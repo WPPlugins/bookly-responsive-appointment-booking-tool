@@ -1,0 +1,27 @@
+#ab-staff-schedule > table { width: 100% }
+#ab-staff-schedule .staff-schedule-item-row > td { padding: 10px 0; border-bottom: 1px solid #DDDDDD; }
+#ab-staff-schedule .staff-schedule-item-row.ab-last-row > td { border: 0; }
+#ab-staff-schedule .staff-schedule-item-row > td.first { width: 115px }
+#ab-staff-schedule .staff-schedule-item-row td.add-break { width: 80px }
+#ab-staff-schedule .staff-schedule-item-row td.working-intervals { width: 210px }
+#ab-staff-schedule .staff-schedule-item-row .break-interval-wrapper { margin-right: 7px; white-space: nowrap; float: left; }
+#ab-staff-schedule .staff-schedule-item-row .break-interval-wrapper img {
+  border: 0 none;
+  cursor: pointer;
+  display: block;
+  float: left;
+  margin-left: 5px;
+  margin-top: 2px;
+  width: 12px;
+}
+#ab-staff-schedule .staff-schedule-item-row .breaks-list { width: 100% }
+#ab-staff-schedule .staff-schedule-item-row .breaks-list .breaks-list-label { width: 60px }
+#ab-staff-schedule .staff-schedule-item-row .ab-popup-wrapper .error { padding: 3px; margin: 5px; }
+#ab-staff-schedule .staff-schedule-item-row .breaks-list .ab-popup-wrapper { float: left; margin-right: 3px; }
+#ab-staff-schedule .error { margin: 0 }
+#ab-staff-list { margin-left: 0; }
+#ab-edit-staff .ab-nav-tabs { height: 37px; }
+.ab-staff-form .control-label { text-align: left!important; }
+.working-end, .working-start { margin-bottom: 0; font-size: 13px; }
+.ab-content .break-end, .ab-content .break-start { width: auto; margin-bottom: 0; }
+.add-break form { margin: 0; }

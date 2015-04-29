@@ -1,0 +1,25 @@
+/* Backend-Appearance */
+
+div.controls {
+    float: right;
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+span.spinner {
+    float: left;
+    margin-right: 20px;
+}
+
+div.ab-second-step-buttons div.ab-first-step-buttons div.ab-third-step-buttons div.ab-fourth-step-buttons div.ab-fifth-step-buttons {
+    float: left;
+    margin-left: 395px;
+}
+
+div.ab-second-step-buttons input.ab-back-forth-button {
+    /* styles */
+}
+
+div.ab-second-step-options {
+    /* styles */
+}

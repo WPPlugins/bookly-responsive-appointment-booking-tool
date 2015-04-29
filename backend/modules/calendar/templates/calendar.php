@@ -1,94 +1,127 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<style>
-    .fc-slats tr { height: <?php echo max( 21, (int) ( 0.43 * get_option( 'bookly_gen_time_slot_length' ) ) ) ?>px; }
-    .fc-time-grid-event.fc-short .fc-time::after { content: '' !important; }
-</style>
-<div id="bookly-tbs" class="wrap">
-    <div class="bookly-tbs-body">
-        <div class="page-header text-right clearfix">
-            <div class="bookly-page-title">
-                <?php _e( 'Calendar', 'bookly' ) ?>
+<?php
+    if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+    // wp start day
+    $week_start_day = get_option('start_of_week', 1);
+?>
+<div ng-app=appointmentForm class="wrap">
+    <div id="ab_calendar_header">
+        <h2><?php _e('Calendar', 'ab') ?></h2>
+        <div class="ab-nav-calendar">
+            <div class="btn-group right-margin left">
+                <button class="btn btn-info ab-calendar-switch-view ab-calendar-day"><?php _e('Day','ab') ?></button>
+                <button class="btn btn-info ab-calendar-switch-view ab-calendar-week ab-button-active"><?php _e('Week','ab') ?></button>
             </div>
-            <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
-                <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
-            <?php endif ?>
-        </div>
-        <div class="panel panel-default bookly-main bookly-fc-inner">
-            <div class="panel-body">
-                <?php if ( $staff_members ) : ?>
-                <ul class="bookly-nav bookly-nav-tabs">
-                    <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
-                        <li class="bookly-nav-item bookly-js-calendar-tab" data-staff_id="0">
-                            <?php _e( 'All', 'bookly' ) ?>
-                        </li>
-                    <?php endif ?>
-                    <?php foreach ( $staff_members as $staff ) : ?>
-                        <li class="bookly-nav-item bookly-js-calendar-tab" data-staff_id="<?php echo $staff->id ?>" style="display: none">
-                            <?php echo $staff->full_name ?>
-                        </li>
-                    <?php endforeach ?>
-                    <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
-                        <div class="btn-group pull-right" style="margin-top: 5px;">
-                            <button class="btn btn-default dropdown-toggle bookly-flexbox" data-toggle="dropdown">
-                                <div class="bookly-flex-cell"><i class="dashicons dashicons-admin-users bookly-margin-right-md"></i></div>
-                                <div class="bookly-flex-cell text-left"><span id="ab-staff-button"></span></div>
-                                <div class="bookly-flex-cell"><div class="bookly-margin-left-md"><span class="caret"></span></div></div>
-                            </button>
-                            <ul class="dropdown-menu bookly-entity-selector">
-                                <li>
-                                    <a class="checkbox" href="javascript:void(0)">
-                                        <label><input type="checkbox" id="bookly-check-all-entities"><?php _e( 'All staff', 'bookly' ) ?></label>
-                                    </a>
-                                </li>
-                                <?php foreach ( $staff_members as $staff ) : ?>
-                                    <li>
-                                        <a class="checkbox" href="javascript:void(0)">
-                                            <label>
-                                                <input type="checkbox" id="ab-filter-staff-<?php echo $staff->id ?>" value="<?php echo $staff->id ?>" data-staff_name="<?php echo esc_attr( $staff->full_name ) ?>" class="bookly-js-check-entity">
-                                                <?php echo $staff->full_name ?>
-                                            </label>
-                                        </a>
-                                    </li>
-                                <?php endforeach ?>
-                            </ul>
-                        </div>
-                    <?php endif ?>
-                </ul>
-                <?php endif ?>
-                <div class="bookly-margin-top-xlg">
-                    <div style="display: none;" class="bookly-loading bookly-js-loading"></div>
-                    <?php if ( $staff_members ) : ?>
-                        <div class="fc-loading-inner" style="display: none">
-                            <div class="fc-loading"></div>
-                        </div>
-                        <div id="bookly-fc-wrapper" class="bookly-calendar">
-                            <div class="bookly-js-calendar-element"></div>
-                        </div>
-                        <?php \BooklyLite\Backend\Modules\Calendar\Components::getInstance()->renderAppointmentDialog() ?>
-                        <?php do_action( 'bookly_render_component_calendar' ) ?>
-                    <?php else : ?>
-                        <div class="well">
-                            <div class="h1"><?php _e( 'Welcome to Bookly!', 'bookly' ) ?></div>
-                            <h3><?php _e( 'Thank you for purchasing our product.', 'bookly' ) ?></h3>
-                            <h3><?php _e( 'Bookly offers a simple solution for making appointments. With our plugin you will be able to easily manage your availability time and handle the flow of your clients.', 'bookly' ) ?></h3>
-                            <p><?php _e( 'To start using Bookly, you need to follow these steps which are the minimum requirements to get it running!', 'bookly' ) ?></p>
-                            <ol>
-                                <li><?php _e( 'Add staff members.', 'bookly' ) ?></li>
-                                <li><?php _e( 'Add services and assign them to staff members.', 'bookly' ) ?></li>
-                            </ol>
-                            <hr>
-                            <a class="btn btn-success" href="<?php echo \BooklyLite\Lib\Utils\Common::escAdminUrl( BooklyLite\Backend\Modules\Staff\Controller::page_slug ) ?>">
-                                <?php _e( 'Add Staff Members', 'bookly' ) ?>
-                            </a>
-                            <a class="btn btn-success" href="<?php echo \BooklyLite\Lib\Utils\Common::escAdminUrl( BooklyLite\Backend\Modules\Services\Controller::page_slug ) ?>">
-                                <?php _e( 'Add Services', 'bookly' ) ?>
-                            </a>
-                        </div>
-                    <?php endif ?>
+            <button class="btn btn-info ab-calendar-today right-margin left"><?php _e('Today','ab') ?></button>
+            <div id="week-calendar-picker" class="ab-week-picker-wrapper left right-margin" data-first_day="<?php echo $week_start_day ?>">
+                <div class="input-prepend input-append">
+                    <span class="ab-week-picker-arrow prev add-on col-arrow">&#9668;</span>
+	                  <input class="span2 ab-date-calendar" readonly="readonly" id="appendedPrependedInput" size="16" type="text" value="" />
+                    <span class="ab-week-picker-arrow next add-on col-arrow">&#9658;</span>
+                </div>
+                <div class="ab-week-picker"></div>
+            </div>
+            <div id="day-calendar-picker" class="ab-week-picker-wrapper left right-margin" style="display: none;" data-first_day="<?php echo $week_start_day ?>">
+                <div class="pagination left">
+                    <ul>
+                        <li><a href="#" class="ab-week-picker-arrow-prev">&#9668;</a></li>
+                        <li><a style="padding: 0" href="#"></a></li>
+                    </ul>
+                </div>
+                <div class="input-append left" style="margin-right:-1px">
+                    <input style="width:131px;margin-left:-2px;border-radius:0" class="span2" id="appendedInput" size="16" type="text" value="" /><span style="border-radius:0" class="add-on col-arrow">▼</span>
+                </div>
+                <div class="pagination left">
+                    <ul>
+                        <?php for ( $i = 1; $i <= 7; ++ $i ) : ?>
+                            <li>
+                                <a href="#" class="ab-day-of-month" <?php if ( 1 == $i ) : ?> style="border-radius:0"<?php endif; ?>></a>
+                            </li>
+                        <?php endfor; ?>
+                        <li><a href="#" class="ab-week-picker-arrow-next">&#9658;</a></li>
+                    </ul>
                 </div>
             </div>
+            <!--div class="btn-group right right-margin">
+                <a class="btn btn-info" href="#"><i class="icon-user icon-white"></i><?php _e(' All services','ab') ?></a>
+                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <input style="margin-right: 5px;" type="checkbox" id="" class="all-staff left">
+                            <label for=""><?php _e('All staff','ab') ?></label>
+                        </a>
+                    </li>
+                </ul>
+            </div-->
+            <div class="btn-group pull-right">
+                <a class="btn btn-info ab-staff-filter-button" href="javascript:void(0)">
+                    <i class="icon-user icon-white"></i>
+                    <span id="ab-staff-button">
+                        <?php
+                            $staff_numb = count($collection);
+                            if ($staff_numb == 0) {
+                                _e(' No staff selected','ab');
+                            } else if ($staff_numb == 1) {
+                                echo $collection[0]->full_name;
+                            } else {
+                                echo $staff_numb . ' '. __('staff members','ab');
+                            }
+                        ?>
+                    </span>
+                </a>
+                <a class="btn btn-info dropdown-toggle ab-staff-filter-button" href="javascript:void(0)"><span class="caret"></span></a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <input style="margin-right: 5px;" type="checkbox" checked="checked" id="ab-filter-all-staff" class="left">
+                            <label for="ab-filter-all-staff"><?php _e('All staff','ab') ?></label>
+                        </a>
+                        <?php foreach ($collection as $staff) : ?>
+                            <a style="padding-left: 35px;" href="javascript:void(0)">
+                                <input style="margin-right: 5px;" type="checkbox" checked="checked" id="ab-filter-staff-<?php echo $staff->id ?>" value="<?php echo $staff->id ?>" class="ab-staff-option left">
+                                <label style="padding-right: 15px;" for="ab-filter-staff-<?php echo $staff->id ?>"><?php echo $staff->full_name ?></label>
+                            </a>
+                        <?php endforeach ?>
+                    </li>
+                </ul>
+            </div>
         </div>
-
-        <?php \BooklyLite\Backend\Modules\Calendar\Components::getInstance()->renderDeleteDialog(); ?>
     </div>
+    <?php if ( $collection ) : ?>
+        <?php
+            $user_names = array();
+            $user_ids   = array();
+        ?>
+        <div id="week_calendar_wrapper">
+            <div class="tabbable" style="margin-top: 20px;">
+                <ul class="nav nav-tabs" style="margin-bottom:0;border-bottom: 6px solid #1f6a8c">
+                    <?php foreach ($collection as $i => $staff) : ?>
+                        <li class="ab-staff-tab-<?php echo $staff->id ?> ab-calendar-tab<?php echo 0 == $i ? ' active' : '' ?>" data-staff-id="<?php echo $staff->id ?>">
+                            <a href="#" data-toggle="tab"><?php echo $staff->full_name ?></a>
+                        </li>
+                    <?php
+                        $user_names[] = $staff->full_name;
+                        $user_ids[]   = $staff->id;
+                    ?>
+                    <?php endforeach ?>
+                </ul>
+            </div>
+            <div class="ab-calendar-element-container">
+                <div class="ab-calendar-element"></div>
+            </div>
+        </div>
+        <div id="day_calendar_wrapper" style="display: none">
+            <div class="ab-calendar-element-container">
+                <div class="ab-calendar-element"></div>
+            </div>
+        </div>
+        <?php include 'appointment_form.php' ?>
+        </div>
+        <span id="staff_ids" style="display: none"><?php echo json_encode($user_ids) ?></span>
+        <span id="ab_calendar_data_holder" style="display: none">
+            <span class="ab-calendar-first-day"><?php echo $week_start_day ?></span>
+            <span class="ab-calendar-time-format"><?php echo get_option( 'time_format' ) ?></span>
+            <span class="ab-calendar-users"><?php echo implode( '|', $user_names ) ?></span>
+        </span>
+    <?php endif; ?>
 </div>

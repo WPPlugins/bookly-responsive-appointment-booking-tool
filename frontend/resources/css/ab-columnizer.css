@@ -1,0 +1,94 @@
+.ab-time-list {
+    max-width: 625px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 20px!important;
+}
+
+.ab-columnizer-wrap {
+    position: relative;
+}
+
+.ab-columnizer {
+    white-space: nowrap;
+    position: absolute;
+}
+
+.ab-columnizer .ab-time-screen {
+    display: inline-block;
+     *display: inline;
+}
+
+.ab-columnizer .ab-column {
+    width: 120px;
+    margin: 0 3.5px;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    vertical-align: top;
+}
+
+.ab-columnizer .ab-available-day,
+.ab-columnizer .ab-available-hour {
+    display: block;
+    width: 100%;
+    margin: 1.5px 0;
+    background: white;
+    height: 36px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333333!important;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+   -moz-border-radius: 4px;
+   -webkit-border-radius: 4px;
+}
+
+.ab-columnizer .ab-available-day {
+    background: #f4662f;
+    color: white!important;
+    font-weight: bold;
+    border: 1px solid #f4662f;
+}
+
+.ab-columnizer .ab-available-hour:hover { border: 2px solid #f4662f; color: #f4662f; }
+.ab-columnizer .ab-available-hour:hover .ab-hour-icon {
+    background: none;
+    border: 2px solid #f4662f;
+    color: #f4662f;
+    width: auto;
+    height: auto;
+    padding: 3px;
+    border-radius: 25px;
+    margin-left: -1px;
+    margin-right: 5px;
+}
+.ab-columnizer .ab-available-hour:hover .ab-hour-icon span {
+    background: #f4662f;
+    width: 8px;
+    height: 8px;
+    border-radius: 10px;
+    display: block;
+}
+
+.ab-time-list .ab-columnizer > button {
+    display: none;
+}
+
+.ab-time-list .ab-columnizer > .ab-column {
+    display: none;
+}
+
+.ab-columnizer .ab-available-hour .ab-hour-icon {
+    display: block;
+    float: left;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    margin-right: 5px;
+    background: url("../images/success.png?1") 0 0 no-repeat;
+}

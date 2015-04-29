@@ -1,42 +1,25 @@
-<?php if (!defined('ABSPATH')) exit; // Exit if accessed directly ?>
-<div class="bookly-holidays-nav">
-    <div class="input-group input-group-lg">
-        <div class="input-group-btn">
-            <button class="btn btn-default bookly-js-jCalBtn" data-trigger=".jCal .left" type="button">
-                <i class="dashicons dashicons-arrow-left-alt2"></i>
-            </button>
-        </div>
-        <input class="form-control text-center jcal_year" id="appendedPrependedInput"
-               readonly type="text" value="">
-        <div class="input-group-btn">
-            <button class="btn btn-default bookly-js-jCalBtn" data-trigger=".jCal .right" type="button">
-                <i class="dashicons dashicons-arrow-right-alt2"></i>
-            </button>
-        </div>
-    </div>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<div id="ab-annual-calendar-scroll" style="text-align: center;">
+  <div class="input-prepend input-append">
+    <span class="ab-week-picker-arrow prev add-on col-arrow">◄</span>
+    <input style="width: 70px; text-align: center;background: white" class="span2 jcal_year" readonly="readonly" id="appendedPrependedInput" size="16" type="text" value="2014">
+    <span class="ab-week-picker-arrow next add-on col-arrow">►</span>
+  </div>
 </div>
+<div id="ab-annual-calendar"></div>
 
-<div class="bookly-js-holidays jCal-wrap bookly-margin-top-lg"></div>
-
-<script>
-    jQuery(function ($) {
-        var d = new Date();
-        $('.bookly-js-holidays').jCal({
-            day         : new Date(d.getFullYear(), 0, 1),
-            days        : 1,
-            showMonths  : 12,
-            scrollSpeed : 350,
-            events      : <?php echo $holidays ?>,
-            action      : 'bookly_staff_holidays_update',
-            staff_id    : <?php echo $staff_id ?>,
-            dayOffset   : <?php echo (int)get_option('start_of_week') ?>,
-            loadingImg  : <?php echo json_encode( plugins_url( 'bookly-responsive-appointment-booking-tool/backend/resources/images/loading.gif' ) ) ?>
-        });
-
-        $('.bookly-js-jCalBtn').on('click', function(e) {
-            e.preventDefault();
-            var trigger = $(this).data('trigger');
-            $('.bookly-js-holidays').find($(trigger)).trigger('click');
-        })
+<script type="text/javascript">
+  jQuery(function($) {
+    var d = new Date();
+    $('#ab-annual-calendar').jCal({
+        day:			new Date(d.getFullYear(), 0, 1),
+        days:			1,
+        showMonths:		12,
+        scrollSpeed:    350,
+        events:         <?php echo $holidays ?>,
+        action:         'ab_staff_holidays_update',
+        staff_id:       <?php echo $id ?>,
+        dayOffset:      <?php echo get_option('start_of_week', 0) ?>
     });
+  });
 </script>

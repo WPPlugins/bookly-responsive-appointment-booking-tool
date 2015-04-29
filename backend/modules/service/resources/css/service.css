@@ -1,0 +1,53 @@
+.ab-category-item {
+    width: 110px;
+    padding: 10px;
+    padding-left: 50px;
+    vertical-align: middle;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.ab-active {
+    background-color: #ccc;
+}
+
+.wp-picker-container .iris-picker {
+    border-color: black;
+    margin-left: 35px;
+    margin-top: 6px;
+}
+
+#services_list .service-color-wrapper .wp-picker-open + .wp-picker-input-wrap {
+    display: block;
+    margin-left: 50px;
+    margin-top: 20px;
+}
+
+.wp-picker-container, .wp-picker-container:active {
+    display: inline-block;
+    outline: 0 none;
+    position: absolute;
+    margin-top: 3px;
+ }
+
+/** Services list **/
+#ab_services_wrapper .list-wrapper { min-width: 590px }
+#ab_services_wrapper .list-wrapper .list-actions { overflow: hidden; margin-top: 10px; }
+#ab_services_wrapper .list-wrapper .list-actions .add-service { float: left }
+#ab_services_wrapper .list-wrapper .list-actions .delete { float: right }
+
+#services_list td.last,
+#services_list th.last { width: 16px; vertical-align: middle; }
+#services_list th, #services_list td { padding:5px }
+#services_list select { width: auto; margin: 0; }
+#services_list .service-color-cell { width: 28px; }
+#services_list .service-color-wrapper .wp-color-result { padding-left: 25px; margin: 0; top: auto; }
+#services_list .service-color-wrapper .wp-color-result.wp-picker-open { top: auto }
+#services_list .service-color-wrapper .wp-color-result:after { top: auto; content: none; }
+#services_list .service-color-wrapper .wp-color-result.wp-picker-open:after { content: none }
+#services_list .service-color-wrapper .wp-picker-open + .wp-picker-input-wrap { display: block; visibility: hidden; margin-top: -25px; margin-left: 34px; }
+#services_list .service-color-wrapper .button { margin-left: 0 }
+
+#new_category_popup .ab-popup { width: 187px }
+.staff-popup-wrapper .staff-row { white-space: nowrap; margin: 0; }
+

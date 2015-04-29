@@ -1,53 +1,49 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'company' ) ) ?>">
-    <div class="row">
-        <div class="col-xs-3 col-lg-2">
-            <div class="bookly-flexbox">
-                <div id="bookly-js-logo" class="bookly-thumb bookly-thumb-lg bookly-margin-right-lg">
-                    <input type="hidden" name="bookly_co_logo_attachment_id" data-default="<?php form_option( 'bookly_co_logo_attachment_id' ) ?>"
-                           value="<?php form_option( 'bookly_co_logo_attachment_id' ) ?>">
-                    <div class="bookly-flex-cell">
-                        <div class="form-group">
-                            <?php $img = wp_get_attachment_image_src( get_option( 'bookly_co_logo_attachment_id' ), 'thumbnail' ) ?>
-                            <div class="bookly-js-image bookly-thumb bookly-thumb-lg bookly-margin-right-lg"
-                                 data-style="<?php echo $img ? 'background-image: url(' . $img[0] . '); background-size: cover;' : '' ?>"
-                                <?php echo $img ? 'style="background-image: url(' . $img[0] . '); background-size: cover;"' : '' ?>
-                            >
-                                <a class="dashicons dashicons-trash text-danger bookly-thumb-delete"
-                                   href="javascript:void(0)"
-                                   title="<?php _e( 'Delete', 'bookly' ) ?>"
-                                   <?php if ( ! $img ) : ?>style="display: none;"<?php endif ?>>
-                                </a>
-                                <div class="bookly-thumb-edit">
-                                    <div class="bookly-pretty">
-                                        <label class="bookly-pretty-indicator bookly-thumb-edit-btn">
-                                            <?php _e( 'Image', 'bookly' ) ?>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<form method="post" action="<?php echo $current_url . '&type=_company' ?>" enctype="multipart/form-data" class="ab-staff-form">
+
+    <?php if (isset($message_c)) : ?>
+        <div id="message" style="margin: 0px!important;" class="updated below-h2">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <p><?php echo $message_c ?></p>
+        </div>
+    <?php endif ?>
+
+    <table class="form-horizontal">
+        <tr>
+            <td><?php _e('Company name','ab') ?></td>
+            <td><input type="text" size="33" name="ab_settings_company_name" value="<?php echo get_option('ab_settings_company_name') ?>" reset="<?php echo get_option('ab_settings_company_name') ?>"/></td>
+        </tr>
+        <tr>
+            <td valign="top"><?php _e('Company logo','ab') ?></td>
+            <td>
+                <?php if ( get_option( 'ab_settings_company_logo_url' ) ): ?>
+                    <div id="ab-show-logo">
+                        <img src="<?php echo get_option( 'ab_settings_company_logo_url' ) ?>" alt="<?php _e( 'Company logo','ab' ) ?>"/>
+                        <a id="ab-delete-logo" href="javascript:void(0)"><?php _e( 'Delete','ab' ) ?></a>
+                        <br/>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-9 col-lg-10">
-            <div class="bookly-flex-cell bookly-vertical-middle">
-                <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_co_name', __( 'Company name', 'bookly' ) ) ?>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="bookly_co_address"><?php _e( 'Address', 'bookly' ) ?></label>
-        <textarea id="bookly_co_address" class="form-control" rows="5"
-                  name="bookly_co_address"><?php form_option( 'bookly_co_address' ) ?></textarea>
-    </div>
-    <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_co_phone', __( 'Phone', 'bookly' ) ) ?>
-    <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_co_website', __( 'Website', 'bookly' ) ) ?>
-
-    <div class="panel-footer">
-        <?php \BooklyLite\Lib\Utils\Common::submitButton() ?>
-        <?php \BooklyLite\Lib\Utils\Common::resetButton( 'bookly-company-reset' ) ?>
-    </div>
+                <?php endif ?>
+                <input name="ab_settings_company_logo" id="ab_settings_company_logo" type="file" />
+            </td>
+        </tr>
+        <tr>
+            <td valign="top"><?php _e('Address','ab') ?></td>
+            <td><textarea cols="32" rows="5" name="ab_settings_company_address"><?php echo get_option('ab_settings_company_address') ?></textarea></td>
+        </tr>
+        <tr>
+            <td><?php _e('Phone','ab') ?></td>
+            <td><input type="text" size="33" name="ab_settings_company_phone" value="<?php echo get_option('ab_settings_company_phone') ?>" /></td>
+        </tr>
+        <tr>
+            <td><?php _e('Website','ab') ?></td>
+            <td><input type="text" size="33" name="ab_settings_company_website" value="<?php echo get_option('ab_settings_company_website') ?>" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="<?php _e( 'Save', 'ab' ) ?>" class="btn btn-info ab-update-button" />
+                <button id="ab-settings-company-reset" class="ab-reset-form" type="reset"><?php _e( ' Reset ', 'ab' ) ?></button>
+            </td>
+        </tr>
+    </table>
 </form>

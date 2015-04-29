@@ -1,0 +1,175 @@
+
+/* calendar nav */
+.ab-calendar-day, .ab-calendar-week, .ab-calendar-today, .btn-list, .btn-dropdown {
+  display: inline-block;
+  padding: 2px 10px;
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #21759b;
+  background-image: -webkit-gradient(linear,left top,left bottom,from(#2a95c5),to(#21759b));
+  background-image: -webkit-linear-gradient(top,#2a95c5,#21759b);
+  background-image: -moz-linear-gradient(top,#2a95c5,#21759b);
+  background-image: -ms-linear-gradient(top,#2a95c5,#21759b);
+  background-image: -o-linear-gradient(top,#2a95c5,#21759b);
+  background-image: linear-gradient(to bottom,#2a95c5,#21759b);
+  background-repeat: repeat-x;
+  border: 1px solid #21759b;
+  border-color: #e6e6e6 #e6e6e6 #1e6a8d;
+  border-bottom-color: #b3b3b3;
+ -webkit-border-radius: 4px;
+ -moz-border-radius: 4px;
+  border-radius: 4px;
+ -webkit-box-shadow: inset 0 1px 0 rgba(120,200,230,0.5);
+  moz-box-shadow: inset 0 1px 0 rgba(120,200,230,0.5);
+  box-shadow: inset 0 1px 0 rgba(120,200,230,0.5);
+}
+.ab-calendar-day { border-bottom-right-radius: 0px; border-top-right-radius: 0px; margin-top: 0; }
+.ab-calendar-week { border-bottom-left-radius: 0px; border-top-left-radius: 0px; margin-left: -3px; margin-top: 0; border-left: 0; }
+.ab-calendar-today { margin: 0 5px; border-radius: 3px; }
+.ab-nav-calendar { height: 30px; }
+.ab-nav-calendar .ab-button-active {
+  background: #1f6a8c;
+}
+.ab-nav-calendar .ab-popup-wrapper { margin-left: 10px; }
+.ab-popup-table td { white-space: nowrap; padding: 5px; border: 0!important; }
+.ab-popup-table td > p { margin: 0; }
+
+.ab-btn-group .btn-list,
+.ab-btn-group .btn-dropdown {
+  margin: 0;
+  border: 0;
+  float: left;
+  position: relative;
+}
+.ab-btn-group .btn-list {
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
+  padding-left: 25px;
+}
+.ab-btn-group .btn-dropdown {
+  font-size: 9px;
+  padding-left: 0;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+}
+.ab-icon-button {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 15px;
+  height: 15px;
+}
+.ab-icon-button.ab-services {
+  background: url("../images/box-small.png") 2px 2px no-repeat;
+}
+.ab-icon-button.ab-staff {
+  background: url("../images/user-white.png") 0 2px no-repeat;
+}
+
+/** week picker */
+.ab-week-picker-wrapper { width: auto; position: relative; margin-right: 15px; }
+.ab-week-picker-wrapper .ab-week-picker { clear: both; left: -1px; position: absolute; top: 30px; z-index: 1; display: none; }
+.ab-week-picker-data { border-radius: 3px; background: url("../images/calendar.png") 2px 4px no-repeat; padding: 4px 7px 4px 25px; height: 16px; border: 1px solid black; }
+#appendedPrependedInput { width: 340px; background-color: #FFFFFF; cursor: default; }
+
+/** appointment dialog */
+.ab-appointment-popup .ui-widget-header {
+  background: none!important;
+  border: none!important;
+  border-bottom: 1px solid #eee!important;
+  margin: -5px -5px 15px -5px!important;
+  font-size: 24.5px!important;
+  font-family: sans-serif!important;
+  line-height: 26px!important;
+  padding: 9px 15px!important;
+}
+.ab-appointment-popup .ui-widget-header .ui-state-hover { background: none!important; border: none!important; }
+
+.ab-appointment-popup .loading-indicator img { display: block; margin: 20px auto; }
+.ab-appointment-popup .dialog-button-wrapper {  }
+
+.ab-appointment-popup .dialog-content .ab-appointment-field-value { width: 110px; vertical-align: top; }
+.ab-appointment-popup .dialog-content td { padding-top: 7px; text-align: left; white-space: nowrap; }
+.ab-appointment-popup .dialog-content select { width: auto; max-width: 100%; }
+.ab-appointment-popup .dialog-content { color: #333333!important; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif!important; font-size: 14px!important; }
+.ab-appointment-popup .dialog-content .ab-reset-form { color: #21759b; }
+.ab-appointment-popup .dialog-content .ab-reset-form:hover { color: #d54e21; }
+
+/** calendars */
+#day_calendar_wrapper { margin-top: 55px; }
+
+#date_interval_warning_msg { color: #21759B }
+#date_interval_not_available_msg { color: red }
+
+/** wp elements */
+#update-nag, .update-nag, #wpfooter { display: none; }
+#wpbody-content { padding-bottom: 0; }
+
+.ab-date-picker { border: 1px solid black!important; padding: 4px 4px 4px 7px; border-radius: 3px; width: 65px; }
+.ab-date-paginator { margin-left: 10px; }
+.ab-date-paginator > a {
+  float: left;
+  text-decoration: none;
+  color: black;
+  padding: 4px 2px;
+  display: block;
+  border: 1px solid black;
+  margin-left: -1px;
+  width: 18px;
+  text-align: center;
+}
+.ab-date-paginator > a.first {
+   border-bottom-left-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -moz-border-bottom-left-radius: 10px;
+  -o-border-bottom-left-radius: 10px;
+   border-top-left-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-top-left-radius: 10px;
+  -o-border-top-left-radius: 10px;
+}
+.ab-date-paginator > a.last {
+  border-bottom-right-radius: 10px;
+ -webkit-border-bottom-right-radius: 10px;
+ -moz-border-bottom-right-radius: 10px;
+ -o-border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+ -webkit-border-top-right-radius: 10px;
+ -moz-border-top-right-radius: 10px;
+ -o-border-top-right-radius: 10px;
+}
+.wc-cal-event {
+  background-color: #DDDDDD;
+  line-height: 16px!important;
+}
+.wc-cal-event .wc-time {
+  background-color    : #DDDDDD;
+  border-left-color   : #DDDDDD;
+  border-right-color  : #DDDDDD;
+  border-top-color    : #DDDDDD;
+  border-bottom-color : #ABABAB;
+}
+
+.wc-information {
+    background: url("../images/information.png") no-repeat scroll 1px 2px transparent;
+    float: right;
+    height: 16px;
+    width: 16px;
+    z-index: 20;
+}
+
+.wc-service-name, .wc-employee {
+    padding: 3px 0;
+}
+
+.right-margin { margin-right: 10px; }
+.pagination { margin: 0!important; }
+
+.nav-tabs > .active > a { background: #1f6a8c!important; color: white!important; border-left: 0!important; }
+.ab-date-calendar { padding-left: 25px!important; background: url("../images/calendar.png") 5px 8px no-repeat; }

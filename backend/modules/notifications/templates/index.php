@@ -1,143 +1,122 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $bookly_email_sender_name  = get_option( 'bookly_email_sender_name' ) == '' ?
-        get_option( 'blogname' )    : get_option( 'bookly_email_sender_name' );
-    $bookly_email_sender = get_option( 'bookly_email_sender' ) == '' ?
-        get_option( 'admin_email' ) : get_option( 'bookly_email_sender' );
-    $collapse_id = 0;
-    $form_data = $form->getData();
-?>
-<div id="bookly-tbs" class="wrap">
-    <div class="bookly-tbs-body" ng-app="notifications">
-        <div class="page-header text-right clearfix">
-            <div class="bookly-page-title">
-                <?php _e( 'Email Notifications', 'bookly' ) ?>
-            </div>
-            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
-        </div>
-        <form method="post" action="">
-            <div class="panel panel-default bookly-main" ng-controller="emailNotifications">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="sender_name"><?php _e( 'Sender name', 'bookly' ) ?></label>
-                                <input id="sender_name" name="bookly_email_sender_name" class="form-control" type="text" value="<?php echo esc_attr( $bookly_email_sender_name ) ?>">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="sender_email"><?php _e( 'Sender email', 'bookly' ) ?></label>
-                                <input id="sender_email" name="bookly_email_sender" class="form-control ab-sender" type="text" value="<?php echo esc_attr( $bookly_email_sender ) ?>">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_email_send_as', __( 'Send emails as', 'bookly' ), __( 'HTML allows formatting, colors, fonts, positioning, etc. With Text you must use Text mode of rich-text editors below. On some servers only text emails are sent successfully.', 'bookly' ),
-                                array( array( 'html', __( 'HTML', 'bookly' ) ), array( 'text', __( 'Text', 'bookly' ) ) )
-                            ) ?>
-                        </div>
-                        <div class="col-md-6">
-                            <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_email_reply_to_customers', __( 'Reply directly to customers', 'bookly' ), __( 'If this option is enabled then the email address of the customer is used as a sender email address for notifications sent to staff members and administrators.', 'bookly' ) ) ?>
-                        </div>
-                    </div>
-                    <?php if ( $form->types['combined'] || \BooklyLite\Lib\Utils\Common::isPluginActive( 'bookly-addon-recurring-appointments/main.php' ) ) : ?>
-                        <h4 class="bookly-block-head bookly-color-gray"><?php _e( 'Single', 'bookly' ) ?></h4>
-                    <?php endif ?>
-                    <div class="panel-group bookly-margin-vertical-xlg" id="single">
-                        <?php foreach ( $form->types['single'] as $type ) : ?>
-                            <div class="panel panel-default bookly-js-collapse">
-                                <div class="panel-heading" role="tab">
-                                    <div class="checkbox bookly-margin-remove">
-                                        <label>
-                                            <input name="<?php echo $type ?>[active]" value="0" type="checkbox" checked="checked" class="hidden">
-                                            <input id="<?php echo $type ?>_active" name="<?php echo $type ?>[active]" value="1" type="checkbox" <?php checked( $form_data[ $type ]['active'] ) ?>>
-                                            <a href="#collapse_<?php echo ++ $collapse_id ?>" class="collapsed panel-title" role="button" data-toggle="collapse" data-parent="#single">
-                                                <?php echo $form_data[ $type ]['name'] ?>
-                                            </a>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div id="collapse_<?php echo $collapse_id ?>" class="panel-collapse collapse">
-                                    <div class="panel-body">
-
-                                        <?php $form->renderSendingTime( $type ) ?>
-                                        <?php $form->renderSubject( $type ) ?>
-                                        <?php $form->renderEditor( $type ) ?>
-                                        <?php $form->renderCopy( $type ) ?>
-
-                                        <div class="form-group">
-                                            <label><?php _e( 'Codes', 'bookly' ) ?></label>
-                                            <?php switch ( $type ) :
-                                                case 'staff_agenda':       include '_codes_staff_agenda.php';       break;
-                                                case 'client_new_wp_user': include '_codes_client_new_wp_user.php'; break;
-                                                default:                   include '_codes.php';
-                                            endswitch ?>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-
-                    <?php if ( $form->types['combined'] ) : ?>
-                        <h4 class="bookly-block-head bookly-color-gray"><?php _e( 'Combined', 'bookly' ) ?></h4>
-                        <div class="panel-group bookly-margin-vertical-xlg" id="combined">
-                            <?php foreach ( $form->types['combined'] as $type ) : ?>
-                                <div class="panel panel-default bookly-js-collapse">
-                                    <div class="panel-heading" role="tab">
-                                        <div class="checkbox bookly-margin-remove">
-                                            <label>
-                                                <input name="<?php echo $type ?>[active]" value="0" type="checkbox" checked="checked" class="hidden">
-                                                <input id="<?php echo $type ?>_active" name="<?php echo $type ?>[active]" value="1" type="checkbox" <?php checked( $form_data[ $type ]['active'] ) ?>>
-                                                <a href="#collapse_<?php echo ++ $collapse_id ?>" class="collapsed panel-title" role="button" data-toggle="collapse" data-parent="#combined">
-                                                    <?php echo $form_data[ $type ]['name'] ?>
-                                                </a>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div id="collapse_<?php echo $collapse_id ?>" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <?php $form->renderSubject( $type ) ?>
-                                            <?php $form->renderEditor( $type ) ?>
-                                            <?php $form->renderCopy( $type ) ?>
-
-                                            <div class="form-group">
-                                                <label><?php _e( 'Codes', 'bookly' ) ?></label>
-                                                <?php include '_codes_cart.php' ?>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach ?>
-                        </div>
-                    <?php endif ?>
-
-                    <?php do_action( 'bookly_render_email_notifications', $form ) ?>
-
-                    <div class="alert alert-info">
-                        <?php if ( is_multisite() ) : ?>
-                            <p><?php printf( __( 'To send scheduled notifications please refer to <a href="%1$s">Bookly Multisite</a> add-on <a href="%2$s">message</a>.', 'bookly' ), 'http://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela', network_admin_url( 'admin.php?page=bookly-multisite-network' ) ) ?></p>
-                        <?php else : ?>
-                            <p><?php _e( 'To send scheduled notifications please execute the following script hourly with your cron:', 'bookly' ) ?></p><br />
-                            <code class="bookly-text-wrap">php -f <?php echo $cron_path ?></code>
-                        <?php endif ?>
-                    </div>
-                </div>
-
-                <div class="panel-footer">
-                    <?php \BooklyLite\Lib\Utils\Common::submitButton() ?>
-                    <?php \BooklyLite\Lib\Utils\Common::resetButton() ?>
-
-                    <div class="pull-left">
-                        <button type="button" class="btn btn-default ab-test-email-notifications btn-lg">
-                            <?php _e( 'Test Email Notifications', 'bookly' ) ?>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <?php include '_test_email_notifications_modal.php' ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<div class="ab-title"><?php _e('Notifications','ab') ?></div>
+<div style="min-width: 800px;margin-top: -20px">
+  <form method="post">
+    <div class="ab-notifications">
+      <?php
+      $sender_name  = get_option( 'ab_settings_sender_name' ) == '' ?
+        get_option( 'blogname' )    : get_option( 'ab_settings_sender_name' );
+      $sender_email = get_option( 'ab_settings_sender_email' ) == ''  ?
+        get_option( 'admin_email' ) : get_option( 'ab_settings_sender_email' );
+      ?>
+      <!-- sender name -->
+      <label for="sender_name" style="display: inline;"><?php _e( 'Sender name', 'ab' ); ?></label>
+      <input id="sender_name" name="sender_name" class="ab-sender" type="text" value="<?php echo $sender_name ; ?>"/><br>
+      <!-- sender email -->
+      <label for="sender_email" style="display: inline;"><?php _e( 'Sender email', 'ab' ); ?></label>
+      <input id="sender_email" name="sender_email" class="ab-sender" type="text" value="<?php echo $sender_email; ?>"/>
     </div>
+    <?php foreach ( $notifications as $k => $slug ): ?>
+      <div class="ab-notifications">
+        <div class="ab-toggle-arrow"></div>
+        <legend id='legend_<?php echo $k; ?>_active'>
+          <input type=checkbox id="<?php echo $k; ?>_active" type="checkbox" value="1" name=<?php echo $k; ?>[active]"/>
+          <label for='<?php echo $k; ?>_active'><?php echo $slug['name']; ?></label>
+        </legend>
+        <div class="ab-form-field">
+          <div class="ab-form-row">
+            <label class='ab-form-label'><?php __( 'Subject','ab'); ?></label><input type='text' size='70' value='<?php echo $slug['subject']; ?>'/>
+          </div>
+          <div id="message_editor" class="ab-form-row">
+            <label class="ab-form-label" style="margin-top: 35px;"><?php _e( 'Message', 'ab' ) ?></label>
+            <?php wp_editor( $slug['message'], $k . '_message', array_merge(array('name' => $k . '[message]'), $settings) ) ?>
+          </div>
+          <?php if ('provider_info' == $k): ?>
+            <div class='ab-form-row'>
+              <label class='ab-form-label'></label>
+              <div class='left'>
+                <legend>
+                  <input type=checkbox />
+                  <label> <?php _e('Send copy to administrators', 'ab');?></label>
+                </legend>
+              </div>
+            </div>
+          <?php endif ?>
+          <div class="ab-form-row">
+            <label class="ab-form-label"><?php _e( 'Tags ','ab' ) ?></label>
+            <div class="ab-tags-form left">
+              <table>
+                <tbody>
+                <?php include "_tags_{$k}.php"; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+    <div class="ab-notifications" style="border: 0">
+      <input type="submit" value="<?php _e( 'Save Changes', 'ab' )?>" class="btn btn-info ab-update-button" />
+      <button class="ab-reset-form" type="reset"><?php _e( 'Reset', 'ab' )?></button>
+    </div>
+  </form>
 </div>
+
+<div class="modal fade" id="light_notice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Notice</h4>
+      </div>
+      <div class="modal-body">
+        <?php _e('This function is disabled in the light verison of Bookly. If you find the plugin useful for your business please consider buying a licence for the full version. It costs just $35 and for this money you will get many useful functions, lifetime free update and excellent support! More information can be found here'); ?>: <a href="http://bookly.ladela.com" target="_blank">http://bookly.ladela.com</a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+  jQuery(function($) {
+    // menu fix for WP 3.8.1
+    $('#toplevel_page_ab-system > ul').css('margin-left', '0px');
+    // Show-hide Notifications
+    $('input:checkbox[id!=_active]').each(function() {
+      $(this).change(function() {
+        if ( $(this).attr('checked') ) {
+          $(this).parent().next('div.ab-form-field').show(200);
+          $(this).parents('.ab-notifications').find('.ab-toggle-arrow').css('background','url(<?php echo plugins_url( 'resources/images/notifications-arrow-up.png', dirname(__FILE__).'/../../../AB_Backend.php' ) ?>) 100% 0 no-repeat');
+        } else {
+          $(this).parent().next('div.ab-form-field').hide(200);
+          $(this).parents('.ab-notifications').find('.ab-toggle-arrow').css('background','url(<?php echo plugins_url( 'resources/images/notifications-arrow-down.png', dirname(__FILE__).'/../../../AB_Backend.php' ) ?>) 100% 0 no-repeat');
+        }
+      }).change();
+    });
+    $('.ab-toggle-arrow').click(function() {
+      $(this).nextAll('.ab-form-field').toggle(200, function() {
+        if ( $('.ab-form-field').css('display') == 'block' ) {
+          $(this).prevAll('.ab-toggle-arrow').css('background','url(<?php echo plugins_url( 'resources/images/notifications-arrow-up.png', dirname(__FILE__).'/../../../AB_Backend.php' ) ?>) 100% 0 no-repeat');
+        } else {
+          $(this).prevAll('.ab-toggle-arrow').css('background','url(<?php echo plugins_url( 'resources/images/notifications-arrow-down.png', dirname(__FILE__).'/../../../AB_Backend.php' ) ?>) 100% 0 no-repeat');
+        }
+      });
+    });
+    // filter sender name and email
+    var escapeXSS = function (infected) {
+      var regexp = /([<|(]("[^"]*"|'[^']*'|[^'">])*[>|)])/gi;
+      return infected.replace(regexp, '');
+    };
+    $('input.ab-sender').on('change', function() {
+      var $val = $(this).val();
+      $(this).val(escapeXSS($val));
+    });
+
+    $("input[id$='_active']").change(function(){
+      if ($(this).is(':checked')){
+        $('#light_notice').modal('show');
+      }
+    });
+  });
+</script>

@@ -1,28 +1,21 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    /** @var WP_Locale $wp_locale */
-    global $wp_locale;
-?>
-<div class="bookly-form">
-    <?php include '_progress_tracker.php' ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 
-    <div class="bookly-service-step">
-        <div class="bookly-box">
-            <span data-option-default="<?php form_option( 'bookly_l10n_info_service_step' ) ?>"
-                  class="bookly-editable ab-bold ab-desc" id="bookly_l10n_info_service_step"
-                  data-rows="7" data-type="textarea"><?php echo esc_html( get_option( 'bookly_l10n_info_service_step' ) ) ?></span>
+<div class="ab-booking-form" style="overflow: hidden">
+
+    <!-- Progress Tracker-->
+    <?php $step = 1; include '_progress_tracker.php'; ?>
+
+    <div class="ab-wrapper-content">
+        <div style="margin-bottom: 15px!important;" class="ab-row-fluid">
+            <span data-inputclass="input-xxlarge" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_info_first_step' ) ); ?>" data-link-class="ab-text-info-first" class="ab-text-info-first-preview ab-bold ab_editable" id="ab-text-info-first" data-rows="7" data-type="textarea" data-pk="1"><?php echo esc_html( get_option( 'ab_appearance_text_info_first_step' ) ) ?></span>
         </div>
-        <div class="ab-mobile-step_1 bookly-box">
-            <div class="bookly-js-chain-item bookly-table bookly-box">
-                <?php if ( \BooklyLite\Lib\Config::isLocationsEnabled() ) : ?>
-                    <div class="ab-formGroup">
-                        <?php do_action( 'bookly_locations_render_appearance' ) ?>
-                    </div>
-                <?php endif ?>
-                <div class="ab-formGroup">
-                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_category', 'bookly_l10n_option_category', ) ) ?>
-                    <div>
-                        <select class="ab-select-mobile ab-select-category">
-                            <option value="" id="bookly_l10n_option_category"><?php echo esc_html( get_option( 'bookly_l10n_option_category' ) ) ?></option>
+        <div class=ab-service-form>
+            <div class="ab-mobile-step_1 ab-row-fluid">
+                <div class="ab-category-list ab-left">
+                    <label data-default="<?php echo get_option( 'ab_appearance_text_label_category' ); ?>" data-link-class="ab-text-option-category" class="ab-category-title text_category_label" id="ab-text-label-category"  data-type="multiple" data-pk="1"><?php echo esc_html(get_option( 'ab_appearance_text_label_category' )) ?></label>
+                    <div class="ab-select-wrap">
+                        <select class="select-list ab-select-mobile ab-select-category" style="width: 100%">
+                            <option value="" class="editable" id="ab-text-option-category" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_option_category' ) ); ?>"><?php echo esc_attr( get_option( 'ab_appearance_text_option_category' ) ); ?></option>
                             <option value="1">Cosmetic Dentistry</option>
                             <option value="2">Invisalign</option>
                             <option value="3">Orthodontics</option>
@@ -30,150 +23,173 @@
                         </select>
                     </div>
                 </div>
-                <div class="ab-formGroup">
-                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array(
-                        'bookly_l10n_label_service',
-                        'bookly_l10n_option_service',
-                        'bookly_l10n_required_service',
-                    ) ) ?>
-                    <div>
-                        <select class="ab-select-mobile ab-select-service">
-                            <option id="bookly_l10n_option_service"><?php echo esc_html( get_option( 'bookly_l10n_option_service' ) ) ?></option>
-                            <option>Crown and Bridge</option>
-                            <option>Teeth Whitening</option>
-                            <option>Veneers</option>
-                            <option>Invisalign (invisable braces)</option>
-                            <option>Orthodontics (braces)</option>
-                            <option>Wisdom tooth Removal</option>
-                            <option>Root Canal Treatment</option>
-                            <option>Dentures</option>
+                <div class="ab-category-list ab-category-list-center ab-left">
+                    <label data-default="<?php echo get_option( 'ab_appearance_text_label_service' ); ?>" data-link-class="ab-text-option-service" class="ab-category-title text_service_label" id="ab-text-label-service" data-type="multiple" data-pk="1"><?php echo esc_html(get_option( 'ab_appearance_text_label_service' )) ?></label>
+                    <div class="ab-select-wrap">
+                        <select class="select-list ab-select-mobile ab-select-service" style="width: 100%">
+                            <option value="" class="editable" id="ab-text-option-service" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_option_service' ) ); ?>"><?php echo esc_attr( get_option( 'ab_appearance_text_option_service' ) ); ?></option>
+                            <option value="1">Crown and Bridge</option>
+                            <option value="2">Teeth Whitening</option>
+                            <option value="3">Veneers</option>
+                            <option value="4">Invisalign (invisable braces)</option>
+                            <option value="5">Orthodontics (braces)</option>
+                            <option value="6">Wisdom tooth Removal</option>
+                            <option value="7">Root Canal Treatment</option>
+                            <option value="8">Dentures</option>
                         </select>
                     </div>
                 </div>
-                <div class="ab-formGroup">
-                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array(
-                        'bookly_l10n_label_employee',
-                        'bookly_l10n_option_employee',
-                        'bookly_l10n_required_employee',
-                    ) ) ?>
-                    <div>
-                        <select class="ab-select-mobile ab-select-employee">
-                            <option value="0" id="bookly_l10n_option_employee"><?php echo esc_html( get_option( 'bookly_l10n_option_employee' ) ) ?></option>
-                            <option value="1" class="employee-name-price">Nick Knight (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 350 ) ?>)</option>
-                            <option value="-1" class="employee-name">Nick Knight</option>
-                            <option value="2" class="employee-name-price">Jane Howard (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 375 ) ?>)</option>
-                            <option value="-2" class="employee-name">Jane Howard</option>
-                            <option value="3" class="employee-name-price">Ashley Stamp (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 300 ) ?>)</option>
-                            <option value="-3" class="employee-name">Ashley Stamp</option>
-                            <option value="4" class="employee-name-price">Bradley Tannen (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 400 ) ?>)</option>
-                            <option value="-4" class="employee-name">Bradley Tannen</option>
-                            <option value="5" class="employee-name-price">Wayne Turner (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 350 ) ?>)</option>
-                            <option value="-5" class="employee-name">Wayne Turner</option>
-                            <option value="6" class="employee-name-price">Emily Taylor (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 350 ) ?>)</option>
-                            <option value="-6" class="employee-name">Emily Taylor</option>
-                            <option value="7" class="employee-name-price">Hugh Canberg (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 380 ) ?>)</option>
-                            <option value="-7" class="employee-name">Hugh Canberg</option>
-                            <option value="8" class="employee-name-price">Jim Gonzalez (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 390 ) ?>)</option>
-                            <option value="-8" class="employee-name">Jim Gonzalez</option>
-                            <option value="9" class="employee-name-price">Nancy Stinson (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 360 ) ?>)</option>
-                            <option value="-9" class="employee-name">Nancy Stinson</option>
-                            <option value="10" class="employee-name-price">Marry Murphy (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 350 ) ?>)</option>
-                            <option value="-10" class="employee-name">Marry Murphy</option>
+                <div class="ab-category-list ab-left">
+                    <label data-default="<?php echo get_option( 'ab_appearance_text_label_employee' ); ?>" data-link-class="ab-text-option-employee" class="ab-category-title text_employee_label" id="ab-text-label-employee" data-type="multiple" data-pk="1"><?php echo esc_html(get_option( 'ab_appearance_text_label_employee' )) ?></label>
+                    <div class="ab-select-wrap">
+                        <select class="select-list ab-select-mobile ab-select-employee" style="width: 100%">
+                            <option value="" class="editable" id="ab-text-option-employee" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_option_employee' ) ); ?>"><?php echo esc_attr( get_option( 'ab_appearance_text_option_employee' ) ); ?></option>
+                            <option value="1">Nick Knight</option>
+                            <option value="2">Jane Howard</option>
+                            <option value="3">Ashley Stamp</option>
+                            <option value="4">Bradley Tannen</option>
+                            <option value="5">Wayne Turner</option>
+                            <option value="6">Emily Taylor</option>
+                            <option value="7">Hugh Canberg</option>
+                            <option value="8">Jim Gonzalez</option>
+                            <option value="9">Nancy Stinson</option>
+                            <option value="10">Marry Murphy</option>
                         </select>
                     </div>
                 </div>
-                <div class="ab-formGroup">
-                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_number_of_persons', ) ) ?>
-                    <div>
-                        <select class="ab-select-mobile ab-select-number-of-persons">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                        </select>
-                    </div>
-                </div>
-                <?php if ( \BooklyLite\Lib\Config::isMultiplyAppointmentsEnabled() ) : ?>
-                    <div class="ab-formGroup">
-                        <?php do_action( 'bookly_multiply_appointments_render_appearance' ) ?>
-                    </div>
-                <?php endif ?>
-                <?php if ( \BooklyLite\Lib\Config::isChainAppointmentsEnabled() ) : ?>
-                    <div class="ab-formGroup">
-                        <label></label>
-                        <div>
-                            <button class="bookly-round" ><i class="bookly-icon-sm bookly-icon-plus"></i></button>
+                <button class="ab-right ab-mobile-next-step ladda-button orange zoom-in" onclick="return false">
+                    <span><?php _e( 'Next', 'ab' ) ?></span>
+                </button>
+            </div>
+            <div class="ab-mobile-step_2">
+                <div class="ab-row-fluid">
+                    <div class="ab-left ab-available-date">
+                        <label data-default="<?php echo get_option( 'ab_appearance_text_label_select_date' ); ?>" data-link-class="text_select_date_label" class="text_select_date_label ab_editable" id="ab-text-label-select_date" data-type="text" data-pk="1"><?php echo esc_html(get_option( 'ab_appearance_text_label_select_date' )) ?></label>
+                        <div class="ab-input-wrap">
+                            <span class="ab-requested-date-wrap">
+                               <input style="height: 30px!important;" class="ab-requested-date-from select-list" type="text" value="29 November, 2013">
+                            </span>
                         </div>
                     </div>
-                <?php endif ?>
-            </div>
-
-            <div class="ab-right ab-mobile-next-step ab-btn ab-none" onclick="return false">
-                <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_next' ), 'bookly-js-text-next' ) ?>
-            </div>
-        </div>
-        <div class="ab-mobile-step_2">
-            <div class="bookly-box">
-                <div class="ab-left">
-                    <div class="ab-available-date ab-left">
-                        <div class="ab-formGroup">
-                            <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_select_date', ) ) ?>
-                            <div>
-                               <input class="ab-date-from" style="background-color: #fff;" type="text" data-value="<?php echo date( 'Y-m-d' ) ?>" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bookly-week-days bookly-table ab-left">
-                        <?php foreach ( $wp_locale->weekday_abbrev as $weekday_abbrev ) : ?>
-                            <div>
-                                <div class="bookly-font-bold"><?php echo $weekday_abbrev ?></div>
+                    <div class="ab-left ab-available-days">
+                        <ul class="ab-week-days">
+                            <li>
+                                <div class="ab-bold"><?php _e('Sun', 'ab' ) ?></div>
+                                <!-- #11055: all days are checked by default -->
                                 <label class="active">
-                                    <input class="bookly-week-day" value="1" checked="checked" type="checkbox">
+                                    <input class="ab-week-day ab-week-day-1" value="1" checked="checked" type="checkbox">
                                 </label>
+                            </li>
+                            <li>
+                                <div class="ab-bold"><?php _e( 'Mon', 'ab' ) ?></div>
+                                <!-- #11055: all days are checked by default -->
+                                <label class="active">
+                                    <input class="ab-week-day ab-week-day-2" value="2" checked="checked" type="checkbox">
+                                </label>
+                            </li>
+                            <li>
+                                <div class="ab-bold"><?php _e( 'Tue', 'ab' ) ?></div>
+                                <!-- #11055: all days are checked by default -->
+                                <label class="active">
+                                    <input class="ab-week-day ab-week-day-3" value="3" checked="checked" type="checkbox">
+                                </label>
+                            </li>
+                            <li>
+                                <div class="ab-bold"><?php _e( 'Wed', 'ab' ) ?></div>
+                                <!-- #11055: all days are checked by default -->
+                                <label class="active">
+                                    <input class="ab-week-day ab-week-day-4" value="4" checked="checked" type="checkbox">
+                                </label>
+                            </li>
+                            <li>
+                                <div class="ab-bold"><?php _e( 'Thu', 'ab' ) ?></div>
+                                <!-- #11055: all days are checked by default -->
+                                <label class="active">
+                                    <input class="ab-week-day ab-week-day-5" value="5" checked="checked" type="checkbox">
+                                </label>
+                            </li>
+                            <li>
+                                <div class="ab-bold"><?php _e( 'Fri', 'ab' ) ?></div>
+                                <!-- #11055: all days are checked by default -->
+                                <label class="active">
+                                    <input class="ab-week-day ab-week-day-6" value="6" checked="checked" type="checkbox">
+                                </label>
+                            </li>
+                            <li>
+                                <div class="ab-bold"><?php _e( 'Sat', 'ab' ) ?></div>
+                                <!-- #11055: all days are checked by default -->
+                                <label class="active">
+                                    <input class="ab-week-day ab-week-day-7" value="7" checked="checked" type="checkbox">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="ab-left ab-time-range">
+                        <div class="ab-left ab-time-from">
+                            <label data-default="<?php echo get_option( 'ab_appearance_text_label_start_from' ); ?>" data-link-class="text_start_from_label" class="text_start_from_label ab_editable" id="ab-text-label-start_from" data-type="text" data-pk="1"><?php echo esc_html(get_option( 'ab_appearance_text_label_start_from' )) ?></label>
+                            <div class="ab-select-wrap">
+                                <select class="select-list ab-requested-time-from" style="width: auto">
+                                    <option value="00:00">12:00 am</option>
+                                    <option value="01:00">1:00 am</option>
+                                    <option value="02:00">2:00 am</option>
+                                    <option value="03:00">3:00 am</option>
+                                    <option value="04:00">4:00 am</option>
+                                    <option value="05:00">5:00 am</option>
+                                    <option value="06:00">6:00 am</option>
+                                    <option value="07:00">7:00 am</option>
+                                    <option value="08:00" selected="selected">8:00 am</option>
+                                    <option value="09:00">9:00 am</option>
+                                    <option value="10:00">10:00 am</option>
+                                    <option value="11:00">11:00 am</option>
+                                    <option value="12:00">12:00 pm</option>
+                                    <option value="13:00">1:00 pm</option>
+                                    <option value="14:00">2:00 pm</option>
+                                    <option value="15:00">3:00 pm</option>
+                                    <option value="16:00">4:00 pm</option>
+                                    <option value="17:00">5:00 pm</option>
+                                    <option value="18:00">6:00 pm</option>
+                                    <option value="19:00">7:00 pm</option>
+                                    <option value="20:00">8:00 pm</option>
+                                    <option value="21:00">9:00 pm</option>
+                                    <option value="22:00">10:00 pm</option>
+                                    <option value="23:00">11:00 pm</option>
+                                </select>
                             </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-                <div class="ab-time-range ab-left">
-                    <div class="ab-formGroup ab-time-from ab-left">
-                        <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_start_from', ) ) ?>
-                        <div>
-                            <select class="ab-select-time-from">
-                                <?php for ( $i = 28800; $i <= 64800; $i += 3600 ) : ?>
-                                    <option><?php echo \BooklyLite\Lib\Utils\DateTime::formatTime( $i ) ?></option>
-                                <?php endfor ?>
-                            </select>
+                        </div>
+                        <div class="ab-left ab-time-to">
+                            <label data-default="<?php echo get_option( 'ab_appearance_text_label_finish_by' ); ?>" data-link-class="text_finish_by_label" class="text_finish_by_label ab_editable" id="ab-text-label-finish_by" data-type="text" data-pk="1"><?php echo esc_html(get_option( 'ab_appearance_text_label_finish_by' )) ?></label>
+                            <div class="ab-select-wrap">
+                                <select class="select-list ab-requested-time-to" style="width: auto">
+                                    <option value="09:00">9:00 am</option>
+                                    <option value="10:00">10:00 am</option>
+                                    <option value="11:00">11:00 am</option>
+                                    <option value="12:00">12:00 pm</option>
+                                    <option value="13:00">1:00 pm</option>
+                                    <option value="14:00">2:00 pm</option>
+                                    <option value="15:00">3:00 pm</option>
+                                    <option value="16:00">4:00 pm</option>
+                                    <option value="17:00">5:00 pm</option>
+                                    <option value="18:00">6:00 pm</option>
+                                    <option value="19:00">7:00 pm</option>
+                                    <option value="20:00">8:00 pm</option>
+                                    <option value="21:00">9:00 pm</option>
+                                    <option value="22:00">10:00 pm</option>
+                                    <option value="23:00">11:00 pm</option>
+                                    <option value="23:59">12:00 am</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="ab-formGroup ab-time-to ab-left">
-                        <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_finish_by', ) ) ?>
-                        <div>
-                            <select class="ab-select-time-to">
-                                <?php for ( $i = 28800; $i <= 64800; $i += 3600 ) : ?>
-                                    <option<?php selected( $i == 64800 ) ?>><?php echo \BooklyLite\Lib\Utils\DateTime::formatTime( $i ) ?></option>
-                                <?php endfor ?>
-                            </select>
-                        </div>
-                    </div>
                 </div>
-            </div>
-            <div class="bookly-box bookly-nav-steps">
-                <div class="ab-right ab-mobile-prev-step ab-btn ab-none">
-                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_back' ), 'bookly-js-text-back' ) ?>
+                <div class="ab-row-fluid ab-nav-steps last-row ab-clear">
+                    <button class="ab-right ab-mobile-prev-step ladda-button orange zoom-in">
+                        <span><?php _e( 'Back', 'ab' ) ?></span>
+                    </button>
+                    <button class="ab-right ab-next-step ladda-button orange zoom-in">
+                        <span><?php _e( 'Next', 'ab' ) ?></span>
+                    </button>
                 </div>
-                <div class="bookly-next-step ab-btn">
-                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_next' ), 'bookly-js-text-next' ) ?>
-                </div>
-                <button class="bookly-go-to-cart bookly-round bookly-round-md ladda-button"><span><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
             </div>
         </div>
     </div>
 </div>
-<div style="display: none">
-    <?php foreach ( array( 'bookly_l10n_required_service', 'bookly_l10n_required_name', 'bookly_l10n_required_phone', 'bookly_l10n_required_email', 'bookly_l10n_required_employee', 'bookly_l10n_required_location' ) as $validator ) : ?>
-        <div id="<?php echo $validator ?>"><?php echo get_option( $validator ) ?></div>
-    <?php endforeach ?>
-</div>
-<style id="ab--style-arrow">
-    .picker__nav--next:before { border-left: 6px solid <?php echo get_option( 'bookly_app_color' ) ?>!important; }
-    .picker__nav--prev:before { border-right: 6px solid <?php echo get_option( 'bookly_app_color' ) ?>!important; }
-</style>
