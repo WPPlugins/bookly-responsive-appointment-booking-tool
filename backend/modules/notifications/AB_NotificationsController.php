@@ -5,9 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class AB_NotificationsController extends AB_Controller {
 
     public function index() {
-        wp_enqueue_style( 'ab-style', plugins_url( 'resources/css/ab_style.css', dirname(__FILE__).'/../../AB_Backend.php' ) );
-        wp_enqueue_style( 'ab-bootstrap', plugins_url( 'resources/bootstrap/css/bootstrap.min.css', dirname(__FILE__).'/../../AB_Backend.php' ) );
-        wp_enqueue_script( 'ab-bootstrap', plugins_url( 'resources/bootstrap/js/bootstrap.min.js', dirname(__FILE__).'/../../AB_Backend.php' ), array( 'jquery' ) );
+        $path = dirname( __DIR__ );
+        wp_enqueue_style( 'ab-style', plugins_url( 'resources/css/ab_style.css', $path ) );
+        wp_enqueue_style( 'ab-bootstrap', plugins_url( 'resources/bootstrap/css/bootstrap.min.css', $path ) );
+        wp_enqueue_script( 'ab-bootstrap', plugins_url( 'resources/bootstrap/js/bootstrap.min.js', $path ), array( 'jquery' ) );
 
 	    $this->notifications = array(
 		    'client_info' => array(
@@ -34,16 +35,6 @@ class AB_NotificationsController extends AB_Controller {
 			    'name'    => __( 'Evening notification with the next day agenda to Staff Member', 'ab' ),
 			    'subject' => __( 'Your agenda for [[TOMORROW_DATE]]', 'ab' ),
 			    'message' => wpautop( __( "Hello.\n\nYour agenda for tomorrow is:\n\n[[NEXT_DAY_AGENDA]]", 'ab' ) ),
-		    )
-	    );
-
-	    $this->settings = array(
-		    'media_buttons' => false,
-		    'tinymce' => array(
-			    'theme_advanced_buttons1' => 'formatselect,|,bold,italic,underline,|,' .
-				    'bullist,blockquote,|,justifyleft,justifycenter' .
-				    ',justifyright,justifyfull,|,link,unlink,|' .
-				    ',spellchecker,wp_fullscreen,wp_adv'
 		    )
 	    );
 

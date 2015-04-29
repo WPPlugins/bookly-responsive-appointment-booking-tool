@@ -1,5 +1,4 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<!-- ab-booking-info-third-preview -->
 <div class="ab-booking-form" style="overflow: hidden">
     <!-- Progress Tracker-->
     <?php $step = 5; include '_progress_tracker.php'; ?>

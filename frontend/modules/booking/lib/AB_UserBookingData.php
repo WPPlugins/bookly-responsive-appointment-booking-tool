@@ -44,11 +44,6 @@ class AB_UserBookingData {
     /**
      * @var string
      */
-    private $username;
-
-    /**
-     * @var string
-     */
     private $name;
 
     /**
@@ -67,11 +62,6 @@ class AB_UserBookingData {
     private $notes;
 
     /**
-     * @var bool
-     */
-    private $create_account;
-
-    /**
      * @var int
      */
     private $client_time_offset = 0;
@@ -80,6 +70,16 @@ class AB_UserBookingData {
      * @var array
      */
     private $available_days = array();
+
+    /**
+     * @var int
+     */
+    private $customer_id;
+
+    /**
+     * @var string
+     */
+    private $coupon;
 
     public function __construct( $form_id ) {
         $this->form_id = $form_id;
@@ -195,66 +195,68 @@ class AB_UserBookingData {
         /** @var wpdb $wpdb */
         global $wpdb;
 
-        add_filter('wp_mail_from', create_function( '$content_type',
-            'return get_option( \'ab_settings_sender_email\' ) == \'\' ?
-                get_option( \'admin_email\' ) : get_option( \'ab_settings_sender_email\' );'
-        ) );
-        add_filter('wp_mail_from_name', create_function( '$name',
-            'return get_option( \'ab_settings_sender_name\' ) == \'\' ?
-                get_option( \'blogname\' ) : get_option( \'ab_settings_sender_name\' );'
-        ) );
-
         // #11094: if customer with such name & e-mail exists, append new booking to him, otherwise - create new customer
-        $customer_exists = $wpdb->get_results( $wpdb->prepare(
-           'SELECT c.* FROM ab_customer c WHERE c.name = %s AND c.email = %s', $this->name, $this->email
+        $customer_exists = $wpdb->get_row( $wpdb->prepare(
+           'SELECT * FROM ab_customer WHERE name = %s AND email = %s', $this->name, $this->email
         ) );
 
-        if ( count( $customer_exists ) ) {
-            $customer =  new AB_Customer();
-            $customer->set( 'id',    $customer_exists[ 0 ]->id );
-            $customer->set( 'name',  $customer_exists[ 0 ]->name );
-            $customer->set( 'email', $customer_exists[ 0 ]->email );
-            $customer->set( 'phone', $customer_exists[ 0 ]->phone );
+        $customer =  new AB_Customer();
+        if ( $customer_exists ) {
+            $customer->set( 'id',    $customer_exists->id );
+            $customer->set( 'name',  $customer_exists->name );
+            $customer->set( 'email', $customer_exists->email );
+            $customer->set( 'phone', $customer_exists->phone );
         } else {
-            $customer =  new AB_Customer();
             $customer->set( 'name',  $this->name );
             $customer->set( 'email', $this->email );
             $customer->set( 'phone', $this->phone );
             $customer->save();
         }
-
-        if ( $this->create_account ) {
-            $user_id = username_exists( $this->username );
-            if ( !$user_id && email_exists( $this->email ) == false ) {
-                $random_password = wp_generate_password( 8, false );
-                $user_data = array(
-                    'user_pass'     => $random_password,
-                    'user_login'    => $this->username,
-                    'user_nicename' => $this->username,
-                    'user_email'    => $this->email,
-                    'first_name'    => $this->name,
-                );
-
-                wp_insert_user( $user_data );
-            }
-        }
+        $this->customer_id = $customer->get('id');
 
         $service = new AB_Service();
         $service->load( $this->service_id );
 
-        $appointment = new AB_Appointment();
-        $appointment->set( 'staff_id', $this->getStaffId() );
-        $appointment->set( 'service_id', $this->service_id );
-        $appointment->set( 'start_date', $this->booked_datetime );
-        $appointment->set( 'token' , md5($this->form_id) );
-        $appointment->set( 'notes', $this->notes );
-        $endDate = new DateTime($this->booked_datetime);
-        $di = "+ {$service->get( 'duration' )} sec";
-        $endDate->modify( $di );
+        $category = new AB_Category();
+        $category->load( $service->get( 'category_id' ) );
 
-        $appointment->set( 'end_date', $endDate->format('Y-m-d H:i:s') );
-        $appointment->set( 'customer_id', $customer->get( 'id' ) );
-        $appointment->save();
+        /**
+         * Get appointment, with same params.
+         * If it is -> create connection to this appointment,
+         * otherwise create appointment and connect customer to new appointment
+         */
+        $booking = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * from ab_appointment a WHERE a.staff_id = %d and a.service_id = %d and a.start_date = %s LIMIT 1;",
+                $this->getStaffId(), $this->service_id, $this->booked_datetime
+            )
+        );
+
+        $appointment = new AB_Appointment();
+        if ($booking) {
+            $appointment->load($booking->id);
+        } else {
+            $appointment->set('staff_id', $this->getStaffId() );
+            $appointment->set('service_id', $this->service_id );
+            $appointment->set('start_date', date('Y-m-d H:i:s', strtotime($this->booked_datetime)));
+
+            $endDate = new DateTime($this->booked_datetime);
+            $di = "+ {$service->get( 'duration' )} sec";
+            $endDate->modify( $di );
+
+            $appointment->set('end_date', $endDate->format('Y-m-d H:i:s'));
+            $appointment->save();
+        }
+
+        $customer_appointment = new AB_Customer_Appointment();
+        $customer_appointment->set('appointment_id', $appointment->get( 'id' ));
+        $customer_appointment->set('customer_id', $customer->get( 'id' ));
+        $customer_appointment->set('token' , md5($this->form_id));
+        $customer_appointment->set('notes', $this->notes);
+        $customer_appointment->save();
+
+        $staff = new AB_Staff();
+        $staff->load($this->getStaffId());
 
         return $appointment;
     }
@@ -266,10 +268,6 @@ class AB_UserBookingData {
     /**
      * @return string
      */
-    public function getRequestedDateFrom() {
-        return $this->requested_date_from;
-    }
-
     public function getFormattedRequestedDateFrom() {
         if ( get_option('ab_settings_no_current_day_appointments' ) ) {
             return date_i18n( 'j F, Y', strtotime('+1 day') );
@@ -280,58 +278,51 @@ class AB_UserBookingData {
     }
 
     /**
-     * @return array
-     */
-    public function getAvailableDays() {
-        return $this->available_days;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRequestedTimeFrom() {
-        if ( !$this->requested_time_from ) {
-            /** @var wpdb $wpdb */
-            global $wpdb;
-            $this->requested_time_from = $wpdb->get_var( "SELECT SUBSTRING_INDEX(MIN(start_time), ':', 2) AS min_end_time FROM ab_staff_schedule_item WHERE start_time IS NOT NULL" );
-        }
-
-        return $this->requested_time_from;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRequestedTimeTo() {
-        if ( !$this->requested_time_to ) {
-            /** @var wpdb $wpdb */
-            global $wpdb;
-            $this->requested_time_to = $wpdb->get_var( "SELECT SUBSTRING_INDEX(MAX(end_time), ':', 2) AS max_end_time FROM ab_staff_schedule_item WHERE end_time IS NOT NULL" );
-        }
-
-        return $this->requested_time_to;
-    }
-
-    /**
-     * @return int
-     */
-    public function getServiceId() {
-        return $this->service_id;
-    }
-
-    /**
-     * @param int $service_id
+     * Get service name.
      *
-     * @return mixed
+     * @return null|string
      */
-    public function getServiceNameById( $service_id ) {
+    public function getServiceName() {
         /** @var wpdb $wpdb */
         global $wpdb;
-        return $wpdb->get_row( $wpdb->prepare( 'SELECT abs.title as service_name FROM `ab_service` as abs WHERE abs.id = %d', $service_id ) );
+        return $wpdb->get_var( $wpdb->prepare(
+            'SELECT abs.title FROM `ab_service` as abs WHERE abs.id = %d', $this->getServiceId()
+        ) );
     }
 
-    public function getStaffIds() {
-        return $this->staff_id;
+    /**
+     * Get service price.
+     *
+     * @return null|int
+     */
+    public function getServicePrice()
+    {
+        /** @var wpdb $wpdb */
+        global $wpdb;
+        return $wpdb->get_var( $wpdb->prepare(
+            'SELECT price FROM ab_staff_service WHERE staff_id = %d AND service_id = %d',
+            $this->getStaffId(),
+            $this->getServiceId()
+        ) );
+    }
+
+    /**
+     * Get category name.
+     *
+     * @return string
+     */
+    public function getCategoryName() {
+        /** @var wpdb $wpdb */
+        global $wpdb;
+        $result = $wpdb->get_var( $wpdb->prepare(
+            'SELECT abc.name
+                FROM `ab_category` as abc
+                    LEFT JOIN `ab_service` as abs ON abs.category_id = abc.id
+                WHERE abs.id = %d',
+            $this->getServiceId()
+        ) );
+
+        return $result !== null ? $result : __( 'Uncategorized', 'ab' );
     }
 
     /**
@@ -340,106 +331,33 @@ class AB_UserBookingData {
     public function getStaffId() {
         if ( count( $this->staff_id ) == 1 ) {
             return $this->staff_id[ 0 ];
-        } elseif ( count( $this->staff_id ) > 1 ) {
-            $first_value = $this->staff_id[ 0 ];
-            for ( $i = 1; $i < count( $this->staff_id ); $i++ ) { // checking for uniqueness
-                return $this->staff_id[ $i ] == $first_value ? $first_value : 0;
-            }
         }
         return 0;
     }
 
     /**
-     * @param int $staff_id
+     * Get staff name.
      *
-     * @return mixed
+     * @return string
      */
-    public function getStaffNameById( $staff_id ) {
+    public function getStaffName() {
         /** @var wpdb $wpdb */
         global $wpdb;
-        return $wpdb->get_row( $wpdb->prepare( 'SELECT abs.full_name as staff_name FROM `ab_staff` as abs WHERE abs.id = %d', $staff_id ) );
-    }
 
-    /**
-     * Return "clean" Service's Price
-     *
-     * @param int $service_id
-     *
-     * @return mixed
-     */
-    public function getServicePriceById( $service_id ) {
-        /** @var wpdb $wpdb */
-        global $wpdb;
-        return $wpdb->get_row( $wpdb->prepare( 'SELECT abs.price as service_price FROM `ab_service` as abs WHERE abs.id = %d', $service_id ) );
-    }
+        $staff_id = $this->getStaffId();
 
-    /**
-     * Return Staff's price for Service
-     *
-     * @param int $service_id
-     * @param int $staff_id
-     *
-     * @return mixed
-     */
-    public function getServicePriceByStaffId( $service_id, $staff_id ) {
-        /** @var wpdb $wpdb */
-        global $wpdb;
-        return $wpdb->get_row( $wpdb->prepare( 'SELECT abss.price as service_price FROM `ab_staff_service` as abss WHERE abss.service_id = %d AND abss.staff_id = %d', $service_id, $staff_id ) );
-    }
-
-    /**
-     * @return string
-     */
-    public function getBookedDatetime() {
-        return $this->booked_datetime;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getCreateAccount() {
-        return $this->create_account;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsername() {
-        return $this->username;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail() {
-        return $this->email;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPhone() {
-        return $this->phone;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNotes() {
-        return $this->notes;
+        return $staff_id
+            ? $wpdb->get_var( $wpdb->prepare( 'SELECT abs.full_name FROM `ab_staff` as abs WHERE abs.id = %d', $staff_id ) )
+            : __( 'Any', 'ab' );
     }
 
     public function setPaymentId( $payment_id ) {
         $_SESSION['appointment_booking'][ $this->form_id ]['payment_id'] = $payment_id;
     }
 
+    /**
+     * @return null|int
+     */
     public function getPaymentId() {
         if ( isset($_SESSION['appointment_booking'][ $this->form_id ]['payment_id']) ) {
             return $_SESSION['appointment_booking'][ $this->form_id ]['payment_id'];
@@ -452,6 +370,9 @@ class AB_UserBookingData {
         $_SESSION['appointment_booking'][ $this->form_id ]['finished'] = $finished;
     }
 
+    /**
+     * @return bool|int
+     */
     public function getBookingFinished() {
         if ( isset($_SESSION['appointment_booking'][ $this->form_id ]['finished']) ) {
             return $_SESSION['appointment_booking'][ $this->form_id ]['finished'];
@@ -475,6 +396,9 @@ class AB_UserBookingData {
         $_SESSION[ 'appointment_booking' ][ $this->form_id ][ 'cancelled' ] = $cancelled;
     }
 
+    /**
+     * @return bool|int
+     */
     public function getBookingCancelled() {
         if ( isset( $_SESSION[ 'appointment_booking' ][ $this->form_id ][ 'cancelled' ] ) ) {
             return $_SESSION[ 'appointment_booking' ][ $this->form_id ][ 'cancelled' ];
@@ -496,5 +420,155 @@ class AB_UserBookingData {
 
     public function setClientTimeOffset($time_offset){
         $this->client_time_offset = $time_offset;
+    }
+
+    /**
+     * Get form id.
+     *
+     * @return int
+     */
+    public function getFormId() {
+        return $this->form_id;
+    }
+
+    /**
+     * Get service id.
+     *
+     * @return int
+     */
+    public function getServiceId() {
+        return $this->service_id;
+    }
+
+    /**
+     * Get staff ids.
+     *
+     * @return array
+     */
+    public function getStaffIds() {
+        return $this->staff_id;
+    }
+
+    /**
+     * Get requested date-from.
+     *
+     * @return string
+     */
+    public function getRequestedDateFrom() {
+        return $this->requested_date_from;
+    }
+
+    /**
+     * Get requested time-from.
+     *
+     * @return string
+     */
+    public function getRequestedTimeFrom() {
+        if ( !$this->requested_time_from ) {
+            /** @var wpdb $wpdb */
+            global $wpdb;
+            $this->requested_time_from = $wpdb->get_var(
+                'SELECT SUBSTRING_INDEX(MIN(start_time), ":", 2) AS min_end_time
+                    FROM ab_staff_schedule_item
+                 WHERE start_time IS NOT NULL'
+            );
+        }
+
+        return $this->requested_time_from;
+    }
+
+    /**
+     * Get requested time-to.
+     *
+     * @return string
+     */
+    public function getRequestedTimeTo() {
+        if ( !$this->requested_time_to ) {
+            /** @var wpdb $wpdb */
+            global $wpdb;
+            $this->requested_time_to = $wpdb->get_var(
+                'SELECT SUBSTRING_INDEX(MAX(end_time), ":", 2) AS max_end_time
+                    FROM ab_staff_schedule_item
+                 WHERE end_time IS NOT NULL'
+            );
+        }
+
+        return $this->requested_time_to;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBookedDatetime() {
+        return $this->booked_datetime;
+    }
+
+    /**
+     * Get email.
+     *
+     * @return string
+     */
+    public function getEmail() {
+        return $this->email;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * Get phone.
+     *
+     * @return string
+     */
+    public function getPhone() {
+        return $this->phone;
+    }
+
+    /**
+     * Get notes.
+     *
+     * @return string
+     */
+    public function getNotes() {
+        return $this->notes;
+    }
+
+    /**
+     * Get available days.
+     *
+     * @return array
+     */
+    public function getAvailableDays() {
+        return $this->available_days;
+    }
+
+    /**
+     * Get customer id
+     *
+     * @return int
+     */
+    public function getCustomerId(){
+        return $this->customer_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCoupon() {
+        return $this->coupon;
+    }
+
+    /**
+     * @param $coupon
+     */
+    public function setCoupon($coupon){
+        $_SESSION['appointment_booking'][ $this->form_id ]['coupon'] = $coupon;
+        $this->coupon = $coupon;
     }
 }

@@ -16,6 +16,10 @@ class AB_CompanyForm extends AB_Form {
         ));
     }
 
+    /**
+     * @param array $post
+     * @param array $files
+     */
     public function bind( array $post, array $files = array() ) {
 
         parent::bind( $post, $files );
@@ -50,7 +54,6 @@ class AB_CompanyForm extends AB_Form {
     }
 
     public function save() {
-
         foreach ( $this->data as $field => $value ) {
             update_option( $field, $value );
         }

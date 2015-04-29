@@ -17,10 +17,14 @@ class AB_Service extends AB_Entity {
             'price'       => array( 'format' => '%.2f', 'default' => '0' ),
             'category_id' => array( 'format' => '%d' ),
             'color'       => array( 'format' => '%s' ),
+            'capacity'    => array( 'format' => '%d', 'default' => '1' ),
         );
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function getTitleWithDuration() {
         return sprintf( '%s (%s)', $this->get( 'title' ), self::durationToString( $this->get( 'duration' ) ) );
     }
@@ -29,6 +33,7 @@ class AB_Service extends AB_Entity {
      * Convert number of seconds into string "[XX hr] XX min".
      *
      * @param int $duration
+     * @return string
      */
     public static function durationToString( $duration ) {
         $hours   = (int)( $duration / 3600 );

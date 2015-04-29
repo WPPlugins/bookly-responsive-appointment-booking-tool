@@ -101,16 +101,29 @@ jQuery(function ($) {
     });
 
     //Payment Tab
-    $('#ab_paypal_type').on('change', function() {
-        $('#light_notice').modal('show');
+    $('#ab_paypal_type,#ab_authorizenet_type,#ab_stripe,[name=ab_settings_coupons]').change(function() {
+        $('#lite_notice').modal('show');
+        $(this).val('disabled');
     });
 
-    $('.ab-help-info').show(function () {
-        $(this).popover({
-            trigger : 'hover',
-            content: $('#' + $(this).data('help_id')).html(),
-            html: true
-        });
+    $("#ab-payments-reset").on("click", function(event){
+        event.preventDefault();
+        $(this).closest('form').get(0).reset();
+    });
+
+    $('.ab-popover').popover({
+        trigger : 'hover'
+    });
+
+    $('.ab-popover-ext').popover({
+        content: function() {
+            return $('#' + $(this).data('ext_id')).html();
+        },
+        html: true
+    });
+
+    $('[name=ab_settings_google_client_id],[name=ab_settings_google_client_secret],.lite-help').on('click', function(){
+        $('#lite_notice').modal('show');
     });
 });
 

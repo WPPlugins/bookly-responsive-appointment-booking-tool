@@ -15,7 +15,7 @@
                                 <option value="<?php echo $user->ID ?>"><?php echo $user->display_name ?></option>
                             <?php endforeach ?>
                         </select>
-                      <img src="<?php echo plugins_url( 'resources/images/help.png', dirname(__FILE__).'/../../../AB_Backend.php' ) ?>" alt="" class="ab-help-info" data-help_id="ab-staff-help"/>
+                      <img src="<?php echo plugins_url( 'backend/resources/images/help.png', AB_PATH . '/main.php' ) ?>" alt="" class="ab-popover" data-ext_id="ab-staff-popover-ext"/>
                     </td>
                 </tr>
                 <tr class="form-field form-required">

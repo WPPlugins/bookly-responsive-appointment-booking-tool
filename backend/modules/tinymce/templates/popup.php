@@ -1,65 +1,76 @@
-<?php
-	if ( ! defined( 'ABSPATH' ) ) {
-		exit; // Exit if accessed directly
-	}
-	$calendar_img = defined( 'AB_TMCE_PATH' ) ? plugins_url( 'resources/images/calendar.png' , AB_TMCE_PATH ) : '';
-?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <div id="ab-tinymce-popup" style="display: none">
     <form id="ab-shortcode-form">
         <table>
             <tr>
-                <td><label for="ab-select-category"><?php _e( 'Default value for category select', 'ab' ); ?></label></td>
+                <td>
+                    <label for="ab-select-category"><?php _e( 'Default value for category select', 'ab' ); ?></label>
+                </td>
                 <td>
                     <select class="select-list" id="ab-select-category">
                         <option value=""><?php _e( 'Select category', 'ab' ); ?></option>
-                    </select><br/>
+                    </select>
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <input type="checkbox" id="ab-hide-categories"> <?php _e( 'Hide this field', 'ab' ); ?>
-                    <p><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'ab' ) ?><p>
+                    <input type="checkbox" id="ab-hide-categories" /> <?php _e( 'Hide this field', 'ab' ); ?>
+                    <p><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'ab' ) ?></p>
                 </td>
             </tr>
             <tr>
-                <td><label for="ab-select-service"><?php _e( 'Default value for service select', 'ab' ); ?></label></td>
+                <td>
+                    <label for="ab-select-service"><?php _e( 'Default value for service select', 'ab' ); ?></label>
+                </td>
                 <td>
                     <select class="select-list" id="ab-select-service">
                         <option value=""><?php _e('Select service') ?></option>
-                    </select><br/>
+                    </select>
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <input type="checkbox" id="ab-hide-services"> <?php _e( 'Hide this field', 'ab' ); ?>
-                    <p><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'ab' ) ?><p>
+                    <input type="checkbox" id="ab-hide-services" /> <?php _e( 'Hide this field', 'ab' ); ?>
+                    <p><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'ab' ) ?></p>
                 </td>
             </tr>
             <tr>
-                <td><label for="ab-select-employee"><?php _e('Default value for employee select', 'ab') ?></label></td>
+                <td>
+                    <label for="ab-select-employee"><?php _e('Default value for employee select', 'ab') ?></label>
+                </td>
                 <td>
                     <select class="select-list ab-select-mobile" id="ab-select-employee">
-                        <option value=""><?php _e('Any') ?></option>
-                    </select><br/>
+                        <option value=""><?php _e( 'Any', 'ab' ) ?></option>
+                    </select>
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <input type="checkbox" id="ab-hide-employee"> <?php _e( 'Hide this field', 'ab' ); ?>
+                    <input type="checkbox" id="ab-hide-employee" /> <?php _e( 'Hide this field', 'ab' ); ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="ab-hide-available"><?php _e('"I\'m available on …" block', 'ab') ?></label>
+                </td>
+                <td>
+                    <input type="checkbox" id="ab-hide-available" /> <?php _e( 'Hide this block', 'ab' ) ?>
                 </td>
             </tr>
             <tr>
                 <td></td>
-                <td><input class="button button-primary" id="ab-insert-shortcode" type="submit" value="<?php _e( 'Insert', 'ab' ); ?>"/></td>
+                <td>
+                    <input class="button button-primary" id="ab-insert-shortcode" type="submit" value="<?php _e( 'Insert', 'ab' ); ?>" />
+                </td>
             </tr>
         </table>
     </form>
 </div>
 <style type="text/css">
-#ab-shortcode-form { margin-top: 50px; }
+#ab-shortcode-form { margin-top: 15px; }
 #ab-shortcode-form table { width: 100%; }
 #ab-shortcode-form table td { padding: 5px; vertical-align: 0; }
 #ab-shortcode-form table td select { width: 100%; margin-bottom: 5px; }
@@ -69,7 +80,7 @@
   height: 16px;
   vertical-align: text-top;
   margin: 0 2px;
-  background: url("<?php echo $calendar_img ?>") 0 0 no-repeat;
+  background: url("<?php echo plugins_url( 'resources/images/calendar.png' , __DIR__ ) ?>") 0 0 no-repeat;
 }
 .ab-booking_form-units {
     width: 17%;
@@ -84,6 +95,7 @@ jQuery(function ($) {
         $hide_categories = $('#ab-hide-categories'),
         $hide_services   = $('#ab-hide-services'),
         $hide_staff      = $('#ab-hide-employee'),
+        $hide_available  = $('#ab-hide-available'),
         $add_button      = $('#add-ap-booking'),
         $insert          = $('#ab-insert-shortcode'),
         abCategories     = <?php echo $categoriesJson ?>,
@@ -91,7 +103,7 @@ jQuery(function ($) {
         abServices       = <?php echo $servicesJson ?>;
 
     $add_button.on('click', function () {
-        window.parent.tb_show('Insert Appointment Booking', this.href);
+        window.parent.tb_show(<?php echo json_encode( __( 'Insert Appointment Booking Form', 'ab' ) ) ?>, this.href);
     });
 
     var AB_Category = Backbone.Model.extend();
@@ -366,6 +378,10 @@ jQuery(function ($) {
             insert += ' he="1"';
         }
 
+        if ($hide_available.is(':checked')) {
+            insert += ' ha="1"';
+        }
+
         insert += ']';
 
         window.send_to_editor(insert);
@@ -376,6 +392,7 @@ jQuery(function ($) {
         $hide_categories.prop('checked', false);
         $hide_services.prop('checked', false);
         $hide_staff.prop('checked', false);
+        $hide_available.prop('checked', false);
 
         window.parent.tb_remove();
         return false;

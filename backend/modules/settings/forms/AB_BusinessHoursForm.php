@@ -30,6 +30,11 @@ class AB_BusinessHoursForm extends AB_Form {
         }
     }
 
+    /**
+     * @param string $field_name
+     * @param bool $is_start
+     * @return string
+     */
     public function renderField($field_name = 'ab_settings_monday', $is_start = true) {
 
         $time_format    = get_option( 'time_format' );
@@ -38,11 +43,11 @@ class AB_BusinessHoursForm extends AB_Form {
         $time_end       = new DateTime( AB_StaffScheduleItem::WORKING_END_TIME, new DateTimeZone( 'UTC' ) );
         $ts_length      = '+' . $ts_length . ' min';
         $option_name    = $field_name . ( $is_start ? '_start' : '_end' );
-	    $class_name     = $is_start ? 'select_start' : 'select_end';
+        $class_name     = $is_start ? 'select_start' : 'select_end';
         $selected_value = get_option( $option_name );
         $output         = "<select name={$option_name} class={$class_name}>";
 
-	      if( $is_start ) $output .= "<option value=''>" . __( 'OFF','ab' ) . "</option>";
+        if( $is_start ) $output .= "<option value=''>" . __( 'OFF','ab' ) . "</option>";
 
         while ( $time_output <= $time_end ) {
             $value    = $time_output->format( 'H:i' );

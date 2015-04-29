@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo $current_url . '&type=_company' ?>" enctype="multipart/form-data" class="ab-staff-form">
+<form method="post" action="<?php echo add_query_arg( 'type', '_company' ) ?>" enctype="multipart/form-data" class="ab-staff-form">
 
     <?php if (isset($message_c)) : ?>
         <div id="message" style="margin: 0px!important;" class="updated below-h2">

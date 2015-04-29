@@ -1,7 +1,6 @@
 jQuery(function($) {
 
     var $name_input = $('#ab-newstaff-fullname'),
-        $list_item_number = $('#ab-list-item-number'),
         $wp_user_select = $('#ab-newstaff-wpuser'),
         $staff_member = $('.ab-staff-member'),
         $edit_form = $('#ab-edit-staff-member'),
@@ -9,14 +8,14 @@ jQuery(function($) {
 
     // Saves new staff form
     $('#ab-save-newstaff').bind('click', function () {
-        $('#light_notice').modal('show');
+        $('#lite_notice').modal('show');
     });
 
     // Save new staff on enter press
     $name_input.bind('keypress', function (e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) {
-            $('#light_notice').modal('show');
+            $('#lite_notice').modal('show');
         }
     });
 
@@ -116,8 +115,8 @@ jQuery(function($) {
                         });
 
                         $('.ab-service-checkbox',services_form).bind('change', function(){
-                            var $price = $('.ab-price[name="price['+$(this).val()+']"]');
-                            $(this).is(':checked') ? $price.removeAttr('disabled') : $price.attr('disabled', true);
+                            var $input_fields = $('.ab-price[name="price['+$(this).val()+']"]').add('.ab-price[name="capacity['+$(this).val()+']"]');
+                            $(this).is(':checked') ? $input_fields.removeAttr('disabled') : $input_fields.attr('disabled', true);
                         });
 
                         // Saves services
@@ -129,6 +128,12 @@ jQuery(function($) {
                         });
 
                         auto_tick_checkboxes();
+
+                        // On click on 'Add Coupon' button.
+                        $('[name^=capacity]').on('change', function(e) {
+                            $('#lite_notice').modal('show');
+                            $(this).val(1);
+                        });
                     });
                 }
             });
@@ -163,6 +168,29 @@ jQuery(function($) {
 
                             $('.working-end', schedule_container).each(function () {
                                 $(this).val($(this).data('default_value'));
+                            });
+
+                            // reset breaks
+                            $.ajax({
+                                url     : ajaxurl,
+                                type    : 'POST',
+                                data    : { action : 'ab_reset_breaks', breaks : $.parseJSON($(this).attr('default-breaks'))},
+                                success : function(response) {
+                                    var days = $.parseJSON(response);
+                                    for (var k in days) {
+                                        var $content = $(days[k]);
+                                        $("[data-id=" + k +"] .breaks", schedule_container).html($content);
+
+                                        $content.find('.break-interval').bind('click', function(){
+                                            markBreakIntervalActive.call($(this));
+                                        });
+
+                                        $content.find('.break-interval-wrapper .delete-break').bind('click', function(){
+                                            deleteStaffScheduleBreakInterval.call($(this));
+                                        });
+                                        schedule_container.find('.ab-popup-wrapper').ab_popup();
+                                    }
+                                }
                             });
                         });
 
@@ -276,7 +304,7 @@ jQuery(function($) {
                                     working_end            : $row.find('.working-end > option:selected').val(),
                                     start_time             : $table.find('.break-start > option:selected').val(),
                                     end_time               : $table.find('.break-end > option:selected').val(),
-                                    staff_schedule_item_id : $row.data('schedule_item_id')
+                                    staff_schedule_item_id : $row.data('staff_schedule_item_id')
                                 };
 
                             if ($break_interval_wrapper.data('break_id')) {
@@ -395,12 +423,12 @@ jQuery(function($) {
 
     function helpInit() {
         // Popovers initialization.
-        $('.ab-help-info').show(function () {
-            $(this).popover({
-                trigger : 'hover',
-                content: $('#' + $(this).data('help_id')).html(),
-                html: true
-            });
+        $('.ab-popover-ext').popover({
+            trigger : 'hover',
+            content: function() {
+                return $('#' + $(this).data('ext_id')).html()
+            },
+            html: true
         });
     }
 

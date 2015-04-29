@@ -21,7 +21,7 @@ include 'forms/widget/AB_TimeChoiceWidget.php';
 class AB_StaffController extends AB_Controller {
 
     public function renderStaffMembers() {
-        $path = dirname( dirname( __FILE__ ) );
+        $path = dirname( __DIR__ );
         wp_enqueue_style( 'ab-style', plugins_url( 'resources/css/ab_style.css', $path ) );
         wp_enqueue_style( 'ab-staff', plugins_url( 'resources/css/staff.css', __FILE__ ) );
         wp_enqueue_style( 'ab-bootstrap', plugins_url( 'resources/bootstrap/css/bootstrap.min.css', $path ) );
@@ -64,7 +64,12 @@ class AB_StaffController extends AB_Controller {
         $this->form = new AB_StaffMemberNewForm();
         $this->collection = $this->getWpdb()->get_results( "SELECT * FROM ab_staff LIMIT 1" );
         if ( !isset ( $this->active_staff_id ) ) {
-            $this->active_staff_id = $this->collection ? $this->collection[0]->id : 0;
+            if ( $this->hasParameter( 'staff_id' ) ) {
+                $this->active_staff_id = $this->getParameter( 'staff_id' );
+            }
+            else {
+                $this->active_staff_id = $this->collection ? $this->collection[0]->id : 0;
+            }
         }
 
         $this->render( 'list' );
@@ -72,34 +77,73 @@ class AB_StaffController extends AB_Controller {
 
     public function executeStaffServices() {
         $this->form = new AB_StaffServicesForm();
-        $this->form->load($this->getParameter( 'id' ));
-        $this->staff_id = $this->getParameter( 'id' );
+        $this->form->load( 1 );
+        $this->staff_id = 1;
         $this->render( 'services' );
         exit;
     }
 
     public function executeStaffSchedule() {
         $staff = new AB_Staff();
-        $staff->load( $this->_post['id'] );
+        $staff->load( 1 );
         $this->schedule_list = $staff->getScheduleList();
+        $this->staff_id      = 1;
         $this->render( 'schedule' );
         exit;
     }
 
     public function executeStaffScheduleUpdate() {
         $this->form = new AB_StaffScheduleForm();
-        $this->form->bind($this->getPost());
+        $this->form->bind( $this->getPostParameters() );
         $this->form->save();
         exit;
     }
 
-    public function executeStaffScheduleHandleBreak() {
-        $_post      = $this->getPost();
+    /**
+     *
+     * @throws Exception
+     */
+    public function executeResetBreaks() {
+        global $wpdb;
+        $breaks = $this->getParameter( 'breaks' );
 
-        $start_time = $_post['start_time'];
-        $end_time   = $_post['end_time'];
-        $working_start = $_post['working_start'];
-        $working_end = $_post['working_end'];
+        // remove all breaks for staff member
+        $break = new AB_ScheduleItemBreak();
+        $break->removeBreaksByStaffId( $breaks[ 'staff_id' ] );
+        $html_breaks = array();
+
+        // restore previous breaks
+        if (isset($breaks['breaks']) && is_array($breaks['breaks'])) {
+            $query = "INSERT INTO ab_schedule_item_break (staff_schedule_item_id, start_time, end_time) VALUES ";
+
+            foreach ($breaks['breaks'] as $day) {
+                $query .= "($day[staff_schedule_item_id], '$day[start]', '$day[end]'), ";
+            }
+            $query = rtrim($query, ", ");
+            $wpdb->get_results($query);
+        }
+
+        $staff = new AB_Staff();
+        $staff->load( $breaks['staff_id'] );
+
+        // make array with breaks (html) for each day
+        foreach ($staff->getScheduleList() as $list_item) {
+            $html_breaks[$list_item->id] = $this->render("_breaks", array(
+                'day_is_not_available' => null === $list_item->start_time,
+                'list_item' => $list_item,
+                'time_format' => get_option( 'time_format' ),
+            ), false);
+        }
+
+        echo json_encode($html_breaks);
+        exit();
+    }
+
+    public function executeStaffScheduleHandleBreak() {
+        $start_time    = $this->getParameter( 'start_time' );
+        $end_time      = $this->getParameter( 'end_time' );
+        $working_start = $this->getParameter( 'working_start' );
+        $working_end   = $this->getParameter( 'working_end' );
 
         if ( strtotime( date( 'Y-m-d ' . $start_time ) ) >= strtotime( date( 'Y-m-d ' . $end_time ) ) ) {
             echo json_encode( array(
@@ -110,9 +154,9 @@ class AB_StaffController extends AB_Controller {
         }
 
         $staffScheduleItem = new AB_StaffScheduleItem();
-        $staffScheduleItem->load( $_post['staff_schedule_item_id'] );
+        $staffScheduleItem->load( $this->getParameter( 'staff_schedule_item_id' ) );
 
-        $break_id = isset( $_post['break_id'] ) ? $_post['break_id'] : 0;
+        $break_id = $this->getParameter( 'break_id', 0 );
 
         $in_working_time = $working_start <= $start_time && $start_time <= $working_end
             && $working_start <= $end_time && $end_time <= $working_end;
@@ -142,7 +186,7 @@ class AB_StaffController extends AB_Controller {
             ) );
         } else {
             $this->form = new AB_StaffScheduleItemBreakForm();
-            $this->form->bind( $this->getPost() );
+            $this->form->bind( $this->getPostParameters() );
 
             $staffScheduleItemBreak = $this->form->save();
             if ( $staffScheduleItemBreak ) {
@@ -188,7 +232,7 @@ class AB_StaffController extends AB_Controller {
                                                   </div>
                                               </div>
                                           </div>
-                                          <img class="delete-break" src="' . plugins_url( 'resources/images/delete_cross.png', dirname(__FILE__).'/../../AB_Backend.php' ) . '" />
+                                          <img class="delete-break" src="' . plugins_url( 'backend/resources/images/delete_cross.png', AB_PATH . '/main.php' ) . '" />
                                        </div>'
                 ) );
             } else {
@@ -204,14 +248,14 @@ class AB_StaffController extends AB_Controller {
 
     public function executeDeleteStaffScheduleBreak() {
         $break = new AB_ScheduleItemBreak();
-        $break->load( $this->_post['id'] );
+        $break->load( 1 );
         $break->delete();
         exit;
     }
 
     public function executeStaffServicesUpdate() {
         $this->form = new AB_StaffServicesForm();
-        $this->form->bind($this->getPost());
+        $this->form->bind( $this->getPostParameters() );
         $this->form->save();
         exit;
     }
@@ -219,29 +263,37 @@ class AB_StaffController extends AB_Controller {
     public function executeEditStaff() {
         $this->form = new AB_StaffMemberEditForm();
         $this->staff = new AB_Staff();
-        $this->staff->load( $this->_get['id'] );
-	      if(isset($_SESSION['was_update'])){
-		      unset($_SESSION['was_update']);
-		      $this->update = true;
-		      $this->render( 'edit');
-	      }else{
-		      $this->render('edit');
-	      }
+        $this->staff->load( 1 );
+        $staff_errors = array();
+
+        if ( isset( $_SESSION['was_update'] ) ) {
+            unset($_SESSION['was_update']);
+            $this->update = true;
+        }
+
+        $this->render('edit', array(
+            'staff_errors' => $staff_errors
+        ));
         exit;
     }
 
     public function updateStaff() {
         $form = new AB_StaffMemberEditForm();
-        $form->bind($this->getPost(), $this->getFiles());
-        $form->save();
-        // Set staff id to load the form for.
-        $this->active_staff_id = $_POST['id'];
-        $_SESSION['was_update'] = true;
+        $form->bind( $this->getPostParameters(), $_FILES );
+        $result = $form->save();
+
+        $this->active_staff_id = 1;
+
+        if ($result === false){
+
+        }else{
+            $_SESSION['was_update'] = true;
+        }
     }
 
     public function executeDeleteStaffAvatar() {
         $staff = new AB_Staff();
-        $staff->load( $this->_post['id'] );
+        $staff->load( 1 );
         unlink( $staff->get( 'avatar_path' ) );
         $staff->set( 'avatar_url', '' );
         $staff->set( 'avatar_path', '' );
@@ -250,19 +302,18 @@ class AB_StaffController extends AB_Controller {
     }
 
     public function executeStaffHolidays() {
-        $this->id = isset( $this->_post['id'] ) ? intval( $this->_post['id'] ) : false;
+        $this->id = $this->getParameter( 'id', 0 );
         $this->holidays = $this->getHolidays( $this->id );
         $this->render('holidays');
         exit;
     }
 
     public function executeStaffHolidaysUpdate() {
-
-        $id         = $this->getParameter('id');
-        $holiday    = $this->getParameter('holiday') == 'true';
-        $repeat     = $this->getParameter('repeat') == 'true';
-        $day        = $this->getParameter('day', false);
-        $staff_id   = $this->getParameter('staff_id');
+        $id         = $this->getParameter( 'id' );
+        $holiday    = $this->getParameter( 'holiday' ) == 'true';
+        $repeat     = $this->getParameter( 'repeat' ) == 'true';
+        $day        = $this->getParameter( 'day', false );
+        $staff_id   = $this->getParameter( 'staff_id' );
 
         if ( $staff_id ) {
             // update or delete the event

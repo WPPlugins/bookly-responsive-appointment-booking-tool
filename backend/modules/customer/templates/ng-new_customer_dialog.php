@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <div>
   <a href=#ab_new_customer_dialog class="{{btn_class}}" data-toggle=modal data-backdrop={{backdrop}}><?php _e( 'New customer' , 'ab' ) ?></a>
   <div id=ab_new_customer_dialog class="modal hide fade" tabindex=-1 role=dialog aria-labelledby=myModalLabel aria-hidden=true>
@@ -42,7 +43,7 @@
         </div>
       </form>
       <div ng-show=loading class=loading-indicator>
-        <img src="<?php echo plugins_url( 'resources/images/ajax_loader_32x32.gif', dirname(__FILE__) . '/../../../AB_Backend.php' ) ?>" alt="" />
+        <img src="<?php echo plugins_url( 'backend/resources/images/ajax_loader_32x32.gif', AB_PATH . '/main.php' ) ?>" alt="" />
       </div>
     </div>
   </div>

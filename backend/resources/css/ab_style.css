@@ -16,12 +16,17 @@ input[type='password'] { height: 30px!important; }
 .ab-rtext { text-align: right; }
 .ab-ltext { text-align: left; }
 .ab-update-button { margin-right: 10px; }
-.ab-help-info + .popover { width: 280px!important; }
 .left-margin { margin-left: 330px; }
+.ab-appointment-popup { overflow: visible; }
 #ab-staff-delete { position: absolute; top: 15px; left: 320px; }
 ul.wp-submenu {
   margin: 0;
 }
+
+.ab-popover + .popover, .ab-popover-ext + .popover { width: 280px!important; }
+.ab-popover, .ab-popover-ext { max-width: 25px; max-height: 25px; cursor: pointer; margin-left: 10px; }
+.ab-popover + .popover.right .arrow, .ab-popover-ext + .popover.right .arrow { margin-left: 0!important; }
+
 body { background: none!important; }
 .ab-title {
   font-size: 23px;
@@ -159,25 +164,14 @@ body { background: none!important; }
   position: absolute;
 }
 
-#ab-staff-services .spinner { float: left }
-
 .ab-popup .ab-arrow,
 .ab_jcal_popup .ab-arrow { left: 6px; top: -15px; }
 .ab-content label { white-space: nowrap; }
 .ab-content #ab-newstaff-fullname { width: 160px; }
 .ab-content td { white-space: nowrap; padding: 5px; border: 0!important; }
 .staff-popup-wrapper .ab-popup .ab-arrow { left: 34px; }
-.ab-help-info { max-width: 25px; max-height: 25px; cursor: pointer; margin-left: 10px; }
 .ab-staff-form { max-width: 500px; }
 .ab-staff-form table td { padding: 5px; }
-#ab-staff-services ul ul li { margin-left: 20px; }
-#ab-staff-services ul ul li.ab-services-category { margin: 25px 20px 15px 20px; }
-#ab-staff-services ul ul li ul li { margin-left: 20px; overflow: hidden; }
-#ab-staff-services ul ul li ul li .ab-price { width: 60px; margin: 0 0 0 5px; text-align: right; }
-#ab-staff-services ul ul li ul li .ab-list-title { margin: 5px 5px 0 0; }
-#ab-staff-services { max-width: 590px; }
-#ab-staff-services #ab-staff-services-update { margin-left: 115px; }
-.ab-help-info + .popover.right .arrow { margin-left: 0!important; }
 
 .ab-static-width { width: 160px; }
 .ab-full-width { margin-left: 175px; float: none; }
@@ -368,6 +362,11 @@ input.ab-sender {
  -webkit-box-shadow: 0px -3px 3px #5f6267;
 }
 
+.ab-nav-tabs .ab-step-tabs > a:hover {
+  background: none;
+  border: 1px solid transparent;
+}
+
 /* Purchase Code */
 .purchase-code {
     width: 320px!important;
@@ -409,7 +408,7 @@ input.appearance-color-picker{
 .editable-click {
     cursor: pointer;
 }
-.ab-wrapper-content .select-list {
+.ab-first-step .select-list {
     background: transparent;
 }
 

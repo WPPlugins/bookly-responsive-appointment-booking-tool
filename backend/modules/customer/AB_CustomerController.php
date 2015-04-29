@@ -7,11 +7,11 @@ include 'forms/AB_CustomerForm.php';
 class AB_CustomerController extends AB_Controller {
 
     public function index() {
-        if (count($this->getPost())){
+        if ( !empty ( $_POST )){
             $this->importCustomers();
         }
 
-        $path = dirname( dirname(__FILE__) );
+        $path = dirname( __DIR__ );
 
         wp_enqueue_style( 'ab-style', plugins_url( 'resources/css/ab_style.css', $path ) );
         wp_enqueue_style( 'ab-bootstrap', plugins_url( 'resources/bootstrap/css/bootstrap.min.css', $path ) );
@@ -26,42 +26,11 @@ class AB_CustomerController extends AB_Controller {
     }
 
     /**
-     * Get Amount of Payments via PayPal and Last and Total Appointments
-     *
-     * @param string $query
-     * @return mixed $query
-     */
-    public function getCustomerData( $query ) {
-        $wpdb = $this->getWpdb();
-        $query = $wpdb->get_results( $query );
-        if ( count( $query ) ) {
-            foreach( $query as $num => $customer_data ) {
-                // get Total Appointments
-                $query[ $num ]->total_appointments = $wpdb->get_var("
-                   SELECT COUNT(a.id) as total_appointments
-                   FROM ab_appointment a
-                   WHERE a.customer_id = {$customer_data->id}
-                ");
-                // get Last Appointment
-                $query[ $num ]->last_appointment = $wpdb->get_var("
-                    SELECT MAX(a.start_date) as last_appointment
-                    FROM ab_appointment a
-                    WHERE a.customer_id = {$customer_data->id}
-                ");
-                $query[ $num ]->last_appointment = AB_CommonUtils::getFormattedDateTime(
-                    $query[ $num ]->last_appointment
-                );
-
-                $query[ $num ]->payments = 0;
-            }
-        }
-        return $query;
-    } // getCustomerData
-
-    /**
      * Get list of customers.
      */
     public function executeGetCustomers() {
+        $wpdb = $this->getWpdb();
+
         $response = array(
             'status' => 'ok',
             'data'   => array(
@@ -72,33 +41,45 @@ class AB_CustomerController extends AB_Controller {
             )
         );
 
-        $page   = (int) ( $this->_post[ 'page' ] ? $this->_post[ 'page' ] : 1 );
-        $sort   = in_array( $this->_post[ 'sort' ], array( 'name', 'phone', 'email' ) ) ? $this->_post[ 'sort' ] : 'name';
-        $order  = in_array( $this->_post[ 'order' ], array( 'asc', 'desc' )) ? $this->_post[ 'order' ] : 'asc';
-        $filter = $this->_post[ 'filter' ] ? $this->_post[ 'filter' ] : '';
+        $page   = intval( $this->getParameter( 'page' ) );
+        $sort   = in_array( $this->getParameter( 'sort' ), array( 'name', 'phone', 'email', 'notes', 'last_appointment', 'total_appointments', 'payments' ) )
+            ? $this->getParameter( 'sort' ) : 'name';
+        $order  = in_array( $this->getParameter( 'order' ), array( 'asc', 'desc' ) ) ? $this->getParameter( 'order' ) : 'asc';
+        $filter = $wpdb->_real_escape( $this->getParameter( 'filter' ) );
 
         $items_per_page = 20;
-        $total = $this->getWpdb()->get_var( 'SELECT COUNT(*) FROM `ab_customer`' );
+        $total = $wpdb->get_var( 'SELECT COUNT(*) FROM `ab_customer`' );
         $pages = ceil( $total / $items_per_page );
         if ( $page < 1 || $page > $pages ) {
             $page = 1;
         }
 
         if ( $total ) {
-            $query = 'SELECT * FROM `ab_customer`';
-
+            $query = "SELECT `c`.*, MAX(`a`.`start_date`) AS `last_appointment`, COUNT(`a`.`id`) AS `total_appointments`,  COALESCE(SUM(`p`.`total`),0) AS `payments`
+                        FROM `ab_customer` `c`
+                        LEFT JOIN `ab_customer_appointment` `ca` ON `ca`.`customer_id` = `c`.`id`
+                        LEFT JOIN `ab_appointment` `a` ON `a`.`id` = `ca`.`appointment_id`
+                        LEFT JOIN `ab_payment` `p` ON `p`.`appointment_id` = `a`.`id` and `p`.`customer_id`  = `c`.`id`";
             // WHERE
             if ( $filter !== '' ) {
-                $query .= " WHERE name LIKE '%{$filter}%' OR phone  LIKE '%{$filter}%' OR  email LIKE '%{$filter}%'";
+                $query .= " WHERE `c`.`name` LIKE '%{$filter}%' OR `c`.`phone` LIKE '%{$filter}%' OR `c`.`email` LIKE '%{$filter}%'";
             }
+            // GROUP BY
+            $query .= ' GROUP BY `c`.`id`';
             // ORDER BY
             $query .= " ORDER BY {$sort} {$order}";
             // LIMIT
             $start = ( $page - 1) * $items_per_page;
             $query .= " LIMIT {$start}, {$items_per_page}";
-            $customer_data = self::getCustomerData( $query );
+
+            $data = $wpdb->get_results( $query );
+            array_walk( $data, function ( $row ) {
+                $row->last_appointment = AB_CommonUtils::getFormattedDateTime( $row->last_appointment );
+                $row->payments = AB_CommonUtils::formatPrice( $row->payments );
+            } );
+
             // Populate response.
-            $response[ 'data' ][ 'customers' ]   = $customer_data;
+            $response[ 'data' ][ 'customers' ]   = $data;
             $response[ 'data' ][ 'total' ]       = $total;
             $response[ 'data' ][ 'pages' ]       = $pages;
             $response[ 'data' ][ 'active_page' ] = $page;
@@ -110,14 +91,16 @@ class AB_CustomerController extends AB_Controller {
 
     /**
      * Create or edit a customer.
+     *
+     * @Security user
      */
     public function executeSaveCustomer() {
         $response = array();
         $form = new AB_CustomerForm();
 
         do {
-            if ( $this->_post[ 'name' ] !== '' ) {
-                $form->bind( $this->getPost() );
+            if ( $this->getParameter( 'name' ) !== '' ) {
+                $form->bind( $this->getPostParameters() );
                 /** @var AB_Customer $customer */
                 $customer = $form->save();
                 if ( $customer ) {
@@ -129,9 +112,9 @@ class AB_CustomerController extends AB_Controller {
                         'email'   => $customer->email,
                         'notes'   => $customer->notes,
                         'jsonString' => json_encode( array(
-                            'name'    => $customer->name,
-                            'phone'   => $customer->phone,
-                            'email'   => $customer->email,
+                            'name'  => $customer->name,
+                            'phone' => $customer->phone,
+                            'email' => $customer->email,
                             'notes' => $customer->notes
                         ) )
                     );
@@ -150,7 +133,9 @@ class AB_CustomerController extends AB_Controller {
      * Import customers from CSV.
      */
     private function importCustomers() {
-        $csv_mimetypes = array(
+        @ini_set( 'auto_detect_line_endings', true );
+
+        $csv_mime_types = array(
             'text/csv',
             'application/csv',
             'text/comma-separated-values',
@@ -159,17 +144,17 @@ class AB_CustomerController extends AB_Controller {
             'application/vnd.msexcel'
         );
 
-        if (in_array($this->_files['importCustomers']['type'], $csv_mimetypes)) {
-            $file = fopen($this->_files['importCustomers']['tmp_name'], "r");
-            while ($line = fgetcsv($file)){
-                if (!empty($line[0])){
+        if ( in_array( $_FILES[ 'import_customers_file' ][ 'type' ], $csv_mime_types ) ) {
+            $file = fopen ( $_FILES[ 'import_customers_file' ][ 'tmp_name' ], 'r' );
+            while ( $line = fgetcsv( $file, null, $this->getParameter( 'import_customers_delimiter' ) ) ) {
+                if ( !empty ( $line[ 0 ] ) ) {
                     $customer = new AB_Customer();
-                    $customer->set('name', $line[0]);
-                    if (isset($line[1])){
-                        $customer->set('phone', $line[1]);
+                    $customer->set( 'name', $line[ 0 ] );
+                    if ( isset ( $line[ 1 ] ) ) {
+                        $customer->set( 'phone', $line[ 1 ] );
                     }
-                    if (isset($line[2])){
-                        $customer->set('email', $line[2]);
+                    if ( isset ( $line[ 2 ] ) ) {
+                        $customer->set( 'email', $line[ 2 ] );
                     }
                     $customer->save();
                 }
@@ -179,6 +164,7 @@ class AB_CustomerController extends AB_Controller {
 
     /**
      * Get angulars template for new customer dialog.
+     * @Security user
      */
     public function executeGetNgNewCustomerDialogTemplate() {
         $this->render( 'ng-new_customer_dialog' );
@@ -189,11 +175,7 @@ class AB_CustomerController extends AB_Controller {
      * Delete a customer.
      */
     public function executeDeleteCustomer() {
-        if ( $this->_post[ 'id' ] !== '' ) {
-            $this->getWpdb()->query($this->getWpdb()->prepare("DELETE FROM ab_customer  WHERE id = %d",
-                $this->_post[ 'id' ]
-            ));
-        }
+        $this->getWpdb()->delete('ab_customer', array( 'id' => $this->getParameter( 'id' ) ), array( '%d' ) );
     }
 
     /**

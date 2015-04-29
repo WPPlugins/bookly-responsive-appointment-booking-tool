@@ -28,7 +28,7 @@ class AB_AppearanceController extends AB_Controller {
      *  Update options
      */
     public function executeUpdateAppearanceOptions() {
-        if ( count( $this->getPost() ) ) {
+        if ( $this->hasParameter( 'options' ) ) {
             $get_option = $this->getParameter( 'options' );
             $options = array(
                 // Info text.
@@ -37,6 +37,7 @@ class AB_AppearanceController extends AB_Controller {
                 'ab_appearance_text_info_third_step'   => $get_option[ 'text_info_third_step' ],
                 'ab_appearance_text_info_fourth_step'  => $get_option[ 'text_info_fourth_step' ],
                 'ab_appearance_text_info_fifth_step'   => $get_option[ 'text_info_fifth_step' ],
+                'ab_appearance_text_info_coupon'       => $get_option[ 'text_info_coupon' ],
                 // Color.
                 'ab_appearance_color'                  => $get_option[ 'color' ],
                 // Step, label and option texts.
@@ -58,6 +59,7 @@ class AB_AppearanceController extends AB_Controller {
                 'ab_appearance_text_option_service'    => $get_option[ 'text_option_service' ],
                 'ab_appearance_text_option_category'   => $get_option[ 'text_option_category' ],
                 'ab_appearance_text_option_employee'   => $get_option[ 'text_option_employee' ],
+                'ab_appearance_text_label_coupon'      => $get_option[ 'text_label_coupon' ],
                 // Checkboxes.
                 'ab_appearance_show_progress_tracker'  => $get_option[ 'progress_tracker' ],
             );

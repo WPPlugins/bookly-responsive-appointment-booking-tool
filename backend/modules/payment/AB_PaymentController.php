@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class AB_PaymentController extends AB_Controller {
 
     public function index() {
-        $path = dirname( dirname( __FILE__ ) );
+        $path = dirname( __DIR__ );
         wp_enqueue_style( 'ab-style', plugins_url( 'resources/css/ab_style.css', $path ) );
         wp_enqueue_style( 'ab-bootstrap', plugins_url( 'resources/bootstrap/css/bootstrap.min.css', $path ) );
         wp_enqueue_script( 'ab-bootstrap', plugins_url( 'resources/bootstrap/js/bootstrap.min.js', $path ), array( 'jquery' ) );
@@ -56,4 +56,26 @@ class AB_PaymentController extends AB_Controller {
         $this->render( 'index' );
     }
 
+    /**
+     * Translate date-ranges
+     */
+    public function executeL10nRanges() {
+        $start = '';
+        $end   = '';
+        if ( $this->hasParameter( 'start' ) && $this->hasParameter( 'end' ) ) {
+            $start = date_i18n( get_option( 'date_format' ), strtotime( $this->getParameter( 'start' ) ) );
+            $end   = date_i18n( get_option( 'date_format' ), strtotime( $this->getParameter( 'end' ) ) );
+        }
+
+        echo json_encode( (object) array( 'start' => $start, 'end' => $end ) );
+        exit;
+    }
+
+    /**
+     * Override parent method to add 'wp_ajax_ab_' prefix
+     * so current 'execute*' methods look nicer.
+     */
+    protected function registerWpActions( $prefix = '' ) {
+        parent::registerWpActions( 'wp_ajax_ab_' );
+    }
 }

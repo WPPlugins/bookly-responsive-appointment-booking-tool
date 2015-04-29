@@ -1,6 +1,5 @@
 <?php
 
-include dirname(__FILE__) . '/../AB_Entity.php';
 include 'AB_StaffScheduleItem.php';
 
 /**
@@ -14,13 +13,15 @@ class AB_Staff extends AB_Entity {
     public function __construct() {
         $this->table_name = 'ab_staff';
         $this->schema = array(
-            'id'          => array( ),
-            'wp_user_id'  => array( 'format' => '%d' ),
-            'full_name'   => array( 'format' => '%s' ),
-            'email'       => array( 'format' => '%s' ),
-            'avatar_path' => array( 'format' => '%s' ),
-            'avatar_url'  => array( 'format' => '%s' ),
-            'phone'       => array( 'format' => '%s' )
+            'id'                 => array( ),
+            'wp_user_id'         => array( 'format' => '%d' ),
+            'full_name'          => array( 'format' => '%s' ),
+            'email'              => array( 'format' => '%s' ),
+            'avatar_path'        => array( 'format' => '%s' ),
+            'avatar_url'         => array( 'format' => '%s' ),
+            'phone'              => array( 'format' => '%s' ),
+            'google_data'        => array( 'format' => '%s' ),
+            'google_calendar_id' => array( 'format' => '%s' ),
         );
         parent::__construct();
     }
@@ -41,11 +42,11 @@ class AB_Staff extends AB_Entity {
                 if ( $this->get( 'wp_user_id' ) ) {
                     $formats[] = '%d';
                     $values['wp_user_id'] = $this->get( 'wp_user_id' );
-	                  $user = get_user_by('id',$this->get('wp_user_id'));
-	                  if( $user )
-	                  {
-		                  $values['email'] = $user->get('user_email');
-	                  }
+                    $user = get_user_by('id',$this->get('wp_user_id'));
+                    if( $user )
+                    {
+                        $values['email'] = $user->get('user_email');
+                    }
                 }
 
                 $this->wpdb->insert( 'ab_staff', $values, $formats );
@@ -80,17 +81,12 @@ class AB_Staff extends AB_Entity {
             return array();
         }
         $list = $this->wpdb->get_results( $this->wpdb->prepare(
-            'SELECT
-                si.id,
-                si.name,
-                ssi.id AS "schedule_item_id",
-                ssi.staff_id,
-                ssi.start_time,
-                ssi.end_time
-            FROM `ab_schedule_item` si
-            LEFT JOIN `ab_staff_schedule_item` ssi ON ssi.schedule_item_id = si.id
+           'SELECT
+              ssi.*,
+              ssi.id AS "staff_schedule_item_id"
+            FROM `ab_staff_schedule_item` ssi
             WHERE ssi.staff_id = %d
-            ORDER BY si.id',
+            ORDER BY ssi.day_index',
             $this->get( 'id' )
         ) );
 
@@ -110,6 +106,10 @@ class AB_Staff extends AB_Entity {
                     $list[] = $list_item;
                 }
             }
+        }
+
+        foreach ($list as $day) {
+            $day->name = AB_DateUtils::getWeekDayByNumber($day->day_index - 1);
         }
 
         return $list;
@@ -132,16 +132,21 @@ class AB_Staff extends AB_Entity {
                   a.id,
                   a.start_date,
                   a.end_date,
-                  a.notes,
-                  a.customer_id AS "customer_id",
                   service.title,
                   service.color,
                   staff.id AS "staff_id",
-                  staff.full_name
+                  staff.full_name,
+                  ss.capacity AS max_capacity,
+                  COUNT( ca.id ) AS current_capacity,
+                  ca.customer_id,
+                  ca.notes
               FROM ab_appointment a
+              LEFT JOIN ab_customer_appointment ca ON ca.appointment_id = a.id
               LEFT JOIN ab_service service ON a.service_id = service.id
               LEFT JOIN ab_staff staff ON a.staff_id = staff.id
-              WHERE staff.id = %d',
+              LEFT JOIN ab_staff_service ss ON ss.staff_id = a.staff_id AND ss.service_id = a.service_id
+              WHERE staff.id = %d
+              ',
             $this->get( 'id' )
         );
 
@@ -154,7 +159,8 @@ class AB_Staff extends AB_Entity {
             $args[]   = $start_date;
         }
 
-        $args[0] .= ' GROUP BY a.id';
+//        $args[0] .= ' GROUP BY a.id';
+        $args[0] .= ' GROUP BY a.start_date';
 
         return $this->wpdb->get_results( call_user_func_array( array( $this->wpdb, 'prepare' ), $args ) );
     }

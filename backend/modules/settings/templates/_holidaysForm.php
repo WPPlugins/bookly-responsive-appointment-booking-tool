@@ -12,9 +12,9 @@
   jQuery(function($) {
     var d = new Date();
     $('#ab-annual-calendar').jCal({
-        day:			new Date(d.getFullYear(), 0, 1),
-        days:			1,
-        showMonths:		12,
+        day:            new Date(d.getFullYear(), 0, 1),
+        days:           1,
+        showMonths:     12,
         scrollSpeed:    350,
         events:         <?php echo $holidays ?>,
         action:         'ab_settings_holiday',

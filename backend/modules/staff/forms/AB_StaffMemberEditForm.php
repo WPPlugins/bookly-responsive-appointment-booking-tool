@@ -1,20 +1,27 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 if ( !function_exists( 'wp_handle_upload' ) ) require_once(ABSPATH . 'wp-admin/includes/file.php');
-include dirname(__FILE__) . '/../../../../lib/AB_ImageResize.php';
+include AB_PATH . '/lib/AB_ImageResize.php';
 
 class AB_StaffMemberEditForm extends AB_StaffMemberForm {
+
+    private $errors = array();
 
     public function configure() {
         $this->setFields( array(
             'wp_user_id',
             'full_name',
-	          'email',
+            'email',
             'phone',
-            'avatar'
+            'avatar',
+            'google_calendar_id',
         ) );
     }
 
+    /**
+     * @param array $post
+     * @param array $files
+     */
     public function bind( array $post, array $files = array() ) {
         if ( isset( $post[ 'wp_user_id' ] ) && ! $post[ 'wp_user_id' ] ) {
             $post[ 'wp_user_id' ] = null;
@@ -36,5 +43,13 @@ class AB_StaffMemberEditForm extends AB_StaffMemberForm {
                 }
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }

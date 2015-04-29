@@ -15,7 +15,7 @@
             <div id="week-calendar-picker" class="ab-week-picker-wrapper left right-margin" data-first_day="<?php echo $week_start_day ?>">
                 <div class="input-prepend input-append">
                     <span class="ab-week-picker-arrow prev add-on col-arrow">&#9668;</span>
-	                  <input class="span2 ab-date-calendar" readonly="readonly" id="appendedPrependedInput" size="16" type="text" value="" />
+                    <input class="span2 ab-date-calendar" readonly="readonly" id="appendedPrependedInput" size="16" type="text" value="" />
                     <span class="ab-week-picker-arrow next add-on col-arrow">&#9658;</span>
                 </div>
                 <div class="ab-week-picker"></div>

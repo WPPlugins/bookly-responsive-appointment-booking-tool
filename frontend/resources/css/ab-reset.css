@@ -26,6 +26,10 @@ body .ab-booking-form section {
 body .ab-booking-form  ol, body .ab-booking-form ul {
     list-style: none;
 }
+body .ab-booking-form ul > li:before {
+    content: ""!important;
+    background: none!important;
+}
 body .ab-booking-form  blockquote,
 body .ab-booking-form q {
     quotes: none;

@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-include dirname(__FILE__) . '/../../../../lib/entities/AB_ScheduleItemBreak.php';
+include AB_PATH . '/lib/entities/AB_ScheduleItemBreak.php';
 
 /**
  * Class AB_StaffScheduleItemBreakForm

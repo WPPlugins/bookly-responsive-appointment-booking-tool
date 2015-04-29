@@ -1,27 +1,26 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-define( 'AB_TMCE_PATH', __FILE__ );
+
 class AB_TinyMCE_Plugin {
 
     private $vars = array();
 
     public function __construct() {
         global $PHP_SELF;
-	    if ( // check if we are in admin area and current page is adding/editing the post
-		    is_admin() && ( strpos( $PHP_SELF, 'post-new.php' ) !== false || strpos( $PHP_SELF, 'post.php' ) !== false )
-	    ) {
+        if ( // check if we are in admin area and current page is adding/editing the post
+            is_admin() && ( strpos( $PHP_SELF, 'post-new.php' ) !== false || strpos( $PHP_SELF, 'post.php' ) !== false )
+        ) {
             wp_enqueue_script( 'backbone' );
             wp_enqueue_script( 'underscore' );
             add_action( 'admin_footer', array( &$this, 'renderPopup' ) );
             add_filter( 'media_buttons', array( &$this, 'addButton' ), 50 );
 
-            $booking = new AB_ServiceBooking();
-            $booking->load();
+            $configuration = new AB_BookingConfiguration();
 
-            $this->vars['categoriesJson'] = $booking->getCategoriesJson();
-            $this->vars['staffJson'] = $booking->getStaffJson();
-            $this->vars['servicesJson'] = $booking->getServicesJson();
+            $this->vars['categoriesJson'] = $configuration->getCategoriesJson();
+            $this->vars['staffJson'] = $configuration->getStaffJson();
+            $this->vars['servicesJson'] = $configuration->getServicesJson();
         }
     }
 

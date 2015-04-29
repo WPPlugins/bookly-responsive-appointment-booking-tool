@@ -7,7 +7,7 @@ class AB_PaymentsForm extends AB_Form {
     public function __construct() {
         $this->setFields(array(
             'ab_settings_pay_locally',
-            'ab_paypal_currency'
+            'ab_paypal_currency',
         ));
     }
 

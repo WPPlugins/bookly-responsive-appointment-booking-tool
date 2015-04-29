@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-include dirname(__FILE__) . '/../../../../lib/entities/AB_Service.php';
+include AB_PATH . '/lib/entities/AB_Service.php';
 
 /**
  * Class AB_ServiceForm
@@ -18,7 +18,7 @@ class AB_ServiceForm extends AB_Form {
     }
 
     public function configure() {
-        $this->setFields(array('id', 'title', 'duration', 'price', 'category_id', 'color'));
+        $this->setFields(array('id', 'title', 'duration', 'price', 'category_id', 'color', 'capacity'));
     }
 
     /**
@@ -40,6 +40,8 @@ class AB_ServiceForm extends AB_Form {
             // when adding new service - set its color randomly
             $this->data[ 'color' ] = $colors[mt_rand(0, count($colors) - 1)];
         }
+
+        $this->data['capacity'] = 1;
 
         return parent::save();
     }

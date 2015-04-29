@@ -66,10 +66,9 @@ abstract class AB_Entity {
 
     /**
      * Constructor.
-     *
-     * @global wpdb $wpdb
      */
     public function __construct() {
+      /** @var WPDB $wpdb */
       global $wpdb;
 
       // Reference to global database object.
@@ -110,6 +109,7 @@ abstract class AB_Entity {
      *
      * @param string $field
      * @param mixed $value
+     * @throws InvalidArgumentException
      */
     public function set( $field, $value ) {
         if ( !array_key_exists( $field, $this->values ) ) {
@@ -124,6 +124,7 @@ abstract class AB_Entity {
      *
      * @param string $field
      * @return mixed
+     * @throws InvalidArgumentException
      */
     public function get( $field ) {
         if ( !array_key_exists( $field, $this->values ) ) {
@@ -203,7 +204,6 @@ abstract class AB_Entity {
      * @return int|false
      */
     public function save() {
-        $res = false;
         // Prepare query data.
         $set    = array();
         $values = array();

@@ -25,3 +25,15 @@
 .working-end, .working-start { margin-bottom: 0; font-size: 13px; }
 .ab-content .break-end, .ab-content .break-start { width: auto; margin-bottom: 0; }
 .add-break form { margin: 0; }
+
+#ab-staff-services ul ul li { margin-left: 20px; }
+#ab-staff-services ul ul li.ab-services-category { margin: 25px 0px 15px 20px; position: relative; }
+#ab-staff-services ul .ab-title-service { position: absolute; right: 0px; top: 1px; }
+#ab-staff-services ul .ab-title-service > div { display: inline-block; width: 60px; text-align: center; }
+#ab-staff-services ul .ab-title-service > div:first-child { margin-right: 5px; }
+#ab-staff-services ul ul li ul li { margin-left: 20px; overflow: hidden; }
+#ab-staff-services ul ul li ul li .ab-price { width: 60px; margin: 0 0 0 5px; text-align: right; height: 30px!important; }
+#ab-staff-services ul ul li ul li .ab-list-title { margin: 5px 5px 0 0; }
+#ab-staff-services { max-width: 590px; }
+#ab-staff-services #ab-staff-services-update { margin-left: 115px; }
+#ab-staff-services .spinner { float: left }

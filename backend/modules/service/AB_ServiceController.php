@@ -35,8 +35,8 @@ class AB_ServiceController extends AB_Controller {
     public function executeCategoryForm() {
         $this->form = new AB_CategoryForm();
 
-        if ( count( $this->getPost() ) ) {
-            $this->form->bind( $this->getPost() );
+        if ( !empty ( $_POST ) ) {
+            $this->form->bind( $this->getPostParameters() );
             if ( $category = $this->form->save() ) {
                 echo "<div class='ab-category-item' data-id='{$category->id}'>
                     <span class='left displayed-value'>{$category->name}</span>
@@ -54,25 +54,23 @@ class AB_ServiceController extends AB_Controller {
      */
     public function executeUpdateCategory() {
         $form = new AB_CategoryForm();
-        $form->bind( $this->getPost() );
+        $form->bind( $this->getPostParameters() );
         $form->save();
     }
 
     /**
      * Delete category.
      */
-
-
-      public function executeDeleteCategory() {
+    public function executeDeleteCategory() {
         $category = new AB_Category();
         $category->set( 'id', $this->getParameter( 'id', 0 ) );
         $category->delete();
-      }
+    }
 
 
     public function executeAddService() {
         $form = new AB_ServiceForm();
-        $form->bind( $this->getPost() );
+        $form->bind( $this->getPostParameters() );
         $service = $form->save();
         $this->setDataForServiceList( $service->get( 'category_id' ) );
         $this->render( 'list' );
@@ -80,21 +78,18 @@ class AB_ServiceController extends AB_Controller {
     }
 
     public function executeRemoveServices() {
-        $_post = $this->getPost();
-        $service_ids = isset( $_post['service_ids'] ) ? $_post['service_ids'] : array();
-        if ( is_array( $service_ids ) && ! empty( $service_ids ) ) {
+        $service_ids = $this->getParameter( 'service_ids', array() );
+        if ( is_array( $service_ids ) && !empty ( $service_ids ) ) {
             $this->getWpdb()->query('DELETE FROM ab_service WHERE id IN (' . implode(', ', $service_ids) . ')');
         }
     }
 
     public function executeAssignStaff() {
-        $_post      = $this->getPost();
-        $service_id = isset( $_post['service_id'] ) ? $_post['service_id'] : 0;
-        $staff_ids  = isset( $_post['staff_ids'] )  ? $_post['staff_ids']  : array();
+        $service_id = $this->getParameter( 'service_id', 0 );
+        $staff_ids  = $this->getParameter( 'staff_ids', array() );
 
         if ( $service_id ) {
-            $wpDb = $this->getWpdb();
-            $wpDb->query( $wpDb->prepare( 'DELETE FROM ab_staff_service WHERE service_id = %d', $service_id ) );
+            $this->getWpdb()->delete('ab_staff_service', array( 'service_id' => $service_id ), array( '%d' ) );
             $service = new AB_Service();
             if ( ! empty( $staff_ids ) && $service->load( $service_id ) ) {
                 foreach ( $staff_ids as $staff_id ) {
@@ -112,13 +107,16 @@ class AB_ServiceController extends AB_Controller {
 
     public function executeUpdateServiceValue() {
         $form = new AB_ServiceForm();
-        $form->bind($this->getPost());
+        $form->bind( $this->getPostParameters() );
         $form->save();
     }
 
+    /**
+     * @param int $category_id
+     */
     private function setDataForServiceList( $category_id = 0 ) {
         if (!$category_id) {
-            $category_id = isset( $_GET['category_id'] ) ? intval( $_GET['category_id'] ) : 0;
+            $category_id = $this->getParameter( 'category_id', 0 );
         }
 
         $this->service_collection  = $this->getServiceCollection($category_id);
@@ -126,38 +124,40 @@ class AB_ServiceController extends AB_Controller {
         $this->category_collection = $this->getCategoryCollection();
     }
 
+    /**
+     * @return mixed
+     */
     private function getCategoryCollection() {
         return $this->getWpdb()->get_results( "SELECT * FROM ab_category" );
     }
 
+    /**
+     * @return mixed
+     */
     private function getStaffCollection() {
         return $this->getWpdb()->get_results( "SELECT * FROM ab_staff" );
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     private function getServiceCollection( $id = 0 ) {
-        if ( $id )  {
-            $query = $this->getWpdb()->prepare(
-                'SELECT
-                   service.*,
-                   COUNT(staff.id) AS "total_staff",
-                   GROUP_CONCAT(DISTINCT staff.id) AS "staff_ids"
-                 FROM ab_service service
-                   LEFT JOIN ab_staff_service staff_service ON service.id = staff_service.service_id
-                   LEFT JOIN ab_staff staff ON staff.id = staff_service.staff_id
-                 WHERE service.category_id = %d
-                 GROUP BY service.id, "total_staff"',
-                 $id
-            );
-        } else {
-            $query = 'SELECT
-                        service.*,
-                        COUNT(staff.id) AS "total_staff",
-                        GROUP_CONCAT(DISTINCT staff.id) AS "staff_ids"
-                      FROM ab_service service
-                        LEFT JOIN ab_staff_service staff_service ON service.id = staff_service.service_id
-                        LEFT JOIN ab_staff staff ON staff.id = staff_service.staff_id
-                      GROUP BY service.id, "total_staff"';
-        }
+
+        $query = $this->getWpdb()->prepare(
+            'SELECT
+               `s`.*,
+               COUNT(`st`.`id`) AS `total_staff`,
+               GROUP_CONCAT(DISTINCT `st`.`id`) AS `staff_ids`
+             FROM `ab_service` `s`
+               LEFT JOIN `ab_staff_service` `sts` ON `sts`.`service_id` = `s`.`id`
+               LEFT JOIN `ab_staff` `st` ON `st`.`id` = `sts`.`staff_id`
+             WHERE `s`.`category_id` = %d OR !%d
+             GROUP BY `s`.`id` ORDER BY ISNULL(`s`.`title`), `s`.`title`',
+            $id,
+            $id
+        );
+
         return $this->getWpdb()->get_results($query);
     }
 

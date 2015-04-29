@@ -93,7 +93,7 @@ table.wc-time-slots {
     overflow: visible;
     vertical-align: top;
 }
-.wc-day-column-header{border-width: 0 0 0 3px; border-style: solid;border-color:#aaaaaa;}
+.wc-day-column-header{border-width: 0 0 0 3px; border-style: double;border-color:#aaaaaa;}
 .wc-scrollable-grid .wc-day-column-last,
 .wc-scrollable-grid .wc-day-column-middle{border-width: 0 0 0 1px; border-style: dashed;}
 .wc-scrollable-grid .wc-day-column-first{border-width: 0 0 0 3px; border-style: double;}
@@ -138,7 +138,7 @@ table.wc-time-slots {
 .wc-column-even.ui-state-hover{background-image:none;border:none;}
 
 .wc-header .wc-today.ui-state-active{background-image:none;}
-.wc-header .wc-today.wc-day-column-header{border-width:0 3px; border-style: solid;}
+.wc-header .wc-today.wc-day-column-header{border-width:0 3px; border-style: double;}
 .wc-header .wc-user-header{border-width:0;}
 
 .wc-time-slots .wc-day-column.ui-state-default{background:transparent;}
@@ -169,6 +169,10 @@ table.wc-time-slots {
 .wc-hour-header.ui-state-active,
 .wc-hour-header.ui-state-default{
   border-width:0 0 1px 0;
+}
+
+.wc-hour-header.ui-state-default{
+  background-image: none;
 }
 
 .wc-hour-end, .wc-hour-header {
@@ -260,7 +264,7 @@ table.wc-time-slots {
 
 .free-busy-free{}
 .free-busy-busy{
-  background:url("../images/ui-bg_flat_0_aaaaaa_40x100.png") repeat scroll 50% 50% #666666;
+  background:url("jquery-ui-1.10.4/images/ui-bg_flat_0_aaaaaa_40x100.png") repeat scroll 50% 50% #666666;
 }
 
 /** hourLine */

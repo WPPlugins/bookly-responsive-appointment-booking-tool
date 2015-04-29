@@ -1,4 +1,4 @@
-.ab-time-list {
+.ab-second-step {
     max-width: 625px;
     overflow: hidden;
     position: relative;
@@ -26,6 +26,7 @@
     *display: inline;
     zoom: 1;
     vertical-align: top;
+    float: none!important;
 }
 
 .ab-columnizer .ab-available-day,
@@ -75,11 +76,11 @@
     display: block;
 }
 
-.ab-time-list .ab-columnizer > button {
+.ab-second-step .ab-columnizer > button {
     display: none;
 }
 
-.ab-time-list .ab-columnizer > .ab-column {
+.ab-second-step .ab-columnizer > .ab-column {
     display: none;
 }
 

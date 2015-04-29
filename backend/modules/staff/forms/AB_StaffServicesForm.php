@@ -2,8 +2,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-include dirname(__FILE__) . '/../../../../lib/entities/AB_Category.php';
-include dirname(__FILE__) . '/../../../../lib/entities/AB_StaffService.php';
+include AB_PATH . '/lib/entities/AB_Category.php';
+include AB_PATH . '/lib/entities/AB_StaffService.php';
 
 /**
  * Class AB_StaffServicesForm
@@ -46,7 +46,7 @@ class AB_StaffServicesForm extends AB_Form {
     public function configure() {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->setFields( array( 'price', 'service', 'staff_id' ) );
+        $this->setFields( array( 'price', 'service', 'staff_id', 'capacity' ) );
     }
 
     public function load($staff_id) {
@@ -69,14 +69,14 @@ class AB_StaffServicesForm extends AB_Form {
         }
 
         $rows = $this->wpdb->get_results( $this->wpdb->prepare('
-            SELECT s.service_id, s.price
+            SELECT s.service_id, s.price, s.capacity
             FROM ab_staff_service s
             WHERE s.staff_id = %d
         ', $staff_id) );
 
         if ( $rows ) {
             foreach ($rows as $row) {
-                $this->selected[$row->service_id] = $row->price;
+                $this->selected[$row->service_id] = array('price' => $row->price, 'capacity' => $row->capacity);
             }
         }
 
@@ -123,7 +123,7 @@ class AB_StaffServicesForm extends AB_Form {
      * @return array
      */
     public function getSelected() {
-        return is_array($this->selected) ? $this->selected : array();
+        return $this->selected;
     }
 
     /**

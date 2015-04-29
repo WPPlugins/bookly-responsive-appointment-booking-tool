@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo $current_url . '&type=_payments' ?>" class="ab-staff-form">
+<form method="post" action="<?php echo add_query_arg( 'type', '_payments' ) ?>" class="ab-staff-form">
     <?php if (isset($message_p)) : ?>
     <div id="message" style="margin: 0px!important;" class="updated below-h2">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -18,6 +18,16 @@
 		    </td>
 	    </tr>
         <tr>
+            <td style="width: 170px;"><?php _e( 'Coupons','ab' ) ?></td>
+            <td>
+                <select name="ab_settings_coupons" style="width: 200px;">
+                    <?php foreach ( array( __( 'Disabled', 'ab' ) => 'disabled', __( 'Enabled', 'ab' ) => '1' ) as $text => $mode ): ?>
+                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_settings_coupons' ), $mode ); ?> ><?php echo $text ?></option>
+                    <?php endforeach ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td colspan="2"><div class="ab-payments-title"><?php _e( 'Service paid locally','ab' ) ?></div></td>
         </tr>
         <tr>
@@ -30,13 +40,37 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2"><div class="ab-payments-title"><?php _e( 'PayPal','ab' ) ?></div></td>
+            <td colspan="2"><div class="ab-payments-title">PayPal</div></td>
         </tr>
         <tr>
             <td colspan="2">
                 <select id="ab_paypal_type" style="width: 200px;">
                     <?php foreach ( array( __( 'Disabled', 'ab' ) => 'disabled', 'PayPal Express Checkout' => 'ec' ) as $text => $mode ): ?>
                         <option value="<?php echo $mode ?>" ><?php echo $text ?></option>
+                    <?php endforeach ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><div class="ab-payments-title">Authorize.Net</div></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <select name="ab_authorizenet_type" id="ab_authorizenet_type" style="width: 200px;">
+                    <?php foreach ( array( __( 'Disabled', 'ab' ) => 'disabled', 'Authorize.Net AIM' => 'aim' ) as $text => $mode ): ?>
+                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_authorizenet_type' ), $mode ); ?> ><?php echo $text ?></option>
+                    <?php endforeach ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><div class="ab-payments-title">Stripe</div></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <select name="ab_stripe" id="ab_stripe" style="width: 200px;">
+                    <?php foreach ( array( __( 'Disabled', 'ab' ) => 0, __( 'Enabled', 'ab' ) => 1 ) as $text => $mode ): ?>
+                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_stripe' ), $mode ); ?> ><?php echo $text ?></option>
                     <?php endforeach ?>
                 </select>
             </td>
@@ -50,19 +84,3 @@
         </tr>
     </table>
 </form>
-
-<div class="modal fade" id="light_notice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Notice</h4>
-      </div>
-      <div class="modal-body">
-        <?php _e('This function is disabled in the light verison of Bookly. If you find the plugin useful for your business please consider buying a licence for the full version. It costs just $35 and for this money you will get many useful functions, lifetime free update and excellent support! More information can be found here'); ?>: <a href="http://bookly.ladela.com" target="_blank">http://bookly.ladela.com</a>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->

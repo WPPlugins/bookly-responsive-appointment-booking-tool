@@ -35,6 +35,10 @@ Class AB_ImageResize {
 
     ## --------------------------------------------------------
 
+    /**
+     * @param $file
+     * @return bool|resource
+     */
     private function openImage($file) {
         // *** Get extension
         $extension = strtolower( strrchr( $file, '.' ) );
@@ -59,6 +63,11 @@ Class AB_ImageResize {
 
     ## --------------------------------------------------------
 
+    /**
+     * @param $newWidth
+     * @param $newHeight
+     * @param string $option
+     */
     public function resizeImage($newWidth, $newHeight, $option = "auto") {
         // *** Get optimal width and height - based on $option
         $optionArray = $this->getDimensions( $newWidth, $newHeight, $option );
@@ -80,6 +89,12 @@ Class AB_ImageResize {
 
     ## --------------------------------------------------------
 
+    /**
+     * @param $newWidth
+     * @param $newHeight
+     * @param $option
+     * @return array
+     */
     private function getDimensions($newWidth, $newHeight, $option) {
 
         switch ( $option ) {
@@ -111,18 +126,31 @@ Class AB_ImageResize {
 
     ## --------------------------------------------------------
 
+    /**
+     * @param $newHeight
+     * @return mixed
+     */
     private function getSizeByFixedHeight($newHeight) {
         $ratio = $this->width / $this->height;
         $newWidth = $newHeight * $ratio;
         return $newWidth;
     }
 
+    /**
+     * @param $newWidth
+     * @return mixed
+     */
     private function getSizeByFixedWidth($newWidth) {
         $ratio = $this->height / $this->width;
         $newHeight = $newWidth * $ratio;
         return $newHeight;
     }
 
+    /**
+     * @param $newWidth
+     * @param $newHeight
+     * @return array
+     */
     private function getSizeByAuto($newWidth, $newHeight) {
         if ( $this->height < $this->width ) // *** Image to be resized is wider (landscape)
         {
@@ -152,6 +180,11 @@ Class AB_ImageResize {
 
     ## --------------------------------------------------------
 
+    /**
+     * @param $newWidth
+     * @param $newHeight
+     * @return array
+     */
     private function getOptimalCrop($newWidth, $newHeight) {
 
         $heightRatio = $this->height / $newHeight;
@@ -171,6 +204,12 @@ Class AB_ImageResize {
 
     ## --------------------------------------------------------
 
+    /**
+     * @param $optimalWidth
+     * @param $optimalHeight
+     * @param $newWidth
+     * @param $newHeight
+     */
     private function crop($optimalWidth, $optimalHeight, $newWidth, $newHeight) {
         // *** Find center - this will be used for the crop
         $cropStartX = ($optimalWidth / 2) - ($newWidth / 2);
@@ -186,6 +225,10 @@ Class AB_ImageResize {
 
     ## --------------------------------------------------------
 
+    /**
+     * @param $savePath
+     * @param string $imageQuality
+     */
     public function saveImage($savePath, $imageQuality = "100") {
         // *** Get extension
         $extension = strrchr( $savePath, '.' );

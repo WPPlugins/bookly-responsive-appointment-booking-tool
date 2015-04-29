@@ -105,7 +105,7 @@
             border-radius: 6px;
 }
 
-.pickadate__calendar * { font-size: 14px!important; }
+.pickadate__calendar, .pickadate__calendar * { font-size: 14px!important; background: none!important; }
 
 /**
  * The calendar table of dates
@@ -123,7 +123,7 @@
     line-height: 18px!important;
 }
 
-.pickadate__table tr { background: none!important; }
+.pickadate__table tr { background: none!important; border: none!important; }
 
 /* Remove browser stylings on a table cell */
 .pickadate__table td {

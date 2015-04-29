@@ -67,6 +67,11 @@ class AB_TimeChoiceWidget {
         return sprintf( '<select name="%s"%s>%s</select>', $name, $attributes_str, implode( '', $options ) );
     }
 
+    /**
+     * @param $start
+     * @param string $selected
+     * @return array
+     */
     public function renderOptions( $start, $selected = '' ) {
         $options = array();
         foreach ( $this->values as $option_value => $option_text ) {

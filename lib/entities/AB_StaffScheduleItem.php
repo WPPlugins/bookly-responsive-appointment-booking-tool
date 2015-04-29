@@ -16,7 +16,7 @@ class AB_StaffScheduleItem extends AB_Entity {
         $this->schema = array(
             'id'               => array(),
             'staff_id'         => array( 'format' => '%d' ),
-            'schedule_item_id' => array( 'format' => '%d' ),
+            'day_index'        => array( 'format' => '%d' ),
             'start_time'       => array( 'format' => '%s' ),
             'end_time'         => array( 'format' => '%s' ),
         );

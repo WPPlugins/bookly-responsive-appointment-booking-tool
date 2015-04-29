@@ -89,7 +89,6 @@
   line-height: 26px!important;
   padding: 9px 15px!important;
 }
-.ab-appointment-popup .ui-widget-header .ui-state-hover { background: none!important; border: none!important; }
 
 .ab-appointment-popup .loading-indicator img { display: block; margin: 20px auto; }
 .ab-appointment-popup .dialog-button-wrapper {  }

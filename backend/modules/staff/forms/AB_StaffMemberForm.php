@@ -1,7 +1,8 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-include dirname(__FILE__) . '/../../../../lib/entities/AB_Staff.php';
+
+include AB_PATH . '/lib/entities/AB_Staff.php';
 
 /**
  * Class AB_StaffMemberForm

@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <div class="ab-title"><?php _e( 'Export appointments', 'ab' ); ?></div>
 <div class=ab-nav-payment>
     <form action="<?php echo get_admin_url(); ?>admin-ajax.php?action=ab_export_to_csv" method="post" style="margin: 0">

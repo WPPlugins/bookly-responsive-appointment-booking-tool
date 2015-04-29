@@ -4,6 +4,11 @@ class AB_Validator {
 
     private $errors = array();
 
+    /**
+     * @param $field
+     * @param $email
+     * @param bool $required
+     */
     public function validateEmail( $field, $email, $required = false ) {
         if ( $email ) {
             if ( !is_email( $email ) ) {
@@ -14,6 +19,11 @@ class AB_Validator {
         }
     }
 
+    /**
+     * @param $field
+     * @param $phone
+     * @param bool $required
+     */
     public function validatePhone( $field, $phone, $required = false ) {
         if ( $phone  ) {
             if ( !preg_match('/^[0-9\s\+\-\(\)]+$/', $phone) ) {
@@ -24,6 +34,14 @@ class AB_Validator {
         }
     }
 
+    /**
+     * @param $field
+     * @param $string
+     * @param $max_length
+     * @param bool $required
+     * @param bool $is_name
+     * @param int $min_length
+     */
     public function validateString( $field, $string, $max_length, $required = false, $is_name = false, $min_length = 0 ) {
         if ( $string ) {
             $long     =  __( 'is too long', 'ab' );
@@ -42,6 +60,11 @@ class AB_Validator {
         }
     }
 
+    /**
+     * @param $field
+     * @param $number
+     * @param bool $required
+     */
     public function validateNumber( $field, $number, $required = false ) {
         if ( $number ) {
             if ( !is_numeric( $number ) ) {
@@ -52,6 +75,11 @@ class AB_Validator {
         }
     }
 
+    /**
+     * @param $field
+     * @param $start_time
+     * @param $end_time
+     */
     public function validateTimeGt( $field, $start_time, $end_time ) {
         $start = new DateTime($start_time);
         $end = new DateTime($end_time);
@@ -60,6 +88,11 @@ class AB_Validator {
         }
     }
 
+    /**
+     * @param $field
+     * @param $datetime
+     * @param bool $required
+     */
     public function validateDateTime( $field, $datetime, $required = false ) {
         if ( $datetime ) {
             if ( date_create( $datetime ) === false ) {
@@ -70,6 +103,9 @@ class AB_Validator {
         }
     }
 
+    /**
+     * @return array
+     */
     public function getErrors() {
         return $this->errors;
     }

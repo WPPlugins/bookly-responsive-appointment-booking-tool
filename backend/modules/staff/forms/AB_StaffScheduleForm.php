@@ -28,13 +28,13 @@ class AB_StaffScheduleForm extends AB_Form {
 
     public function save() {
         if ( isset($this->data['days']) ) {
-            foreach ( $this->data['days'] as $id => $schedule_item_id ) {
+            foreach ( $this->data['days'] as $id => $day_index ) {
                 $staffScheduleItem = new AB_StaffScheduleItem();
                 $staffScheduleItem->load( $id );
-                $staffScheduleItem->set( 'schedule_item_id', $schedule_item_id );
-                if ($this->data['start_time'][$schedule_item_id]) {
-                    $staffScheduleItem->set( 'start_time', $this->data['start_time'][$schedule_item_id] );
-                    $staffScheduleItem->set( 'end_time', $this->data['end_time'][$schedule_item_id] );
+                $staffScheduleItem->set( 'day_index', $day_index );
+                if ($this->data['start_time'][$day_index]) {
+                    $staffScheduleItem->set( 'start_time', $this->data['start_time'][$day_index] );
+                    $staffScheduleItem->set( 'end_time', $this->data['end_time'][$day_index] );
                 } else {
                     $staffScheduleItem->set( 'start_time', null );
                     $staffScheduleItem->set( 'end_time', null );

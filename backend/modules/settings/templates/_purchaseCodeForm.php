@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form enctype="multipart/form-data" method="post" action="<?php echo $current_url . '&type=_purchase_code' ?>" class="ab-staff-form" id="purchase_code">
+<form enctype="multipart/form-data" method="post" action="<?php echo add_query_arg( 'type', '_purchase_code' ) ?>" class="ab-staff-form" id="purchase_code">
     <?php if ( isset ( $message_pc ) ) : ?>
         <div class="alert">
             <button type="button" class="close" data-dismiss="alert">&times;</button>

@@ -1,5 +1,4 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-
 <div class="ab-title">
     <div class="alert" style="font-size: 14px; display: none;">
         <button type="button" class="close" onclick="jQuery('.alert').hide()">&times;</button>

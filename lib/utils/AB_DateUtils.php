@@ -55,6 +55,11 @@
             return $result;
         }
 
+        /**
+         * @param $timestamp
+         * @param $tz_offset
+         * @return DateTime
+         */
         public static function getDateBasedOnUserTimezoneOffset( $timestamp, $tz_offset ) {
             return new DateTime( '@' . ( $timestamp + ( $tz_offset * HOUR_IN_SECONDS ) ) );
         }

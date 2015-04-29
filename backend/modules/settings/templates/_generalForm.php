@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo $current_url . '&type=_general' ?>" enctype="multipart/form-data" class="ab-staff-form">
+<form method="post" action="<?php echo add_query_arg( 'type', '_general' ) ?>" enctype="multipart/form-data" class="ab-staff-form">
 
     <?php if (isset($message_g)) : ?>
         <div id="message" style="margin: 0px!important;" class="updated below-h2">
@@ -14,22 +14,21 @@
             <td>
                 <select name="ab_settings_time_slot_length" style="width: 200px;">
                     <?php
-                        foreach ( array( 10, 15, 20, 30, 60 ) as $duration ) {
-                            $duration_output = AB_Service::durationToString( $duration * 60 );
-                    ?>
-                            <option value="<?php echo $duration ?>" <?php selected( get_option( 'ab_settings_time_slot_length' ), $duration ); ?>>
-                                <?php echo $duration_output ?>
-                            </option>
+                    foreach ( array( 5, 10, 12, 15, 20, 30, 60 ) as $duration ) {
+                        $duration_output = AB_Service::durationToString( $duration * 60 );
+                        ?>
+                        <option value="<?php echo $duration ?>" <?php selected( get_option( 'ab_settings_time_slot_length' ), $duration ); ?>>
+                            <?php echo $duration_output ?>
+                        </option>
                     <?php } ?>
                 </select>
-                </td>
+            </td>
             <td>
                 <img
-                    src="<?php echo plugins_url( 'resources/images/help.png', dirname(__FILE__).'/../../../AB_Backend.php' ) ?>"
+                    src="<?php echo plugins_url( 'backend/resources/images/help.png', AB_PATH . '/main.php' ) ?>"
                     alt=""
-                    class="ab-help-info"
-                    data-help_id="ab-staff-slot"
-                    rel='popover'
+                    class="ab-popover"
+                    data-content="<?php echo esc_attr( __( 'Select the time interval that will be used in frontend and backend, e.g. in calendar, second step of the booking process, while indicating the working hours, etc.', 'ab' ) ) ?>"
                     />
             </td>
         </tr>
@@ -38,11 +37,11 @@
                 <label><?php _e( 'Make it impossible for users to book appointments on the current day (last minute appointments)', 'ab' ) ?></label>
             </td>
             <td style="vertical-align: top">
-              <select name="ab_settings_no_current_day_appointments" style="width: 200px;">
-                  <?php foreach ( array( __( 'Disabled', 'ab' ) => '0', __( 'Enabled', 'ab' ) => '1' ) as $text => $mode ): ?>
-                    <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_settings_no_current_day_appointments' ), $mode ); ?> ><?php echo $text ?></option>
-                  <?php endforeach ?>
-              </select>
+                <select name="ab_settings_no_current_day_appointments" style="width: 200px;">
+                    <?php foreach ( array( __( 'Disabled', 'ab' ) => '0', __( 'Enabled', 'ab' ) => '1' ) as $text => $mode ): ?>
+                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_settings_no_current_day_appointments' ), $mode ); ?> ><?php echo $text ?></option>
+                    <?php endforeach ?>
+                </select>
             </td>
         </tr>
         <tr>
@@ -50,19 +49,18 @@
                 <label><?php _e( 'Display available time slots in client\'s time zone', 'ab' ) ?></label>
             </td>
             <td>
-              <select name="ab_settings_use_client_time_zone" style="width: 200px;">
-                  <?php foreach ( array( __( 'Disabled', 'ab' ) => '0', __( 'Enabled', 'ab' ) => '1' ) as $text => $mode ): ?>
-                <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_settings_use_client_time_zone' ), $mode ); ?> ><?php echo $text ?></option>
-                  <?php endforeach ?>
-              </select>
+                <select name="ab_settings_use_client_time_zone" style="width: 200px;">
+                    <?php foreach ( array( __( 'Disabled', 'ab' ) => '0', __( 'Enabled', 'ab' ) => '1' ) as $text => $mode ): ?>
+                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_settings_use_client_time_zone' ), $mode ); ?> ><?php echo $text ?></option>
+                    <?php endforeach ?>
+                </select>
             </td>
             <td>
                 <img
-                    src="<?php echo plugins_url( 'resources/images/help.png', dirname(__FILE__).'/../../../AB_Backend.php' ) ?>"
+                    src="<?php echo plugins_url( 'backend/resources/images/help.png', AB_PATH . '/main.php' ) ?>"
                     alt=""
-                    class="ab-help-info"
-                    data-help_id="ab-staff-zone"
-                    rel='popover'
+                    class="ab-popover"
+                    data-content="<?php echo esc_attr( __( 'The value is taken from client’s browser.', 'ab' ) ) ?>"
                     />
             </td>
         </tr>
@@ -75,11 +73,69 @@
             </td>
             <td>
                 <img
-                    src="<?php echo plugins_url( 'resources/images/help.png', dirname(__FILE__).'/../../../AB_Backend.php' ) ?>"
+                    src="<?php echo plugins_url( 'backend/resources/images/help.png', AB_PATH . '/main.php' ) ?>"
                     alt=""
-                    class="ab-help-info"
-                    data-help_id="ab-staff-cancel"
-                    rel='popover'
+                    class="ab-popover"
+                    data-content="<?php echo esc_attr( __( 'Insert the URL of the page that is shown to clients after they have cancelled their booking.', 'ab' ) ) ?>"
+                    />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <h4 style="float:left"><?php _e( 'Google Calendar', 'ab' ) ?></h4>
+                <img
+                    style="float: left;margin-top: 8px;margin-left:15px;"
+                    src="<?php echo plugins_url( 'backend/resources/images/help.png', AB_PATH . '/main.php' ) ?>"
+                    alt=""
+                    class="ab-popover lite-help"
+                    />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label><?php _e( 'Client ID', 'ab' ) ?></label>
+            </td>
+            <td>
+                <input type="text" name="ab_settings_google_client_id" value="" >
+            </td>
+            <td>
+                <img
+                    src="<?php echo plugins_url( 'backend/resources/images/help.png', AB_PATH . '/main.php' ) ?>"
+                    alt=""
+                    class="ab-popover"
+                    data-content="<?php echo esc_attr( __( 'The client ID obtained from the Developers Console', 'ab' ) ) ?>"
+                    />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label><?php _e( 'Client secret', 'ab' ) ?></label>
+            </td>
+            <td>
+                <input type="text" name="ab_settings_google_client_secret" value="" >
+            </td>
+            <td>
+                <img
+                    src="<?php echo plugins_url( 'backend/resources/images/help.png', AB_PATH . '/main.php' ) ?>"
+                    alt=""
+                    class="ab-popover"
+                    data-content="<?php echo esc_attr( __( 'The client secret obtained from the Developers Console', 'ab' ) ) ?>"
+                    />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label><?php _e( 'Redirect URI', 'ab' ) ?></label>
+            </td>
+            <td>
+                <input type="text" readonly value="" onclick="this.select();" style="cursor: pointer;">
+            </td>
+            <td>
+                <img
+                    src="<?php echo plugins_url( 'backend/resources/images/help.png', AB_PATH . '/main.php' ) ?>"
+                    alt=""
+                    class="ab-popover"
+                    data-content="<?php _e('Enter this URL as a redirect URI in the Developers Console', 'ab') ?>"
                     />
             </td>
         </tr>
@@ -92,12 +148,3 @@
         </tr>
     </table>
 </form>
-<div id="ab-staff-slot" style="display: none">
-    <p><?php _e('Select the time interval that will be used in frontend and backend, e.g. in calendar, second step of the booking process, while indicating the working hours, etc.', 'ab') ?></p>
-</div>
-<div id="ab-staff-zone" style="display: none">
-    <p><?php _e('The value is taken from client’s browser.', 'ab') ?></p>
-</div>
-<div id="ab-staff-cancel" style="display: none">
-    <p><?php _e('Insert the URL of the page that is shown to clients after they have cancelled their booking.', 'ab') ?></p>
-</div>

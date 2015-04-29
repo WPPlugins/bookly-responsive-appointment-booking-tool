@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo $current_url . '&type=_hours' ?>" class="ab-staff-form" id="business-hours">
+<form method="post" action="<?php echo add_query_arg( 'type', '_hours' ) ?>" class="ab-staff-form" id="business-hours">
     <?php if (isset($message_h)) : ?>
     <div class="alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -15,7 +15,7 @@
                 <td><?php _e( ucfirst( $day ) ) ?></td>
                 <td>
                     <?php echo $form->renderField( 'ab_settings_' . $day ); ?>
-                    <span><?php _e( ' to ' ) ?></span>
+                    <span><?php _e( ' to ', 'ab' ) ?></span>
                     <?php echo $form->renderField( 'ab_settings_' . $day, false ); ?>
                 </td>
             </tr>

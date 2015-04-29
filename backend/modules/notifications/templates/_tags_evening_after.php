@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <tr>
     <th><?php _e('Subject', 'ab') ?></th>
     <th><?php _e('Message', 'ab') ?></th>
@@ -17,6 +18,14 @@
 <tr>
     <td></td>
     <td><?php _e('[[SERVICE_NAME]] - name of service', 'ab') ?></td>
+</tr>
+<tr>
+    <td></td>
+    <td><?php _e('[[SERVICE_PRICE]] - price of service', 'ab') ?></td>
+</tr>
+<tr>
+    <td></td>
+    <td><?php _e('[[CATEGORY_NAME]] - name of category', 'ab') ?></td>
 </tr>
 <tr>
     <td></td>

@@ -1,11 +1,10 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<!-- ab-booking-info-second-preview -->
 <div id="ab-booking-form" class="ab-booking-form" style="overflow: hidden">
 <!-- Progress Tracker-->
 <?php $step = 2; include '_progress_tracker.php'; ?>
 
 <div style="margin-bottom: 15px!important;" class="ab-row-fluid">
-  <span data-inputclass="input-xxlarge" data-notes="<?php _e( '<b>[[SERVICE_NAME]]</b> - name of service, <b>[[STAFF_NAME]]</b> - name of staff', 'ab' ); ?>" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_info_second_step' ) ) ?>" data-link-class="ab-text-info-second" class="ab-text-info-second-preview ab-row-fluid ab_editable" id="ab-text-info-second" data-type="textarea" data-pk="1"><?php echo esc_html( get_option( 'ab_appearance_text_info_second_step' ) ) ?></span>
+  <span data-inputclass="input-xxlarge" data-notes="<?php _e( '<b>[[SERVICE_NAME]]</b> - name of service, <b>[[STAFF_NAME]]</b> - name of staff,', 'ab' ); ?><br><?php _e( '<b>[[CATEGORY_NAME]]</b> - name of category.', 'ab' ); ?>" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_info_second_step' ) ) ?>" data-link-class="ab-text-info-second" class="ab-text-info-second-preview ab-row-fluid ab_editable" id="ab-text-info-second" data-type="textarea" data-pk="1"><?php echo esc_html( get_option( 'ab_appearance_text_info_second_step' ) ) ?></span>
 </div>
 <!-- timeslots -->
 <div class="ab-columnizer-wrap" style="height: 400px;">
@@ -99,9 +98,15 @@
     </div>
 </div>
 <div class="ab-time-buttons ab-row-fluid ab-nav-steps last-row ab-clear">
-    <a href="javascript:void(0)" class="ab-time-no-resize ab-time-next ab-right"></a>
-    <a href="javascript:void(0)" class="ab-time-no-resize ab-time-prev ab-right"></a>
-    <button class="ab-time-no-resize ab-left ab-to-first-step ladda-button orange zoom-in">
+    <button class="ab-time-next ab-btn ab-right ladda-button orange zoom-in">
+        <span class="ab_label">&gt;</span>
+        <span class="spinner"></span>
+    </button>
+    <button class="ab-time-prev ab-btn ab-right ladda-button orange zoom-in">
+        <span class="ab_label">&lt;</span>
+        <span class="spinner"></span>
+    </button>
+    <button class="ab-left ab-to-first-step ab-btn ladda-button orange zoom-in">
         <span><?php _e( 'Back', 'ab' ) ?></span>
     </button>
 </div>

@@ -26,11 +26,13 @@ jQuery(function($) {
         $text_label_phone = $('#ab-text-label-phone'),
         $text_label_email = $('#ab-text-label-email'),
         $text_label_notes = $('#ab-text-label-notes'),
+        $text_label_coupon = $('#ab-text-label-coupon'),
         $text_info_service = $('#ab-text-info-first'),
         $text_info_time = $('#ab-text-info-second'),
         $text_info_details = $('#ab-text-info-third'),
         $text_info_payment = $('#ab-text-info-fourth'),
         $text_info_done = $('#ab-text-info-fifth'),
+        $text_info_coupon = $('#ab-text-info-coupon'),
         $color_picker = $('.wp-color-picker'),
         $ab_editable  = $('.ab_editable');
 
@@ -67,7 +69,7 @@ jQuery(function($) {
             'background': $color_picker.wpColorPicker('color'),
             'border-color': $color_picker.wpColorPicker('color')
         });
-        $('.ab-time-no-resize').css('background-color', $color_picker.wpColorPicker('color'));
+        $('.ladda-button').css('background-color', $color_picker.wpColorPicker('color'));
         $('.ab-columnizer .ab-available-hour').off().hover(
             function() { // mouse-on
                 $(this).css({
@@ -96,7 +98,7 @@ jQuery(function($) {
                 });
             }
         );
-        $('div.ab-details-list > label.ab-formLabel').css('color', $color_picker.wpColorPicker('color'));
+        $('div.ab-formGroup > label.ab-formLabel').css('color', $color_picker.wpColorPicker('color'));
         $('.ab-to-second-step, .ab-to-fourth-step, .ab-to-third-step, .ab-final-step')
             .css('background', $color_picker.wpColorPicker('color'));
     };
@@ -122,30 +124,32 @@ jQuery(function($) {
                 // Color.
                 'color'                  : $color_picker.wpColorPicker('color'),
                 // Info text.
-                'text_info_first_step'   : $.trim($text_info_service.text()),
-                'text_info_second_step'  : $.trim($text_info_time.text()),
-                'text_info_third_step'   : $.trim($text_info_details.text()),
-                'text_info_fourth_step'  : $.trim($text_info_payment.text()),
-                'text_info_fifth_step'   : $.trim($text_info_done.text()),
+                'text_info_first_step'   : $.trim($text_info_service.text() == 'Empty' ? '' : $text_info_service.text()),
+                'text_info_second_step'  : $.trim($text_info_time.text() == 'Empty' ? '' : $text_info_time.text()),
+                'text_info_third_step'   : $.trim($text_info_details.text() == 'Empty' ? '' : $text_info_details.text()),
+                'text_info_fourth_step'  : $.trim($text_info_payment.text() == 'Empty' ? '' : $text_info_payment.text()),
+                'text_info_fifth_step'   : $.trim($text_info_done.text() == 'Empty' ? '' : $text_info_done.text()),
+                'text_info_coupon'       : $.trim($text_info_coupon.text() == 'Empty' ? '' : $text_info_coupon.text()),
                 // Step and label texts.
-                'text_step_service'      : $.trim($text_step_service.text()),
-                'text_step_time'         : $.trim($text_step_time.text()),
-                'text_step_details'      : $.trim($text_step_details.text()),
-                'text_step_payment'      : $.trim($text_step_payment.text()),
-                'text_step_done'         : $.trim($text_step_done.text()),
-                'text_label_category'    : $.trim($text_label_category.text()),
-                'text_label_service'     : $.trim($text_label_service.text()),
-                'text_label_employee'    : $.trim($text_label_employee.text()),
-                'text_label_select_date' : $.trim($text_label_select_date.text()),
-                'text_label_start_from'  : $.trim($text_label_start_from.text()),
-                'text_label_finish_by'   : $.trim($text_label_finish_by.text()),
-                'text_label_name'        : $.trim($text_label_name.text()),
-                'text_label_phone'       : $.trim($text_label_phone.text()),
-                'text_label_email'       : $.trim($text_label_email.text()),
-                'text_label_notes'       : $.trim($text_label_notes.text()),
-                'text_option_category'   : $.trim($text_option_category.text()),
-                'text_option_service'    : $.trim($text_option_service.text()),
-                'text_option_employee'   : $.trim($text_option_employee.text()),
+                'text_step_service'      : $.trim($text_step_service.text() == 'Empty' ? '' : $text_step_service.text()),
+                'text_step_time'         : $.trim($text_step_time.text() == 'Empty' ? '' : $text_step_time.text()),
+                'text_step_details'      : $.trim($text_step_details.text() == 'Empty' ? '' : $text_step_details.text()),
+                'text_step_payment'      : $.trim($text_step_payment.text() == 'Empty' ? '' : $text_step_payment.text()),
+                'text_step_done'         : $.trim($text_step_done.text() == 'Empty' ? '' : $text_step_done.text()),
+                'text_label_category'    : $.trim($text_label_category.text() == 'Empty' ? '' : $text_label_category.text()),
+                'text_label_service'     : $.trim($text_label_service.text() == 'Empty' ? '' : $text_label_service.text()),
+                'text_label_employee'    : $.trim($text_label_employee.text() == 'Empty' ? '' : $text_label_employee.text()),
+                'text_label_select_date' : $.trim($text_label_select_date.text() == 'Empty' ? '' : $text_label_select_date.text()),
+                'text_label_start_from'  : $.trim($text_label_start_from.text() == 'Empty' ? '' : $text_label_start_from.text()),
+                'text_label_finish_by'   : $.trim($text_label_finish_by.text() == 'Empty' ? '' : $text_label_finish_by.text()),
+                'text_label_name'        : $.trim($text_label_name.text() == 'Empty' ? '' : $text_label_name.text()),
+                'text_label_phone'       : $.trim($text_label_phone.text() == 'Empty' ? '' : $text_label_phone.text()),
+                'text_label_email'       : $.trim($text_label_email.text() == 'Empty' ? '' : $text_label_email.text()),
+                'text_label_notes'       : $.trim($text_label_notes.text() == 'Empty' ? '' : $text_label_notes.text()),
+                'text_label_coupon'      : $.trim($text_label_coupon.text() == 'Empty' ? '' : $text_label_coupon.text()),
+                'text_option_category'   : $.trim($text_option_category.text() == 'Empty' ? '' : $text_option_category.text()),
+                'text_option_service'    : $.trim($text_option_service.text() == 'Empty' ? '' : $text_option_service.text()),
+                'text_option_employee'   : $.trim($text_option_employee.text() == 'Empty' ? '' : $text_option_employee.text()),
                 // Checkboxes.
                 'progress_tracker'       : Number($('#ab-progress-tracker-checkbox').is(':checked'))
            } // options
@@ -304,8 +308,8 @@ jQuery(function($) {
         }
     });
 
-    $('#ab-text-info-first').add('#ab-text-info-second').add('#ab-text-info-third').add('#ab-text-info-fourth').add('#ab-text-info-fifth').editable({placement: 'right', emptytext: ''});
-    $ab_editable.editable({emptytext: ''});
+    $('#ab-text-info-first').add('#ab-text-info-second').add('#ab-text-info-third').add('#ab-text-info-fourth').add('#ab-text-info-fifth').add('#ab-text-info-coupon').editable({placement: 'right'});
+    $ab_editable.editable();
 
     $.fn.editableform.template = '<form class="form-inline editableform"> <div class="control-group"> <div> <div class="editable-input"></div><div class="editable-buttons"></div></div><div style="margin-top: 10px;" class="editable-notes"></div><div class="editable-error-block"></div></div> </form>';
 
@@ -316,5 +320,22 @@ jQuery(function($) {
     $("span[data-link-class^='text_step_']").on('save', function(e, params) {
         $("span[data-link-class='" + $(e.target).data('link-class') + "']").editable('setValue', params.newValue);
         $("span." + $(e.target).data('link-class')).text(params.newValue);
+    });
+
+    if(jQuery('.ab-authorizenet-payment').is(':checked')) {
+        jQuery('form.authorizenet').show();
+    }
+
+    if(jQuery('.ab-stripe-payment').is(':checked')) {
+        jQuery('form.stripe').show();
+    }
+
+    jQuery('input[type=radio]').change( function() {
+        jQuery('form.authorizenet').add('form.stripe').hide();
+        if(jQuery('.ab-authorizenet-payment').is(':checked')) {
+            jQuery('form.authorizenet').show();
+        } else if(jQuery('.ab-stripe-payment').is(':checked')) {
+            jQuery('form.stripe').show();
+        }
     });
 }); // jQuery
