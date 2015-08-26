@@ -1,337 +1,333 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-include AB_PATH . '/lib/AB_Validator.php';
-
+/**
+ * Class AB_UserBookingData
+ */
 class AB_UserBookingData {
 
-    /**
-     * @var int
-     */
-    private $form_id;
+    private $form_id = null;
 
     /**
-     * @var int
+     * ID of customer created after save.
+     * @var int|null
      */
-    private $service_id;
+    private $customer_id = null;
 
     /**
+     * @var AB_Coupon|null
+     */
+    private $coupon = null;
+
+    /**
+     * Data provided by user at booking steps
+     * and stored in PHP session.
      * @var array
      */
-    private $staff_id = array();
+    private $data = array(
+        // Step 0
+        'time_zone_offset'     => null,
+        // Step 1
+        'service_id'           => null,
+        'number_of_persons'    => null,
+        'staff_ids'            => array(),
+        'date_from'            => null,
+        'days'                 => array(),
+        'time_from'            => null,
+        'time_to'              => null,
+        // Step 2
+        'appointment_datetime' => null,
+        // Step 3
+        'name'                 => null,
+        'email'                => null,
+        'phone'                => null,
+        'custom_fields'        => null,
+        // Step 4
+        'coupon'               => null,
+    );
 
     /**
-     * @var string
+     * Set data parameter.
+     *
+     * @param string $name
+     * @param mixed $value
      */
-    private $requested_date_from;
+    public function set( $name, $value )
+    {
+        $this->data[ $name ] = $value;
+    }
 
     /**
-     * @var string
+     * Get data parameter.
+     *
+     * @param string $name
+     * @return mixed
      */
-    private $requested_time_from;
+    public function get( $name )
+    {
+        return $this->data[ $name ];
+    }
 
     /**
-     * @var string
+     * Contructor.
+     *
+     * @param $form_id
      */
-    private $requested_time_to;
-
-    /**
-     * @var string
-     */
-    private $booked_datetime;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $email;
-
-    /**
-     * @var string
-     */
-    private $phone;
-
-    /**
-     * @var string
-     */
-    private $notes;
-
-    /**
-     * @var int
-     */
-    private $client_time_offset = 0;
-
-    /**
-     * @var array
-     */
-    private $available_days = array();
-
-    /**
-     * @var int
-     */
-    private $customer_id;
-
-    /**
-     * @var string
-     */
-    private $coupon;
-
-    public function __construct( $form_id ) {
+    public function __construct( $form_id )
+    {
         $this->form_id = $form_id;
-        
-        $this->requested_date_from = date( 'Y-m-d' );
-    }
 
-    public function hasData() {
-        return isset($_SESSION[ 'appointment_booking' ][ $this->form_id ]);
-    }
+        // Set up default parameters.
+        $prior_time = AB_Config::getMinimumTimePriorBooking();
+        $this->set( 'date_from', date( 'Y-m-d', current_time( 'timestamp' ) + $prior_time ) );
+        $schedule_item = AB_StaffScheduleItem::query( 'ssi' )
+            ->select( 'SUBSTRING_INDEX(MIN(ssi.start_time), ":", 2) AS min_end_time' )->whereNot( 'start_time', null )->fetchArray();
+        $this->set( 'time_from', $schedule_item[0]['min_end_time'] );
+        $schedule_item = AB_StaffScheduleItem::query( 'ssi' )
+            ->select( 'SUBSTRING_INDEX(MAX(end_time), ":", 2) AS max_end_time' )->whereNot( 'start_time', null )->fetchArray();
+        $this->set( 'time_to', $schedule_item[0]['max_end_time'] );
 
-    public function load() {
-        if ( isset($_SESSION[ 'appointment_booking' ][ $this->form_id ]) ) {
-            $reflection = new ReflectionObject($this);
-            foreach ( $reflection->getProperties() as $reflectionProperty ) {
-                $field_name = $reflectionProperty->getName();
-                if ( isset($_SESSION['appointment_booking'][ $this->form_id ][ $field_name ]) ) {
-                    $this->$field_name = $_SESSION['appointment_booking'][ $this->form_id ][ $field_name ];
-                }
+        // If logged in then set name, email and if existing customer then also phone.
+        $current_user = wp_get_current_user();
+        if ( $current_user && $current_user->ID ) {
+            $customer = new AB_Customer();
+            if ( $customer->loadBy( array( 'wp_user_id' => $current_user->ID ) ) ) {
+                $this->set( 'name',  $customer->get( 'name' ) );
+                $this->set( 'email', $customer->get( 'email' ) );
+                $this->set( 'phone', $customer->get( 'phone' ) );
+            } else {
+                $this->set( 'name',  $current_user->display_name );
+                $this->set( 'email', $current_user->user_email );
             }
         }
     }
 
-    public function loadTemporaryForExpressCheckout() {
-        if ( isset( $_SESSION[ 'appointment_booking' ][ $this->form_id ][ 'cancelled' ] ) &&
-            $_SESSION[ 'appointment_booking' ][ $this->form_id ][ 'cancelled' ] === true) {
-            $reflection = new ReflectionObject($this);
-            foreach ( $reflection->getProperties() as $reflectionProperty ) {
-                $field_name = $reflectionProperty->getName();
-                $tmp_booking_data = unserialize( $_SESSION[ 'tmp_booking_data' ] );
-                $tmp_booking_data = get_object_vars( $tmp_booking_data );
+    /**
+     * Load data from session.
+     *
+     * @return bool
+     */
+    public function load()
+    {
+        if ( isset( $_SESSION[ 'bookly' ][ $this->form_id ] ) ) {
+            $this->data = $_SESSION[ 'bookly' ][ $this->form_id ][ 'data' ];
 
-                if ( isset( $tmp_booking_data[ $field_name ] ) ) {
-                    $this->$field_name = $tmp_booking_data[ $field_name ];
-                }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get data.
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Set data.
+     *
+     * @param array $data
+     */
+    public function setData( array $data )
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * Partially update data in session.
+     *
+     * @param array $data
+     */
+    public function saveData( array $data )
+    {
+        foreach ( $data as $key => $value ) {
+            if ( array_key_exists( $key, $this->data ) ) {
+                $this->set( $key, $value );
             }
         }
+        $_SESSION['bookly'][ $this->form_id ][ 'data' ] = $this->data;
     }
 
-    public function loadTemporaryForLocalPayment() {
-        if ( isset( $_SESSION[ 'tmp_booking_data' ] ) ) {
-            $reflection = new ReflectionObject($this);
-            foreach ( $reflection->getProperties() as $reflectionProperty ) {
-                $field_name = $reflectionProperty->getName();
-                $tmp_booking_data = unserialize( $_SESSION[ 'tmp_booking_data' ] );
-                $tmp_booking_data = get_object_vars( $tmp_booking_data );
-
-                if ( isset( $tmp_booking_data[ $field_name ] ) ) {
-                    $this->$field_name = $tmp_booking_data[ $field_name ];
-                }
-            }
-        }
-    }
-
-    public function setData( $data ) {
-        $reflection = new ReflectionObject($this);
-        $default_properties = $reflection->getDefaultProperties();
-        if ( !$this->hasData( $this->form_id ) ) {
-            $_SESSION['appointment_booking'][ $this->form_id ] = array();
-        }
-        foreach ( $reflection->getProperties() as $reflectionProperty ) {
-            $field_name = $reflectionProperty->getName();
-            if ( isset ( $data[ $field_name ] ) ) {
-                $_SESSION['appointment_booking'][ $this->form_id ][ $field_name ] = $data[ $field_name ];
-            // overwrite to default property only if there are no property or it's empty
-            } elseif ( !isset( $_SESSION['appointment_booking'][ $this->form_id ][ $field_name ] ) ||
-                empty( $_SESSION['appointment_booking'][ $this->form_id ][ $field_name ] ) ) {
-                    $_SESSION['appointment_booking'][ $this->form_id ][ $field_name ] = $default_properties[ $field_name ];
-                }
-        }
-    }
-
-    public function validate( $data ) {
-        $reflection = new ReflectionObject($this);
+    /**
+     * Validate fields.
+     *
+     * @param $data
+     * @return array
+     */
+    public function validate( $data )
+    {
         $validator = new AB_Validator();
-        foreach ( $reflection->getProperties() as $reflectionProperty ) {
-            $field_name = $reflectionProperty->getName();
-            if ( isset($data[ $field_name ]) ) {
-                switch ( $field_name ) {
-                    case 'email':
-                        $validator->validateEmail( $field_name, $data[ $field_name ], true );
-                        break;
-                    case 'phone':
-                        $validator->validatePhone( $field_name, $data[ $field_name ], true );
-                        break;
-                    case 'requested_date_from':
-                    case 'requested_time_from':
-                    case 'requested_time_to':
-                    case 'booked_datetime':
-                        $validator->validateDateTime( $field_name, $data[ $field_name ], true );
-                        break;
-                    case 'name':
-                        $validator->validateString( $field_name, $data[ $field_name ], 255, true, true, 3 );
-                        break;
-                    case 'service_id':
-                        $validator->validateNumber( $field_name, $data[ $field_name ] );
-                        break;
-                }
+        foreach ( $data as $field_name => $field_value ) {
+            switch ( $field_name ) {
+                case 'email':
+                    $validator->validateEmail( $field_name, $data );
+                    break;
+                case 'phone':
+                    $validator->validatePhone( $field_name, $field_value, true );
+                    break;
+                case 'date_from':
+                case 'time_from':
+                case 'appointment_datetime':
+                    $validator->validateDateTime( $field_name, $field_value, true );
+                    break;
+                case 'name':
+                    $validator->validateString( $field_name, $field_value, 255, true, true, 3 );
+                    break;
+                case 'service_id':
+                    $validator->validateNumber( $field_name, $field_value );
+                    break;
+                case 'custom_fields':
+                    $validator->validateCustomFields( $field_value );
+                    break;
+                default:
             }
         }
 
-        if ( isset( $data['requested_time_from'] ) && isset( $data['requested_time_to'] ) ) {
-            $validator->validateTimeGt( 'requested_time_from', $data['requested_time_from'], $data['requested_time_to'] );
+        if ( isset( $data['time_from'] ) && isset( $data['time_to'] ) ) {
+            $validator->validateTimeGt( 'time_from', $data['time_from'], $data['time_to'] );
         }
 
         return $validator->getErrors();
     }
 
     /**
+     * Save all data and create appointment.
+     *
      * @return AB_Appointment
      */
-    public function save() {
-        /** @var wpdb $wpdb */
-        global $wpdb;
-
-        // #11094: if customer with such name & e-mail exists, append new booking to him, otherwise - create new customer
-        $customer_exists = $wpdb->get_row( $wpdb->prepare(
-           'SELECT * FROM ab_customer WHERE name = %s AND email = %s', $this->name, $this->email
-        ) );
-
-        $customer =  new AB_Customer();
-        if ( $customer_exists ) {
-            $customer->set( 'id',    $customer_exists->id );
-            $customer->set( 'name',  $customer_exists->name );
-            $customer->set( 'email', $customer_exists->email );
-            $customer->set( 'phone', $customer_exists->phone );
-        } else {
-            $customer->set( 'name',  $this->name );
-            $customer->set( 'email', $this->email );
-            $customer->set( 'phone', $this->phone );
-            $customer->save();
+    public function save()
+    {
+        $user_id  = get_current_user_id();
+        $customer = new AB_Customer();
+        if ( $user_id ) {
+            // Try to find customer by WP user ID.
+            $customer->loadBy( array( 'wp_user_id' => $user_id ) );
         }
-        $this->customer_id = $customer->get('id');
+        if ( ! $customer->isLoaded() ) {
+            // If customer with such name & e-mail exists, append new booking to him, otherwise - create new customer
+            $customer->loadBy( array(
+                'name'  => $this->get( 'name' ),
+                'email' => $this->get( 'email' )
+            ) );
+        }
+        $customer->set( 'name',  $this->get( 'name' ) );
+        $customer->set( 'email', $this->get( 'email' ) );
+        $customer->set( 'phone', $this->get( 'phone' ) );
+        if ( get_option( 'ab_settings_create_account', 0 ) && ! $customer->get( 'wp_user_id' ) ) {
+            // Create WP user and link it to customer.
+            $customer->setWPUser( $user_id ?: null );
+        }
+        $customer->save();
 
-        $service = new AB_Service();
-        $service->load( $this->service_id );
+        $this->customer_id = $customer->get( 'id' );
 
-        $category = new AB_Category();
-        $category->load( $service->get( 'category_id' ) );
+        $service = $this->getService();
 
         /**
          * Get appointment, with same params.
          * If it is -> create connection to this appointment,
          * otherwise create appointment and connect customer to new appointment
          */
-        $booking = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT * from ab_appointment a WHERE a.staff_id = %d and a.service_id = %d and a.start_date = %s LIMIT 1;",
-                $this->getStaffId(), $this->service_id, $this->booked_datetime
-            )
-        );
-
         $appointment = new AB_Appointment();
-        if ($booking) {
-            $appointment->load($booking->id);
-        } else {
-            $appointment->set('staff_id', $this->getStaffId() );
-            $appointment->set('service_id', $this->service_id );
-            $appointment->set('start_date', date('Y-m-d H:i:s', strtotime($this->booked_datetime)));
+        $appointment->loadBy( array(
+            'staff_id'   => $this->getStaffId(),
+            'service_id' => $this->get( 'service_id' ),
+            'start_date' => $this->get( 'appointment_datetime' )
+        ) );
+        if ( $appointment->isLoaded() == false ) {
+            $appointment->set( 'staff_id', $this->getStaffId() );
+            $appointment->set( 'service_id', $this->get( 'service_id' ) );
+            $appointment->set( 'start_date', $this->get( 'appointment_datetime' ) );
 
-            $endDate = new DateTime($this->booked_datetime);
+            $endDate = new DateTime( $this->get( 'appointment_datetime' ) );
             $di = "+ {$service->get( 'duration' )} sec";
             $endDate->modify( $di );
 
-            $appointment->set('end_date', $endDate->format('Y-m-d H:i:s'));
+            $appointment->set( 'end_date', $endDate->format( 'Y-m-d H:i:s' ) );
             $appointment->save();
         }
 
-        $customer_appointment = new AB_Customer_Appointment();
-        $customer_appointment->set('appointment_id', $appointment->get( 'id' ));
-        $customer_appointment->set('customer_id', $customer->get( 'id' ));
-        $customer_appointment->set('token' , md5($this->form_id));
-        $customer_appointment->set('notes', $this->notes);
+        $customer_appointment = new AB_CustomerAppointment();
+        $customer_appointment->loadBy( array(
+                'customer_id'    => $customer->get( 'id' ),
+                'appointment_id' => $appointment->get( 'id' )
+            )
+        );
+        if ( $customer_appointment->isLoaded() ) {
+            // Add number of persons to existing booking.
+            $customer_appointment->set( 'number_of_persons', $customer_appointment->get( 'number_of_persons' ) + $this->get( 'number_of_persons' ) );
+        } else {
+            $customer_appointment->set( 'customer_id', $customer->get( 'id' ) );
+            $customer_appointment->set( 'appointment_id', $appointment->get( 'id' ) );
+            $customer_appointment->set( 'number_of_persons', $this->get( 'number_of_persons' ) );
+        }
+        $customer_appointment->set( 'custom_fields', $this->get( 'custom_fields' ) );
+        $customer_appointment->set( 'time_zone_offset', $this->get( 'time_zone_offset' ) );
+
         $customer_appointment->save();
 
-        $staff = new AB_Staff();
-        $staff->load($this->getStaffId());
+
+        // Google Calendar.
+        $appointment->handleGoogleCalendar();
 
         return $appointment;
     }
 
-    public function clean() {
-        unset( $_SESSION[ 'appointment_booking' ][ $this->form_id ] );
-    }
-
     /**
-     * @return string
-     */
-    public function getFormattedRequestedDateFrom() {
-        if ( get_option('ab_settings_no_current_day_appointments' ) ) {
-            return date_i18n( 'j F, Y', strtotime('+1 day') );
-        }
-        else {
-            return date_i18n( 'j F, Y', strtotime( $this->requested_date_from ) );
-        }
-    }
-
-    /**
-     * Get service name.
+     * Get service.
      *
-     * @return null|string
+     * @return AB_Service
      */
-    public function getServiceName() {
-        /** @var wpdb $wpdb */
-        global $wpdb;
-        return $wpdb->get_var( $wpdb->prepare(
-            'SELECT abs.title FROM `ab_service` as abs WHERE abs.id = %d', $this->getServiceId()
-        ) );
+    public function getService()
+    {
+        $service = new AB_Service();
+        $service->load( $this->get( 'service_id' ) );
+
+        return $service;
     }
 
     /**
      * Get service price.
      *
-     * @return null|int
+     * @return string|false
      */
     public function getServicePrice()
     {
-        /** @var wpdb $wpdb */
-        global $wpdb;
-        return $wpdb->get_var( $wpdb->prepare(
-            'SELECT price FROM ab_staff_service WHERE staff_id = %d AND service_id = %d',
-            $this->getStaffId(),
-            $this->getServiceId()
+        $staff_service = new AB_StaffService();
+        $staff_service->loadBy( array(
+            'staff_id'   => $this->getStaffId(),
+            'service_id' => $this->get( 'service_id' )
         ) );
+
+        return $staff_service->isLoaded() ? $staff_service->get( 'price' ) : false;
     }
 
     /**
-     * Get category name.
+     * Get service price (with applied coupon).
      *
-     * @return string
+     * @return float
      */
-    public function getCategoryName() {
-        /** @var wpdb $wpdb */
-        global $wpdb;
-        $result = $wpdb->get_var( $wpdb->prepare(
-            'SELECT abc.name
-                FROM `ab_category` as abc
-                    LEFT JOIN `ab_service` as abs ON abs.category_id = abc.id
-                WHERE abs.id = %d',
-            $this->getServiceId()
-        ) );
-
-        return $result !== null ? $result : __( 'Uncategorized', 'ab' );
+    public function getFinalServicePrice()
+    {
+        return $this->getServicePrice();
     }
 
     /**
+     * Get staff id.
+     *
      * @return int
      */
-    public function getStaffId() {
-        if ( count( $this->staff_id ) == 1 ) {
-            return $this->staff_id[ 0 ];
+    public function getStaffId()
+    {
+        $ids = $this->get( 'staff_ids' );
+        if ( count( $ids ) == 1 ) {
+            return $ids[ 0 ];
         }
+
         return 0;
     }
 
@@ -340,235 +336,58 @@ class AB_UserBookingData {
      *
      * @return string
      */
-    public function getStaffName() {
-        /** @var wpdb $wpdb */
-        global $wpdb;
-
+    public function getStaffName()
+    {
         $staff_id = $this->getStaffId();
 
-        return $staff_id
-            ? $wpdb->get_var( $wpdb->prepare( 'SELECT abs.full_name FROM `ab_staff` as abs WHERE abs.id = %d', $staff_id ) )
-            : __( 'Any', 'ab' );
-    }
+        if ( $staff_id ) {
+            $staff = new AB_Staff();
+            $staff->load( $staff_id );
 
-    public function setPaymentId( $payment_id ) {
-        $_SESSION['appointment_booking'][ $this->form_id ]['payment_id'] = $payment_id;
-    }
-
-    /**
-     * @return null|int
-     */
-    public function getPaymentId() {
-        if ( isset($_SESSION['appointment_booking'][ $this->form_id ]['payment_id']) ) {
-            return $_SESSION['appointment_booking'][ $this->form_id ]['payment_id'];
+            return $staff->get( 'full_name' );
         }
 
-        return null;
-    }
-
-    public function setBookingFinished( $finished ) {
-        $_SESSION['appointment_booking'][ $this->form_id ]['finished'] = $finished;
+        return __( 'Any', 'bookly' );
     }
 
     /**
-     * @return bool|int
-     */
-    public function getBookingFinished() {
-        if ( isset($_SESSION['appointment_booking'][ $this->form_id ]['finished']) ) {
-            return $_SESSION['appointment_booking'][ $this->form_id ]['finished'];
-        } elseif ( isset( $_SESSION[ 'tmp_booking_data' ] ) ) {
-            $tmp_booking_data = unserialize( $_SESSION[ 'tmp_booking_data' ] );
-            if ( is_array( $tmp_booking_data ) ) {
-                $tmp_booking_data = (object)$tmp_booking_data;
-            }
-            $tmp_booking_data = get_object_vars( $tmp_booking_data );
-            $tmp_form_id = $tmp_booking_data[ 'form_id' ];
-
-            if ( isset( $_SESSION[ 'appointment_booking' ][ $tmp_form_id ][ 'finished' ] ) ) {
-                return $_SESSION[ 'appointment_booking' ][ $tmp_form_id ][ 'finished' ];
-            }
-        }
-
-        return false;
-    }
-
-    public function setBookingCancelled( $cancelled ) {
-        $_SESSION[ 'appointment_booking' ][ $this->form_id ][ 'cancelled' ] = $cancelled;
-    }
-
-    /**
-     * @return bool|int
-     */
-    public function getBookingCancelled() {
-        if ( isset( $_SESSION[ 'appointment_booking' ][ $this->form_id ][ 'cancelled' ] ) ) {
-            return $_SESSION[ 'appointment_booking' ][ $this->form_id ][ 'cancelled' ];
-        } elseif ( isset( $_SESSION[ 'tmp_booking_data' ] ) ) {
-            $tmp_booking_data = unserialize( $_SESSION[ 'tmp_booking_data' ] );
-            if ( is_array( $tmp_booking_data ) ) {
-                $tmp_booking_data = (object)$tmp_booking_data;
-            }
-            $tmp_booking_data = get_object_vars( $tmp_booking_data );
-            $tmp_form_id = $tmp_booking_data[ 'form_id' ];
-
-            if ( isset( $_SESSION[ 'appointment_booking' ][ $tmp_form_id ][ 'cancelled' ] ) ) {
-                return $_SESSION[ 'appointment_booking' ][ $tmp_form_id ][ 'cancelled' ];
-            }
-        }
-
-        return false;
-    }
-
-    public function setClientTimeOffset($time_offset){
-        $this->client_time_offset = $time_offset;
-    }
-
-    /**
-     * Get form id.
+     * Get customer ID.
      *
-     * @return int
+     * @return int|null
      */
-    public function getFormId() {
-        return $this->form_id;
-    }
-
-    /**
-     * Get service id.
-     *
-     * @return int
-     */
-    public function getServiceId() {
-        return $this->service_id;
-    }
-
-    /**
-     * Get staff ids.
-     *
-     * @return array
-     */
-    public function getStaffIds() {
-        return $this->staff_id;
-    }
-
-    /**
-     * Get requested date-from.
-     *
-     * @return string
-     */
-    public function getRequestedDateFrom() {
-        return $this->requested_date_from;
-    }
-
-    /**
-     * Get requested time-from.
-     *
-     * @return string
-     */
-    public function getRequestedTimeFrom() {
-        if ( !$this->requested_time_from ) {
-            /** @var wpdb $wpdb */
-            global $wpdb;
-            $this->requested_time_from = $wpdb->get_var(
-                'SELECT SUBSTRING_INDEX(MIN(start_time), ":", 2) AS min_end_time
-                    FROM ab_staff_schedule_item
-                 WHERE start_time IS NOT NULL'
-            );
-        }
-
-        return $this->requested_time_from;
-    }
-
-    /**
-     * Get requested time-to.
-     *
-     * @return string
-     */
-    public function getRequestedTimeTo() {
-        if ( !$this->requested_time_to ) {
-            /** @var wpdb $wpdb */
-            global $wpdb;
-            $this->requested_time_to = $wpdb->get_var(
-                'SELECT SUBSTRING_INDEX(MAX(end_time), ":", 2) AS max_end_time
-                    FROM ab_staff_schedule_item
-                 WHERE end_time IS NOT NULL'
-            );
-        }
-
-        return $this->requested_time_to;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBookedDatetime() {
-        return $this->booked_datetime;
-    }
-
-    /**
-     * Get email.
-     *
-     * @return string
-     */
-    public function getEmail() {
-        return $this->email;
-    }
-
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    /**
-     * Get phone.
-     *
-     * @return string
-     */
-    public function getPhone() {
-        return $this->phone;
-    }
-
-    /**
-     * Get notes.
-     *
-     * @return string
-     */
-    public function getNotes() {
-        return $this->notes;
-    }
-
-    /**
-     * Get available days.
-     *
-     * @return array
-     */
-    public function getAvailableDays() {
-        return $this->available_days;
-    }
-
-    /**
-     * Get customer id
-     *
-     * @return int
-     */
-    public function getCustomerId(){
+    public function getCustomerId()
+    {
         return $this->customer_id;
     }
 
     /**
-     * @return string
+     * Set PayPal transaction status.
+     *
+     * @param string $status
+     * @param string $error
      */
-    public function getCoupon() {
-        return $this->coupon;
+    public function setPayPalStatus( $status, $error = null )
+    {
+        $_SESSION[ 'bookly' ][ $this->form_id ][ 'paypal' ] = array(
+            'status' => $status,
+            'error'  => $error
+        );
     }
 
-    /**
-     * @param $coupon
+    /*
+     * Get and clear PayPal transaction status.
+     *
+     * @return array|false
      */
-    public function setCoupon($coupon){
-        $_SESSION['appointment_booking'][ $this->form_id ]['coupon'] = $coupon;
-        $this->coupon = $coupon;
+    public function extractPayPalStatus()
+    {
+        if ( isset ( $_SESSION[ 'bookly' ][ $this->form_id ][ 'paypal' ] ) ) {
+            $status = $_SESSION[ 'bookly' ][ $this->form_id ][ 'paypal' ];
+            unset ( $_SESSION[ 'bookly' ][ $this->form_id ][ 'paypal' ] );
+
+            return $status;
+        }
+
+        return false;
     }
 }

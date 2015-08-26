@@ -1,20 +1,19 @@
-<?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-if ( !function_exists( 'wp_handle_upload' ) ) require_once(ABSPATH . 'wp-admin/includes/file.php');
-include AB_PATH . '/lib/AB_ImageResize.php';
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! function_exists( 'wp_handle_upload' ) ) { require_once( ABSPATH . 'wp-admin/includes/file.php' ); }
 
 class AB_StaffMemberEditForm extends AB_StaffMemberForm {
 
     private $errors = array();
 
-    public function configure() {
+    public function configure()
+    {
         $this->setFields( array(
             'wp_user_id',
             'full_name',
             'email',
             'phone',
             'avatar',
-            'google_calendar_id',
+            'position',
         ) );
     }
 
@@ -22,24 +21,28 @@ class AB_StaffMemberEditForm extends AB_StaffMemberForm {
      * @param array $post
      * @param array $files
      */
-    public function bind( array $post, array $files = array() ) {
-        if ( isset( $post[ 'wp_user_id' ] ) && ! $post[ 'wp_user_id' ] ) {
-            $post[ 'wp_user_id' ] = null;
-        }
-
+    public function bind( array $post, array $files = array() )
+    {
         parent::bind( $post );
 
-        if ( isset ( $files[ 'avatar' ] ) && $files[ 'avatar' ][ 'tmp_name' ] ) {
+        if ( isset ( $files['avatar'] ) && $files['avatar']['tmp_name'] ) {
 
-            if ( in_array( $files[ 'avatar' ][ 'type' ], array( "image/gif", "image/jpeg", "image/png" ) ) ) {
-                $movefile = wp_handle_upload( $files[ 'avatar' ], array( 'test_form' => false ) );
-                if ( $movefile ) {
-                    $imageResize = new AB_ImageResize( $movefile[ 'file' ] );
-                    $imageResize->resizeImage( 80, 80 );
-                    $imageResize->saveImage( $movefile[ 'file' ], 80 );
+            if ( in_array( $files['avatar']['type'], array( 'image/gif', 'image/jpeg', 'image/png' ) ) ) {
+                $uploaded = wp_handle_upload( $files['avatar'], array( 'test_form' => false ) );
+                if ( $uploaded ) {
+                    $editor = wp_get_image_editor( $uploaded['file'] );
+                    $editor->resize( 200, 200 );
+                    $editor->save( $uploaded['file'] );
 
-                    $this->data[ 'avatar_path' ] = $movefile[ 'file' ];
-                    $this->data[ 'avatar_url' ]  = $movefile[ 'url' ];
+                    $this->data['avatar_path'] = $uploaded['file'];
+                    $this->data['avatar_url']  = $uploaded['url'];
+
+                    // Remove old image.
+                    $staff = new AB_Staff();
+                    $staff->load( $post['id'] );
+                    if ( file_exists( $staff->get( 'avatar_path' ) ) ) {
+                        unlink( $staff->get( 'avatar_path' ) );
+                    }
                 }
             }
         }
@@ -52,4 +55,5 @@ class AB_StaffMemberEditForm extends AB_StaffMemberForm {
     {
         return $this->errors;
     }
+
 }

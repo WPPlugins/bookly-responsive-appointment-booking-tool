@@ -1,10 +1,12 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+/**
+ * Class AB_CompanyForm
+ */
 class AB_CompanyForm extends AB_Form {
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setFields(array(
            'ab_settings_company_name',
            'ab_settings_company_logo',
@@ -20,31 +22,31 @@ class AB_CompanyForm extends AB_Form {
      * @param array $post
      * @param array $files
      */
-    public function bind( array $post, array $files = array() ) {
-
+    public function bind( array $post, array $files = array() )
+    {
         parent::bind( $post, $files );
 
-        // remove the old image
+        // Remove the old image.
         if ( isset( $post['ab_remove_logo'] ) && file_exists( get_option( 'ab_settings_company_logo_path' ) ) ) {
             unlink( get_option( 'ab_settings_company_logo_path' ) );
             update_option( 'ab_settings_company_logo_path', '' );
             update_option( 'ab_settings_company_logo_url', '' );
         }
 
-        // and add new
-        if ( isset ($files['ab_settings_company_logo']) && $files['ab_settings_company_logo']['tmp_name'] ) {
+        // And add new.
+        if ( isset ( $files['ab_settings_company_logo'] ) && $files['ab_settings_company_logo']['tmp_name'] ) {
 
-            if ( in_array( $files['ab_settings_company_logo']['type'], array( "image/gif", "image/jpeg", "image/png" ) ) ) {
-                $movefile = wp_handle_upload( $files['ab_settings_company_logo'], array( 'test_form' => false ) );
-                if ( $movefile ) {
-                    $imageResize = new AB_ImageResize($movefile['file']);
-                    $imageResize->resizeImage( 150, 150 );
-                    $imageResize->saveImage($movefile['file']);
+            if ( in_array( $files['ab_settings_company_logo']['type'], array( 'image/gif', 'image/jpeg', 'image/png' ) ) ) {
+                $uploaded = wp_handle_upload( $files['ab_settings_company_logo'], array( 'test_form' => false ) );
+                if ( $uploaded ) {
+                    $editor = wp_get_image_editor( $uploaded['file'] );
+                    $editor->resize( 200, 200 );
+                    $editor->save( $uploaded['file'] );
 
-                    $this->data['ab_settings_company_logo_path'] = $movefile['file'];
-                    $this->data['ab_settings_company_logo_url'] = $movefile['url'];
+                    $this->data['ab_settings_company_logo_path'] = $uploaded['file'];
+                    $this->data['ab_settings_company_logo_url'] = $uploaded['url'];
 
-                    // remove the old image
+                    // Remove old image.
                     if ( file_exists( get_option( 'ab_settings_company_logo_path' ) ) ) {
                         unlink( get_option( 'ab_settings_company_logo_path' ) );
                     }
@@ -53,7 +55,8 @@ class AB_CompanyForm extends AB_Form {
         }
     }
 
-    public function save() {
+    public function save()
+    {
         foreach ( $this->data as $field => $value ) {
             update_option( $field, $value );
         }

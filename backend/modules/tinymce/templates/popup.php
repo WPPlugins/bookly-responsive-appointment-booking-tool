@@ -4,66 +4,57 @@
         <table>
             <tr>
                 <td>
-                    <label for="ab-select-category"><?php _e( 'Default value for category select', 'ab' ); ?></label>
+                    <label for="ab-select-category"><?php _e( 'Default value for category select', 'bookly' ) ?></label>
                 </td>
                 <td>
                     <select class="select-list" id="ab-select-category">
-                        <option value=""><?php _e( 'Select category', 'ab' ); ?></option>
+                        <option value=""><?php _e( 'Select category', 'bookly' ) ?></option>
                     </select>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="checkbox" id="ab-hide-categories" /> <?php _e( 'Hide this field', 'ab' ); ?>
-                    <p><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'ab' ) ?></p>
+                    <div><input type="checkbox" id="ab-hide-categories" /><?php _e( 'Hide this field', 'bookly' ) ?></div>
+                    <i><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'bookly' ) ?></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="ab-select-service"><?php _e( 'Default value for service select', 'ab' ); ?></label>
+                    <label for="ab-select-service"><?php _e( 'Default value for service select', 'bookly' ) ?></label>
                 </td>
                 <td>
                     <select class="select-list" id="ab-select-service">
-                        <option value=""><?php _e('Select service') ?></option>
+                        <option value=""><?php _e( 'Select service', 'bookly' ) ?></option>
                     </select>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="checkbox" id="ab-hide-services" /> <?php _e( 'Hide this field', 'ab' ); ?>
-                    <p><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'ab' ) ?></p>
+                    <div><input type="checkbox" id="ab-hide-services" /><?php _e( 'Hide this field', 'bookly' ) ?></div>
+                    <i><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'bookly' ) ?></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="ab-select-employee"><?php _e('Default value for employee select', 'ab') ?></label>
+                    <label for="ab-select-employee"><?php _e( 'Default value for employee select', 'bookly' ) ?></label>
                 </td>
                 <td>
                     <select class="select-list ab-select-mobile" id="ab-select-employee">
-                        <option value=""><?php _e( 'Any', 'ab' ) ?></option>
+                        <option value=""><?php _e( 'Any', 'bookly' ) ?></option>
                     </select>
+                    <div><input type="checkbox" id="ab-hide-employee" /><?php _e( 'Hide this field', 'bookly' ) ?></div>
+                </td>
+            </tr>
+            <tr>
+                <td><?php _e( 'Number of persons', 'bookly' ) ?></td>
+                <td>
+                    <input type="checkbox" id="ab-hide-number-of-persons" checked /><?php _e( 'Hide this field', 'bookly' ) ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="ab-hide-available"><?php _e( '"I\'m available on …" block', 'bookly' ) ?></label>
+                </td>
+                <td>
+                    <input type="checkbox" id="ab-hide-available" /><?php _e( 'Hide this block', 'bookly' ) ?>
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <input type="checkbox" id="ab-hide-employee" /> <?php _e( 'Hide this field', 'ab' ); ?>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="ab-hide-available"><?php _e('"I\'m available on …" block', 'ab') ?></label>
-                </td>
-                <td>
-                    <input type="checkbox" id="ab-hide-available" /> <?php _e( 'Hide this block', 'ab' ) ?>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input class="button button-primary" id="ab-insert-shortcode" type="submit" value="<?php _e( 'Insert', 'ab' ); ?>" />
+                    <input class="button button-primary" id="ab-insert-shortcode" type="submit" value="<?php _e( 'Insert', 'bookly' ) ?>" />
                 </td>
             </tr>
         </table>
@@ -72,7 +63,7 @@
 <style type="text/css">
 #ab-shortcode-form { margin-top: 15px; }
 #ab-shortcode-form table { width: 100%; }
-#ab-shortcode-form table td { padding: 5px; vertical-align: 0; }
+#ab-shortcode-form table td { padding: 5px 5px 15px 5px; vertical-align: top; }
 #ab-shortcode-form table td select { width: 100%; margin-bottom: 5px; }
 .ab-media-icon {
   display: inline-block;
@@ -80,7 +71,7 @@
   height: 16px;
   vertical-align: text-top;
   margin: 0 2px;
-  background: url("<?php echo plugins_url( 'resources/images/calendar.png' , __DIR__ ) ?>") 0 0 no-repeat;
+  background: url("<?php echo plugins_url( 'resources/images/calendar.png', __DIR__ ) ?>") 0 0 no-repeat;
 }
 .ab-booking_form-units {
     width: 17%;
@@ -89,21 +80,28 @@
 </style>
 <script type="text/javascript">
 jQuery(function ($) {
-    var $select_category = $('#ab-select-category'),
-        $select_service  = $('#ab-select-service'),
-        $select_employee = $('#ab-select-employee'),
-        $hide_categories = $('#ab-hide-categories'),
-        $hide_services   = $('#ab-hide-services'),
-        $hide_staff      = $('#ab-hide-employee'),
-        $hide_available  = $('#ab-hide-available'),
-        $add_button      = $('#add-ap-booking'),
-        $insert          = $('#ab-insert-shortcode'),
-        abCategories     = <?php echo $categoriesJson ?>,
-        abStaff          = <?php echo $staffJson ?>,
-        abServices       = <?php echo $servicesJson ?>;
+    var $select_category        = $('#ab-select-category'),
+        $select_service         = $('#ab-select-service'),
+        $hide_number_of_persons = $('#ab-hide-number-of-persons'),
+        $select_employee        = $('#ab-select-employee'),
+        $hide_categories        = $('#ab-hide-categories'),
+        $hide_services          = $('#ab-hide-services'),
+        $hide_staff             = $('#ab-hide-employee'),
+        $hide_available         = $('#ab-hide-available'),
+        $add_button             = $('#add-bookly-form'),
+        $insert                 = $('#ab-insert-shortcode'),
+        abCategories            = <?php echo $categoriesJson ?>,
+        abStaff                 = <?php echo $staffJson ?>,
+        abServices              = <?php echo $servicesJson ?>;
 
     $add_button.on('click', function () {
-        window.parent.tb_show(<?php echo json_encode( __( 'Insert Appointment Booking Form', 'ab' ) ) ?>, this.href);
+        window.parent.tb_show(<?php echo json_encode( __( 'Insert Appointment Booking Form', 'bookly' ) ) ?>, this.href);
+        window.setTimeout(function(){
+            $("#TB_window").css({
+                'overflow-x': 'auto',
+                'overflow-y': 'hidden'
+            });
+        },100);
     });
 
     var AB_Category = Backbone.Model.extend();
@@ -352,34 +350,38 @@ jQuery(function ($) {
     $insert.on('click', function (e) {
         e.preventDefault();
 
-        var insert = '[ap-booking';
+        var insert = '[bookly-form';
 
         if ($select_category.val()) {
-            insert += ' cid="' + $select_category.val() + '"';
+            insert += ' category_id="' + $select_category.val() + '"';
         }
 
         if ($hide_categories.is(':checked')) {
-            insert += ' ch="1"';
+            insert += ' hide_categories="1"';
         }
 
         if ($select_service.val()) {
-            insert += ' sid="' + $select_service.val() + '"';
+            insert += ' service_id="' + $select_service.val() + '"';
         }
 
         if ($hide_services.is(':checked')) {
-            insert += ' hs="1"';
+            insert += ' hide_services="1"';
         }
 
         if ($select_employee.val()) {
-            insert += ' eid="' + $select_employee.val() + '"';
+            insert += ' staff_member_id="' + $select_employee.val() + '"';
+        }
+
+        if ($hide_number_of_persons.is(':not(:checked)')) {
+            insert += ' show_number_of_persons="1"';
         }
 
         if ($hide_staff.is(':checked')) {
-            insert += ' he="1"';
+            insert += ' hide_staff_members="1"';
         }
 
         if ($hide_available.is(':checked')) {
-            insert += ' ha="1"';
+            insert += ' hide_date_and_time="1"';
         }
 
         insert += ']';
@@ -393,6 +395,7 @@ jQuery(function ($) {
         $hide_services.prop('checked', false);
         $hide_staff.prop('checked', false);
         $hide_available.prop('checked', false);
+        $hide_number_of_persons.prop('checked', true);
 
         window.parent.tb_remove();
         return false;

@@ -1,24 +1,21 @@
 .ab-second-step {
-    max-width: 625px;
     overflow: hidden;
     position: relative;
     margin-bottom: 20px!important;
+    margin-left: auto;
+    margin-right: auto;
 }
-
 .ab-columnizer-wrap {
     position: relative;
 }
-
 .ab-columnizer {
     white-space: nowrap;
     position: absolute;
 }
-
 .ab-columnizer .ab-time-screen {
     display: inline-block;
-     *display: inline;
+    *display: inline;
 }
-
 .ab-columnizer .ab-column {
     width: 120px;
     margin: 0 3.5px;
@@ -28,7 +25,6 @@
     vertical-align: top;
     float: none!important;
 }
-
 .ab-columnizer .ab-available-day,
 .ab-columnizer .ab-available-hour {
     display: block;
@@ -41,49 +37,32 @@
     line-height: 20px;
     color: #333333!important;
     text-align: center;
+    float: none;
     vertical-align: middle;
     cursor: pointer;
+    text-transform: none;
     border: 1px solid #cccccc;
     border-radius: 4px;
-   -moz-border-radius: 4px;
-   -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-sizing: border-box!important;
+    -moz-box-sizing: border-box!important;
+    -webkit-box-sizing: border-box!important;
 }
 
+.ab-columnizer .ab-available-hour {
+    background: white!important;
+    font-weight: normal;
+}
+.ab-columnizer .ab-available-hour .ladda-label { margin: 0 -12px; display: inline-block; }
 .ab-columnizer .ab-available-day {
     background: #f4662f;
     color: white!important;
     font-weight: bold;
     border: 1px solid #f4662f;
 }
-
-.ab-columnizer .ab-available-hour:hover { border: 2px solid #f4662f; color: #f4662f; }
-.ab-columnizer .ab-available-hour:hover .ab-hour-icon {
-    background: none;
-    border: 2px solid #f4662f;
-    color: #f4662f;
-    width: auto;
-    height: auto;
-    padding: 3px;
-    border-radius: 25px;
-    margin-left: -1px;
-    margin-right: 5px;
-}
-.ab-columnizer .ab-available-hour:hover .ab-hour-icon span {
-    background: #f4662f;
-    width: 8px;
-    height: 8px;
-    border-radius: 10px;
-    display: block;
-}
-
-.ab-second-step .ab-columnizer > button {
-    display: none;
-}
-
-.ab-second-step .ab-columnizer > .ab-column {
-    display: none;
-}
-
+.booked, .booked:hover { opacity: .5; cursor: default!important; }
+.booked span { text-decoration: line-through; }
 .ab-columnizer .ab-available-hour .ab-hour-icon {
     display: block;
     float: left;
@@ -92,4 +71,59 @@
     margin-top: 1px;
     margin-right: 5px;
     background: url("../images/success.png?1") 0 0 no-repeat;
+}
+.ab-columnizer .ab-available-hour:hover { border: 2px solid #f4662f; color: #f4662f; }
+.ab-columnizer .ab-available-hour.booked:hover { border: 1px solid #cccccc!important; color: #333333!important; }
+.ab-columnizer .ab-available-hour.booked:hover .ab-hour-icon span { visibility: hidden; }
+.ab-columnizer .ab-available-hour:hover .ab-hour-icon {
+    background: none;
+    border: 2px solid #f4662f;
+    color: #f4662f;
+    width: auto;
+    height: auto;
+    padding: 3px;
+    border-radius: 25px;
+    margin-right: 5px;
+}
+.ab-columnizer .ab-available-hour.booked:hover .ab-hour-icon { border: 2px solid #cccccc!important; }
+.ab-columnizer .ab-available-hour:hover .ab-hour-icon span {
+    background: #f4662f;
+    width: 8px;
+    height: 8px;
+    border-radius: 10px;
+    display: block;
+}
+.ab-second-step .ab-columnizer > button { display: none; }
+.ab-second-step .ab-columnizer > .ab-column { display: none; }
+
+.ab-slot-calendar {
+    width: 310px;
+    height: 260px;
+    float: left;
+}
+
+.ab-not-time-screen {
+    font-size: 16px;
+    height: 240px;
+    margin-left: 320px;
+    font-weight: bold;
+}
+
+.ab-not-time-screen.ab-not-calendar {
+    height: auto;
+    margin-left: 0;
+    padding-bottom: 15px;
+}
+
+.ab-spin-overlay {
+    position: relative;
+    opacity: .5;
+}
+
+.ab-spin-overlay .ab-spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -20px;
+    margin-top: -20px;
 }

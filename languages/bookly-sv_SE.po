@@ -1,0 +1,2825 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Bookly v7.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-12 14:52+0300\n"
+"PO-Revision-Date: 2015-08-12 15:29+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.2\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1,2t;_e:1,2t;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;"
+"__ngettext_noop:1,2;_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;"
+"_nx_js:1,2,3c;esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;"
+"esc_attr_x:1,2c;esc_html_x:1,2c;comments_number_link:2,3\n"
+"X-Poedit-Basepath: .\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../backend/AB_Backend.php:58
+#: ../backend/modules/calendar/templates/calendar.php:10
+msgid "Calendar"
+msgstr "Kalender"
+
+#: ../backend/AB_Backend.php:59
+#: ../backend/modules/appointments/templates/index.php:4
+#: ../frontend/modules/customer_profile/templates/short_code.php:4
+msgid "Appointments"
+msgstr "Bokning"
+
+#: ../backend/AB_Backend.php:60 ../backend/modules/staff/templates/list.php:7
+msgid "Staff Members"
+msgstr "Medarbetare"
+
+#: ../backend/AB_Backend.php:61
+#: ../backend/modules/service/templates/index.php:5
+#: ../backend/modules/staff/templates/edit.php:21
+msgid "Services"
+msgstr "Tjänster"
+
+#: ../backend/AB_Backend.php:62 ../backend/modules/sms/templates/index.php:6
+msgid "SMS Notifications"
+msgstr "SMS Påminnelser"
+
+#: ../backend/AB_Backend.php:63
+#: ../backend/modules/notifications/templates/index.php:10
+msgid "Email Notifications"
+msgstr "E-postpåminnelser"
+
+#: ../backend/AB_Backend.php:64
+#: ../backend/modules/calendar/templates/_appointment_form.php:66
+#: ../backend/modules/customer/templates/index.php:4
+#: ../backend/modules/settings/templates/index.php:12
+msgid "Customers"
+msgstr "Kunder"
+
+#: ../backend/AB_Backend.php:65
+#: ../backend/modules/customer/templates/index.php:36
+#: ../backend/modules/payment/templates/index.php:12
+#: ../backend/modules/settings/templates/index.php:15
+msgid "Payments"
+msgstr "Betalningar"
+
+#: ../backend/AB_Backend.php:66
+#: ../backend/modules/appearance/templates/index.php:4
+msgid "Appearance"
+msgstr "Utseende"
+
+#: ../backend/AB_Backend.php:67
+#: ../backend/modules/settings/templates/index.php:4
+msgid "Settings"
+msgstr "Inställningar"
+
+#: ../backend/AB_Backend.php:68
+#: ../backend/modules/coupons/templates/index.php:5
+#: ../backend/modules/settings/templates/_paymentsForm.php:18
+msgid "Coupons"
+msgstr "Rabattkuponger"
+
+#: ../backend/AB_Backend.php:69
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:22
+#: ../backend/modules/custom_fields/templates/index.php:4
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:49
+msgid "Custom Fields"
+msgstr "Anpassade fält"
+
+#: ../backend/AB_Backend.php:85 ../backend/modules/staff/templates/list.php:9
+msgid "Profile"
+msgstr "Användarprofil"
+
+#: ../backend/modules/appearance/AB_AppearanceController.php:60
+#: ../backend/modules/appointments/AB_AppointmentsController.php:48
+#: ../backend/modules/calendar/AB_CalendarController.php:73
+#: ../backend/modules/payment/AB_PaymentController.php:28
+#: ../backend/modules/sms/AB_SmsController.php:108
+#: ../frontend/AB_Frontend.php:51
+msgid "Today"
+msgstr "Idag"
+
+#: ../backend/modules/appearance/AB_AppearanceController.php:63
+#: ../frontend/AB_Frontend.php:55
+msgid "Next month"
+msgstr "Nästa månad"
+
+#: ../backend/modules/appearance/AB_AppearanceController.php:64
+#: ../frontend/AB_Frontend.php:56
+msgid "Previous month"
+msgstr "Föregående månad"
+
+#: ../backend/modules/appearance/templates/_1_service.php:74
+#: ../backend/modules/appearance/templates/_1_service.php:127
+#: ../backend/modules/appearance/templates/_3_details.php:39
+#: ../backend/modules/appearance/templates/_4_payment.php:56
+#: ../backend/modules/sms/templates/index.php:144
+#: ../frontend/modules/booking/templates/1_service.php:53
+#: ../frontend/modules/booking/templates/1_service.php:112
+#: ../frontend/modules/booking/templates/3_details.php:89
+#: ../frontend/modules/booking/templates/4_payment.php:99
+#: ../frontend/modules/booking/templates/4_payment.php:116
+#: ../frontend/modules/booking/templates/4_payment.php:126
+#: ../lib/payment/AB_PayPal.php:136
+msgid "Next"
+msgstr "Nästa"
+
+#: ../backend/modules/appearance/templates/_1_service.php:124
+#: ../backend/modules/appearance/templates/_2_time.php:189
+#: ../backend/modules/appearance/templates/_3_details.php:36
+#: ../backend/modules/appearance/templates/_4_payment.php:53
+#: ../frontend/modules/booking/templates/1_service.php:109
+#: ../frontend/modules/booking/templates/2_time.php:32
+#: ../frontend/modules/booking/templates/2_time.php:41
+#: ../frontend/modules/booking/templates/3_details.php:86
+#: ../frontend/modules/booking/templates/4_payment.php:96
+#: ../frontend/modules/booking/templates/4_payment.php:113
+#: ../frontend/modules/booking/templates/4_payment.php:123
+#: ../lib/payment/AB_PayPal.php:135
+msgid "Back"
+msgstr "Tillbaka"
+
+#: ../backend/modules/appearance/templates/_3_details.php:10
+msgid "Visible to non-logged in customers only"
+msgstr "Synlig för endast anonyma kunder"
+
+#: ../backend/modules/appearance/templates/_4_payment.php:16
+#: ../backend/modules/appointments/AB_AppointmentsController.php:55
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:71
+#: ../backend/modules/payment/AB_PaymentController.php:35
+#: ../backend/modules/sms/AB_SmsController.php:115
+#: ../frontend/modules/booking/templates/4_payment.php:27
+msgid "Apply"
+msgstr "Utför"
+
+#: ../backend/modules/appearance/templates/_4_payment.php:35
+#: ../frontend/modules/booking/templates/4_payment.php:50
+msgid "I will pay now with PayPal"
+msgstr "Betala med PayPal"
+
+#: ../backend/modules/appearance/templates/_4_payment.php:42
+#: ../frontend/modules/booking/templates/4_payment.php:64
+#: ../frontend/modules/booking/templates/4_payment.php:78
+msgid "I will pay now with Credit Card"
+msgstr "Betala med kort "
+
+#: ../backend/modules/appearance/templates/_card_payment.php:4
+#: ../frontend/modules/booking/templates/_card_payment.php:4
+msgid "Credit Card Number"
+msgstr "Kreditkortsnummer"
+
+#: ../backend/modules/appearance/templates/_card_payment.php:10
+#: ../frontend/modules/booking/templates/_card_payment.php:10
+msgid "Expiration Date"
+msgstr "Utgångsdatum"
+
+#: ../backend/modules/appearance/templates/_card_payment.php:27
+#: ../frontend/modules/booking/templates/_card_payment.php:27
+msgid "Card Security Code"
+msgstr "CSV säkerhetskod"
+
+#: ../backend/modules/appearance/templates/_codes.php:2
+#: ../backend/modules/notifications/templates/_codes.php:6
+#: ../backend/modules/settings/templates/_woocommerce.php:62
+#: ../backend/modules/sms/templates/_notif_codes.php:6
+msgid "name of category"
+msgstr "kategorinamn"
+
+#: ../backend/modules/appearance/templates/_codes.php:4
+msgid "login form"
+msgstr "inloggningsformulär"
+
+#: ../backend/modules/appearance/templates/_codes.php:6
+#: ../backend/modules/notifications/templates/_codes.php:17
+#: ../backend/modules/sms/templates/_notif_codes.php:15
+msgid "number of persons"
+msgstr "antal personer"
+
+#: ../backend/modules/appearance/templates/_codes.php:8
+msgid "date of service"
+msgstr "tjänstens datum"
+
+#: ../backend/modules/appearance/templates/_codes.php:10
+#: ../backend/modules/notifications/templates/_codes.php:18
+#: ../backend/modules/settings/templates/_woocommerce.php:63
+#: ../backend/modules/sms/templates/_notif_codes.php:16
+msgid "name of service"
+msgstr "tjänstens namn"
+
+#: ../backend/modules/appearance/templates/_codes.php:11
+#: ../backend/modules/notifications/templates/_codes.php:19
+#: ../backend/modules/settings/templates/_woocommerce.php:64
+#: ../backend/modules/sms/templates/_notif_codes.php:17
+msgid "price of service"
+msgstr "tjänstens pris"
+
+#: ../backend/modules/appearance/templates/_codes.php:13
+msgid "time of service"
+msgstr "tjänstens tidpunkt"
+
+#: ../backend/modules/appearance/templates/_codes.php:15
+#: ../backend/modules/notifications/templates/_codes.php:21
+#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:4
+#: ../backend/modules/settings/templates/_woocommerce.php:65
+#: ../backend/modules/sms/templates/_notif_codes.php:19
+#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:4
+msgid "name of staff"
+msgstr "medarbetarens namn"
+
+#: ../backend/modules/appearance/templates/_codes.php:16
+msgid "total price of booking"
+msgstr "summa"
+
+#: ../backend/modules/appearance/templates/index.php:7
+#: ../backend/modules/service/templates/_list.php:4
+#: ../backend/modules/settings/AB_SettingsController.php:59
+#: ../backend/modules/settings/AB_SettingsController.php:73
+#: ../backend/modules/settings/AB_SettingsController.php:81
+#: ../backend/modules/settings/AB_SettingsController.php:90
+#: ../backend/modules/settings/AB_SettingsController.php:97
+#: ../backend/modules/settings/AB_SettingsController.php:106
+#: ../backend/modules/staff/templates/edit.php:9
+msgid "Settings saved."
+msgstr "Inställningarna har sparats."
+
+#: ../backend/modules/appearance/templates/index.php:18
+msgid "Show form progress tracker"
+msgstr "Visa formulärets framsteg"
+
+#: ../backend/modules/appearance/templates/index.php:26
+msgid "Show calendar"
+msgstr "Visa kalender"
+
+#: ../backend/modules/appearance/templates/index.php:34
+msgid "Show blocked timeslots"
+msgstr "Visa blockerade tidsintervall"
+
+#: ../backend/modules/appearance/templates/index.php:42
+msgid "Show each day in one column"
+msgstr "Visa varje dag i en kolumn"
+
+#: ../backend/modules/appearance/templates/index.php:80
+msgid "Click on the underlined text to edit."
+msgstr "Klicka på den understrukna texten för att redigera."
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:49
+#: ../backend/modules/payment/AB_PaymentController.php:29
+#: ../backend/modules/sms/AB_SmsController.php:109
+msgid "Yesterday"
+msgstr "Igår"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:50
+#: ../backend/modules/payment/AB_PaymentController.php:30
+#: ../backend/modules/sms/AB_SmsController.php:110
+msgid "Last 7 Days"
+msgstr "De senaste 7 dagarna"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:51
+#: ../backend/modules/payment/AB_PaymentController.php:31
+#: ../backend/modules/sms/AB_SmsController.php:111
+msgid "Last 30 Days"
+msgstr "De senaste 30 dagarna"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:52
+#: ../backend/modules/payment/AB_PaymentController.php:32
+#: ../backend/modules/sms/AB_SmsController.php:112
+msgid "This Month"
+msgstr "Den här månaden"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:53
+msgid "Next Month"
+msgstr "Nästa månad"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:54
+#: ../backend/modules/payment/AB_PaymentController.php:34
+#: ../backend/modules/sms/AB_SmsController.php:114
+msgid "Custom Range"
+msgstr "Annat intervall"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:56
+#: ../backend/modules/calendar/templates/_appointment_form.php:99
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:72
+#: ../backend/modules/customer/templates/_import.php:32
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:101
+#: ../backend/modules/payment/AB_PaymentController.php:36
+#: ../backend/modules/service/templates/index.php:44
+#: ../backend/modules/sms/AB_SmsController.php:116
+#: ../backend/modules/sms/templates/index.php:185
+#: ../backend/modules/staff/templates/_break.php:17
+#: ../backend/modules/staff/templates/new.php:32
+#: ../backend/modules/staff/templates/schedule.php:61
+#: ../backend/modules/tinymce/templates/appointment_list.php:44
+#: ../frontend/modules/customer_profile/templates/short_code.php:41
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:57
+#: ../backend/modules/payment/AB_PaymentController.php:37
+#: ../backend/modules/sms/AB_SmsController.php:117
+msgid "To"
+msgstr "Till"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:58
+#: ../backend/modules/payment/AB_PaymentController.php:38
+#: ../backend/modules/sms/AB_SmsController.php:118
+msgid "From"
+msgstr "Från"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:59
+#: ../backend/modules/calendar/AB_CalendarController.php:80
+msgid "Edit appointment"
+msgstr "Ändra bokning"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:60
+#: ../backend/modules/appointments/templates/index.php:22
+#: ../backend/modules/calendar/AB_CalendarController.php:79
+#: ../backend/modules/calendar/templates/_appointment_form.php:17
+msgid "New appointment"
+msgstr "Ny bokning"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:69
+msgid "Please select at least one appointment."
+msgstr "Välj minst en avtalad tid."
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:199
+#: ../backend/modules/appointments/templates/index.php:29
+msgid "Booking Time"
+msgstr "Bokningstid"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:200
+#: ../backend/modules/appointments/templates/index.php:30
+msgid "Staff Member"
+msgstr "Medarbetare"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:201
+#: ../backend/modules/appointments/templates/index.php:32
+#: ../backend/modules/calendar/templates/_appointment_form.php:28
+#: ../backend/modules/payment/templates/index.php:72
+#: ../backend/modules/tinymce/templates/appointment_list.php:14
+#: ../installer.php:182 ../installer.php:188 ../installer.php:232
+#: ../lib/AB_Google.php:150 ../updates.php:413 ../updates.php:727
+#: ../updates.php:733
+msgid "Service"
+msgstr "Tjänst"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:202
+#: ../backend/modules/appointments/templates/index.php:33
+#: ../backend/modules/service/templates/_list.php:53
+msgid "Duration"
+msgstr "Tidslängd"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:203
+#: ../backend/modules/appointments/templates/index.php:34
+#: ../backend/modules/service/templates/_list.php:108
+#: ../backend/modules/sms/templates/_price.php:8
+#: ../backend/modules/staff/templates/services.php:24
+#: ../backend/modules/staff/templates/services.php:60
+#: ../backend/modules/tinymce/templates/appointment_list.php:38
+msgid "Price"
+msgstr "Pris"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:204
+#: ../backend/modules/payment/templates/index.php:70
+msgid "Customer"
+msgstr "Kund"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:205
+#: ../backend/modules/customer/templates/index.php:31
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:33
+#: ../backend/modules/settings/templates/_companyForm.php:33
+#: ../backend/modules/sms/templates/_sms_details.php:16
+#: ../backend/modules/staff/templates/edit.php:83 ../installer.php:194
+#: ../lib/AB_Google.php:157 ../updates.php:739
+msgid "Phone"
+msgstr "Mobiltelefon"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:206
+#: ../backend/modules/customer/templates/index.php:32
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:37
+#: ../backend/modules/sms/templates/index.php:85
+#: ../backend/modules/sms/templates/index.php:105
+#: ../backend/modules/sms/templates/index.php:132
+#: ../backend/modules/staff/templates/edit.php:77 ../installer.php:195
+#: ../lib/AB_Google.php:156 ../updates.php:740
+msgid "Email"
+msgstr "E-post"
+
+#: ../backend/modules/appointments/templates/index.php:16
+#: ../backend/modules/customer/templates/_import.php:21
+msgid "Delimiter"
+msgstr "Avgränsare"
+
+#: ../backend/modules/appointments/templates/index.php:18
+#: ../backend/modules/customer/templates/_import.php:23
+msgid "Comma (,)"
+msgstr "+Komma(,)."
+
+#: ../backend/modules/appointments/templates/index.php:19
+#: ../backend/modules/customer/templates/_import.php:24
+msgid "Semicolon (;)"
+msgstr "Semikolon (;)"
+
+#: ../backend/modules/appointments/templates/index.php:21
+msgid "Export to CSV"
+msgstr "Exportera till CSV"
+
+#: ../backend/modules/appointments/templates/index.php:31
+msgid "Customer Name"
+msgstr "Kundens namn"
+
+#: ../backend/modules/appointments/templates/index.php:47
+msgid "Edit"
+msgstr "Redigera"
+
+#: ../backend/modules/appointments/templates/index.php:54
+msgid "No appointments for selected period."
+msgstr "Inga möten för valda perioden."
+
+#: ../backend/modules/appointments/templates/index.php:67
+#: ../backend/modules/coupons/templates/index.php:18
+#: ../backend/modules/customer/templates/index.php:105
+#: ../backend/modules/service/templates/index.php:63
+#: ../backend/modules/settings/templates/_companyForm.php:18
+msgid "Delete"
+msgstr "Ta bort"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:74
+msgid "Week"
+msgstr "Vecka"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:75
+msgid "Day"
+msgstr "Dag"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:76
+msgid "Month"
+msgstr "Månad"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:77
+msgid "All Day"
+msgstr "Hela Dagen"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:78
+#: ../backend/modules/service/AB_ServiceController.php:49
+msgid "No staff selected"
+msgstr "Ingen medarbetare vald"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:81
+#: ../backend/modules/coupons/AB_CouponsController.php:34
+#: ../backend/modules/customer/AB_CustomerController.php:59
+#: ../backend/modules/service/AB_ServiceController.php:48
+#: ../backend/modules/staff/AB_StaffController.php:58
+msgid "Are you sure?"
+msgstr "Är du säker?"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:342
+msgid "The number of customers should be not more than "
+msgstr "Antalet deltagare får inte överskrida"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:345
+msgid "Start time must not be empty"
+msgstr "Starttiden får inte vara tom"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:347
+msgid "End time must not be empty"
+msgstr "Sluttiden får inte vara tom"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:349
+msgid "End time must not be equal to start time"
+msgstr "Sluttiden får inte vara samma som starttid"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:401
+#: ../lib/entities/AB_Staff.php:117
+msgid "Signed up"
+msgstr "Blev medlem"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:402
+#: ../backend/modules/service/templates/_list.php:112
+#: ../backend/modules/staff/templates/services.php:25
+#: ../backend/modules/staff/templates/services.php:61
+#: ../lib/entities/AB_Staff.php:118
+msgid "Capacity"
+msgstr "Kapacitet"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:414
+#: ../lib/entities/AB_Service.php:38 ../lib/entities/AB_Staff.php:125
+msgid "Untitled"
+msgstr "Namnlöst"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:419
+msgid "Could not save appointment in database."
+msgstr "Det gick inte att spara möte i databasen."
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:23
+#: ../backend/modules/payment/templates/index.php:71
+msgid "Provider"
+msgstr "Leverantör"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:30
+#: ../frontend/modules/booking/templates/1_service.php:32
+msgid "Please select a service"
+msgstr "Välj en tjänst"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:33
+msgid "-- Select a service --"
+msgstr "- Välj en tjänst -"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:38
+#: ../backend/modules/payment/templates/index.php:68
+#: ../backend/modules/sms/templates/_purchases.php:13
+#: ../backend/modules/sms/templates/_sms_details.php:13
+#: ../backend/modules/tinymce/templates/appointment_list.php:26
+#: ../installer.php:232 ../updates.php:413
+msgid "Date"
+msgstr "Datum"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:43
+msgid "Period"
+msgstr "Tidsperiod"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:48
+#: ../backend/modules/settings/templates/_hoursForm.php:17
+#: ../backend/modules/staff/templates/_break.php:12
+#: ../backend/modules/staff/templates/schedule.php:25
+#: ../backend/modules/staff/templates/schedule.php:54
+msgid "to"
+msgstr "till"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:54
+msgid "Selected period doesn't match service duration"
+msgstr ""
+"Den valda perioden matchar inte den valda standardtiden för den valda "
+"tjänsten"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:60
+msgid "The selected period is occupied by another appointment"
+msgstr "Det valda intervallet är upptaget av en annan bokning"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:67
+msgid "Selected / maximum"
+msgstr "Vald / max"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:69
+msgid "Please select a customer"
+msgstr "Välj en kund"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:74
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:7
+msgid "Edit booking details"
+msgstr "Redigera bokninginformation"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:75
+msgid "Remove customer"
+msgstr "Ta bort kund"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:80
+msgid "-- Search customers --"
+msgstr "- Sök kunder -"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:84
+#: ../backend/modules/customer/templates/index.php:20 ../installer.php:65
+#: ../updates.php:453
+msgid "New customer"
+msgstr "Ny kund"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:90
+msgid "Send email notifications"
+msgstr "Skicka e-postmeddelanden"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:91
+msgid ""
+"If email or SMS notifications are enabled and you want the customer or the "
+"staff member to be notified about this appointment after saving, tick this "
+"checkbox before clicking Save."
+msgstr ""
+"Om e-post eller SMS-meddelanden är aktiverade och du vill att kunden eller "
+"medarbetaren ska få en påminnelse efter att bokningen sparats, kryssa i "
+"rutan innan du klickar på Spara."
+
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:13
+msgid "Participants"
+msgstr "Deltagare"
+
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:16
+#: ../backend/modules/tinymce/templates/popup.php:41 ../installer.php:198
+#: ../updates.php:475
+msgid "Number of persons"
+msgstr "Antal personer"
+
+#: ../backend/modules/calendar/templates/calendar.php:26
+msgid "All"
+msgstr "Allt"
+
+#: ../backend/modules/calendar/templates/calendar.php:39
+#: ../backend/modules/service/templates/_list.php:146
+msgid "All staff"
+msgstr "alla medarbetare"
+
+#: ../backend/modules/calendar/templates/calendar.php:64
+msgid "Welcome to Bookly!"
+msgstr "Välkommen till Bookly!"
+
+#: ../backend/modules/calendar/templates/calendar.php:65
+msgid "Thank you for purchasing our product."
+msgstr "Tack för att du köpt vår produkt."
+
+#: ../backend/modules/calendar/templates/calendar.php:66
+msgid ""
+"Bookly offers a simple solution for making appointments. With our plugin you "
+"will be able to easily manage your availability time and handle the flow of "
+"your clients."
+msgstr ""
+"Bookly erbjuder en enda lösning för tillsättningen. Med vår plugin kommer du "
+"att enkelt kunna hantera din tillgänglighet tid och hantera flödet av dina "
+"kunder."
+
+#: ../backend/modules/calendar/templates/calendar.php:67
+msgid ""
+"To start using Bookly, you need to follow these steps which are the minimum "
+"requirements to get it running!"
+msgstr ""
+"För att börja använda Bookly, måste du följa dessa steg Vilka är de "
+"minimikrav för att få det igång!"
+
+#: ../backend/modules/calendar/templates/calendar.php:69
+msgid "Please add your staff members."
+msgstr "Fyll i dina anställda."
+
+#: ../backend/modules/calendar/templates/calendar.php:70
+msgid "Add services and assign them to the staff members you created earlier."
+msgstr ""
+"Lägg till tjänster och tilldela dem till anställda som du har skapat "
+"tidigare."
+
+#: ../backend/modules/calendar/templates/calendar.php:73
+msgid "Add Staff Members"
+msgstr "Lägg till anställda"
+
+#: ../backend/modules/calendar/templates/calendar.php:74
+msgid "Add Services"
+msgstr "Lägg tjänster"
+
+#: ../backend/modules/coupons/AB_CouponsController.php:35
+msgid "Please select at least one coupon."
+msgstr "Vänligen välj minst en rabattkupong"
+
+#: ../backend/modules/coupons/AB_CouponsController.php:67
+msgid "Discount should be between 0 and 100."
+msgstr "Rabatten ska vara mellan 0 och 100."
+
+#: ../backend/modules/coupons/AB_CouponsController.php:69
+msgid "Deduction should be a positive number."
+msgstr "Sänkningen måste vara ett positivt tal."
+
+#: ../backend/modules/coupons/templates/_list.php:7
+#: ../backend/modules/sms/templates/_price.php:7
+msgid "Code"
+msgstr "Kod"
+
+#: ../backend/modules/coupons/templates/_list.php:8
+msgid "Discount (%)"
+msgstr "Rabatt (%)"
+
+#: ../backend/modules/coupons/templates/_list.php:9
+msgid "Deduction"
+msgstr "Prissänkning"
+
+#: ../backend/modules/coupons/templates/_list.php:10
+msgid "Usage limit"
+msgstr "Får utnyttjas"
+
+#: ../backend/modules/coupons/templates/_list.php:11
+msgid "Number of times used"
+msgstr "Utnyttjats antal gånger"
+
+#: ../backend/modules/coupons/templates/index.php:8
+msgid "No coupons found"
+msgstr "Hittade inga rabattkuponger"
+
+#: ../backend/modules/coupons/templates/index.php:17
+msgid "Add Coupon"
+msgstr "Lägg till rabattkupong"
+
+#: ../backend/modules/custom_fields/templates/index.php:10
+#: ../backend/modules/custom_fields/templates/index.php:22
+msgid "Text Field"
+msgstr "Textfält"
+
+#: ../backend/modules/custom_fields/templates/index.php:11
+#: ../backend/modules/custom_fields/templates/index.php:39
+msgid "Text Area"
+msgstr "Textarea"
+
+#: ../backend/modules/custom_fields/templates/index.php:12
+#: ../backend/modules/custom_fields/templates/index.php:56
+msgid "Checkbox Group"
+msgstr "Kryssrutegrupp"
+
+#: ../backend/modules/custom_fields/templates/index.php:13
+#: ../backend/modules/custom_fields/templates/index.php:75
+msgid "Radio Button Group"
+msgstr "Radioknappsgroup"
+
+#: ../backend/modules/custom_fields/templates/index.php:14
+#: ../backend/modules/custom_fields/templates/index.php:94
+msgid "Drop Down"
+msgstr "Rullgardinsmeny"
+
+#: ../backend/modules/custom_fields/templates/index.php:20
+#: ../backend/modules/custom_fields/templates/index.php:37
+#: ../backend/modules/custom_fields/templates/index.php:54
+#: ../backend/modules/custom_fields/templates/index.php:73
+#: ../backend/modules/custom_fields/templates/index.php:92
+#: ../backend/modules/custom_fields/templates/index.php:111
+#: ../backend/modules/custom_fields/templates/index.php:117
+#: ../backend/modules/custom_fields/templates/index.php:123
+#: ../backend/modules/service/templates/_list.php:15
+#: ../backend/modules/service/templates/index.php:16
+msgid "Reorder"
+msgstr "Ändra ordning"
+
+#: ../backend/modules/custom_fields/templates/index.php:23
+#: ../backend/modules/custom_fields/templates/index.php:40
+#: ../backend/modules/custom_fields/templates/index.php:57
+#: ../backend/modules/custom_fields/templates/index.php:76
+#: ../backend/modules/custom_fields/templates/index.php:95
+msgid "Remove field"
+msgstr "Ta bort fält"
+
+#: ../backend/modules/custom_fields/templates/index.php:26
+#: ../backend/modules/custom_fields/templates/index.php:43
+#: ../backend/modules/custom_fields/templates/index.php:60
+#: ../backend/modules/custom_fields/templates/index.php:79
+#: ../backend/modules/custom_fields/templates/index.php:98
+#: ../backend/modules/custom_fields/templates/index.php:112
+#: ../backend/modules/custom_fields/templates/index.php:118
+#: ../backend/modules/custom_fields/templates/index.php:124
+msgid "Enter a label"
+msgstr "Ange en etikett"
+
+#: ../backend/modules/custom_fields/templates/index.php:30
+#: ../backend/modules/custom_fields/templates/index.php:47
+#: ../backend/modules/custom_fields/templates/index.php:64
+#: ../backend/modules/custom_fields/templates/index.php:83
+#: ../backend/modules/custom_fields/templates/index.php:102
+msgid "Required field"
+msgstr "Obligatoriska fält"
+
+#: ../backend/modules/custom_fields/templates/index.php:69
+msgid "Checkbox"
+msgstr "Kryssruta"
+
+#: ../backend/modules/custom_fields/templates/index.php:88
+msgid "Radio Button"
+msgstr "Radioknapp"
+
+#: ../backend/modules/custom_fields/templates/index.php:107
+msgid "Option"
+msgstr "Alternativ"
+
+#: ../backend/modules/custom_fields/templates/index.php:113
+#: ../backend/modules/custom_fields/templates/index.php:119
+#: ../backend/modules/custom_fields/templates/index.php:125
+msgid "Remove item"
+msgstr "Ta bort"
+
+#: ../backend/modules/customer/AB_CustomerController.php:63
+msgid "Please select at least one customer."
+msgstr "Välj minst en kund."
+
+#: ../backend/modules/customer/templates/_import.php:8
+#: ../backend/modules/customer/templates/_import.php:31
+#: ../backend/modules/customer/templates/index.php:19
+msgid "Import"
+msgstr "Importera"
+
+#: ../backend/modules/customer/templates/_import.php:13
+msgid "Note"
+msgstr "Observera"
+
+#: ../backend/modules/customer/templates/_import.php:14
+msgid ""
+"You may import list of clients in CSV format. The file needs to have three "
+"columns: Name, Phone and Email."
+msgstr ""
+"Du kan importera en lista med kunder i CSV-format. Filen måste ha tre "
+"kolumner: Namn, telefon och e-post."
+
+#: ../backend/modules/customer/templates/_import.php:17
+msgid "Select file"
+msgstr "Välj en fil"
+
+#: ../backend/modules/customer/templates/index.php:11
+msgid "Quick search customer"
+msgstr "Snabbsök kund"
+
+#: ../backend/modules/customer/templates/index.php:29
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:28
+#: ../installer.php:193 ../lib/AB_Google.php:155 ../updates.php:738
+msgid "Name"
+msgstr "Namn"
+
+#: ../backend/modules/customer/templates/index.php:30
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:16
+#: ../backend/modules/staff/templates/edit.php:35
+#: ../backend/modules/staff/templates/new.php:13
+msgid "User"
+msgstr "Användare"
+
+#: ../backend/modules/customer/templates/index.php:33
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:41
+#: ../installer.php:227
+msgid "Notes"
+msgstr "Anteckningar"
+
+#: ../backend/modules/customer/templates/index.php:34
+msgid "Last appointment"
+msgstr "Senast bokning"
+
+#: ../backend/modules/customer/templates/index.php:35
+msgid "Total appointments"
+msgstr "Totalt antal bokningar"
+
+#: ../backend/modules/customer/templates/index.php:44
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:30
+#: ../lib/AB_Validator.php:73 ../lib/AB_Validator.php:89
+#: ../lib/AB_Validator.php:117 ../lib/AB_Validator.php:137
+#: ../lib/AB_Validator.php:147
+msgid "Required"
+msgstr "Obligatoriskt"
+
+#: ../backend/modules/customer/templates/index.php:80
+msgid "No customers."
+msgstr "Inga kunder."
+
+#: ../backend/modules/customer/templates/index.php:120
+msgid "Delete customers"
+msgstr "Radera kunder"
+
+#: ../backend/modules/customer/templates/index.php:123
+msgid ""
+"You are about to delete customers which may have WordPress accounts "
+"associated to them. Do you want to delete those accounts too (if there are "
+"any)?"
+msgstr ""
+"Du är på väg att ta bort kunder som kan ha Wordpress konton knutna till dem. "
+"Vill du ta bort dessa konton också (om det finns några)?"
+
+#: ../backend/modules/customer/templates/index.php:126
+#: ../backend/modules/service/templates/index.php:78
+msgid "Remember my choice"
+msgstr "Kom ihåg valet"
+
+#: ../backend/modules/customer/templates/index.php:131
+msgid "No, delete just customers"
+msgstr "Nej, ta bort bara kunder"
+
+#: ../backend/modules/customer/templates/index.php:132
+#: ../backend/modules/service/templates/index.php:83
+#: ../backend/modules/settings/templates/_paymentsForm.php:55
+#: ../backend/modules/settings/templates/_paymentsForm.php:77
+#: ../backend/modules/tinymce/templates/appointment_list.php:54
+msgid "Yes"
+msgstr "Ja"
+
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:9
+msgid "New Customer"
+msgstr "Ny kund"
+
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:13
+msgid "Personal Information"
+msgstr "Personliga uppgifter"
+
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:100
+msgid "Create customer"
+msgstr "Skapa ny kund"
+
+#: ../backend/modules/notifications/AB_NotificationsController.php:40
+#: ../backend/modules/sms/AB_SmsController.php:103
+msgid "Notification settings were updated successfully."
+msgstr "Bekräftelseinställningarna har uppdaterats."
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:89
+msgid "Notification to customer about appointment details"
+msgstr "Bekräftelse till kunden om bokningsinformation"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:90
+msgid "Notification to staff member about appointment details"
+msgstr "Bekräftelse till medarbetare med bokningsinformationen"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:91
+msgid "Notification to staff member about appointment cancellation"
+msgstr "Bekräftelse till medarbetare angående avbokning"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:92
+msgid "Notification to customer about their WordPress user login details"
+msgstr "Bekräftelse till kunden angående inloggningsuppgifter till Wordpress"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:93
+msgid ""
+"Evening reminder to customer about next day appointment (requires cron setup)"
+msgstr ""
+"Kvällspåminnelse till kunden angående morgondagens bokning (kräver cron "
+"setup)"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:94
+msgid ""
+"Follow-up message in the same day after appointment (requires cron setup)"
+msgstr "Uppföljningsmeddelande samma dag efter bokningen (kräver cron setup)"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:95
+msgid ""
+"Evening notification with the next day agenda to staff member (requires cron "
+"setup)"
+msgstr ""
+"Kvällsmeddelande till medarbetare med med morgondagens bokningsschema "
+"(kräver cron setup)"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:124
+msgid "Subject"
+msgstr "Ämne"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:166
+msgid "Send copy to administrators"
+msgstr "Skicka en kopia till administratörer"
+
+#: ../backend/modules/notifications/templates/_codes.php:2
+#: ../backend/modules/settings/templates/_woocommerce.php:60
+#: ../backend/modules/sms/templates/_notif_codes.php:2
+msgid "date of appointment"
+msgstr "Bokningsdag"
+
+#: ../backend/modules/notifications/templates/_codes.php:3
+#: ../backend/modules/settings/templates/_woocommerce.php:61
+#: ../backend/modules/sms/templates/_notif_codes.php:3
+msgid "time of appointment"
+msgstr "Bokningstid"
+
+#: ../backend/modules/notifications/templates/_codes.php:4
+#: ../backend/modules/sms/templates/_notif_codes.php:4
+msgid "cancel appointment link"
+msgstr "Avbokningslänk"
+
+#: ../backend/modules/notifications/templates/_codes.php:5
+#: ../backend/modules/sms/templates/_notif_codes.php:5
+msgid "URL for cancel appointment link (to use inside <a> tag)"
+msgstr "Avboknings-URL (används i en <a>-tagg)"
+
+#: ../backend/modules/notifications/templates/_codes.php:7
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:2
+#: ../backend/modules/sms/templates/_notif_codes.php:7
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:2
+msgid "email of client"
+msgstr "kundens e-postadress"
+
+#: ../backend/modules/notifications/templates/_codes.php:8
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:3
+#: ../backend/modules/sms/templates/_notif_codes.php:8
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:3
+msgid "name of client"
+msgstr "kundens namn"
+
+#: ../backend/modules/notifications/templates/_codes.php:9
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:4
+#: ../backend/modules/sms/templates/_notif_codes.php:9
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:4
+msgid "phone of client"
+msgstr "kundens telefonnummer"
+
+#: ../backend/modules/notifications/templates/_codes.php:10
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:5
+#: ../backend/modules/sms/templates/_notif_codes.php:10
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:5
+msgid "name of your company"
+msgstr "företagets namn"
+
+#: ../backend/modules/notifications/templates/_codes.php:11
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:6
+msgid "your company logo"
+msgstr "företagets logotyp"
+
+#: ../backend/modules/notifications/templates/_codes.php:12
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:7
+#: ../backend/modules/sms/templates/_notif_codes.php:11
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:6
+msgid "address of your company"
+msgstr "företaget adress"
+
+#: ../backend/modules/notifications/templates/_codes.php:13
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:8
+#: ../backend/modules/sms/templates/_notif_codes.php:12
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:7
+msgid "your company phone"
+msgstr "företagets telefonnummer"
+
+#: ../backend/modules/notifications/templates/_codes.php:14
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:9
+#: ../backend/modules/sms/templates/_notif_codes.php:13
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:8
+msgid "this web-site address"
+msgstr "den här webbplatsens adress"
+
+#: ../backend/modules/notifications/templates/_codes.php:15
+#: ../backend/modules/sms/templates/_notif_codes.php:14
+msgid "combined values of all custom fields"
+msgstr "sammanlagda värden för alla egna fält"
+
+#: ../backend/modules/notifications/templates/_codes.php:16
+msgid "combined values of all custom fields (formatted in 2 columns)"
+msgstr "sammanlagda värden för alla egna fält (formaterad i 2 kolumner)"
+
+#: ../backend/modules/notifications/templates/_codes.php:20
+#: ../backend/modules/sms/templates/_notif_codes.php:18
+msgid "email of staff"
+msgstr "medarbetarens e-postadress"
+
+#: ../backend/modules/notifications/templates/_codes.php:22
+#: ../backend/modules/sms/templates/_notif_codes.php:20
+msgid "phone of staff"
+msgstr "medarbetarens telefonnummer"
+
+#: ../backend/modules/notifications/templates/_codes.php:23
+msgid "photo of staff"
+msgstr "medarbetarens foto"
+
+#: ../backend/modules/notifications/templates/_codes.php:24
+#: ../backend/modules/sms/templates/_notif_codes.php:21
+msgid ""
+"total price of booking (service price multiplied by the number of persons)"
+msgstr ""
+"Sammanlagt pris för bokningen (tjänstens pris multiplicerat med antalet "
+"personer)"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:10
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:9
+msgid "customer new username"
+msgstr "kund nytt användarnamn"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:11
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:10
+msgid "customer new password"
+msgstr "kund nytt lösenord"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:12
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:11
+msgid "site address"
+msgstr "hemsidesadress"
+
+#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:2
+#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:2
+msgid "date of next day"
+msgstr "morgondagens datum"
+
+#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:3
+#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:3
+msgid "staff agenda for next day"
+msgstr "morgondagens bokningschema för medarbetare"
+
+#: ../backend/modules/notifications/templates/index.php:18
+msgid "Sender name"
+msgstr "Avsändarnamn"
+
+#: ../backend/modules/notifications/templates/index.php:27
+msgid "Sender email"
+msgstr "E-postadress"
+
+#: ../backend/modules/notifications/templates/index.php:36
+msgid "Reply directly to customers"
+msgstr "Svara direkt till kunderna"
+
+#: ../backend/modules/notifications/templates/index.php:42
+msgid ""
+"If this option is enabled then the email address of the customer is used as "
+"a sender email address for notifications sent to staff members and "
+"administrators."
+msgstr ""
+"Om det här alternativet är aktiverat då e-postadress kunden används som "
+"avsändare e-postadress för anmälningar skickas till anställda och "
+"administratörer."
+
+#: ../backend/modules/notifications/templates/index.php:47
+msgid "Send emails as"
+msgstr "Skicka e-post som"
+
+#: ../backend/modules/notifications/templates/index.php:50
+msgid "HTML"
+msgstr "HTML"
+
+#: ../backend/modules/notifications/templates/index.php:50
+#: ../backend/modules/sms/templates/_sms_details.php:15
+msgid "Text"
+msgstr "Text"
+
+#: ../backend/modules/notifications/templates/index.php:53
+msgid ""
+"HTML allows formatting, colors, fonts, positioning, etc. With Text you must "
+"use Text mode of rich-text editors below. On some servers only text emails "
+"are sent successfully."
+msgstr ""
+"HTML tillåter formatering, färger, teckensnitt, positionering, etc. Med text "
+"måste du använda textläget av rik-textredigerare nedan. På vissa servrar "
+"bara text e-post skickats."
+
+#: ../backend/modules/notifications/templates/index.php:81
+#: ../backend/modules/sms/templates/_notifications.php:44
+msgid "Message"
+msgstr "Meddelande"
+
+#: ../backend/modules/notifications/templates/index.php:88
+#: ../backend/modules/sms/templates/_notifications.php:51
+msgid "Codes"
+msgstr "Koder"
+
+#: ../backend/modules/notifications/templates/index.php:111
+#: ../backend/modules/sms/templates/_notifications.php:84
+msgid ""
+"To send scheduled notifications please execute the following script hourly "
+"with your cron:"
+msgstr ""
+"Om du vill skicka schemalagda bekräftelser kör följande skript var timme med "
+"cron:"
+
+#: ../backend/modules/payment/AB_PaymentController.php:33
+#: ../backend/modules/sms/AB_SmsController.php:113
+msgid "Last Month"
+msgstr "Förra månaden"
+
+#: ../backend/modules/payment/templates/_alert.php:3
+msgid "No payments for selected period and criteria."
+msgstr "Inga betalningar för vald period och kriterier."
+
+#: ../backend/modules/payment/templates/_body.php:18
+#: ../backend/modules/payment/templates/index.php:74 ../installer.php:196
+#: ../updates.php:590
+msgid "Coupon"
+msgstr "Rabattkupong"
+
+#: ../backend/modules/payment/templates/_body.php:20
+#: ../backend/modules/payment/templates/index.php:35
+msgid "Local"
+msgstr "På plats"
+
+#: ../backend/modules/payment/templates/_body.php:34
+msgid "Total"
+msgstr "Totalt"
+
+#: ../backend/modules/payment/templates/index.php:23
+msgid "All payment types"
+msgstr "Alla betalningsalternativ"
+
+#: ../backend/modules/payment/templates/index.php:42
+msgid "All customers"
+msgstr "Alla kunder"
+
+#: ../backend/modules/payment/templates/index.php:48
+msgid "All providers"
+msgstr "Alla leverantörer"
+
+#: ../backend/modules/payment/templates/index.php:54
+#: ../backend/modules/staff/templates/services.php:21
+msgid "All services"
+msgstr "Alla tjänster"
+
+#: ../backend/modules/payment/templates/index.php:59
+#: ../backend/modules/sms/templates/_purchases.php:8
+#: ../backend/modules/sms/templates/_sms_details.php:8
+msgid "Filter"
+msgstr "Filtrera"
+
+#: ../backend/modules/payment/templates/index.php:69
+#: ../backend/modules/sms/templates/_purchases.php:15
+msgid "Type"
+msgstr "Typ"
+
+#: ../backend/modules/payment/templates/index.php:73
+#: ../backend/modules/sms/templates/_purchases.php:18
+msgid "Amount"
+msgstr "Summa"
+
+#: ../backend/modules/payment/templates/index.php:75
+msgid "Appointment Date"
+msgstr "Bokningsdatum"
+
+#: ../backend/modules/service/AB_ServiceController.php:50
+msgid "Please select at least one service."
+msgstr "Välj minst en tjänst."
+
+#: ../backend/modules/service/templates/_list.php:38
+msgid "Title"
+msgstr "Titel"
+
+#: ../backend/modules/service/templates/_list.php:66
+msgid "All day"
+msgstr "Hela dagen"
+
+#: ../backend/modules/service/templates/_list.php:71
+msgid "Padding time (before and after)"
+msgstr "Stoppning tid (före och efter)"
+
+#: ../backend/modules/service/templates/_list.php:74
+#: ../backend/modules/service/templates/_list.php:87
+#: ../backend/modules/settings/forms/AB_BusinessHoursForm.php:51
+#: ../backend/modules/staff/templates/schedule.php:3
+msgid "OFF"
+msgstr "AV"
+
+#: ../backend/modules/service/templates/_list.php:101
+msgid ""
+"Set padding time before and/or after an appointment. For example, if you "
+"require 15 minutes to prepare for the next appointment then you should set "
+"\"padding before\" to 15 min. If there is an appointment from 8:00 to 9:00 "
+"then the next available time slot will be 9:15 rather than 9:00."
+msgstr ""
+"Ställ stoppning tid före och / eller efter ett möte. Till exempel, om du "
+"behöver 15 minuter för att förbereda sig för nästa möte så ska du ställa in "
+"\"utfyllnad före\" till 15 minuter. Om det finns en tid från 8:00 till 09:00 "
+"då nästa tillgängliga tidslucka kommer att vara 09:15 i stället för 09:00."
+
+#: ../backend/modules/service/templates/_list.php:116
+msgid ""
+"The maximum number of customers allowed to book the service for the certain "
+"time period."
+msgstr "Det maximala antalet kunder som får boka tjänsten en viss tidsperiod."
+
+#: ../backend/modules/service/templates/_list.php:123
+#: ../backend/modules/tinymce/templates/appointment_list.php:8
+#: ../installer.php:187 ../updates.php:732
+msgid "Category"
+msgstr "Kategori"
+
+#: ../backend/modules/service/templates/_list.php:134
+msgid "Providers"
+msgstr "Leverantörer"
+
+#: ../backend/modules/service/templates/index.php:12
+#: ../backend/modules/service/templates/index.php:55
+msgid "All Services"
+msgstr "Alla tjänster"
+
+#: ../backend/modules/service/templates/index.php:29
+msgid "New Category"
+msgstr "Ny kategori"
+
+#: ../backend/modules/service/templates/index.php:56
+#: ../backend/modules/staff/templates/services.php:92
+msgid "No services found. Please add services."
+msgstr "Inga tjänster hittades. Vänligen lägg till tjänster."
+
+#: ../backend/modules/service/templates/index.php:62
+#: ../backend/modules/staff/templates/services.php:93
+msgid "Add Service"
+msgstr "Lägg till tjänst"
+
+#: ../backend/modules/service/templates/index.php:73
+msgid "Update service setting"
+msgstr "Uppdatera tjänsteinställningar"
+
+#: ../backend/modules/service/templates/index.php:76
+msgid ""
+"You are about to change a service setting which is also configured "
+"separately for each staff member. Do you want to update it in staff settings "
+"too?"
+msgstr ""
+"Du är på väg att ändra en tjänsteinställning som också konfigureras separat "
+"för varje anställd. Vill du uppdatera den i medarbetarinställningar också?"
+
+#: ../backend/modules/service/templates/index.php:82
+msgid "No, update just here in services"
+msgstr "Nej, uppdatera bara här i tjänster"
+
+#: ../backend/modules/settings/AB_SettingsController.php:42
+#: ../backend/modules/staff/AB_StaffController.php:59
+msgid "We are not working on this day"
+msgstr "Vi arbetar inte den här dagen"
+
+#: ../backend/modules/settings/AB_SettingsController.php:43
+#: ../backend/modules/staff/AB_StaffController.php:60
+msgid "Repeat every year"
+msgstr "Upprepa varje år"
+
+#: ../backend/modules/settings/AB_SettingsController.php:176
+msgid "Select product"
+msgstr "Välj produkt"
+
+#: ../backend/modules/settings/templates/_companyForm.php:6
+msgid "Company name"
+msgstr "Företagets namn"
+
+#: ../backend/modules/settings/templates/_companyForm.php:12
+#: ../backend/modules/settings/templates/_companyForm.php:17
+msgid "Company logo"
+msgstr "Företagets logo"
+
+#: ../backend/modules/settings/templates/_companyForm.php:27
+msgid "Address"
+msgstr "Adress"
+
+#: ../backend/modules/settings/templates/_companyForm.php:39
+msgid "Website"
+msgstr "Hemsida"
+
+#: ../backend/modules/settings/templates/_customers.php:6
+msgid "Create WordPress user account for customers"
+msgstr "Skapa Wordpress användarkonto för kunder"
+
+#: ../backend/modules/settings/templates/_customers.php:12
+msgid ""
+"If this setting is enabled then Bookly will be creating WordPress user "
+"accounts for all new customers. If the user is logged in then the new "
+"customer will be associated with the existing user account."
+msgstr ""
+"Om den här inställningen är aktiverad kommer Bookly att skapa användarkonton "
+"i WordPress för alla nya kunder. Om användaren är inloggad kommer den nya "
+"kunden att kopplas till användarkontot."
+
+#: ../backend/modules/settings/templates/_customers.php:17
+msgid "Phone field default country"
+msgstr "Telefon fält standard land"
+
+#: ../backend/modules/settings/templates/_customers.php:21
+msgid "Guess country by user's IP address"
+msgstr "Gissa land användarens IP-adress"
+
+#: ../backend/modules/settings/templates/_customers.php:26
+msgid ""
+"Select default country for the phone field in the 'Details' step of booking. "
+"You can also let Bookly determine the country based on the IP address of the "
+"client."
+msgstr ""
+"Välj standard land för telefonen fältet i \"Detaljer\" steg "
+"bokningstillfället. Du kan också låta Bookly bestämma landet baserat på IP-"
+"adressen för klienten."
+
+#: ../backend/modules/settings/templates/_customers.php:31
+msgid "Default country code"
+msgstr "Defaultlandskod"
+
+#: ../backend/modules/settings/templates/_customers.php:37
+msgid ""
+"Your clients must have their phone numbers in international format in order "
+"to receive text messages. However you can specify a default country code "
+"that will be used as a prefix for all phone numbers that do not start with "
+"\"+\" or \"00\". E.g. if you enter \"1\" as the default country code and a "
+"client enters their phone as \"(600) 555-2222\" the resulting phone number "
+"to send the SMS to will be \"+1600555222\"."
+msgstr ""
+"Dina kunder måste ange sina telefonnummer i internationellt format för att "
+"kunna ta emot SMS. Du kan ange en defaultlandskod som används som prefix för "
+"alla telefonnummer som inte startar med ”+” eller ”00”. Tex, om du anger ”1” "
+"som defaultlandskod och en kund fyller i sitt telefonnummer som ”(600) "
+"555-2222” kommer numret som SMSet skickas till att vara ”+16005552222”."
+
+#: ../backend/modules/settings/templates/_generalForm.php:6
+msgid "Time slot length"
+msgstr "Tidsintervallets längd"
+
+#: ../backend/modules/settings/templates/_generalForm.php:21
+msgid ""
+"Select the time interval that will be used in frontend and backend, e.g. in "
+"calendar, second step of the booking process, while indicating the working "
+"hours, etc."
+msgstr ""
+"Välj det tidsintervall som ska användas i kundvyn och administrationsvyn, "
+"dvs i kalendern, i det andra steget i bokningsprocessen, samtidigt som du "
+"som anger arbetstid, etc."
+
+#: ../backend/modules/settings/templates/_generalForm.php:26
+msgid "Minimum time requirement prior to booking"
+msgstr "Senaste tidpunkt för bokning"
+
+#: ../backend/modules/settings/templates/_generalForm.php:30
+#: ../backend/modules/settings/templates/_generalForm.php:79
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:68
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:80
+#: ../backend/modules/settings/templates/_paymentsForm.php:37
+#: ../backend/modules/settings/templates/_paymentsForm.php:63
+#: ../lib/utils/AB_Utils.php:168
+msgid "Disabled"
+msgstr "Inaktiverad"
+
+#: ../backend/modules/settings/templates/_generalForm.php:37
+msgid ""
+"Set a minimum amount of time before the chosen appointment (for example, "
+"require the customer to book at least 1 hour before the appointment time)."
+msgstr ""
+"Ställ in senaste möjliga bokningstid (t.ex. kräv att kunden bokar minst 1 "
+"timme i förväg)."
+
+#: ../backend/modules/settings/templates/_generalForm.php:42
+msgid "Number of days available for booking"
+msgstr "Antal bokningsbara dagar"
+
+#: ../backend/modules/settings/templates/_generalForm.php:48
+msgid ""
+"Specify the number of days that should be available for booking at step 2 "
+"starting from the current day."
+msgstr ""
+"Du kan ange hur många dagar som ska vara tillgängliga för bokning vid steg 2 "
+"med start från idag."
+
+#: ../backend/modules/settings/templates/_generalForm.php:53
+msgid "Display available time slots in client's time zone"
+msgstr "Visa tillgängliga tider i kundens tidszon"
+
+#: ../backend/modules/settings/templates/_generalForm.php:59
+msgid "The value is taken from client’s browser."
+msgstr "Värdet hämtas från kundens webbläsare."
+
+#: ../backend/modules/settings/templates/_generalForm.php:64
+msgid "Cancel appointment page URL"
+msgstr "URL för avbokningssida"
+
+#: ../backend/modules/settings/templates/_generalForm.php:67
+#: ../backend/modules/settings/templates/_generalForm.php:83
+msgid "Enter a URL"
+msgstr "Ange URL"
+
+#: ../backend/modules/settings/templates/_generalForm.php:70
+msgid ""
+"Insert a URL of a page that is shown to clients after they have cancelled "
+"their booking."
+msgstr ""
+"Ange en URL till en sida som visas för kunder efter att de har genomfört en "
+"avbokning."
+
+#: ../backend/modules/settings/templates/_generalForm.php:75
+msgid "Final step URL"
+msgstr "URL för sista steget"
+
+#: ../backend/modules/settings/templates/_generalForm.php:79
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:68
+#: ../lib/utils/AB_Utils.php:167
+msgid "Enabled"
+msgstr "Aktiverad"
+
+#: ../backend/modules/settings/templates/_generalForm.php:86
+msgid ""
+"Set a URL of a page that the user will be forwarded to after successful "
+"booking. If disabled then the default step 5 is displayed."
+msgstr ""
+"Ange en URL till en sida som användaren kommer att vidarebefordras till "
+"efter en genomförd bokning. Om den är inaktiverad visas default steg 5."
+
+#: ../backend/modules/settings/templates/_generalForm.php:91
+msgid "Allow staff members to edit their profiles"
+msgstr "Tillåt medarbetare att redigera sina profiler"
+
+#: ../backend/modules/settings/templates/_generalForm.php:97
+msgid ""
+"If this option is enabled then all staff members who are associated with "
+"WordPress users will be able to edit their own profiles, services, schedule "
+"and days off."
+msgstr ""
+"Om detta alternativ är aktiverat kan alla medarbetare med WordPress-konton "
+"redigera sina egna profiler, tjänster, arbetstid och lediga dagar."
+
+#: ../backend/modules/settings/templates/_generalForm.php:102
+msgid "Method to include Bookly JavaScript and CSS files on the page"
+msgstr "Metod för att lägga till Bookly JavaScript och CSS filer på sidan"
+
+#: ../backend/modules/settings/templates/_generalForm.php:111
+msgid ""
+"With \"Enqueue\" method the JavaScript and CSS files of Bookly will be "
+"included on all pages of your website. This method should work with all "
+"themes. With \"Print\" method the files will be included only on the pages "
+"which contain Bookly booking form. This method may not work with all themes."
+msgstr ""
+"Med \"Enqueue\" -metoden kommer Booklys JavaScript- och CSSfiler att läggas "
+"till på alla webbplatsens sidor. Den här metoden bör fungera med alla teman. "
+"Med \"Print”-metoden läggs Booklys JavaScript- och CSSfiler bara till på de "
+"sidor som har Booklys bokningsformulär. Den metoden fungerar inte alltid med "
+"alla teman."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:7
+#: ../backend/modules/settings/templates/_purchaseCodeForm.php:7
+#: ../backend/modules/settings/templates/_woocommerce.php:7
+msgid "Instructions"
+msgstr "Instruktioner"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:10
+msgid "To find your client ID and client secret, do the following:"
+msgstr ""
+"För att hitta ditt kund-ID (client ID) och din hemlighet (client secret), "
+"gör så här:"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:13
+msgid ""
+"Go to the <a href=\"https://console.developers.google.com/\" target=\"_blank"
+"\">Google Developers Console</a>."
+msgstr ""
+"Gå till <a href=\"https://console.developers.google.com/\" target=\"_blank"
+"\">Google Developers Console</a> ."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:14
+msgid "Select a project, or create a new one."
+msgstr "Välj ett projekt, eller skapa en nytt."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:15
+msgid ""
+"In the sidebar on the left, expand <b>APIs & auth</b>. Next, click <b>APIs</"
+"b>. In the list of APIs, make sure the status is <b>ON</b> for the Google "
+"Calendar API."
+msgstr ""
+"I menyn till vänster, expandera <b>API & auth.</b> Klicka sedan på <b>API.</"
+"b> I listan över APIer, se till att statusen är <b>ON</b> för Google "
+"Calender API."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:16
+msgid "In the sidebar on the left, select <b>Credentials</b>."
+msgstr "I menyn till vänster, välj <b>Credentials.</b>"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:17
+msgid ""
+"Create your project's OAuth 2.0 credentials by clicking <b>Create new Client "
+"ID</b>, selecting <b>Web application</b>, and providing the information "
+"needed to create the credentials. For <b>AUTHORIZED REDIRECT URIS</b> enter "
+"the <b>Redirect URI</b> found below on this page."
+msgstr ""
+"Skapa ditt projekts OAuth 2.0 användaruppgifter genom att klicka på "
+"<b>Create new Client ID</b>, välj <b>Web application</b>, och fyll i den "
+"information som behövs för att skapa användaruppgifterna. För <b>AUTHORIZED "
+"REDIRECT URIS</b> ange <b>Redirect URI</b> som du hittar längre ner på den "
+"här sidan."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:18
+msgid ""
+"Look for the <b>Client ID</b> and <b>Client secret</b> in the table "
+"associated with each of your credentials."
+msgstr ""
+"Leta upp <b>Client-ID</b> och <b>Client secret</b> i tabellen associerad med "
+"dina uppgifter."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:19
+msgid ""
+"Go to Staff Members, select a staff member and click on \"Connect\" which is "
+"located at the bottom of the page."
+msgstr ""
+"Gå till anställda, väljer en anställd och klicka på \"Anslut\", som ligger "
+"längst ner på sidan."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:27
+#: ../backend/modules/settings/templates/index.php:13
+msgid "Google Calendar"
+msgstr "Google Calender"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:32
+msgid "Client ID"
+msgstr "Client ID"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:38
+msgid "The client ID obtained from the Developers Console"
+msgstr "Client ID från Developers Console"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:43
+msgid "Client secret"
+msgstr "Client secret"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:49
+msgid "The client secret obtained from the Developers Console"
+msgstr "Hemligheten (client secret) från Developers Console"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:54
+msgid "Redirect URI"
+msgstr "Vidarebefordran"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:60
+msgid "Enter this URL as a redirect URI in the Developers Console"
+msgstr "Ange denna länk som redirect URI i Developers Console"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:65
+msgid "2 way sync"
+msgstr "2-vägssynkronisering"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:71
+msgid ""
+"By default Bookly pushes new appointments and any further changes to Google "
+"Calendar. If you enable this option then Bookly will fetch events from "
+"Google Calendar and remove corresponding time slots before displaying the "
+"second step of the booking form (this may lead to a delay when users click "
+"Next at the first step)."
+msgstr ""
+"Booklys defaultinställning är att pusha nya bokningar och eventuella "
+"ändringar till Google Calender. Om du aktiverar det här alternativet så "
+"kommer Bookly att hämta händelser från Google Calender och spärra "
+"motsvarande tidsintervall innan det andra steget av bokningsformuläret visas "
+"(detta kan leda till en fördröjning när användare klickar på Nästa i det "
+"första steget)."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:76
+msgid "Limit number of fetched events"
+msgstr "Begränsa antalet händelser att hämta"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:86
+msgid ""
+"If there is a lot of events in Google Calendar sometimes this leads to a "
+"lack of memory in PHP when Bookly tries to fetch all events. You can limit "
+"the number of fetched events here. This only works when 2 way sync is "
+"enabled."
+msgstr ""
+"Om det finns många händelser i Google Calender kan det ibland leda till "
+"minnesproblem i PHP när Bookly försöker hämta alla händelser. Du kan "
+"begränsa antalet händelser att hämta här. Detta fungerar bara när 2-"
+"vägssynkroniseringen är aktiverad."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:91
+msgid "Template for event title"
+msgstr "Mall för händelserubrik"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:97
+msgid ""
+"Configure what information should be places in the title of Google Calendar "
+"event. Available codes are [[SERVICE_NAME]], [[STAFF_NAME]] and "
+"[[CLIENT_NAMES]]."
+msgstr ""
+"Ange vilken information som ska läggas till i rubriken i Google Calender "
+"händelser. Tillgängliga koder är [[SERVICE_NAME]], [[STAFF_NAME]] och "
+"[[CLIENT_NAMES]]."
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:6
+msgid "Currency"
+msgstr "Valuta"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:25
+msgid "Service paid locally"
+msgstr "Tjänsten betalas på plats"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:41
+msgid "API Username"
+msgstr "API-användarnamn"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:45
+msgid "API Password"
+msgstr "API-lösenord"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:49
+msgid "API Signature"
+msgstr "API-signatur"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:53
+#: ../backend/modules/settings/templates/_paymentsForm.php:75
+msgid "Sandbox Mode"
+msgstr "Sandbox Mode"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:55
+#: ../backend/modules/settings/templates/_paymentsForm.php:77
+msgid "No"
+msgstr "Nej"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:67
+msgid "API Login ID"
+msgstr "API Login ID"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:71
+msgid "API Transaction Key"
+msgstr "API Transaktion Key"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:89
+msgid "Secret Key"
+msgstr "Hemlig nyckel"
+
+#: ../backend/modules/settings/templates/_purchaseCodeForm.php:8
+msgid ""
+"Upon providing the purchase code you will have access to free updates of "
+"Bookly. Updates may contain functionality improvements and important "
+"security fixes. For more information on where to find your purchase code see "
+"this <a href=\"https://help.market.envato.com/hc/en-us/articles/202822600-"
+"Where-can-I-find-my-Purchase-Code-\" target=\"_blank\">page</a>."
+msgstr ""
+"Om du fyller i licensnyckeln kommer du att ha tillgång till fria "
+"uppdateringar av Bookly. Uppdateringar kan innehålla viktiga "
+"funktionalitets- och säkerhetsuppdateringar. För mer information om var du "
+"hittar din licenskod, gå till den här <a href=\"https://help.market.envato."
+"com/hc/en-us/articles/202822600-Where-can-I-find-my-Purchase-Code-\" target="
+"\"_blank\">den här sidan</a> ."
+
+#: ../backend/modules/settings/templates/_purchaseCodeForm.php:14
+#: ../backend/modules/settings/templates/index.php:18
+msgid "Purchase Code"
+msgstr "Licensnyckel"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:10
+msgid ""
+"You need to install and activate WooCommerce plugin before using the options "
+"below.<br/><br/>Once the plugin is activated do the following steps:"
+msgstr ""
+"Du behöver installera och aktivera tillägget WooCommerce innan du kan välja "
+"nedanstående alternativ. <br/><br/>När tillägget är aktiverat, gör så här:"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:13
+msgid "Create a product in WooCommerce that can be placed in cart."
+msgstr "Skapa en produkt i WooCommerce som kan läggas till i kundvagnen."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:14
+msgid "In the form below enable WooCommerce option."
+msgstr "Aktivera WooCommerce-alternativet i formuläret nedan."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:15
+msgid ""
+"Select the product that you created at step 1 in the drop down list of "
+"products."
+msgstr "Välj produkten du skapade i steg 1 i rullgardinsmenyn av produkter."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:16
+msgid "If needed, edit item data which will be displayed in the cart."
+msgstr "Om det behövs, redigera artikeldata som ska visas i kundvagnen."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:19
+msgid ""
+"Note that once you have enabled WooCommerce option in Bookly the built-in "
+"payment methods will no longer work. All your customers will be redirected "
+"to WooCommerce cart instead of standard payment step."
+msgstr ""
+"Observera att när du har aktiverat WooCommerce-alternativet i Bookly kommer "
+"de inbyggda betalningsalternativen att sluta fungera. Alla dina kunder "
+"skickas vidare till WooCommerce-kundvagnen istället för det ursprungliga "
+"betalningssteget."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:35
+msgid "Booking product"
+msgstr "Boka produkt"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:46
+msgid "Cart item data"
+msgstr "Kundvagnens artikeldata"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:49
+msgid "Enter a name"
+msgstr "Ange ett namn"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:53
+msgid "Enter a value"
+msgstr "Ange ett värde"
+
+#: ../backend/modules/settings/templates/admin_notice.php:4
+msgid ""
+"Please do not forget to specify your purchase code in Bookly <a href=\"admin."
+"php?page=ab-settings\">settings</a>. Upon providing the code you will have "
+"access to free updates of Bookly. Updates may contain functionality "
+"improvements and important security fixes."
+msgstr ""
+"Glöm inte att ange din licensnyckel i Booklys <a href=\"admin.php?page=ab-"
+"settings\">inställningar</a> . När du angett licensnyckeln kommer du att ha "
+"tillgång till fria uppdateringar av Bookly. Uppdateringarna kan innehålla "
+"viktiga funktionalitets- och säkerhetsförbättringar."
+
+#: ../backend/modules/settings/templates/admin_notice.php:5
+msgid ""
+"<b>Important!</b> Please be aware that if your copy of Bookly was not "
+"downloaded from Codecanyon (the only channel of Bookly distribution), you "
+"may put your website under significant risk - it is very likely that it "
+"contains a malicious code, a trojan or a backdoor. Please consider buying a "
+"licensed copy of Bookly <a href=\"http://booking-wp-plugin.com\" target="
+"\"_blank\">here</a>."
+msgstr ""
+"<b>Viktigt!</b> Vi ber dig vara uppmärksam på att om din kopia av Bookly "
+"inte laddades ned från Codecanyon (Booklys enda distributionskanal), "
+"utsätter du din webbplats för avsevärd risk - det är sannolikt att den "
+"innehåller skadlig kod, en trojan eller en bakdörr. Överväg att köpa en "
+"licensierad kopia av Bookly <a href=\"http://booking-wp-plugin.com\" target="
+"\"_blank\">härifrån</a>."
+
+#: ../backend/modules/settings/templates/admin_notice.php:6
+msgid "Dismiss"
+msgstr "Avfärda"
+
+#: ../backend/modules/settings/templates/index.php:10
+msgid "General"
+msgstr "Allmän"
+
+#: ../backend/modules/settings/templates/index.php:11
+msgid "Company"
+msgstr "Företag"
+
+#: ../backend/modules/settings/templates/index.php:16
+msgid "Business hours"
+msgstr "Öppettider"
+
+#: ../backend/modules/settings/templates/index.php:17
+msgid "Holidays"
+msgstr "Helgdagar"
+
+#: ../backend/modules/sms/AB_SmsController.php:60
+msgid "Your payment has been accepted for processing."
+msgstr "Din betalning har gått igenom för behandling."
+
+#: ../backend/modules/sms/AB_SmsController.php:63
+msgid "Your payment has been interrupted."
+msgstr "Din betalning har avbrutits."
+
+#: ../backend/modules/sms/AB_SmsController.php:81
+msgid "Please accept terms and conditions."
+msgstr "Vänligen acceptera köpvillkoren."
+
+#: ../backend/modules/sms/AB_SmsController.php:126 ../lib/AB_SMS.php:48
+msgid "Passwords must be the same."
+msgstr "Lösenorden måste vara likadana."
+
+#: ../backend/modules/sms/AB_SmsController.php:127
+msgid "Please enter old password."
+msgstr "Vänligen ange ditt gamla lösenord."
+
+#: ../backend/modules/sms/AB_SmsController.php:207
+msgid "SMS has been sent successfully."
+msgstr "SMS-meddelandet har skickats."
+
+#: ../backend/modules/sms/AB_SmsController.php:209
+msgid "Failed to send SMS."
+msgstr "SMS-meddelandet har inte skickats."
+
+#: ../backend/modules/sms/AB_SmsController.php:213 ../lib/AB_SMS.php:152
+msgid "Phone number is empty."
+msgstr "Inget telefonnummer."
+
+#: ../backend/modules/sms/templates/_notifications.php:10
+msgid "Administrator phone"
+msgstr "Administratörstelefonnnummer"
+
+#: ../backend/modules/sms/templates/_notifications.php:16
+msgid "Send test SMS"
+msgstr "Skicka test SMS"
+
+#: ../backend/modules/sms/templates/_notifications.php:19
+msgid ""
+"Enter a phone number in international format. E.g. for the United States a "
+"valid phone number would be +17327572923."
+msgstr ""
+"Ange telefonnummer i internationellt format. Tex, för Sverige blir det "
+"+46701234567 istället för 0701-234567."
+
+#: ../backend/modules/sms/templates/_price.php:6
+msgid "Country"
+msgstr "Land"
+
+#: ../backend/modules/sms/templates/_price.php:21
+msgid ""
+"If you do not see your country in the list please contact us at <a href="
+"\"mailto:support@ladela.com\">support@ladela.com</a>."
+msgstr ""
+"Om du inte ser ditt land i listan kan du kontakta oss på <a href=\"mailto:"
+"support@ladela.com\">support@ladela.com</a>."
+
+#: ../backend/modules/sms/templates/_purchases.php:14
+#: ../backend/modules/sms/templates/_sms_details.php:14
+#: ../backend/modules/tinymce/templates/appointment_list.php:32
+#: ../installer.php:183 ../installer.php:232 ../updates.php:413
+#: ../updates.php:728
+msgid "Time"
+msgstr "Tid"
+
+#: ../backend/modules/sms/templates/_purchases.php:16
+msgid "Order"
+msgstr "Beställning"
+
+#: ../backend/modules/sms/templates/_purchases.php:17
+#: ../backend/modules/sms/templates/_sms_details.php:18
+msgid "Status"
+msgstr "Status"
+
+#: ../backend/modules/sms/templates/_sms_details.php:17
+msgid "Cost"
+msgstr "Kostnad"
+
+#: ../backend/modules/sms/templates/index.php:18
+msgid "Your balance"
+msgstr "Ditt saldo"
+
+#: ../backend/modules/sms/templates/index.php:30
+#: ../backend/modules/sms/templates/index.php:167
+msgid "Change password"
+msgstr "Ändra lösenord"
+
+#: ../backend/modules/sms/templates/index.php:36
+msgid "Log out"
+msgstr "Logga ut"
+
+#: ../backend/modules/sms/templates/index.php:48
+msgid "Notifications"
+msgstr "Bekräftelser"
+
+#: ../backend/modules/sms/templates/index.php:49
+msgid "Add money"
+msgstr "Fyll på saldo"
+
+#: ../backend/modules/sms/templates/index.php:50
+msgid "Purchases"
+msgstr "Köp"
+
+#: ../backend/modules/sms/templates/index.php:51
+msgid "SMS Details"
+msgstr "SMS Information"
+
+#: ../backend/modules/sms/templates/index.php:52
+msgid "Price list"
+msgstr "Prislista"
+
+#: ../backend/modules/sms/templates/index.php:75
+msgid ""
+"SMS Notifications (or \"Bookly SMS\") is a service for notifying your "
+"customers via text messages which are sent to mobile phones.<br/>It is "
+"necessary to register in order to start using this service.<br/>After "
+"registration you will need to configure notification messages and top up "
+"your balance in order to start sending SMS."
+msgstr ""
+"SMS Notifications (eller ”Bookly SMS”) är en tjänst för att påminna dina "
+"kunder via SMS som skickas till deras mobiltelefoner. <br/>Du behöver "
+"registrera dig för att börja använda den här tjänsten. <br/>Efter "
+"registrering behöver du ställa in bekräftelsemeddelanden och fylla på ditt "
+"saldo för att kunna börja skicka SMS."
+
+#: ../backend/modules/sms/templates/index.php:83
+#: ../frontend/modules/booking/templates/_login_form.php:10
+msgid "Login"
+msgstr "Inloggning"
+
+#: ../backend/modules/sms/templates/index.php:89
+#: ../backend/modules/sms/templates/index.php:109
+msgid "Password"
+msgstr "Lösen"
+
+#: ../backend/modules/sms/templates/index.php:93
+#: ../backend/modules/sms/templates/index.php:123
+#: ../backend/modules/sms/templates/index.php:145
+#: ../frontend/modules/booking/templates/_login_form.php:48
+msgid "Log In"
+msgstr "Logga In"
+
+#: ../backend/modules/sms/templates/index.php:94
+#: ../backend/modules/sms/templates/index.php:103
+msgid "Registration"
+msgstr "Registrering"
+
+#: ../backend/modules/sms/templates/index.php:95
+#: ../backend/modules/sms/templates/index.php:130
+msgid "Forgot password"
+msgstr "Glömt lösenord"
+
+#: ../backend/modules/sms/templates/index.php:113
+msgid "Repeat password"
+msgstr "Upprepa lösenord"
+
+#: ../backend/modules/sms/templates/index.php:117
+msgid ""
+"Accept <a href=\"javascript:void(0)\" data-toggle=\"modal\" data-target="
+"\"#ab-tos\">Terms & Conditions</a>"
+msgstr ""
+"Godkänn  <a href=\"javascript:void(0)\" data-toggle=\"modal\" data-target="
+"\"#ab-tos\">köpvillkoren</a>."
+
+#: ../backend/modules/sms/templates/index.php:122
+msgid "Register"
+msgstr "Registrera"
+
+#: ../backend/modules/sms/templates/index.php:135
+msgid "Enter code from email"
+msgstr "Ange koden från e-postmeddelandet"
+
+#: ../backend/modules/sms/templates/index.php:138
+#: ../backend/modules/sms/templates/index.php:175
+#: ../backend/modules/sms/templates/index.php:176
+msgid "New password"
+msgstr "Nytt lösenord"
+
+#: ../backend/modules/sms/templates/index.php:141
+#: ../backend/modules/sms/templates/index.php:179
+#: ../backend/modules/sms/templates/index.php:180
+msgid "Repeat new password"
+msgstr "Upprepa det nya lösenordet"
+
+#: ../backend/modules/sms/templates/index.php:171
+#: ../backend/modules/sms/templates/index.php:172
+msgid "Old password"
+msgstr "Gammalt lösenord"
+
+#: ../backend/modules/sms/templates/index.php:200
+msgid "Terms & Conditions"
+msgstr "Köpvillkor"
+
+#: ../backend/modules/staff/AB_StaffController.php:209
+msgid "The start time must be less than the end one"
+msgstr "Startiden måste vara mindre än sluttiden."
+
+#: ../backend/modules/staff/AB_StaffController.php:224
+msgid "The requested interval is not available"
+msgstr "Det tidsintervallet är inte ledigt."
+
+#: ../backend/modules/staff/AB_StaffController.php:277
+msgid "Error adding the break interval"
+msgstr "Problem med att lägga till rasten"
+
+#: ../backend/modules/staff/AB_StaffController.php:312
+msgid "Calendar ID is not valid."
+msgstr "Calender IDt är inte giltigt."
+
+#: ../backend/modules/staff/AB_StaffController.php:356
+#: ../lib/AB_Controller.php:95
+msgid "Bookly: You do not have sufficient permissions to access this page."
+msgstr ""
+"Bookly säger: Du har inte tillräckliga rättigheter för att få se den här "
+"sidan."
+
+#: ../backend/modules/staff/templates/_break.php:16
+#: ../backend/modules/staff/templates/schedule.php:60
+#: ../lib/utils/AB_Utils.php:244
+msgid "Save"
+msgstr "Spara"
+
+#: ../backend/modules/staff/templates/_break.php:25
+msgid "Delete break"
+msgstr "Radera rast"
+
+#: ../backend/modules/staff/templates/_breaks.php:9
+msgid "breaks:"
+msgstr "Raster"
+
+#: ../backend/modules/staff/templates/edit.php:15
+msgid "Delete this staff member"
+msgstr "Ta bort den här medarbetaren"
+
+#: ../backend/modules/staff/templates/edit.php:20 ../installer.php:184
+#: ../updates.php:729
+msgid "Details"
+msgstr "Info"
+
+#: ../backend/modules/staff/templates/edit.php:22
+msgid "Schedule"
+msgstr "Schema"
+
+#: ../backend/modules/staff/templates/edit.php:23
+msgid "Days off"
+msgstr "Lediga dagar"
+
+#: ../backend/modules/staff/templates/edit.php:37
+#: ../backend/modules/staff/templates/new.php:16
+msgid "Select from WP users"
+msgstr "Välj bland WP-användare"
+
+#: ../backend/modules/staff/templates/edit.php:56
+msgid "Photo"
+msgstr "Foto"
+
+#: ../backend/modules/staff/templates/edit.php:59
+msgid "Avatar"
+msgstr "Profilbild"
+
+#: ../backend/modules/staff/templates/edit.php:60
+msgid "Delete current photo"
+msgstr "Radera nuvarande bild"
+
+#: ../backend/modules/staff/templates/edit.php:68
+#: ../backend/modules/staff/templates/new.php:25
+msgid "Full name"
+msgstr "För- och efternamn"
+
+#: ../backend/modules/staff/templates/edit.php:90
+msgid "Google Calendar integration"
+msgstr "Google Calender länkning"
+
+#: ../backend/modules/staff/templates/edit.php:92
+msgid "Synchronize the data of the staff member bookings with Google Calendar."
+msgstr "Synkronisera medarbetarnas bokningsinformation med Google Calender."
+
+#: ../backend/modules/staff/templates/edit.php:101
+msgid "Connect"
+msgstr "Anslut"
+
+#: ../backend/modules/staff/templates/edit.php:103
+msgid ""
+"Please configure Google Calendar <a href=\"?page=ab-"
+"settings&type=_google_calendar\">settings</a> first"
+msgstr ""
+"Var vänlig konfigurera Google Calender <a href=\"?page=ab-"
+"settings&type=_google_calendar\">inställningar</a> först"
+
+#: ../backend/modules/staff/templates/edit.php:106
+msgid "Connected"
+msgstr "Ansluten"
+
+#: ../backend/modules/staff/templates/edit.php:106
+msgid "disconnect"
+msgstr "Koppla ifrån"
+
+#: ../backend/modules/staff/templates/edit.php:114
+msgid "Calendar ID"
+msgstr "Calender ID"
+
+#: ../backend/modules/staff/templates/list.php:38
+msgid ""
+"If this staff member requires separate login to access personal calendar, a "
+"regular WP user needs to be created for this purpose."
+msgstr ""
+"Om den här medarbetaren behöver en separat inloggning för att komma åt sin "
+"personliga kalender, måste en vanlig WP användare skapas för detta ändamål."
+
+#: ../backend/modules/staff/templates/list.php:39
+msgid ""
+"User with \"Administrator\" role will have access to calendars and settings "
+"of all staff members, user with some other role will have access only to "
+"personal calendar and settings."
+msgstr ""
+"Användare med ”Administratör”-rollen kommer att ha tillgång till alla "
+"medarbetares kalendrar och inställningar, användare med andra roller bara "
+"har tillgång till sin personliga kalender och egna inställningar."
+
+#: ../backend/modules/staff/templates/list.php:40
+msgid ""
+"If you will leave this field blank, this staff member will not be able to "
+"access personal calendar using WP backend."
+msgstr ""
+"Om du lämnar det här fältet tomt, kommer den här medarbetaren inte att kunna "
+"komma åt sin personlig kalender via administratörsvyn i WP."
+
+#: ../backend/modules/staff/templates/list.php:43
+msgid ""
+"The Calendar ID can be found by clicking on \"Calendar settings\" next to "
+"the calendar you wish to display. The Calendar ID is then shown beside "
+"\"Calendar Address\"."
+msgstr ""
+"Calendar ID hittar du genom att klicka på ”Calendar settings” bredvid den "
+"kalender du vill visa. Calender IDt syns då bredvid ”Calendar Address”."
+
+#: ../backend/modules/staff/templates/list.php:44
+msgid "<b>Leave this field empty</b> to work with the default calendar."
+msgstr "<b>Lämna det här fältet tomt</b> för att använda defaultkalendern."
+
+#: ../backend/modules/staff/templates/new.php:5
+msgid "New Staff Member"
+msgstr "Ny medarbetare"
+
+#: ../backend/modules/staff/templates/new.php:31
+msgid "Save Member"
+msgstr "Spara medlem"
+
+#: ../backend/modules/staff/templates/schedule.php:41
+msgid "add break"
+msgstr "lägg till rast"
+
+#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:42
+#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:47
+msgid "Add Bookly booking form"
+msgstr "Lägg till Bookly bokningsformulär"
+
+#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:43
+#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:48
+#: ../backend/modules/tinymce/templates/appointment_list.php:97
+msgid "Add Bookly appointments list"
+msgstr "Lägg till Bookly bokningslista"
+
+#: ../backend/modules/tinymce/templates/appointment_list.php:6
+msgid "Columns"
+msgstr "Kolumner"
+
+#: ../backend/modules/tinymce/templates/appointment_list.php:20
+msgid "Staff"
+msgstr "Medarbetare"
+
+#: ../backend/modules/tinymce/templates/appointment_list.php:52
+msgid "Titles"
+msgstr "Rubrik"
+
+#: ../backend/modules/tinymce/templates/appointment_list.php:64
+#: ../backend/modules/tinymce/templates/popup.php:57
+msgid "Insert"
+msgstr "Infoga"
+
+#: ../backend/modules/tinymce/templates/popup.php:7
+msgid "Default value for category select"
+msgstr "Defaultvärde för kategorival"
+
+#: ../backend/modules/tinymce/templates/popup.php:11 ../installer.php:200
+#: ../updates.php:743
+msgid "Select category"
+msgstr "Välj kategori"
+
+#: ../backend/modules/tinymce/templates/popup.php:13
+#: ../backend/modules/tinymce/templates/popup.php:25
+#: ../backend/modules/tinymce/templates/popup.php:37
+#: ../backend/modules/tinymce/templates/popup.php:43
+msgid "Hide this field"
+msgstr "Dölj detta fält"
+
+#: ../backend/modules/tinymce/templates/popup.php:14
+#: ../backend/modules/tinymce/templates/popup.php:26
+msgid ""
+"Please be aware that a value in this field is required in the frontend. If "
+"you choose to hide this field, please be sure to select a default value for "
+"it"
+msgstr ""
+"Tänk på att det krävs ett värde i det här fältet i kundvyn. Om du väljer att "
+"dölja detta fält, vänligen se till att ange ett defaultvärde för fältet"
+
+#: ../backend/modules/tinymce/templates/popup.php:19
+msgid "Default value for service select"
+msgstr "Defaultvärde för tjänsteval"
+
+#: ../backend/modules/tinymce/templates/popup.php:23 ../installer.php:199
+#: ../updates.php:742
+msgid "Select service"
+msgstr "Välj tjänst:"
+
+#: ../backend/modules/tinymce/templates/popup.php:31
+msgid "Default value for employee select"
+msgstr "Defaultvärde för medarbetarval"
+
+#: ../backend/modules/tinymce/templates/popup.php:35
+#: ../frontend/modules/booking/lib/AB_UserBookingData.php:401
+#: ../installer.php:201 ../updates.php:744
+msgid "Any"
+msgstr "Valfri text"
+
+#: ../backend/modules/tinymce/templates/popup.php:48
+msgid "\"I'm available on …\" block"
+msgstr "”Jag är tillgänglig…” block"
+
+#: ../backend/modules/tinymce/templates/popup.php:51
+msgid "Hide this block"
+msgstr "Dölj detta block"
+
+#: ../backend/modules/tinymce/templates/popup.php:98
+msgid "Insert Appointment Booking Form"
+msgstr "Infoga bokningsformulär"
+
+#: ../frontend/modules/authorize.net/AB_AuthorizeNetController.php:64
+#: ../frontend/modules/booking/AB_BookingController.php:236
+#: ../frontend/modules/booking/AB_BookingController.php:275
+#: ../frontend/modules/booking/AB_BookingController.php:336
+#: ../frontend/modules/booking/AB_BookingController.php:366
+#: ../frontend/modules/booking/AB_BookingController.php:463
+#: ../frontend/modules/booking/AB_BookingController.php:556
+#: ../frontend/modules/stripe/AB_StripeController.php:69
+#: ../frontend/modules/woocommerce/AB_WooCommerceController.php:171
+msgid "Session error."
+msgstr "Session error"
+
+#: ../frontend/modules/booking/AB_BookingController.php:177
+msgid "Form ID error."
+msgstr "Form ID error."
+
+#: ../frontend/modules/booking/AB_BookingController.php:361
+msgid ""
+"<h3>The selected time is not available anymore. Please, choose another time "
+"slot.</h3>"
+msgstr ""
+"<h3> Den valda tiden är inte längre ledig. Var vänlig välj en annan tid. </"
+"h3>"
+
+#: ../frontend/modules/booking/AB_BookingController.php:551
+msgid "This coupon code is invalid or has been used"
+msgstr "Denna rabattkod är ogiltig eller förbrukad"
+
+#: ../frontend/modules/booking/templates/1_service.php:103
+#: ../lib/AB_Validator.php:101
+msgid "The start time must be less than the end time"
+msgstr "Starttiden måste vara mindre än sluttiden"
+
+#: ../frontend/modules/booking/templates/2_time.php:37
+msgid "No time is available for selected criteria."
+msgstr "Ingen tid är ledig för det här valet."
+
+#: ../frontend/modules/booking/templates/cancel_appointment.php:9
+msgid "Page Redirection"
+msgstr "Vidarebefordran"
+
+#: ../frontend/modules/booking/templates/cancel_appointment.php:12
+#, php-format
+msgid ""
+"If you are not redirected automatically, follow the <a href=\"%s\">link</a>."
+msgstr "Om du inte skickas vidare automatiskt, följ <a href=\"%s\">länken</a>."
+
+#: ../frontend/modules/booking/templates/short_code.php:9
+msgid "Loading..."
+msgstr "Laddar…"
+
+#: ../frontend/modules/customer_profile/templates/short_code.php:44
+msgid "Expired"
+msgstr "Förfallen"
+
+#: ../frontend/modules/customer_profile/templates/short_code.php:60
+msgid "No appointments found"
+msgstr "Inga bokningar"
+
+#: ../installer.php:23
+msgid "Your appointment information"
+msgstr "Din bokningsinformation"
+
+#: ../installer.php:24
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"\n"
+"This is confirmation that you have booked [[SERVICE_NAME]].\n"
+"\n"
+"We are waiting you at [[COMPANY_ADDRESS]] on [[APPOINTMENT_DATE]] at "
+"[[APPOINTMENT_TIME]].\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Hej [[CLIENT_NAME]]!\n"
+"\n"
+"Det här är en bekräftelse på din bokning av [[SERVICE_NAME]].\n"
+"\n"
+"Vi ser fram emot att träffa dig på [[COMPANY_ADDRESS]] den "
+"[[APPOINTMENT_DATE]] kl [[APPOINTMENT_TIME]].\n"
+"\n"
+"Tack för att du valde oss.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:30
+msgid "New booking information"
+msgstr "Information om ny bokning"
+
+#: ../installer.php:31
+msgid ""
+"Hello.\n"
+"\n"
+"You have new booking.\n"
+"\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+msgstr ""
+"Hej!\n"
+"\n"
+"Du har en ny bokning\n"
+"\n"
+"Tjänst:. [[SERVICE_NAME]] \n"
+"Datum: [[APPOINTMENT_DATE]]\n"
+"Tid: [[APPOINTMENT_TIME]]\n"
+"Kundens namn: [[CLIENT_NAME]]\n"
+"Kundens telefonnummer: [[CLIENT_PHONE]]\n"
+"Kundens e-postadress: [[CLIENT_EMAIL]]"
+
+#: ../installer.php:37
+msgid "Your appointment at [[COMPANY_NAME]]"
+msgstr "Din bokning hos [[COMPANY_NAME]]"
+
+#: ../installer.php:38
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"\n"
+"We would like to remind you that you have booked [[SERVICE_NAME]] tomorrow "
+"on [[APPOINTMENT_TIME]]. We are waiting you at [[COMPANY_ADDRESS]].\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Hej [[CLIENT_NAME]]!\n"
+"\n"
+"Vi vill påminna dig om att du har bokat [[SERVICE_NAME]] imorgon "
+"[[APPOINTMENT_TIME]]. Vi ser fram emot att träffa dig på "
+"[[COMPANY_ADDRESS]].\n"
+"\n"
+"Tack för att du har valt oss.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:44
+msgid "Your visit to [[COMPANY_NAME]]"
+msgstr "Ditt besök hos [[COMPANY_NAME]]"
+
+#: ../installer.php:45
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"\n"
+"Thank you for choosing [[COMPANY_NAME]]. We hope you were satisfied with "
+"your [[SERVICE_NAME]].\n"
+"\n"
+"Thank you and we look forward to seeing you again soon.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Bäste [[CLIENT_NAME]].\n"
+"\n"
+"Tack för att du valde [[COMPANY_NAME]]. Vi hoppas du är nöjd med din "
+"[[SERVICE_NAME]].\n"
+"\n"
+"Tack och på återseende.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:51
+msgid "Your agenda for [[TOMORROW_DATE]]"
+msgstr "Ditt bokningsschema för [[TOMORROW_DATE]]"
+
+#: ../installer.php:52
+msgid ""
+"Hello.\n"
+"\n"
+"Your agenda for tomorrow is:\n"
+"\n"
+"[[NEXT_DAY_AGENDA]]"
+msgstr ""
+"Hej!\n"
+"\n"
+"Ditt bokningsschema för imorgon ser ut så här:\n"
+"\n"
+"[[NEXT_DAY_AGENDA]]"
+
+#: ../installer.php:58 ../updates.php:446
+msgid "Booking cancellation"
+msgstr "Avbokning"
+
+#: ../installer.php:59 ../updates.php:447
+msgid ""
+"Hello.\n"
+"\n"
+"The following booking has been cancelled.\n"
+"\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+msgstr ""
+"Hej!\n"
+"\n"
+"Följande bokning är avbokad.\n"
+"\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+
+#: ../installer.php:66 ../updates.php:454
+msgid ""
+"Hello.\n"
+"\n"
+"An account was created for you at [[SITE_ADDRESS]]\n"
+"\n"
+"Your user details:\n"
+"user: [[NEW_USERNAME]]\n"
+"password: [[NEW_PASSWORD]]\n"
+"\n"
+"Thanks."
+msgstr ""
+"Hej!\n"
+"\n"
+"Ett konto har skapats åt dig på [[SITE_ADDRESS]]\n"
+"\n"
+"Dina användaruppgifter:\n"
+"Användarnamn: [[NEW_USERNAME]]\n"
+"Lösenord: [[NEW_PASSWORD]]\n"
+"\n"
+"Tack."
+
+#: ../installer.php:75 ../updates.php:266
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"This is confirmation that you have booked [[SERVICE_NAME]].\n"
+"We are waiting you at [[COMPANY_ADDRESS]] on [[APPOINTMENT_DATE]] at "
+"[[APPOINTMENT_TIME]].\n"
+"Thank you for choosing our company.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Hej [[CLIENT_NAME]]!\n"
+"Det här är en bekräftelse på att du bokat [[SERVICE_NAME]].\n"
+"vi ser fram emot att träffa dig på [[COMPANY_ADDRESS]] den "
+"[[APPOINTMENT_DATE]] kl [[APPOINTMENT_TIME]].\n"
+"Tack för att du valde oss.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:82 ../updates.php:271
+msgid ""
+"Hello.\n"
+"You have new booking.\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+msgstr ""
+"Hej!\n"
+"Du har en ny bokning\n"
+"Tjänst:. [[SERVICE_NAME]] \n"
+"Datum: [[APPOINTMENT_DATE]]\n"
+"Tid: [[APPOINTMENT_TIME]]\n"
+"Kundens namn: [[CLIENT_NAME]]\n"
+"Kundens telefonnummer: [[CLIENT_PHONE]]\n"
+"Kundens e-postadress: [[CLIENT_EMAIL]]"
+
+#: ../installer.php:89 ../updates.php:276
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"We would like to remind you that you have booked [[SERVICE_NAME]] tomorrow "
+"on [[APPOINTMENT_TIME]]. We are waiting you at [[COMPANY_ADDRESS]].\n"
+"Thank you for choosing our company.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Hej [[CLIENT_NAME]]!\n"
+"Vi vill påminna dig om att du har bokat [[SERVICE_NAME]] imorgon kl "
+"[[APPOINTMENT_TIME]]. Vi ser fram emot att träffa dig på "
+"[[COMPANY_ADDRESS]].\n"
+"Tack för att du har valt oss.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:96 ../updates.php:281
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"Thank you for choosing [[COMPANY_NAME]]. We hope you were satisfied with "
+"your [[SERVICE_NAME]].\n"
+"Thank you and we look forward to seeing you again soon.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Hej [[CLIENT_NAME]]!\n"
+"Tack för att du valt [[COMPANY_NAME]]. Vi hoppas är nöjd med din "
+"[[SERVICE_NAME]].\n"
+"Tack och på återseende.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:103 ../updates.php:286
+msgid ""
+"Hello.\n"
+"Your agenda for tomorrow is:\n"
+"[[NEXT_DAY_AGENDA]]"
+msgstr ""
+"Hej!\n"
+"Ditt bokningsschema i morgon ser ut så här:\n"
+"[[NEXT_DAY_AGENDA]]"
+
+#: ../installer.php:110 ../updates.php:291
+msgid ""
+"Hello.\n"
+"The following booking has been cancelled.\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+msgstr ""
+"Hej\n"
+"Den här bokningen är avbommad.\n"
+"Tjänst:. [[SERVICE_NAME]]\n"
+"Datum: [[APPOINTMENT_DATE]]\n"
+"Tid: [[APPOINTMENT_TIME]]\n"
+"Kundens namn: [[CLIENT_NAME]]\n"
+"Kundens telefon: [ [CLIENT_PHONE]]\n"
+"Kundens e-postadress: [[client_email]]"
+
+#: ../installer.php:117 ../updates.php:296
+msgid ""
+"Hello.\n"
+"An account was created for you at [[SITE_ADDRESS]]\n"
+"Your user details:\n"
+"user: [[NEW_USERNAME]]\n"
+"password: [[NEW_PASSWORD]]\n"
+"\n"
+"Thanks."
+msgstr ""
+"Hej!\n"
+"Ett konto har skapats åt dig på [[SITE_ADDRESS]]\n"
+"Dina användaruppgifter:\n"
+"Användarnamn: [[NEW_USERNAME]]\n"
+"Lösenord: [[NEW_PASSWORD]]\n"
+"\n"
+"Thanks."
+
+#: ../installer.php:174
+msgid "Please select service: "
+msgstr "Välj tjänst:"
+
+#: ../installer.php:175
+msgid ""
+"Below you can find a list of available time slots for [[SERVICE_NAME]] by "
+"[[STAFF_NAME]].\n"
+"Click on a time slot to proceed with booking."
+msgstr ""
+"Nedan hittar du en lista över tillgängliga tider för [[SERVICE_NAME]] med "
+"[[STAFF_NAME]].\n"
+"Klicka på en tid för att fortsätta med bokningen."
+
+#: ../installer.php:176
+msgid ""
+"You selected a booking for [[SERVICE_NAME]] by [[STAFF_NAME]] at "
+"[[SERVICE_TIME]] on [[SERVICE_DATE]]. The price for the service is "
+"[[SERVICE_PRICE]].\n"
+"Please provide your details in the form below to proceed with booking."
+msgstr ""
+"Du har valt att boka [[SERVICE_NAME]] av [[STAFF_NAME]] kl [[SERVICE_TIME]] "
+"den [[SERVICE_DATE]]. Priset för tjänsten är [[SERVICE_PRICE]].\n"
+"Vänligen fyll i dina uppgifter i formuläret nedan för att gå vidare med "
+"bokningen."
+
+#: ../installer.php:178
+msgid "Please tell us how you would like to pay: "
+msgstr "Ange hur du vill betala:"
+
+#: ../installer.php:179
+msgid ""
+"Thank you! Your booking is complete. An email with details of your booking "
+"has been sent to you."
+msgstr ""
+"Tack! Din bokning är klar. Ett e-postmeddelande med information om din "
+"bokning har skickats till dig."
+
+#: ../installer.php:180 ../updates.php:591
+msgid "The price for the service is [[SERVICE_PRICE]]."
+msgstr "Priset för tjänsten är [[SERVICE_PRICE]]."
+
+#: ../installer.php:185 ../updates.php:730
+msgid "Payment"
+msgstr "Betalning"
+
+#: ../installer.php:186 ../updates.php:731
+msgid "Done"
+msgstr "Klar"
+
+#: ../installer.php:189 ../updates.php:734
+msgid "Employee"
+msgstr "Medarbetare"
+
+#: ../installer.php:190 ../updates.php:735
+msgid "I'm available on or after"
+msgstr "Jag är tillgänglig från och med"
+
+#: ../installer.php:191 ../updates.php:736
+msgid "Start from"
+msgstr "Från"
+
+#: ../installer.php:192 ../updates.php:737
+msgid "Finish by"
+msgstr "Slutar"
+
+#: ../installer.php:197 ../updates.php:525
+msgid "I will pay locally"
+msgstr "Jag kommer att betala på plats"
+
+#: ../installer.php:231 ../updates.php:412
+msgid "Appointment"
+msgstr "Bokning"
+
+#: ../lib/AB_Config.php:26 ../lib/entities/AB_Service.php:55
+msgid "Uncategorized"
+msgstr "Okategoriserad"
+
+#: ../lib/AB_SMS.php:289
+msgid "Queued"
+msgstr "Köar"
+
+#: ../lib/AB_SMS.php:294 ../lib/AB_SMS.php:326
+msgid "Error"
+msgstr "Fel"
+
+#: ../lib/AB_SMS.php:298
+msgid "Out of credit"
+msgstr "För lågt saldo"
+
+#: ../lib/AB_SMS.php:302
+msgid "Country out of service"
+msgstr "Landet omfattas inte av tjänsten"
+
+#: ../lib/AB_SMS.php:306
+msgid "Sending"
+msgstr "Skickar"
+
+#: ../lib/AB_SMS.php:310
+msgid "Sent"
+msgstr "Skickat"
+
+#: ../lib/AB_SMS.php:314
+msgid "Delivered"
+msgstr "Levererat"
+
+#: ../lib/AB_SMS.php:318
+msgid "Failed"
+msgstr "Misslyckats"
+
+#: ../lib/AB_SMS.php:322
+msgid "Undelivered"
+msgstr "Ej levererat"
+
+#: ../lib/AB_SMS.php:438
+msgid "Error connecting to server."
+msgstr "Problem med att ansluta till servern"
+
+#: ../lib/AB_SMS.php:479
+msgid "Recovery code expired."
+msgstr "Recovery code har slutat gälla."
+
+#: ../lib/AB_SMS.php:480
+msgid "Empty password."
+msgstr "Inget lösenord."
+
+#: ../lib/AB_SMS.php:481
+msgid "Incorrect password."
+msgstr "Felaktigt lösenord."
+
+#: ../lib/AB_SMS.php:482
+msgid "Incorrect recovery code."
+msgstr "Felaktig recovery code."
+
+#: ../lib/AB_SMS.php:483
+msgid "Incorrect email or password."
+msgstr "Felaktig e-postadress eller lösenord"
+
+#: ../lib/AB_SMS.php:484
+msgid "Invalid email."
+msgstr "Ogiltig e-postadress."
+
+#: ../lib/AB_SMS.php:485
+msgid "Error sending email."
+msgstr "Problem att skicka e-postmeddelande."
+
+#: ../lib/AB_SMS.php:486
+msgid "User not found."
+msgstr "Hittar inte användaren."
+
+#: ../lib/AB_SMS.php:487
+msgid "Email already in use."
+msgstr "E-postadressen används redan."
+
+#: ../lib/AB_Validator.php:15
+msgid "Invalid email"
+msgstr "Ogiltig e-postadress"
+
+#: ../lib/AB_Validator.php:22
+msgid "This email is already in use"
+msgstr "Den här e-postadressen används redan"
+
+#: ../lib/AB_Validator.php:26
+msgid "Please tell us your email"
+msgstr "Ange din e-postadress"
+
+#: ../lib/AB_Validator.php:39
+msgid "Invalid phone number"
+msgstr "Ogiltigt telefonnummer"
+
+#: ../lib/AB_Validator.php:42
+msgid "Please tell us your phone"
+msgstr "Ange ditt telefonnummer"
+
+#: ../lib/AB_Validator.php:59
+#, php-format
+msgid "\"%s\" is too long (%d characters max)."
+msgstr "\"%s\" är för lång (%d tecken max)."
+
+#: ../lib/AB_Validator.php:65
+#, php-format
+msgid "\"%s\" is too short (%d characters min)."
+msgstr "\"%s\" är för kort (%d tecken min)."
+
+#: ../lib/AB_Validator.php:71
+msgid "Please tell us your name"
+msgstr "Ange ditt namn"
+
+#: ../lib/AB_Validator.php:86
+msgid "Invalid number"
+msgstr "Ogiltigt nummer"
+
+#: ../lib/AB_Validator.php:114
+msgid "Invalid date or time"
+msgstr "Ogiltigt datum eller tid"
+
+#: ../lib/utils/AB_DateTimeUtils.php:246
+#, php-format
+msgid "%d h"
+msgstr "%d h"
+
+#: ../lib/utils/AB_DateTimeUtils.php:252
+#, php-format
+msgid "%d min"
+msgstr "%d min"
+
+#: ../lib/utils/AB_Utils.php:260
+msgid "Reset"
+msgstr "Återställ"
+
+#: ../updates.php:741
+msgid "Notes (optional)"
+msgstr "Anteckningar (valfritt)"

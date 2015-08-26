@@ -1,10 +1,11 @@
-=== Bookly - Responsive Appointment Booking Application (Lite Version) ===
+=== Bookly - Responsive Appointment Booking Tool (Lite Version) ===
 
 Contributors: Ladela
-Tags: appointment booking, booking calendar, booking, business, responsive, hair salon, personal trainer
+Donate link: http://booking-wp-plugin.com/
+Tags: appointment, authorize.net, booking, business, calendar, google calendar, night shift, paypal, reservation, responsive, stripe, woocommerce, wpml 
 Requires at least: 3.7
-Tested up to: 4.0.1
-Stable tag: 3.3
+Tested up to: 4.3
+Stable tag: 7.6.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -19,7 +20,7 @@ Bookly Plugin – is a great easy-to-use and easy-to-manage booking tool for ser
 * User friendly responsive touch optimized front end design
 * Comprehensive admin area with intuitive interface
 * Easy WordPress integration
-* Multi languages support: language files can be uploaded to WordPress
+* Fully translatable with WPML support
 * Dozens of options to fit your business model
 * Weekly calendar view for each service provider
 * Unlimited colors
@@ -31,17 +32,23 @@ Bookly Plugin – is a great easy-to-use and easy-to-manage booking tool for ser
 * Importable and manageable list of customers
 * Customizable appearance settings
 * Export of bookings to CSV
+* Custom fields
+* Night shifts support
 
 = Features available in full version: =
 
-* Google calendar integration
+* Google Calendar integration
+* WooCommerce integration
 * Daily calendar overview for all or selected service providers
 * Unlimited number of service providers
 * Personalized price of service for a provider
 * PayPal payments
+* Credit card payments through Authorize.Net and Stripe
 * Editable email notifications to customers and service providers
-* Configurable email reminders
+* SMS notifications
+* Configurable email and SMS reminders
 * Configurable payments report
+* Discount coupons
 
 = Plugins Resources =
 
@@ -121,6 +128,174 @@ Upon the completion of these steps, customers can book appointments. In the Cale
 * Booking form appearance modes.
 
 == Changelog ==
+
+= 7.6.1 =
+* Fixed disabling SMS and email notifications
+
+= 7.6 =
+* Added padding time
+* Fixed regression bugs with credit card payments
+* Fixed issue with HTTPS and detecting client’s country by IP
+
+= 7.5 =
+* Added support for night shifts
+* Fixed “<br/>” in company address in emails sent as plain text
+* Fixed issue with the second step not loading when “Show calendar” is enabled
+
+= 7.4 =
+* Added time slot lengths up to 6 hours
+* Added new setting to send emails as plain text
+* Added new setting to set clients’ email as “reply to” address in email notifications
+* Improved the second step of booking when “Show calendar” is enabled
+
+= 7.3.1 =
+* Fixed wrong dates in the popup back-end calendar for time zones behind UTC
+* Fixed time-text in vertical axis of the back-end calendar
+
+= 7.3 =
+* Added ‘All day’ services
+* Added new code [[LOGIN_FORM]] to the Details step of booking so users can log in at that step
+* Added ability to choose staff members in the back-end calendar
+* Back-end calendar now remembers active view and staff members
+* Added ability to translate category, service and staff member names with WPML
+
+= 7.2 =
+* Added ability to view appointments of all staff members in the back-end calendar
+* Added ability to navigate to specific dates in the back-end calendar
+* Added ability to edit appointments in the list
+* Fixed issue with displaying dates in calendar at the second step of booking
+
+= 7.1 =
+* Added support for WPML
+* Added month view in the back-end calendar
+* Added ability to select country in the phone field
+* Added [[STAFF_NAME]] in staff agenda templates
+* Fixed “<br/>” in company address in SMS
+
+= 7.0.1 =
+* Fixed issue with popups in the back-end on mobile devices
+* Fixed issue with “No time is available for booking”
+
+= 7.0 =
+* Added SMS notifications
+* Added reusable coupons
+* Added deduction parameter in coupons
+* Added support for database backup/transfer plugins
+* Added ability to specify what information should be placed in Google Calendar event title
+* Added new setting for choosing how Bookly assets should be included in the page (may be helpful in some themes)
+* Improved the look and feel of the admin panel elements
+* Fixed email notifications when WooCommerce is enabled
+
+= 6.3 =
+* Added ability to use WooCommerce cart with free services
+* Fixed conflict with other plugins that change default time zone in WordPress
+* Fixed issues with Google Calendar events when “Show blocked timeslots” is enabled
+
+= 6.2 =
+* Updated Authorize.Net library
+* Added support for working hours up to midnight
+* Added translation into Italian
+* Fixed issue with displaying days off in calendar at the second step
+* Fixed problem with creating `ab_email_notification` table in database
+* Fixed E_STRICT error message
+
+= 6.1 =
+* Added ability to delete associated WordPress user when deleting customer
+* Added restoring selected week days when going back to the first step of booking
+* Fixed creating new staff members
+* Fixed minor cosmetic issues
+
+= 6.0 =
+* Added integration with WooCommerce
+* Added new option to allow staff members to edit their profile settings
+* Added auto scroll when the next step’s content is outside of screen
+
+= 5.2.3 =
+* Security update to prevent XSS vulnerability
+* Fixed issue with extra slot being excluded when fetching events from Google Calendar
+
+= 5.2.2 =
+* Fixed problem with initialization of Bookly in some themes
+
+= 5.2.1 =
+* Fixed displaying booking forms in IE9
+* Fixed displaying PayPal errors
+* Fixed bug with repeating days when “Show each day in one column” is enabled
+
+= 5.2 =
+* Added new code [[CUSTOM_FIELDS_2C]] in Notifications for 2 column formatting ([[CUSTOM_FIELDS]] reverted to old formatting)
+* Fixed issues when creating WP user for logged in customer or not logged in customer uses existing name and email
+
+= 5.1 =
+* Added ability to assign WP users to customers when editing or creating a new customer
+* Added translation into Dutch
+
+= 5.0 =
+* Added ability to create WP accounts for customers
+* Added new shortcode for viewing and cancelling customers’ appointments in the front-end
+* Added cancelled appointment notifications
+* Added ability to view appointments as a list in the admin panel
+* Added ability to use HTML tags in Appearance and Custom Fields
+* Improved time zones support
+
+= 4.6 =
+* Added new selection “Number of persons” in the first step of booking
+* Added new appearance setting “Show calendar”
+* Added new codes [[NUMBER_OF_PERSONS]] and [[TOTAL_PRICE]]
+* Added new currency COP
+* Fixed time in scheduled email notifications when “Display available time slots in client’s time zone” is enabled
+
+= 4.5.1 =
+* Added translation into German
+* Added new currency SAR
+* Fixed time in email notifications to clients (regression bug)
+* Fixed an issue when Bookly output is affected by “wpautop”
+
+= 4.5 =
+* Added new setting to limit the number of fetched events from Google Calendar for 2 way sync
+* Fixed displaying time slots with big time zone offset
+* Fixed a problem with Google Calendar integration (regression bug)
+
+= 4.4 =
+* Added new setting to restrict the number of days available for booking
+* Added new code [[CANCEL_APPOINTMENT_URL]]
+* Added new currency CLP
+* Fixed the number of displayed time slots at step 2
+
+= 4.3 =
+* Added ability to reorder items in the lists of services, categories and staff members
+* Added new appearance settings – “Show blocked timeslots” and “Show each day in one column”
+* Fixed regression bugs in the drop down lists in the first step of booking form
+
+= 4.2 =
+* Added custom fields in export
+* Added new codes [[STAFF_PHOTO]], [[STAFF_EMAIL]], [[STAFF_PHONE]] in email notifications
+* Added option to enable just 1 way sync with Google Calendar
+* Added ability to change “I will pay locally”
+
+= 4.1 =
+* Added [[CUSTOM_FIELDS]] code in email notifications
+* Added copying custom fields to Google Calendar event
+* Added displaying custom fields’ values in Bookly calendar when capacity is 1
+* Fixed issue when loading lots of events from Google Calendar for step 2
+
+= 4.0 =
+* Added custom fields (Note that [[CLIENT_NOTES]] has been removed from email notifications)
+* Added support for 100% discount coupons
+* Added payment description in PayPal invoice
+* Fixed export to CSV
+
+= 3.4.2 =
+* Fixed popup box issue in calendar in WordPress 4.1
+* Fixed [[CATEGORY_NAME]] in email notifications
+
+= 3.4.1 =
+* Fixed redirect after PayPal payment
+
+= 3.4 =
+* Added minimum time requirement prior to booking from 1 to 48 hours
+* Fixed caching problems on WP Engine hosting
+* Fixed auto selection of newly created customer in the calendar
 
 = 3.3 =
 * Added option to hide date and time selection at the first step
@@ -217,5 +392,5 @@ Upon the completion of these steps, customers can book appointments. In the Cale
 
 == Upgrade Notice ==
 
-= 2.0.1 =
-Upgrade now for full compatibility with WordPress 4.0
+= 7.6.1 =
+Upgrade now to the most recent version of Bookly.

@@ -1,0 +1,53 @@
+/* notifications */
+.ab-notifications table td { padding-left: 20px; padding-top: 10px; }
+.ab-notifications .ab-form-field { padding-top: 10px; }
+.ab-notifications .ab-toggle-arrow { position: absolute; right: 0; top: 9px; width: 24px; height: 24px; cursor: pointer; }
+.ab-notifications .ab-form-label { display: block; float: left; margin-top: 3px; min-width: 80px; }
+.ab-notifications .ab-form-row { padding: 3px 0; overflow: hidden; }
+.ab-notifications .ab-form-row input[type="text"] { width: 700px!important; position: relative; z-index: 9; }
+.ab-notifications #message_editor { margin-top: -20px; }
+.ab-notifications #message_editor .wp-editor-wrap { margin-left: 81px; }
+.ab-notifications legend { margin: 0; border: 0; line-height: normal; }
+.ab-notifications legend input { margin: 0!important; }
+.ab-notifications legend label { display: inline; font-size: 17px; }
+.ab-notifications .ab-codes table tr td { padding: 0 20px 0 0; font-size: 12px;}
+.ab-notifications .ab-codes table tr td input { cursor: pointer; border: none; width: 250px; }
+.ab-notifications .ab-codes .ab-codes-inner {
+    max-width: 320px;
+    display: inline-block;
+    vertical-align: top;
+    border: 1px solid silver;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-right: 15px;
+    margin-bottom: 20px;
+}
+.ab-notifications .ab-codes .ab-codes-inner input { cursor: pointer; border: none; width: 250px; }
+.ab-notifications .ab-codes .ab-codes-inner legend {
+    display: inline-block;
+    width: auto;
+    padding: 0 10px 0px 10px;
+    font-size: 17px;
+    font-weight: bold;
+}
+.ab-notifications .panel-title > input { margin: 0 5px 0 0; }
+.ab-notifications a[data-toggle="collapse"] {
+    outline: none;
+    box-shadow: none;
+    padding-right: 25px;
+    background: url("../../../../resources/images/notifications-arrow-up.png") 100% 50% no-repeat;
+    background-size: 17px 17px;
+}
+.ab-notifications a[data-toggle="collapse"].collapsed {
+    background: url("../../../../resources/images/notifications-arrow-down.png") 100% 50% no-repeat;
+    background-size: 17px 17px;
+}
+.ab-sms-holder > textarea { width: 370px; }
+.ab-logout {
+    border: 0;
+    background: none;
+    width: 100%;
+    padding: 0;
+    text-align: left;
+}
+#sms_tabs { margin: 15px 0; }

@@ -1,0 +1,411 @@
+/* global class */
+.ab-list-none { list-style: none; }
+.ab-left { float: left!important; }
+.ab-right { float: right!important; }
+.ab-clear { clear: both!important; }
+.ab-rtext { text-align: right; }
+.ab-bold { font-weight: bold!important; }
+.ab-list { margin-left: 10px!important; }
+.ab-clearBottom { margin-bottom: 0!important; }
+.ab-hidden { overflow: hidden; }
+.ab-none { display: none!important; }
+.ab-nowrap { white-space: nowrap; }
+.ab-btn { text-decoration: none; }
+
+/* <booking-form> */
+
+    .ab-booking-form {
+        font-size: 14px!important;
+        color: #5f6267;
+        margin: 0 auto;
+    }
+
+    .ab-booking-form label {
+        float: none;
+        width: auto;
+    }
+
+    /* <modal> */
+        .bookly-fade { display: none; }
+        .bookly-in { display: block; }
+
+        .bookly-close:hover,
+        .bookly-close:focus,
+        .bookly-close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 1px 0 #fff; filter: alpha(opacity=20); opacity: .2; -webkit-appearance: none; padding: 0; cursor: pointer; background: none; border: 0; margin-top: -35px; }
+        .bookly-close:focus,
+        .bookly-close:hover { color: #000; text-decoration: none; cursor: pointer; opacity: .5; background: none; }
+        .bookly-modal { position: fixed; width: 100%; left: 0; top: 0; z-index: 9999; bottom: 0; background-color: rgba(0, 0, 0, 0.7); }
+        .bookly-modal .bookly-modal-dialog { width: 400px; position: absolute; left: 50%; margin-left: -200px; top: 100px; }
+        .bookly-modal .bookly-modal-content { position: relative; background-color: #fff; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0,0,0,.2); border-radius: 6px; outline: 0; -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5); box-shadow: 0 3px 9px rgba(0,0,0,.5); }
+        .bookly-modal .bookly-modal-content .bookly-modal-header { min-height: 16.5px; padding: 15px; border-bottom: 1px solid #e5e5e5; color: #5f6267; }
+        .bookly-modal .bookly-modal-content .bookly-modal-header h4 { margin: 0; padding: 0; font-size: 22px; }
+        .bookly-modal .bookly-modal-content .bookly-modal-footer { padding: 15px; text-align: right; border-top: 1px solid #e5e5e5; }
+        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:focus,
+        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:active,
+        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:hover,
+        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit { display: inline-block; padding: 6px 12px!important; border: 0; margin-bottom: 0; font-size: 14px; font-weight: 400; line-height: 1.42857143; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; border-radius: 4px; color: #fff; text-transform: capitalize; }
+        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-cancel { border: 0; background: none; color: #21759b; cursor: pointer; padding: 0; vertical-align: -2px; font-size: 14px; }
+        .bookly-modal .bookly-modal-content .bookly-modal-body { position: relative; padding: 15px; }
+        .bookly-modal .bookly-modal-content .bookly-modal-body .ab-formGroup .ab-formLabel { font-size: 14px; }
+        @media (max-width: 768px) {
+            .bookly-modal .bookly-modal-dialog {
+                width: auto;
+                left: 15px;
+                right: 15px;
+                margin: 30px auto;
+                top: 50px;
+            }
+        }
+
+    /* </modal> */
+
+    /* <progress-tracker> */
+        .ab-progress-tracker { display: table; width: 100%; margin-bottom: 20px!important; }
+        .ab-progress-bar { margin: 0 0 10px 0!important; overflow: hidden!important; display: table-row; padding: 0!important; }
+        .ab-progress-bar .ab-step-tabs { display: table-cell; padding-left: 4px; width: 20%; list-style: none; }
+        .ab-progress-bar .ab-step-tabs .step ~ .ab-step-tabs.active .step { background: red }
+        .ab-progress-tracker-four-steps .ab-progress-bar .ab-step-tabs { width: 25%; }
+        .ab-progress-bar .ab-step-tabs .step { height: 15px; background: #bec3c7; margin-top: 5px; }
+        .ab-progress-bar .ab-step-tabs.active .step { background: #f56530; }
+        .ab-progress-bar .ab-step-tabs.ab-first .step { border-top-left-radius: 5px; border-bottom-left-radius: 5px; }
+        .ab-progress-bar .ab-step-tabs.ab-last .step { border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
+        .ab-progress-bar .ab-step-tabs.ab-first { padding-left: 0; }
+        .ab-progress-bar .ab-step-tabs .arr {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0;
+            height: 0;
+            margin-top: -7px;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+            border-left: 7px solid #4f92bd;
+        }
+        .ab-progress-bar .ab-step-tabs a {
+            display: block;
+            border: none;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            color: #5f6267;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: default;
+            outline: none;
+        }
+        .ab-progress-bar .ab-step-tabs.active a { color: #f56530; }
+    /* </progress-tracker> */
+
+    /* <separator-button> */
+        .ab-mobile-step_1 { margin-right: -10px; }
+        .ab-mobile-step_1 .ab-nav-steps { display: none; }
+        .ab-nav-steps {
+            padding-top: 20px!important;
+            border-top: 1px solid silver!important;
+        }
+    /* </separator-button> */
+
+    /* <checkbox-list> */
+        .ab-first-step .ab-time-from { margin-right: 12px; }
+        .ab-first-step .ab-week-days { list-style: none!important; margin: 0!important; margin-bottom: 3px!important; float: left!important; padding: 0!important; }
+        .ab-first-step .ab-week-days li { float: left!important; min-width: 35px!important; text-align: center!important; margin: 0 1px 3px 1px!important; list-style: none!important; }
+        .ab-first-step .ab-week-days li label {
+            display: block;
+            width: 23px;
+            height: 23px;
+            padding: 0;
+            margin: 0 auto;
+            margin-top: 8px;
+            background: #f56530;
+            border-radius: 25px;
+            -moz-border-radius: 25px;
+            -webkit-border-radius: 25px;
+            cursor: pointer;
+        }
+        .ab-first-step .ab-week-days li label.active { background: #f56530 url("../images/checkbox.png") 0 0 no-repeat; }
+        .ab-first-step .ab-week-days li label input { visibility: hidden; }
+        .ab-to-third-step,
+        .ab-to-second-step { margin-right: 10px; }
+        /*.ab-third-step { overflow: hidden; }*/
+        .ab-textarea { width: 100% !important; clear: both; margin-top: 20px; }
+        .ab-textarea textarea {
+            width: 100%;
+            resize: vertical;
+            padding: 2px 6px!important;
+            border-radius: 4px!important;
+            border: 1px solid silver;
+            outline: none;
+            height: 70px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+    /* </checkbox-list> */
+
+    /* <form-style> */
+        .ab-label-error {
+            color: rgb(245, 101, 48);
+            margin-left: 0;
+            font-size: 12px;
+            font-weight: bold;
+            /*line-height: 12px;*/
+            padding-top: 5px;
+        }
+        .ab-four-cols .ab-formGroup { width: 25%; }
+        .ab-formGroup { width: 33.33%; margin-bottom: 0; }
+        .ab-formGroup.ab-full { width: 100%; }
+        .ab-formGroup.ab-w-50 { width: 50%; }
+        .ab-formGroup.ab-lastGroup .ab-formField { margin-right: 0; }
+        .ab-formGroup .ab-formLabel { display: inline; line-height: normal; font-weight: bold; color: #f56530; }
+        .ab-formGroup .ab-formField { margin-right: 10px; padding: 0 7px; margin-top: 5px; }
+        .ab-formGroup .ab-formField .ab-formElement {
+            padding: 2px 6px!important;
+            border-radius: 4px!important;
+            border: 1px solid silver;
+            outline: none;
+            width: 100%;
+            /*white-space: nowrap;*/
+            height: 24px!important;
+            margin: 0 -7px;
+            box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            -webkit-box-sizing: content-box;
+        }
+        .ab-formGroup .ab-formField .ab-formElement.ab-user-phone {
+            padding-left: 44px!important;
+            height: 30px!important;
+            margin: 0;
+            position: relative;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+        ::-webkit-input-placeholder {color:#bbb!important;}
+        ::-moz-placeholder          {color:#bbb!important;}/* Firefox 19+ */
+        :-moz-placeholder           {color:#bbb!important;}/* Firefox 18- */
+        :-ms-input-placeholder      {color:#bbb!important;}
+        .ab-formGroup .ab-formField .intl-tel-input { display: block; margin: 0 -7px; }
+        .ab-formGroup .ab-formField .ab-formElement.ab-user-coupon { width: 100px; display: inline-block; margin: 0 10px; }
+        .ab-formGroup .ab-formField textarea.ab-formElement { height: auto!important; }
+        .ab-date-from { cursor: text!important; }
+        .ab-formGroup .ab-formField .ab-user-email.ab-details-error,
+        .ab-formGroup .ab-formField .ab-full-name.ab-details-error,
+        .ab-formGroup .ab-formField .ab-custom-field.ab-details-error { padding: 2px 5px!important; }
+        .ab-formGroup .ab-formField .ab-user-phone.ab-details-error { padding: 2px 5px!important; padding-left: 44px!important; }
+        .ab-first-step .ab-service-form label { line-height: normal; font-weight: bold; display: inline; }
+        .ab-first-step .ab-select { width: 33.33%; margin-bottom: 0; }
+        .ab-first-step .ab-select label { color: #f56530; display: inline; }
+        .ab-first-step .ab-right { float: right!important; }
+        .ab-first-step .ab-time-from { margin-right: 12px; }
+        /*.ab-first-step .ab-available-date, .ab-first-step .ab-available-days { margin: 0 15px 12px 0; }*/
+        .ab-first-step .ab-time-range,
+        .ab-first-step .ab-available-date,
+        .ab-first-step .ab-available-days {
+            margin-bottom: 15px!important;
+            margin-right: 10px!important;
+            overflow: hidden;
+        }
+        .ab-first-step .ab-time-range { margin-bottom: 0!important; }
+        .ab-first-step .ab-time-range select {
+            padding: 4px 6px!important;
+            border-radius: 4px!important;
+            border: 1px solid silver;
+            width: 100px!important;
+            margin-bottom: 0;
+            margin-top: 5px;
+            line-height: normal;
+            height: 30px!important;
+            outline: none;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+        .ab-guest-desc { margin-top: 15px; }
+    /* </form-style> */
+
+    /* <grid-row> */
+        .ab-row-fluid {
+            overflow: hidden;
+            margin-bottom:20px!important;
+        }
+        .ab-row-fluid.last-row {
+            margin-bottom: 0!important;
+        }
+        .ab-row-fluid.ab-col-phone { overflow: visible!important; height: 63px; }
+    /* </grid-row> */
+
+    /* <button> */
+        .ab-btn {
+            padding: 9px 5px!important;
+            border: 0!important;
+            width: 118px;
+            display: block;
+            text-align: center;
+            border-radius: 4px!important;
+            background: #f4662f;
+            cursor: pointer!important;
+            height: auto!important;
+            line-height: 17px;
+            outline: none!important;
+        }
+        .ab-btn span {
+            color: #fff!important;
+            font-weight: bold!important;
+            text-transform: uppercase!important;
+        }
+        .ab-time-next,
+        .ab-time-prev {
+            width: 60px;
+            background: #f4662f;
+            height: 35px!important;
+            padding: 0 5px!important;
+        }
+        .ab-time-next { background-position: 50% -56px; margin-left: 10px; }
+        .ab-time-prev { background-position: 50% 8px; }
+        .btn-apply-coupon { display: inline-block; }
+        .btn-apply-coupon span { text-transform: capitalize!important; font-weight: normal!important; }
+        input.ab-user-coupon { margin: 10px 10px 0 10px; }
+    /* </button> */
+
+/* </booking-form> */
+
+
+/* <media-query> */
+    @media screen and (max-width: 650px) {
+
+        .ab-formGroup {
+            float: none!important;
+            margin: 0 0 20px 0!important;
+            width: 100%!important;
+            overflow: hidden;
+        }
+
+        .ab-formGroup.ab-clearBottom { margin-bottom: 0!important; }
+
+        .ab-first-step .ab-week-days {
+            text-align: center;
+            float: none!important;
+            margin-bottom: 0!important;
+        }
+
+        .ab-first-step .ab-week-days li {
+            margin: 0!important;
+            width: 13.5%!important;
+            float: none!important;
+            display: inline-block;
+        }
+
+        .ab-first-step .ab-date-wrap > input {
+            font-size: 20px;
+        }
+
+        .ab-mobile-step_2 {
+            display: none;
+        }
+
+        .ab-mobile-step_1 { margin-right: 0px; }
+
+        .ab-mobile-step_1 .ab-nav-steps { display: block; }
+
+        .ab-select-mobile {
+            width: 95%;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
+        .ab-mobile-next-step, .ab-mobile-prev-step {
+            display: block!important;
+        }
+
+        .ab-progress-tracker { display: none; }
+
+        .ab-formGroup .ab-formField { margin-right: 0; }
+
+        .ab-input-wrap .ab-date-wrap .ab-date-from {
+            width: 100%;
+            font-size: 14px;
+            box-sizing: border-box;
+           -webkit-box-sizing: border-box;
+           -moz-box-sizing: border-box;
+        }
+
+        .ab-first-step .ab-select {
+            float: none!important;
+            margin: 0 0 10px 0;
+            width: 100%;
+        }
+
+        .ab-third-step .ab-details-list {
+            float: none!important;
+            margin: 0 0 10px 0!important;
+            width: 100%!important;
+        }
+
+        .ab-third-step .ab-details-list .ab-details-wrap { margin-right: 0; }
+
+        .ab-time-range,
+        .ab-available-date,
+        .ab-available-days {
+            margin-bottom: 20px!important;
+            width: 100%;
+            overflow: hidden;
+            float: none;
+        }
+
+        .ab-first-step .ab-time-to,
+        .ab-first-step .ab-time-from {
+            float: none;
+            margin: 0;
+            display: inline-block;
+            width: 48%;
+        }
+
+        .ab-first-step .ab-time-range {
+            margin-bottom: 20px!important;
+        }
+
+        .ab-first-step .ab-time-range select {
+            width: 100%!important;
+        }
+
+        .ab-first-step .ab-time-to { float: right!important; }
+        .ab-first-step .ab-time-from { float: left!important; }
+
+        .ab-row-fluid { margin-bottom: 0!important; }
+
+        .ab-desc { margin-bottom: 15px!important; }
+
+        .ab-row-fluid.ab-list {
+            margin-bottom: 20px!important;
+        }
+
+        .ab-row-fluid.ab-list.ab-last {
+            margin-bottom: 20px!important;
+        }
+
+        .ab-not-time-screen {
+            height: auto!important;
+            margin-left: 0!important;
+            margin-bottom: 15px;
+            clear: both;
+        }
+
+        .ab-second-step {
+            clear: both;
+        }
+        .ab-formGroup .ab-formField .ab-formElement {
+            padding: 2px 5px!important;
+        }
+
+        .ab-row-fluid.ab-col-phone {
+            height: auto!important;
+        }
+        .ab-row-fluid.ab-col-phone .ab-formGroup {
+            overflow: visible!important;
+        }
+    }
+/* </media-query> */
+
+/* intlTelInput.js */
+.iti-flag{background-image:url("../images/flags.png");}
+@media only screen and (min-resolution: 2dppx){.iti-flag{background-image:url("../images/flags@2x.png")}}

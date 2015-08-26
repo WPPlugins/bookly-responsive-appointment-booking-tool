@@ -1,10 +1,10 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<div id="ab-annual-calendar-scroll" style="text-align: center;">
-  <div class="input-prepend input-append">
-    <span class="ab-week-picker-arrow prev add-on col-arrow">◄</span>
-    <input style="width: 70px; text-align: center;background: white" class="span2 jcal_year" readonly="readonly" id="appendedPrependedInput" size="16" type="text" value="2014">
-    <span class="ab-week-picker-arrow next add-on col-arrow">►</span>
-  </div>
+<div id="ab-annual-calendar-scroll" style="text-align: center; max-width: 715px;">
+    <div class="input-prepend input-append form-inline">
+        <span class="prev glyphicon glyphicon-triangle-left"></span>
+        <input style="width: 70px; text-align: center;background: white" class="jcal_year form-control" readonly="readonly" id="appendedPrependedInput" size="16" type="text" value="">
+        <span class="next glyphicon glyphicon-triangle-right"></span>
+    </div>
 </div>
 <div id="ab-annual-calendar"></div>
 
@@ -18,7 +18,7 @@
         scrollSpeed:    350,
         events:         <?php echo $holidays ?>,
         action:         'ab_settings_holiday',
-        dayOffset:      <?php echo get_option('start_of_week', 0) ?>
+        dayOffset:      <?php echo (int) get_option( 'start_of_week' ) ?>
     });
   });
 </script>

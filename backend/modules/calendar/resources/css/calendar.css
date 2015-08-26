@@ -1,4 +1,3 @@
-
 /* calendar nav */
 .ab-calendar-day, .ab-calendar-week, .ab-calendar-today, .btn-list, .btn-dropdown {
   display: inline-block;
@@ -33,9 +32,7 @@
 .ab-calendar-week { border-bottom-left-radius: 0px; border-top-left-radius: 0px; margin-left: -3px; margin-top: 0; border-left: 0; }
 .ab-calendar-today { margin: 0 5px; border-radius: 3px; }
 .ab-nav-calendar { height: 30px; }
-.ab-nav-calendar .ab-button-active {
-  background: #1f6a8c;
-}
+.ab-nav-calendar .ab-button-active { background: #1f6a8c; }
 .ab-nav-calendar .ab-popup-wrapper { margin-left: 10px; }
 .ab-popup-table td { white-space: nowrap; padding: 5px; border: 0!important; }
 .ab-popup-table td > p { margin: 0; }
@@ -68,15 +65,14 @@
 .ab-icon-button.ab-services {
   background: url("../images/box-small.png") 2px 2px no-repeat;
 }
-.ab-icon-button.ab-staff {
-  background: url("../images/user-white.png") 0 2px no-repeat;
-}
+td.fc-axis.fc-time.fc-widget-content { vertical-align: top; }
 
 /** week picker */
-.ab-week-picker-wrapper { width: auto; position: relative; margin-right: 15px; }
-.ab-week-picker-wrapper .ab-week-picker { clear: both; left: -1px; position: absolute; top: 30px; z-index: 1; display: none; }
+.ab-week-picker-wrapper { width: 350px; position: relative; margin-top: 2px; }
+.ab-week-picker-wrapper i.glyphicon-calendar { position: absolute; left: 46px; top: 8px; z-index: 9; }
+.ab-week-picker-wrapper .ab-week-picker { clear: both; left: -1px; position: absolute; top: 30px; z-index: 9; display: none; }
 .ab-week-picker-data { border-radius: 3px; background: url("../images/calendar.png") 2px 4px no-repeat; padding: 4px 7px 4px 25px; height: 16px; border: 1px solid black; }
-#appendedPrependedInput { width: 340px; background-color: #FFFFFF; cursor: default; }
+#appendedPrependedInput { background-color: #FFFFFF; cursor: default; }
 
 /** appointment dialog */
 .ab-appointment-popup .ui-widget-header {
@@ -102,9 +98,17 @@
 
 /** calendars */
 #day_calendar_wrapper { margin-top: 55px; }
-
-#date_interval_warning_msg { color: #21759B }
-#date_interval_not_available_msg { color: red }
+.ab-calendar-inner .table-responsive { position: relative; }
+.ab-calendar-inner .ab-loading-inner {
+    position: absolute;
+    left: 0;
+    top: 50px;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9;
+}
+.ab-calendar-inner .ab-loading-inner .ab-loader { position: absolute; left: 50%; top: 50%; width: auto; }
 
 /** wp elements */
 #update-nag, .update-nag, #wpfooter { display: none; }
@@ -143,32 +147,69 @@
  -moz-border-top-right-radius: 10px;
  -o-border-top-right-radius: 10px;
 }
-.wc-cal-event {
+
+.fc-cal-event {
   background-color: #DDDDDD;
   line-height: 16px!important;
+  opacity: 1;
 }
-.wc-cal-event .wc-time {
+.fc-cal-event .fc-time {
   background-color    : #DDDDDD;
   border-left-color   : #DDDDDD;
   border-right-color  : #DDDDDD;
   border-top-color    : #DDDDDD;
   border-bottom-color : #ABABAB;
+  padding             : 3.5px 0;
 }
 
-.wc-information {
-    background: url("../images/information.png") no-repeat scroll 1px 2px transparent;
-    float: right;
-    height: 16px;
-    width: 16px;
-    z-index: 20;
-}
-
-.wc-service-name, .wc-employee {
-    padding: 3px 0;
-}
-
-.right-margin { margin-right: 10px; }
 .pagination { margin: 0!important; }
 
 .nav-tabs > .active > a { background: #1f6a8c!important; color: white!important; border-left: 0!important; }
 .ab-date-calendar { padding-left: 25px!important; background: url("../images/calendar.png") 5px 8px no-repeat; }
+
+/* Custom fields */
+.dialog-content .ab-formGroup { margin-bottom: 15px; }
+.ab-customer-list { margin: 6px 0 0 0; }
+.ab-create-customer > a,
+.ab-customer-list li a { cursor: pointer; border-bottom: 1px dashed #21759B; }
+.ab-customer-list li a + .icon-remove { cursor: pointer; }
+.ab-create-customer > a:hover,
+.ab-customer-list li a:hover { text-decoration: none; color: #21759b; border-color: #21759b; }
+
+/* Appointment dialog */
+/*#ab_appointment_dialog { overflow: visible; }*/
+#ab_appointment_dialog .chzn-container { font-family: Verdana,Arial,sans-serif; font-size: 14px; }
+#ab_custom_fields_dialog * { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif!important; }
+
+.fc-content .icon-rt { float: right; position: absolute; top: 4px; right: 4px; cursor: pointer; }
+.fc-view-container { box-shadow: 0 0 3px silver; }
+.fc-widget-header table th { padding: 10px; }
+.ab-head-calendar { margin-bottom: 0!important; }
+.fc button { padding: 6px 12px!important; height: auto!important; }
+.fc-time-grid-event.fc-short .fc-time:before { font-size: 12px; }
+.fc-ltr .fc-time-grid .fc-event-container { margin: 0!important; }
+.fc-time-grid-event .fc-time,
+.fc-time-grid-event.fc-short .fc-title { font-size: 12px!important; padding: 0 5px!important; padding-top: 3px!important; }
+.fc-time-grid-event.fc-short .fc-title { padding-top: 5px!important; display: block!important; }
+.fc-day-grid-event,
+.fc-time-grid-event { cursor: pointer; }
+.fc-time-grid-event .fc-title { padding: 0 5px!important; padding-top: 5px!important; }
+#full_calendar_wrapper .table-responsive { overflow: visible; }
+.fc-toolbar h2 { position: relative; padding-right: 25px; }
+.fc-toolbar h2:before {
+  content: "\e252";
+  font-family: 'Glyphicons Halflings';
+  position: absolute;
+  right: 0;
+  font-size: 19px;
+  top: 7px;
+}
+.fc-toolbar h2:hover,
+.fc-toolbar h2:hover:before { color: #337ab7; cursor: pointer; }
+
+/* media query */
+@media screen and (max-width: 782px) {
+    #full_calendar_wrapper .table-responsive { overflow-y: hidden; }
+}
+
+

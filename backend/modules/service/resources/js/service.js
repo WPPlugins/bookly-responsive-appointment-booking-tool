@@ -1,5 +1,7 @@
 jQuery(function($) {
     var $no_result = $('#ab_services_wrapper .no-result');
+    // Remember user choice in the modal dialog.
+    var update_staff_choice = null;
 
     // On new category form submit.
     $('#new-category-form').on('submit', function(event) {
@@ -35,7 +37,7 @@ jQuery(function($) {
                 $('.ab-category-item').not($clicked).removeClass('ab-active');
                 $('.ab-category-title').text($clicked.text());
                 $clicked.addClass('ab-active');
-                refreshList(response);
+                refreshList(response,0);
             });
         })
 
@@ -102,63 +104,8 @@ jQuery(function($) {
             }
         });
 
-
     // Services list delegated events.
     $('#ab_services_wrapper')
-
-        // On click on editable cell.
-        .on('click', '.editable-cell div.displayed-value', function() {
-            var $this = $(this);
-            $this.hide().next('.value').show();
-            // Fix FF accidental blur of input[type=number].
-            setTimeout( function() { $this.next('.value').focus(); }, 100 );
-        })
-
-        // On blur of input in editable cell.
-        .on('blur', '.editable-cell input.value', function() {
-            var $this = $(this),
-                field = $this.attr('name'),
-                value = $this.attr('value'),
-                id    = $this.parents('.service-row').attr('id');
-            if (value) {
-                var data = { action: 'ab_update_service_value', id: id };
-                data[field] = value;
-                $.post(ajaxurl, data, function(response) {
-                    $this.hide();
-                    $this.prev('.displayed-value').text(value).show();
-                });
-            }
-        })
-
-        // On change in 'Duration' or 'Category' drop-down lists.
-        .on('change', 'select', function() {
-            var $this = $(this),
-                field = $this.attr('name'),
-                value = $this.val(),
-                $row  = $this.parents('.service-row'),
-                id    = $row.attr('id');
-            if (value) {
-                var data = { action: 'ab_update_service_value', id: id };
-                data[field] = value;
-                $.post(ajaxurl, data, function(response) {
-                    if ($this.attr('name') == 'category_id') {
-                        var services_category_id = parseInt($('.ab-category-item.ab-active').data('id')),
-                            selected_category_id = parseInt(value);
-                        if (services_category_id && selected_category_id != services_category_id) {
-                            if ($('#services_list > tbody > tr').length == 1) {
-                                $('#services_list > tbody > tr').remove();
-                                $('#services_list').hide();
-                                $no_result.show();
-                            } else {
-                                $row.removeClass('last').prev().addClass('last');
-                                $row.remove();
-                            }
-                        }
-                    }
-                });
-            }
-        })
-
         // On click on 'Add Service' button.
         .on('click', 'a.add-service', function(e) {
             e.preventDefault();
@@ -168,115 +115,88 @@ jQuery(function($) {
                 data['category_id'] = selected_category_id;
             }
             $.post(ajaxurl, data, function(response) {
-                refreshList(response);
+                refreshList(response.data.html,response.data.service_id);
             });
         })
-
-        // On change in `select row` checkbox.
-        .on('change', 'input.row-checker', function() {
-            if ($(this).attr('checked')) {
-                $(this).parents('.service-row').addClass('checked');
-            } else {
-                $(this).parents('.service-row').removeClass('checked');
-            }
-        })
-
         // On click on 'Delete' button.
         .on('click', 'a.delete', function(e){
             e.preventDefault();
-            var $checked_rows = $('#services_list .service-row.checked');
-            if (!$checked_rows.length) {
+
+            var for_delete = $('input:checkbox.service-checker:checked'),
+                data = { action: 'ab_remove_services' },
+                services = [],
+                $panels = [];
+
+            if (!for_delete.length) {
                 alert(BooklyL10n.please_select_at_least_one_service);
                 return false;
             }
-            var selected_category_id = $('#ab-categories-list .ab-active').data('id'),
-                data = { action: 'ab_remove_services' },
-                row_ids = [];
-            $checked_rows.each(function() {
-                row_ids.push($(this).attr('id'));
+
+            for_delete.each(function(){
+                var panel = $(this).parents('.panel.service');
+                $panels.push(panel);
+                services.push(panel.data('service_id'));
             });
-            if (selected_category_id) {
-                data['category_id'] = selected_category_id;
-            }
-            data['service_ids[]'] = row_ids;
+            data['service_ids[]'] = services;
             $.post(ajaxurl, data, function() {
-                $checked_rows.fadeOut(700, function() {
-                    $(this).each(function() {
-                        if ($(this).hasClass('last')) {
-                            $(this).removeClass('last').prev().addClass('last');
-                        }
+                $.each($panels, function () {
+                    $(this).fadeOut(200, function () {
+                        $(this).remove();
                     });
-                    $(this).remove();
-                    $('#services_list .service-row').removeClass('even odd').each(function(index, value) {
-                        if (index % 2) {
-                            $(this).addClass('even');
-                        } else {
-                            $(this).addClass('odd');
-                        }
-                    });
-                    if (!$('#services_list > tbody > tr').length) {
-                        $('#services_list').hide();
-                        $no_result.show();
-                    }
                 });
             });
         })
 
-        // On change in `select staff` checkbox.
         .on('change', 'input.all-staff, input.staff', function(){
-            var $this = $(this),
-                $row = $this.parents('.service-row'),
-                staff_ids = [],
-                data = { action: 'ab_assign_staff', service_id: $row.attr('id') };
-            if ($this.hasClass('all-staff')) {
-                $row.find('.staff').prop('checked', $this.prop('checked'));
+            var $panel = $(this).parents('.panel.service');
+            if ($(this).hasClass('all-staff')) {
+                $panel.find('.staff').prop('checked', $(this).prop('checked'));
             } else {
-                $row.find('.all-staff').prop(
-                    'checked',
-                    $row.find('.staff:not(:checked)').length == 0
-                );
+                $panel.find('.all-staff').prop('checked', $panel.find('.staff:not(:checked)').length == 0);
             }
-            $row.find('.staff:checked').each(function(){
-                staff_ids.push($(this).val());
-            });
-            data['staff_ids[]'] = staff_ids;
-            $.post(ajaxurl, data, function(response) {
-                if (response) {
-                    $row.find('.staff-count').text(response);
-                }
-            });
-        })
-
-        .on('change', '[name=capacity]', function(){
-            $('#lite_notice').modal('show');
-            $(this).val(1);
+            updateStaffButton($panel);
         });
 
-    function refreshList(response) {
+    // Modal window events.
+    var $modal = $('#ab-staff-update');
+    $modal
+        .on('click', '.ab-yes', function() {
+            $modal.modal('hide');
+            if ( $('#ab-remember-my-choice').prop('checked') ) {
+                update_staff_choice = true;
+            }
+            submitServiceFrom($modal.data('input'),true);
+        })
+        .on('click', '.ab-no', function() {
+            if ( $('#ab-remember-my-choice').prop('checked') ) {
+                update_staff_choice = false;
+            }
+            submitServiceFrom($modal.data('input'),false);
+        });
+
+    function refreshList(response,service_id) {
         var $list = $('#ab-services-list');
         $list.html(response);
+        makeServicesSortable();
         doNotCloseDropDowns();
         initColorPicker($list.find('.service-color'));
         initPopovers();
+        initServiceFormButtons();
 
-        if (response) {
+        if (response.indexOf('panel') >= 0) {
             $no_result.hide();
         } else {
             $no_result.show();
         }
+        $('#service_' + service_id).collapse('show');
+        $('#service_' + service_id).find('input[name=title]').focus();
     }
 
     function initColorPicker($jquery_collection) {
-        $jquery_collection.wpColorPicker({
-            change: function() {
-                var data = {
-                    action :'ab_update_service_value',
-                    id     : $(this).parents('.service-row').first().attr('id')
-                };
-                data['color'] = $(this).wpColorPicker('color');
-                $.post(ajaxurl, data);
-            }
+        $jquery_collection.each(function(){
+            $(this).data('last_color', $(this).val());
         });
+        $jquery_collection.wpColorPicker();
     }
 
     function doNotCloseDropDowns() {
@@ -292,12 +212,133 @@ jQuery(function($) {
         });
     }
 
+    function submitServiceFrom($form, update_staff) {
+        $form.find('input[name=update_staff]').val( update_staff ? 1 : 0 );
+        var ladda = Ladda.create( $form.find('button[type=submit]').get(0) );
+        ladda.start();
+        $.post(ajaxurl, $form.serialize(), function (response) {
+            if (response.success) {
+                var $panel = $form.parents('.panel.service'),
+                    $price = $form.find('[name=price]'),
+                    $capacity = $form.find('[name=capacity]');
+                $panel.find('span.badge').css('background-color', response.data.color);
+                $panel.find('.panel-title a').html(response.data.title);
+                $panel.find('.panel-title .ab-right-nav small').html(response.data.nice_duration + '<div class="ab-inline-block" style="width: 75px;text-align: right">' + response.data.price + '</div>');
+                $price.data('last_value', $price.val());
+                $capacity.data('last_value', $capacity.val());
+                $('.notice-dismiss').unbind('click.wp-dismiss-notice').on('click', function(){
+                    $(this).parents('.notice').fadeOut();
+                });
+                $('.notice-success').show();
+            }
+        }, 'json').always(function() {
+            ladda.stop();
+        } );
+    }
+
+    function updateStaffButton($panel) {
+        var staff_checked = $panel.find('.staff:checked').length;
+        if (staff_checked == 0) {
+            $panel.find('.staff-count').text(BooklyL10n.no_staff_selected);
+        } else if (staff_checked == 1) {
+            $panel.find('.staff-count').text($panel.find('.staff:checked').data('staff_name'));
+        } else {
+            $panel.find('.staff-count').text(staff_checked + '/' + $panel.find('.staff').length);
+        }
+    }
+
+    function initServiceFormButtons() {
+        $('.ajax-service-send').on('click', function (e) {
+            e.preventDefault();
+            var $form = $(this).parents('form'),
+                show_modal = false;
+            if(update_staff_choice === null) {
+                $('.ab-question', $form).each(function () {
+                    if ($(this).data('last_value') != $(this).val()) {
+                        show_modal = true;
+                    }
+                });
+            }
+            if(show_modal){
+                $modal.data('input', $form).modal('show');
+            }else{
+                submitServiceFrom($form, update_staff_choice);
+            }
+        });
+        $('.js-reset').on('click', function (e) {
+            $(this).parents('form').trigger('reset');
+            var $color = $(this).parents('form').find('.service-color'),
+                $panel = $(this).parents('.panel.service');
+            $color.val($color.data('last_color')).trigger('change');
+            updateStaffButton($panel);
+        });
+        $('.ab-question').each( function(){
+            $(this).data('last_value', $(this).val());
+        });
+    }
+
+
     doNotCloseDropDowns();
     initColorPicker($('.service-color'));
     initPopovers();
+    initServiceFormButtons();
 
-    $.ajaxSetup({
-        mode: 'abort',
-        port: 'ab_service'
+    var $category = $('ul#ab-category-item-list');
+    $category.sortable({
+        axis   : 'y',
+        handle : '.ab-handle',
+        update : function( event, ui ) {
+            var data = [];
+            $category.children('li').each(function() {
+                var $this = $(this);
+                var position = $this.data('id');
+                data.push(position);
+            });
+            $.ajax({
+                type : 'POST',
+                url  : ajaxurl,
+                data : { action: 'ab_update_category_position', position: data }
+            });
+        }
+    });
+
+    function makeServicesSortable() {
+        if ($('.ab-main-category-item').hasClass('ab-active')) {
+            var $services = $('#services_list'),
+                fixHelper = function(e, ui) {
+                    ui.children().each(function() {
+                        $(this).width($(this).width());
+                    });
+                    return ui;
+                };
+            $services.sortable({
+                helper : fixHelper,
+                axis   : 'y',
+                handle : '.ab-handle',
+                update : function( event, ui ) {
+                    var data = [];
+                    $services.children('div').each(function() {
+                        data.push($(this).data('service_id'));
+                    });
+                    $.ajax({
+                        type : 'POST',
+                        url  : ajaxurl,
+                        data : { action: 'ab_update_services_position', position: data }
+                    });
+                }
+            });
+        } else {
+            $('#services_list .ab-handle').hide();
+        }
+    }
+    makeServicesSortable();
+    $('.panel.service').each(function(){
+        updateStaffButton($(this));
+    });
+    $('[name=capacity]').on('change',function(){
+        if ($(this).val() > 1) {
+            $('#lite_notice').modal('show');
+            $(this).val(1) ;
+        }
     });
 });

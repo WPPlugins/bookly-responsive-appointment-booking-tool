@@ -1,26 +1,33 @@
 jQuery(function($) {
 
     var $name_input = $('#ab-newstaff-fullname'),
+        $email_input = $('#ab-newstaff-email'),
+        $list_item_number = $('#ab-list-item-number'),
         $wp_user_select = $('#ab-newstaff-wpuser'),
+        $staff_list = $('#ab-staff-list'),
         $staff_member = $('.ab-staff-member'),
         $edit_form = $('#ab-edit-staff-member'),
         $new_form = $('#ab-new-satff');
 
-    // Saves new staff form
-    $('#ab-save-newstaff').bind('click', function () {
+    function saveNewForm() {
         $('#lite_notice').modal('show');
+    }
+
+    // Saves new staff form
+    $('#ab-save-newstaff').on('click', function () {
+        saveNewForm();
     });
 
     // Save new staff on enter press
-    $name_input.bind('keypress', function (e) {
+    $name_input.on('keypress', function (e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) {
-            $('#lite_notice').modal('show');
+            saveNewForm();
         }
     });
 
     // Close new staff form on esc
-    $new_form.bind('keypress', function (e) {
+    $new_form.on('keypress', function (e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 27) {
             $('.ab-popup-wrapper').ab_popup('close');
@@ -34,51 +41,57 @@ jQuery(function($) {
 
         var staff_id = $(this).data('staff-id');
         var active_tab_id = $('ul.nav li.active a').attr('id');
+        $edit_form.html('<div class="loading-indicator"><span class="ab-loader"></span></div>');
         $.get(ajaxurl, { action: 'ab_edit_staff', id: staff_id }, function (response) {
             $edit_form.html(response);
 
+            var service_container  = $('#ab-staff-services-container'),
+                loading_indicator  = $('.loading-indicator'),
+                details_container  = $('#ab-staff-details-container'),
+                schedule_container = $('#ab-staff-schedule-container'),
+                holidays_container = $('#ab-staff-holidays-container'),
+                $schedule_form,
+                services_form;
+
+            initHelps();
+            initNotices();
+            Ladda.bind( 'button[type=submit]' );
+
             // Deletes staff avatar
-            $('#ab-delete-avatar').bind('click', function () {
+            $('#ab-delete-avatar').on('click', function () {
                 $.post(ajaxurl, { action: 'ab_delete_staff_avatar', id: staff_id }, function () {
                     $('#ab-staff-avatar-image', $edit_form).remove();
                 });
             });
 
-            $('#ab-update-staff').bind('click', function (e) {
+            $('#ab-update-staff').on('click', function (e) {
                 if (!validateForm($edit_form)) {
                     e.preventDefault(e);
                     e.stopPropagation(e);
+                } else {
+                    $edit_form.phone = $("#ab-staff-phone").intlTelInput('getNumber');
                 }
             });
 
-            $('#ab-staff-wpuser').bind('change', function () {
+            $('#ab-staff-wpuser').on('change', function () {
                 if ($(this).val()) {
                     $('#ab-staff-full-name').val($(this).find(':selected').text());
                     $('#ab-staff-email').val($(this).find(':selected').data('email'));
                 }
             });
 
-            helpInit();
-
-            var service_container  = $('#ab-staff-services-container'),
-                details_container  = $('#ab-staff-details-container'),
-                schedule_container = $('#ab-staff-schedule-container'),
-                holidays_container = $('#ab-staff-holidays-container'),
-                $schedule_form,
-                services_form,
-                tabs = $('.ab-list-link', $edit_form);
-
             // Opens services tab
-            $('#ab-staff-services-tab').bind('click', function () {
+            $('#ab-staff-services-tab').on('click', function () {
                 activateTab.call($(this));
                 service_container.show();
 
                 // Loads services form
                 if (!service_container.children().length) {
+                    loading_indicator.show();
                     $.post(ajaxurl, { action: 'ab_staff_services', id: staff_id }, function (response) {
                         service_container.html(response);
                         services_form = $('form', service_container);
-                        
+
                         var auto_tick_checkboxes = function() {
                             // Handle 'select category' checkbox.
                             $('.ab-services-category .ab-category-checkbox').each(function() {
@@ -94,76 +107,82 @@ jQuery(function($) {
                             );
                         };
 
-                        // Select all services related to choosen category
+                        // Select all services related to chosen category
                         $('.ab-category-checkbox', services_form).bind('click', function () {
-                            $('.ab-category-services .ab-category-' + $(this).data('category-id')).attr('checked', $(this).is(':checked')).change();
+                            $('.ab-category-services .ab-category-' + $(this).data('category-id')).prop('checked', $(this).is(':checked')).change();
                             auto_tick_checkboxes();
                         });
 
-                        // Select all services
-                        $('#ab-all-services').bind('click', function () {
-                            $('.ab-service-checkbox', services_form).attr('checked', $(this).is(':checked')).change();
-                            $('.ab-category-checkbox').attr('checked', $(this).is(':checked'));
+                        // Check and uncheck all services
+                        $('#ab-all-services').on('click', function () {
+                            $('.ab-service-checkbox', services_form).prop('checked', $(this).is(':checked')).change();
+                            $('.ab-category-checkbox').prop('checked', $(this).is(':checked'));
                         });
 
                         // Select service
-                        $('.ab-service-checkbox', services_form).bind('click', function () {
+                        $('.ab-service-checkbox', services_form).on('click', function () {
                             var $this  = $(this);
                             var $price = $this.closest('li').find('.ab-price');
                             $this.is(':checked') ? $price.removeAttr('disabled') : $price.attr('disabled', true);
                             auto_tick_checkboxes();
                         });
 
-                        $('.ab-service-checkbox',services_form).bind('change', function(){
+                        $('.ab-service-checkbox',services_form).on('change', function(){
                             var $input_fields = $('.ab-price[name="price['+$(this).val()+']"]').add('.ab-price[name="capacity['+$(this).val()+']"]');
                             $(this).is(':checked') ? $input_fields.removeAttr('disabled') : $input_fields.attr('disabled', true);
                         });
 
                         // Saves services
-                        $('#ab-staff-services-update').bind('click', function () {
-                            $('.spinner', services_form).fadeIn('slow');
+                        $('#ajax-send-service').on('click', function (e) {
+                            e.preventDefault();
+                            var ladda = Ladda.create(this);
+                            ladda.start();
                             $.post(ajaxurl, services_form.serialize(), function (response) {
-                                $('.spinner', services_form).fadeOut('slow');
+                                ladda.stop();
+                                if (response.success) {
+                                    showSuccessNotice();
+                                }
                             });
                         });
 
-                        auto_tick_checkboxes();
+                        // After reset auto tick group checkboxes.
+                        $('button[type=reset]').on('click', function() {
+                            setTimeout(auto_tick_checkboxes, 0);
+                        });
 
-                        // On click on 'Add Coupon' button.
-                        $('[name^=capacity]').on('change', function(e) {
-                            $('#lite_notice').modal('show');
-                            $(this).val(1);
+                        auto_tick_checkboxes();
+                        loading_indicator.hide();
+
+                        services_form.find('input[name^="capacity"]').on('change', function(){
+                            if($(this).val() > 1) {
+                                $(this).val(1);
+                                $('#lite_notice').modal('show');
+                            }
                         });
                     });
                 }
             });
 
             // Opens schedule tab
-            $('#ab-staff-schedule-tab').bind('click', function () {
+            $('#ab-staff-schedule-tab').on('click', function () {
                 activateTab.call($(this));
                 schedule_container.show();
 
                 // Loads schedule list
                 if (!schedule_container.children().length) {
+                    loading_indicator.show();
                     $.post(ajaxurl, { action: 'ab_staff_schedule', id: staff_id }, function (response) {
                         // fill in the container
                         schedule_container.html(response);
                         $schedule_form = $('form', schedule_container);
 
-                        // Saves initial values
-                        $('.working-start', schedule_container).each(function () {
-                            $(this).data('default_value', $(this).val());
-                        });
-
-                        $('.working-end', schedule_container).each(function () {
-                            $(this).data('default_value', $(this).val());
-                        });
-
+                        initNotices();
                         // Resets initial values
-                        $('#ab-schedule-reset').bind('click', function () {
+                        $('#ab-schedule-reset').on('click', function (e) {
+                            e.preventDefault();
                             $('.working-start', schedule_container).each(function () {
                                 $(this).val($(this).data('default_value'));
-                                $(this).trigger('click');
+                                $(this).trigger('change');
                             });
 
                             $('.working-end', schedule_container).each(function () {
@@ -172,121 +191,115 @@ jQuery(function($) {
 
                             // reset breaks
                             $.ajax({
-                                url     : ajaxurl,
-                                type    : 'POST',
-                                data    : { action : 'ab_reset_breaks', breaks : $.parseJSON($(this).attr('default-breaks'))},
-                                success : function(response) {
-                                    var days = $.parseJSON(response);
-                                    for (var k in days) {
-                                        var $content = $(days[k]);
-                                        $("[data-id=" + k +"] .breaks", schedule_container).html($content);
+                                url      : ajaxurl,
+                                type     : 'POST',
+                                data     : { action : 'ab_reset_breaks', breaks : $(this).data('default-breaks') },
+                                dataType : 'json',
+                                success  : function(response) {
+                                    for (var k in response) {
+                                        var $content = $(response[k]);
 
-                                        $content.find('.break-interval').bind('click', function(){
+                                        $("[data-staff_schedule_item_id=" + k +"] .breaks", schedule_container).html($content);
+
+                                        $content.find('.break-interval').on('click', function(){
                                             markBreakIntervalActive.call($(this));
+                                        }).end().find('.break-interval-wrapper .delete-break').on('click', function(){
+                                            deleteStaffScheduleBreakInterval.call($(this));
+                                        }).end().find('.break-start').on('change', function(){
+                                            var start = $(this);
+                                            var end   = start.parent().find('.break-end');
+                                            checkStaffScheduleBreakTimeRange(start,end);
                                         });
 
-                                        $content.find('.break-interval-wrapper .delete-break').bind('click', function(){
-                                            deleteStaffScheduleBreakInterval.call($(this));
-                                        });
                                         schedule_container.find('.ab-popup-wrapper').ab_popup();
                                     }
                                 }
                             });
                         });
 
-                        $('#ab-staff-schedule-update', schedule_container).bind('click', function () {
-                            $('.spinner', $schedule_form).fadeIn('slow');
+                        $('#ajax-send-staff-schedule', schedule_container).on('click', function (e) {
+                            e.preventDefault();
+                            var ladda = Ladda.create(this);
+                            ladda.start();
                             var data = {};
                             $('select.working-start, select.working-end, input:hidden', $schedule_form).each(function() {
                                 data[this.name] = this.value;
                             });
                             $.post(ajaxurl, $.param(data), function (response) {
-                                $('.spinner', $schedule_form).fadeOut('slow');
-                                schedule_container.html('');
-                                $('#ab-staff-schedule-tab').trigger('click');
+                                ladda.stop();
+                                showSuccessNotice();
                             });
                         });
 
                         // init "add break" functionality
                         schedule_container.find('.ab-popup-wrapper').ab_popup();
-                        schedule_container.find('.ab-popup-trigger:not(.break-interval)').bind('click', function() {
-                            var $row = $(this).parents('.staff-schedule-item-row').first(),
-                                $working_start = $row.find('.working-start').val(),
-                                $working_end = $row.find('.working-end').val();
+                        schedule_container.find('.ab-popup-trigger:not(.break-interval)').on('click', function() {
+                            var $row                = $(this).closest('.staff-schedule-item-row'),
+                                working_start       = $row.find('.working-start').val(),
+                                $break_start        = $row.find('.add-break .break-start'),
+                                $break_end          = $row.find('.add-break .break-end'),
+                                working_start_time  = working_start.split(':'),
+                                working_start_hours = parseInt(working_start_time[0], 10);
 
-                            // if the day is the working one - handle "add break" selected values
-                            if ($working_start.length && $working_end.length) {
-                                var $working_start_time  = $working_start.split(':'),
-                                    $working_start_hours = parseInt($working_start_time[0], 10),
-                                    $break_end           = $row.find('.add-break .break-end'),
-                                    $break_end_hours     = $working_start_hours + 2;
-
-                                if ($break_end_hours < 10) {
-                                    $break_end_hours = '0' + $break_end_hours;
-                                }
-                                var $break_end_hours_str  = $break_end_hours + ':' + $working_start_time[1] + ':' + $working_start_time[2],
-                                    $break_end_option     = $break_end.find('option[value="' + $break_end_hours_str + '"]'),
-                                    $break_start          = $row.find('.add-break .break-start');
-
-                                if ($break_end_option.length) {
-                                    var $break_start_hours = $working_start_hours + 1;
-                                    if ($break_start_hours < 10) {
-                                        $break_start_hours = '0' + $break_start_hours;
-                                    }
-                                    var $break_start_hours_str = $break_start_hours + ':' + $working_start_time[1] + ':' + $working_start_time[2];
-
-                                    $break_start.val($break_start_hours_str);
-                                    $break_end.val($break_end_hours_str);
-                                } else {
-                                    // set defaults
-                                    $break_start.val($break_start.data('default_value'));
-                                    $break_end.val($break_end.data('default_value'));
-                                }
-                                $break_start.trigger('change');
+                            var break_start_hours  = working_start_hours + 1;
+                            if (break_start_hours < 10) {
+                                break_start_hours = '0' + break_start_hours;
                             }
+                            var break_end_hours = working_start_hours + 2;
+                            if (break_end_hours < 10) {
+                                break_end_hours = '0' + break_end_hours;
+                            }
+                            var break_end_hours_str = break_end_hours + ':' + working_start_time[1] + ':' + working_start_time[2],
+                                break_start_hours_str = break_start_hours + ':' + working_start_time[1] + ':' + working_start_time[2];
+
+                            $break_start.val(break_start_hours_str);
+                            // Set $break_end value after DOM update.
+                            setTimeout(function() { $break_end.val(break_end_hours_str); }, 0);
                         });
 
                         // when the working day is disabled (working start time is set to "OFF")
                         // hide all the elements inside the row
-                        schedule_container.find('.working-start').bind('click', function(){
+                        schedule_container.find('.working-start').on('change', function(){
                             var $this = $(this),
                                 $row  = $this.parents('.staff-schedule-item-row');
 
                             if (!$this.val()) {
-                                $row.find('.hide-on-non-working-day').hide();
+                                $row.find('.hide-on-non-working-day').attr('style','display:none!important;');
                             } else {
-                                $row.find('.hide-on-non-working-day:hidden').show();
+                                $row.find('.hide-on-non-working-day').show();
                             }
                         });
 
                         $('.working-start', schedule_container).on('change', function () {
-                            var $row = $(this).parents('.staff-schedule-item-row').first(),
-                                $end_select = $('.working-end', $row),
-                                start_time = $(this).val();
+                            var $this = $(this),
+                                $end_select = $this.nextAll('.working-end'),
+                                start_time = $this.val();
 
-                            $('span > option', $end_select).each(function () {
-                                if ( start_time < $(this).val()) {
-                                    $(this).unwrap();
-                                }
-                            });
-
-                            // Hides end time options with value less than in the start time
+                            // Hide end time options to keep them within 24 hours after start time.
+                            var parts = start_time.split(':');
+                            parts[0] = parseInt(parts[0]) + 24;
+                            var end_time = parts.join(':');
                             $('option', $end_select).each(function () {
-                                if ($(this).val() <= start_time) {
-                                    $(this).wrap("<span>").parent().hide();
+                                var $this = $(this);
+                                if (this.value <= start_time || this.value > end_time) {
+                                    if ($this.parent().is(':not(span)')) {
+                                        $this.wrap("<span>").parent().hide();
+                                    }
+                                } else if ($this.parent().is('span')) {
+                                    $this.unwrap();
                                 }
                             });
                         }).trigger('change');
 
-                        schedule_container.find('.ab-popup-wrapper .break-interval').bind('click', function(){
+                        schedule_container.find('.ab-popup-wrapper .break-interval').on('click', function(){
                             markBreakIntervalActive.call($(this));
                         });
 
-                        schedule_container.find('.break-interval-wrapper .delete-break').bind('click', function(){
+                        schedule_container.find('.break-interval-wrapper .delete-break').on('click', function(){
                             deleteStaffScheduleBreakInterval.call($(this));
                         });
 
-                        schedule_container.find('.break-start').bind('change', function(){
+                        schedule_container.find('.break-start').on('change', function(){
                             var start = $(this);
                             var end   = start.parent().find('.break-end');
                             checkStaffScheduleBreakTimeRange(start,end);
@@ -322,10 +335,10 @@ jQuery(function($) {
                                               .hide()
                                               .appendTo($row.find('.breaks-list-content'))
                                               .fadeIn('slow');
-                                            $new_break_interval_item.find('.break-interval').bind('click', function(){
+                                            $new_break_interval_item.find('.break-interval').on('click', function(){
                                                 markBreakIntervalActive.call($(this));
                                             });
-                                            $new_break_interval_item.find('.delete-break').bind('click', function(){
+                                            $new_break_interval_item.find('.delete-break').on('click', function(){
                                                 deleteStaffScheduleBreakInterval.call($(this));
                                             });
                                             if ($break_list_label.is(':hidden')) {
@@ -353,23 +366,25 @@ jQuery(function($) {
 
                             return false;
                         });
+                        loading_indicator.hide();
                     });
                 }
             });
 
             // Opens details tab
-            $('#ab-staff-details-tab').bind('click', function () {
+            $('#ab-staff-details-tab').on('click', function () {
                 activateTab.call($(this));
                 details_container.show();
             });
 
             // Opens "Days off" tab
-            $('#ab-staff-holidays-tab').bind('click', function () {
+            $('#ab-staff-holidays-tab').on('click', function () {
                 activateTab.call($(this));
                 holidays_container.show();
 
                 if (!holidays_container.children().length) {
-                    holidays_container.load(ajaxurl, { action: 'ab_staff_holidays', id: staff_id });
+                    loading_indicator.show();
+                    holidays_container.load(ajaxurl, { action: 'ab_staff_holidays', id: staff_id }, function(){ loading_indicator.hide(); });
                 }
             });
 
@@ -399,7 +414,7 @@ jQuery(function($) {
             function deleteStaffScheduleBreakInterval() {
                 var $break_interval_wrapper = $(this).parent(),
                     $row = $break_interval_wrapper.parents('.staff-schedule-item-row').first();
-                if (confirm('Are you sure?')) {
+                if (confirm(BooklyL10n.are_you_sure)) {
                     $.post(ajaxurl, { action: 'ab_delete_staff_schedule_break', id: $break_interval_wrapper.data('break_id') }, function (response) {
                         $break_interval_wrapper.fadeOut(700, function() {
                             $(this).remove();
@@ -412,17 +427,31 @@ jQuery(function($) {
             }
 
             function activateTab() {
-//                $('.ab-active', tabs).removeClass('ab-active');
-//                $(this).addClass('ab-active');
                 $('.ab-staff-tab-content').not(':hidden').hide();
             }
 
             $('#' + active_tab_id).click();
+
+            $("#ab-staff-phone").intlTelInput({
+                preferredCountries: [BooklyL10n.country],
+                defaultCountry: BooklyL10n.country,
+                geoIpLookup: function(callback) {
+                    $.get(ajaxurl, {action: 'ab_ip_info'}, function() {}, 'json').always(function(resp) {
+                        var countryCode = (resp && resp.country) ? resp.country : '';
+                        callback(countryCode);
+                    });
+                },
+                utilsScript: BooklyL10n.intlTelInput_utils
+            });
+
         });
     }
 
-    function helpInit() {
+    function initHelps() {
         // Popovers initialization.
+        $('.ab-popover').popover({
+            trigger : 'hover'
+        });
         $('.ab-popover-ext').popover({
             trigger : 'hover',
             content: function() {
@@ -432,7 +461,30 @@ jQuery(function($) {
         });
     }
 
-    $wp_user_select.bind('change', function () {
+    function initNotices() {
+        $('.notice.is-dismissible').each( function() {
+            var $this = $(this),
+                $button = $('<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>'),
+                btnText = commonL10n.dismiss || '';
+
+            $button.find('.screen-reader-text').text(btnText);
+
+            $this.append($button);
+
+            $button.on('click.wp-dismiss-notice', function(event) {
+                event.preventDefault();
+                $this.fadeTo(100, 0, function() {
+                    $(this).slideUp(100);
+                });
+            });
+        });
+    }
+
+    function showSuccessNotice() {
+        $('.notice.notice-success').slideDown(100).fadeTo(100, 100);
+    }
+
+    $wp_user_select.on('change', function () {
         if ($(this).val()) {
             $name_input.val($(this).find(':selected').text());
         }
@@ -443,5 +495,25 @@ jQuery(function($) {
     });
     $staff_member.filter('[data-active="true"]').click();
 
-    helpInit();
+    initHelps();
+
+    var $staff = $('ul#ab-staff-list');
+    $staff.sortable({
+        axis   : 'y',
+        handle : '.ab-handle',
+        update : function( event, ui ) {
+            var data = [];
+            $staff.children('li').each(function() {
+                var $this = $(this);
+                var position = $this.data('staff-id');
+                data.push(position);
+            });
+            $.ajax({
+                type : 'POST',
+                url  : ajaxurl,
+                data : { action: 'ab_update_staff_position', position: data }
+            });
+        }
+    });
+
 });

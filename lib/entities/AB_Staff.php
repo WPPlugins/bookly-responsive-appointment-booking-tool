@@ -1,174 +1,207 @@
-<?php
-
-include 'AB_StaffScheduleItem.php';
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Class AB_Staff
  */
-class AB_Staff extends AB_Entity {
+class AB_Staff extends AB_Entity
+{
+    protected static $table = 'ab_staff';
 
-    /**
-     * Constructor.
-     */
-    public function __construct() {
-        $this->table_name = 'ab_staff';
-        $this->schema = array(
-            'id'                 => array( ),
-            'wp_user_id'         => array( 'format' => '%d' ),
-            'full_name'          => array( 'format' => '%s' ),
-            'email'              => array( 'format' => '%s' ),
-            'avatar_path'        => array( 'format' => '%s' ),
-            'avatar_url'         => array( 'format' => '%s' ),
-            'phone'              => array( 'format' => '%s' ),
-            'google_data'        => array( 'format' => '%s' ),
-            'google_calendar_id' => array( 'format' => '%s' ),
-        );
-        parent::__construct();
+    protected static $schema = array(
+        'id'                 => array( 'format' => '%d' ),
+        'wp_user_id'         => array( 'format' => '%d' ),
+        'full_name'          => array( 'format' => '%s' ),
+        'email'              => array( 'format' => '%s' ),
+        'avatar_path'        => array( 'format' => '%s' ),
+        'avatar_url'         => array( 'format' => '%s' ),
+        'phone'              => array( 'format' => '%s' ),
+        'google_data'        => array( 'format' => '%s' ),
+        'google_calendar_id' => array( 'format' => '%s' ),
+        'position'           => array( 'format' => '%d', 'default' => 9999 ),
+    );
+
+    public function save()
+    {
+        $is_new = ! $this->get( 'id' );
+
+        if ( $is_new && $this->get( 'wp_user_id' ) ) {
+            $user = get_user_by( 'id', $this->get( 'wp_user_id' ) );
+            if( $user ) {
+                $this->set( 'email', $user->get( 'user_email' ) );
+            }
+        }
+
+        parent::save();
+
+        if ( $is_new ) {
+            // Schedule items.
+            $staff_id = $this->get( 'id' );
+            $index    = 1;
+            foreach ( array( 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ) as $week_day ) {
+                $item = new AB_StaffScheduleItem();
+                $item->set( 'staff_id', $staff_id );
+                $item->set( 'day_index', $index ++ );
+                $item->set( 'start_time', get_option( "ab_settings_{$week_day}_start" ) ?: null );
+                $item->set( 'end_time', get_option( "ab_settings_{$week_day}_end" ) ?: null );
+                $item->save();
+            }
+
+            // Create holidays for staff
+            $this->wpdb->query( sprintf(
+                'INSERT INTO `' . AB_Holiday::getTableName(). '` (`parent_id`, `staff_id`, `date`, `repeat_event`, `title`)
+                SELECT `id`, %d, `date`, `repeat_event`, `title` FROM `' . AB_Holiday::getTableName() . '` WHERE `staff_id` IS NULL',
+                $staff_id
+            ) );
+        }
     }
 
-    public function save() {
-        if ( $this->get( 'id' ) ) {
-            parent::save();
-        } else {
-            $user_exist = $this->wpdb->get_results( $this->wpdb->prepare( 'SELECT * FROM ab_staff WHERE wp_user_id = %d', $this->get( 'wp_user_id' ) ) );
+    /**
+     * Get schedule items of staff member.
+     *
+     * @return array
+     */
+    public function getScheduleItems()
+    {
+        $start_of_week = (int) get_option( 'start_of_week' );
+        // Start of week affects the sorting.
+        // If it is 0(Sun) then the result should be 1,2,3,4,5,6,7.
+        // If it is 1(Mon) then the result should be 2,3,4,5,6,7,1.
+        // If it is 2(Tue) then the result should be 3,4,5,6,7,1,2. Etc.
+        return AB_StaffScheduleItem::query()
+            ->where( 'staff_id',  $this->get( 'id' ) )
+            ->sortBy( "IF(r.day_index + 10 - {$start_of_week} > 10, r.day_index + 10 - {$start_of_week}, 16 + r.day_index)" )
+            ->indexBy( 'day_index' )
+            ->find();
+    }
 
-            if ( !count( $user_exist ) ) {
-                $formats = array( '%s', '%s' );
-                $values = array(
-                    'full_name' => $this->get( 'full_name' ),
-                    'email'     => $this->get( 'email' )
-                );
+    /**
+     * Get appointments for FullCalendar.
+     *
+     * @param DateTime $start_date
+     * @param DateTime $end_date
+     *
+     * @return array
+     */
+    public function getAppointmentsForFC( DateTime $start_date, DateTime $end_date )
+    {
+        $appointments = AB_Appointment::query( 'a' )
+            ->select( 'a.id, a.start_date, a.end_date,
+                    s.title AS service_title, s.color AS service_color,
+                    ss.capacity AS max_capacity,
+                    SUM(ca.number_of_persons) AS total_number_of_persons, ca.custom_fields,
+                    c.name AS customer_name, c.phone AS customer_phone, c.email AS customer_email' )
+            ->leftJoin( 'AB_CustomerAppointment', 'ca', 'ca.appointment_id = a.id' )
+            ->leftJoin( 'AB_Customer', 'c', 'c.id = ca.customer_id' )
+            ->leftJoin( 'AB_Service', 's', 's.id = a.service_id' )
+            ->leftJoin( 'AB_Staff', 'st', 'st.id = a.staff_id' )
+            ->leftJoin( 'AB_StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id' )
+            ->where( 'st.id', $this->get( 'id' ) )
+            ->whereBetween( 'DATE(a.start_date)', $start_date->format( 'Y-m-d' ), $end_date->format( 'Y-m-d' ) )
+            ->groupBy( 'a.start_date' )
+            ->fetchArray();
 
-                if ( $this->get( 'wp_user_id' ) ) {
-                    $formats[] = '%d';
-                    $values['wp_user_id'] = $this->get( 'wp_user_id' );
-                    $user = get_user_by('id',$this->get('wp_user_id'));
-                    if( $user )
-                    {
-                        $values['email'] = $user->get('user_email');
+        foreach ( $appointments as $key => $appointment ) {
+            $desc = '';
+            if ( $appointment['max_capacity'] == 1 ) {
+                foreach ( array( 'customer_name', 'customer_phone', 'customer_email' ) as $data_entry ) {
+                    if ( $appointment[ $data_entry ] ) {
+                        $desc .= '<div class="fc-employee">' . esc_html( $appointment[ $data_entry ] ) . '</div>';
                     }
                 }
-
-                $this->wpdb->insert( 'ab_staff', $values, $formats );
-                $this->set( 'id', $this->wpdb->insert_id);
-
-                // Schedule items.
-                $values   = array();
-                $staff_id = $this->get( 'id' );
-                $id       = 1;
-                foreach ( array( 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ) as $week_day ) {
-                    $start = get_option( "ab_settings_{$week_day}_start", null );
-                    $end   = get_option( "ab_settings_{$week_day}_end", null );
-                    $values[] = sprintf(
-                        '(NULL, %d, %d, %s, %s)',
-                        $staff_id,
-                        $id ++,
-                        ($start ? "\"$start\"" : 'NULL'),
-                        ($end ? "\"$end\"" : 'NULL')
-                    );
+                $ca = new AB_CustomerAppointment();
+                $ca->set( 'custom_fields', $appointment['custom_fields'] );
+                foreach ( $ca->getCustomFields() as $custom_field ) {
+                    $desc .= sprintf( '<div class="fc-notes">%s : %s</div>', wp_strip_all_tags( $custom_field['label'] ), esc_html( $custom_field['value'] ) );
                 }
-
-                $this->wpdb->query('INSERT INTO ab_staff_schedule_item VALUES ' . implode( ',', $values ) );
-
-                // Create holidays for staff
-                $this->wpdb->query('INSERT INTO ab_holiday (parent_id, staff_id, holiday, repeat_event, title) SELECT id, '.$this->get( 'id' ).', holiday, repeat_event, title FROM ab_holiday WHERE staff_id IS NULL' );
+            } else {
+                $desc .= sprintf( '<div class="fc-notes">%s %s</div>', __( 'Signed up', 'bookly' ), $appointment['total_number_of_persons'] );
+                $desc .= sprintf( '<div class="fc-notes">%s %s</div>', __( 'Capacity', 'bookly' ), $appointment['max_capacity'] );
             }
-        }
-    }
 
-    public function getScheduleList() {
-        if ( ! $this->loaded ) {
-            return array();
-        }
-        $list = $this->wpdb->get_results( $this->wpdb->prepare(
-           'SELECT
-              ssi.*,
-              ssi.id AS "staff_schedule_item_id"
-            FROM `ab_staff_schedule_item` ssi
-            WHERE ssi.staff_id = %d
-            ORDER BY ssi.day_index',
-            $this->get( 'id' )
-        ) );
-
-        if ( ! empty( $list ) ) {
-            $wp_week_start_day = get_option('start_of_week', 1);
-            $list_start_day    = $list[0]->id - 1;
-
-            // if wp week start day is higher than our
-            // cut the list into 2 parts (before and after wp wp week start day)
-            // move the second part of the list above the first one
-            if ( $wp_week_start_day > $list_start_day ) {
-                $list_start = array_slice( $list, 0, $wp_week_start_day );
-                $list_end   = array_slice( $list, $wp_week_start_day );
-                $list       = $list_end;
-
-                foreach ( $list_start as $list_item ) {
-                    $list[] = $list_item;
-                }
-            }
+            $appointments[ $key ] = array(
+                'id'       => $appointment['id'],
+                'start'    => $appointment['start_date'],
+                'end'      => $appointment['end_date'],
+                'title'    => $appointment['service_title'] ? esc_html( $appointment['service_title'] ) : __( 'Untitled', 'bookly' ),
+                'desc'     => $desc,
+                'color'    => $appointment['service_color'],
+                'staffId'  => $this->get( 'id' )
+            );
         }
 
-        foreach ($list as $day) {
-            $day->name = AB_DateUtils::getWeekDayByNumber($day->day_index - 1);
-        }
-
-        return $list;
+        return $appointments;
     }
 
     /**
-     * Get staff appointments for period
+     * Get AB_StaffService entities associated with this staff member.
      *
-     * @param      $start_date
-     * @param null $end_date
-     *
-     * @return array|mixed
+     * @return array  Array of entities
      */
-    public function getAppointments( $start_date, $end_date = null ) {
-        if ( ! $this->loaded ) {
-            return array();
-        }
-        $args = array(
-            'SELECT
-                  a.id,
-                  a.start_date,
-                  a.end_date,
-                  service.title,
-                  service.color,
-                  staff.id AS "staff_id",
-                  staff.full_name,
-                  ss.capacity AS max_capacity,
-                  COUNT( ca.id ) AS current_capacity,
-                  ca.customer_id,
-                  ca.notes
-              FROM ab_appointment a
-              LEFT JOIN ab_customer_appointment ca ON ca.appointment_id = a.id
-              LEFT JOIN ab_service service ON a.service_id = service.id
-              LEFT JOIN ab_staff staff ON a.staff_id = staff.id
-              LEFT JOIN ab_staff_service ss ON ss.staff_id = a.staff_id AND ss.service_id = a.service_id
-              WHERE staff.id = %d
-              ',
-            $this->get( 'id' )
-        );
+    public function getStaffServices()
+    {
+        $result = array();
 
-        if ( null !== $end_date ) {
-            $args[0] .=' AND DATE(a.start_date) BETWEEN %s AND %s';
-            $args[]   = $start_date;
-            $args[]   = $end_date;
-        } else {
-            $args[0] .= ' AND DATE(a.start_date) = %s';
-            $args[]   = $start_date;
+        if ( $this->get( 'id' ) ) {
+            $staff_services = AB_StaffService::query( 'ss' )
+                ->select( 'ss.*, s.title, s.duration, s.price AS service_price, s.color, s.capacity AS service_capacity' )
+                ->leftJoin( 'AB_Service', 's', 's.id = ss.service_id' )
+                ->where( 'ss.staff_id',  $this->get( 'id' ) )
+                ->fetchArray();
+
+            foreach ( $staff_services as $data ) {
+                $ss = new AB_StaffService( $data );
+
+                // Inject AB_Service entity.
+                $ss->service        = new AB_Service();
+                $data[ 'id' ]       = $data[ 'service_id' ];
+                $data[ 'price' ]    = $data[ 'service_price' ];
+                $data[ 'capacity' ] = $data[ 'service_capacity' ];
+                $ss->service->setFields( $data, true );
+
+                $result[] = $ss;
+            }
         }
 
-//        $args[0] .= ' GROUP BY a.id';
-        $args[0] .= ' GROUP BY a.start_date';
-
-        return $this->wpdb->get_results( call_user_func_array( array( $this->wpdb, 'prepare' ), $args ) );
+        return $result;
     }
 
-    public function delete() {
-        parent::delete();
-        if ( $this->get( 'avatar_path' ) ) {
+    /**
+     * Check whether staff is on holiday on given day.
+     *
+     * @param DateTime $day
+     * @return bool
+     */
+    public function isOnHoliday( DateTime $day )
+    {
+        // Check one-time holidays.
+        if ( AB_Holiday::query()
+            ->where( 'date', $day->format( 'Y-m-d' ) )
+            ->whereRaw( 'staff_id = %d OR staff_id IS NULL', array( $this->get( 'id' ) ) )
+            ->count() == 0 ) {
+            // Check repeating holidays.
+            if ( AB_Holiday::query()
+                ->whereRaw( 'MONTH(date) = %d AND DAY(date) = %s', array( $day->format( 'm' ), $day->format( 'd' ) ) )
+                ->whereRaw( 'staff_id = %d OR staff_id IS NULL', array( $this->get( 'id' ) ) )
+                ->count() == 0 ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Delete staff member.
+     */
+    public function delete()
+    {
+        if ( file_exists( $this->get( 'avatar_path' ) ) ) {
             unlink( $this->get( 'avatar_path' ) );
         }
+        AB_Holiday::query()->delete()->where( 'staff_id', $this->get( 'id' ) )->execute();
+        AB_StaffScheduleItem::query()->delete()->where( 'staff_id', $this->get( 'id' ) )->execute();
+        AB_StaffService::query()->delete()->where( 'staff_id', $this->get( 'id' ) )->execute();
+
+        parent::delete();
     }
 }

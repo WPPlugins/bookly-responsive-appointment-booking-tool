@@ -1,25 +1,21 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo add_query_arg( 'type', '_company' ) ?>" enctype="multipart/form-data" class="ab-staff-form">
-
-    <?php if (isset($message_c)) : ?>
-        <div id="message" style="margin: 0px!important;" class="updated below-h2">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <p><?php echo $message_c ?></p>
-        </div>
-    <?php endif ?>
-
+<form method="post" action="<?php echo esc_url( add_query_arg( 'type', '_company' ) ) ?>" enctype="multipart/form-data" class="ab-settings-form">
     <table class="form-horizontal">
         <tr>
-            <td><?php _e('Company name','ab') ?></td>
-            <td><input type="text" size="33" name="ab_settings_company_name" value="<?php echo get_option('ab_settings_company_name') ?>" reset="<?php echo get_option('ab_settings_company_name') ?>"/></td>
+            <td>
+                <label for="ab_settings_company_name"><?php _e( 'Company name', 'bookly' ) ?></label>
+            </td>
+            <td><input id="ab_settings_company_name" class="form-control" type="text" name="ab_settings_company_name" value="<?php echo esc_attr( get_option( 'ab_settings_company_name' ) ) ?>" reset="<?php echo esc_attr( get_option( 'ab_settings_company_name' ) ) ?>"/></td>
         </tr>
         <tr>
-            <td valign="top"><?php _e('Company logo','ab') ?></td>
+            <td valign="top">
+                <label for="ab_settings_company_logo"><?php _e( 'Company logo', 'bookly' ) ?></label>
+            </td>
             <td>
                 <?php if ( get_option( 'ab_settings_company_logo_url' ) ): ?>
                     <div id="ab-show-logo">
-                        <img src="<?php echo get_option( 'ab_settings_company_logo_url' ) ?>" alt="<?php _e( 'Company logo','ab' ) ?>"/>
-                        <a id="ab-delete-logo" href="javascript:void(0)"><?php _e( 'Delete','ab' ) ?></a>
+                        <img src="<?php echo esc_attr( get_option( 'ab_settings_company_logo_url' ) ) ?>" alt="<?php echo esc_attr( __( 'Company logo', 'bookly' ) ) ?>"/>
+                        <a id="ab-delete-logo" href="javascript:void(0)"><?php _e( 'Delete', 'bookly' ) ?></a>
                         <br/>
                     </div>
                 <?php endif ?>
@@ -27,22 +23,28 @@
             </td>
         </tr>
         <tr>
-            <td valign="top"><?php _e('Address','ab') ?></td>
-            <td><textarea cols="32" rows="5" name="ab_settings_company_address"><?php echo get_option('ab_settings_company_address') ?></textarea></td>
+            <td valign="top">
+                <label for="ab_settings_company_address"><?php _e( 'Address', 'bookly' ) ?></label>
+            </td>
+            <td><textarea id="ab_settings_company_address" class="form-control" rows="5" name="ab_settings_company_address"><?php echo esc_attr( get_option( 'ab_settings_company_address' ) ) ?></textarea></td>
         </tr>
         <tr>
-            <td><?php _e('Phone','ab') ?></td>
-            <td><input type="text" size="33" name="ab_settings_company_phone" value="<?php echo get_option('ab_settings_company_phone') ?>" /></td>
+            <td>
+                <label for="ab_settings_company_phone"><?php _e( 'Phone', 'bookly' ) ?></label>
+            </td>
+            <td><input id="ab_settings_company_phone" class="form-control" type="text" name="ab_settings_company_phone" value="<?php echo esc_attr( get_option( 'ab_settings_company_phone' ) ) ?>" /></td>
         </tr>
         <tr>
-            <td><?php _e('Website','ab') ?></td>
-            <td><input type="text" size="33" name="ab_settings_company_website" value="<?php echo get_option('ab_settings_company_website') ?>" /></td>
+            <td>
+                <label for="ab_settings_company_website"><?php _e( 'Website', 'bookly' ) ?></label>
+            </td>
+            <td><input id="ab_settings_company_website" class="form-control" type="text" name="ab_settings_company_website" value="<?php echo esc_attr( get_option( 'ab_settings_company_website' ) ) ?>" /></td>
         </tr>
         <tr>
             <td></td>
             <td>
-                <input type="submit" value="<?php _e( 'Save', 'ab' ) ?>" class="btn btn-info ab-update-button" />
-                <button id="ab-settings-company-reset" class="ab-reset-form" type="reset"><?php _e( ' Reset ', 'ab' ) ?></button>
+                <?php AB_Utils::submitButton() ?>
+                <?php AB_Utils::resetButton( 'ab-settings-company-reset' ) ?>
             </td>
         </tr>
     </table>

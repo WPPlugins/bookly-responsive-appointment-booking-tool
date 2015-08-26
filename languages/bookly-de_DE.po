@@ -1,0 +1,2849 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Bookly v7.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-12 13:55+0300\n"
+"PO-Revision-Date: 2015-08-12 14:17+0300\n"
+"Last-Translator: Mario Steinmeyer <mario.steinmeyer@t-online.de>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.2\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1,2t;_e:1,2t;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;"
+"__ngettext_noop:1,2;_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;"
+"_nx_js:1,2,3c;esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;"
+"esc_attr_x:1,2c;esc_html_x:1,2c;comments_number_link:2,3\n"
+"X-Poedit-Basepath: .\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../backend/AB_Backend.php:58
+#: ../backend/modules/calendar/templates/calendar.php:10
+msgid "Calendar"
+msgstr "Kalender"
+
+#: ../backend/AB_Backend.php:59
+#: ../backend/modules/appointments/templates/index.php:4
+#: ../frontend/modules/customer_profile/templates/short_code.php:4
+msgid "Appointments"
+msgstr "Ausstattung"
+
+#: ../backend/AB_Backend.php:60 ../backend/modules/staff/templates/list.php:7
+msgid "Staff Members"
+msgstr "Team Mitglieder"
+
+#: ../backend/AB_Backend.php:61
+#: ../backend/modules/service/templates/index.php:5
+#: ../backend/modules/staff/templates/edit.php:21
+msgid "Services"
+msgstr "Service"
+
+#: ../backend/AB_Backend.php:62 ../backend/modules/sms/templates/index.php:6
+msgid "SMS Notifications"
+msgstr "SMS Benachrichtigungen"
+
+#: ../backend/AB_Backend.php:63
+#: ../backend/modules/notifications/templates/index.php:10
+msgid "Email Notifications"
+msgstr "E-Mail Benachrichtigungen"
+
+#: ../backend/AB_Backend.php:64
+#: ../backend/modules/calendar/templates/_appointment_form.php:66
+#: ../backend/modules/customer/templates/index.php:4
+#: ../backend/modules/settings/templates/index.php:12
+msgid "Customers"
+msgstr "Kunden"
+
+#: ../backend/AB_Backend.php:65
+#: ../backend/modules/customer/templates/index.php:36
+#: ../backend/modules/payment/templates/index.php:12
+#: ../backend/modules/settings/templates/index.php:15
+msgid "Payments"
+msgstr "Zahlungsverkehr"
+
+#: ../backend/AB_Backend.php:66
+#: ../backend/modules/appearance/templates/index.php:4
+msgid "Appearance"
+msgstr "Aussehen"
+
+#: ../backend/AB_Backend.php:67
+#: ../backend/modules/settings/templates/index.php:4
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: ../backend/AB_Backend.php:68
+#: ../backend/modules/coupons/templates/index.php:5
+#: ../backend/modules/settings/templates/_paymentsForm.php:18
+msgid "Coupons"
+msgstr "Coupons"
+
+#: ../backend/AB_Backend.php:69
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:22
+#: ../backend/modules/custom_fields/templates/index.php:4
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:49
+msgid "Custom Fields"
+msgstr "﻿Benutzerdefinierte Felder"
+
+#: ../backend/AB_Backend.php:85 ../backend/modules/staff/templates/list.php:9
+msgid "Profile"
+msgstr "Profil"
+
+#: ../backend/modules/appearance/AB_AppearanceController.php:60
+#: ../backend/modules/appointments/AB_AppointmentsController.php:48
+#: ../backend/modules/calendar/AB_CalendarController.php:73
+#: ../backend/modules/payment/AB_PaymentController.php:28
+#: ../backend/modules/sms/AB_SmsController.php:108
+#: ../frontend/AB_Frontend.php:51
+msgid "Today"
+msgstr "Heute"
+
+#: ../backend/modules/appearance/AB_AppearanceController.php:63
+#: ../frontend/AB_Frontend.php:55
+msgid "Next month"
+msgstr "Nächster Monat"
+
+#: ../backend/modules/appearance/AB_AppearanceController.php:64
+#: ../frontend/AB_Frontend.php:56
+msgid "Previous month"
+msgstr "Vorheriger Monat"
+
+#: ../backend/modules/appearance/templates/_1_service.php:74
+#: ../backend/modules/appearance/templates/_1_service.php:127
+#: ../backend/modules/appearance/templates/_3_details.php:39
+#: ../backend/modules/appearance/templates/_4_payment.php:56
+#: ../backend/modules/sms/templates/index.php:144
+#: ../frontend/modules/booking/templates/1_service.php:53
+#: ../frontend/modules/booking/templates/1_service.php:112
+#: ../frontend/modules/booking/templates/3_details.php:89
+#: ../frontend/modules/booking/templates/4_payment.php:99
+#: ../frontend/modules/booking/templates/4_payment.php:116
+#: ../frontend/modules/booking/templates/4_payment.php:126
+#: ../lib/payment/AB_PayPal.php:136
+msgid "Next"
+msgstr "Weiter"
+
+#: ../backend/modules/appearance/templates/_1_service.php:124
+#: ../backend/modules/appearance/templates/_2_time.php:189
+#: ../backend/modules/appearance/templates/_3_details.php:36
+#: ../backend/modules/appearance/templates/_4_payment.php:53
+#: ../frontend/modules/booking/templates/1_service.php:109
+#: ../frontend/modules/booking/templates/2_time.php:32
+#: ../frontend/modules/booking/templates/2_time.php:41
+#: ../frontend/modules/booking/templates/3_details.php:86
+#: ../frontend/modules/booking/templates/4_payment.php:96
+#: ../frontend/modules/booking/templates/4_payment.php:113
+#: ../frontend/modules/booking/templates/4_payment.php:123
+#: ../lib/payment/AB_PayPal.php:135
+msgid "Back"
+msgstr "Zurück"
+
+#: ../backend/modules/appearance/templates/_3_details.php:10
+msgid "Visible to non-logged in customers only"
+msgstr "Sichtbar nur anonyme Kunden"
+
+#: ../backend/modules/appearance/templates/_4_payment.php:16
+#: ../backend/modules/appointments/AB_AppointmentsController.php:55
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:71
+#: ../backend/modules/payment/AB_PaymentController.php:35
+#: ../backend/modules/sms/AB_SmsController.php:115
+#: ../frontend/modules/booking/templates/4_payment.php:27
+msgid "Apply"
+msgstr "Anwenden"
+
+#: ../backend/modules/appearance/templates/_4_payment.php:35
+#: ../frontend/modules/booking/templates/4_payment.php:50
+msgid "I will pay now with PayPal"
+msgstr "Ich möchte per PayPal bezahlen"
+
+#: ../backend/modules/appearance/templates/_4_payment.php:42
+#: ../frontend/modules/booking/templates/4_payment.php:64
+#: ../frontend/modules/booking/templates/4_payment.php:78
+msgid "I will pay now with Credit Card"
+msgstr "Ich möchte mit Kredit Karte bezahlen"
+
+#: ../backend/modules/appearance/templates/_card_payment.php:4
+#: ../frontend/modules/booking/templates/_card_payment.php:4
+msgid "Credit Card Number"
+msgstr "Kreditkarten Nummer"
+
+#: ../backend/modules/appearance/templates/_card_payment.php:10
+#: ../frontend/modules/booking/templates/_card_payment.php:10
+msgid "Expiration Date"
+msgstr "Ablauf Datum"
+
+#: ../backend/modules/appearance/templates/_card_payment.php:27
+#: ../frontend/modules/booking/templates/_card_payment.php:27
+msgid "Card Security Code"
+msgstr "Sicherheits Code der Karte"
+
+#: ../backend/modules/appearance/templates/_codes.php:2
+#: ../backend/modules/notifications/templates/_codes.php:6
+#: ../backend/modules/settings/templates/_woocommerce.php:62
+#: ../backend/modules/sms/templates/_notif_codes.php:6
+msgid "name of category"
+msgstr "Name der Kategorie"
+
+#: ../backend/modules/appearance/templates/_codes.php:4
+msgid "login form"
+msgstr "Login Formular"
+
+#: ../backend/modules/appearance/templates/_codes.php:6
+#: ../backend/modules/notifications/templates/_codes.php:17
+#: ../backend/modules/sms/templates/_notif_codes.php:15
+msgid "number of persons"
+msgstr "Personenzahl"
+
+#: ../backend/modules/appearance/templates/_codes.php:8
+msgid "date of service"
+msgstr "Datum des Service"
+
+#: ../backend/modules/appearance/templates/_codes.php:10
+#: ../backend/modules/notifications/templates/_codes.php:18
+#: ../backend/modules/settings/templates/_woocommerce.php:63
+#: ../backend/modules/sms/templates/_notif_codes.php:16
+msgid "name of service"
+msgstr "Bezeichnung des Service"
+
+#: ../backend/modules/appearance/templates/_codes.php:11
+#: ../backend/modules/notifications/templates/_codes.php:19
+#: ../backend/modules/settings/templates/_woocommerce.php:64
+#: ../backend/modules/sms/templates/_notif_codes.php:17
+msgid "price of service"
+msgstr "Preis der Dienstleistung"
+
+#: ../backend/modules/appearance/templates/_codes.php:13
+msgid "time of service"
+msgstr "Zeit des Service"
+
+#: ../backend/modules/appearance/templates/_codes.php:15
+#: ../backend/modules/notifications/templates/_codes.php:21
+#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:4
+#: ../backend/modules/settings/templates/_woocommerce.php:65
+#: ../backend/modules/sms/templates/_notif_codes.php:19
+#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:4
+msgid "name of staff"
+msgstr "Team Mitglied"
+
+#: ../backend/modules/appearance/templates/_codes.php:16
+msgid "total price of booking"
+msgstr "Gesamtpreis der Buchung"
+
+#: ../backend/modules/appearance/templates/index.php:7
+#: ../backend/modules/service/templates/_list.php:4
+#: ../backend/modules/settings/AB_SettingsController.php:59
+#: ../backend/modules/settings/AB_SettingsController.php:73
+#: ../backend/modules/settings/AB_SettingsController.php:81
+#: ../backend/modules/settings/AB_SettingsController.php:90
+#: ../backend/modules/settings/AB_SettingsController.php:97
+#: ../backend/modules/settings/AB_SettingsController.php:106
+#: ../backend/modules/staff/templates/edit.php:9
+msgid "Settings saved."
+msgstr "Einstellung wurden gesichert."
+
+#: ../backend/modules/appearance/templates/index.php:18
+msgid "Show form progress tracker"
+msgstr "Anzeige der Nachverfolgung"
+
+#: ../backend/modules/appearance/templates/index.php:26
+msgid "Show calendar"
+msgstr "Zeige Kalender"
+
+#: ../backend/modules/appearance/templates/index.php:34
+msgid "Show blocked timeslots"
+msgstr "Zeige blockierte Zeiten"
+
+#: ../backend/modules/appearance/templates/index.php:42
+msgid "Show each day in one column"
+msgstr "Zeige jeden Tag in einer Spalte"
+
+#: ../backend/modules/appearance/templates/index.php:80
+msgid "Click on the underlined text to edit."
+msgstr "Klicke zum ändern auf den unterstrichenen Text."
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:49
+#: ../backend/modules/payment/AB_PaymentController.php:29
+#: ../backend/modules/sms/AB_SmsController.php:109
+msgid "Yesterday"
+msgstr "Gestern"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:50
+#: ../backend/modules/payment/AB_PaymentController.php:30
+#: ../backend/modules/sms/AB_SmsController.php:110
+msgid "Last 7 Days"
+msgstr "Letzten 7 Tage"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:51
+#: ../backend/modules/payment/AB_PaymentController.php:31
+#: ../backend/modules/sms/AB_SmsController.php:111
+msgid "Last 30 Days"
+msgstr "Letzten 30 Tage"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:52
+#: ../backend/modules/payment/AB_PaymentController.php:32
+#: ../backend/modules/sms/AB_SmsController.php:112
+msgid "This Month"
+msgstr "Dieser Monat"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:53
+msgid "Next Month"
+msgstr "Nächsten Monat"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:54
+#: ../backend/modules/payment/AB_PaymentController.php:34
+#: ../backend/modules/sms/AB_SmsController.php:114
+msgid "Custom Range"
+msgstr "Kundenbereich"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:56
+#: ../backend/modules/calendar/templates/_appointment_form.php:99
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:72
+#: ../backend/modules/customer/templates/_import.php:32
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:101
+#: ../backend/modules/payment/AB_PaymentController.php:36
+#: ../backend/modules/service/templates/index.php:44
+#: ../backend/modules/sms/AB_SmsController.php:116
+#: ../backend/modules/sms/templates/index.php:185
+#: ../backend/modules/staff/templates/_break.php:17
+#: ../backend/modules/staff/templates/new.php:32
+#: ../backend/modules/staff/templates/schedule.php:61
+#: ../backend/modules/tinymce/templates/appointment_list.php:44
+#: ../frontend/modules/customer_profile/templates/short_code.php:41
+msgid "Cancel"
+msgstr "Stornieren"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:57
+#: ../backend/modules/payment/AB_PaymentController.php:37
+#: ../backend/modules/sms/AB_SmsController.php:117
+msgid "To"
+msgstr "Zu"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:58
+#: ../backend/modules/payment/AB_PaymentController.php:38
+#: ../backend/modules/sms/AB_SmsController.php:118
+msgid "From"
+msgstr "Von"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:59
+#: ../backend/modules/calendar/AB_CalendarController.php:80
+msgid "Edit appointment"
+msgstr "Änderung der Terminvereinbarung"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:60
+#: ../backend/modules/appointments/templates/index.php:22
+#: ../backend/modules/calendar/AB_CalendarController.php:79
+#: ../backend/modules/calendar/templates/_appointment_form.php:17
+msgid "New appointment"
+msgstr "Neue Terminverbarung"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:69
+msgid "Please select at least one appointment."
+msgstr "Bitte wählen Sie mindestens einen Termin."
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:199
+#: ../backend/modules/appointments/templates/index.php:29
+msgid "Booking Time"
+msgstr "﻿Reservierungszeit"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:200
+#: ../backend/modules/appointments/templates/index.php:30
+msgid "Staff Member"
+msgstr "Team Mitglied"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:201
+#: ../backend/modules/appointments/templates/index.php:32
+#: ../backend/modules/calendar/templates/_appointment_form.php:28
+#: ../backend/modules/payment/templates/index.php:72
+#: ../backend/modules/tinymce/templates/appointment_list.php:14
+#: ../installer.php:182 ../installer.php:188 ../installer.php:232
+#: ../lib/AB_Google.php:150 ../updates.php:413 ../updates.php:727
+#: ../updates.php:733
+msgid "Service"
+msgstr "Service"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:202
+#: ../backend/modules/appointments/templates/index.php:33
+#: ../backend/modules/service/templates/_list.php:53
+msgid "Duration"
+msgstr "Dauer"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:203
+#: ../backend/modules/appointments/templates/index.php:34
+#: ../backend/modules/service/templates/_list.php:108
+#: ../backend/modules/sms/templates/_price.php:8
+#: ../backend/modules/staff/templates/services.php:24
+#: ../backend/modules/staff/templates/services.php:60
+#: ../backend/modules/tinymce/templates/appointment_list.php:38
+msgid "Price"
+msgstr "Entgelt"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:204
+#: ../backend/modules/payment/templates/index.php:70
+msgid "Customer"
+msgstr "Kunde"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:205
+#: ../backend/modules/customer/templates/index.php:31
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:33
+#: ../backend/modules/settings/templates/_companyForm.php:33
+#: ../backend/modules/sms/templates/_sms_details.php:16
+#: ../backend/modules/staff/templates/edit.php:83 ../installer.php:194
+#: ../lib/AB_Google.php:157 ../updates.php:739
+msgid "Phone"
+msgstr "Telefon"
+
+#: ../backend/modules/appointments/AB_AppointmentsController.php:206
+#: ../backend/modules/customer/templates/index.php:32
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:37
+#: ../backend/modules/sms/templates/index.php:85
+#: ../backend/modules/sms/templates/index.php:105
+#: ../backend/modules/sms/templates/index.php:132
+#: ../backend/modules/staff/templates/edit.php:77 ../installer.php:195
+#: ../lib/AB_Google.php:156 ../updates.php:740
+msgid "Email"
+msgstr "E-Mail"
+
+#: ../backend/modules/appointments/templates/index.php:16
+#: ../backend/modules/customer/templates/_import.php:21
+msgid "Delimiter"
+msgstr "Trennzeichen"
+
+#: ../backend/modules/appointments/templates/index.php:18
+#: ../backend/modules/customer/templates/_import.php:23
+msgid "Comma (,)"
+msgstr "Komma (,)"
+
+#: ../backend/modules/appointments/templates/index.php:19
+#: ../backend/modules/customer/templates/_import.php:24
+msgid "Semicolon (;)"
+msgstr "Semikolon (;)"
+
+#: ../backend/modules/appointments/templates/index.php:21
+msgid "Export to CSV"
+msgstr "Export in eine CSV-Datei"
+
+#: ../backend/modules/appointments/templates/index.php:31
+msgid "Customer Name"
+msgstr "Kundenname"
+
+#: ../backend/modules/appointments/templates/index.php:47
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: ../backend/modules/appointments/templates/index.php:54
+msgid "No appointments for selected period."
+msgstr "Keine Termine für den ausgewählten Zeitraum."
+
+#: ../backend/modules/appointments/templates/index.php:67
+#: ../backend/modules/coupons/templates/index.php:18
+#: ../backend/modules/customer/templates/index.php:105
+#: ../backend/modules/service/templates/index.php:63
+#: ../backend/modules/settings/templates/_companyForm.php:18
+msgid "Delete"
+msgstr "Löschen"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:74
+msgid "Week"
+msgstr "Woche"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:75
+msgid "Day"
+msgstr "Tag"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:76
+msgid "Month"
+msgstr "Monat"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:77
+msgid "All Day"
+msgstr "Den Ganzen Tag"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:78
+#: ../backend/modules/service/AB_ServiceController.php:49
+msgid "No staff selected"
+msgstr "Kein Team-Mitglied gewählt!"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:81
+#: ../backend/modules/coupons/AB_CouponsController.php:34
+#: ../backend/modules/customer/AB_CustomerController.php:59
+#: ../backend/modules/service/AB_ServiceController.php:48
+#: ../backend/modules/staff/AB_StaffController.php:58
+msgid "Are you sure?"
+msgstr "Sind Sie sicher?"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:342
+msgid "The number of customers should be not more than "
+msgstr "Die Anzahl der Kunden sollte nicht größer sein als "
+
+#: ../backend/modules/calendar/AB_CalendarController.php:345
+msgid "Start time must not be empty"
+msgstr "﻿Startzeit darf nicht leer sein"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:347
+msgid "End time must not be empty"
+msgstr "﻿Endzeit darf nicht leer sein"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:349
+msgid "End time must not be equal to start time"
+msgstr "Die Startzeit muss kleiner als das Termin-Ende sein"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:401
+#: ../lib/entities/AB_Staff.php:117
+msgid "Signed up"
+msgstr "Registriert"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:402
+#: ../backend/modules/service/templates/_list.php:112
+#: ../backend/modules/staff/templates/services.php:25
+#: ../backend/modules/staff/templates/services.php:61
+#: ../lib/entities/AB_Staff.php:118
+msgid "Capacity"
+msgstr "Kapazität"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:414
+#: ../lib/entities/AB_Service.php:38 ../lib/entities/AB_Staff.php:125
+msgid "Untitled"
+msgstr "Ohne Bezeichnung"
+
+#: ../backend/modules/calendar/AB_CalendarController.php:419
+msgid "Could not save appointment in database."
+msgstr "Termin in Datenbank konnte nicht gespeichert werden."
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:23
+#: ../backend/modules/payment/templates/index.php:71
+msgid "Provider"
+msgstr "Dienstanbieter"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:30
+#: ../frontend/modules/booking/templates/1_service.php:32
+msgid "Please select a service"
+msgstr "Bitte wählen Sie einen Service"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:33
+msgid "-- Select a service --"
+msgstr "-- Wählen Sie einen Service --"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:38
+#: ../backend/modules/payment/templates/index.php:68
+#: ../backend/modules/sms/templates/_purchases.php:13
+#: ../backend/modules/sms/templates/_sms_details.php:13
+#: ../backend/modules/tinymce/templates/appointment_list.php:26
+#: ../installer.php:232 ../updates.php:413
+msgid "Date"
+msgstr "Datum"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:43
+msgid "Period"
+msgstr "Periode"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:48
+#: ../backend/modules/settings/templates/_hoursForm.php:17
+#: ../backend/modules/staff/templates/_break.php:12
+#: ../backend/modules/staff/templates/schedule.php:25
+#: ../backend/modules/staff/templates/schedule.php:54
+msgid "to"
+msgstr "zu"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:54
+msgid "Selected period doesn't match service duration"
+msgstr ""
+"Der gewählte Termin entspricht nicht der Standardzeit des gewählten Service"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:60
+msgid "The selected period is occupied by another appointment"
+msgstr "Der gewählte Zeitraum ist bereits durch einen anderen Termin belegt"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:67
+msgid "Selected / maximum"
+msgstr "Ausgewählte Seiten"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:69
+msgid "Please select a customer"
+msgstr "Bitte wählen Sie einen Kunden"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:74
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:7
+msgid "Edit booking details"
+msgstr "Buchungsdetails bearbeiten"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:75
+msgid "Remove customer"
+msgstr "﻿Entferne Kunde"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:80
+msgid "-- Search customers --"
+msgstr "﻿--Suche Kunden--"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:84
+#: ../backend/modules/customer/templates/index.php:20 ../installer.php:65
+#: ../updates.php:453
+msgid "New customer"
+msgstr "Neuer Kunde"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:90
+msgid "Send email notifications"
+msgstr "Senden Sie bitte eine E-Mail Benachrichtigung!"
+
+#: ../backend/modules/calendar/templates/_appointment_form.php:91
+msgid ""
+"If email or SMS notifications are enabled and you want the customer or the "
+"staff member to be notified about this appointment after saving, tick this "
+"checkbox before clicking Save."
+msgstr ""
+"Wenn E-Mail oder SMS-Benachrichtigungen aktiviert sind und Sie dem Kunden "
+"oder das Team Mitglied an diesen Termin nach dem Speichern benachrichtigt "
+"werden möchten, aktivieren Sie dieses Kontrollkästchen, bevor Sie auf "
+"Speichern klicken."
+
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:13
+msgid "Participants"
+msgstr "Teilnehmer"
+
+#: ../backend/modules/calendar/templates/_custom_fields_form.php:16
+#: ../backend/modules/tinymce/templates/popup.php:41 ../installer.php:198
+#: ../updates.php:475
+msgid "Number of persons"
+msgstr "Personenzahl"
+
+#: ../backend/modules/calendar/templates/calendar.php:26
+msgid "All"
+msgstr "Alle"
+
+#: ../backend/modules/calendar/templates/calendar.php:39
+#: ../backend/modules/service/templates/_list.php:146
+msgid "All staff"
+msgstr "Alle Team-Mitglieder"
+
+#: ../backend/modules/calendar/templates/calendar.php:64
+msgid "Welcome to Bookly!"
+msgstr "Willkommen in Bookly!"
+
+#: ../backend/modules/calendar/templates/calendar.php:65
+msgid "Thank you for purchasing our product."
+msgstr "Danke für den Kauf unseres Produktes."
+
+#: ../backend/modules/calendar/templates/calendar.php:66
+msgid ""
+"Bookly offers a simple solution for making appointments. With our plugin you "
+"will be able to easily manage your availability time and handle the flow of "
+"your clients."
+msgstr ""
+"Bookly bietet eine einfache Lösung für die Herstellung von Terminen. Mit "
+"unserem Plugin können Sie die einfache Verwaltung Ihrer Bereitschaftszeit "
+"und zu handhaben den Fluss Ihrer Kunden."
+
+#: ../backend/modules/calendar/templates/calendar.php:67
+msgid ""
+"To start using Bookly, you need to follow these steps which are the minimum "
+"requirements to get it running!"
+msgstr ""
+"So starten Sie Bookly, müssen Sie diese Schritte, die die "
+"Mindestanforderungen an das Laufen zu bekommen sind zu folgen!"
+
+#: ../backend/modules/calendar/templates/calendar.php:69
+msgid "Please add your staff members."
+msgstr "Bitte fügen Sie Ihre Mitarbeiter."
+
+#: ../backend/modules/calendar/templates/calendar.php:70
+msgid "Add services and assign them to the staff members you created earlier."
+msgstr "In Service und weisen Sie sie den Mitarbeitern zuvor erstellt wurde."
+
+#: ../backend/modules/calendar/templates/calendar.php:73
+msgid "Add Staff Members"
+msgstr "In MitarbeiterInnen"
+
+#: ../backend/modules/calendar/templates/calendar.php:74
+msgid "Add Services"
+msgstr "In Dienstleistungen"
+
+#: ../backend/modules/coupons/AB_CouponsController.php:35
+msgid "Please select at least one coupon."
+msgstr "Bitte wählen Sie einen Coupon."
+
+#: ../backend/modules/coupons/AB_CouponsController.php:67
+msgid "Discount should be between 0 and 100."
+msgstr "Discount sollte zwischen 0 und 100 sein."
+
+#: ../backend/modules/coupons/AB_CouponsController.php:69
+msgid "Deduction should be a positive number."
+msgstr "Der Abzug sollte eine positive Zahl sein."
+
+#: ../backend/modules/coupons/templates/_list.php:7
+#: ../backend/modules/sms/templates/_price.php:7
+msgid "Code"
+msgstr "Code"
+
+#: ../backend/modules/coupons/templates/_list.php:8
+msgid "Discount (%)"
+msgstr "Discount (%)"
+
+#: ../backend/modules/coupons/templates/_list.php:9
+msgid "Deduction"
+msgstr "Abzug"
+
+#: ../backend/modules/coupons/templates/_list.php:10
+msgid "Usage limit"
+msgstr "Nutzungsbeschränkung"
+
+#: ../backend/modules/coupons/templates/_list.php:11
+msgid "Number of times used"
+msgstr "Fach verwendet"
+
+#: ../backend/modules/coupons/templates/index.php:8
+msgid "No coupons found"
+msgstr "Kein Coupons gefunden"
+
+#: ../backend/modules/coupons/templates/index.php:17
+msgid "Add Coupon"
+msgstr "Coupons hinzufügen"
+
+#: ../backend/modules/custom_fields/templates/index.php:10
+#: ../backend/modules/custom_fields/templates/index.php:22
+msgid "Text Field"
+msgstr "﻿Text-Feld"
+
+#: ../backend/modules/custom_fields/templates/index.php:11
+#: ../backend/modules/custom_fields/templates/index.php:39
+msgid "Text Area"
+msgstr "﻿Textbereich"
+
+#: ../backend/modules/custom_fields/templates/index.php:12
+#: ../backend/modules/custom_fields/templates/index.php:56
+msgid "Checkbox Group"
+msgstr "﻿CheckBox-Gruppe"
+
+#: ../backend/modules/custom_fields/templates/index.php:13
+#: ../backend/modules/custom_fields/templates/index.php:75
+msgid "Radio Button Group"
+msgstr "﻿Radio Button-Group"
+
+#: ../backend/modules/custom_fields/templates/index.php:14
+#: ../backend/modules/custom_fields/templates/index.php:94
+msgid "Drop Down"
+msgstr "﻿Drop-Down-"
+
+#: ../backend/modules/custom_fields/templates/index.php:20
+#: ../backend/modules/custom_fields/templates/index.php:37
+#: ../backend/modules/custom_fields/templates/index.php:54
+#: ../backend/modules/custom_fields/templates/index.php:73
+#: ../backend/modules/custom_fields/templates/index.php:92
+#: ../backend/modules/custom_fields/templates/index.php:111
+#: ../backend/modules/custom_fields/templates/index.php:117
+#: ../backend/modules/custom_fields/templates/index.php:123
+#: ../backend/modules/service/templates/_list.php:15
+#: ../backend/modules/service/templates/index.php:16
+msgid "Reorder"
+msgstr "Nachbestellung"
+
+#: ../backend/modules/custom_fields/templates/index.php:23
+#: ../backend/modules/custom_fields/templates/index.php:40
+#: ../backend/modules/custom_fields/templates/index.php:57
+#: ../backend/modules/custom_fields/templates/index.php:76
+#: ../backend/modules/custom_fields/templates/index.php:95
+msgid "Remove field"
+msgstr "﻿Entfernen Feld"
+
+#: ../backend/modules/custom_fields/templates/index.php:26
+#: ../backend/modules/custom_fields/templates/index.php:43
+#: ../backend/modules/custom_fields/templates/index.php:60
+#: ../backend/modules/custom_fields/templates/index.php:79
+#: ../backend/modules/custom_fields/templates/index.php:98
+#: ../backend/modules/custom_fields/templates/index.php:112
+#: ../backend/modules/custom_fields/templates/index.php:118
+#: ../backend/modules/custom_fields/templates/index.php:124
+msgid "Enter a label"
+msgstr "﻿Geben Sie eine Bezeichnung ein"
+
+#: ../backend/modules/custom_fields/templates/index.php:30
+#: ../backend/modules/custom_fields/templates/index.php:47
+#: ../backend/modules/custom_fields/templates/index.php:64
+#: ../backend/modules/custom_fields/templates/index.php:83
+#: ../backend/modules/custom_fields/templates/index.php:102
+msgid "Required field"
+msgstr "﻿Pflichtfeld"
+
+#: ../backend/modules/custom_fields/templates/index.php:69
+msgid "Checkbox"
+msgstr "﻿Checkbox"
+
+#: ../backend/modules/custom_fields/templates/index.php:88
+msgid "Radio Button"
+msgstr "﻿Optionsfeld"
+
+#: ../backend/modules/custom_fields/templates/index.php:107
+msgid "Option"
+msgstr "﻿Option"
+
+#: ../backend/modules/custom_fields/templates/index.php:113
+#: ../backend/modules/custom_fields/templates/index.php:119
+#: ../backend/modules/custom_fields/templates/index.php:125
+msgid "Remove item"
+msgstr "﻿Artikel entfernen"
+
+#: ../backend/modules/customer/AB_CustomerController.php:63
+msgid "Please select at least one customer."
+msgstr "Bitte wählen Sie mindestens einen Kunden."
+
+#: ../backend/modules/customer/templates/_import.php:8
+#: ../backend/modules/customer/templates/_import.php:31
+#: ../backend/modules/customer/templates/index.php:19
+msgid "Import"
+msgstr "Import"
+
+#: ../backend/modules/customer/templates/_import.php:13
+msgid "Note"
+msgstr "Hinweis"
+
+#: ../backend/modules/customer/templates/_import.php:14
+msgid ""
+"You may import list of clients in CSV format. The file needs to have three "
+"columns: Name, Phone and Email."
+msgstr ""
+"Sie können die Kundenliste im CSV-Format importieren. Die Datei muss drei "
+"Spalten: Name, Telefonnummer und E-Mail haben."
+
+#: ../backend/modules/customer/templates/_import.php:17
+msgid "Select file"
+msgstr "Datei auswählen"
+
+#: ../backend/modules/customer/templates/index.php:11
+msgid "Quick search customer"
+msgstr "Schnellsuche Kunden"
+
+#: ../backend/modules/customer/templates/index.php:29
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:28
+#: ../installer.php:193 ../lib/AB_Google.php:155 ../updates.php:738
+msgid "Name"
+msgstr "Name"
+
+#: ../backend/modules/customer/templates/index.php:30
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:16
+#: ../backend/modules/staff/templates/edit.php:35
+#: ../backend/modules/staff/templates/new.php:13
+msgid "User"
+msgstr "Anwender"
+
+#: ../backend/modules/customer/templates/index.php:33
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:41
+#: ../installer.php:227
+msgid "Notes"
+msgstr "Beschreibung"
+
+#: ../backend/modules/customer/templates/index.php:34
+msgid "Last appointment"
+msgstr "Letzter Termin"
+
+#: ../backend/modules/customer/templates/index.php:35
+msgid "Total appointments"
+msgstr "Termine insgesamt"
+
+#: ../backend/modules/customer/templates/index.php:44
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:30
+#: ../lib/AB_Validator.php:73 ../lib/AB_Validator.php:89
+#: ../lib/AB_Validator.php:117 ../lib/AB_Validator.php:137
+#: ../lib/AB_Validator.php:147
+msgid "Required"
+msgstr "Erforderlich"
+
+#: ../backend/modules/customer/templates/index.php:80
+msgid "No customers."
+msgstr "Keine Kunden."
+
+#: ../backend/modules/customer/templates/index.php:120
+msgid "Delete customers"
+msgstr "Kunden löschen"
+
+#: ../backend/modules/customer/templates/index.php:123
+msgid ""
+"You are about to delete customers which may have WordPress accounts "
+"associated to them. Do you want to delete those accounts too (if there are "
+"any)?"
+msgstr ""
+"Du bist dabei, die Kunden, die Wordpress-Konten zugeordnet haben können, zu "
+"löschen. Möchten Sie diese Konten zu löschen (wenn es welche gibt) werden?"
+
+#: ../backend/modules/customer/templates/index.php:126
+#: ../backend/modules/service/templates/index.php:78
+msgid "Remember my choice"
+msgstr "﻿Erinnere dich an mich"
+
+#: ../backend/modules/customer/templates/index.php:131
+msgid "No, delete just customers"
+msgstr "Nein, löschen Sie einfach die Kunden"
+
+#: ../backend/modules/customer/templates/index.php:132
+#: ../backend/modules/service/templates/index.php:83
+#: ../backend/modules/settings/templates/_paymentsForm.php:55
+#: ../backend/modules/settings/templates/_paymentsForm.php:77
+#: ../backend/modules/tinymce/templates/appointment_list.php:54
+msgid "Yes"
+msgstr "﻿Ja"
+
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:9
+msgid "New Customer"
+msgstr "Neuer Kunde"
+
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:13
+msgid "Personal Information"
+msgstr "﻿Persönliche Daten"
+
+#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:100
+msgid "Create customer"
+msgstr "Neuer Kunde"
+
+#: ../backend/modules/notifications/AB_NotificationsController.php:40
+#: ../backend/modules/sms/AB_SmsController.php:103
+msgid "Notification settings were updated successfully."
+msgstr "Benachrichtigungseinstellungen wurden erfolgreich aktualisiert."
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:89
+msgid "Notification to customer about appointment details"
+msgstr "Mitteilung der Termin Details an den Kunden"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:90
+msgid "Notification to staff member about appointment details"
+msgstr "Mitteilung der Termin Details an das/die Team Mitglied(er)"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:91
+msgid "Notification to staff member about appointment cancellation"
+msgstr "Mitteilung an das/die Team Mitglied(er) über Termin Stornierung"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:92
+msgid "Notification to customer about their WordPress user login details"
+msgstr "Mitteilung an die Kunden über ihre Wordpress Benutzer Login-Daten"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:93
+msgid ""
+"Evening reminder to customer about next day appointment (requires cron setup)"
+msgstr ""
+"Erinnerung für den Kunden zum Termin am nächsten Tag (erfordert Cron-Setup)"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:94
+msgid ""
+"Follow-up message in the same day after appointment (requires cron setup)"
+msgstr "Folge-Nachricht am Tag nach dem Termin (erfordert Cron-Setup)"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:95
+msgid ""
+"Evening notification with the next day agenda to staff member (requires cron "
+"setup)"
+msgstr ""
+"Vorabend Information über die Termine am der Team Mitglieder am nächsten Tag "
+"(erfordert Cron-Setup)"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:124
+msgid "Subject"
+msgstr "Gegenstand"
+
+#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:166
+msgid "Send copy to administrators"
+msgstr "Eine Kopie an den Administrator senden"
+
+#: ../backend/modules/notifications/templates/_codes.php:2
+#: ../backend/modules/settings/templates/_woocommerce.php:60
+#: ../backend/modules/sms/templates/_notif_codes.php:2
+msgid "date of appointment"
+msgstr "Datum des Service"
+
+#: ../backend/modules/notifications/templates/_codes.php:3
+#: ../backend/modules/settings/templates/_woocommerce.php:61
+#: ../backend/modules/sms/templates/_notif_codes.php:3
+msgid "time of appointment"
+msgstr "Zeitpunkt des Service"
+
+#: ../backend/modules/notifications/templates/_codes.php:4
+#: ../backend/modules/sms/templates/_notif_codes.php:4
+msgid "cancel appointment link"
+msgstr "Termin-Vereinbarung abbrechen"
+
+#: ../backend/modules/notifications/templates/_codes.php:5
+#: ../backend/modules/sms/templates/_notif_codes.php:5
+msgid "URL for cancel appointment link (to use inside <a> tag)"
+msgstr "URL für \"Abbrechen\" Termin-Link (innen verwendet <a>Tag)</a>"
+
+#: ../backend/modules/notifications/templates/_codes.php:7
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:2
+#: ../backend/modules/sms/templates/_notif_codes.php:7
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:2
+msgid "email of client"
+msgstr "E-Mail des Kunden"
+
+#: ../backend/modules/notifications/templates/_codes.php:8
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:3
+#: ../backend/modules/sms/templates/_notif_codes.php:8
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:3
+msgid "name of client"
+msgstr "Name des Kunden"
+
+#: ../backend/modules/notifications/templates/_codes.php:9
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:4
+#: ../backend/modules/sms/templates/_notif_codes.php:9
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:4
+msgid "phone of client"
+msgstr "Telefon des Kunden"
+
+#: ../backend/modules/notifications/templates/_codes.php:10
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:5
+#: ../backend/modules/sms/templates/_notif_codes.php:10
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:5
+msgid "name of your company"
+msgstr "Name Ihres Unternehmens"
+
+#: ../backend/modules/notifications/templates/_codes.php:11
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:6
+msgid "your company logo"
+msgstr "Ihr Firmenlogo"
+
+#: ../backend/modules/notifications/templates/_codes.php:12
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:7
+#: ../backend/modules/sms/templates/_notif_codes.php:11
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:6
+msgid "address of your company"
+msgstr "Adresse Ihres Unternehmens"
+
+#: ../backend/modules/notifications/templates/_codes.php:13
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:8
+#: ../backend/modules/sms/templates/_notif_codes.php:12
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:7
+msgid "your company phone"
+msgstr "Firma Telefonnummer"
+
+#: ../backend/modules/notifications/templates/_codes.php:14
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:9
+#: ../backend/modules/sms/templates/_notif_codes.php:13
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:8
+msgid "this web-site address"
+msgstr "Diese Website-Adresse"
+
+#: ../backend/modules/notifications/templates/_codes.php:15
+#: ../backend/modules/sms/templates/_notif_codes.php:14
+msgid "combined values of all custom fields"
+msgstr "Kombination der Werte aller benutzerdefinierten Felder"
+
+#: ../backend/modules/notifications/templates/_codes.php:16
+msgid "combined values of all custom fields (formatted in 2 columns)"
+msgstr ""
+"Kombination der Werte aller benutzerdefinierten Felder (in 2 Spalten "
+"formatiert)"
+
+#: ../backend/modules/notifications/templates/_codes.php:20
+#: ../backend/modules/sms/templates/_notif_codes.php:18
+msgid "email of staff"
+msgstr "e-Mail des Team-Mitgliedes"
+
+#: ../backend/modules/notifications/templates/_codes.php:22
+#: ../backend/modules/sms/templates/_notif_codes.php:20
+msgid "phone of staff"
+msgstr "Telefon des Team-Mitgliedes"
+
+#: ../backend/modules/notifications/templates/_codes.php:23
+msgid "photo of staff"
+msgstr "Foto des Team-Mitgliedes"
+
+#: ../backend/modules/notifications/templates/_codes.php:24
+#: ../backend/modules/sms/templates/_notif_codes.php:21
+msgid ""
+"total price of booking (service price multiplied by the number of persons)"
+msgstr ""
+"Gesamtpreis der Buchung (Servicepreis multipliziert mit der Anzahl der "
+"Personen)"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:10
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:9
+msgid "customer new username"
+msgstr "Kunden neuen Benutzernamen"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:11
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:10
+msgid "customer new password"
+msgstr "Kunden neues Passwort"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:12
+#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:11
+msgid "site address"
+msgstr "Website-Adresse"
+
+#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:2
+#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:2
+msgid "date of next day"
+msgstr "Datum des nächsten Tages"
+
+#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:3
+#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:3
+msgid "staff agenda for next day"
+msgstr "Personal-Agenda für den nächsten Tag"
+
+#: ../backend/modules/notifications/templates/index.php:18
+msgid "Sender name"
+msgstr "Name des Absenders"
+
+#: ../backend/modules/notifications/templates/index.php:27
+msgid "Sender email"
+msgstr "Absender E-Mailadresse"
+
+#: ../backend/modules/notifications/templates/index.php:36
+msgid "Reply directly to customers"
+msgstr "Antworten direkt an die Kunden"
+
+#: ../backend/modules/notifications/templates/index.php:42
+msgid ""
+"If this option is enabled then the email address of the customer is used as "
+"a sender email address for notifications sent to staff members and "
+"administrators."
+msgstr ""
+"Wenn diese Option aktiviert ist, wird die E-Mail-Adresse des Kunden wird als "
+"Absender E-Mail-Anschrift für Mitteilungen an Mitarbeiter und "
+"Administratoren gesendet werden."
+
+#: ../backend/modules/notifications/templates/index.php:47
+msgid "Send emails as"
+msgstr "Senden Sie E-Mails als"
+
+#: ../backend/modules/notifications/templates/index.php:50
+msgid "HTML"
+msgstr "HTML"
+
+#: ../backend/modules/notifications/templates/index.php:50
+#: ../backend/modules/sms/templates/_sms_details.php:15
+msgid "Text"
+msgstr "Text"
+
+#: ../backend/modules/notifications/templates/index.php:53
+msgid ""
+"HTML allows formatting, colors, fonts, positioning, etc. With Text you must "
+"use Text mode of rich-text editors below. On some servers only text emails "
+"are sent successfully."
+msgstr ""
+"HTML ermöglicht die Formatierung, Farben, Schriftarten, Positionierung, etc. "
+"Mit Text müssen Text-Modus des Rich-Text-Editoren unter verwenden. Auf "
+"einigen Servern nur Text-E-Mails erfolgreich gesendet."
+
+#: ../backend/modules/notifications/templates/index.php:81
+#: ../backend/modules/sms/templates/_notifications.php:44
+msgid "Message"
+msgstr "Mitteilung"
+
+#: ../backend/modules/notifications/templates/index.php:88
+#: ../backend/modules/sms/templates/_notifications.php:51
+msgid "Codes"
+msgstr "﻿Codes"
+
+#: ../backend/modules/notifications/templates/index.php:111
+#: ../backend/modules/sms/templates/_notifications.php:84
+msgid ""
+"To send scheduled notifications please execute the following script hourly "
+"with your cron:"
+msgstr ""
+"Für zeitgesteuerte Benachrichtigungen senden Sie bitte das folgende Skript "
+"stündlich Cron-Job:"
+
+#: ../backend/modules/payment/AB_PaymentController.php:33
+#: ../backend/modules/sms/AB_SmsController.php:113
+msgid "Last Month"
+msgstr "Letzter Monat"
+
+#: ../backend/modules/payment/templates/_alert.php:3
+msgid "No payments for selected period and criteria."
+msgstr "Keine Zahlungen für den gewünschten Zeitraum und Kriterien."
+
+#: ../backend/modules/payment/templates/_body.php:18
+#: ../backend/modules/payment/templates/index.php:74 ../installer.php:196
+#: ../updates.php:590
+msgid "Coupon"
+msgstr "Coupon"
+
+#: ../backend/modules/payment/templates/_body.php:20
+#: ../backend/modules/payment/templates/index.php:35
+msgid "Local"
+msgstr "Örtlich"
+
+#: ../backend/modules/payment/templates/_body.php:34
+msgid "Total"
+msgstr "Gesamt"
+
+#: ../backend/modules/payment/templates/index.php:23
+msgid "All payment types"
+msgstr "Alle Bezahlmöglichkeiten"
+
+#: ../backend/modules/payment/templates/index.php:42
+msgid "All customers"
+msgstr "Alle Kunden"
+
+#: ../backend/modules/payment/templates/index.php:48
+msgid "All providers"
+msgstr "Alle Anbieter"
+
+#: ../backend/modules/payment/templates/index.php:54
+#: ../backend/modules/staff/templates/services.php:21
+msgid "All services"
+msgstr "Alle Services"
+
+#: ../backend/modules/payment/templates/index.php:59
+#: ../backend/modules/sms/templates/_purchases.php:8
+#: ../backend/modules/sms/templates/_sms_details.php:8
+msgid "Filter"
+msgstr "Filter"
+
+#: ../backend/modules/payment/templates/index.php:69
+#: ../backend/modules/sms/templates/_purchases.php:15
+msgid "Type"
+msgstr "Type"
+
+#: ../backend/modules/payment/templates/index.php:73
+#: ../backend/modules/sms/templates/_purchases.php:18
+msgid "Amount"
+msgstr "Höhe"
+
+#: ../backend/modules/payment/templates/index.php:75
+msgid "Appointment Date"
+msgstr "Termin Datum"
+
+#: ../backend/modules/service/AB_ServiceController.php:50
+msgid "Please select at least one service."
+msgstr "Bitte wählen Sie einen Service aus."
+
+#: ../backend/modules/service/templates/_list.php:38
+msgid "Title"
+msgstr "Name"
+
+#: ../backend/modules/service/templates/_list.php:66
+msgid "All day"
+msgstr "Ganzer Tag"
+
+#: ../backend/modules/service/templates/_list.php:71
+msgid "Padding time (before and after)"
+msgstr "Padding Zeit (vor und nach)"
+
+#: ../backend/modules/service/templates/_list.php:74
+#: ../backend/modules/service/templates/_list.php:87
+#: ../backend/modules/settings/forms/AB_BusinessHoursForm.php:51
+#: ../backend/modules/staff/templates/schedule.php:3
+msgid "OFF"
+msgstr "Aus"
+
+#: ../backend/modules/service/templates/_list.php:101
+msgid ""
+"Set padding time before and/or after an appointment. For example, if you "
+"require 15 minutes to prepare for the next appointment then you should set "
+"\"padding before\" to 15 min. If there is an appointment from 8:00 to 9:00 "
+"then the next available time slot will be 9:15 rather than 9:00."
+msgstr ""
+"Stellen padding Zeit vor und / oder nach einem Termin. Zum Beispiel, wenn "
+"Sie benötigen 15 Minuten, um für den nächsten Termin vorbereiten, dann "
+"sollten Sie \"padding vor\" bis 15 min eingestellt. Wenn es ein Termin von "
+"8.00 bis 09.00 Uhr wird der nächste verfügbare Zeitschlitz wird 09.15 statt "
+"09.00 sein."
+
+#: ../backend/modules/service/templates/_list.php:116
+msgid ""
+"The maximum number of customers allowed to book the service for the certain "
+"time period."
+msgstr ""
+"Für die maximale Anzahl der Kunden ist es erlaubt, den Service für den "
+"bestimmten Zeitraum zu buchen."
+
+#: ../backend/modules/service/templates/_list.php:123
+#: ../backend/modules/tinymce/templates/appointment_list.php:8
+#: ../installer.php:187 ../updates.php:732
+msgid "Category"
+msgstr "Kategorie"
+
+#: ../backend/modules/service/templates/_list.php:134
+msgid "Providers"
+msgstr "Anbieter"
+
+#: ../backend/modules/service/templates/index.php:12
+#: ../backend/modules/service/templates/index.php:55
+msgid "All Services"
+msgstr "Alle Services"
+
+#: ../backend/modules/service/templates/index.php:29
+msgid "New Category"
+msgstr "Neue Kategorie"
+
+#: ../backend/modules/service/templates/index.php:56
+#: ../backend/modules/staff/templates/services.php:92
+msgid "No services found. Please add services."
+msgstr "Keine Services gefunden. Bitte Service hinzufügen."
+
+#: ../backend/modules/service/templates/index.php:62
+#: ../backend/modules/staff/templates/services.php:93
+msgid "Add Service"
+msgstr "Service hinzufügen."
+
+#: ../backend/modules/service/templates/index.php:73
+msgid "Update service setting"
+msgstr "﻿Update-Service-Einstellung"
+
+#: ../backend/modules/service/templates/index.php:76
+msgid ""
+"You are about to change a service setting which is also configured "
+"separately for each staff member. Do you want to update it in staff settings "
+"too?"
+msgstr ""
+"﻿Sie sind dabei, eine Service-Einstellung, die auch separat für jeden "
+"Mitarbeiter konfiguriert ist, zu ändern. Wollen Sie es in allgemeinen Team-"
+"Einstellungen aktualisieren?"
+
+#: ../backend/modules/service/templates/index.php:82
+msgid "No, update just here in services"
+msgstr "Nein, nur hier im Servicebereich aktualisieren"
+
+#: ../backend/modules/settings/AB_SettingsController.php:42
+#: ../backend/modules/staff/AB_StaffController.php:59
+msgid "We are not working on this day"
+msgstr "An diesem Tag stehen wir nicht zur Verfügung."
+
+#: ../backend/modules/settings/AB_SettingsController.php:43
+#: ../backend/modules/staff/AB_StaffController.php:60
+msgid "Repeat every year"
+msgstr "Wiederhole jedes Jahr"
+
+#: ../backend/modules/settings/AB_SettingsController.php:176
+msgid "Select product"
+msgstr "Produkt auswählen"
+
+#: ../backend/modules/settings/templates/_companyForm.php:6
+msgid "Company name"
+msgstr "Team Name"
+
+#: ../backend/modules/settings/templates/_companyForm.php:12
+#: ../backend/modules/settings/templates/_companyForm.php:17
+msgid "Company logo"
+msgstr "Logo"
+
+#: ../backend/modules/settings/templates/_companyForm.php:27
+msgid "Address"
+msgstr "Adresse"
+
+#: ../backend/modules/settings/templates/_companyForm.php:39
+msgid "Website"
+msgstr "Webseite"
+
+#: ../backend/modules/settings/templates/_customers.php:6
+msgid "Create WordPress user account for customers"
+msgstr "Neues Wordpress-Benutzerkonto für Kunden"
+
+#: ../backend/modules/settings/templates/_customers.php:12
+msgid ""
+"If this setting is enabled then Bookly will be creating WordPress user "
+"accounts for all new customers. If the user is logged in then the new "
+"customer will be associated with the existing user account."
+msgstr ""
+"Wenn diese Einstellung aktiviert ist, dann wird die Schaffung Bookly "
+"Wordpress-Benutzerkonten für alle Neukunden. Wenn der Benutzer dann in loggt "
+"die neue Kunde wird mit dem bestehenden Benutzerkonto zugeordnet werden."
+
+#: ../backend/modules/settings/templates/_customers.php:17
+msgid "Phone field default country"
+msgstr "Phone Feld Standard Land"
+
+#: ../backend/modules/settings/templates/_customers.php:21
+msgid "Guess country by user's IP address"
+msgstr "Ratet mal, Land nach IP-Adresse des Benutzers"
+
+#: ../backend/modules/settings/templates/_customers.php:26
+msgid ""
+"Select default country for the phone field in the 'Details' step of booking. "
+"You can also let Bookly determine the country based on the IP address of the "
+"client."
+msgstr ""
+"Wählen Sie eine Standard Land für das Telefon Feld in dem Schritt der "
+"Buchung 'Details'. Sie können auch bestimmen lassen Bookly das Land auf der "
+"Grundlage der IP-Adresse des Clients."
+
+#: ../backend/modules/settings/templates/_customers.php:31
+msgid "Default country code"
+msgstr "Standard-Ländercode"
+
+#: ../backend/modules/settings/templates/_customers.php:37
+msgid ""
+"Your clients must have their phone numbers in international format in order "
+"to receive text messages. However you can specify a default country code "
+"that will be used as a prefix for all phone numbers that do not start with "
+"\"+\" or \"00\". E.g. if you enter \"1\" as the default country code and a "
+"client enters their phone as \"(600) 555-2222\" the resulting phone number "
+"to send the SMS to will be \"+1600555222\"."
+msgstr ""
+"Ihre Kunden müssen ihre Telefonnummern im internationalen Format, um SMS-"
+"Nachrichten zu empfangen. Wie auch immer Sie eine Standardlandesvorwahl, die "
+"als Präfix für alle Telefonnummern, die nicht mit \"+\" oder \"00\" lohnt "
+"Start verwendet werden können angeben. Z.B. wenn Sie \"1\" als Standard-"
+"Ländercode eingeben und ein Client gibt seine Handy als \"(600) 555-2222\" "
+"die resultierende Telefonnummer, um die SMS zu senden, um wird "
+"\"+1600555222\"."
+
+#: ../backend/modules/settings/templates/_generalForm.php:6
+msgid "Time slot length"
+msgstr "Zeitdauer"
+
+#: ../backend/modules/settings/templates/_generalForm.php:21
+msgid ""
+"Select the time interval that will be used in frontend and backend, e.g. in "
+"calendar, second step of the booking process, while indicating the working "
+"hours, etc."
+msgstr ""
+"Wählen Sie das Zeitintervall, das in Frontend und Backend, beispielsweise "
+"für den Kalender verwendet  werden soll, zweiter Schritt im "
+"Buchungsprozesses bezeichnen die Servicezeiten usw."
+
+#: ../backend/modules/settings/templates/_generalForm.php:26
+msgid "Minimum time requirement prior to booking"
+msgstr "Minimum Zeit vor der möglichen Buchung eines Service"
+
+#: ../backend/modules/settings/templates/_generalForm.php:30
+#: ../backend/modules/settings/templates/_generalForm.php:79
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:68
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:80
+#: ../backend/modules/settings/templates/_paymentsForm.php:37
+#: ../backend/modules/settings/templates/_paymentsForm.php:63
+#: ../lib/utils/AB_Utils.php:168
+msgid "Disabled"
+msgstr "Gesperrt"
+
+#: ../backend/modules/settings/templates/_generalForm.php:37
+msgid ""
+"Set a minimum amount of time before the chosen appointment (for example, "
+"require the customer to book at least 1 hour before the appointment time)."
+msgstr ""
+"Stellen Sie eine minimale Menge an Zeit ein, bis wie weit der gewählte "
+"Termin vor dem Termin zu buchen ist."
+
+#: ../backend/modules/settings/templates/_generalForm.php:42
+msgid "Number of days available for booking"
+msgstr "Anzahl der Tage, die für die Buchung zur verfügbar sind."
+
+#: ../backend/modules/settings/templates/_generalForm.php:48
+msgid ""
+"Specify the number of days that should be available for booking at step 2 "
+"starting from the current day."
+msgstr ""
+"Geben Sie die Anzahl der Tage, an denen buchbar bei Schritt 2 ab dem "
+"aktuellen Tag sein sollte."
+
+#: ../backend/modules/settings/templates/_generalForm.php:53
+msgid "Display available time slots in client's time zone"
+msgstr "Anzeige der verfügbaren Zeiten in der Zeitzone des Kunden"
+
+#: ../backend/modules/settings/templates/_generalForm.php:59
+msgid "The value is taken from client’s browser."
+msgstr "Der Wert wurde vom Internet Browser des Kunden übernommen."
+
+#: ../backend/modules/settings/templates/_generalForm.php:64
+msgid "Cancel appointment page URL"
+msgstr "Termin stornieren URL"
+
+#: ../backend/modules/settings/templates/_generalForm.php:67
+#: ../backend/modules/settings/templates/_generalForm.php:83
+msgid "Enter a URL"
+msgstr "﻿Geben Sie eine URL ein"
+
+#: ../backend/modules/settings/templates/_generalForm.php:70
+msgid ""
+"Insert a URL of a page that is shown to clients after they have cancelled "
+"their booking."
+msgstr ""
+"Füge die URL der Seite, die den Kunden angezeigt wird, nachdem sie ihre "
+"Buchung storniert haben."
+
+#: ../backend/modules/settings/templates/_generalForm.php:75
+msgid "Final step URL"
+msgstr "﻿Letzter Schritt-URL"
+
+#: ../backend/modules/settings/templates/_generalForm.php:79
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:68
+#: ../lib/utils/AB_Utils.php:167
+msgid "Enabled"
+msgstr "Aktiviert"
+
+#: ../backend/modules/settings/templates/_generalForm.php:86
+msgid ""
+"Set a URL of a page that the user will be forwarded to after successful "
+"booking. If disabled then the default step 5 is displayed."
+msgstr ""
+"﻿Legen Sie eine URL einer Seite, die der Benutzer nach der erfolgreichen "
+"Buchung übermittelt wird. Wenn dann den Standard-Schritt 5 deaktiviert wird "
+"angezeigt."
+
+#: ../backend/modules/settings/templates/_generalForm.php:91
+msgid "Allow staff members to edit their profiles"
+msgstr "Lassen Sie Mitarbeiter, um ihre Profile bearbeiten"
+
+#: ../backend/modules/settings/templates/_generalForm.php:97
+msgid ""
+"If this option is enabled then all staff members who are associated with "
+"WordPress users will be able to edit their own profiles, services, schedule "
+"and days off."
+msgstr ""
+"Wenn diese Option aktiviert ist, wird alle Mitarbeiter, die mit Wordpress-"
+"Benutzer zugeordnet sind in der Lage, ihre eigenen Profile, "
+"Dienstleistungen, Zeitplan und freie Tage bearbeiten."
+
+#: ../backend/modules/settings/templates/_generalForm.php:102
+msgid "Method to include Bookly JavaScript and CSS files on the page"
+msgstr "Verfahren zur Bookly JavaScript und CSS-Dateien auf der Seite gehören"
+
+#: ../backend/modules/settings/templates/_generalForm.php:111
+msgid ""
+"With \"Enqueue\" method the JavaScript and CSS files of Bookly will be "
+"included on all pages of your website. This method should work with all "
+"themes. With \"Print\" method the files will be included only on the pages "
+"which contain Bookly booking form. This method may not work with all themes."
+msgstr ""
+"Mit \"Enqueue\" werden die JavaScript und CSS-Dateien von Bookly wird auf "
+"allen Seiten Ihrer Website enthalten sein. Diese Methode sollte bei allen "
+"Themen zu arbeiten. Mit \"Print\" Methode werden die Dateien nur auf den "
+"Seiten, die Bookly Buchungsformular enthalten, enthalten sein. Dieses "
+"Verfahren kann nicht mit allen Themen zu arbeiten."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:7
+#: ../backend/modules/settings/templates/_purchaseCodeForm.php:7
+#: ../backend/modules/settings/templates/_woocommerce.php:7
+msgid "Instructions"
+msgstr "Anweisungen"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:10
+msgid "To find your client ID and client secret, do the following:"
+msgstr ""
+"Um Ihre Kundennummer und Sicherheitseinstellungen zur erhalten, gehen Sie "
+"folgendermaßen vor:"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:13
+msgid ""
+"Go to the <a href=\"https://console.developers.google.com/\" target=\"_blank"
+"\">Google Developers Console</a>."
+msgstr ""
+"Zum <a href=\"https://console.developers.google.com/\" target=\"_blank"
+"\">Google Developers Console</a>."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:14
+msgid "Select a project, or create a new one."
+msgstr "Wählen Sie ein Projekt oder legen Sie ein neues an."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:15
+msgid ""
+"In the sidebar on the left, expand <b>APIs & auth</b>. Next, click <b>APIs</"
+"b>. In the list of APIs, make sure the status is <b>ON</b> for the Google "
+"Calendar API."
+msgstr ""
+"In der Seitenleiste auf der linken Seite, erweitern Sie <b> APIs & Auth </"
+"b>. Klicken Sie dann auf <b>APIs</ b>. In der Liste der APIs, stellen Sie "
+"sicher, dass der Status <b>ON</b> für die Google Kalender API ist."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:16
+msgid "In the sidebar on the left, select <b>Credentials</b>."
+msgstr ""
+"In der Seitenleiste auf der linken Seite, wählen Sie <b>Credentials</b>."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:17
+msgid ""
+"Create your project's OAuth 2.0 credentials by clicking <b>Create new Client "
+"ID</b>, selecting <b>Web application</b>, and providing the information "
+"needed to create the credentials. For <b>AUTHORIZED REDIRECT URIS</b> enter "
+"the <b>Redirect URI</b> found below on this page."
+msgstr ""
+"Erstellen Sie OAuth 2.0 Anmeldeinformationen für Ihr Projekt, indem Sie auf "
+"<b>Create new Client ID</ b>, Auswahl <b>Web application</b>, und die "
+"Bereitstellung der erforderlichen Informationen gehen, um die "
+"Anmeldeinformationen zu erstellen. Für <b>AUTHORIZED REDIRECT URIS</ b> "
+"Geben Sie bitte die <b>Redirect URI</b> unten auf dieser Seite an."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:18
+msgid ""
+"Look for the <b>Client ID</b> and <b>Client secret</b> in the table "
+"associated with each of your credentials."
+msgstr ""
+"Achten Sie auf die <b>Client ID</b> und <b>Client secret</b> in der Tabelle, "
+"die mit jedem Ihrer Anmeldeinformationen verbunden sind."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:19
+msgid ""
+"Go to Staff Members, select a staff member and click on \"Connect\" which is "
+"located at the bottom of the page."
+msgstr ""
+"Zum MitarbeiterInnen, wählen Sie einen Mitarbeiter, und klicken Sie auf "
+"\"Connect\", die am unteren Rand der Seite befindet."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:27
+#: ../backend/modules/settings/templates/index.php:13
+msgid "Google Calendar"
+msgstr "Google Kalender"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:32
+msgid "Client ID"
+msgstr "Client ID"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:38
+msgid "The client ID obtained from the Developers Console"
+msgstr "Die von der Developers Console erhaltene Client-ID"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:43
+msgid "Client secret"
+msgstr "Client secret"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:49
+msgid "The client secret obtained from the Developers Console"
+msgstr "Die von der Developers Console erhalten Client Geheimnis"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:54
+msgid "Redirect URI"
+msgstr "Redirect URI"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:60
+msgid "Enter this URL as a redirect URI in the Developers Console"
+msgstr "Geben Sie diese URL als Redirect-URI in der Developers Console"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:65
+msgid "2 way sync"
+msgstr "﻿2-Wege-Synchronisation"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:71
+msgid ""
+"By default Bookly pushes new appointments and any further changes to Google "
+"Calendar. If you enable this option then Bookly will fetch events from "
+"Google Calendar and remove corresponding time slots before displaying the "
+"second step of the booking form (this may lead to a delay when users click "
+"Next at the first step)."
+msgstr ""
+"﻿Standardmäßig synchronisiert Bookly neue Termine und Änderungen an den "
+"Google Kalendar. Wenn Sie diese Option aktivieren, dann wird Bookly "
+"Ereignisse aus dem Google Kalender synchronisieren und die entsprechenden "
+"Zeitfenster vor der Anzeige des zweiten Schritt im Buchungsformular (dies "
+"kann zu einer Verzögerung führen, wenn Benutzer auf Weiter in der ersten "
+"Stufe klicken) entfernen."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:76
+msgid "Limit number of fetched events"
+msgstr "Grenzzahl der abgerufenen Ereignisse"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:86
+msgid ""
+"If there is a lot of events in Google Calendar sometimes this leads to a "
+"lack of memory in PHP when Bookly tries to fetch all events. You can limit "
+"the number of fetched events here. This only works when 2 way sync is "
+"enabled."
+msgstr ""
+"Wenn es gibt eine Menge von Veranstaltungen in Google Calendar manchmal "
+"führt dies zu einem Mangel an Speicher in PHP, wenn Bookly versucht, alle "
+"Ereignisse zu holen. Sie können die Anzahl der abgerufenen Ereignisse hier "
+"zu begrenzen. Dies funktioniert nur, wenn 2-Wege-Synchronisierung aktiviert "
+"ist."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:91
+msgid "Template for event title"
+msgstr "Vorlage für Titel der Veranstaltung"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:97
+msgid ""
+"Configure what information should be places in the title of Google Calendar "
+"event. Available codes are [[SERVICE_NAME]], [[STAFF_NAME]] and "
+"[[CLIENT_NAMES]]."
+msgstr ""
+"Konfigurieren Sie, welche Informationen Orten im Titel Google Calendar "
+"Event. Verfügbare Codes sind [[SERVICE_NAME]], [[STAFF_NAME]] und "
+"[[CLIENT_NAMES]]."
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:6
+msgid "Currency"
+msgstr "Währung"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:25
+msgid "Service paid locally"
+msgstr "Service vor Ort bezahlt"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:41
+msgid "API Username"
+msgstr "API Benutzername"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:45
+msgid "API Password"
+msgstr "API Passwort"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:49
+msgid "API Signature"
+msgstr "API Signatur"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:53
+#: ../backend/modules/settings/templates/_paymentsForm.php:75
+msgid "Sandbox Mode"
+msgstr "Sandbox Modus"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:55
+#: ../backend/modules/settings/templates/_paymentsForm.php:77
+msgid "No"
+msgstr "Nein"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:67
+msgid "API Login ID"
+msgstr "API Benutzer ID"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:71
+msgid "API Transaction Key"
+msgstr "API Transaktions-Key"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:89
+msgid "Secret Key"
+msgstr "Sicherheits-Key"
+
+#: ../backend/modules/settings/templates/_purchaseCodeForm.php:8
+msgid ""
+"Upon providing the purchase code you will have access to free updates of "
+"Bookly. Updates may contain functionality improvements and important "
+"security fixes. For more information on where to find your purchase code see "
+"this <a href=\"https://help.market.envato.com/hc/en-us/articles/202822600-"
+"Where-can-I-find-my-Purchase-Code-\" target=\"_blank\">page</a>."
+msgstr ""
+"Durch die Bereitstellung des Code, haben Sie kostenlosen Zugang zu Updates "
+"der Plugin. Updates können Funktionalitätsverbesserungen und wichtige "
+"Sicherheitsupdates enthalten. Weitere Informationen dazu, wo Sie finden "
+"Ihren Einkauf Code auf dieser <a href=\"https://help.market.envato.com/hc/en-"
+"us/articles/202822600-Where-can-I-find-my-Purchase-Code-\" target=\"_blank"
+"\">Seite</a>."
+
+#: ../backend/modules/settings/templates/_purchaseCodeForm.php:14
+#: ../backend/modules/settings/templates/index.php:18
+msgid "Purchase Code"
+msgstr "Registrierungs-Code"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:10
+msgid ""
+"You need to install and activate WooCommerce plugin before using the options "
+"below.<br/><br/>Once the plugin is activated do the following steps:"
+msgstr ""
+"Sie benötigen zur Installation und WooCommerce Plugin zu aktivieren, bevor "
+"Sie die folgenden Optionen.<br/><br/>Sobald das Plugin aktiviert die "
+"folgenden Schritte aus.:"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:13
+msgid "Create a product in WooCommerce that can be placed in cart."
+msgstr ""
+"Erstellen Sie ein Produkt in WooCommerce, die in den Warenkorb gelegt werden "
+"kann."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:14
+msgid "In the form below enable WooCommerce option."
+msgstr "In das Formular unten ermöglichen WooCommerce Option."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:15
+msgid ""
+"Select the product that you created at step 1 in the drop down list of "
+"products."
+msgstr ""
+"Wählen Sie das Produkt, das Sie in Schritt 1 in der Dropdown-Liste der "
+"Produkte erstellt."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:16
+msgid "If needed, edit item data which will be displayed in the cart."
+msgstr "Bei Bedarf bearbeiten Positionsdaten, die im Warenkorb angezeigt wird."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:19
+msgid ""
+"Note that once you have enabled WooCommerce option in Bookly the built-in "
+"payment methods will no longer work. All your customers will be redirected "
+"to WooCommerce cart instead of standard payment step."
+msgstr ""
+"Beachten Sie, dass, sobald Sie WooCommerce Option in Bookly aktiviert die "
+"integrierte Zahlungsmittel wird nicht mehr funktionieren. Alle Ihre Kunden "
+"zu WooCommerce Warenkorb statt Standard-Zahlungs Schritt umgeleitet werden."
+
+#: ../backend/modules/settings/templates/_woocommerce.php:35
+msgid "Booking product"
+msgstr "Produkt für die Reservierung"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:46
+msgid "Cart item data"
+msgstr "Warenkorb Artikeldaten"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:49
+msgid "Enter a name"
+msgstr "Geben Sie einen Namen"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:53
+msgid "Enter a value"
+msgstr "Geben Sie einen Wert"
+
+#: ../backend/modules/settings/templates/admin_notice.php:4
+msgid ""
+"Please do not forget to specify your purchase code in Bookly <a href=\"admin."
+"php?page=ab-settings\">settings</a>. Upon providing the code you will have "
+"access to free updates of Bookly. Updates may contain functionality "
+"improvements and important security fixes."
+msgstr ""
+"Bitte vergessen Sie nicht, Ihren Registrierungs-Code in Bookly <a einzugeben "
+"href=\"admin.php?page=ab-settings\">System-Einstellungen</a>. Durch die "
+"Bereitstellung des Code, haben Sie kostenlosen Zugang zu Updates der Plugin. "
+"Updates können Funktionalitätsverbesserungen und wichtige Sicherheitsupdates "
+"enthalten."
+
+#: ../backend/modules/settings/templates/admin_notice.php:5
+msgid ""
+"<b>Important!</b> Please be aware that if your copy of Bookly was not "
+"downloaded from Codecanyon (the only channel of Bookly distribution), you "
+"may put your website under significant risk - it is very likely that it "
+"contains a malicious code, a trojan or a backdoor. Please consider buying a "
+"licensed copy of Bookly <a href=\"http://booking-wp-plugin.com\" target="
+"\"_blank\">here</a>."
+msgstr ""
+"<b>Achtung</b> Bitte beachten Sie, dass, wenn Sie Ihre Kopie von Bookly "
+"nicht von Codecanyon (der einzige, offizielle  Vertriebskanal von Bookly) "
+"heruntergeladen haben, können Sie Ihre Website erheblichen Gefahren "
+"aussetzen - es ist sehr wahrscheinlich, dass es einen Schadcode, ein "
+"Trojaner oder eine Hintertür enthält. Bitte erwägen Sie den Kauf einer "
+"lizenzierten Kopie von Bookly <a href=\"http://booking-wp-plugin.com\" "
+"target=\"_blank\"hier</a>."
+
+#: ../backend/modules/settings/templates/admin_notice.php:6
+msgid "Dismiss"
+msgstr "Zurückweisen"
+
+#: ../backend/modules/settings/templates/index.php:10
+msgid "General"
+msgstr "Generell"
+
+#: ../backend/modules/settings/templates/index.php:11
+msgid "Company"
+msgstr "Unternehmen"
+
+#: ../backend/modules/settings/templates/index.php:16
+msgid "Business hours"
+msgstr "Servicezeiten"
+
+#: ../backend/modules/settings/templates/index.php:17
+msgid "Holidays"
+msgstr "Ferien"
+
+#: ../backend/modules/sms/AB_SmsController.php:60
+msgid "Your payment has been accepted for processing."
+msgstr "Ihre Zahlung zur Verarbeitung übernommen worden."
+
+#: ../backend/modules/sms/AB_SmsController.php:63
+msgid "Your payment has been interrupted."
+msgstr "Ihre Zahlung wurde unterbrochen."
+
+#: ../backend/modules/sms/AB_SmsController.php:81
+msgid "Please accept terms and conditions."
+msgstr "Bitte akzeptieren Sie Nutzungsbedingungen."
+
+#: ../backend/modules/sms/AB_SmsController.php:126 ../lib/AB_SMS.php:48
+msgid "Passwords must be the same."
+msgstr "Passwörter müssen gleich sein."
+
+#: ../backend/modules/sms/AB_SmsController.php:127
+msgid "Please enter old password."
+msgstr "Bitte geben Sie das alte Kennwort."
+
+#: ../backend/modules/sms/AB_SmsController.php:207
+msgid "SMS has been sent successfully."
+msgstr "SMS wurde erfolgreich gesendet."
+
+#: ../backend/modules/sms/AB_SmsController.php:209
+msgid "Failed to send SMS."
+msgstr "Fehler beim SMS versenden."
+
+#: ../backend/modules/sms/AB_SmsController.php:213 ../lib/AB_SMS.php:152
+msgid "Phone number is empty."
+msgstr "Telefonnummer ist leer."
+
+#: ../backend/modules/sms/templates/_notifications.php:10
+msgid "Administrator phone"
+msgstr "Telefon von Administrator"
+
+#: ../backend/modules/sms/templates/_notifications.php:16
+msgid "Send test SMS"
+msgstr "Senden Sie Test SMS"
+
+#: ../backend/modules/sms/templates/_notifications.php:19
+msgid ""
+"Enter a phone number in international format. E.g. for the United States a "
+"valid phone number would be +17327572923."
+msgstr ""
+"Geben Sie eine Telefonnummer im internationalen Format. Z.B. für Spanien "
+"eine gültige Telefonnummer +49234555776 sein würde."
+
+#: ../backend/modules/sms/templates/_price.php:6
+msgid "Country"
+msgstr "Land"
+
+#: ../backend/modules/sms/templates/_price.php:21
+msgid ""
+"If you do not see your country in the list please contact us at <a href="
+"\"mailto:support@ladela.com\">support@ladela.com</a>."
+msgstr ""
+"Wenn Sie nicht sehen, Ihr Land in der Liste wenden Sie sich bitte an <a href="
+"\"mailto:support@ladela.com\">support@ladela.com</a>."
+
+#: ../backend/modules/sms/templates/_purchases.php:14
+#: ../backend/modules/sms/templates/_sms_details.php:14
+#: ../backend/modules/tinymce/templates/appointment_list.php:32
+#: ../installer.php:183 ../installer.php:232 ../updates.php:413
+#: ../updates.php:728
+msgid "Time"
+msgstr "Zeit"
+
+#: ../backend/modules/sms/templates/_purchases.php:16
+msgid "Order"
+msgstr "Bestellen"
+
+#: ../backend/modules/sms/templates/_purchases.php:17
+#: ../backend/modules/sms/templates/_sms_details.php:18
+msgid "Status"
+msgstr "Status"
+
+#: ../backend/modules/sms/templates/_sms_details.php:17
+msgid "Cost"
+msgstr "Kosten"
+
+#: ../backend/modules/sms/templates/index.php:18
+msgid "Your balance"
+msgstr "Ihr Kontostand"
+
+#: ../backend/modules/sms/templates/index.php:30
+#: ../backend/modules/sms/templates/index.php:167
+msgid "Change password"
+msgstr "Kennwort ändern"
+
+#: ../backend/modules/sms/templates/index.php:36
+msgid "Log out"
+msgstr "Abmelden"
+
+#: ../backend/modules/sms/templates/index.php:48
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+#: ../backend/modules/sms/templates/index.php:49
+msgid "Add money"
+msgstr "Geld hinzufügen"
+
+#: ../backend/modules/sms/templates/index.php:50
+msgid "Purchases"
+msgstr "Einkäufe"
+
+#: ../backend/modules/sms/templates/index.php:51
+msgid "SMS Details"
+msgstr "SMS-Details"
+
+#: ../backend/modules/sms/templates/index.php:52
+msgid "Price list"
+msgstr "Preisliste"
+
+#: ../backend/modules/sms/templates/index.php:75
+msgid ""
+"SMS Notifications (or \"Bookly SMS\") is a service for notifying your "
+"customers via text messages which are sent to mobile phones.<br/>It is "
+"necessary to register in order to start using this service.<br/>After "
+"registration you will need to configure notification messages and top up "
+"your balance in order to start sending SMS."
+msgstr ""
+"SMS Benachrichtigungen (oder \"Bookly SMS\") ist ein Dienst zur "
+"Benachrichtigung Ihre Kunden per SMS, die an Mobiltelefone gesendet werden."
+"<br/>Es ist notwendig, um zu registrieren, um mit der Anwendung dieses "
+"Service.<br/>Nach der Registrierung müssen Sie Benachrichtigungen "
+"konfigurieren und Nachfüllen Ihrer Waage, um das Senden von SMS zu starten."
+
+#: ../backend/modules/sms/templates/index.php:83
+#: ../frontend/modules/booking/templates/_login_form.php:10
+msgid "Login"
+msgstr "Einloggen"
+
+#: ../backend/modules/sms/templates/index.php:89
+#: ../backend/modules/sms/templates/index.php:109
+msgid "Password"
+msgstr "Passwort"
+
+#: ../backend/modules/sms/templates/index.php:93
+#: ../backend/modules/sms/templates/index.php:123
+#: ../backend/modules/sms/templates/index.php:145
+#: ../frontend/modules/booking/templates/_login_form.php:48
+msgid "Log In"
+msgstr "Einloggen"
+
+#: ../backend/modules/sms/templates/index.php:94
+#: ../backend/modules/sms/templates/index.php:103
+msgid "Registration"
+msgstr "Anmeldung"
+
+#: ../backend/modules/sms/templates/index.php:95
+#: ../backend/modules/sms/templates/index.php:130
+msgid "Forgot password"
+msgstr "Passwort vergessen"
+
+#: ../backend/modules/sms/templates/index.php:113
+msgid "Repeat password"
+msgstr "Passwort wiederholen"
+
+#: ../backend/modules/sms/templates/index.php:117
+msgid ""
+"Accept <a href=\"javascript:void(0)\" data-toggle=\"modal\" data-target="
+"\"#ab-tos\">Terms & Conditions</a>"
+msgstr ""
+"Akzeptieren <a href=\"javascript:void(0)\" data-toggle=\"modal\" data-target="
+"\"#ab-tos\">AGB</a>"
+
+#: ../backend/modules/sms/templates/index.php:122
+msgid "Register"
+msgstr "Registrieren"
+
+#: ../backend/modules/sms/templates/index.php:135
+msgid "Enter code from email"
+msgstr "Code eingeben von E-Mail"
+
+#: ../backend/modules/sms/templates/index.php:138
+#: ../backend/modules/sms/templates/index.php:175
+#: ../backend/modules/sms/templates/index.php:176
+msgid "New password"
+msgstr "Neues Passwort"
+
+#: ../backend/modules/sms/templates/index.php:141
+#: ../backend/modules/sms/templates/index.php:179
+#: ../backend/modules/sms/templates/index.php:180
+msgid "Repeat new password"
+msgstr "Neues Passwort wiederholen"
+
+#: ../backend/modules/sms/templates/index.php:171
+#: ../backend/modules/sms/templates/index.php:172
+msgid "Old password"
+msgstr "Altes Passwort"
+
+#: ../backend/modules/sms/templates/index.php:200
+msgid "Terms & Conditions"
+msgstr "Geschäftsbedingungen"
+
+#: ../backend/modules/staff/AB_StaffController.php:209
+msgid "The start time must be less than the end one"
+msgstr "Die Startzeit muss kleiner als das Termin-Ende sein"
+
+#: ../backend/modules/staff/AB_StaffController.php:224
+msgid "The requested interval is not available"
+msgstr "Der gewünschte Zeitraum ist nicht verfügbar"
+
+#: ../backend/modules/staff/AB_StaffController.php:277
+msgid "Error adding the break interval"
+msgstr "Fehler beim Hinzufügen der Pausenzeiten"
+
+#: ../backend/modules/staff/AB_StaffController.php:312
+msgid "Calendar ID is not valid."
+msgstr "Die Kalender Adresse ist nicht gültig"
+
+#: ../backend/modules/staff/AB_StaffController.php:356
+#: ../lib/AB_Controller.php:95
+msgid "Bookly: You do not have sufficient permissions to access this page."
+msgstr ""
+"﻿Sie haben keine ausreichende Berechtigung, um auf diese Seite zuzugreifen."
+
+#: ../backend/modules/staff/templates/_break.php:16
+#: ../backend/modules/staff/templates/schedule.php:60
+#: ../lib/utils/AB_Utils.php:244
+msgid "Save"
+msgstr "Sichern"
+
+#: ../backend/modules/staff/templates/_break.php:25
+msgid "Delete break"
+msgstr "Löschen"
+
+#: ../backend/modules/staff/templates/_breaks.php:9
+msgid "breaks:"
+msgstr "Unterbrechungen:"
+
+#: ../backend/modules/staff/templates/edit.php:15
+msgid "Delete this staff member"
+msgstr "Löschen des Team-Mitgliedes"
+
+#: ../backend/modules/staff/templates/edit.php:20 ../installer.php:184
+#: ../updates.php:729
+msgid "Details"
+msgstr "Details"
+
+#: ../backend/modules/staff/templates/edit.php:22
+msgid "Schedule"
+msgstr "Zeitplan"
+
+#: ../backend/modules/staff/templates/edit.php:23
+msgid "Days off"
+msgstr "Freie Tage"
+
+#: ../backend/modules/staff/templates/edit.php:37
+#: ../backend/modules/staff/templates/new.php:16
+msgid "Select from WP users"
+msgstr "Auswahl eines gespeicherten Benutzers"
+
+#: ../backend/modules/staff/templates/edit.php:56
+msgid "Photo"
+msgstr "Foto"
+
+#: ../backend/modules/staff/templates/edit.php:59
+msgid "Avatar"
+msgstr "Avatar"
+
+#: ../backend/modules/staff/templates/edit.php:60
+msgid "Delete current photo"
+msgstr "Lösche aktuelles Foto"
+
+#: ../backend/modules/staff/templates/edit.php:68
+#: ../backend/modules/staff/templates/new.php:25
+msgid "Full name"
+msgstr "Ganzer Name"
+
+#: ../backend/modules/staff/templates/edit.php:90
+msgid "Google Calendar integration"
+msgstr "Google Kalender Integration"
+
+#: ../backend/modules/staff/templates/edit.php:92
+msgid "Synchronize the data of the staff member bookings with Google Calendar."
+msgstr ""
+"Synchronisieren Sie die Daten der Team-Mitglieder Buchungen mit dem Google "
+"Kalender."
+
+#: ../backend/modules/staff/templates/edit.php:101
+msgid "Connect"
+msgstr "Verbinden"
+
+#: ../backend/modules/staff/templates/edit.php:103
+msgid ""
+"Please configure Google Calendar <a href=\"?page=ab-"
+"settings&type=_google_calendar\">settings</a> first"
+msgstr ""
+"Bitte konfigurieren Sie die Google Kalender <a href=\"?page=ab-system-"
+"settings\">Einstellungen</a> zuerst."
+
+#: ../backend/modules/staff/templates/edit.php:106
+msgid "Connected"
+msgstr "Verbunden"
+
+#: ../backend/modules/staff/templates/edit.php:106
+msgid "disconnect"
+msgstr "Verbindung lösen"
+
+#: ../backend/modules/staff/templates/edit.php:114
+msgid "Calendar ID"
+msgstr "Kalender Adresse"
+
+#: ../backend/modules/staff/templates/list.php:38
+msgid ""
+"If this staff member requires separate login to access personal calendar, a "
+"regular WP user needs to be created for this purpose."
+msgstr ""
+"Wenn dieser Mitarbeiter ein separates Login für den Zugriff auf persönliche "
+"Kalender erfordert, muss ein  WP Anwender für diesen Zweck erstellt werden."
+
+#: ../backend/modules/staff/templates/list.php:39
+msgid ""
+"User with \"Administrator\" role will have access to calendars and settings "
+"of all staff members, user with some other role will have access only to "
+"personal calendar and settings."
+msgstr ""
+"Benutzer mit der \"Administrator \" Rolle wird Zugriff auf Kalender und "
+"Einstellungen aller Team-Mitglieder haben. Benutzer mit einer anderen Rolle "
+"haben nur Zugang zu persönlichen Kalender und Einstellungen."
+
+#: ../backend/modules/staff/templates/list.php:40
+msgid ""
+"If you will leave this field blank, this staff member will not be able to "
+"access personal calendar using WP backend."
+msgstr ""
+"Wenn Sie dieses Feld leer lassen, wird Team-Mitglieder nicht in der Lage "
+"sein, auf den persönlichen Kalender im WP-Backend zugreifen zu können."
+
+#: ../backend/modules/staff/templates/list.php:43
+msgid ""
+"The Calendar ID can be found by clicking on \"Calendar settings\" next to "
+"the calendar you wish to display. The Calendar ID is then shown beside "
+"\"Calendar Address\"."
+msgstr ""
+"Die Kalender-ID kann durch einen Klick auf \"Kalendereinstellungen \" neben "
+"dem Kalender, den Sie anzeigen möchten gefunden werden. Die Kalender-ID wird "
+"dann neben der \"Kalenderadresse \" angezeigt."
+
+#: ../backend/modules/staff/templates/list.php:44
+msgid "<b>Leave this field empty</b> to work with the default calendar."
+msgstr ""
+"<b> Lassen Sie dieses Feld leer </ b>, um mit der Standardkalender zu "
+"arbeiten."
+
+#: ../backend/modules/staff/templates/new.php:5
+msgid "New Staff Member"
+msgstr "Neues Team Mitglied"
+
+#: ../backend/modules/staff/templates/new.php:31
+msgid "Save Member"
+msgstr "Speicher Team Mitglied"
+
+#: ../backend/modules/staff/templates/schedule.php:41
+msgid "add break"
+msgstr "Pause einfügen"
+
+#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:42
+#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:47
+msgid "Add Bookly booking form"
+msgstr "Hinzufügen Bookly Buchungsformulars"
+
+#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:43
+#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:48
+#: ../backend/modules/tinymce/templates/appointment_list.php:97
+msgid "Add Bookly appointments list"
+msgstr "Hinzufügen Bookly Terminliste"
+
+#: ../backend/modules/tinymce/templates/appointment_list.php:6
+msgid "Columns"
+msgstr "Spalten"
+
+#: ../backend/modules/tinymce/templates/appointment_list.php:20
+msgid "Staff"
+msgstr "Team Mitglieder"
+
+#: ../backend/modules/tinymce/templates/appointment_list.php:52
+msgid "Titles"
+msgstr "Titel"
+
+#: ../backend/modules/tinymce/templates/appointment_list.php:64
+#: ../backend/modules/tinymce/templates/popup.php:57
+msgid "Insert"
+msgstr "Einfügen"
+
+#: ../backend/modules/tinymce/templates/popup.php:7
+msgid "Default value for category select"
+msgstr "Den Standardwert für die Kategorie wählen"
+
+#: ../backend/modules/tinymce/templates/popup.php:11 ../installer.php:200
+#: ../updates.php:743
+msgid "Select category"
+msgstr "Wähle Kategorie"
+
+#: ../backend/modules/tinymce/templates/popup.php:13
+#: ../backend/modules/tinymce/templates/popup.php:25
+#: ../backend/modules/tinymce/templates/popup.php:37
+#: ../backend/modules/tinymce/templates/popup.php:43
+msgid "Hide this field"
+msgstr "Dieses Feld ausblenden"
+
+#: ../backend/modules/tinymce/templates/popup.php:14
+#: ../backend/modules/tinymce/templates/popup.php:26
+msgid ""
+"Please be aware that a value in this field is required in the frontend. If "
+"you choose to hide this field, please be sure to select a default value for "
+"it"
+msgstr ""
+"Bitte beachten Sie, dass ein Wert in diesem Feld im Frontend erforderlich "
+"wird. Wenn Sie ihn für dieses Feld verbergen, bitten wir Sie, einen "
+"Standardwert für sie auszuwählen."
+
+#: ../backend/modules/tinymce/templates/popup.php:19
+msgid "Default value for service select"
+msgstr "Standardwert für den Service gewählt"
+
+#: ../backend/modules/tinymce/templates/popup.php:23 ../installer.php:199
+#: ../updates.php:742
+msgid "Select service"
+msgstr "Wählen Sie den Service"
+
+#: ../backend/modules/tinymce/templates/popup.php:31
+msgid "Default value for employee select"
+msgstr "Den Standardwert für das Team Mitglied wählen"
+
+#: ../backend/modules/tinymce/templates/popup.php:35
+#: ../frontend/modules/booking/lib/AB_UserBookingData.php:401
+#: ../installer.php:201 ../updates.php:744
+msgid "Any"
+msgstr "Jeder"
+
+#: ../backend/modules/tinymce/templates/popup.php:48
+msgid "\"I'm available on …\" block"
+msgstr "\" Ich bin verfügbar von …\" blockieren"
+
+#: ../backend/modules/tinymce/templates/popup.php:51
+msgid "Hide this block"
+msgstr "Verberge diese Blockierung"
+
+#: ../backend/modules/tinymce/templates/popup.php:98
+msgid "Insert Appointment Booking Form"
+msgstr "Termin einfügen in das Reservierungsformular"
+
+#: ../frontend/modules/authorize.net/AB_AuthorizeNetController.php:64
+#: ../frontend/modules/booking/AB_BookingController.php:236
+#: ../frontend/modules/booking/AB_BookingController.php:275
+#: ../frontend/modules/booking/AB_BookingController.php:336
+#: ../frontend/modules/booking/AB_BookingController.php:366
+#: ../frontend/modules/booking/AB_BookingController.php:463
+#: ../frontend/modules/booking/AB_BookingController.php:556
+#: ../frontend/modules/stripe/AB_StripeController.php:69
+#: ../frontend/modules/woocommerce/AB_WooCommerceController.php:171
+msgid "Session error."
+msgstr "Sitzungsfehler."
+
+#: ../frontend/modules/booking/AB_BookingController.php:177
+msgid "Form ID error."
+msgstr "Form ID Fehler."
+
+#: ../frontend/modules/booking/AB_BookingController.php:361
+msgid ""
+"<h3>The selected time is not available anymore. Please, choose another time "
+"slot.</h3>"
+msgstr ""
+"<h3> Die eingestellte Zeit ist nicht mehr vorhanden. Bitte, wählen Sie ein "
+"anderes Zeitfenster. </ H3>"
+
+#: ../frontend/modules/booking/AB_BookingController.php:551
+msgid "This coupon code is invalid or has been used"
+msgstr "Dieser Gutscheincode ist ungültig oder wurde bereits verwendet"
+
+#: ../frontend/modules/booking/templates/1_service.php:103
+#: ../lib/AB_Validator.php:101
+msgid "The start time must be less than the end time"
+msgstr "Die Startzeit muss kleiner als die Endzeit"
+
+#: ../frontend/modules/booking/templates/2_time.php:37
+msgid "No time is available for selected criteria."
+msgstr "Es stehen keine Zeiten für die ausgewählten Kriterien zur Verfügung."
+
+#: ../frontend/modules/booking/templates/cancel_appointment.php:9
+msgid "Page Redirection"
+msgstr "Seiten Umleitung"
+
+#: ../frontend/modules/booking/templates/cancel_appointment.php:12
+#, php-format
+msgid ""
+"If you are not redirected automatically, follow the <a href=\"%s\">link</a>."
+msgstr ""
+"Wenn Sie nicht automatisch umgeleitet werden, folgen Sie bitte diesem <a "
+"href=\"%s\">Link</a>."
+
+#: ../frontend/modules/booking/templates/short_code.php:9
+msgid "Loading..."
+msgstr "Wird geladen ..."
+
+#: ../frontend/modules/customer_profile/templates/short_code.php:44
+msgid "Expired"
+msgstr "Abgelaufen"
+
+#: ../frontend/modules/customer_profile/templates/short_code.php:60
+msgid "No appointments found"
+msgstr "Keine Termine gefunden"
+
+#: ../installer.php:23
+msgid "Your appointment information"
+msgstr "Ihre Termininformation"
+
+#: ../installer.php:24
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"\n"
+"This is confirmation that you have booked [[SERVICE_NAME]].\n"
+"\n"
+"We are waiting you at [[COMPANY_ADDRESS]] on [[APPOINTMENT_DATE]] at "
+"[[APPOINTMENT_TIME]].\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Sehr geehrter [[CLIENT_NAME]].\n"
+"\n"
+"Dieses ist eine Bestätigung, dass Sie gebucht haben [[SERVICE_NAME]].\n"
+"\n"
+"Wir begrüßen Sie auf der Veranstaltung  [[COMPANY_ADDRESS]] am "
+"[[APPOINTMENT_DATE]] um [[APPOINTMENT_TIME]].\n"
+"\n"
+"Vielen dass Sie sich für unsere Teams entschieden haben.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:30
+msgid "New booking information"
+msgstr "Neue Buchungsinformation"
+
+#: ../installer.php:31
+msgid ""
+"Hello.\n"
+"\n"
+"You have new booking.\n"
+"\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+msgstr ""
+"Hallo\n"
+"\n"
+"Sie haben neue Buchung\n"
+"\n"
+"des Service.: [[SERVICE_NAME]]\n"
+"Datum: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Auftragsgeber Name: [[CLIENT_NAME]]\n"
+"Auftraggeber Telefon: [[CLIENT_PHONE]]\n"
+"Auftraggeber E-Mail: [[CLIENT_EMAIL]]\n"
+"Ihre Hinweise: [[CLIENT_NOTES]]"
+
+#: ../installer.php:37
+msgid "Your appointment at [[COMPANY_NAME]]"
+msgstr "Ihr nächster Termin [[COMPANY_NAME]]"
+
+#: ../installer.php:38
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"\n"
+"We would like to remind you that you have booked [[SERVICE_NAME]] tomorrow "
+"on [[APPOINTMENT_TIME]]. We are waiting you at [[COMPANY_ADDRESS]].\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Sehr geehrter [[CLIENT_NAME]].\n"
+"\n"
+"Wir möchten Sie daran erinnern, dass Sie einen  [[SERVICE_NAME]] für morgen "
+"um [[APPOINTMENT_TIME]] gebucht haben. Unser Team wird Sie "
+"[[COMPANY_ADDRESS]] erwarten.\n"
+"Vielen Dank,  dass Sie sich für unser Portal entschieden haben.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:44
+msgid "Your visit to [[COMPANY_NAME]]"
+msgstr "Ihr Besuch auf [[COMPANY_NAME]]"
+
+#: ../installer.php:45
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"\n"
+"Thank you for choosing [[COMPANY_NAME]]. We hope you were satisfied with "
+"your [[SERVICE_NAME]].\n"
+"\n"
+"Thank you and we look forward to seeing you again soon.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Sehr geehrter [[CLIENT_NAME]].\n"
+"\n"
+"Vielen Dank, dass Sie sich für [[COMPANY_NAME]] entschieden haben. Wir "
+"hoffen, dass Sie mit Ihrem [[SERVICE_NAME]] zufrieden waren.\n"
+"\n"
+"Vielen Dank und wir freuen uns auf ein baldiges Wiedersehen.\n"
+"\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE] ]"
+
+#: ../installer.php:51
+msgid "Your agenda for [[TOMORROW_DATE]]"
+msgstr "Ihre Agenda für [[TOMORROW_DATE]]"
+
+#: ../installer.php:52
+msgid ""
+"Hello.\n"
+"\n"
+"Your agenda for tomorrow is:\n"
+"\n"
+"[[NEXT_DAY_AGENDA]]"
+msgstr ""
+"Hallo.\n"
+"\n"
+"Ihre Tagesordnung für morgen ist:\n"
+"\n"
+"[[NEXT_DAY_AGENDA]]"
+
+#: ../installer.php:58 ../updates.php:446
+msgid "Booking cancellation"
+msgstr "Buchungsstornierung"
+
+#: ../installer.php:59 ../updates.php:447
+msgid ""
+"Hello.\n"
+"\n"
+"The following booking has been cancelled.\n"
+"\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+msgstr ""
+"Hallo.\n"
+"\n"
+"Die folgende Buchung storniert wurde.\n"
+"\n"
+"Service: [[SERVICE_NAME]]\n"
+"Datum: [[APPOINTMENT_DATE]]\n"
+"Zeit: [[APPOINTMENT_TIME]]\n"
+"Client-Name: [[CLIENT_NAME]]\n"
+"Client-Telefon: [[CLIENT_PHONE]]\n"
+"Kunden E-Mail: [[CLIENT_EMAIL]]"
+
+#: ../installer.php:66 ../updates.php:454
+msgid ""
+"Hello.\n"
+"\n"
+"An account was created for you at [[SITE_ADDRESS]]\n"
+"\n"
+"Your user details:\n"
+"user: [[NEW_USERNAME]]\n"
+"password: [[NEW_PASSWORD]]\n"
+"\n"
+"Thanks."
+msgstr ""
+"Hallo.\n"
+"\n"
+"Ein Konto wurde für Sie auf [[SITE_ADDRESS]]\n"
+"\n"
+"Ihre Benutzerdaten:\n"
+"Benutzer: [[NEW_USERNAME]]\n"
+"Passwort: [[NEW_PASSWORD]]\n"
+"\n"
+"Danke Shon."
+
+#: ../installer.php:75 ../updates.php:266
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"This is confirmation that you have booked [[SERVICE_NAME]].\n"
+"We are waiting you at [[COMPANY_ADDRESS]] on [[APPOINTMENT_DATE]] at "
+"[[APPOINTMENT_TIME]].\n"
+"Thank you for choosing our company.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Sehr geehrter [[CLIENT_NAME]].\n"
+"Dieses ist eine Bestätigung, dass Sie gebucht haben [[SERVICE_NAME]].\n"
+"Wir begrüßen Sie auf der Veranstaltung  [[COMPANY_ADDRESS]] am "
+"[[APPOINTMENT_DATE]] um [[APPOINTMENT_TIME]].\n"
+"Vielen dass Sie sich für unsere Teams entschieden haben.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:82 ../updates.php:271
+msgid ""
+"Hello.\n"
+"You have new booking.\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+msgstr ""
+"Hallo\n"
+"Sie haben neue Buchung\n"
+"des Service.: [[SERVICE_NAME]]\n"
+"Datum: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Auftragsgeber Name: [[CLIENT_NAME]]\n"
+"Auftraggeber Telefon: [[CLIENT_PHONE]]\n"
+"Auftraggeber E-Mail: [[CLIENT_EMAIL]]\n"
+"Ihre Hinweise: [[CLIENT_NOTES]]"
+
+#: ../installer.php:89 ../updates.php:276
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"We would like to remind you that you have booked [[SERVICE_NAME]] tomorrow "
+"on [[APPOINTMENT_TIME]]. We are waiting you at [[COMPANY_ADDRESS]].\n"
+"Thank you for choosing our company.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Sehr geehrter [[CLIENT_NAME]].\n"
+"Wir möchten Sie daran erinnern, dass Sie einen  [[SERVICE_NAME]] für morgen "
+"um [[APPOINTMENT_TIME]] gebucht haben. Unser Team wird Sie "
+"[[COMPANY_ADDRESS]] erwarten.\n"
+"Vielen Dank,  dass Sie sich für unser Portal entschieden haben.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+
+#: ../installer.php:96 ../updates.php:281
+msgid ""
+"Dear [[CLIENT_NAME]].\n"
+"Thank you for choosing [[COMPANY_NAME]]. We hope you were satisfied with "
+"your [[SERVICE_NAME]].\n"
+"Thank you and we look forward to seeing you again soon.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE]]"
+msgstr ""
+"Sehr geehrter [[CLIENT_NAME]].\n"
+"Vielen Dank, dass Sie sich für [[COMPANY_NAME]] entschieden haben. Wir "
+"hoffen, dass Sie mit Ihrem [[SERVICE_NAME]] zufrieden waren.\n"
+"Vielen Dank und wir freuen uns auf ein baldiges Wiedersehen.\n"
+"[[COMPANY_NAME]]\n"
+"[[COMPANY_PHONE]]\n"
+"[[COMPANY_WEBSITE] ]"
+
+#: ../installer.php:103 ../updates.php:286
+msgid ""
+"Hello.\n"
+"Your agenda for tomorrow is:\n"
+"[[NEXT_DAY_AGENDA]]"
+msgstr ""
+"Hallo.\n"
+"Ihre Tagesordnung für morgen ist:\n"
+"[[NEXT_DAY_AGENDA]]"
+
+#: ../installer.php:110 ../updates.php:291
+msgid ""
+"Hello.\n"
+"The following booking has been cancelled.\n"
+"Service: [[SERVICE_NAME]]\n"
+"Date: [[APPOINTMENT_DATE]]\n"
+"Time: [[APPOINTMENT_TIME]]\n"
+"Client name: [[CLIENT_NAME]]\n"
+"Client phone: [[CLIENT_PHONE]]\n"
+"Client email: [[CLIENT_EMAIL]]"
+msgstr ""
+"Hallo.\n"
+"Die folgende Buchung storniert wurde.\n"
+"Service: [[SERVICE_NAME]]\n"
+"Datum: [[APPOINTMENT_DATE]]\n"
+"Zeit: [[APPOINTMENT_TIME]]\n"
+"Client-Name: [[CLIENT_NAME]]\n"
+"Client-Telefon: [[CLIENT_PHONE]]\n"
+"Kunden E-Mail: [[CLIENT_EMAIL]]"
+
+#: ../installer.php:117 ../updates.php:296
+msgid ""
+"Hello.\n"
+"An account was created for you at [[SITE_ADDRESS]]\n"
+"Your user details:\n"
+"user: [[NEW_USERNAME]]\n"
+"password: [[NEW_PASSWORD]]\n"
+"\n"
+"Thanks."
+msgstr ""
+"Hallo.\n"
+"Ein Konto wurde für Sie auf [[SITE_ADDRESS]]\n"
+"Ihre Benutzerdaten:\n"
+"Benutzer: [[NEW_USERNAME]]\n"
+"Passwort: [[NEW_PASSWORD]]\n"
+"\n"
+"Danke Shon."
+
+#: ../installer.php:174
+msgid "Please select service: "
+msgstr "Bitte wählen Sie einen Service: "
+
+#: ../installer.php:175
+msgid ""
+"Below you can find a list of available time slots for [[SERVICE_NAME]] by "
+"[[STAFF_NAME]].\n"
+"Click on a time slot to proceed with booking."
+msgstr ""
+"Hier finden Sie eine Liste der verfügbaren Zeitfenster für [[SERVICE_NAME]] "
+"von [[STAFF_NAME]].\n"
+" Klicken Sie auf einem Zeitraum für eine weitere Buchung."
+
+#: ../installer.php:176
+msgid ""
+"You selected a booking for [[SERVICE_NAME]] by [[STAFF_NAME]] at "
+"[[SERVICE_TIME]] on [[SERVICE_DATE]]. The price for the service is "
+"[[SERVICE_PRICE]].\n"
+"Please provide your details in the form below to proceed with booking."
+msgstr ""
+"Sie wählten eine Reservierung von [[SERVICE_NAME]] mit [[STAFF_NAME]] in der "
+"Zeit [[SERVICE_TIME]] an [[SERVICE_DATE]]. Das Entgelt für den Service "
+"beträgt [[SERVICE_PRICE]].\n"
+" Bitte tragen Sie Ihre Angaben in das Formular unten ein, um mit der Buchung "
+"fortzufahren."
+
+#: ../installer.php:178
+msgid "Please tell us how you would like to pay: "
+msgstr "Bitte sagen Sie uns, wie Sie bezahlen möchten: "
+
+#: ../installer.php:179
+msgid ""
+"Thank you! Your booking is complete. An email with details of your booking "
+"has been sent to you."
+msgstr ""
+"Danke! Ihre Buchung ist abgeschlossen. Eine E-Mail mit den Details Ihrer "
+"Buchung wird Ihnen übermittelt."
+
+#: ../installer.php:180 ../updates.php:591
+msgid "The price for the service is [[SERVICE_PRICE]]."
+msgstr "Das Entgelt für für den Service beträgt [[SERVICE_PRICE]]."
+
+#: ../installer.php:185 ../updates.php:730
+msgid "Payment"
+msgstr "Bezahlung"
+
+#: ../installer.php:186 ../updates.php:731
+msgid "Done"
+msgstr "Beendet"
+
+#: ../installer.php:189 ../updates.php:734
+msgid "Employee"
+msgstr "Team-Mitglied"
+
+#: ../installer.php:190 ../updates.php:735
+msgid "I'm available on or after"
+msgstr "Ich bin verfügbar am oder nach"
+
+#: ../installer.php:191 ../updates.php:736
+msgid "Start from"
+msgstr "Beginn um"
+
+#: ../installer.php:192 ../updates.php:737
+msgid "Finish by"
+msgstr "Beenden durch"
+
+#: ../installer.php:197 ../updates.php:525
+msgid "I will pay locally"
+msgstr "Barzahlung vor Ort"
+
+#: ../installer.php:231 ../updates.php:412
+msgid "Appointment"
+msgstr "Termin"
+
+#: ../lib/AB_Config.php:26 ../lib/entities/AB_Service.php:55
+msgid "Uncategorized"
+msgstr "Nicht kategorisiert"
+
+#: ../lib/AB_SMS.php:289
+msgid "Queued"
+msgstr "Warteschlange"
+
+#: ../lib/AB_SMS.php:294 ../lib/AB_SMS.php:326
+msgid "Error"
+msgstr "Fehler"
+
+#: ../lib/AB_SMS.php:298
+msgid "Out of credit"
+msgstr "Von Kredit"
+
+#: ../lib/AB_SMS.php:302
+msgid "Country out of service"
+msgstr "Land außer Betrieb"
+
+#: ../lib/AB_SMS.php:306
+msgid "Sending"
+msgstr "Versendung"
+
+#: ../lib/AB_SMS.php:310
+msgid "Sent"
+msgstr "Gesendet "
+
+#: ../lib/AB_SMS.php:314
+msgid "Delivered"
+msgstr "Geliefert"
+
+#: ../lib/AB_SMS.php:318
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
+#: ../lib/AB_SMS.php:322
+msgid "Undelivered"
+msgstr "Nicht gesendet"
+
+#: ../lib/AB_SMS.php:438
+msgid "Error connecting to server."
+msgstr "Fehler beim Verbinden mit Server."
+
+#: ../lib/AB_SMS.php:479
+msgid "Recovery code expired."
+msgstr "Wiederherstellungscode abgelaufen."
+
+#: ../lib/AB_SMS.php:480
+msgid "Empty password."
+msgstr "Leeres Passwort."
+
+#: ../lib/AB_SMS.php:481
+msgid "Incorrect password."
+msgstr "Falsches Passwort."
+
+#: ../lib/AB_SMS.php:482
+msgid "Incorrect recovery code."
+msgstr "Falsche Wiederherstellungscode."
+
+#: ../lib/AB_SMS.php:483
+msgid "Incorrect email or password."
+msgstr "Falsche E-Mail oder Passwort."
+
+#: ../lib/AB_SMS.php:484
+msgid "Invalid email."
+msgstr "Ungültige E-Mail."
+
+#: ../lib/AB_SMS.php:485
+msgid "Error sending email."
+msgstr "Fehler beim E-Mail."
+
+#: ../lib/AB_SMS.php:486
+msgid "User not found."
+msgstr "Spieler nicht gefunden."
+
+#: ../lib/AB_SMS.php:487
+msgid "Email already in use."
+msgstr "Bereits verwendet Email."
+
+#: ../lib/AB_Validator.php:15
+msgid "Invalid email"
+msgstr "Ungültige E-Mail"
+
+#: ../lib/AB_Validator.php:22
+msgid "This email is already in use"
+msgstr "Diese E-Mail ist bereits im Einsatz"
+
+#: ../lib/AB_Validator.php:26
+msgid "Please tell us your email"
+msgstr "Bitte geben Sie unser Ihre E-Mail-Adresse an"
+
+#: ../lib/AB_Validator.php:39
+msgid "Invalid phone number"
+msgstr "Ungültige Telefon Nr."
+
+#: ../lib/AB_Validator.php:42
+msgid "Please tell us your phone"
+msgstr "Bitte geben Sie uns Ihre Telefon Nr. bekannt"
+
+#: ../lib/AB_Validator.php:59
+#, php-format
+msgid "\"%s\" is too long (%d characters max)."
+msgstr "\"%s\" ist zu lang (%d Zeichen max)."
+
+#: ../lib/AB_Validator.php:65
+#, php-format
+msgid "\"%s\" is too short (%d characters min)."
+msgstr "\"%s\" ist zu kurz (%d Zeichen min)."
+
+#: ../lib/AB_Validator.php:71
+msgid "Please tell us your name"
+msgstr "Bitte nennen Sie uns Ihren Namen"
+
+#: ../lib/AB_Validator.php:86
+msgid "Invalid number"
+msgstr "Ungültige Nummer"
+
+#: ../lib/AB_Validator.php:114
+msgid "Invalid date or time"
+msgstr "Ungültiges Datum oder Zeit"
+
+#: ../lib/utils/AB_DateTimeUtils.php:246
+#, php-format
+msgid "%d h"
+msgstr "%d h"
+
+#: ../lib/utils/AB_DateTimeUtils.php:252
+#, php-format
+msgid "%d min"
+msgstr "%d min"
+
+#: ../lib/utils/AB_Utils.php:260
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: ../updates.php:741
+msgid "Notes (optional)"
+msgstr "Anmerkungen (optional)"

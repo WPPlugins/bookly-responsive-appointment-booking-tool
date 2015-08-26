@@ -1,11 +1,7 @@
-body .ab-booking-form div, body .ab-booking-form input,
+body .ab-booking-form input,
 body .ab-booking-form select, body .ab-booking-form ul,
-body .ab-booking-form li, body .ab-booking-form table,
-body .ab-booking-form tbody, body .ab-booking-form tr,
-body .ab-booking-form td, body .ab-booking-form thead,
-body .ab-booking-form th, body .ab-booking-form tfoot,
-body .ab-booking-form p, .ab-booking-form form,
-body .ab-booking-form label {
+body .ab-booking-form li, body .ab-booking-form p,
+.ab-booking-form form, body .ab-booking-form label {
     margin: 0;
     padding: 0;
     border: 0;

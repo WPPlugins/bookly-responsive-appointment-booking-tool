@@ -1,11 +1,9 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Database entity.
  */
 abstract class AB_Entity {
-
-    // Protected properties.
 
     /**
      * Reference to global database object.
@@ -14,94 +12,71 @@ abstract class AB_Entity {
     protected $wpdb;
 
     /**
-     * Name of table in database.
-     * Must be defined in child class.
+     * Name of table in database without WordPress prefix.
+     * Must be defined in the child class.
+     * @static
      * @var string
      */
-    protected $table_name = null;
+    protected static $table = null;
 
     /**
      * Schema of entity fields in database.
-     * Must be defined in child class as
+     * Must be defined in the child class as
      * array(
      *     '[FIELD_NAME]' => array(
      *         'format'  => '[FORMAT]',
      *         'default' => '[DEFAULT_VALUE]',
      *     )
      * )
+     * @static
      * @var array
      */
-    protected $schema = null;
-
-    /**
-     * Flag that shows whether entity data was loaded or not.
-     * @var boolean
-     */
-    protected $loaded = false;
+    protected static $schema = null;
 
     // Private properties.
+
+    /**
+     * Name of table in database with WordPress prefix.
+     * @var string
+     */
+    private $table_name = null;
 
     /**
      * Values of fields.
      * @var array
      */
-    private $values = array();
+    private $fields = array();
 
     /**
-     * Formats of fields.
-     * @var array
+     * Values loaded from the database.
+     * @var boolean
      */
-    private $formats = array();
-
-    /**
-     * Array of flags that indicate whether static properties
-     * were checked for particular child class
-     * to contain all required options.
-     * @staticvar array
-     */
-    private static $checked_child_classes = array();
+    private $loaded_values = null;
 
 
     // Public methods.
 
     /**
-     * Constructor.
+     * Constructor
+     *
+     * @param array $fields
      */
-    public function __construct() {
-      /** @var WPDB $wpdb */
-      global $wpdb;
+    public function __construct( $fields = array() )
+    {
+        /** @var WPDB $wpdb */
+        global $wpdb;
 
-      // Reference to global database object.
-      $this->wpdb = $wpdb;
+        // Reference to global database object.
+        $this->wpdb = $wpdb;
 
-      // Get name of child class.
-      $class_name = get_class( $this );
+        $this->table_name = self::getTableName();
 
-      if ( !in_array( $class_name, self::$checked_child_classes ) ) {
-          // Check whether table name is defined in the child class.
-          if ( $this->table_name === null ) {
-              throw new Exception( sprintf( 'Table name must be defined for entity %s', $class_name ) );
-          }
-          // Check whether schema is defined in the child class.
-          if ( $this->schema === null ) {
-              throw new Exception( sprintf( 'Schema must be defined for entity %s', $class_name ) );
-          }
-          // Ensure that schema contains field `id`.
-          if ( !array_key_exists( 'id', $this->schema ) ) {
-              throw new Exception( sprintf( 'Schema must contain field `id` for entity %s', $class_name ) );
-          }
-          // Ensure that schema contains all required options.
-          // Set default options otherwise.
-          array_walk( $this->schema, array( $this, '_ensureSchemaDefaultOptions' ) );
-          // Indicate that static properties are now checked for this class.
-          self::$checked_child_classes[] = $class_name;
-      }
+        // Initialize field values.
+        foreach ( static::$schema as $field_name => $options ) {
+            $this->fields[ $field_name ]  = array_key_exists( 'default', $options ) ? $options[ 'default' ] : null;
+        }
 
-      // Initialize $values and $formats.
-      foreach ( $this->schema as $field_name => $options ) {
-          @$this->values[ $field_name ]  = $options[ 'default' ];
-          @$this->formats[ $field_name ] = $options[ 'format' ];
-      }
+        $this->setFields( $fields );
     }
 
     /**
@@ -109,14 +84,10 @@ abstract class AB_Entity {
      *
      * @param string $field
      * @param mixed $value
-     * @throws InvalidArgumentException
      */
-    public function set( $field, $value ) {
-        if ( !array_key_exists( $field, $this->values ) ) {
-            throw new InvalidArgumentException( sprintf( 'Trying to set unknown field "%s" for entity "%s"', $field, get_class( $this ) ) );
-        }
-
-        $this->values[ $field ] = $value;
+    public function set( $field, $value )
+    {
+        $this->fields[ $field ] = $value;
     }
 
     /**
@@ -124,14 +95,10 @@ abstract class AB_Entity {
      *
      * @param string $field
      * @return mixed
-     * @throws InvalidArgumentException
      */
-    public function get( $field ) {
-        if ( !array_key_exists( $field, $this->values ) ) {
-            throw new InvalidArgumentException( sprintf( 'Trying to get unknown field "%s" for entity "%s"', $field, get_class( $this ) ) );
-        }
-
-        return $this->values[ $field ];
+    public function get( $field )
+    {
+        return $this->fields[ $field ];
     }
 
     /**
@@ -140,7 +107,8 @@ abstract class AB_Entity {
      * @param string $field
      * @param mixed $value
      */
-    public function __set( $field, $value ) {
+    public function __set( $field, $value )
+    {
         $this->set( $field, $value );
     }
 
@@ -150,27 +118,70 @@ abstract class AB_Entity {
      * @param string $field
      * @return mixed
      */
-    public function __get( $field ) {
+    public function __get( $field )
+    {
         return $this->get( $field );
     }
 
     /**
-     * Load entity from database.
+     * Load entity from database by ID.
      *
      * @param integer $id
      * @return boolean
      */
-    public function load( $id ) {
-        $row = $this->wpdb->get_row( sprintf( 'SELECT * FROM %s WHERE id = %d', $this->table_name, $id ) );
+    public function load( $id )
+    {
+        return $this->loadBy( array( 'id' => $id ) );
+    }
 
-        if ( $row ) {
-            $this->setData( $row );
-            $this->loaded = true;
-        } else {
-            $this->loaded = false;
+    /**
+     * Load entity from database by field values.
+     *
+     * @param array $fields
+     * @return bool
+     */
+    public function loadBy( array $fields )
+    {
+        // Prepare WHERE clause.
+        $where = array();
+        $values = array();
+        foreach ( $fields as $field => $value ) {
+            if ( $value === null ) {
+                $where[] = sprintf( '`%s` IS NULL', $field );
+            } else {
+                $where[] = sprintf( '`%s` = %s', $field, static::$schema[ $field ]['format'] );
+                $values[] = $value;
+            }
         }
 
-        return $this->loaded;
+        $query = sprintf(
+            'SELECT * FROM `%s` WHERE %s LIMIT 1',
+            $this->table_name,
+            implode( ' AND ', $where )
+        );
+
+        $row = $this->wpdb->get_row(
+            empty ( $values ) ? $query : $this->wpdb->prepare( $query, $values )
+        );
+
+        if ( $row ) {
+            $this->setFields( $row );
+            $this->loaded_values = $this->fields;
+        } else {
+            $this->loaded_values = null;
+        }
+
+        return $this->isLoaded();
+    }
+
+    /**
+     * Check whether the entity was loaded from the database or not.
+     *
+     * @return bool
+     */
+    public function isLoaded()
+    {
+        return $this->loaded_values !== null;
     }
 
     /**
@@ -178,13 +189,20 @@ abstract class AB_Entity {
      * The method can be used to update only some fields.
      *
      * @param array|object $data
+     * @param bool $overwrite_loaded_values
      */
-    public function setData( $data ) {
+    public function setFields( $data, $overwrite_loaded_values = false )
+    {
         if ( is_array( $data ) || $data instanceof stdClass ) {
             foreach ( $data as $field => $value ) {
-                if ( array_key_exists( $field, $this->values ) ) {
-                    $this->values[ $field ] = $value;
+                if ( array_key_exists( $field, $this->fields ) ) {
+                    $this->fields[ $field ] = $value;
                 }
+            }
+
+            // This parameter is used by AB_Query.
+            if ( $overwrite_loaded_values ) {
+                $this->loaded_values = $this->fields;
             }
         }
     }
@@ -194,8 +212,19 @@ abstract class AB_Entity {
      *
      * @return array
      */
-    public function getData() {
-        return $this->values;
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    /**
+     * Get modified fields with initial values.
+     *
+     * @return array
+     */
+    public function getModified()
+    {
+        return array_diff_assoc( $this->loaded_values ?: array(), $this->fields );
     }
 
     /**
@@ -203,30 +232,30 @@ abstract class AB_Entity {
      *
      * @return int|false
      */
-    public function save() {
+    public function save()
+    {
         // Prepare query data.
         $set    = array();
         $values = array();
-        foreach ( $this->values as $field => $value )
-        {
+        foreach ( $this->fields as $field => $value ) {
             if ( $field == 'id' ) {
                 continue;
             }
             if ( $value === null ) {
                 $set[] = sprintf( '`%s` = NULL', $field );
             } else {
-                $set[] = sprintf( '`%s` = %s', $field, $this->formats[ $field ] );
+                $set[] = sprintf( '`%s` = %s', $field, static::$schema[ $field ]['format'] );
                 $values[] = $value;
             }
         }
         // Run query.
-        if ( $this->values[ 'id' ] ) {
+        if ( $this->fields[ 'id' ] ) {
             $res = $this->wpdb->query( $this->wpdb->prepare(
                 sprintf(
                     'UPDATE `%s` SET %s WHERE `id` = %d',
                     $this->table_name,
                     implode( ', ', $set ),
-                    $this->values[ 'id' ]
+                    $this->fields[ 'id' ]
                 ),
                 $values
             ) );
@@ -240,8 +269,13 @@ abstract class AB_Entity {
                 $values
             ) );
             if ( $res ) {
-                $this->values[ 'id' ] = $this->wpdb->insert_id;
+                $this->fields[ 'id' ] = $this->wpdb->insert_id;
             }
+        }
+
+        if ( $res ) {
+            // Update loaded values.
+            $this->loaded_values = $this->fields;
         }
 
         return $res;
@@ -252,29 +286,49 @@ abstract class AB_Entity {
      *
      * @return int|false
      */
-    public function delete() {
-        if ( $this->values[ 'id' ] ) {
-            return $this->wpdb->delete( $this->table_name, array( 'id' => $this->values[ 'id' ] ), array( '%d' ) );
+    public function delete()
+    {
+        if ( $this->fields[ 'id' ] ) {
+            return $this->wpdb->delete( $this->table_name, array( 'id' => $this->fields[ 'id' ] ), array( '%d' ) );
         }
 
         return false;
     }
 
+    /**
+     * Get table name.
+     *
+     * @static
+     * @return string
+     */
+    public static function getTableName()
+    {
+        global $wpdb;
 
-    // Private methods.
+        return $wpdb->prefix . static::$table;
+    }
 
     /**
-     * Private function that makes sure that schema
-     * contains all required options.
+     * Get schema.
      *
-     * @param array &$options
+     * @static
+     * @return array
      */
-    private function _ensureSchemaDefaultOptions( &$options ) {
-        if ( !array_key_exists( 'format', $options ) ) {
-            $options[ 'format' ] = '%s';
-        }
-        if ( !array_key_exists( 'default', $options ) ) {
-            $options[ 'default' ] = null;
-        }
+    public static function getSchema()
+    {
+        return static::$schema;
     }
+
+    /**
+     * Create query for this entity.
+     *
+     * @param $alias
+     *
+     * @return AB_Query
+     */
+    public static function query( $alias = 'r' )
+    {
+        return new AB_Query( get_called_class(), $alias );
+    }
+
 }

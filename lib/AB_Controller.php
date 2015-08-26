@@ -1,10 +1,10 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Web Controller abstract class.
  */
-abstract class AB_Controller
-{
+abstract class AB_Controller {
+
     /**
      * Reflection object for reverse-engineering of child controller classes.
      * @var ReflectionClass
@@ -17,7 +17,6 @@ abstract class AB_Controller
      */
     private $vars = array();
 
-
     /******************************************************************************************************************
      * Public methods                                                                                                 *
      ******************************************************************************************************************/
@@ -27,7 +26,7 @@ abstract class AB_Controller
      */
     public function __construct()
     {
-        $this->reflection = new ReflectionClass($this);
+        $this->reflection = new ReflectionClass( $this );
 
         $this->registerWpActions();
     }
@@ -38,8 +37,9 @@ abstract class AB_Controller
      * @param string $name
      * @param string $value
      */
-    public function __set($name, $value) {
-        $this->vars[$name] = $value;
+    public function __set( $name, $value )
+    {
+        $this->vars[ $name ] = $value;
     }
 
     /**
@@ -48,7 +48,8 @@ abstract class AB_Controller
      * @param string $name
      * @return boolean
      */
-    public function __isset( $name ) {
+    public function __isset( $name )
+    {
         return isset ( $this->vars[ $name ] );
     }
 
@@ -58,9 +59,10 @@ abstract class AB_Controller
      * @param string $name
      * @return mixed
      */
-    public function __get($name) {
-        if (array_key_exists($name, $this->vars)) {
-            return $this->vars[$name];
+    public function __get( $name )
+    {
+        if ( array_key_exists( $name, $this->vars ) ) {
+            return $this->vars[ $name ];
         }
 
         $trace = debug_backtrace();
@@ -83,12 +85,14 @@ abstract class AB_Controller
      * @param string $action
      * @param bool   $check_access
      */
-    public function forward( $action, $check_access = true ) {
+    public function forward( $action, $check_access = true )
+    {
         if ( !$check_access || $this->hasAccess( $action ) ) {
+            date_default_timezone_set( 'UTC' );
             call_user_func( array( $this, $action ) );
         } else {
             do_action( 'admin_page_access_denied' );
-            wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+            wp_die( __( 'Bookly: You do not have sufficient permissions to access this page.', 'bookly' ) );
         }
     }
 
@@ -97,12 +101,35 @@ abstract class AB_Controller
      ******************************************************************************************************************/
 
     /**
+     * Enqueue scripts with wp_enqueue_script.
+     *
+     * @see _enqueue
+     * @param array $sources
+     */
+    protected function enqueueScripts( array $sources )
+    {
+        $this->_enqueue( 'scripts', $sources );
+    }
+
+    /**
+     * Enqueue styles with wp_enqueue_style.
+     *
+     * @see _enqueue
+     * @param array $sources
+     */
+    protected function enqueueStyles( array $sources )
+    {
+        $this->_enqueue( 'styles', $sources );
+    }
+
+    /**
      * Get path to directory of the current module.
      *
      * @return string
      */
-    protected function getModuleDirectory() {
-        return dirname($this->reflection->getFileName());
+    protected function getModuleDirectory()
+    {
+        return dirname( $this->reflection->getFileName() );
     }
 
     /**
@@ -112,8 +139,9 @@ abstract class AB_Controller
      * @param mixed $default
      * @return mixed
      */
-    protected function getParameter($name, $default = null) {
-        return $this->hasParameter($name) ? stripslashes_deep($_REQUEST[$name]) : $default;
+    protected function getParameter( $name, $default = null )
+    {
+        return $this->hasParameter( $name ) ? stripslashes_deep( $_REQUEST[ $name ] ) : $default;
     }
 
     /**
@@ -121,8 +149,9 @@ abstract class AB_Controller
      *
      * @return mixed
      */
-    protected function getParameters() {
-        return stripslashes_deep($_REQUEST);
+    protected function getParameters()
+    {
+        return stripslashes_deep( $_REQUEST );
     }
 
     /**
@@ -130,8 +159,9 @@ abstract class AB_Controller
      *
      * @return mixed
      */
-    protected function getPostParameters() {
-        return stripslashes_deep($_POST);
+    protected function getPostParameters()
+    {
+        return stripslashes_deep( $_POST );
     }
 
     /**
@@ -140,15 +170,16 @@ abstract class AB_Controller
      *
      * @param string $prefix Prefix for auto generated add_action() $tag parameter
      */
-    protected function registerWpActions( $prefix = '' ) {
+    protected function registerWpActions( $prefix = '' )
+    {
         $_this = $this;
 
         foreach ( $this->reflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $method ) {
             if ( preg_match( '/^execute(.*)/', $method->name, $match ) ) {
                 add_action(
-                    $prefix . strtolower( preg_replace( '/([a-z])([A-Z])/', '$1_$2', $match[ 1 ] ) ),
+                    $prefix . strtolower( preg_replace( '/([a-z])([A-Z])/', '$1_$2', $match[1] ) ),
                     function () use ( $_this, $match ) {
-                        $_this->forward( $match[ 0 ], true );
+                        $_this->forward( $match[0], true );
                     }
                 );
             }
@@ -167,21 +198,21 @@ abstract class AB_Controller
      * @param string $action
      * @return bool
      */
-    protected function hasAccess( $action ) {
-        // Check if action has "@Security" annotation.
-        $reader = new AB_AnnotationsReader( $this, $action );
-        $security = $reader->getParameter( 'Security' );
+    protected function hasAccess( $action )
+    {
+        $permissions = $this->getPermissions();
+        $security    = isset( $permissions[ $action ] ) ? $permissions[ $action ] : null;
+
         if ( is_null( $security ) ) {
-            // Check if controller class has "@Security" annotation.
-            $reader = new AB_AnnotationsReader( $this );
-            $security = $reader->getParameter( 'Security' );
+            // Check if controller class has permission
+            $security = isset( $permissions['_this'] ) ? $permissions['_this'] : null;
+
             if ( is_null( $security ) ) {
                 $security = 'admin';
             }
         }
-
         switch ( $security ) {
-            case 'admin'     : return is_super_admin();
+            case 'admin'     : return AB_Utils::isCurrentUserAdmin();
             case 'user'      : return is_user_logged_in();
             case 'anonymous' : return true;
         }
@@ -190,14 +221,22 @@ abstract class AB_Controller
     }
 
     /**
+     * @return array
+     */
+    protected function getPermissions()
+    {
+        return array();
+    }
+
+    /**
      * Check if there is a parameter with given name in the request.
      *
      * @param string $name
      * @return bool
      */
-    protected function hasParameter($name)
+    protected function hasParameter( $name )
     {
-        return array_key_exists($name, $_REQUEST);
+        return array_key_exists( $name, $_REQUEST );
     }
 
     /**
@@ -209,17 +248,18 @@ abstract class AB_Controller
      * @return string
      * @throws Exception
      */
-    protected function render($template, $variables = array(), $echo = true) {
-        extract($this->vars);
-        extract($variables);
+    protected function render( $template, $variables = array(), $echo = true )
+    {
+        extract( $this->vars );
+        extract( $variables );
 
         // Start output buffering.
         ob_start();
-        ob_implicit_flush(0);
+        ob_implicit_flush( 0 );
 
         try {
             include $this->getModuleDirectory() . '/templates/' . $template . '.php';
-        } catch (Exception $e) {
+        } catch ( Exception $e ) {
             ob_end_clean();
             throw $e;
         }
@@ -234,9 +274,63 @@ abstract class AB_Controller
     /**
      * @return wpdb
      */
-    protected function getWpdb() {
+    protected function getWpdb()
+    {
         global $wpdb;
 
         return $wpdb;
     }
+
+    /******************************************************************************************************************
+     * Private methods                                                                                              *
+     ******************************************************************************************************************/
+
+    /**
+     * Enqueue scripts or styles with wp_enqueue_script/wp_enqueue_style.
+     *
+     * @param string $type
+     * @param array $sources
+     * array(
+     *  resource_directory => array(
+     *      file[ => deps],
+     *      ...
+     *  ),
+     *  ...
+     * )
+     */
+    private function _enqueue( $type, array $sources )
+    {
+        $func = ( $type == 'scripts' ) ? 'wp_enqueue_script' : 'wp_enqueue_style';
+
+        foreach ( $sources as $source => $files ) {
+            switch ( $source ) {
+                case 'wp':
+                    $path = false;
+                    break;
+                case 'backend':
+                    $path = AB_PATH . '/backend/resources/path';
+                    break;
+                case 'frontend':
+                    $path = AB_PATH . '/frontend/resources/path';
+                    break;
+                case 'module':
+                    $path = $this->getModuleDirectory() . '/resources/path';
+                    break;
+                default:
+                    $path = AB_PATH . '/' . $source . '/path';
+            }
+
+            foreach ( $files as $key => $value ) {
+                $file = is_array( $value ) ? $key : $value;
+                $deps = is_array( $value ) ? $value : array();
+
+                if ( $path === false ) {
+                    call_user_func( $func, $file, false, $deps, AB_Instance::version );
+                } else {
+                    call_user_func( $func, 'ab-' . basename( $file ), plugins_url( $file, $path ), $deps, AB_Instance::version );
+                }
+            }
+        }
+    }
+
 }

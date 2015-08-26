@@ -1,27 +1,22 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
 * Class AB_StaffService
 */
-class AB_StaffScheduleItem extends AB_Entity {
+class AB_StaffScheduleItem extends AB_Entity
+{
+    protected static $table = 'ab_staff_schedule_items';
 
-    const WORKING_START_TIME = '00:00:00';
-    const WORKING_END_TIME   = '23:45:00';
+    protected static $schema = array(
+        'id'               => array( 'format' => '%d' ),
+        'staff_id'         => array( 'format' => '%d' ),
+        'day_index'        => array( 'format' => '%d' ),
+        'start_time'       => array( 'format' => '%s' ),
+        'end_time'         => array( 'format' => '%s' ),
+    );
 
-    /**
-     * Constructor.
-     */
-    public function __construct() {
-        $this->table_name = 'ab_staff_schedule_item';
-        $this->schema = array(
-            'id'               => array(),
-            'staff_id'         => array( 'format' => '%d' ),
-            'day_index'        => array( 'format' => '%d' ),
-            'start_time'       => array( 'format' => '%s' ),
-            'end_time'         => array( 'format' => '%s' ),
-        );
-        parent::__construct();
-    }
+    const WORKING_START_TIME = 0;     // 00:00:00
+    const WORKING_END_TIME   = 86400; // 24:00:00
 
     /**
      * Checks if
@@ -32,32 +27,16 @@ class AB_StaffScheduleItem extends AB_Entity {
      *
      * @return bool
      */
-    public function isBreakIntervalAvailable( $start_time, $end_time, $break_id = 0 ) {
-        if ( ! $this->loaded ) {
-            return false;
-        }
-
-        return !is_object($this->wpdb->get_row($this->wpdb->prepare(
-            'SELECT * FROM `ab_schedule_item_break`
-             WHERE staff_schedule_item_id = %d
-             AND (
-                 start_time > %s AND start_time < %s
-                 OR (end_time > %s AND end_time < %s)
-                 OR (start_time < %s AND end_time > %s)
-                 OR (start_time = %s AND end_time = %s)
-             )
-             AND id <> %d',
-            $this->get( 'id' ),
-            $start_time,
-            $end_time,
-            $start_time,
-            $end_time,
-            $start_time,
-            $end_time,
-            $start_time,
-            $end_time,
-            $break_id
-        )));
+    public function isBreakIntervalAvailable( $start_time, $end_time, $break_id = 0 )
+    {
+        return AB_ScheduleItemBreak::query()
+            ->where( 'staff_schedule_item_id', $this->get( 'id' ) )
+            ->whereNot( 'id', $break_id )
+            ->whereRaw(
+                'start_time > %s AND start_time < %s OR (end_time > %s AND end_time < %s) OR (start_time < %s AND end_time > %s) OR (start_time = %s AND end_time = %s)',
+                array( $start_time, $end_time, $start_time, $end_time, $start_time, $end_time, $start_time, $end_time )
+            )
+            ->count() == 0;
     }
 
     /**
@@ -65,24 +44,20 @@ class AB_StaffScheduleItem extends AB_Entity {
      *
      * @return array|mixed
      */
-    public function getBreaksList() {
-        if ( ! $this->loaded ) {
-            return array();
-        }
-
-        return $this->wpdb->get_results( $this->wpdb->prepare(
-            'SELECT *
-             FROM `ab_schedule_item_break`
-             WHERE staff_schedule_item_id = %d
-             ORDER BY start_time, end_time',
-            $this->get( 'id' )
-        ) );
+    public function getBreaksList()
+    {
+        return AB_ScheduleItemBreak::query()
+            ->where( 'staff_schedule_item_id', $this->get( 'id' ) )
+            ->sortBy( 'start_time, end_time' )
+            ->fetchArray();
     }
 
-    public function save() {
-        foreach ( $this->getBreaksList() as $row ) {
+    public function save()
+    {
+        $a = $this->getBreaksList();
+        foreach ( $a as $row ) {
             $break = new AB_ScheduleItemBreak();
-            $break->setData( $row );
+            $break->setFields( $row );
             if (
                 $this->get( 'start_time' )     >= $break->get( 'start_time' )
                 || $break->get( 'start_time' ) >= $this->get( 'end_time' )
@@ -95,5 +70,4 @@ class AB_StaffScheduleItem extends AB_Entity {
 
         parent::save();
     }
-
 }

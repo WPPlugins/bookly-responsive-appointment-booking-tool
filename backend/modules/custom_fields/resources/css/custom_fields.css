@@ -1,0 +1,86 @@
+ul#ab-custom-fields {
+    list-style-type: none;
+    margin: 0 0 15px 0;
+    padding: 0;
+}
+ul#ab-custom-fields .input-group { margin-left: 15px; }
+ul#ab-custom-fields > li {
+    margin: 0 0 10px;
+    padding: 15px 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+}
+ul#ab-custom-fields > li .ab-field-title {
+    font-size: 16px;
+    font-weight: normal;
+    margin: 2px 0px 13px 0px;
+    line-height: normal;
+}
+ul#ab-custom-fields > li input[type=text] {
+    margin-bottom: 0;
+    width: 300px;
+}
+ul#ab-custom-fields > li input.ab-label {
+    width: 322px;
+}
+ul#ab-custom-fields > li .input-group {
+    margin-bottom: 0;
+}
+ul#ab-custom-fields > li .ab-required {
+    margin: -2px 0 0 0;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+}
+ul#ab-custom-fields > li span.input-group-addon {
+    width: auto;
+}
+ul#ab-custom-fields > li span.input-group-addon label {
+    margin: 0;
+}
+ul#ab-custom-fields > li span.input-group-addon span {
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    font-size: 13px;
+}
+ul#ab-custom-fields > li button {
+    margin-left: 37px;
+}
+ul#ab-custom-fields > li i.ab-handle{
+    display: block;
+    float: left;
+    margin: 0 8px 0 -8px;
+    line-height: 20px;
+    text-align: center;
+    cursor: move;
+}
+ul#ab-custom-fields > li i.ab-inner-handle {
+    float: left;
+    margin: 10px 8px 0 0;
+    cursor: move;
+}
+ul#ab-custom-fields ul.ab-items {
+    margin: 0 0 15px 0;
+}
+ul#ab-custom-fields ul.ab-items > li {
+    margin: 0;
+    padding: 15px 15px 0 15px;
+    background: transparent;
+}
+ul#ab-custom-fields li .ab-delete {
+    cursor: pointer;
+}
+#ab-add-fields { margin-bottom: 15px; }
+
+@media screen and (max-width: 782px) {
+    ul#ab-custom-fields > li .ab-required {
+        height: 16px;
+        width: 16px;
+    }
+    ul#ab-custom-fields > li input[type=text] {
+        width: 127px;
+    }
+    ul#ab-custom-fields > li input.ab-label {
+        width: 150px;
+    }
+}

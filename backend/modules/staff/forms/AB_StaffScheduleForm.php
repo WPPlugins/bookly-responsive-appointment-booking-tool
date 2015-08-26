@@ -1,6 +1,4 @@
-<?php
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Class AB_StaffScheduleForm
@@ -10,23 +8,19 @@ class AB_StaffScheduleForm extends AB_Form {
     /**
      * Constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::$entity_class = 'AB_StaffScheduleItem';
         parent::__construct();
     }
 
-    /**
-     * @var wpdb $wpdb
-     */
-    private $wpdb;
-
-    public function configure() {
-        global $wpdb;
-        $this->wpdb = $wpdb;
+    public function configure()
+    {
         $this->setFields( array( 'days', 'staff_id', 'start_time', 'end_time' ) );
     }
 
-    public function save() {
+    public function save()
+    {
         if ( isset($this->data['days']) ) {
             foreach ( $this->data['days'] as $id => $day_index ) {
                 $staffScheduleItem = new AB_StaffScheduleItem();

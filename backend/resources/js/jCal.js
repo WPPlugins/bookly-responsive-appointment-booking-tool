@@ -29,29 +29,8 @@
       dayOffset:	0,											// 0=week start with sunday, 1=week starts with monday
       scrollSpeed:	150,										// default .animate() speed used
       forceWeek:	false,										// true=force selection at start of week, false=select days out from selected day
-      dow:			[
-          BooklyL10n.day.Sun,
-          BooklyL10n.day.Mon,
-          BooklyL10n.day.Tue,
-          BooklyL10n.day.Wed,
-          BooklyL10n.day.Thu,
-          BooklyL10n.day.Fri,
-          BooklyL10n.day.Sat
-      ],                                                        // days of week
-      ml:			[
-          BooklyL10n.month.January,
-          BooklyL10n.month.February,
-          BooklyL10n.month.March,
-          BooklyL10n.month.April,
-          BooklyL10n.month.May,
-          BooklyL10n.month.June,
-          BooklyL10n.month.July,
-          BooklyL10n.month.August,
-          BooklyL10n.month.September,
-          BooklyL10n.month.October,
-          BooklyL10n.month.November,
-          BooklyL10n.month.December
-      ],
+      dow:          BooklyL10n.days,                            // days of week
+      ml:           BooklyL10n.months,
       ms:			['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       _target:		target										// target DOM element - no need to set extend this variable
     }, opt);
@@ -267,7 +246,6 @@
                           '<td>' + BooklyL10n.we_are_not_working + '</td>' +
                       '</tr>' +
                       '<tr>' +
-                          '<td></td>' +
                           '<td style="color:' + color + '" colspan="2"><input style="margin:-1px 10px 0 0" ' + di + ' type="checkbox" class="ab-holiday-repeat-annual" ' + ch2 + '>' + BooklyL10n.repeat + '</td>' +
                       '</tr>' +
                   '</table>' +

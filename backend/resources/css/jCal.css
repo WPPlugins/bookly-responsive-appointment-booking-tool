@@ -8,14 +8,15 @@
 }
 /* default dimensions and justification for each month not including title */
 .jCalMo {
-  width:224px;		/* each day width + border-left + border-right */
-  float:left;
-  overflow:visible;
-  height:166px;
-  padding-right:2px;
-  padding-left:2px;
-  white-space:nowrap;
+  width: 224px;
+  overflow: visible;
+  height: 166px;
+  padding-right: 2px;
+  padding-left: 2px;
+  white-space: nowrap;
   margin: 5px;
+  display: inline-block;
+  vertical-align: top;
 }
 /* top month display block - i.e. January */
 .jCal .month, .jCal .monthSelect, .jCal .monthName, .jCal .monthYear {
@@ -150,4 +151,17 @@
   overflow:hidden;
   width: 700px;
   height: 930px;
+}
+
+#ab-annual-calendar {
+  max-width: 715px;
+  display: inline-block;
+  padding: 5px;
+  text-align: center;
+}
+
+#ab-annual-calendar-scroll {
+  text-align: center;
+  padding-bottom: 5px;
+  max-width: 715px;
 }

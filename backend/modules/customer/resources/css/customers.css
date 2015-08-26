@@ -1,0 +1,10 @@
+/* intlTelInput.js */
+.iti-flag{background-image:url("../../../../../frontend/resources/images/flags.png");}
+@media only screen and (min-resolution: 2dppx){.iti-flag{background-image:url("../../../../../frontend/resources/images/flags@2x.png")}}
+#ab_customers_list .intl-tel-input,
+#ab_customers_list td.ab-phone .displayed-value { width: 170px; }
+.ab-customers-list .table-responsive { overflow: visible; }
+/* media query */
+@media screen and (max-width: 782px) {
+    .ab-customers-list .table-responsive { overflow-y: hidden; }
+}

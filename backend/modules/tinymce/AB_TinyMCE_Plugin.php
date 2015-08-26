@@ -1,6 +1,4 @@
-<?php
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class AB_TinyMCE_Plugin {
 
@@ -13,54 +11,60 @@ class AB_TinyMCE_Plugin {
         ) {
             wp_enqueue_script( 'backbone' );
             wp_enqueue_script( 'underscore' );
-            add_action( 'admin_footer', array( &$this, 'renderPopup' ) );
+            add_action( 'admin_footer',  array( &$this, 'renderPopup' ) );
             add_filter( 'media_buttons', array( &$this, 'addButton' ), 50 );
 
-            $configuration = new AB_BookingConfiguration();
+            $casest = AB_Config::getCaSeSt();
 
-            $this->vars['categoriesJson'] = $configuration->getCategoriesJson();
-            $this->vars['staffJson'] = $configuration->getStaffJson();
-            $this->vars['servicesJson'] = $configuration->getServicesJson();
+            $this->vars['categoriesJson'] = json_encode( $casest['categories'] );
+            $this->vars['staffJson']      = json_encode( $casest['staff'] );
+            $this->vars['servicesJson']   = json_encode( $casest['services'] );
         }
     }
 
     public function addButton( $buttons ) {
         // don't show on dashboard (QuickPress)
         $current_screen = get_current_screen();
-        if ( 'dashboard' == $current_screen->base )
+        if ( 'dashboard' == $current_screen->base ) {
             return;
+        }
 
         // don't display button for users who don't have access
-        if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') )
+        if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
             return;
+        }
 
         // do a version check for the new 3.5 UI
-        $version	= get_bloginfo('version');
+        $version = get_bloginfo( 'version' );
 
-        if ($version < 3.5) {
+        if ( $version < 3.5 ) {
             // show button for v 3.4 and below
-            echo '<a href="#TB_inline?width=640&amp;inlineId=ab-tinymce-popup&amp;height=650"  id="add-ap-booking" title="' . esc_attr__( 'Add Booking Form', 'ab' ) . '">' . __('Add Booking Form', 'ab' ) . '</a>';
+            echo '<a href="#TB_inline?width=640&inlineId=ab-tinymce-popup&height=650" id="add-bookly-form" title="' . esc_attr__( 'Add Bookly booking form', 'bookly' ) . '">' . __( 'Add Bookly booking form', 'bookly' ) . '</a>';
+            echo '<a href="#TB_inline?width=400&amp;inlineId=ab-tinymce-appointment-popup&amp;height=250" id="add-ap-appointment" title="' . esc_attr__( 'Add Bookly appointments list', 'bookly' ) . '">' . __( 'Add Bookly appointments list', 'bookly' ) . '</a>';
         } else {
             // display button matching new UI
             $img = '<span class="ab-media-icon"></span> ';
-            echo '<a href="#TB_inline?width=640&amp;inlineId=ab-tinymce-popup&amp;height=650" id="add-ap-booking" class="button ab-media-button" title="' . esc_attr__( 'Add Booking Form', 'ab' ) . '">' . $img . __( 'Add Booking Form', 'ab' ) . '</a>';
+            echo '<a href="#TB_inline?width=640&inlineId=ab-tinymce-popup&height=650" id="add-bookly-form" class="thickbox button ab-media-button" title="' . esc_attr__( 'Add Bookly booking form', 'bookly' ) . '">' . $img . __( 'Add Bookly booking form', 'bookly' ) . '</a>';
+            echo '<a href="#TB_inline?width=400&amp;inlineId=ab-tinymce-appointment-popup&amp;height=250" id="add-ap-appointment" class="thickbox button ab-media-button" title="' . esc_attr__( 'Add Bookly appointments list', 'bookly' ) . '">' . $img . __( 'Add Bookly appointments list', 'bookly' ) . '</a>';
         }
     }
 
     public function renderPopup() {
-        extract($this->vars);
+        extract( $this->vars );
 
         // render
         ob_start();
-        ob_implicit_flush(0);
+        ob_implicit_flush( 0 );
 
         try {
-            include  'templates/popup.php';
-        } catch (Exception $e) {
+            include 'templates/popup.php';
+            include 'templates/appointment_list.php';
+        } catch ( Exception $e ) {
             ob_end_clean();
             throw $e;
         }
 
         echo ob_get_clean();
     }
+
 }

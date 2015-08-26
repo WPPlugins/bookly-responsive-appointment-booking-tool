@@ -1,7 +1,12 @@
 jQuery(function ($) {
-    var $form      = $('#business-hours'),
-        $all_tabs  = $('#ab_settings_company, #ab_settings_payments, #ab_settings_hours, #ab_settings_holidays, #ab_settings_purchase_code, #ab_settings_general'),
-        $all_forms = $('#company-form, #payments-form, #hours-form, #holidays-form, #purchase-code-form, #general-form');
+    var $form                = $('#business-hours'),
+        $all_tabs            = $('#ab_settings_company, #ab_settings_payments, #ab_settings_hours, #ab_settings_holidays, #ab_settings_purchase_code, #ab_settings_google_calendar, #ab_settings_general, #ab_settings_woocommerce, #ab_settings_customers'),
+        $all_forms           = $('#company-form, #payments-form, #hours-form, #holidays-form, #purchase-code-form, #general-form, #google-calendar-form, #woocommerce-form, #customers-form'),
+        $final_step_url      = $('input[name=ab_settings_final_step_url]'),
+        $final_step_url_mode = $('#ab_settings_final_step_url_mode');
+
+    Ladda.bind( 'button[type=submit]' );
+
     $('.select_start', $form).on('change', function () {
         var $row = $(this).parent(),
             $end_select = $('.select_end', $row),
@@ -45,8 +50,9 @@ jQuery(function ($) {
         }
     }).trigger('change');
 
-    // Reset
-    $('#ab-hours-reset', $form).on('click', function () {
+    // Reset.
+    $('#ab-hours-reset', $form).on('click', function ( e ) {
+        e.preventDefault();
         $('.select_start', $form).each(function () {
             $(this).val($(this).data('default_value'));
             $(this).trigger('click');
@@ -59,7 +65,7 @@ jQuery(function ($) {
         $('.select_start', $form).trigger('change');
     });
 
-    // Tabs Onclick Handlers
+    // Tabs Onclick Handlers.
     $all_tabs.on('click', function() {
         $('.ab-active').removeClass('ab-active');
         $(this).addClass('ab-active');
@@ -88,6 +94,38 @@ jQuery(function ($) {
         $all_forms.addClass('hidden');
         $('#general-form').removeClass('hidden');
     });
+    $('#ab_settings_woocommerce').on('click', function() {
+        $all_forms.addClass('hidden');
+        $('#woocommerce-form').removeClass('hidden');
+    });
+    $('#ab_settings_google_calendar').on('click', function() {
+        $all_forms.addClass('hidden');
+        $('#google-calendar-form').removeClass('hidden');
+    });
+
+    // Customers Tab
+    var $customers_tab        = $('#ab_settings_customers'),
+        $default_country      = $('#ab_settings_phone_default_country'),
+        $default_country_code = $('#ab_sms_default_country_code');
+
+    $customers_tab.on('click', function() {
+        $all_forms.addClass('hidden');
+        $('#customers-form').removeClass('hidden');
+    }).on('click.fill', function() {
+        $.each($.fn.intlTelInput.getCountryData(), function( index, value ) {
+            $default_country.append('<option value="'+value.iso2 + '" data-code="' + value.dialCode + '">'+ value.name + ' +' + value.dialCode + '</option>' );
+        });
+        $(this).unbind('click.fill');
+        $default_country.val( $default_country.data('country') );
+    });
+
+    $default_country.on('change', function() {
+        $default_country_code.val($default_country.find('option:selected').data('code'));
+    });
+
+    if ($customers_tab.hasClass('ab-active')){
+        $customers_tab.trigger('click.fill');
+    }
 
     // Company Tab
     $('#ab-delete-logo').on('click', function() {
@@ -100,15 +138,8 @@ jQuery(function ($) {
         $('#ab-show-logo').show(300);
     });
 
-    //Payment Tab
-    $('#ab_paypal_type,#ab_authorizenet_type,#ab_stripe,[name=ab_settings_coupons]').change(function() {
-        $('#lite_notice').modal('show');
-        $(this).val('disabled');
-    });
-
-    $("#ab-payments-reset").on("click", function(event){
-        event.preventDefault();
-        $(this).closest('form').get(0).reset();
+    $('#ab_settings_google_client_id,#ab_settings_google_client_secret,#ab_settings_google_two_way_sync,#ab_settings_google_limit_events,#ab_settings_google_event_title,#ab_woocommerce,#ab_settings_coupons,#ab_paypal_type,#ab_authorizenet_type,#ab_stripe,#ab_2checkout').on('click', function(){
+       $('#lite_notice').modal('show');
     });
 
     $('.ab-popover').popover({
@@ -122,8 +153,14 @@ jQuery(function ($) {
         html: true
     });
 
-    $('[name=ab_settings_google_client_id],[name=ab_settings_google_client_secret],.lite-help').on('click', function(){
-        $('#lite_notice').modal('show');
-    });
-});
+    if ($final_step_url.val()) { $final_step_url_mode.val(1); }
+    $final_step_url_mode.change(function(){
 
+        if (this.value == 0){
+            $final_step_url.hide().val('');
+        }else{
+            $final_step_url.show();
+        }
+    });
+
+});

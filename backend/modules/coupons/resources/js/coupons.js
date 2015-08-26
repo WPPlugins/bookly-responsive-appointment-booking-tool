@@ -1,6 +1,5 @@
 jQuery(function($) {
-    // On click on 'Add Coupon' button.
-    $('a.add-coupon').on('click', function(e) {
+    $('.add-coupon, .delete').on('click', function(){
         $('#lite_notice').modal('show');
     });
 });

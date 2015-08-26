@@ -1,100 +1,151 @@
-<?php
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-include 'forms/AB_CustomerForm.php';
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class AB_CustomerController extends AB_Controller {
 
-    public function index() {
-        if ( !empty ( $_POST )){
+    const page_slug = 'ab-customers';
+
+    protected function getPermissions()
+    {
+        return array(
+            'executeSaveCustomer' => 'user',
+            'executeGetNgNewCustomerDialogTemplate' => 'user',
+        );
+    }
+
+    public function index()
+    {
+        if ( $this->hasParameter( 'import-customers' ) ) {
             $this->importCustomers();
         }
 
-        $path = dirname( __DIR__ );
+        $this->enqueueStyles( array(
+            'module' => array(
+                'css/customers.css' => array( 'ab-intlTelInput.css' ),
+            ),
+            'backend' => array(
+                'css/bookly.main-backend.css',
+                'bootstrap/css/bootstrap.min.css',
+            ),
+            'frontend' => array(
+                'css/intlTelInput.css',
+            )
+        ) );
 
-        wp_enqueue_style( 'ab-style', plugins_url( 'resources/css/ab_style.css', $path ) );
-        wp_enqueue_style( 'ab-bootstrap', plugins_url( 'resources/bootstrap/css/bootstrap.min.css', $path ) );
-        wp_enqueue_script( 'ab-bootstrap', plugins_url( 'resources/bootstrap/js/bootstrap.min.js', $path ), array( 'jquery' ) );
-        wp_enqueue_script( 'ab-angularjs', plugins_url( 'resources/js/angular-1.0.6.min.js', $path ) );
-        wp_enqueue_script( 'ab-angularui', plugins_url( 'resources/js/angular-ui-0.4.0.min.js', $path ) );
-        wp_enqueue_script( 'ab-ng-sanitize', plugins_url( 'resources/js/angular-sanitize-1.0.6.min.js', $path ) );
-        wp_enqueue_script( 'ab-ng-app',  plugins_url( 'resources/js/ng-app.js', __FILE__ ), array( 'jquery', 'ab-angularjs', 'ab-angularui', 'ab-ng-sanitize' ) );
-        wp_enqueue_script( 'ab-ng-new_customer_dialog', plugins_url( 'resources/js/ng-new_customer_dialog.js', dirname(__FILE__) . '/../../AB_Backend.php' ), array( 'jquery', 'ab-angularjs' ) );
+        $this->enqueueScripts( array(
+            'backend' => array(
+                'bootstrap/js/bootstrap.min.js' => array( 'jquery' ),
+                'js/angular.min.js',
+                'js/angular-sanitize.min.js',
+                'js/angular-ui-utils-0.2.1.min.js',
+                'js/angular-ui-date-0.0.8.js',
+                'js/ng-new_customer_dialog.js' => array( 'jquery', 'ab-angular.min.js' ),
+            ),
+            'module' => array(
+                'js/ng-app.js' => array(
+                    'jquery',
+                    'ab-angular.min.js',
+                    'ab-angular-ui-utils-0.2.1.min.js',
+                    'ab-angular-ui-date-0.0.8.js',
+                    'ab-intlTelInput.utils.js',
+                ),
+            ),
+            'frontend' => array(
+                'js/intlTelInput.min.js' => array( 'jquery' ),
+                'js/intlTelInput.utils.js' => array( 'jquery' )
+            )
+        ) );
 
-        $this->render('index');
+        wp_localize_script( 'ab-ng-app.js', 'BooklyL10n', array(
+            'are_you_sure' => __( 'Are you sure?', 'bookly' ),
+            'wp_users'     => $this->getWpUsers(),
+            'country'      => get_option( 'ab_settings_phone_default_country' ),
+            'intlTelInput_utils' => plugins_url( 'intlTelInput.utils.js', AB_PATH . '/frontend/resources/js/intlTelInput.utils.js' ),
+            'please_select_at_least_one_row' => __( 'Please select at least one customer.', 'bookly' ),
+        ) );
+
+        $this->render( 'index' );
     }
 
     /**
      * Get list of customers.
      */
-    public function executeGetCustomers() {
+    public function executeGetCustomers()
+    {
         $wpdb = $this->getWpdb();
-
+        $items_per_page = 20;
         $response = array(
-            'status' => 'ok',
-            'data'   => array(
-                'customers' => array(),
-                'total'       => 0,
-                'pages'       => 0,
-                'active_page' => 0,
-            )
+            'customers' => array(),
+            'total'       => 0,
+            'pages'       => 0,
+            'active_page' => 0,
         );
 
         $page   = intval( $this->getParameter( 'page' ) );
-        $sort   = in_array( $this->getParameter( 'sort' ), array( 'name', 'phone', 'email', 'notes', 'last_appointment', 'total_appointments', 'payments' ) )
+        $sort   = in_array( $this->getParameter( 'sort' ), array( 'name', 'phone', 'email', 'notes', 'last_appointment', 'total_appointments', 'payments', 'wp_user' ) )
             ? $this->getParameter( 'sort' ) : 'name';
         $order  = in_array( $this->getParameter( 'order' ), array( 'asc', 'desc' ) ) ? $this->getParameter( 'order' ) : 'asc';
         $filter = $wpdb->_real_escape( $this->getParameter( 'filter' ) );
 
-        $items_per_page = 20;
-        $total = $wpdb->get_var( 'SELECT COUNT(*) FROM `ab_customer`' );
+        $query = AB_Customer::query( 'c' );
+        // WHERE
+        if ( $filter !== '' ) {
+            $query->whereLike( 'c.name', "%{$filter}%")
+                  ->whereLike( 'c.phone', "%{$filter}%", 'OR' )
+                  ->whereLike( 'c.email', "%{$filter}%", 'OR' );
+        }
+        $total = $query->count();
+
         $pages = ceil( $total / $items_per_page );
         if ( $page < 1 || $page > $pages ) {
             $page = 1;
         }
 
-        if ( $total ) {
-            $query = "SELECT `c`.*, MAX(`a`.`start_date`) AS `last_appointment`, COUNT(`a`.`id`) AS `total_appointments`,  COALESCE(SUM(`p`.`total`),0) AS `payments`
-                        FROM `ab_customer` `c`
-                        LEFT JOIN `ab_customer_appointment` `ca` ON `ca`.`customer_id` = `c`.`id`
-                        LEFT JOIN `ab_appointment` `a` ON `a`.`id` = `ca`.`appointment_id`
-                        LEFT JOIN `ab_payment` `p` ON `p`.`appointment_id` = `a`.`id` and `p`.`customer_id`  = `c`.`id`";
-            // WHERE
-            if ( $filter !== '' ) {
-                $query .= " WHERE `c`.`name` LIKE '%{$filter}%' OR `c`.`phone` LIKE '%{$filter}%' OR `c`.`email` LIKE '%{$filter}%'";
+        $data = $query->select( 'c.*, MAX(a.start_date) AS last_appointment,
+                COUNT(a.id) AS total_appointments,
+                COALESCE(SUM(p.total),0) AS payments,
+                wpu.display_name AS wp_user' )
+            ->leftJoin( 'AB_CustomerAppointment', 'ca', 'ca.customer_id = c.id' )
+            ->leftJoin( 'AB_Appointment', 'a', 'a.id = ca.appointment_id' )
+            ->leftJoin( 'AB_Payment', 'p', 'p.customer_appointment_id = ca.id' )
+            ->tableJoin( $wpdb->users, 'wpu', 'wpu.ID = c.wp_user_id' )
+            ->groupBy( 'c.id' )
+            ->sortBy( $sort )
+            ->order( $order )
+            ->limit( $items_per_page )
+            ->offset( ( $page - 1 ) * $items_per_page )
+            ->fetchArray();
+
+        array_walk( $data, function ( &$row ) {
+            if ( $row['last_appointment'] ) {
+                $row['last_appointment'] = AB_DateTimeUtils::formatDateTime( $row['last_appointment'] );
             }
-            // GROUP BY
-            $query .= ' GROUP BY `c`.`id`';
-            // ORDER BY
-            $query .= " ORDER BY {$sort} {$order}";
-            // LIMIT
-            $start = ( $page - 1) * $items_per_page;
-            $query .= " LIMIT {$start}, {$items_per_page}";
+            $row['payments'] = AB_Utils::formatPrice( $row['payments'] );
+        } );
 
-            $data = $wpdb->get_results( $query );
-            array_walk( $data, function ( $row ) {
-                $row->last_appointment = AB_CommonUtils::getFormattedDateTime( $row->last_appointment );
-                $row->payments = AB_CommonUtils::formatPrice( $row->payments );
-            } );
+        // Populate response.
+        $response[ 'customers' ]   = $data;
+        $response[ 'total' ]       = $total;
+        $response[ 'pages' ]       = $pages;
+        $response[ 'active_page' ] = $page;
 
-            // Populate response.
-            $response[ 'data' ][ 'customers' ]   = $data;
-            $response[ 'data' ][ 'total' ]       = $total;
-            $response[ 'data' ][ 'pages' ]       = $pages;
-            $response[ 'data' ][ 'active_page' ] = $page;
-        }
+        wp_send_json_success( $response );
+    }
 
-        echo json_encode( $response );
-        exit ( 0 );
+    /**
+     * Get WP users array.
+     *
+     * @return array
+     */
+    public function getWpUsers()
+    {
+        return get_users( array( 'fields' => array( 'ID', 'display_name' ), 'orderby' => 'display_name' ) );
     }
 
     /**
      * Create or edit a customer.
-     *
-     * @Security user
      */
-    public function executeSaveCustomer() {
+    public function executeSaveCustomer()
+    {
         $response = array();
         $form = new AB_CustomerForm();
 
@@ -104,10 +155,11 @@ class AB_CustomerController extends AB_Controller {
                 /** @var AB_Customer $customer */
                 $customer = $form->save();
                 if ( $customer ) {
-                    $response[ 'status' ]   = 'ok';
+                    $response[ 'success' ]  = true;
                     $response[ 'customer' ] = array(
                         'id'      => $customer->id,
                         'name'    => $customer->name,
+                        'wp_user_id' => $customer->wp_user_id,
                         'phone'   => $customer->phone,
                         'email'   => $customer->email,
                         'notes'   => $customer->notes,
@@ -121,18 +173,18 @@ class AB_CustomerController extends AB_Controller {
                     break;
                 }
             }
-            $response[ 'status' ] = 'error';
-            $response[ 'errors' ] = array( 'name' => array( 'required' ) );
+            $response[ 'success' ] = false;
+            $response[ 'errors' ]  = array( 'name' => array( 'required' ) );
         } while ( 0 );
 
-        echo json_encode( $response );
-        exit ( 0 );
+        wp_send_json( $response );
     }
 
     /**
      * Import customers from CSV.
      */
-    private function importCustomers() {
+    private function importCustomers()
+    {
         @ini_set( 'auto_detect_line_endings', true );
 
         $csv_mime_types = array(
@@ -164,25 +216,39 @@ class AB_CustomerController extends AB_Controller {
 
     /**
      * Get angulars template for new customer dialog.
-     * @Security user
      */
-    public function executeGetNgNewCustomerDialogTemplate() {
-        $this->render( 'ng-new_customer_dialog' );
+    public function executeGetNgNewCustomerDialogTemplate()
+    {
+        $this->render( 'ng-new_customer_dialog', array(
+            'custom_fields' => json_decode( get_option( 'ab_custom_fields' ) ),
+            'module'        => $this->getParameter( 'module' ),
+            'wp_users'      => $this->getWpUsers()
+        ) );
         exit ( 0 );
     }
 
     /**
      * Delete a customer.
      */
-    public function executeDeleteCustomer() {
-        $this->getWpdb()->delete('ab_customer', array( 'id' => $this->getParameter( 'id' ) ), array( '%d' ) );
+    public function executeDeleteCustomer()
+    {
+        foreach ( $this->getParameter( 'ids' ) as $id ) {
+            $customer = new AB_Customer();
+            $customer->load( $id );
+            $customer->deleteWithWPUser( (bool) $this->getParameter( 'with_wp_user' ) );
+        }
+        wp_send_json_success();
     }
 
     /**
      * Override parent method to add 'wp_ajax_ab_' prefix
      * so current 'execute*' methods look nicer.
+     *
+     * @param string $prefix
      */
-    protected function registerWpActions( $prefix = '' ) {
+    protected function registerWpActions( $prefix = '' )
+    {
         parent::registerWpActions( 'wp_ajax_ab_' );
     }
+
 }

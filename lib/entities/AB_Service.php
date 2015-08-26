@@ -1,54 +1,58 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Class AB_Service
  */
-class AB_Service extends AB_Entity {
+class AB_Service extends AB_Entity
+{
+    protected static $table = 'ab_services';
 
-    /**
-     * Constructor.
-     */
-    public function __construct() {
-        $this->table_name = 'ab_service';
-        $this->schema = array(
-            'id'          => array( ),
-            'title'       => array( 'format' => '%s' ),
-            'duration'    => array( 'format' => '%d', 'default' => 900 ),
-            'price'       => array( 'format' => '%.2f', 'default' => '0' ),
-            'category_id' => array( 'format' => '%d' ),
-            'color'       => array( 'format' => '%s' ),
-            'capacity'    => array( 'format' => '%d', 'default' => '1' ),
-        );
-        parent::__construct();
-    }
+    protected static $schema = array(
+        'id'            => array( 'format' => '%d' ),
+        'title'         => array( 'format' => '%s' ),
+        'duration'      => array( 'format' => '%d', 'default' => 900 ),
+        'price'         => array( 'format' => '%.2f', 'default' => '0' ),
+        'category_id'   => array( 'format' => '%d' ),
+        'color'         => array( 'format' => '%s' ),
+        'capacity'      => array( 'format' => '%d', 'default' => '1' ),
+        'position'      => array( 'format' => '%d', 'default' => 9999 ),
+        'padding_left'  => array( 'format' => '%d', 'default' => '0' ),
+        'padding_right' => array( 'format' => '%d', 'default' => '0' ),
+    );
 
     /**
      * @return string
      */
-    public function getTitleWithDuration() {
-        return sprintf( '%s (%s)', $this->get( 'title' ), self::durationToString( $this->get( 'duration' ) ) );
+    public function getTitleWithDuration()
+    {
+        return sprintf( '%s (%s)', $this->getTitle(), AB_DateTimeUtils::secondsToInterval( $this->get( 'duration' ) ) );
     }
 
     /**
-     * Convert number of seconds into string "[XX hr] XX min".
+     * Get title (if empty returns "Untitled").
      *
-     * @param int $duration
      * @return string
      */
-    public static function durationToString( $duration ) {
-        $hours   = (int)( $duration / 3600 );
-        $minutes = (int)( ( $duration % 3600 ) / 60 );
-        $result  = '';
-        if ( $hours > 0 ) {
-          $result = sprintf( __( '%d h', 'ab' ), $hours );
-          if ( $minutes > 0 ) {
-            $result .= ' ';
-          }
-        }
-        if ( $minutes > 0 ) {
-          $result .= sprintf( __( '%d min', 'ab' ), $minutes );
+    public function getTitle()
+    {
+        return $this->get( 'title' ) != '' ? $this->get( 'title' ) : __( 'Untitled', 'bookly' );
+    }
+
+    /**
+     * Get category name.
+     *
+     * @return string
+     */
+    public function getCategoryName()
+    {
+        if ( $this->get( 'category_id' ) ) {
+            $category = new AB_Category();
+            $category->load( $this->get( 'category_id' ) );
+
+            return $category->get( 'name' );
         }
 
-        return $result;
+        return __( 'Uncategorized', 'bookly' );
     }
+
 }

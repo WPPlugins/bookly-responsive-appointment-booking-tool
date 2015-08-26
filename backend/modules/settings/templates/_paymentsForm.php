@@ -1,42 +1,32 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo add_query_arg( 'type', '_payments' ) ?>" class="ab-staff-form">
-    <?php if (isset($message_p)) : ?>
-    <div id="message" style="margin: 0px!important;" class="updated below-h2">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <p><?php echo $message_p ?></p>
-    </div>
-    <?php endif ?>
+<form method="post" action="<?php echo esc_url( add_query_arg( 'type', '_payments' ) ) ?>" class="ab-settings-form">
     <table class="form-horizontal">
-	    <tr>
-		    <td style="width: 170px;"><?php _e( 'Currency','ab' ) ?></td>
-		    <td>
-			    <select name="ab_paypal_currency" style="width: 200px;">
-				    <?php foreach ( PayPal::getCurrencyCodes() as $code ): ?>
-					    <option value="<?php echo $code ?>" <?php selected( get_option( 'ab_paypal_currency' ), $code ); ?> ><?php echo $code ?></option>
-				    <?php endforeach ?>
-			    </select>
-		    </td>
-	    </tr>
         <tr>
-            <td style="width: 170px;"><?php _e( 'Coupons','ab' ) ?></td>
+            <td style="width: 170px;">
+                <label for="ab_paypal_currency"><?php _e( 'Currency', 'bookly' ) ?></label>
+            </td>
             <td>
-                <select name="ab_settings_coupons" style="width: 200px;">
-                    <?php foreach ( array( __( 'Disabled', 'ab' ) => 'disabled', __( 'Enabled', 'ab' ) => '1' ) as $text => $mode ): ?>
-                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_settings_coupons' ), $mode ); ?> ><?php echo $text ?></option>
+                <select id="ab_paypal_currency" class="form-control" name="ab_paypal_currency">
+                    <?php foreach ( array( 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'COP', 'CZK', 'DKK', 'EUR', 'GBP', 'GTQ', 'HKD', 'HUF', 'IDR', 'INR', 'ILS', 'JPY', 'KRW', 'KZT', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'QAR', 'RON', 'RMB', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'UGX', 'USD', 'ZAR' ) as $code ): ?>
+                        <option value="<?php echo $code ?>" <?php selected( get_option( 'ab_paypal_currency' ), $code ) ?> ><?php echo $code ?></option>
                     <?php endforeach ?>
                 </select>
             </td>
         </tr>
         <tr>
-            <td colspan="2"><div class="ab-payments-title"><?php _e( 'Service paid locally','ab' ) ?></div></td>
+            <td style="width: 170px;">
+                <label for="ab_settings_coupons"><?php _e( 'Coupons', 'bookly' ) ?></label>
+            </td>
+            <td>
+                <?php AB_Utils::optionToggle( 'ab_settings_coupons' ) ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><div class="ab-payments-title"><?php _e( 'Service paid locally', 'bookly' ) ?></div></td>
         </tr>
         <tr>
             <td colspan="2">
-                <select name="ab_settings_pay_locally" style="width: 200px;">
-                    <?php foreach ( array( __( 'Disabled', 'ab' ) => '0', __( 'Enabled', 'ab' ) => '1' ) as $text => $mode ): ?>
-                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_settings_pay_locally' ), $mode ); ?> ><?php echo $text ?></option>
-                    <?php endforeach ?>
-                </select>
+                <?php AB_Utils::optionToggle( 'ab_settings_pay_locally' ) ?>
             </td>
         </tr>
         <tr>
@@ -44,11 +34,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <select id="ab_paypal_type" style="width: 200px;">
-                    <?php foreach ( array( __( 'Disabled', 'ab' ) => 'disabled', 'PayPal Express Checkout' => 'ec' ) as $text => $mode ): ?>
-                        <option value="<?php echo $mode ?>" ><?php echo $text ?></option>
-                    <?php endforeach ?>
-                </select>
+                <?php AB_Utils::optionToggle( 'ab_paypal_type', array( 'f' => array( 'disabled', __( 'Disabled', 'bookly' ) ), 't' => array( 'ec', 'PayPal Express Checkout' ) ) ) ?>
             </td>
         </tr>
         <tr>
@@ -56,11 +42,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <select name="ab_authorizenet_type" id="ab_authorizenet_type" style="width: 200px;">
-                    <?php foreach ( array( __( 'Disabled', 'ab' ) => 'disabled', 'Authorize.Net AIM' => 'aim' ) as $text => $mode ): ?>
-                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_authorizenet_type' ), $mode ); ?> ><?php echo $text ?></option>
-                    <?php endforeach ?>
-                </select>
+                <?php AB_Utils::optionToggle( 'ab_authorizenet_type', array( 'f' => array( 'disabled', __( 'Disabled', 'bookly' ) ), 't' => array( 'aim', 'Authorize.Net AIM' ) ) ) ?>
             </td>
         </tr>
         <tr>
@@ -68,17 +50,13 @@
         </tr>
         <tr>
             <td colspan="2">
-                <select name="ab_stripe" id="ab_stripe" style="width: 200px;">
-                    <?php foreach ( array( __( 'Disabled', 'ab' ) => 0, __( 'Enabled', 'ab' ) => 1 ) as $text => $mode ): ?>
-                        <option value="<?php echo $mode ?>" <?php selected( get_option( 'ab_stripe' ), $mode ); ?> ><?php echo $text ?></option>
-                    <?php endforeach ?>
-                </select>
+                <?php AB_Utils::optionToggle( 'ab_stripe' ) ?>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="submit" value="<?php _e( 'Save', 'ab' ) ?>" class="btn btn-info ab-update-button" />
-                <button id="ab-payments-reset" class="ab-reset-form" type="reset"><?php _e( 'Reset', 'ab' ) ?></button>
+                <?php AB_Utils::submitButton() ?>
+                <?php AB_Utils::resetButton( 'ab-payments-reset' ) ?>
             </td>
             <td></td>
         </tr>

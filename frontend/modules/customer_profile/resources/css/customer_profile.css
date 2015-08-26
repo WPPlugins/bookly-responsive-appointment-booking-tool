@@ -1,0 +1,39 @@
+.ab-customer-appointments p {
+    font-weight: bold;
+}
+
+.ab-customer-appointments h2 {
+    margin: 20px 0;
+    font-size: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid silver;
+}
+
+.ab-customer-appointments .ab-appointments-table {
+    border: 1px solid silver;
+    border-collapse: collapse;
+}
+
+.ab-customer-appointments .ab-appointments-table th {
+    background: #dddddd;
+    font-size: 14px;
+    padding: 5px;
+    border: 0;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.ab-customer-appointments .ab-appointments-table td {
+    font-size: 14px;
+    padding: 5px;
+    background: #EEEEEE;
+    text-align: center;
+    border: 1px solid silver;
+    vertical-align: middle;
+}
+
+.ab-customer-appointments .ab-appointments-table td .ab-btn {
+    padding: 5px 10px!important;
+    width: auto;
+    font-size: 11px!important;
+}

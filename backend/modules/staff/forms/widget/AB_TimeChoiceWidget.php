@@ -1,6 +1,4 @@
-<?php
-
-if ( !defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class AB_TimeChoiceWidget {
     /**
@@ -13,29 +11,39 @@ class AB_TimeChoiceWidget {
      *
      * @param array $options
      */
-    public function __construct( array $options = array() ) {
+    public function __construct( array $options = array() )
+    {
         // Handle widget options.
         $options = array_merge( array(
-            'use_empty' => true,
-            'empty_value' => null
+            'use_empty'   => true,
+            'empty_value' => null,
+            'type'        => 'from',
         ), $options );
 
         // Insert empty value if required.
-        if ( $options[ 'use_empty' ] ) {
-            $this->values[ null ] = $options[ 'empty_value' ];
+        if ( $options['use_empty'] ) {
+            $this->values[null] = $options['empty_value'];
         }
 
-        $tf         = get_option( 'time_format' );
-        $ts_length  = get_option( 'ab_settings_time_slot_length' );
-        $time_start = new AB_DateTime( AB_StaffScheduleItem::WORKING_START_TIME, new DateTimeZone( 'UTC' ) );
-        $time_end   = new AB_DateTime( AB_StaffScheduleItem::WORKING_END_TIME, new DateTimeZone( 'UTC' ) );
+        $ts_length  = AB_Config::getTimeSlotLength();
+        if ( isset( $options['bound'] ) ) {
+            $time_start = AB_DateTimeUtils::timeToSeconds( $options['bound'][0] );
+            $time_end   = AB_DateTimeUtils::timeToSeconds( $options['bound'][1] );
+        } else {
+            $time_start = AB_StaffScheduleItem::WORKING_START_TIME;
+            $time_end   = AB_StaffScheduleItem::WORKING_END_TIME;
+        }
+        if ( $options['type'] == 'from' ) {
+            $time_end -= $ts_length;    // Exclude last slot.
+        } elseif ( $options['type'] == 'to' ) {
+            $time_end *= 2;             // Create slots for 2 days.
+        }
 
         // Run the loop.
-        while ( $time_start->format( 'U' ) <= $time_end->format( 'U' ) ) {
-            $this->values[ $time_start->format( 'H:i:s' ) ] = $time_start->format( $tf );
-            $time_start->modify( '+' . $ts_length . ' min' );
+        while ( $time_start <= $time_end ) {
+            $this->values[ AB_DateTimeUtils::buildTimeString( $time_start ) ] = AB_DateTimeUtils::formatTime( $time_start );
+            $time_start += $ts_length;
         }
-        $this->values[ $time_end->format( 'H:i:s' ) ] = $time_end->format( $tf );
     }
 
     /**
@@ -47,16 +55,28 @@ class AB_TimeChoiceWidget {
      *
      * @return string
      */
-    public function render( $name, $value = null, array $attributes = array() ) {
-        $options = array();
+    public function render( $name, $value = null, array $attributes = array() )
+    {
+        $options = '';
         $attributes_str = '';
+        $exist_slot = false;
         foreach ( $this->values as $option_value => $option_text ) {
-
-            $selected = strval( $value ) == strval( $option_value );
-            $options[ ] = sprintf(
+            if ( $exist_slot === false ) {
+                if ( $value == $option_value ) {
+                    $exist_slot = true;
+                } elseif ( $value < $option_value ) {
+                    $options .= sprintf(
+                        '<option value="%s" selected="selected">%s</option>',
+                        $value,
+                        AB_DateTimeUtils::formatTime( $value )
+                    );
+                    $exist_slot = true;
+                }
+            }
+            $options .= sprintf(
                 '<option value="%s"%s>%s</option>',
                 $option_value,
-                ($selected ? ' selected="selected"' : ''),
+                selected( $value, $option_value, false ),
                 $option_text
             );
         }
@@ -64,26 +84,7 @@ class AB_TimeChoiceWidget {
             $attributes_str .= sprintf( ' %s="%s"', $attr_name, $attr_value );
         }
 
-        return sprintf( '<select name="%s"%s>%s</select>', $name, $attributes_str, implode( '', $options ) );
+        return sprintf( '<select name="%s" data-default_value="%s"%s>%s</select>', $name, $value, $attributes_str, $options );
     }
 
-    /**
-     * @param $start
-     * @param string $selected
-     * @return array
-     */
-    public function renderOptions( $start, $selected = '' ) {
-        $options = array();
-        foreach ( $this->values as $option_value => $option_text ) {
-            if ( $start && strval( $option_value ) < strval( $start ) ) continue;
-            $options[ ] = sprintf(
-                '<option value="%s"%s>%s</option>',
-                $option_value,
-                (strval( $selected ) == strval( $option_value ) ? 'selected="selected"' : ''),
-                $option_text
-            );
-        }
-
-        return $options;
-    }
 }

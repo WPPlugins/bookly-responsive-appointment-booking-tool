@@ -1,30 +1,25 @@
 #ab-staff-schedule > table { width: 100% }
-#ab-staff-schedule .staff-schedule-item-row > td { padding: 10px 0; border-bottom: 1px solid #DDDDDD; }
+#ab-staff-schedule .staff-schedule-item-row > td { padding: 10px 5px; border-bottom: 1px solid #DDDDDD; }
 #ab-staff-schedule .staff-schedule-item-row.ab-last-row > td { border: 0; }
 #ab-staff-schedule .staff-schedule-item-row > td.first { width: 115px }
 #ab-staff-schedule .staff-schedule-item-row td.add-break { width: 80px }
-#ab-staff-schedule .staff-schedule-item-row td.working-intervals { width: 210px }
-#ab-staff-schedule .staff-schedule-item-row .break-interval-wrapper { margin-right: 7px; white-space: nowrap; float: left; }
-#ab-staff-schedule .staff-schedule-item-row .break-interval-wrapper img {
-  border: 0 none;
-  cursor: pointer;
-  display: block;
-  float: left;
-  margin-left: 5px;
-  margin-top: 2px;
-  width: 12px;
-}
+#ab-staff-schedule .staff-schedule-item-row td.working-intervals { white-space: nowrap; }
+#ab-staff-schedule .staff-schedule-item-row .break-interval-wrapper { white-space: nowrap; }
+#ab-staff-schedule .staff-schedule-item-row .break-interval-wrapper img { border: 0 none; cursor: pointer; display: inline-block; margin-left: 5px; margin-top: 2px; width: 12px; }
 #ab-staff-schedule .staff-schedule-item-row .breaks-list { width: 100% }
 #ab-staff-schedule .staff-schedule-item-row .breaks-list .breaks-list-label { width: 60px }
 #ab-staff-schedule .staff-schedule-item-row .ab-popup-wrapper .error { padding: 3px; margin: 5px; }
-#ab-staff-schedule .staff-schedule-item-row .breaks-list .ab-popup-wrapper { float: left; margin-right: 3px; }
+#ab-staff-schedule .staff-schedule-item-row .breaks-list .ab-popup-wrapper { margin-left: 5px; display: inline-block; }
+#ab-staff-schedule .staff-schedule-item-row .working-start,
+#ab-staff-schedule .staff-schedule-item-row .working-end { width: 90px!important; margin-bottom: 0; font-size: 13px; }
+#ab-staff-schedule .staff-schedule-item-row .break-end,
+#ab-staff-schedule .staff-schedule-item-row .break-start { width: auto; margin-bottom: 0; }
 #ab-staff-schedule .error { margin: 0 }
-#ab-staff-list { margin-left: 0; }
-#ab-edit-staff .ab-nav-tabs { height: 37px; }
-.ab-staff-form .control-label { text-align: left!important; }
-.working-end, .working-start { margin-bottom: 0; font-size: 13px; }
-.ab-content .break-end, .ab-content .break-start { width: auto; margin-bottom: 0; }
-.add-break form { margin: 0; }
+
+#ab-edit-staff .ab-staff-tab-content { position: relative; }
+.ab-nav-head { overflow: hidden; position: relative; margin-bottom: 20px; }
+.ab-nav-head h2 { margin: 0; padding-right: 20px; }
+.tabbable .tab-content .tab-pane { padding-top: 15px; }
 
 #ab-staff-services ul ul li { margin-left: 20px; }
 #ab-staff-services ul ul li.ab-services-category { margin: 25px 0px 15px 20px; position: relative; }
@@ -32,8 +27,30 @@
 #ab-staff-services ul .ab-title-service > div { display: inline-block; width: 60px; text-align: center; }
 #ab-staff-services ul .ab-title-service > div:first-child { margin-right: 5px; }
 #ab-staff-services ul ul li ul li { margin-left: 20px; overflow: hidden; }
-#ab-staff-services ul ul li ul li .ab-price { width: 60px; margin: 0 0 0 5px; text-align: right; height: 30px!important; }
+#ab-staff-services ul ul li ul li .ab-price { width: 70px; margin: 0 0 0 5px; text-align: right; height: 30px!important; }
 #ab-staff-services ul ul li ul li .ab-list-title { margin: 5px 5px 0 0; }
 #ab-staff-services { max-width: 590px; }
-#ab-staff-services #ab-staff-services-update { margin-left: 115px; }
-#ab-staff-services .spinner { float: left }
+#ab-staff-services #ajax-send-service { margin-left: 40px; }
+
+#ab-staff-list { margin-left: 0; }
+#ab-staff-list .ab-staff-member .ab-avatar { max-width: 35px; max-height: 35px; margin-right: 10px; }
+#ab-staff-list .ab-staff-member { padding: 5px; padding-left: 25px; margin: 3px 0; overflow: hidden; cursor: pointer; position: relative; border-radius: 5px; }
+#ab-staff-list .ab-staff-member .ab-handle { position: absolute; left: 5px; top: 50%; cursor: move; margin-top: -10px; }
+#ab-staff-list .ab-staff-member:hover,
+#ab-staff-list .ab-staff-member.ab-active { background: #d6d6d6; }
+
+#ab-staff-details-container .ab-staff-form .control-label { text-align: left!important; }
+.ab-staff-form { max-width: 450px; }
+
+.ab-calendar-tabs .ab-text-align,
+.ab-left-bar #ab-staff-list .ab-staff-member .ab-text-align { height: 35px; display: table-cell; vertical-align: middle; }
+
+/* media query */
+@media screen and (max-width: 782px) {
+  .ab-nav-tabs li a {
+      padding: 5px 10px;
+  }
+  .ab-nav-head {
+      margin-top: 20px;
+  }
+}

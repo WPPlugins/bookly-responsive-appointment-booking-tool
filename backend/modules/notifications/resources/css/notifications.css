@@ -1,0 +1,29 @@
+/* notifications */
+.ab-notifications tr td { padding-left: 10px; }
+.ab-notifications input[type=text],
+.ab-notifications select { margin-top: 10px; min-width: 250px; }
+.ab-notifications .ab-form-field { padding-top: 10px; }
+.ab-notifications .ab-toggle-arrow { position: absolute; right: 0; top: 9px; width: 24px; height: 24px; cursor: pointer; }
+.ab-notifications .ab-form-label { display: block; float: left; margin-top: 3px; min-width: 80px; }
+.ab-notifications .ab-form-row { padding: 3px 0; overflow: hidden; }
+.ab-notifications .ab-form-row input[type="text"] { width: 700px!important; position: relative; z-index: 9; }
+.ab-notifications #message_editor { margin-top: -20px; }
+.ab-notifications legend { margin: 0; border: 0; line-height: normal; }
+.ab-notifications legend input { margin: 0!important; }
+.ab-notifications legend label { display: inline; font-size: 17px; }
+.ab-notifications #message_editor .wp-editor-wrap { margin-left: 81px; }
+.ab-notifications .panel-title > input { margin: 0 5px 0 0; }
+.ab-notifications .ab-codes table tr td { padding: 0 20px 0 0; font-size: 12px;}
+.ab-notifications .ab-codes table tr td input { cursor: pointer; border: none; width: 250px; }
+.ab-notifications .wp-editor-tools { position: relative; top: 26px; }
+.ab-notifications a[data-toggle="collapse"] {
+    outline: none;
+    box-shadow: none;
+    padding-right: 25px;
+    background: url("../../../../resources/images/notifications-arrow-up.png") 100% 50% no-repeat;
+    background-size: 17px 17px;
+}
+.ab-notifications a[data-toggle="collapse"].collapsed {
+    background: url("../../../../resources/images/notifications-arrow-down.png") 100% 50% no-repeat;
+    background-size: 17px 17px;
+}

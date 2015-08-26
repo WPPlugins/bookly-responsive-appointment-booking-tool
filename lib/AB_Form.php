@@ -1,7 +1,7 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 abstract class AB_Form {
-  
+
     // Protected properties.
 
     /**
@@ -45,7 +45,8 @@ abstract class AB_Form {
     /**
      * Constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         // Get name of child class.
         $class_name = get_class( $this );
 
@@ -68,7 +69,8 @@ abstract class AB_Form {
     /**
      * Configure the form in child class.
      */
-    public function configure() {
+    public function configure()
+    {
         // Place configuration code here, like $this->setFields(...)
     }
 
@@ -77,7 +79,8 @@ abstract class AB_Form {
      *
      * @param array $fields
      */
-    public function setFields( array $fields ) {
+    public function setFields( array $fields )
+    {
         $this->fields = array_merge( array( 'id' ), $fields );
     }
 
@@ -87,7 +90,8 @@ abstract class AB_Form {
      * @param array $post
      * @param array $files
      */
-    public function bind( array $post, array $files = array() ) {
+    public function bind( array $post, array $files = array() )
+    {
         foreach ( $this->fields as $field ) {
             if ( array_key_exists( $field, $post ) ) {
                 $this->data[ $field ] = $post[ $field ];
@@ -105,8 +109,9 @@ abstract class AB_Form {
      *
      * @return boolean Create - true, Update - false
      */
-    public function isNew() {
-        return !(array_key_exists( 'id', $this->data ) && $this->data[ 'id' ]);
+    public function isNew()
+    {
+        return ! ( array_key_exists( 'id', $this->data ) && $this->data['id'] );
     }
 
     /**
@@ -114,8 +119,9 @@ abstract class AB_Form {
      *
      * @return object Entity
      */
-    public function save() {
-        foreach ( $this->object->getData() as $field => $value ) {
+    public function save()
+    {
+        foreach ( $this->object->getFields() as $field => $value ) {
             if ( array_key_exists( $field, $this->data ) ) {
                 $this->object->set( $field, $this->data[ $field ] );
             }
@@ -129,7 +135,8 @@ abstract class AB_Form {
     /**
      * @return array
      */
-    public function getData() {
+    public function getData()
+    {
         return $this->data;
     }
 
@@ -138,7 +145,9 @@ abstract class AB_Form {
      *
      * @return object
      */
-    public function getObject() {
+    public function getObject()
+    {
         return $this->object;
     }
+
 }

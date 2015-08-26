@@ -1,64 +1,102 @@
-<?php
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-include 'forms/AB_CompanyForm.php';
-include 'forms/AB_PaymentsForm.php';
-include 'forms/AB_BusinessHoursForm.php';
-include AB_PATH . '/lib/Payment/PayPal.php';
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Class AB_SettingsController
  */
 class AB_SettingsController extends AB_Controller {
 
-    public function index() {
-        // save the settings
-        if ( !empty ( $_POST ) ) {
-            // Payments form
-            if ( $this->getParameter( 'type' ) == '_payments' ) {
-                $this->form = new AB_PaymentsForm();
-                $this->message_p = __( 'Settings saved.', 'ab' );
+    const page_slug = 'ab-settings';
 
-                // Business hours form
-            }
-            else if ( $this->getParameter( 'type' ) == '_hours' ) {
-                $this->form = new AB_BusinessHoursForm();
-                $this->message_h = __( 'Settings saved.', 'ab' );
-            }
-            // Purchase Code Form
-            else if ( $this->getParameter( 'type' ) == '_purchase_code' ) {
-                update_option( 'ab_envato_purchase_code',  esc_html( $this->getParameter( 'ab_envato_purchase_code' ) ) );
-                $this->message_pc = __( 'Settings saved.', 'ab' );
-            }
-            else if ( $this->getParameter( 'type' ) == '_general' ) {
-                $ab_settings_time_slot_length = $this->getParameter( 'ab_settings_time_slot_length' );
-                if ( in_array( $ab_settings_time_slot_length, array( 5, 10, 12, 15, 20, 30, 60 ) ) ) {
-                    update_option( 'ab_settings_time_slot_length',  $ab_settings_time_slot_length );
-                }
-                update_option( 'ab_settings_no_current_day_appointments', (int)$this->getParameter( 'ab_settings_no_current_day_appointments' ) );
-                update_option( 'ab_settings_use_client_time_zone', (int)$this->getParameter( 'ab_settings_use_client_time_zone' ) );
-                update_option( 'ab_settings_cancel_page_url', $this->getParameter( 'ab_settings_cancel_page_url' ) );
+    public function index()
+    {
+        /** @var WP_Locale $wp_locale */
+        global $wp_locale;
 
-                $this->message_g = __( 'Settings saved.', 'ab' );
+        $this->enqueueStyles( array(
+            'frontend' => array(
+                'css/ladda.min.css'
+            ),
+            'backend' => array(
+                'css/bookly.main-backend.css',
+                'bootstrap/css/bootstrap.min.css',
+                'css/jCal.css',
+            )
+        ) );
+
+        $this->enqueueScripts( array(
+            'backend' => array(
+                'bootstrap/js/bootstrap.min.js' => array( 'jquery' ),
+                'js/jCal.js' => array( 'jquery' ),
+            ),
+            'module' => array(
+                'js/settings.js' => array( 'jquery', 'ab-intlTelInput.min.js' ),
+            ),
+            'frontend' => array(
+                'js/intlTelInput.min.js' => array( 'jquery' ),
+                'js/spin.min.js' => array( 'jquery' ),
+                'js/ladda.min.js' => array( 'jquery' ),
+            )
+        ) );
+
+        wp_localize_script( 'ab-jCal.js', 'BooklyL10n',  array(
+            'we_are_not_working' => __( 'We are not working on this day', 'bookly' ),
+            'repeat'             => __( 'Repeat every year', 'bookly' ),
+            'months'             => array_values( $wp_locale->month ),
+            'days'               => array_values( $wp_locale->weekday_abbrev )
+        ) );
+        $this->message = '';
+        // Save the settings.
+        if ( ! empty ( $_POST ) ) {
+            switch ( $this->getParameter( 'type' ) ) {
+                case '_payments':           // Payments form.
+                    update_option( 'ab_settings_pay_locally', (int)$this->getParameter( 'ab_settings_pay_locally' ) );
+                    break;
+                case '_hours':              // Business hours form.
+                    $this->form = new AB_BusinessHoursForm();
+                    break;
+                case '_general':            // General form.
+                    $ab_settings_time_slot_length = $this->getParameter( 'ab_settings_time_slot_length' );
+                    if ( in_array( $ab_settings_time_slot_length, array( 5, 10, 12, 15, 20, 30, 60, 90, 120, 180, 240, 360 ) ) ) {
+                        update_option( 'ab_settings_time_slot_length',  $ab_settings_time_slot_length );
+                    }
+                    update_option( 'ab_settings_minimum_time_prior_booking', (int)$this->getParameter( 'ab_settings_minimum_time_prior_booking' ) );
+                    update_option( 'ab_settings_maximum_available_days_for_booking', (int)$this->getParameter( 'ab_settings_maximum_available_days_for_booking' ) );
+                    update_option( 'ab_settings_use_client_time_zone',  (int)$this->getParameter( 'ab_settings_use_client_time_zone' ) );
+                    update_option( 'ab_settings_cancel_page_url',       $this->getParameter( 'ab_settings_cancel_page_url' ) );
+                    update_option( 'ab_settings_final_step_url',        $this->getParameter( 'ab_settings_final_step_url' ) );
+                    update_option( 'ab_settings_allow_staff_members_edit_profile', (int)$this->getParameter( 'ab_settings_allow_staff_members_edit_profile' ) );
+                    update_option( 'ab_settings_link_assets_method',    $this->getParameter( 'ab_settings_link_assets_method' ) );
+                    $this->message = __( 'Settings saved.', 'bookly' );
+                    break;
+                case '_google_calendar':    // Google calendar form.
+                    $this->message = __( 'Settings saved.', 'bookly' );
+                    break;
+                case '_holidays':           // Holidays form.
+                    // Company form.
+                    break;
+                case '_customers':          // Customers form.
+                    update_option( 'ab_settings_create_account',        (int)$this->getParameter( 'ab_settings_create_account' ) );
+                    update_option( 'ab_settings_phone_default_country', $this->getParameter( 'ab_settings_phone_default_country' ) );
+                    update_option( 'ab_sms_default_country_code',       $this->getParameter( 'ab_sms_default_country_code' ) );
+                    $this->message = __( 'Settings saved.', 'bookly' );
+                    break;
+                case '_woocommerce':        // WooCommerce form.
+                    $this->message = __( 'Settings saved.', 'bookly' );
+                    break;
+                case '_company':            // Company form.
+                    $this->form = new AB_CompanyForm();
+                    break;
             }
-            // Holidays form
-            else if ( $this->getParameter( 'type' ) == '_holidays' ) {
-                // Company form
-            }
-            else {
-                $this->form = new AB_CompanyForm();
-                $this->message_c = __( 'Settings saved.', 'ab' );
-            }
-            if ( $this->getParameter( 'type' ) != '_purchase_code' && $this->getParameter( 'type' ) != '_holidays'
-                && $this->getParameter( 'type' ) != '_import' && $this->getParameter( 'type' ) != '_general' ) {
+            if ( in_array( $this->getParameter( 'type' ), array ( '_hours', '_company' ) ) ) {
                 $this->form->bind( $this->getPostParameters(), $_FILES );
                 $this->form->save();
+                $this->message = __( 'Settings saved.', 'bookly' );
             }
         }
 
-        // get holidays
+        // Get holidays.
         $this->holidays = $this->getHolidays();
+        $this->candidates = $this->getCandidatesBooklyProduct();
 
         $this->render( 'index' );
     } // index
@@ -66,37 +104,28 @@ class AB_SettingsController extends AB_Controller {
     /**
      * Ajax request for Holidays calendar
      */
-    public function executeSettingsHoliday() {
-        $id       = $this->getParameter( 'id', false );
-        $holiday  = $this->getParameter( 'holiday' ) == 'true';
-        $repeat   = $this->getParameter( 'repeat' ) == 'true';
-        $day      = $this->getParameter( 'day', false );
+    public function executeSettingsHoliday()
+    {
+        $id      = $this->getParameter( 'id', false );
+        $holiday = $this->getParameter( 'holiday' ) == 'true';
+        $repeat  = $this->getParameter( 'repeat' ) == 'true';
+        $day     = $this->getParameter( 'day', false );
 
         // update or delete the event
         if ( $id ) {
             if ( $holiday ) {
-                $this->getWpdb()->update( 'ab_holiday', array('repeat_event' => intval( $repeat ) ), array( 'id' => $id ), array( '%d' ) );
-                $this->getWpdb()->update( 'ab_holiday', array( 'repeat_event' => intval( $repeat ) ), array( 'parent_id' => $id ), array( '%d' )  );
+                $this->getWpdb()->update( AB_Holiday::getTableName(), array( 'repeat_event' => intval( $repeat ) ), array( 'id' => $id ), array( '%d' ) );
+                $this->getWpdb()->update( AB_Holiday::getTableName(), array( 'repeat_event' => intval( $repeat ) ), array( 'parent_id' => $id ), array( '%d' ) );
             } else {
-                $this->getWpdb()->delete( 'ab_holiday', array( 'id' => $id ), array( '%d' ) );
-                $this->getWpdb()->delete( 'ab_holiday', array( 'parent_id' => $id ), array( '%d' ) );
+                AB_Holiday::query()->delete()->where( 'id', $id )->where( 'parent_id', $id, 'OR' )->execute();
             }
             // add the new event
         } elseif ( $holiday && $day ) {
-            $day = new DateTime( $day );
-            $this->getWpdb()->insert( 'ab_holiday', array( 'holiday' => $day->format( 'Y-m-d H:i:s' ), 'repeat_event' => intval( $repeat ) ), array( '%s', '%d' ) );
-            $parent_id = $this->getWpdb()->insert_id;
-            $staff = $this->getWpdb()->get_results( 'SELECT id FROM ab_staff' );
-            foreach ( $staff as $employee ) {
-                $this->getWpdb()->insert( 'ab_holiday',
-                    array(
-                        'holiday' => date( 'Y-m-d H:i:s', $day->format( 'U' ) ),
-                        'repeat_event' => intval( $repeat ),
-                        'staff_id' => $employee->id,
-                        'parent_id' => $parent_id
-                    ),
-                    array( '%s', '%d', '%d' )
-                );
+            $holiday = new AB_Holiday( array( 'date' => $day, 'repeat_event' => intval( $repeat ) ) );
+            $holiday->save();
+            foreach ( AB_Staff::query()->fetchArray() as $employee ) {
+                $staff_holiday = new AB_Holiday( array( 'date' => $day, 'repeat_event' => intval( $repeat ), 'staff_id'  => $employee['id'], 'parent_id' => $holiday->get( 'id' ) ) );
+                $staff_holiday->save();
             }
         }
 
@@ -108,40 +137,61 @@ class AB_SettingsController extends AB_Controller {
     /**
      * @return mixed|string|void
      */
-    protected function getHolidays() {
-        $collection = $this->getWpdb()->get_results( "SELECT * FROM ab_holiday WHERE staff_id IS NULL" );
+    protected function getHolidays()
+    {
+        $collection = AB_Holiday::query()->where( 'staff_id', null )->fetchArray();
         $holidays = array();
         if ( count( $collection ) ) {
             foreach ( $collection as $holiday ) {
-                $holidays[ $holiday->id ] = array(
-                    'm'     => intval( date( 'm', strtotime( $holiday->holiday ) ) ),
-                    'd'     => intval( date( 'd', strtotime( $holiday->holiday ) ) ),
-                    'title' => $holiday->title,
+                $holidays[ $holiday['id'] ] = array(
+                    'm'     => intval( date( 'm', strtotime( $holiday['date'] ) ) ),
+                    'd'     => intval( date( 'd', strtotime( $holiday['date'] ) ) ),
+                    'title' => $holiday['title'],
                 );
                 // if not repeated holiday, add the year
-                if ( ! $holiday->repeat_event ) {
-                    $holidays[ $holiday->id ][ 'y' ] = intval( date( 'Y', strtotime( $holiday->holiday ) ) );
+                if ( ! $holiday['repeat_event'] ) {
+                    $holidays[ $holiday['id'] ]['y'] = intval( date( 'Y', strtotime( $holiday['date'] ) ) );
                 }
             }
         }
 
-        return json_encode( (object) $holidays );
+        return json_encode( $holidays );
+    }
+
+    protected function getCandidatesBooklyProduct()
+    {
+        $goods = array( array( 'id' => 0, 'name' => __( 'Select product', 'bookly' ) ) );
+        $args  = array(
+            'numberposts'      => 0,
+            'post_type'        => 'product',
+            'suppress_filters' => true
+        );
+        $collection = get_posts( $args );
+        foreach ( $collection as $item ) {
+            $goods[] = array( 'id' => $item->ID, 'name' => $item->post_title );
+        }
+        wp_reset_postdata();
+
+        return $goods;
     }
 
     /**
      * Ajax request to dismiss admin notice for current user.
      */
-    public function executeDismissAdminNotice() {
-        global $current_user;
-
-        update_user_meta( $current_user->ID, 'ab_dismiss_admin_notice', 1 );
+    public function executeDismissAdminNotice()
+    {
+        update_user_meta( get_current_user_id(), 'ab_dismiss_admin_notice', 1 );
     }
 
     /**
      * Override parent method to add 'wp_ajax_ab_' prefix
      * so current 'execute*' methods look nicer.
+     *
+     * @param string $prefix
      */
-    protected function registerWpActions( $prefix = '' ) {
+    protected function registerWpActions( $prefix = '' )
+    {
         parent::registerWpActions( 'wp_ajax_ab_' );
     }
+
 }
