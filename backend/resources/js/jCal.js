@@ -36,12 +36,13 @@
     }, opt);
     opt.day = new Date(opt.day.getFullYear(), opt.day.getMonth(), 1);
     if ( !$(opt._target).data('days') ) $(opt._target).data('days', opt.days);
-    $(target).stop().empty();
+    var $target = $(target);
+    $target.stop().empty();
     events = opt.events;
     for (var sm=0; sm < opt.showMonths; sm++)
-      $(target).append('<div class="jCalMo"></div>');
+      $target.append('<div class="jCalMo"></div>');
     opt.cID = 'c' + $('.jCalMo').length;
-    $('.jCalMo', target).each(
+    $('.jCalMo', $target).each(
       function (ind) {
         drawCalControl($(this), $.extend( {}, opt, { 'ind':ind,
             'day':new Date( new Date( opt.day.getTime() ).setMonth( new Date( opt.day.getTime() ).getMonth() + ind ) ) }
@@ -53,8 +54,8 @@
   };
 
   // draw arrow controlers
-  function drawCalControl (target, opt) {
-    $(target).append(
+  function drawCalControl ($target, opt) {
+    $target.append(
       '<div class="jCal">' +
         ( (opt.ind == 0) ? '<div class="left" />' : '' ) +
         '<div class="month">' +
@@ -68,7 +69,7 @@
     $('.jcal_year').val(opt.day.getFullYear());
 
     // left arrow
-    $(target).find('.jCal .left').bind('click', $.extend( {}, opt ),
+    $target.find('.jCal .left').bind('click', $.extend( {}, opt ),
       function (e) {
         if ($('.jCalMask', e.data._target).length > 0) return false;
         $(e.data._target).stop();
@@ -100,7 +101,7 @@
       });
 
     // right arrow
-    $(target).find('.jCal .right').bind('click', $.extend( {}, opt ),
+    $target.find('.jCal .right').bind('click', $.extend( {}, opt ),
       function (e) {
         if ($('.jCalMask', e.data._target).length > 0) return false;
         $(e.data._target).stop();
@@ -130,17 +131,17 @@
         // restore left arrow
         left.prependTo( $('.jCalMo:eq(1) .jCal', e.data._target) );
       });
-  };
+  }
 
   // called for each month
-  function drawCal (target, opt) {
+  function drawCal($target, opt) {
 
     // draw the name of week days
     for (var ds = opt.dayOffset; ds < 7; ds++) {
-      $(target).append('<div class="dow">' + opt.dow[ds] + '</div>');
+      $target.append('<div class="dow">' + opt.dow[ds] + '</div>');
     }
     for (var ds = 0; ds < opt.dayOffset ; ds++) {
-      $(target).append('<div class="dow">' + opt.dow[ds] + '</div>');
+      $target.append('<div class="dow">' + opt.dow[ds] + '</div>');
     }
 
     var fd              = new Date( new Date( opt.day.getTime() ).setDate(1) ); // first day of month
@@ -153,13 +154,13 @@
       // get days from the start of week to the start of current month
       var diff = fd.getDay() < opt.dayOffset ? fd.getDay() + 7 - opt.dayOffset : Math.abs(fd.getDay() - opt.dayOffset);
       for (var d = (ldlm.getDate() - diff + 1); d <= ldlm.getDate(); d++) {
-        $(target).append('<div id="' + opt.cID + 'd' + d + '" class="pday">' + d + '</div>');
+        $target.append('<div id="' + opt.cID + 'd' + d + '" class="pday">' + d + '</div>');
       }
     }
 
     // renders days of the current month
     for (var d = 1; d <= ld.getDate(); d++) {
-      $(target).append('<div id="' + opt.cID + 'd_' + (fd.getMonth() + 1) + '_' + d + '_' + fd.getFullYear() + '" class="day">' + d  + '</div>');
+      $target.append('<div id="' + opt.cID + 'd_' + (fd.getMonth() + 1) + '_' + d + '_' + fd.getFullYear() + '" class="day">' + d  + '</div>');
     }
 
     // if month not end at end of week
@@ -167,12 +168,12 @@
       // get days from end of the month to end of current week
       var diff = fdnm.getDay() >= opt.dayOffset ? 6 - fdnm.getDay() + opt.dayOffset : 6 - (fdnm.getDay() - opt.dayOffset + 7);
       for (var d = 1; d <= diff + 1; d++) {
-        $(target).append('<div id="' + opt.cID + 'd' + d + '" class="pday">' + d + '</div>');
+        $target.append('<div id="' + opt.cID + 'd' + d + '" class="pday">' + d + '</div>');
       }
     }
 
-    $(target).find('div[id^=' + opt.cID + 'd]:first, div[id^=' + opt.cID + 'd]:nth-child(7n+2)').before( '<br style="clear:both;" />' );
-    $(target).find('div[id^=' + opt.cID + 'd_]:not(.invday)').bind("mouseover mouseout click", $.extend( {}, opt ),
+    $target.find('div[id^=' + opt.cID + 'd]:first, div[id^=' + opt.cID + 'd]:nth-child(7n+2)').before( '<br style="clear:both;" />' );
+    $target.find('div[id^=' + opt.cID + 'd_]:not(.invday)').bind("mouseover mouseout click", $.extend( {}, opt ),
       function(e){
         if ($('.jCalMask', e.data._target).length > 0) return false;
         var osDate = new Date ( $(this).attr('id').replace(/c[0-9]{1,}d_([0-9]{1,2})_([0-9]{1,2})_([0-9]{4})/, '$1/$2/$3') );
@@ -190,7 +191,7 @@
         }
         if (e.type == 'click') {
           e.data.day = osDate;
-          drawPopup(target, opt, this, osDate);
+          drawPopup($target, opt, this, osDate);
           if ( e.data.callback( osDate, di, this ) )
             $(e.data._target).data('day', e.data.day).data('days', di);
         }
@@ -198,23 +199,24 @@
 
       // draw events for this month
       if (events) {
-          drawEvents(target, fd.getMonth() + 1);
+          drawEvents($target, fd.getMonth() + 1);
       }
-  };
+  }
 
   // draw the events in calendar (called for each month)
-  function drawEvents(target, month) {
+  function drawEvents($target, month) {
       // remove old events
-      $('.holidayDay', $(target)).removeClass('holidayDay').removeAttr('event-title').removeAttr('event-id');
-      $('.repeatDay', $(target)).removeClass('repeatDay');
+      $('.holidayDay', $target).removeClass('holidayDay').data('id', null);
+      $('.repeatDay', $target).removeClass('repeatDay');
       // and add new
       for (var i in events) {
-          if (events[i].m == month) {
-          $(target).find(getEventSelector(events[i]))
-                .addClass('holidayDay')
-                .addClass(events[i].hasOwnProperty('y') ? '' : 'repeatDay')
-                .attr('event-title', events[i].title)
-                .attr('event-id', i);
+          if (events.hasOwnProperty(i)) {
+              if (events[i].m == month) {
+                  $target.find(getEventSelector(events[i]))
+                      .addClass('holidayDay')
+                      .addClass(events[i].hasOwnProperty('y') ? '' : 'repeatDay')
+                      .data('id', i);
+              }
           }
       }
   }
@@ -224,84 +226,92 @@
       return 'div[id^=c12d_' + event.m + '_' + event.d + '_' + (event.hasOwnProperty('y') ? (event.y + ']') : ']');
   }
 
-  // draw the popup on click to day
-  function drawPopup(target, opt, div, day) {
-      var _self = $(div);
+    // draw the popup on click to day
+    function drawPopup($target, opt, div, day) {
+        $('.popover').popover('hide');
+        var $div = $(div);
 
-      // remove previous popup
-      $('.ab_jcal_popup').remove();
-      // checked or not on draw
-      var ch  = _self.hasClass('holidayDay') ? 'checked="checked"' : '';
-      var ch2 = _self.hasClass('repeatDay') ? 'checked="checked"' : '';
-      var di  = ch ? '' : 'disabled="disabled"';
-      var color = ch ? 'black' : 'silver';
-      var day = new Date(day);
+        // checked or not on draw
+        var ch  = $div.hasClass('holidayDay') ? 'checked="checked"' : '';
+        var ch2 = $div.hasClass('repeatDay') ? 'checked="checked"' : '';
+        var di  = ch ? '' : 'disabled="disabled"';
+        var day = new Date(day);
 
-      $popup = $('<div class="ab_jcal_popup">' +
-          '<div class="ab-content">' +
-              '<div class="ab-arrow"></div>' +
-                  '<table class="form-horizontal">' +
-                      '<tr>' +
-                          '<td><input style="margin:-1px 0 0 0" type="checkbox" class="ab-holiday-not-working" ' + ch + '></td>' +
-                          '<td>' + BooklyL10n.we_are_not_working + '</td>' +
-                      '</tr>' +
-                      '<tr>' +
-                          '<td style="color:' + color + '" colspan="2"><input style="margin:-1px 10px 0 0" ' + di + ' type="checkbox" class="ab-holiday-repeat-annual" ' + ch2 + '>' + BooklyL10n.repeat + '</td>' +
-                      '</tr>' +
-                  '</table>' +
-                  '<div id="ab_jcal_close"></div>' +
-              '</div>' +
-          '</div>');
-      _self.after($popup);
+        var $popup = $('<div class="text-center" style="width: 260px;">' +
+            '<div class="checkbox bookly-margin-bottom-md"><label>' +
+            '<img src="' + opt.loadingImg + '" style="display: none; margin: 0 10px 0 -26px">' +
+            '<input type="checkbox" class="bookly-js-day-off" ' + ch + '>' +
+            '<span class="bookly-toggle-label">' + BooklyL10n.we_are_not_working + '</span>' +
+            '</label></div><div class="checkbox"><label>' +
+            '<img src="' + opt.loadingImg + '" style="display: none; margin: 0 10px 0 -26px">' +
+            '<input ' + di + ' type="checkbox" class="bookly-js-repeat" ' + ch2 + '>' +
+            '<span class="bookly-toggle-label">' + BooklyL10n.repeat  + '</span>' +
+            '</label></div></div><hr><div class="text-right"><button type="button" class="btn btn-default">' + BooklyL10n.close +
+            '</button></div>');
 
-      $('.ab-holiday-not-working, .ab-holiday-repeat-annual').on('change', function() {
-          var is_holiday  = $('.ab-holiday-not-working', $popup).is(':checked');
-          var is_repeat   = $('.ab-holiday-repeat-annual', $popup).is(':checked');
-          is_holiday ?
-              $('.ab-holiday-repeat-annual', $popup).removeAttr('disabled').parent().css('color','black')
-              :
-              $('.ab-holiday-repeat-annual', $popup).attr('disabled','disabled').parent().css('color','silver');
-          // update data on server side
-          var options = {
-              action:   opt.action,
-              id:       _self.attr('event-id'),
-              holiday:  is_holiday,
-              repeat:   is_repeat,
-              day:      day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate()
-          };
-          if (opt.staff_id) {
-              options.staff_id = opt.staff_id;
-          }
+        var $day_off = $popup.find('.bookly-js-day-off');
+        var $repeat  = $popup.find('.bookly-js-repeat');
 
-          $.get(
-              ajaxurl,
-              options,
-              function (response) {
-                  // refresh events from server
-                  events = response;
-                  drawEvents(target, day.getMonth() + 1);
-              },
-              "json"
-          );
-      });
-  }
-})(jQuery);
+        $popup.find('button').on('click', function () {
+            $div.popover('hide');
+        });
 
-jQuery(function ($) {
-    $(document).on('click', '.day', function(e) {
-        e.stopPropagation();
-        var position = $(this).position();
-        $('.ab_jcal_popup').css('left',position.left);
-    })
-    .on('click', '.ab_jcal_popup', function(e) {
-        e.stopPropagation();
-    })
-    .on('click', '#ab_jcal_close', function(e) {
-        $('.selectedDay').removeClass('selectedDay');
-        $('.ab_jcal_popup').remove();
-    })
-    .on('click', function() {
-        $('.selectedDay').removeClass('selectedDay');
-        $('.ab_jcal_popup').remove();
+        // Show popover.
+        $div
+            .popover({
+                html: true,
+                placement: 'bottom',
+                template: '<div class="popover bookly-jcal" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                content: function() {
+                    return $popup;
+                },
+                trigger: 'manual'
+            })
+            .popover('show');
+
+        $('.bookly-js-day-off, .bookly-js-repeat', $popup).on('change', function () {
+            var $this   = $(this);
+            var day_off = $day_off.prop('checked');
+            var repeat  = $repeat.prop('checked');
+
+            if (day_off) {
+                $repeat.prop('disabled', false);
+            } else {
+                $repeat.prop('checked', false).prop('disabled', true);
+            }
+
+            // update data on server side
+            var options = {
+                action  : opt.action,
+                id      : $div.data('id'),
+                holiday : day_off,
+                repeat  : repeat,
+                day     : day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate()
+            };
+            if (opt.staff_id) {
+                options.staff_id = opt.staff_id;
+            }
+
+            $this.prop('disabled', true).hide().prev('img').show();
+
+            $.get(
+                ajaxurl,
+                options,
+                function (response) {
+                    $this.prop('disabled', false).show().prev('img').hide();
+                    // refresh events from server
+                    events = response;
+                    drawEvents($target, day.getMonth() + 1);
+                },
+                'json'
+            );
+        });
+    }
+
+    $('body').on('click', function (e) {
+        var $target = $(e.target);
+        if (!$target.hasClass('day') && $target.closest('.popover.bookly-jcal').length == 0) {
+            $('.popover.bookly-jcal').popover('hide');
+        }
     });
-});
+})(jQuery);

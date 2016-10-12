@@ -1,0 +1,12 @@
+.panel {
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.panel-body .list-group{
+    margin-bottom: 0;
+}
+
+.list-group-item{
+    padding: 5px 10px;
+}

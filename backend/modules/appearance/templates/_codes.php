@@ -1,16 +1,25 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<b>[[CATEGORY_NAME]]</b> - <?php _e( 'name of category', 'bookly' ) ?><br />
-<?php if ( $step == 3 && $login ) : ?>
-    <b>[[LOGIN_FORM]]</b> - <?php _e( 'login form', 'bookly' ) ?><br />
-<?php endif ?>
-<b>[[NUMBER_OF_PERSONS]]</b> - <?php _e( 'number of persons', 'bookly' ) ?><br />
-<?php if ( $step > 2 ) : ?>
-    <b>[[SERVICE_DATE]]</b> - <?php _e( 'date of service', 'bookly' ) ?><br />
-<?php endif ?>
-<b>[[SERVICE_NAME]]</b> - <?php _e( 'name of service', 'bookly' ) ?><br />
-<b>[[SERVICE_PRICE]]</b> - <?php _e( 'price of service', 'bookly' ) ?><br />
-<?php if ( $step > 2 ) : ?>
-    <b>[[SERVICE_TIME]]</b> - <?php _e( 'time of service', 'bookly' ) ?><br />
-<?php endif ?>
-<b>[[STAFF_NAME]]</b> - <?php _e( 'name of staff', 'bookly' ) ?><br />
-<b>[[TOTAL_PRICE]]</b> - <?php _e( 'total price of booking', 'bookly' ) ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+$codes = array(
+    array( 'code' => 'category_name',  'description' => __( 'name of category', 'bookly' ), ),
+    array( 'code' => 'login_form',     'description' => __( 'login form', 'bookly' ),
+        'step'        => 5,
+        'login'       => true,
+    ),
+    array( 'code' => 'number_of_persons', 'description' => __( 'number of persons', 'bookly' ), ),
+    array( 'code' => 'booking_number', 'description' => __( 'booking number', 'bookly' ),
+        'step'        => 7,
+    ),
+    array( 'code' => 'service_date',   'description' => __( 'date of service', 'bookly' ),
+        'min_step'    => 3,
+    ),
+    array( 'code' => 'service_info',   'description' => __( 'info of service', 'bookly' ), ),
+    array( 'code' => 'service_name',   'description' => __( 'name of service', 'bookly' ), ),
+    array( 'code' => 'service_price',  'description' => __( 'price of service', 'bookly' ), ),
+    array( 'code' => 'service_time',   'description' => __( 'time of service', 'bookly' ),
+        'min_step'    => 3,
+    ),
+    array( 'code' => 'staff_info',     'description' => __( 'info of staff', 'bookly' ), ),
+    array( 'code' => 'staff_name',     'description' => __( 'name of staff', 'bookly' ), ),
+    array( 'code' => 'total_price',    'description' => __( 'total price of booking', 'bookly' ), ),
+);
+\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_appearance_short_codes', $codes ), $step, isset( $login ) ? $login : false );

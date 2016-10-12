@@ -2,11 +2,11 @@
 <!--
 Plugin Name: Bookly – Responsive WordPress Appointment Booking and Scheduling Plugin
 Plugin URI: http://booking-wp-plugin.com
-Version: 7.6.1
+Version: <?php echo \BooklyLite\Lib\Plugin::getVersion() ?>
 -->
 <?php if ( $print_assets ) include '_css.php' ?>
-<div id="ab-booking-form-<?php echo $form_id ?>" class="ab-booking-form" data-form_id="<?php echo $form_id ?>">
-    <div style="text-align: center"><img src="<?php echo includes_url( 'js/tinymce/skins/lightgray/img/loader.gif' ) ?>" alt="<?php echo esc_attr( __( 'Loading...', 'bookly' ) ) ?>" /></div>
+<div id="bookly-form-<?php echo $form_id ?>" class="bookly-form" data-form_id="<?php echo $form_id ?>">
+    <div style="text-align: center"><img src="<?php echo includes_url( 'js/tinymce/skins/lightgray/img/loader.gif' ) ?>" alt="<?php esc_attr_e( 'Loading...', 'bookly' ) ?>" /></div>
 </div>
 <script type="text/javascript">
     (function (win, fn) {
@@ -38,17 +38,20 @@ Version: 7.6.1
         }
     })(window, function() {
         window.bookly({
-            is_finished    : <?php echo (int)$booking_finished ?>,
-            is_cancelled   : <?php echo (int)$booking_cancelled ?>,
             ajaxurl        : <?php echo json_encode( $ajax_url ) ?>,
-            attributes     : <?php echo $attributes ?>,
             form_id        : <?php echo json_encode( $form_id ) ?>,
+            attributes     : <?php echo json_encode( $attrs ) ?>,
+            status         : <?php echo json_encode( $status ) ?>,
             start_of_week  : <?php echo (int) get_option( 'start_of_week' ) ?>,
-            date_format    : <?php echo json_encode( AB_DateTimeUtils::convertFormat( 'date', AB_DateTimeUtils::FORMAT_PICKADATE ) ) ?>,
-            custom_fields  : <?php echo get_option( 'ab_custom_fields' ) ?>,
-            show_calendar  : <?php echo intval( get_option( 'ab_appearance_show_calendar' ) ) ?>,
-            intlTelInput_utils   : <?php echo json_encode( plugins_url( 'intlTelInput.utils.js', AB_PATH . '/frontend/resources/js/intlTelInput.utils.js' ) ) ?>,
-            country        : <?php echo json_encode( get_option( 'ab_settings_phone_default_country' ) ) ?>
+            show_calendar  : <?php echo (int) get_option( 'ab_appearance_show_calendar' ) ?>,
+            required       : <?php echo json_encode( $required ) ?>,
+            skip_steps     : <?php echo json_encode( $skip_steps ) ?>,
+            date_format    : <?php echo json_encode( \BooklyLite\Lib\Utils\DateTime::convertFormat( 'date', \BooklyLite\Lib\Utils\DateTime::FORMAT_PICKADATE ) ) ?>,
+            final_step_url : <?php echo json_encode( get_option( 'ab_settings_final_step_url' ) ) ?>,
+            intlTelInput   : <?php echo json_encode( $options['intlTelInput'] ) ?>,
+            woocommerce    : <?php echo json_encode( $options['woocommerce'] ) ?>,
+            cart           : <?php echo json_encode( $options['cart'] ) ?>,
+            is_rtl         : <?php echo (int) is_rtl() ?>
         });
     });
 </script>

@@ -6,25 +6,29 @@ jQuery(function($) {
     $('#toplevel_page_ab-system > ul').css('margin-left', '0px');
 
     /* exclude checkboxes in form */
-    var $checkboxes = $('.ab-notifications .panel-title > input:checkbox[id!=_active]');
+    var $checkboxes = $('.bookly-js-collapse .panel-title > input:checkbox');
 
     $checkboxes.change(function () {
         $(this).parents('.panel-heading').next().collapse(this.checked ? 'show' : 'hide');
-        $('#lite_notice').modal('show');
     });
 
-    // filter sender name and email
-    var escapeXSS = function (infected) {
-        var regexp = /([<|(]("[^"]*"|'[^']*'|[^'">])*[>|)])/gi;
-        return infected.replace(regexp, '');
-    };
-    $('input.ab-sender').on('change', function() {
-        var $val = $(this).val();
-        $(this).val(escapeXSS($val));
+    $('[data-toggle="popover"]').popover({
+        html: true,
+        placement: 'top',
+        trigger: 'hover',
+        template: '<div class="popover bookly-font-xs" style="width: 220px" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
     });
 
-    $('.ab-popover').popover({
-        trigger : 'hover'
+    booklyAlert(BooklyL10n.alert);
+
+    $(':checkbox').on('change', function () {
+        if ($(this).prop('checked')) {
+            booklyAlert({error: [BooklyL10n.limitations]});
+            $(this).prop('checked', false).prop('readonly', true);
+        }
     });
 
+    $('.ab-test-email-notifications').on('click',function () {
+        booklyAlert({error: [BooklyL10n.limitations]});
+    });
 });

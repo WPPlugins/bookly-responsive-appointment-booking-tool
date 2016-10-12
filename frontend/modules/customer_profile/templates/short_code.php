@@ -1,65 +1,80 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<?php if ( is_user_logged_in() ): ?>
-    <div class="ab-customer-appointments">
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+    $color = get_option( 'ab_appearance_color', '#f4662f' );
+    $compound_tokens = array();
+    $custom_fields = isset( $attributes['custom_fields'] ) ? explode( ',', $attributes['custom_fields'] ) : array();
+    $columns = isset( $attributes['columns'] ) ? explode( ',', $attributes['columns'] ) : array();
+    $with_cancel = in_array( 'cancel', $columns );
+?>
+<?php if ( is_user_logged_in() ) : ?>
+    <div class="bookly-customer-appointment-list">
         <h2><?php _e( 'Appointments', 'bookly' ) ?></h2>
-        <?php if ( !empty( $appointments ) ): ?>
-            <?php if ( isset( $attr[ 'columns' ] ) && $columns = explode( ',', $attr[ 'columns' ] ) ): ?>
-                <table class="ab-appointments-table">
-
-                    <?php if ( isset( $attr[ 'show_column_titles' ] ) && $attr[ 'show_column_titles' ] ): ?>
-                        <thead>
-                            <tr>
-                                <?php foreach ( $columns as $column ): ?>
-                                    <th class="<?php echo 'ab-column-' . $column ?>"><?php _e( ucfirst( $column ), 'bookly' ) ?></th>
-                                <?php endforeach ?>
-                            </tr>
-                        </thead>
-                    <?php endif ?>
-
-                    <?php foreach ( $appointments as $a ): ?>
-                    <tr>
-                        <?php foreach ( $columns as $column ): ?>
-                            <?php
-                                switch ( $column ) {
-
-                                    case 'date':
-                                        ?><td class="ab-column-date"><?php echo AB_DateTimeUtils::formatDate( $a[ 'start_date' ] ) ?></td><?php
-                                        break;
-
-                                    case 'time':
-                                        ?><td class="ab-column-time"><?php echo AB_DateTimeUtils::formatTime( $a[ 'start_date' ] ) ?></td><?php
-                                        break;
-
-                                    case 'price':
-                                        ?><td class="ab-column-price"><?php echo AB_Utils::formatPrice( $a[ 'price' ] ) ?></td><?php
-                                        break;
-
-                                    case 'cancel':
-                                        ?><td class="ab-column-cancel">
-                                            <?php if ( $a[ 'start_date' ] > current_time( 'mysql' ) ): ?>
-                                                <a class="ab-btn orange" href="<?php echo esc_attr( admin_url( 'admin-ajax.php' ) . '?action=ab_cancel_appointment&token=' . $a['token'] ) ?>">
-                                                    <span class="ab_label"><?php _e( 'Cancel', 'bookly' ) ?></span>
-                                                </a>
-                                            <?php else: ?>
-                                                <?php _e( 'Expired', 'bookly' ) ?>
-                                            <?php endif ?>
-                                        </td><?php
-                                        break;
-
-                                    default:
-                                        ?><td class="ab-column-<?php echo $column ?>"><?php echo $a[ $column ] ?></td><?php
-                                }
-                            ?>
-                        <?php endforeach ?>
-                    </tr>
-                    <?php endforeach ?>
-
-                </table>
+        <?php if ( ! empty( $columns ) || ! empty( $custom_fields ) ) : ?>
+            <table class="ab-appointments-table" data-columns="<?php echo esc_attr( json_encode( $columns ) ) ?>" data-custom_fields="<?php echo esc_attr( implode(',', $custom_fields ) ) ?>" data-page="0">
+                <?php if ( isset( $attributes['show_column_titles'] ) && $attributes['show_column_titles'] ) : ?>
+                    <thead>
+                        <tr>
+                            <?php foreach ( $columns as $column ) : ?>
+                                <?php if ( $column != 'cancel' ) : ?>
+                                    <th><?php echo $titles[ $column ] ?></th>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                            <?php foreach ( $custom_fields as $column ) : ?>
+                                <th><?php if ( isset( $titles[ $column ] ) ) echo $titles[ $column ] ?></th>
+                            <?php endforeach ?>
+                            <?php if ( $with_cancel ) : ?>
+                                <th><?php echo $titles['cancel'] ?></th>
+                            <?php endif ?>
+                        </tr>
+                    </thead>
+                <?php endif ?>
+                <?php if ( empty( $appointments ) ) : ?>
+                    <tr class="bookly--no-appointments"><td colspan="<?php echo count( $columns ) + count( $custom_fields ) ?>"><?php _e( 'No appointments found.', 'bookly' ) ?></td></tr>
+                <?php else : ?>
+                    <?php include '_row.php' ?>
+                <?php endif ?>
+            </table>
+            <?php if( $more ) : ?>
+                <button class="ab-btn ab--show-past ab-inline-block ab-right" style="background: <?php echo $color ?>!important; width: auto" data-spinner-size="40" data-style="zoom-in">
+                    <span class="ab_label"><?php _e( 'Show past appointments', 'bookly' ) ?></span>
+                </button>
             <?php endif ?>
-        <?php else: ?>
-            <p><?php _e( 'No appointments found', 'bookly' ) ?></p>
         <?php endif ?>
     </div>
-<?php else: ?>
+
+    <script type="text/javascript">
+        (function (win, fn) {
+            var done = false, top = true,
+                doc = win.document,
+                root = doc.documentElement,
+                modern = doc.addEventListener,
+                add = modern ? 'addEventListener' : 'attachEvent',
+                rem = modern ? 'removeEventListener' : 'detachEvent',
+                pre = modern ? '' : 'on',
+                init = function(e) {
+                    if (e.type == 'readystatechange') if (doc.readyState != 'complete') return;
+                    (e.type == 'load' ? win : doc)[rem](pre + e.type, init, false);
+                    if (!done) { done = true; fn.call(win, e.type || e); }
+                },
+                poll = function() {
+                    try { root.doScroll('left'); } catch(e) { setTimeout(poll, 50); return; }
+                    init('poll');
+                };
+            if (doc.readyState == 'complete') fn.call(win, 'lazy');
+            else {
+                if (!modern) if (root.doScroll) {
+                    try { top = !win.frameElement; } catch(e) { }
+                    if (top) poll();
+                }
+                doc[add](pre + 'DOMContentLoaded', init, false);
+                doc[add](pre + 'readystatechange', init, false);
+                win[add](pre + 'load', init, false);
+            }
+        })(window, function() {
+            window.booklyCustomerProfile({
+                ajaxurl : <?php echo json_encode( $ajax_url ) ?>
+            });
+        });
+    </script>
+<?php else : ?>
     <?php wp_login_form() ?>
 <?php endif ?>

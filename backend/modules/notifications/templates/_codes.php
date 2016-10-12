@@ -1,24 +1,33 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<tr><td><input value="[[APPOINTMENT_DATE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('date of appointment', 'bookly') ?></td></tr>
-<tr><td><input value="[[APPOINTMENT_TIME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('time of appointment', 'bookly') ?></td></tr>
-<tr><td><input value="[[CANCEL_APPOINTMENT]]" readonly="readonly" onclick="this.select()" /> - <?php _e('cancel appointment link', 'bookly') ?></td></tr>
-<tr><td><input value="[[CANCEL_APPOINTMENT_URL]]" readonly="readonly" onclick="this.select()" /> - <?php echo esc_html( __('URL for cancel appointment link (to use inside <a> tag)', 'bookly') ) ?></td></tr>
-<tr><td><input value="[[CATEGORY_NAME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('name of category', 'bookly') ?></td></tr>
-<tr><td><input value="[[CLIENT_EMAIL]]" readonly="readonly" onclick="this.select()" /> - <?php _e('email of client', 'bookly') ?></td></tr>
-<tr><td><input value="[[CLIENT_NAME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('name of client', 'bookly') ?></td></tr>
-<tr><td><input value="[[CLIENT_PHONE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('phone of client', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_NAME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('name of your company', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_LOGO]]" readonly="readonly" onclick="this.select()" /> - <?php _e('your company logo', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_ADDRESS]]" readonly="readonly" onclick="this.select()" /> - <?php _e('address of your company', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_PHONE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('your company phone', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_WEBSITE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('this web-site address', 'bookly') ?></td></tr>
-<tr><td><input value="[[CUSTOM_FIELDS]]" readonly="readonly" onclick="this.select()" /> - <?php _e('combined values of all custom fields', 'bookly') ?></td></tr>
-<tr><td><input value="[[CUSTOM_FIELDS_2C]]" readonly="readonly" onclick="this.select()" /> - <?php _e('combined values of all custom fields (formatted in 2 columns)', 'bookly') ?></td></tr>
-<tr><td><input value="[[NUMBER_OF_PERSONS]]" readonly="readonly" onclick="this.select()" /> - <?php _e('number of persons', 'bookly') ?></td></tr>
-<tr><td><input value="[[SERVICE_NAME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('name of service', 'bookly') ?></td></tr>
-<tr><td><input value="[[SERVICE_PRICE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('price of service', 'bookly') ?></td></tr>
-<tr><td><input value="[[STAFF_EMAIL]]" readonly="readonly" onclick="this.select()" /> - <?php _e('email of staff', 'bookly') ?></td></tr>
-<tr><td><input value="[[STAFF_NAME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('name of staff', 'bookly') ?></td></tr>
-<tr><td><input value="[[STAFF_PHONE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('phone of staff', 'bookly') ?></td></tr>
-<tr><td><input value="[[STAFF_PHOTO]]" readonly="readonly" onclick="this.select()" /> - <?php _e('photo of staff', 'bookly') ?></td></tr>
-<tr><td><input value="[[TOTAL_PRICE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('total price of booking (service price multiplied by the number of persons)', 'bookly') ?></td></tr>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+$codes = array(
+    array( 'code' => 'appointment_date',    'description' => __( 'date of appointment', 'bookly' ) ),
+    array( 'code' => 'appointment_time',    'description' => __( 'time of appointment', 'bookly' ) ),
+    array( 'code' => 'booking_number',      'description' => __( 'booking number', 'bookly' ) ),
+    array( 'code' => 'approve_appointment_url', 'description' => esc_html__( 'URL of approve appointment link (to use inside <a> tag)', 'bookly' ) ),
+    array( 'code' => 'cancel_appointment',  'description' => __( 'cancel appointment link', 'bookly' ) ),
+    array( 'code' => 'cancel_appointment_url', 'description' => esc_html__( 'URL of cancel appointment link (to use inside <a> tag)', 'bookly' ) ),
+    array( 'code' => 'category_name',       'description' => __( 'name of category', 'bookly' ) ),
+    array( 'code' => 'client_email',        'description' => __( 'email of client', 'bookly' ) ),
+    array( 'code' => 'client_name',         'description' => __( 'name of client', 'bookly' ) ),
+    array( 'code' => 'client_phone',        'description' => __( 'phone of client', 'bookly' ) ),
+    array( 'code' => 'company_name',        'description' => __( 'name of company', 'bookly' ) ),
+    array( 'code' => 'company_logo',        'description' => __( 'company logo', 'bookly' ) ),
+    array( 'code' => 'company_address',     'description' => __( 'address of company', 'bookly' ) ),
+    array( 'code' => 'company_phone',       'description' => __( 'company phone', 'bookly' ) ),
+    array( 'code' => 'company_website',     'description' => __( 'company web-site address', 'bookly' ) ),
+    array( 'code' => 'custom_fields',       'description' => __( 'combined values of all custom fields', 'bookly' ) ),
+    array( 'code' => 'custom_fields_2c',    'description' => __( 'combined values of all custom fields (formatted in 2 columns)', 'bookly' ) ),
+    array( 'code' => 'google_calendar_url', 'description' => esc_html__( 'URL for adding event to client\'s Google Calendar (to use inside <a> tag)', 'bookly' ) ),
+    array( 'code' => 'number_of_persons',   'description' => __( 'number of persons', 'bookly' ) ),
+    array( 'code' => 'payment_type',        'description' => __( 'payment type', 'bookly' ) ),
+    array( 'code' => 'service_info',        'description' => __( 'info of service', 'bookly' ) ),
+    array( 'code' => 'service_name',        'description' => __( 'name of service', 'bookly' ) ),
+    array( 'code' => 'service_price',       'description' => __( 'price of service', 'bookly' ) ),
+    array( 'code' => 'staff_email',         'description' => __( 'email of staff', 'bookly' ) ),
+    array( 'code' => 'staff_info',          'description' => __( 'info of staff', 'bookly' ) ),
+    array( 'code' => 'staff_name',          'description' => __( 'name of staff', 'bookly' ) ),
+    array( 'code' => 'staff_phone',         'description' => __( 'phone of staff', 'bookly' ) ),
+    array( 'code' => 'staff_photo',         'description' => __( 'photo of staff', 'bookly' ) ),
+    array( 'code' => 'total_price',         'description' => __( 'total price of booking (sum of all cart items after applying coupon)', 'bookly' ) ),
+);
+\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_notification_short_codes', $codes ) );

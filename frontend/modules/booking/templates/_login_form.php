@@ -7,25 +7,25 @@
         <div class="bookly-modal-content">
             <form>
                 <div class="bookly-modal-header">
-                    <h4 class="bookly-modal-title"><?php _e( 'Login', 'bookly' ) ?></h4>
+                    <div><?php _e( 'Login', 'bookly' ) ?></div>
                     <button type="button" class="bookly-close">×</button>
                 </div>
-                <div class="bookly-modal-body">
-                    <div class="ab-formGroup ab-full">
-                        <label class="ab-formLabel"><?php _e( 'Username' ) ?></label>
-                        <div class="ab-formField">
-                            <input type="text" name="log" class="ab-formElement" required />
+                <div class="bookly-modal-body bookly-form">
+                    <div class="ab-formGroup">
+                        <label><?php _e( 'Username' ) ?></label>
+                        <div>
+                            <input type="text" name="log" required />
                         </div>
                     </div>
-                    <div class="ab-formGroup ab-full">
-                        <label class="ab-formLabel"><?php _e( 'Password' ) ?></label>
-                        <div class="ab-formField">
-                            <input type="password" name="pwd" class="ab-formElement" required />
+                    <div class="ab-formGroup">
+                        <label><?php _e( 'Password' ) ?></label>
+                        <div>
+                            <input type="password" name="pwd" required />
                         </div>
                     </div>
                     <div class="ab-label-error"></div>
-                    <div class="ab-formGroup ab-full">
-                        <label class="ab-formLabel">
+                    <div class="ab-formGroup">
+                        <label>
                             <input name="action" value="ab_wp_user_login" type="hidden" />
                             <input name="form_id" value="0" type="hidden" />
                             <input type="checkbox" name="rememberme" />
@@ -45,14 +45,14 @@
     </div>
 </div>
 <!-- end modal -->
-<a id="bookly-auth-modal-show-<?php echo $auth_form_id ?>" href="javascript:void(0)"><?php _e( 'Log In', 'bookly' ) ?></a>
+<a id="bookly-auth-modal-show-<?php echo $auth_form_id ?>" href="javascript:void(0)"><?php _e( 'Log In' ) ?></a>
 
 <script type="text/javascript">
     jQuery(document).ready(function($){
         var $modal = $("#bookly-auth-modal-<?php echo $auth_form_id ?>"),
             $guest_info = $modal.parents('.ab-guest-desc'),
             $form = $modal.find('form');
-        $form.find('input[name=form_id]').val($modal.parents('.ab-booking-form').data('form_id'));
+        $form.find('input[name=form_id]').val($modal.parents('.bookly-form').data('form_id'));
         $modal.appendTo('body');
         $('#bookly-auth-modal-show-<?php echo $auth_form_id ?>').on('click', function(e){
             e.preventDefault();
@@ -61,7 +61,7 @@
         $('.bookly-close,.bookly-btn-cancel', $modal).on('click', function(){
             $modal.removeClass('bookly-in');
             $form.trigger('reset');
-            $form.find('input').removeClass('ab-details-error');
+            $form.find('input').removeClass('ab-field-error');
             $form.find('.ab-label-error').html('');
         });
 
@@ -77,15 +77,15 @@
                 success: function(response) {
                     if(response.success) {
                         $guest_info.fadeOut('slow');
-                        $('.ab-full-name').val(response.data.name).removeClass('ab-details-error');
+                        $('.ab-full-name').val(response.data.name).removeClass('ab-field-error');
                         if(response.data.phone){
-                            $('.ab-user-phone').intlTelInput("setNumber", response.data.phone).removeClass('ab-details-error');
+                            $('.ab-user-phone').intlTelInput("setNumber", response.data.phone).removeClass('ab-field-error');
                         }
-                        $('.ab-user-email').val(response.data.email).removeClass('ab-details-error');
+                        $('.ab-user-email').val(response.data.email).removeClass('ab-field-error');
                         $('.ab-full-name-error, .ab-user-phone-error, .ab-user-email-error').html('');
                         $modal.remove();
                     } else {
-                        $form.find('input').addClass('ab-details-error');
+                        $form.find('input').addClass('ab-field-error');
                         $form.find('.ab-label-error').html(response.data.message);
                     }
                     ladda.stop();

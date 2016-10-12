@@ -1,9 +1,9 @@
 jQuery(function ($) {
 
-    var $fullCalendar = $('#full_calendar_wrapper .ab-calendar-element'),
-        $tabs         = $('li.ab-calendar-tab'),
-        $staff        = $('input.ab-staff-filter'),
-        $showAll      = $('input#ab-filter-all-staff'),
+    var $fullCalendar = $('#bookly-fc-wrapper .bookly-js-calendar-element'),
+        $tabs         = $('.bookly-js-calendar-tab'),
+        $staff        = $('input.bookly-js-check-entity'),
+        $showAll      = $('input#bookly-check-all-entities'),
         firstHour     = new Date().getHours(),
         $staffButton  = $('#ab-staff-button'),
         staffMembers  = [],
@@ -17,12 +17,12 @@ jQuery(function ($) {
     }
     // Init tabs and staff member filters.
     if (staffIds === null) {
-        $staff.each(function(index, value){
+        $staff.each(function (index, value) {
             this.checked = true;
             $tabs.filter('[data-staff_id=' + this.value + ']').show();
         });
     } else if (staffIds != '') {
-        $.each(staffIds.split(','), function (index, value){
+        $.each(staffIds.split(','), function (index, value) {
             $staff.filter('[value=' + value + ']').prop('checked', true);
             $tabs.filter('[data-staff_id=' + value + ']').show();
         });
@@ -49,7 +49,7 @@ jQuery(function ($) {
         height: heightFC(),
         // Views.
         defaultView: lastView,
-        scrollTime: firstHour+':00:00',
+        scrollTime: firstHour + ':00:00',
         views: {
             agendaWeek: {
                 columnFormat: 'ddd, D'
@@ -67,16 +67,16 @@ jQuery(function ($) {
         // Text/Time Customization.
         timeFormat:   BooklyL10n.mjsTimeFormat,
         displayEventEnd: true,
-        buttonText : {
+        buttonText: {
             today: BooklyL10n.today,
             month: BooklyL10n.month,
             week:  BooklyL10n.week,
             day:   BooklyL10n.day
         },
-        monthNames:      BooklyL10n.longMonths,
-        monthNamesShort: BooklyL10n.shortMonths,
-        dayNames:        BooklyL10n.longDays,
-        dayNamesShort:   BooklyL10n.shortDays,
+        monthNames:      BooklyL10n.calendar.longMonths,
+        monthNamesShort: BooklyL10n.calendar.shortMonths,
+        dayNames:        BooklyL10n.calendar.longDays,
+        dayNamesShort:   BooklyL10n.calendar.shortDays,
         // Event Dragging & Resizing.
         editable: false,
         // Event Data.
@@ -84,7 +84,7 @@ jQuery(function ($) {
             url: ajaxurl,
             data: {
                 action    : 'ab_get_staff_appointments',
-                staff_ids : function() {
+                staff_ids : function () {
                     var ids = [];
                     if ($tabs.filter('.active').data('staff_id') == 0) {
                         for (var i = 0; i < staffMembers.length; ++i) {
@@ -98,8 +98,8 @@ jQuery(function ($) {
             }
         }],
         // Event Rendering.
-        eventRender : function(calEvent, $event) {
-            var body = '<div class="fc-service-name">' + calEvent.title + '<i class="delete-event icon-rt glyphicon glyphicon-trash"></i></div>';
+        eventRender : function (calEvent, $event) {
+            var body = calEvent.title + '<a class="delete-event dashicons dashicons-trash" title="' + BooklyL10n.delete + '"></a>';
 
             if (calEvent.desc) {
                 body += calEvent.desc;
@@ -107,7 +107,10 @@ jQuery(function ($) {
 
             $event.find('.fc-title').html(body);
 
-            $event.find('i.delete-event').on('click', function(e) {
+            var $time = $event.find('.fc-time');
+            $time.attr('data-start', $time.find('span').text());
+
+            $event.find('.delete-event').on('click', function(e) {
                 e.stopPropagation();
                 if (confirm(BooklyL10n.are_you_sure)) {
                     $.post(ajaxurl, {'action' : 'ab_delete_appointment', 'appointment_id' : calEvent.id }, function () {
@@ -116,39 +119,25 @@ jQuery(function ($) {
                 }
             });
         },
-        eventAfterRender : function(calEvent, $calEventList, calendar) {
+        eventAfterRender : function (calEvent, $calEventList, calendar) {
             $calEventList.each(function () {
                 var $calEvent   = $(this);
-                var titleHeight = $calEvent.find('.fc-title').height();
-                var origHeight  = $calEvent.height();
-
-                if ( origHeight < titleHeight ) {
-                    var $info   = $('<i class="icon-rt glyphicon glyphicon-info-sign"></i>');
-                    var $delete = $('.delete-event', $calEvent);
-
-                    $delete.hide();
-                    $('.fc-content', $calEvent).append($info);
-                    $('.fc-content', $calEvent).append($delete);
-
+                var titleHeight = $calEvent.find('.fc-title').height(),
+                    origHeight  = $calEvent.outerHeight();
+                if (origHeight < titleHeight) {
                     var z_index = $calEvent.zIndex();
                     // Mouse handlers.
-                    $info.on('mouseenter', function () {
-                        $calEvent.css({height: (titleHeight + 30), 'z-index': 64});
-                        $info.hide();
-                        $delete.show();
-                        $calEvent.removeClass('fc-short');
-                    });
-                    $calEvent.on('mouseleave', function () {
-                        $calEvent.css({height: origHeight, 'z-index': z_index});
-                        $delete.hide();
-                        $info.show();
-                        $calEvent.addClass('fc-short');
+                    $calEvent.on('mouseenter', function () {
+                        $calEvent.removeClass('fc-short')
+                            .css({'z-index': 64, bottom: '', height: ''});
+                    }).on('mouseleave', function () {
+                        $calEvent.css({'z-index': z_index, height: origHeight});
                     });
                 }
             });
         },
         // Clicking & Hovering.
-        dayClick: function(date, jsEvent, view) {
+        dayClick: function (date, jsEvent, view) {
             var staff_id, visible_staff_id;
             if (view.type == 'multiStaffDay') {
                 var cell = view.coordMap.getCell(jsEvent.pageX, jsEvent.pageY);
@@ -163,11 +152,10 @@ jQuery(function ($) {
                 null,
                 staff_id,
                 date,
-                null,
-                function(event) {
+                function (event) {
                     if (visible_staff_id == event.staffId || visible_staff_id == 0) {
                         // Create event in calendar.
-                        $fullCalendar.fullCalendar('renderEvent', event );
+                        $fullCalendar.fullCalendar('renderEvent', event);
                     } else {
                         // Switch to the event owner tab.
                         jQuery('li[data-staff_id=' + event.staffId + ']').click();
@@ -175,7 +163,7 @@ jQuery(function ($) {
                 }
             );
         },
-        eventClick: function(calEvent, jsEvent, view) {
+        eventClick: function (calEvent, jsEvent, view) {
             var visible_staff_id;
             if (view.type == 'multiStaffDay') {
                 visible_staff_id = 0;
@@ -185,10 +173,9 @@ jQuery(function ($) {
 
             showAppointmentDialog(
                 calEvent.id,
-                calEvent.staffId,
-                calEvent.start,
-                calEvent.end,
-                function(event) {
+                null,
+                null,
+                function (event) {
                     if (visible_staff_id == event.staffId || visible_staff_id == 0) {
                         // Update event in calendar.
                         jQuery.extend(calEvent, event);
@@ -201,10 +188,10 @@ jQuery(function ($) {
             );
         },
         loading: function (bool) {
-            bool ? $('.ab-loading-inner').show() : $('.ab-loading-inner').hide();
+            $('.fc-loading-inner').toggle(bool);
         },
-        viewRender: function(view, element){
-            setCookie('bookly_cal_view',view.type);
+        viewRender: function (view, element) {
+            setCookie('bookly_cal_view', view.type);
         }
     });
 
@@ -217,43 +204,44 @@ jQuery(function ($) {
 
     // Init date picker for fast navigation in FullCalendar.
     var $fcDatePicker = $('<input type=hidden />');
-    $('.fc-toolbar .fc-center h2').before($fcDatePicker).on('click', function() {
+    $('.fc-toolbar .fc-center h2').before($fcDatePicker).on('click', function () {
         $fcDatePicker.datepicker('setDate', $fullCalendar.fullCalendar('getDate').toDate()).datepicker('show');
     });
     $fcDatePicker.datepicker({
-        dayNamesMin     : BooklyL10n.shortDays,
-        monthNames      : BooklyL10n.longMonths,
-        monthNamesShort : BooklyL10n.shortMonths,
+        dayNamesMin     : BooklyL10n.calendar.shortDays,
+        monthNames      : BooklyL10n.calendar.longMonths,
+        monthNamesShort : BooklyL10n.calendar.shortMonths,
         firstDay        : BooklyL10n.startOfWeek,
-        beforeShow: function(input, inst){
-            inst.dpDiv.queue(function() {
+        beforeShow: function (input, inst) {
+            inst.dpDiv.queue(function () {
                 inst.dpDiv.css({marginTop: '35px'});
                 inst.dpDiv.dequeue();
             });
         },
-        onSelect: function(dateText, inst) {
+        onSelect: function (dateText, inst) {
             var d = new Date(dateText);
             $fullCalendar.fullCalendar('gotoDate', d);
-            if( $fullCalendar.fullCalendar('getView').type != 'agendaDay' &&
-                $fullCalendar.fullCalendar('getView').type != 'multiStaffDay' ){
-                $fullCalendar.find('.fc-day').removeClass('ab-fcday-active');
-                $fullCalendar.find('.fc-day[data-date="' + moment(d).format('YYYY-MM-DD') + '"]').addClass('ab-fcday-active');
+            if ($fullCalendar.fullCalendar('getView').type != 'agendaDay' &&
+                $fullCalendar.fullCalendar('getView').type != 'multiStaffDay')
+            {
+                $fullCalendar.find('.fc-day').removeClass('bookly-fc-day-active');
+                $fullCalendar.find('.fc-day[data-date="' + moment(d).format('YYYY-MM-DD') + '"]').addClass('bookly-fc-day-active');
             }
         },
-        onClose: function(dateText, inst) {
-            inst.dpDiv.queue(function() {
+        onClose: function (dateText, inst) {
+            inst.dpDiv.queue(function () {
                 inst.dpDiv.css({marginTop: '0'});
                 inst.dpDiv.dequeue();
             });
         }
     });
 
-    $(window).on('resize', function() {
+    $(window).on('resize', function () {
         $fullCalendar.fullCalendar('option', 'height', heightFC());
     });
 
     // Click on tabs.
-    $tabs.on('click', function(e) {
+    $tabs.on('click', function (e) {
         e.preventDefault();
         $tabs.removeClass('active');
         $(this).addClass('active');
@@ -298,7 +286,7 @@ jQuery(function ($) {
         updateStaffButton();
 
         $tabs.filter('[data-staff_id=' + this.value + ']').toggle(this.checked);
-        if ($tabs.filter(':visible.active').length == 0 ) {
+        if ($tabs.filter(':visible.active').length == 0) {
             $tabs.filter(':visible:first').triggerHandler('click');
         } else if ($tabs.filter('.active').data('staff_id') == 0) {
             var view = $fullCalendar.fullCalendar('getView');
@@ -315,7 +303,7 @@ jQuery(function ($) {
         // Update staffMembers array.
         var ids = [];
         staffMembers.length = 0;
-        $staff.filter(':checked').each(function() {
+        $staff.filter(':checked').each(function () {
             staffMembers.push({id: this.value, name: this.getAttribute('data-staff_name')});
             ids.push(this.value);
         });
@@ -340,7 +328,7 @@ jQuery(function ($) {
      */
     function setCookie(key, value) {
         var expires = new Date();
-        expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
+        expires.setTime(expires.getTime() + 86400000); // 60 × 60 × 24 × 1000
         document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
     }
 
@@ -363,7 +351,7 @@ jQuery(function ($) {
     function heightFC() {
         var window_height           = $(window).height(),
             wp_admin_bar_height     = $('#wpadminbar').height(),
-            ab_calendar_tabs_height = $('#full_calendar_wrapper .tabbable').outerHeight(true),
+            ab_calendar_tabs_height = $('#bookly-fc-wrapper .tabbable').outerHeight(true),
             height_to_reduce        = wp_admin_bar_height + ab_calendar_tabs_height,
             $wrap                   = $('#wpbody-content .wrap');
 

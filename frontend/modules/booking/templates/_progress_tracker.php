@@ -1,32 +1,41 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<div class="ab-progress-tracker<?php if ( $payment_disabled ) echo ' ab-progress-tracker-four-steps'?>">
-    <ul class=ab-progress-bar>
-        <li class="ab-step-tabs<?php if ( $booking_step >= 1 ): ?> active<?php endif ?> ab-first">
-            <a href="javascript:void(0)">1. <?php echo AB_Utils::getTranslatedOption( 'ab_appearance_text_step_service' ) ?></a>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+    $i = 1;
+?>
+<div class="ab-progress-tracker bookly-table">
+    <?php if ( $skip_service_step == false ) : ?>
+    <div <?php if ( $step >= 1 ) : ?>class="active"<?php endif ?>>
+        <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_step_service' ) ?>
+        <div class=step></div>
+    </div>
+    <?php endif ?>
+    <?php if ( \BooklyLite\Lib\Config::extrasEnabled() ) : ?>
+    <div <?php if ( $step >= 2 ) : ?>class="active"<?php endif ?>>
+        <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_step_extras' ) ?>
+        <div class=step></div>
+    </div>
+    <?php endif ?>
+    <div <?php if ( $step >= 3 ) : ?>class="active"<?php endif ?>>
+        <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_step_time' ) ?>
+        <div class=step></div>
+    </div>
+    <?php if ( $show_cart ) : ?>
+        <div <?php if ( $step >= 4 ) : ?>class="active"<?php endif ?>>
+            <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_step_cart' ) ?>
             <div class=step></div>
-        </li>
-        <li class="ab-step-tabs<?php if ( $booking_step >= 2 ): ?> active<?php endif ?>">
-            <a href="javascript:void(0)">2. <?php echo AB_Utils::getTranslatedOption( 'ab_appearance_text_step_time' ) ?></a href="javascript:void(0)">
+        </div>
+    <?php endif ?>
+    <div <?php if ( $step >= 5 ) : ?>class="active"<?php endif ?>>
+        <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_step_details' ) ?>
+        <div class=step></div>
+    </div>
+    <?php if ( $payment_disabled == false ) : ?>
+        <div <?php if ( $step >= 6 ) : ?>class="active"<?php endif ?>>
+            <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_step_payment' ) ?>
             <div class=step></div>
-        </li>
-        <li class="ab-step-tabs<?php if ( $booking_step >= 3 ): ?> active<?php endif ?>">
-            <a href="javascript:void(0)">3. <?php echo AB_Utils::getTranslatedOption( 'ab_appearance_text_step_details' ) ?></a>
-            <div class=step></div>
-        </li>
-        <?php if ( $payment_disabled ): ?>
-            <li class="ab-step-tabs<?php if ( $booking_step >= 4 ): ?> active<?php endif ?> ab-last">
-                <a href="javascript:void(0)">4. <?php echo AB_Utils::getTranslatedOption( 'ab_appearance_text_step_done' ) ?></a>
-                <div class=step></div>
-            </li>
-        <?php else: ?>
-            <li class="ab-step-tabs<?php if ( $booking_step >= 4 ): ?> active<?php endif ?>">
-                <a href="javascript:void(0)">4. <?php echo AB_Utils::getTranslatedOption( 'ab_appearance_text_step_payment' ) ?></a>
-                <div class=step></div>
-            </li>
-            <li class="ab-step-tabs<?php if ( $booking_step >= 5 ): ?> active<?php endif ?> ab-last">
-                <a href="javascript:void(0)">5. <?php echo AB_Utils::getTranslatedOption( 'ab_appearance_text_step_done' ) ?></a>
-                <div class=step></div>
-            </li>
-        <?php endif ?>
-    </ul>
+        </div>
+    <?php endif ?>
+    <div <?php if ( $step >= 7 ) : ?>class="active"<?php endif ?>>
+        <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_step_done' ) ?>
+        <div class=step></div>
+    </div>
 </div>

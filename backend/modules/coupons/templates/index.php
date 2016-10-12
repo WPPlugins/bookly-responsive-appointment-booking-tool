@@ -1,35 +1,45 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<div id="bookly-tbs" class="wrap">
+    <div class="bookly-tbs-body">
+        <div class="page-header text-right clearfix">
+            <div class="bookly-page-title">
+                <?php _e( 'Coupons', 'bookly' ) ?>
+            </div>
+        </div>
+        <div class="panel panel-default bookly-main">
+            <div class="panel-body">
+                <div class="form-inline bookly-margin-bottom-lg text-right">
+                    <div class="form-group">
+                        <button type="button"
+                                id="bookly-add"
+                                class="btn btn-success">
+                            <i class="glyphicon glyphicon-plus"></i> <?php _e( 'Add Coupon', 'bookly' ) ?>
+                        </button>
+                    </div>
+                </div>
 
-<div id="ab_coupons_wrapper" class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title"><?php _e( 'Coupons', 'bookly' ) ?></h3>
-    </div>
-    <div class="panel-body">
-        <div class="list-wrapper">
-            <div id="ab-coupons-list">
-                <?php include '_list.php' ?>
+                <table class="table table-striped"
+                       id="bookly-coupons-list"
+                       width="100%">
+                    <thead>
+                        <tr>
+                            <th><?php _e( 'Code', 'bookly' ) ?></th>
+                            <th><?php _e( 'Discount (%)', 'bookly' ) ?></th>
+                            <th><?php _e( 'Deduction', 'bookly' ) ?></th>
+                            <th><?php _e( 'Services', 'bookly' ) ?></th>
+                            <th><?php _e( 'Usage limit', 'bookly' ) ?></th>
+                            <th><?php _e( 'Number of times used', 'bookly' ) ?></th>
+                            <th></th>
+                            <th width="16"><input type="checkbox" id="bookly-check-all"></th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div class="text-right bookly-margin-top-lg">
+                    <?php \BooklyLite\Lib\Utils\Common::deleteButton() ?>
+                </div>
             </div>
         </div>
     </div>
-    <div class="panel-footer">
-        <div class="list-actions">
-            <a class="add-coupon btn btn-info" href="#"><?php _e( 'Add Coupon', 'bookly' ) ?></a>
-            <a class="delete btn btn-info" href="#"><?php _e( 'Delete', 'bookly' ) ?></a>
-        </div>
-    </div>
+    <?php include '_modal.php' ?>
 </div>
-<div class="modal fade" id="lite_notice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title"><?php _e('Notice', 'bookly') ?></h4>
-            </div>
-            <div class="modal-body">
-                <?php _e('This function is disabled in the lite version of Bookly. If you find the plugin useful for your business please consider buying a licence for the full version. It costs just $46 and for this money you will get many useful functions, lifetime free update and excellent support! More information can be found here', 'bookly'); ?>: <a href="http://booking-wp-plugin.com" target="_blank">http://booking-wp-plugin.com</a>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?php _e('Close', 'bookly') ?></button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->

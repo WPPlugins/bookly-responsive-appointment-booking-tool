@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Bookly v7.6\n"
+"Project-Id-Version: Bookly v11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-12 15:29+0300\n"
-"PO-Revision-Date: 2015-08-12 15:30+0300\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2016-10-06 11:13+0300\n"
+"PO-Revision-Date: 2016-10-06 11:14+0300\n"
+"Last-Translator: Andrew <andcheung@gmail.com>\n"
 "Language-Team: \n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.2\n"
+"X-Generator: Poedit 1.8.6\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
 "__:1,2t;_e:1,2t;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;"
@@ -22,1300 +22,1749 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../backend/AB_Backend.php:58
-#: ../backend/modules/calendar/templates/calendar.php:10
+#: ../backend/resources/js/moment.min.js:6
+msgid "\n"
+msgstr ""
+
+#: ../backend/Backend.php:68
+#: ../backend/modules/calendar/templates/calendar.php:13
+#: ../backend/modules/staff/templates/edit.php:151
 msgid "Calendar"
-msgstr ""
+msgstr "日曆"
 
-#: ../backend/AB_Backend.php:59
-#: ../backend/modules/appointments/templates/index.php:4
-#: ../frontend/modules/customer_profile/templates/short_code.php:4
+#: ../backend/Backend.php:69
+#: ../backend/modules/appointments/templates/index.php:8
+#: ../frontend/modules/customer_profile/templates/short_code.php:10
 msgid "Appointments"
-msgstr ""
+msgstr "預約"
 
-#: ../backend/AB_Backend.php:60 ../backend/modules/staff/templates/list.php:7
+#: ../backend/Backend.php:70 ../backend/modules/staff/templates/index.php:8
 msgid "Staff Members"
-msgstr ""
+msgstr "員工"
 
-#: ../backend/AB_Backend.php:61
-#: ../backend/modules/service/templates/index.php:5
-#: ../backend/modules/staff/templates/edit.php:21
+#: ../backend/Backend.php:71 ../backend/modules/coupons/templates/index.php:29
+#: ../backend/modules/services/templates/index.php:6
+#: ../backend/modules/staff/templates/edit.php:47
 msgid "Services"
-msgstr ""
+msgstr "服務"
 
-#: ../backend/AB_Backend.php:62 ../backend/modules/sms/templates/index.php:6
+#: ../backend/Backend.php:72 ../backend/modules/sms/templates/index.php:8
 msgid "SMS Notifications"
-msgstr ""
+msgstr "SMS短信通知"
 
-#: ../backend/AB_Backend.php:63
-#: ../backend/modules/notifications/templates/index.php:10
+#: ../backend/Backend.php:73
+#: ../backend/modules/notifications/templates/index.php:13
 msgid "Email Notifications"
-msgstr ""
+msgstr "電郵通知"
 
-#: ../backend/AB_Backend.php:64
-#: ../backend/modules/calendar/templates/_appointment_form.php:66
-#: ../backend/modules/customer/templates/index.php:4
-#: ../backend/modules/settings/templates/index.php:12
+#: ../backend/Backend.php:74
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:71
+#: ../backend/modules/customers/templates/index.php:6
+#: ../backend/modules/settings/templates/index.php:20
 msgid "Customers"
-msgstr ""
+msgstr "客戶"
 
-#: ../backend/AB_Backend.php:65
-#: ../backend/modules/customer/templates/index.php:36
-#: ../backend/modules/payment/templates/index.php:12
-#: ../backend/modules/settings/templates/index.php:15
+#: ../backend/Backend.php:75
+#: ../backend/modules/customers/templates/_export.php:26
+#: ../backend/modules/customers/templates/index.php:41
+#: ../backend/modules/payments/templates/index.php:6
+#: ../backend/modules/settings/templates/index.php:33
 msgid "Payments"
-msgstr ""
+msgstr "付款"
 
-#: ../backend/AB_Backend.php:66
-#: ../backend/modules/appearance/templates/index.php:4
+#: ../backend/Backend.php:76
+#: ../backend/modules/appearance/templates/index.php:6
 msgid "Appearance"
-msgstr ""
+msgstr "外貌"
 
-#: ../backend/AB_Backend.php:67
-#: ../backend/modules/settings/templates/index.php:4
+#: ../backend/Backend.php:77 ../backend/modules/settings/templates/index.php:6
 msgid "Settings"
-msgstr ""
+msgstr "設定"
 
-#: ../backend/AB_Backend.php:68
-#: ../backend/modules/coupons/templates/index.php:5
-#: ../backend/modules/settings/templates/_paymentsForm.php:18
+#: ../backend/Backend.php:78 ../backend/modules/coupons/templates/index.php:6
+#: ../backend/modules/settings/templates/_paymentsForm.php:16
 msgid "Coupons"
-msgstr ""
+msgstr "優惠券"
 
-#: ../backend/AB_Backend.php:69
-#: ../backend/modules/calendar/templates/_custom_fields_form.php:22
-#: ../backend/modules/custom_fields/templates/index.php:4
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:49
+#: ../backend/Backend.php:79
+#: ../backend/modules/calendar/templates/_customer_details_dialog.php:27
+#: ../backend/modules/custom_fields/templates/index.php:6
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:64
 msgid "Custom Fields"
-msgstr ""
+msgstr "自定欄"
 
-#: ../backend/AB_Backend.php:85 ../backend/modules/staff/templates/list.php:9
+#: ../backend/Backend.php:96 ../backend/modules/staff/templates/index.php:11
 msgid "Profile"
-msgstr ""
+msgstr "簡介"
 
-#: ../backend/modules/appearance/AB_AppearanceController.php:60
-#: ../backend/modules/appointments/AB_AppointmentsController.php:48
-#: ../backend/modules/calendar/AB_CalendarController.php:73
-#: ../backend/modules/payment/AB_PaymentController.php:28
-#: ../backend/modules/sms/AB_SmsController.php:108
-#: ../frontend/AB_Frontend.php:51
+#: ../backend/modules/appearance/Controller.php:61
+#: ../backend/modules/appointments/Controller.php:46
+#: ../backend/modules/calendar/Controller.php:54
+#: ../backend/modules/payments/Controller.php:52
+#: ../backend/modules/sms/Controller.php:135 ../frontend/Frontend.php:86
 msgid "Today"
-msgstr ""
+msgstr "今天"
 
-#: ../backend/modules/appearance/AB_AppearanceController.php:63
-#: ../frontend/AB_Frontend.php:55
+#: ../backend/modules/appearance/Controller.php:64 ../frontend/Frontend.php:90
 msgid "Next month"
-msgstr ""
+msgstr "下月"
 
-#: ../backend/modules/appearance/AB_AppearanceController.php:64
-#: ../frontend/AB_Frontend.php:56
+#: ../backend/modules/appearance/Controller.php:65 ../frontend/Frontend.php:91
 msgid "Previous month"
-msgstr ""
+msgstr "上月"
 
-#: ../backend/modules/appearance/templates/_1_service.php:74
-#: ../backend/modules/appearance/templates/_1_service.php:127
-#: ../backend/modules/appearance/templates/_3_details.php:39
-#: ../backend/modules/appearance/templates/_4_payment.php:56
-#: ../backend/modules/sms/templates/index.php:144
-#: ../frontend/modules/booking/templates/1_service.php:53
-#: ../frontend/modules/booking/templates/1_service.php:112
-#: ../frontend/modules/booking/templates/3_details.php:89
-#: ../frontend/modules/booking/templates/4_payment.php:99
-#: ../frontend/modules/booking/templates/4_payment.php:116
-#: ../frontend/modules/booking/templates/4_payment.php:126
-#: ../lib/payment/AB_PayPal.php:136
-msgid "Next"
-msgstr ""
+#: ../backend/modules/appearance/Controller.php:68
+#: ../backend/modules/custom_fields/Controller.php:36
+#: ../backend/modules/notifications/Controller.php:42
+#: ../backend/modules/services/Controller.php:42
+#: ../backend/modules/settings/Controller.php:54
+#: ../backend/modules/settings/Controller.php:75
+#: ../backend/modules/settings/Controller.php:83
+#: ../backend/modules/settings/Controller.php:90
+#: ../backend/modules/settings/Controller.php:99
+#: ../backend/modules/settings/Controller.php:105
+#: ../backend/modules/settings/Controller.php:116
+#: ../backend/modules/settings/Controller.php:127
+#: ../backend/modules/sms/Controller.php:98
+#: ../backend/modules/staff/Controller.php:68
+msgid "Settings saved."
+msgstr "設定已保存。"
 
-#: ../backend/modules/appearance/templates/_1_service.php:124
-#: ../backend/modules/appearance/templates/_2_time.php:189
-#: ../backend/modules/appearance/templates/_3_details.php:36
-#: ../backend/modules/appearance/templates/_4_payment.php:53
-#: ../frontend/modules/booking/templates/1_service.php:109
-#: ../frontend/modules/booking/templates/2_time.php:32
-#: ../frontend/modules/booking/templates/2_time.php:41
-#: ../frontend/modules/booking/templates/3_details.php:86
-#: ../frontend/modules/booking/templates/4_payment.php:96
-#: ../frontend/modules/booking/templates/4_payment.php:113
-#: ../frontend/modules/booking/templates/4_payment.php:123
-#: ../lib/payment/AB_PayPal.php:135
-msgid "Back"
-msgstr ""
+#: ../backend/modules/appearance/templates/_4_cart.php:21
+#: ../backend/modules/appearance/templates/_4_cart.php:58
+#: ../backend/modules/appearance/templates/_4_cart.php:85
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:34
+#: ../backend/modules/payments/templates/details.php:18
+#: ../backend/modules/payments/templates/details.php:32
+#: ../backend/modules/payments/templates/index.php:59
+#: ../backend/modules/settings/Controller.php:146
+#: ../backend/modules/sms/templates/_purchases.php:17
+#: ../backend/modules/sms/templates/_sender_id.php:15
+#: ../backend/modules/sms/templates/_sms_details.php:17
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:36
+#: ../backend/modules/tiny_mce/templates/popup.php:51
+#: ../frontend/modules/booking/Controller.php:492
+#: ../frontend/modules/customer_profile/Controller.php:65
+#: ../lib/Installer.php:358 ../lib/NotificationCodes.php:136
+#: ../lib/Updater.php:919 ../lib/utils/send_notifications_cron.php:101
+msgid "Date"
+msgstr "日期"
 
-#: ../backend/modules/appearance/templates/_3_details.php:10
+#: ../backend/modules/appearance/templates/_4_cart.php:22
+#: ../backend/modules/appearance/templates/_4_cart.php:62
+#: ../backend/modules/appearance/templates/_4_cart.php:89
+#: ../backend/modules/settings/Controller.php:147
+#: ../backend/modules/sms/templates/_purchases.php:18
+#: ../backend/modules/sms/templates/_sms_details.php:18
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:42
+#: ../frontend/modules/booking/Controller.php:495
+#: ../frontend/modules/customer_profile/Controller.php:66
+#: ../lib/Installer.php:262 ../lib/Installer.php:358
+#: ../lib/NotificationCodes.php:139 ../lib/Updater.php:919
+#: ../lib/Updater.php:1234
+msgid "Time"
+msgstr "時間"
+
+#: ../backend/modules/appearance/templates/_4_cart.php:24
+#: ../backend/modules/appearance/templates/_4_cart.php:70
+#: ../backend/modules/appearance/templates/_4_cart.php:97
+#: ../backend/modules/payments/templates/details.php:37
+#: ../backend/modules/services/templates/_list.php:88
+#: ../backend/modules/services/templates/_list.php:258
+#: ../backend/modules/settings/Controller.php:149
+#: ../backend/modules/staff/templates/services.php:20
+#: ../backend/modules/staff/templates/services.php:52
+#: ../backend/modules/staff/templates/services.php:95
+#: ../backend/modules/staff/templates/services.php:125
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:48
+#: ../frontend/modules/booking/Controller.php:501
+#: ../frontend/modules/customer_profile/Controller.php:67
+#: ../lib/NotificationCodes.php:145
+msgid "Price"
+msgstr "售價"
+
+#: ../backend/modules/appearance/templates/_4_cart.php:36
+#: ../backend/modules/appearance/templates/_4_cart.php:47
+#: ../backend/modules/appearance/templates/_4_cart.php:76
+#: ../backend/modules/appearance/templates/_4_cart.php:103
+#: ../backend/modules/appointments/Controller.php:68
+#: ../backend/modules/coupons/Controller.php:35
+#: ../backend/modules/customers/Controller.php:47
+#: ../backend/modules/services/templates/_category_item.php:12
+#: ../frontend/modules/booking/templates/4_cart.php:29
+#: ../frontend/modules/booking/templates/4_cart.php:46
+msgid "Edit"
+msgstr "編輯"
+
+#: ../backend/modules/appearance/templates/_4_cart.php:37
+#: ../backend/modules/appearance/templates/_4_cart.php:48
+#: ../backend/modules/appearance/templates/_4_cart.php:77
+#: ../backend/modules/appearance/templates/_4_cart.php:104
+#: ../frontend/modules/booking/templates/4_cart.php:30
+#: ../frontend/modules/booking/templates/4_cart.php:47
+msgid "Remove"
+msgstr "清除"
+
+#: ../backend/modules/appearance/templates/_4_cart.php:110
+#: ../backend/modules/appearance/templates/_4_cart.php:117
+#: ../backend/modules/payments/templates/details.php:111
+#: ../backend/modules/payments/templates/index.php:73
+#: ../frontend/modules/booking/templates/4_cart.php:55
+#: ../frontend/modules/booking/templates/4_cart.php:68
+msgid "Total"
+msgstr "總計"
+
+#: ../backend/modules/appearance/templates/_5_details.php:9
 msgid "Visible to non-logged in customers only"
-msgstr ""
+msgstr "僅未登陸用戶可見"
 
-#: ../backend/modules/appearance/templates/_4_payment.php:16
-#: ../backend/modules/appointments/AB_AppointmentsController.php:55
-#: ../backend/modules/calendar/templates/_custom_fields_form.php:71
-#: ../backend/modules/payment/AB_PaymentController.php:35
-#: ../backend/modules/sms/AB_SmsController.php:115
-#: ../frontend/modules/booking/templates/4_payment.php:27
-msgid "Apply"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_4_payment.php:35
-#: ../frontend/modules/booking/templates/4_payment.php:50
-msgid "I will pay now with PayPal"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_4_payment.php:42
-#: ../frontend/modules/booking/templates/4_payment.php:64
-#: ../frontend/modules/booking/templates/4_payment.php:78
-msgid "I will pay now with Credit Card"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_card_payment.php:4
-#: ../frontend/modules/booking/templates/_card_payment.php:4
-msgid "Credit Card Number"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_card_payment.php:10
-#: ../frontend/modules/booking/templates/_card_payment.php:10
-msgid "Expiration Date"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_card_payment.php:27
-#: ../frontend/modules/booking/templates/_card_payment.php:27
-msgid "Card Security Code"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_codes.php:2
-#: ../backend/modules/notifications/templates/_codes.php:6
-#: ../backend/modules/settings/templates/_woocommerce.php:62
-#: ../backend/modules/sms/templates/_notif_codes.php:6
+#: ../backend/modules/appearance/templates/_codes.php:3
+#: ../backend/modules/notifications/templates/_codes.php:9
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:5
+#: ../backend/modules/sms/templates/_codes.php:8
 msgid "name of category"
-msgstr ""
+msgstr "類別名稱"
 
 #: ../backend/modules/appearance/templates/_codes.php:4
 msgid "login form"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_codes.php:6
-#: ../backend/modules/notifications/templates/_codes.php:17
-#: ../backend/modules/sms/templates/_notif_codes.php:15
-msgid "number of persons"
-msgstr ""
+msgstr "登入表格"
 
 #: ../backend/modules/appearance/templates/_codes.php:8
+#: ../backend/modules/notifications/templates/_codes.php:21
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:6
+#: ../backend/modules/sms/templates/_codes.php:18
+msgid "number of persons"
+msgstr "人數"
+
+#: ../backend/modules/appearance/templates/_codes.php:9
+#: ../backend/modules/notifications/templates/_codes.php:5
+#: ../backend/modules/sms/templates/_codes.php:5
+msgid "booking number"
+msgstr "訂單號"
+
+#: ../backend/modules/appearance/templates/_codes.php:12
 msgid "date of service"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_codes.php:10
-#: ../backend/modules/notifications/templates/_codes.php:18
-#: ../backend/modules/settings/templates/_woocommerce.php:63
-#: ../backend/modules/sms/templates/_notif_codes.php:16
-msgid "name of service"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_codes.php:11
-#: ../backend/modules/notifications/templates/_codes.php:19
-#: ../backend/modules/settings/templates/_woocommerce.php:64
-#: ../backend/modules/sms/templates/_notif_codes.php:17
-msgid "price of service"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/_codes.php:13
-msgid "time of service"
-msgstr ""
+msgstr "服務日期"
 
 #: ../backend/modules/appearance/templates/_codes.php:15
-#: ../backend/modules/notifications/templates/_codes.php:21
-#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:4
-#: ../backend/modules/settings/templates/_woocommerce.php:65
-#: ../backend/modules/sms/templates/_notif_codes.php:19
-#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:4
-msgid "name of staff"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes.php:23
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:7
+#: ../backend/modules/sms/templates/_codes.php:20
+msgid "info of service"
+msgstr "服務內容"
 
 #: ../backend/modules/appearance/templates/_codes.php:16
+#: ../backend/modules/notifications/templates/_codes.php:24
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:8
+#: ../backend/modules/sms/templates/_codes.php:21
+msgid "name of service"
+msgstr "服務名稱"
+
+#: ../backend/modules/appearance/templates/_codes.php:17
+#: ../backend/modules/notifications/templates/_codes.php:25
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:9
+#: ../backend/modules/sms/templates/_codes.php:22
+msgid "price of service"
+msgstr "服務收費"
+
+#: ../backend/modules/appearance/templates/_codes.php:18
+msgid "time of service"
+msgstr "服務時間"
+
+#: ../backend/modules/appearance/templates/_codes.php:21
+#: ../backend/modules/notifications/templates/_codes.php:27
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:10
+#: ../backend/modules/sms/templates/_codes.php:26
+msgid "info of staff"
+msgstr "員工資訊"
+
+#: ../backend/modules/appearance/templates/_codes.php:22
+#: ../backend/modules/notifications/templates/_codes.php:28
+#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:5
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:11
+#: ../backend/modules/sms/templates/_codes.php:24
+#: ../backend/modules/sms/templates/_codes_staff_agenda.php:5
+msgid "name of staff"
+msgstr "員工名稱"
+
+#: ../backend/modules/appearance/templates/_codes.php:23
 msgid "total price of booking"
-msgstr ""
+msgstr "總服務收費"
 
-#: ../backend/modules/appearance/templates/index.php:7
-#: ../backend/modules/service/templates/_list.php:4
-#: ../backend/modules/settings/AB_SettingsController.php:59
-#: ../backend/modules/settings/AB_SettingsController.php:73
-#: ../backend/modules/settings/AB_SettingsController.php:81
-#: ../backend/modules/settings/AB_SettingsController.php:90
-#: ../backend/modules/settings/AB_SettingsController.php:97
-#: ../backend/modules/settings/AB_SettingsController.php:106
-#: ../backend/modules/staff/templates/edit.php:9
-msgid "Settings saved."
-msgstr ""
-
-#: ../backend/modules/appearance/templates/index.php:18
+#: ../backend/modules/appearance/templates/index.php:22
 msgid "Show form progress tracker"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/index.php:26
-msgid "Show calendar"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/index.php:34
-msgid "Show blocked timeslots"
-msgstr ""
+msgstr "顯示錶單進度狀態"
 
 #: ../backend/modules/appearance/templates/index.php:42
-msgid "Show each day in one column"
-msgstr ""
-
-#: ../backend/modules/appearance/templates/index.php:80
 msgid "Click on the underlined text to edit."
-msgstr ""
+msgstr "點擊下畫綫編輯文本"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:49
-#: ../backend/modules/payment/AB_PaymentController.php:29
-#: ../backend/modules/sms/AB_SmsController.php:109
+#: ../backend/modules/appearance/templates/index.php:54
+msgid "Make selecting employee required"
+msgstr "使選擇所需員工為必需"
+
+#: ../backend/modules/appearance/templates/index.php:62
+msgid "Show service price next to employee name"
+msgstr "旁邊的員工姓名顯示服務價格"
+
+#: ../backend/modules/appearance/templates/index.php:73
+msgid "Show calendar"
+msgstr "顯示日歷"
+
+#: ../backend/modules/appearance/templates/index.php:81
+msgid "Show blocked timeslots"
+msgstr "顯示不可選時間"
+
+#: ../backend/modules/appearance/templates/index.php:89
+msgid "Show each day in one column"
+msgstr "每一欄中顯示一天"
+
+#: ../backend/modules/appointments/Controller.php:45
+msgid "Tomorrow"
+msgstr "明天"
+
+#: ../backend/modules/appointments/Controller.php:47
+#: ../backend/modules/payments/Controller.php:53
+#: ../backend/modules/sms/Controller.php:136
 msgid "Yesterday"
-msgstr ""
+msgstr "昨天"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:50
-#: ../backend/modules/payment/AB_PaymentController.php:30
-#: ../backend/modules/sms/AB_SmsController.php:110
+#: ../backend/modules/appointments/Controller.php:48
+#: ../backend/modules/payments/Controller.php:54
+#: ../backend/modules/sms/Controller.php:129
 msgid "Last 7 Days"
-msgstr ""
+msgstr "最近7天"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:51
-#: ../backend/modules/payment/AB_PaymentController.php:31
-#: ../backend/modules/sms/AB_SmsController.php:111
+#: ../backend/modules/appointments/Controller.php:49
+#: ../backend/modules/payments/Controller.php:55
+#: ../backend/modules/sms/Controller.php:128
 msgid "Last 30 Days"
-msgstr ""
+msgstr "最近30天"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:52
-#: ../backend/modules/payment/AB_PaymentController.php:32
-#: ../backend/modules/sms/AB_SmsController.php:112
+#: ../backend/modules/appointments/Controller.php:50
+#: ../backend/modules/payments/Controller.php:56
+#: ../backend/modules/sms/Controller.php:133
 msgid "This Month"
-msgstr ""
+msgstr "本月"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:53
+#: ../backend/modules/appointments/Controller.php:51
 msgid "Next Month"
-msgstr ""
+msgstr "下個月"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:54
-#: ../backend/modules/payment/AB_PaymentController.php:34
-#: ../backend/modules/sms/AB_SmsController.php:114
+#: ../backend/modules/appointments/Controller.php:52
+#: ../backend/modules/payments/Controller.php:58
+#: ../backend/modules/sms/Controller.php:126
 msgid "Custom Range"
-msgstr ""
+msgstr "自定範圍"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:56
-#: ../backend/modules/calendar/templates/_appointment_form.php:99
-#: ../backend/modules/calendar/templates/_custom_fields_form.php:72
-#: ../backend/modules/customer/templates/_import.php:32
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:101
-#: ../backend/modules/payment/AB_PaymentController.php:36
-#: ../backend/modules/service/templates/index.php:44
-#: ../backend/modules/sms/AB_SmsController.php:116
-#: ../backend/modules/sms/templates/index.php:185
-#: ../backend/modules/staff/templates/_break.php:17
-#: ../backend/modules/staff/templates/new.php:32
-#: ../backend/modules/staff/templates/schedule.php:61
-#: ../backend/modules/tinymce/templates/appointment_list.php:44
-#: ../frontend/modules/customer_profile/templates/short_code.php:41
+#: ../backend/modules/appointments/Controller.php:53
+#: ../backend/modules/calendar/templates/_customer_details_dialog.php:92
+#: ../backend/modules/payments/Controller.php:59
+#: ../backend/modules/sms/Controller.php:121 ../lib/Installer.php:269
+#: ../lib/Updater.php:386
+msgid "Apply"
+msgstr "使用"
+
+#: ../backend/modules/appointments/Controller.php:54
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:134
+#: ../backend/modules/calendar/templates/_customer_details_dialog.php:93
+#: ../backend/modules/coupons/templates/_modal.php:60
+#: ../backend/modules/customers/templates/_customer_dialog.php:53
+#: ../backend/modules/payments/Controller.php:60
+#: ../backend/modules/services/templates/index.php:43
+#: ../backend/modules/settings/templates/_customers.php:23
+#: ../backend/modules/sms/Controller.php:123
+#: ../backend/modules/staff/templates/new.php:43
+#: ../backend/modules/staff/templates/schedule.php:101
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:60
+#: ../frontend/modules/customer_profile/Controller.php:68
+#: ../frontend/modules/customer_profile/templates/_rows.php:46
+#: ../lib/NotificationCodes.php:194 ../lib/NotificationCodes.php:198
+#: ../lib/NotificationCodes.php:210
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:57
-#: ../backend/modules/payment/AB_PaymentController.php:37
-#: ../backend/modules/sms/AB_SmsController.php:117
+#: ../backend/modules/appointments/Controller.php:55
+#: ../backend/modules/payments/Controller.php:61
+#: ../backend/modules/sms/Controller.php:134
 msgid "To"
-msgstr ""
+msgstr "至"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:58
-#: ../backend/modules/payment/AB_PaymentController.php:38
-#: ../backend/modules/sms/AB_SmsController.php:118
+#: ../backend/modules/appointments/Controller.php:56
+#: ../backend/modules/payments/Controller.php:62
+#: ../backend/modules/sms/Controller.php:127
 msgid "From"
-msgstr ""
+msgstr "由"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:59
-#: ../backend/modules/calendar/AB_CalendarController.php:80
-msgid "Edit appointment"
-msgstr ""
+#: ../backend/modules/appointments/Controller.php:65
+#: ../backend/modules/calendar/Controller.php:61
+#: ../backend/modules/coupons/Controller.php:38
+#: ../backend/modules/customers/Controller.php:48
+#: ../backend/modules/payments/Controller.php:74
+#: ../backend/modules/services/Controller.php:41
+#: ../backend/modules/sms/Controller.php:122
+#: ../backend/modules/staff/Controller.php:63
+msgid "Are you sure?"
+msgstr "確定?"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:60
-#: ../backend/modules/appointments/templates/index.php:22
-#: ../backend/modules/calendar/AB_CalendarController.php:79
-#: ../backend/modules/calendar/templates/_appointment_form.php:17
-msgid "New appointment"
-msgstr ""
+#: ../backend/modules/appointments/Controller.php:66
+msgid "No appointments for selected period."
+msgstr "選擇時間沒有預約。"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:69
-msgid "Please select at least one appointment."
-msgstr ""
+#: ../backend/modules/appointments/Controller.php:67
+#: ../backend/modules/coupons/Controller.php:37
+#: ../backend/modules/customers/Controller.php:51
+#: ../backend/modules/payments/Controller.php:72
+#: ../backend/modules/sms/Controller.php:156
+msgid "Processing..."
+msgstr "處理..."
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:199
-#: ../backend/modules/appointments/templates/index.php:29
-msgid "Booking Time"
-msgstr ""
+#: ../backend/modules/appointments/Controller.php:168
+#: ../backend/modules/calendar/Controller.php:304
+#: ../backend/modules/payments/Controller.php:148
+#: ../backend/modules/payments/Controller.php:241
+#, php-format
+msgid "%s of %s"
+msgstr "%s %s個"
 
-#: ../backend/modules/appointments/AB_AppointmentsController.php:200
-#: ../backend/modules/appointments/templates/index.php:30
-msgid "Staff Member"
-msgstr ""
-
-#: ../backend/modules/appointments/AB_AppointmentsController.php:201
-#: ../backend/modules/appointments/templates/index.php:32
-#: ../backend/modules/calendar/templates/_appointment_form.php:28
-#: ../backend/modules/payment/templates/index.php:72
-#: ../backend/modules/tinymce/templates/appointment_list.php:14
-#: ../installer.php:182 ../installer.php:188 ../installer.php:232
-#: ../lib/AB_Google.php:150 ../updates.php:413 ../updates.php:727
-#: ../updates.php:733
-msgid "Service"
-msgstr ""
-
-#: ../backend/modules/appointments/AB_AppointmentsController.php:202
-#: ../backend/modules/appointments/templates/index.php:33
-#: ../backend/modules/service/templates/_list.php:53
-msgid "Duration"
-msgstr ""
-
-#: ../backend/modules/appointments/AB_AppointmentsController.php:203
-#: ../backend/modules/appointments/templates/index.php:34
-#: ../backend/modules/service/templates/_list.php:108
-#: ../backend/modules/sms/templates/_price.php:8
-#: ../backend/modules/staff/templates/services.php:24
-#: ../backend/modules/staff/templates/services.php:60
-#: ../backend/modules/tinymce/templates/appointment_list.php:38
-msgid "Price"
-msgstr ""
-
-#: ../backend/modules/appointments/AB_AppointmentsController.php:204
-#: ../backend/modules/payment/templates/index.php:70
-msgid "Customer"
-msgstr ""
-
-#: ../backend/modules/appointments/AB_AppointmentsController.php:205
-#: ../backend/modules/customer/templates/index.php:31
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:33
-#: ../backend/modules/settings/templates/_companyForm.php:33
-#: ../backend/modules/sms/templates/_sms_details.php:16
-#: ../backend/modules/staff/templates/edit.php:83 ../installer.php:194
-#: ../lib/AB_Google.php:157 ../updates.php:739
-msgid "Phone"
-msgstr ""
-
-#: ../backend/modules/appointments/AB_AppointmentsController.php:206
-#: ../backend/modules/customer/templates/index.php:32
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:37
-#: ../backend/modules/sms/templates/index.php:85
-#: ../backend/modules/sms/templates/index.php:105
-#: ../backend/modules/sms/templates/index.php:132
-#: ../backend/modules/staff/templates/edit.php:77 ../installer.php:195
-#: ../lib/AB_Google.php:156 ../updates.php:740
-msgid "Email"
-msgstr ""
-
+#: ../backend/modules/appointments/templates/_export_dialog.php:7
+#: ../backend/modules/appointments/templates/_export_dialog.php:35
 #: ../backend/modules/appointments/templates/index.php:16
-#: ../backend/modules/customer/templates/_import.php:21
-msgid "Delimiter"
-msgstr ""
-
-#: ../backend/modules/appointments/templates/index.php:18
-#: ../backend/modules/customer/templates/_import.php:23
-msgid "Comma (,)"
-msgstr ""
-
-#: ../backend/modules/appointments/templates/index.php:19
-#: ../backend/modules/customer/templates/_import.php:24
-msgid "Semicolon (;)"
-msgstr ""
-
-#: ../backend/modules/appointments/templates/index.php:21
+#: ../backend/modules/customers/templates/_export.php:8
+#: ../backend/modules/customers/templates/_export.php:31
+#: ../backend/modules/customers/templates/index.php:14
 msgid "Export to CSV"
-msgstr ""
+msgstr "導出 CSV"
 
-#: ../backend/modules/appointments/templates/index.php:31
+#: ../backend/modules/appointments/templates/_export_dialog.php:11
+#: ../backend/modules/customers/templates/_export.php:12
+#: ../backend/modules/customers/templates/_import.php:20
+msgid "Delimiter"
+msgstr "分隔符"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:13
+#: ../backend/modules/customers/templates/_export.php:14
+#: ../backend/modules/customers/templates/_import.php:22
+msgid "Comma (,)"
+msgstr "逗號 (,)"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:14
+#: ../backend/modules/customers/templates/_export.php:15
+#: ../backend/modules/customers/templates/_import.php:23
+msgid "Semicolon (;)"
+msgstr "分號 (;)"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:18
+#: ../backend/modules/appointments/templates/_print_dialog.php:11
+#: ../backend/modules/appointments/templates/index.php:28
+#: ../backend/modules/appointments/templates/index.php:87
+msgid "No."
+msgstr "號"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:19
+msgid "Booking Time"
+msgstr "預約時間"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:21
+#: ../backend/modules/appointments/templates/_print_dialog.php:14
+#: ../backend/modules/appointments/templates/index.php:90
 msgid "Customer Name"
-msgstr ""
+msgstr "客戶名稱"
 
-#: ../backend/modules/appointments/templates/index.php:47
-msgid "Edit"
-msgstr ""
+#: ../backend/modules/appointments/templates/_export_dialog.php:22
+#: ../backend/modules/appointments/templates/_print_dialog.php:15
+#: ../backend/modules/appointments/templates/index.php:91
+msgid "Customer Phone"
+msgstr "客戶電話"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:23
+#: ../backend/modules/appointments/templates/_print_dialog.php:16
+#: ../backend/modules/appointments/templates/index.php:92
+msgid "Customer Email"
+msgstr "客戶電郵"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:25
+#: ../backend/modules/appointments/templates/_print_dialog.php:18
+#: ../backend/modules/appointments/templates/index.php:94
+#: ../backend/modules/services/templates/_list.php:106
+#: ../backend/modules/services/templates/_list.php:267
+msgid "Duration"
+msgstr "歷時"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:26
+#: ../backend/modules/appointments/templates/_print_dialog.php:19
+#: ../backend/modules/appointments/templates/index.php:74
+#: ../backend/modules/appointments/templates/index.php:95
+#: ../backend/modules/calendar/Controller.php:467
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:80
+#: ../backend/modules/calendar/templates/_customer_details_dialog.php:14
+#: ../backend/modules/payments/templates/details.php:20
+#: ../backend/modules/payments/templates/index.php:66
+#: ../backend/modules/sms/templates/_purchases.php:21
+#: ../backend/modules/sms/templates/_sender_id.php:17
+#: ../backend/modules/sms/templates/_sms_details.php:23
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:54
+#: ../frontend/modules/customer_profile/Controller.php:69
+#: ../lib/entities/Staff.php:156
+msgid "Status"
+msgstr "狀態"
+
+#: ../backend/modules/appointments/templates/_export_dialog.php:27
+#: ../backend/modules/appointments/templates/_print_dialog.php:20
+#: ../backend/modules/appointments/templates/index.php:96
+#: ../backend/modules/calendar/Controller.php:460
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:82
+#: ../backend/modules/payments/templates/_payment_details_dialog.php:8
+#: ../backend/modules/payments/templates/details.php:11
+#: ../lib/Installer.php:265 ../lib/Updater.php:1236
+#: ../lib/entities/Staff.php:149
+msgid "Payment"
+msgstr "付款"
+
+#: ../backend/modules/appointments/templates/_print_dialog.php:7
+#: ../backend/modules/appointments/templates/_print_dialog.php:28
+#: ../backend/modules/appointments/templates/index.php:19
+msgid "Print"
+msgstr "打印"
+
+#: ../backend/modules/appointments/templates/_print_dialog.php:12
+#: ../backend/modules/appointments/templates/index.php:88
+#: ../backend/modules/payments/templates/index.php:64
+msgid "Appointment Date"
+msgstr "預約日期"
+
+#: ../backend/modules/appointments/templates/index.php:22
+#: ../backend/modules/calendar/Components.php:49
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:9
+msgid "New appointment"
+msgstr "建立預約"
 
 #: ../backend/modules/appointments/templates/index.php:54
-msgid "No appointments for selected period."
-msgstr ""
+#: ../backend/modules/payments/templates/details.php:10
+#: ../backend/modules/payments/templates/index.php:61
+#: ../lib/utils/send_notifications_cron.php:103
+msgid "Customer"
+msgstr "客戶"
 
-#: ../backend/modules/appointments/templates/index.php:67
-#: ../backend/modules/coupons/templates/index.php:18
-#: ../backend/modules/customer/templates/index.php:105
-#: ../backend/modules/service/templates/index.php:63
-#: ../backend/modules/settings/templates/_companyForm.php:18
-msgid "Delete"
-msgstr ""
+#: ../backend/modules/calendar/Components.php:48
+msgid "Edit appointment"
+msgstr "編輯預約"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:74
+#: ../backend/modules/calendar/Controller.php:55
 msgid "Week"
-msgstr ""
+msgstr "星期"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:75
+#: ../backend/modules/calendar/Controller.php:56
 msgid "Day"
-msgstr ""
+msgstr "日"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:76
+#: ../backend/modules/calendar/Controller.php:57
 msgid "Month"
-msgstr ""
+msgstr "月"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:77
+#: ../backend/modules/calendar/Controller.php:58
 msgid "All Day"
-msgstr ""
+msgstr "全日"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:78
-#: ../backend/modules/service/AB_ServiceController.php:49
+#: ../backend/modules/calendar/Controller.php:59
+#: ../backend/modules/services/templates/_category_item.php:15
+#: ../backend/modules/services/templates/_list.php:232
+#: ../backend/modules/settings/templates/_companyForm.php:19
+#: ../backend/modules/settings/templates/_customers.php:23
+#: ../backend/modules/staff/templates/edit.php:19 ../lib/utils/Common.php:383
+msgid "Delete"
+msgstr "删除"
+
+#: ../backend/modules/calendar/Controller.php:60
+#: ../backend/modules/services/Controller.php:43
 msgid "No staff selected"
-msgstr ""
+msgstr "沒有選擇員工"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:81
-#: ../backend/modules/coupons/AB_CouponsController.php:34
-#: ../backend/modules/customer/AB_CustomerController.php:59
-#: ../backend/modules/service/AB_ServiceController.php:48
-#: ../backend/modules/staff/AB_StaffController.php:58
-msgid "Are you sure?"
-msgstr ""
-
-#: ../backend/modules/calendar/AB_CalendarController.php:342
-msgid "The number of customers should be not more than "
-msgstr ""
-
-#: ../backend/modules/calendar/AB_CalendarController.php:345
+#: ../backend/modules/calendar/Controller.php:362
 msgid "Start time must not be empty"
-msgstr ""
+msgstr "必須輸入開始時間"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:347
+#: ../backend/modules/calendar/Controller.php:364
 msgid "End time must not be empty"
-msgstr ""
+msgstr "必須輸入結束時間"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:349
+#: ../backend/modules/calendar/Controller.php:366
 msgid "End time must not be equal to start time"
-msgstr ""
+msgstr "結束時間不能等於開始時間"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:401
-#: ../lib/entities/AB_Staff.php:117
+#: ../backend/modules/calendar/Controller.php:387
+#, php-format
+msgid "The number of customers should not be more than %d"
+msgstr "客戶的數量不應超過%d"
+
+#: ../backend/modules/calendar/Controller.php:474
+#: ../backend/modules/calendar/Controller.php:483 ../lib/entities/Staff.php:159
+#: ../lib/entities/Staff.php:163
 msgid "Signed up"
-msgstr ""
+msgstr "報名"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:402
-#: ../backend/modules/service/templates/_list.php:112
-#: ../backend/modules/staff/templates/services.php:25
-#: ../backend/modules/staff/templates/services.php:61
-#: ../lib/entities/AB_Staff.php:118
+#: ../backend/modules/calendar/Controller.php:475
+#: ../backend/modules/calendar/Controller.php:484
+#: ../backend/modules/services/templates/_list.php:94
+#: ../backend/modules/staff/templates/services.php:28
+#: ../backend/modules/staff/templates/services.php:64
+#: ../backend/modules/staff/templates/services.php:101
+#: ../backend/modules/staff/templates/services.php:137
+#: ../lib/entities/Staff.php:160 ../lib/entities/Staff.php:164
 msgid "Capacity"
-msgstr ""
+msgstr "名額"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:414
-#: ../lib/entities/AB_Service.php:38 ../lib/entities/AB_Staff.php:125
+#: ../backend/modules/calendar/Controller.php:501 ../lib/Config.php:48
+#: ../lib/entities/Service.php:45 ../lib/entities/Staff.php:170
 msgid "Untitled"
-msgstr ""
+msgstr "無標題"
 
-#: ../backend/modules/calendar/AB_CalendarController.php:419
+#: ../backend/modules/calendar/Controller.php:506
 msgid "Could not save appointment in database."
-msgstr ""
+msgstr "無法將預約存進系統"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:23
-#: ../backend/modules/payment/templates/index.php:71
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:16
+#: ../backend/modules/payments/templates/details.php:33
+#: ../backend/modules/payments/templates/index.php:36
+#: ../backend/modules/payments/templates/index.php:62
 msgid "Provider"
-msgstr ""
+msgstr "供應者"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:30
-#: ../frontend/modules/booking/templates/1_service.php:32
-msgid "Please select a service"
-msgstr ""
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:21
+#: ../backend/modules/payments/templates/details.php:31
+#: ../backend/modules/payments/templates/index.php:46
+#: ../backend/modules/payments/templates/index.php:63
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:24
+#: ../lib/Google.php:151 ../lib/Installer.php:261 ../lib/Installer.php:272
+#: ../lib/Installer.php:358 ../lib/Updater.php:919 ../lib/Updater.php:1233
+#: ../lib/Updater.php:1239 ../lib/utils/send_notifications_cron.php:102
+msgid "Service"
+msgstr "服務"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:33
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:24
 msgid "-- Select a service --"
-msgstr ""
+msgstr "—選擇服務—"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:38
-#: ../backend/modules/payment/templates/index.php:68
-#: ../backend/modules/sms/templates/_purchases.php:13
-#: ../backend/modules/sms/templates/_sms_details.php:13
-#: ../backend/modules/tinymce/templates/appointment_list.php:26
-#: ../installer.php:232 ../updates.php:413
-msgid "Date"
-msgstr ""
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:27
+#: ../lib/Installer.php:293 ../lib/Updater.php:368
+msgid "Please select a service"
+msgstr "請選擇服務"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:43
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:42
 msgid "Period"
-msgstr ""
+msgstr "時段"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:48
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:50
 #: ../backend/modules/settings/templates/_hoursForm.php:17
-#: ../backend/modules/staff/templates/_break.php:12
-#: ../backend/modules/staff/templates/schedule.php:25
-#: ../backend/modules/staff/templates/schedule.php:54
+#: ../backend/modules/staff/templates/_break.php:23
+#: ../backend/modules/staff/templates/schedule.php:43
+#: ../backend/modules/staff/templates/schedule.php:90
 msgid "to"
-msgstr ""
+msgstr "至"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:54
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:59
 msgid "Selected period doesn't match service duration"
-msgstr ""
+msgstr "選擇的時期不匹配服務期"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:60
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:63
 msgid "The selected period is occupied by another appointment"
-msgstr ""
+msgstr "在選擇的時期已安排了另一預約"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:67
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:72
 msgid "Selected / maximum"
-msgstr ""
+msgstr "已選/最大"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:69
-msgid "Please select a customer"
-msgstr ""
-
-#: ../backend/modules/calendar/templates/_appointment_form.php:74
-#: ../backend/modules/calendar/templates/_custom_fields_form.php:7
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:78
+#: ../backend/modules/calendar/templates/_customer_details_dialog.php:9
 msgid "Edit booking details"
-msgstr ""
+msgstr "編輯預約詳情"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:75
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:89
 msgid "Remove customer"
-msgstr ""
+msgstr "删除客戶"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:80
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:96
 msgid "-- Search customers --"
-msgstr ""
+msgstr "—搜索客戶—"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:84
-#: ../backend/modules/customer/templates/index.php:20 ../installer.php:65
-#: ../updates.php:453
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:103
+#: ../backend/modules/customers/Controller.php:53
+#: ../backend/modules/customers/templates/index.php:20 ../lib/Installer.php:81
+#: ../lib/Updater.php:959
 msgid "New customer"
-msgstr ""
+msgstr "新客戶"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:90
-msgid "Send email notifications"
-msgstr ""
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:108
+msgid "Please select a customer"
+msgstr "請選擇客戶"
 
-#: ../backend/modules/calendar/templates/_appointment_form.php:91
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:116
+msgid "Send notifications"
+msgstr "發送通知"
+
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:117
 msgid ""
-"If email or SMS notifications are enabled and you want the customer or the "
-"staff member to be notified about this appointment after saving, tick this "
-"checkbox before clicking Save."
+"If email or SMS notifications are enabled and you want customers or staff "
+"member to be notified about this appointment after saving, select "
+"appropriate option before clicking Save. With \"If status changed\" the "
+"notifications are sent to those customers whose status has just been "
+"changed. With \"To all customers\" the notifications are sent to everyone in "
+"the list."
 msgstr ""
+"如果電子郵件或SMS短信通知已啓用，並且希望你的客戶或員工有關保存後收到通知，點"
+"擊保存前選擇相應的選項。隨著“如果狀態改變”的通知發送到這些客戶的身份剛剛被改"
+"變。以“發送給所有顧客”的通知，在列表中發送給所有人。"
 
-#: ../backend/modules/calendar/templates/_custom_fields_form.php:13
-msgid "Participants"
-msgstr ""
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:119
+msgid "Don't send"
+msgstr "不要傳送"
 
-#: ../backend/modules/calendar/templates/_custom_fields_form.php:16
-#: ../backend/modules/tinymce/templates/popup.php:41 ../installer.php:198
-#: ../updates.php:475
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:120
+msgid "If status changed"
+msgstr "如果狀態已變更"
+
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:121
+msgid "To all customers"
+msgstr "所有客戶"
+
+#: ../backend/modules/calendar/templates/_appointment_dialog.php:126
+msgid "Internal note"
+msgstr "內部說明"
+
+#: ../backend/modules/calendar/templates/_customer_details_dialog.php:22
+#: ../lib/Installer.php:289 ../lib/Updater.php:981
 msgid "Number of persons"
-msgstr ""
+msgstr "人數"
 
-#: ../backend/modules/calendar/templates/calendar.php:26
+#: ../backend/modules/calendar/templates/_customer_details_dialog.php:75
+#: ../lib/Google.php:164
+msgid "Extras"
+msgstr "額外"
+
+#: ../backend/modules/calendar/templates/calendar.php:22
 msgid "All"
-msgstr ""
+msgstr "所有"
 
-#: ../backend/modules/calendar/templates/calendar.php:39
-#: ../backend/modules/service/templates/_list.php:146
+#: ../backend/modules/calendar/templates/calendar.php:40
+#: ../backend/modules/services/templates/_list.php:168
 msgid "All staff"
-msgstr ""
+msgstr "所有員工"
 
-#: ../backend/modules/calendar/templates/calendar.php:64
+#: ../backend/modules/calendar/templates/calendar.php:71
 msgid "Welcome to Bookly!"
-msgstr ""
+msgstr "歡迎使用Bookly!"
 
-#: ../backend/modules/calendar/templates/calendar.php:65
+#: ../backend/modules/calendar/templates/calendar.php:72
 msgid "Thank you for purchasing our product."
-msgstr ""
+msgstr "感謝您購買我們的產品。"
 
-#: ../backend/modules/calendar/templates/calendar.php:66
+#: ../backend/modules/calendar/templates/calendar.php:73
 msgid ""
 "Bookly offers a simple solution for making appointments. With our plugin you "
 "will be able to easily manage your availability time and handle the flow of "
 "your clients."
 msgstr ""
+"Bookly提供了一個簡單的方案來管理預約。使用我們的插件，你就可以輕鬆管理您的可"
+"用時間和處理客戶的流動。"
 
-#: ../backend/modules/calendar/templates/calendar.php:67
+#: ../backend/modules/calendar/templates/calendar.php:74
 msgid ""
 "To start using Bookly, you need to follow these steps which are the minimum "
 "requirements to get it running!"
-msgstr ""
+msgstr "你必須完成下列最基本步驟來開始使用Bookly系統："
 
-#: ../backend/modules/calendar/templates/calendar.php:69
-msgid "Please add your staff members."
-msgstr ""
+#: ../backend/modules/calendar/templates/calendar.php:76
+msgid "Add staff members."
+msgstr "添加工作人員。"
 
-#: ../backend/modules/calendar/templates/calendar.php:70
-msgid "Add services and assign them to the staff members you created earlier."
-msgstr ""
+#: ../backend/modules/calendar/templates/calendar.php:77
+msgid "Add services and assign them to staff members."
+msgstr "添加服務，並將其分配給工作人員。"
 
-#: ../backend/modules/calendar/templates/calendar.php:73
+#: ../backend/modules/calendar/templates/calendar.php:81
 msgid "Add Staff Members"
-msgstr ""
+msgstr "添加員工"
 
-#: ../backend/modules/calendar/templates/calendar.php:74
+#: ../backend/modules/calendar/templates/calendar.php:84
 msgid "Add Services"
-msgstr ""
+msgstr "添加服務"
 
-#: ../backend/modules/coupons/AB_CouponsController.php:35
-msgid "Please select at least one coupon."
-msgstr ""
+#: ../backend/modules/coupons/Controller.php:36
+msgid "No coupons found."
+msgstr "沒有找到優惠券。"
 
-#: ../backend/modules/coupons/AB_CouponsController.php:67
+#: ../backend/modules/coupons/Controller.php:40
+#: ../backend/modules/custom_fields/Controller.php:38
+#: ../backend/modules/custom_fields/templates/_services.php:17
+#: ../backend/modules/staff/templates/services.php:13
+msgid "All services"
+msgstr "所有服務"
+
+#: ../backend/modules/coupons/Controller.php:41
+#: ../backend/modules/custom_fields/Controller.php:39
+msgid "No service selected"
+msgstr "未選擇服務"
+
+#: ../backend/modules/coupons/Controller.php:76
 msgid "Discount should be between 0 and 100."
-msgstr ""
+msgstr "折扣應該在0到100之間。"
 
-#: ../backend/modules/coupons/AB_CouponsController.php:69
+#: ../backend/modules/coupons/Controller.php:78
 msgid "Deduction should be a positive number."
-msgstr ""
+msgstr "折扣應該爲一個正數。"
 
-#: ../backend/modules/coupons/templates/_list.php:7
-#: ../backend/modules/sms/templates/_price.php:7
+#: ../backend/modules/coupons/templates/_modal.php:8
+msgid "New coupon"
+msgstr "新的優惠券"
+
+#: ../backend/modules/coupons/templates/_modal.php:9
+msgid "Edit coupon"
+msgstr "編輯優惠券"
+
+#: ../backend/modules/coupons/templates/_modal.php:15
+#: ../backend/modules/coupons/templates/index.php:26
+#: ../backend/modules/sms/templates/_price.php:8
 msgid "Code"
-msgstr ""
+msgstr "代碼"
 
-#: ../backend/modules/coupons/templates/_list.php:8
+#: ../backend/modules/coupons/templates/_modal.php:21
+#: ../backend/modules/coupons/templates/index.php:27
 msgid "Discount (%)"
-msgstr ""
+msgstr "折扣(%）"
 
-#: ../backend/modules/coupons/templates/_list.php:9
+#: ../backend/modules/coupons/templates/_modal.php:27
+#: ../backend/modules/coupons/templates/index.php:28
 msgid "Deduction"
-msgstr ""
+msgstr "扣除"
 
-#: ../backend/modules/coupons/templates/_list.php:10
+#: ../backend/modules/coupons/templates/_modal.php:33
+#: ../backend/modules/coupons/templates/index.php:30
 msgid "Usage limit"
-msgstr ""
+msgstr "使用限額"
 
-#: ../backend/modules/coupons/templates/_list.php:11
-msgid "Number of times used"
-msgstr ""
+#: ../backend/modules/coupons/templates/_modal.php:49
+#: ../backend/modules/services/templates/index.php:13
+#: ../backend/modules/services/templates/index.php:53
+msgid "All Services"
+msgstr "所有服務"
 
-#: ../backend/modules/coupons/templates/index.php:8
-msgid "No coupons found"
-msgstr ""
-
-#: ../backend/modules/coupons/templates/index.php:17
+#: ../backend/modules/coupons/templates/index.php:18
 msgid "Add Coupon"
-msgstr ""
+msgstr "添加優惠卷"
 
-#: ../backend/modules/custom_fields/templates/index.php:10
-#: ../backend/modules/custom_fields/templates/index.php:22
+#: ../backend/modules/coupons/templates/index.php:31
+msgid "Number of times used"
+msgstr "優惠券已經被使用過"
+
+#: ../backend/modules/custom_fields/templates/index.php:15
+msgid "Bind fields to services"
+msgstr "綁定欄位到服務"
+
+#: ../backend/modules/custom_fields/templates/index.php:17
+msgid ""
+"When this setting is enabled you will be able to create service specific "
+"custom fields."
+msgstr "如果啟用此設置，您將能夠創建服務特定的自定義字段。"
+
+#: ../backend/modules/custom_fields/templates/index.php:28
+#: ../backend/modules/custom_fields/templates/index.php:97
 msgid "Text Field"
-msgstr ""
+msgstr "文字欄"
 
-#: ../backend/modules/custom_fields/templates/index.php:11
-#: ../backend/modules/custom_fields/templates/index.php:39
+#: ../backend/modules/custom_fields/templates/index.php:29
+#: ../backend/modules/custom_fields/templates/index.php:46
 msgid "Text Area"
-msgstr ""
-
-#: ../backend/modules/custom_fields/templates/index.php:12
-#: ../backend/modules/custom_fields/templates/index.php:56
-msgid "Checkbox Group"
-msgstr ""
-
-#: ../backend/modules/custom_fields/templates/index.php:13
-#: ../backend/modules/custom_fields/templates/index.php:75
-msgid "Radio Button Group"
-msgstr ""
-
-#: ../backend/modules/custom_fields/templates/index.php:14
-#: ../backend/modules/custom_fields/templates/index.php:94
-msgid "Drop Down"
-msgstr ""
-
-#: ../backend/modules/custom_fields/templates/index.php:20
-#: ../backend/modules/custom_fields/templates/index.php:37
-#: ../backend/modules/custom_fields/templates/index.php:54
-#: ../backend/modules/custom_fields/templates/index.php:73
-#: ../backend/modules/custom_fields/templates/index.php:92
-#: ../backend/modules/custom_fields/templates/index.php:111
-#: ../backend/modules/custom_fields/templates/index.php:117
-#: ../backend/modules/custom_fields/templates/index.php:123
-#: ../backend/modules/service/templates/_list.php:15
-#: ../backend/modules/service/templates/index.php:16
-msgid "Reorder"
-msgstr ""
-
-#: ../backend/modules/custom_fields/templates/index.php:23
-#: ../backend/modules/custom_fields/templates/index.php:40
-#: ../backend/modules/custom_fields/templates/index.php:57
-#: ../backend/modules/custom_fields/templates/index.php:76
-#: ../backend/modules/custom_fields/templates/index.php:95
-msgid "Remove field"
-msgstr ""
-
-#: ../backend/modules/custom_fields/templates/index.php:26
-#: ../backend/modules/custom_fields/templates/index.php:43
-#: ../backend/modules/custom_fields/templates/index.php:60
-#: ../backend/modules/custom_fields/templates/index.php:79
-#: ../backend/modules/custom_fields/templates/index.php:98
-#: ../backend/modules/custom_fields/templates/index.php:112
-#: ../backend/modules/custom_fields/templates/index.php:118
-#: ../backend/modules/custom_fields/templates/index.php:124
-msgid "Enter a label"
-msgstr ""
+msgstr "多行文字框"
 
 #: ../backend/modules/custom_fields/templates/index.php:30
+#: ../backend/modules/custom_fields/templates/index.php:74
+msgid "Text Content"
+msgstr "文本内容"
+
+#: ../backend/modules/custom_fields/templates/index.php:31
+#: ../backend/modules/custom_fields/templates/index.php:126
+msgid "Checkbox Group"
+msgstr "複選框組"
+
+#: ../backend/modules/custom_fields/templates/index.php:32
+#: ../backend/modules/custom_fields/templates/index.php:160
+msgid "Radio Button Group"
+msgstr "單選按鈕組"
+
+#: ../backend/modules/custom_fields/templates/index.php:33
+#: ../backend/modules/custom_fields/templates/index.php:194
+msgid "Drop Down"
+msgstr "下拉顯示"
+
+#: ../backend/modules/custom_fields/templates/index.php:34
+#: ../backend/modules/custom_fields/templates/index.php:228
+#: ../frontend/modules/booking/templates/5_details.php:77
+msgid "Captcha"
+msgstr "Captcha 驗證"
+
+#: ../backend/modules/custom_fields/templates/index.php:36
+msgid "HTML allowed in all texts and labels."
+msgstr "所有文字和標籤皆允許HTML語法"
+
+#: ../backend/modules/custom_fields/templates/index.php:43
+#: ../backend/modules/custom_fields/templates/index.php:71
+#: ../backend/modules/custom_fields/templates/index.php:94
+#: ../backend/modules/custom_fields/templates/index.php:123
+#: ../backend/modules/custom_fields/templates/index.php:157
+#: ../backend/modules/custom_fields/templates/index.php:191
+#: ../backend/modules/custom_fields/templates/index.php:225
+#: ../backend/modules/custom_fields/templates/index.php:255
+#: ../backend/modules/custom_fields/templates/index.php:271
+#: ../backend/modules/custom_fields/templates/index.php:287
+#: ../backend/modules/services/templates/_category_item.php:5
+#: ../backend/modules/services/templates/_list.php:18
+#: ../backend/modules/services/templates/_list.php:218
+#: ../backend/modules/settings/templates/_cartForm.php:15
+#: ../backend/modules/staff/templates/_list_item.php:8
+msgid "Reorder"
+msgstr "重新排序"
+
 #: ../backend/modules/custom_fields/templates/index.php:47
-#: ../backend/modules/custom_fields/templates/index.php:64
-#: ../backend/modules/custom_fields/templates/index.php:83
-#: ../backend/modules/custom_fields/templates/index.php:102
+#: ../backend/modules/custom_fields/templates/index.php:75
+#: ../backend/modules/custom_fields/templates/index.php:98
+#: ../backend/modules/custom_fields/templates/index.php:127
+#: ../backend/modules/custom_fields/templates/index.php:161
+#: ../backend/modules/custom_fields/templates/index.php:195
+#: ../backend/modules/custom_fields/templates/index.php:229
+msgid "Remove field"
+msgstr "刪除文字欄"
+
+#: ../backend/modules/custom_fields/templates/index.php:51
+#: ../backend/modules/custom_fields/templates/index.php:103
+#: ../backend/modules/custom_fields/templates/index.php:132
+#: ../backend/modules/custom_fields/templates/index.php:166
+#: ../backend/modules/custom_fields/templates/index.php:200
+#: ../backend/modules/custom_fields/templates/index.php:234
+#: ../backend/modules/custom_fields/templates/index.php:259
+#: ../backend/modules/custom_fields/templates/index.php:275
+#: ../backend/modules/custom_fields/templates/index.php:291
+msgid "Enter a label"
+msgstr "輸入標籤"
+
+#: ../backend/modules/custom_fields/templates/index.php:54
+#: ../backend/modules/custom_fields/templates/index.php:106
+#: ../backend/modules/custom_fields/templates/index.php:135
+#: ../backend/modules/custom_fields/templates/index.php:169
+#: ../backend/modules/custom_fields/templates/index.php:203
+#: ../backend/modules/custom_fields/templates/index.php:238
 msgid "Required field"
-msgstr ""
+msgstr "必填的文字欄"
 
-#: ../backend/modules/custom_fields/templates/index.php:69
+#: ../backend/modules/custom_fields/templates/index.php:79
+msgid "Enter a content"
+msgstr "輸入內容"
+
+#: ../backend/modules/custom_fields/templates/index.php:142
 msgid "Checkbox"
-msgstr ""
+msgstr "複選框"
 
-#: ../backend/modules/custom_fields/templates/index.php:88
+#: ../backend/modules/custom_fields/templates/index.php:176
 msgid "Radio Button"
-msgstr ""
+msgstr "單選按鈕"
 
-#: ../backend/modules/custom_fields/templates/index.php:107
+#: ../backend/modules/custom_fields/templates/index.php:210
 msgid "Option"
-msgstr ""
+msgstr "選項"
 
-#: ../backend/modules/custom_fields/templates/index.php:113
-#: ../backend/modules/custom_fields/templates/index.php:119
-#: ../backend/modules/custom_fields/templates/index.php:125
+#: ../backend/modules/custom_fields/templates/index.php:263
+#: ../backend/modules/custom_fields/templates/index.php:279
+#: ../backend/modules/custom_fields/templates/index.php:295
 msgid "Remove item"
-msgstr ""
+msgstr "刪除此項目"
 
-#: ../backend/modules/customer/AB_CustomerController.php:63
-msgid "Please select at least one customer."
-msgstr ""
+#: ../backend/modules/customers/Controller.php:50
+msgid "No customers found."
+msgstr "沒有客戶找到。"
 
-#: ../backend/modules/customer/templates/_import.php:8
-#: ../backend/modules/customer/templates/_import.php:31
-#: ../backend/modules/customer/templates/index.php:19
+#: ../backend/modules/customers/Controller.php:52
+msgid "Edit customer"
+msgstr "編輯客戶"
+
+#: ../backend/modules/customers/Controller.php:54
+#: ../backend/modules/customers/templates/_customer_dialog.php:50
+msgid "Create customer"
+msgstr "新增客戶"
+
+#: ../backend/modules/customers/Controller.php:55
+#: ../backend/modules/services/templates/index.php:40
+#: ../backend/modules/staff/templates/new.php:39 ../lib/utils/Common.php:347
+msgid "Save"
+msgstr "保存"
+
+#: ../backend/modules/customers/Controller.php:56
+#: ../backend/modules/customers/templates/index.php:26
+msgid "Quick search customer"
+msgstr "快速搜索客戶"
+
+#: ../backend/modules/customers/templates/_customer_dialog.php:8
+msgid "New Customer"
+msgstr "新客戶"
+
+#: ../backend/modules/customers/templates/_customer_dialog.php:15
+#: ../backend/modules/customers/templates/_export.php:20
+#: ../backend/modules/customers/templates/index.php:35
+#: ../backend/modules/staff/templates/edit.php:77
+#: ../backend/modules/staff/templates/new.php:15
+msgid "User"
+msgstr "用戶"
+
+#: ../backend/modules/customers/templates/_customer_dialog.php:27
+#: ../backend/modules/services/templates/index.php:31
+#: ../backend/modules/staff/templates/modal-feedback.php:15
+#: ../lib/Google.php:156 ../lib/Installer.php:277 ../lib/Updater.php:1244
+msgid "Name"
+msgstr "姓名"
+
+#: ../backend/modules/customers/templates/_customer_dialog.php:29
+#: ../lib/Validator.php:73 ../lib/Validator.php:89 ../lib/Validator.php:105
+#: ../lib/Validator.php:128
+msgid "Required"
+msgstr "必需"
+
+#: ../backend/modules/customers/templates/_customer_dialog.php:33
+#: ../backend/modules/settings/templates/_companyForm.php:48
+#: ../backend/modules/sms/templates/_sms_details.php:20
+#: ../backend/modules/staff/templates/edit.php:105 ../lib/Google.php:158
+#: ../lib/Installer.php:278 ../lib/Updater.php:1245
+msgid "Phone"
+msgstr "電話號碼"
+
+#: ../backend/modules/customers/templates/_customer_dialog.php:38
+#: ../backend/modules/sms/templates/index.php:85
+#: ../backend/modules/sms/templates/index.php:104
+#: ../backend/modules/sms/templates/index.php:135
+#: ../backend/modules/staff/templates/edit.php:97 ../lib/Google.php:157
+#: ../lib/Installer.php:279 ../lib/Updater.php:1246
+msgid "Email"
+msgstr "電郵地址"
+
+#: ../backend/modules/customers/templates/_customer_dialog.php:43
+#: ../backend/modules/customers/templates/_export.php:23
+#: ../backend/modules/customers/templates/index.php:38 ../lib/Installer.php:352
+msgid "Notes"
+msgstr "記錄"
+
+#: ../backend/modules/customers/templates/_export.php:24
+#: ../backend/modules/customers/templates/index.php:39
+msgid "Last appointment"
+msgstr "最後一個預約"
+
+#: ../backend/modules/customers/templates/_export.php:25
+#: ../backend/modules/customers/templates/index.php:40
+msgid "Total appointments"
+msgstr "所有預約"
+
+#: ../backend/modules/customers/templates/_import.php:8
+#: ../backend/modules/customers/templates/_import.php:30
+#: ../backend/modules/customers/templates/index.php:17
 msgid "Import"
-msgstr ""
+msgstr "導入"
 
-#: ../backend/modules/customer/templates/_import.php:13
+#: ../backend/modules/customers/templates/_import.php:11
 msgid "Note"
-msgstr ""
+msgstr "註解"
 
-#: ../backend/modules/customer/templates/_import.php:14
+#: ../backend/modules/customers/templates/_import.php:13
 msgid ""
 "You may import list of clients in CSV format. The file needs to have three "
 "columns: Name, Phone and Email."
 msgstr ""
+"您可以導入 CSV 格式的客戶列表。該文件必需要有三列: 姓名、 電話和電子郵件。"
 
-#: ../backend/modules/customer/templates/_import.php:17
+#: ../backend/modules/customers/templates/_import.php:16
 msgid "Select file"
-msgstr ""
+msgstr "選擇文件"
 
-#: ../backend/modules/customer/templates/index.php:11
-msgid "Quick search customer"
-msgstr ""
-
-#: ../backend/modules/customer/templates/index.php:29
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:28
-#: ../installer.php:193 ../lib/AB_Google.php:155 ../updates.php:738
-msgid "Name"
-msgstr ""
-
-#: ../backend/modules/customer/templates/index.php:30
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:16
-#: ../backend/modules/staff/templates/edit.php:35
-#: ../backend/modules/staff/templates/new.php:13
-msgid "User"
-msgstr ""
-
-#: ../backend/modules/customer/templates/index.php:33
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:41
-#: ../installer.php:227
-msgid "Notes"
-msgstr ""
-
-#: ../backend/modules/customer/templates/index.php:34
-msgid "Last appointment"
-msgstr ""
-
-#: ../backend/modules/customer/templates/index.php:35
-msgid "Total appointments"
-msgstr ""
-
-#: ../backend/modules/customer/templates/index.php:44
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:30
-#: ../lib/AB_Validator.php:73 ../lib/AB_Validator.php:89
-#: ../lib/AB_Validator.php:117 ../lib/AB_Validator.php:137
-#: ../lib/AB_Validator.php:147
-msgid "Required"
-msgstr ""
-
-#: ../backend/modules/customer/templates/index.php:80
-msgid "No customers."
-msgstr ""
-
-#: ../backend/modules/customer/templates/index.php:120
+#: ../backend/modules/customers/templates/index.php:62
 msgid "Delete customers"
-msgstr ""
+msgstr "删除客戶"
 
-#: ../backend/modules/customer/templates/index.php:123
+#: ../backend/modules/customers/templates/index.php:65
 msgid ""
 "You are about to delete customers which may have WordPress accounts "
 "associated to them. Do you want to delete those accounts too (if there are "
 "any)?"
 msgstr ""
+"您將要刪除的客戶可能有 WordPress 關聯帳戶。您要同時刪除關聯賬戶嗎 (如果有的"
+"話)?"
 
-#: ../backend/modules/customer/templates/index.php:126
-#: ../backend/modules/service/templates/index.php:78
+#: ../backend/modules/customers/templates/index.php:68
+#: ../backend/modules/services/templates/index.php:87
 msgid "Remember my choice"
-msgstr ""
+msgstr "記住我的選擇"
 
-#: ../backend/modules/customer/templates/index.php:131
+#: ../backend/modules/customers/templates/index.php:74
 msgid "No, delete just customers"
-msgstr ""
+msgstr "不，僅僅刪除客戶"
 
-#: ../backend/modules/customer/templates/index.php:132
-#: ../backend/modules/service/templates/index.php:83
-#: ../backend/modules/settings/templates/_paymentsForm.php:55
-#: ../backend/modules/settings/templates/_paymentsForm.php:77
-#: ../backend/modules/tinymce/templates/appointment_list.php:54
+#: ../backend/modules/customers/templates/index.php:77
+#: ../backend/modules/services/templates/index.php:95
+#: ../backend/modules/settings/templates/_paymentsForm.php:63
+#: ../backend/modules/settings/templates/_paymentsForm.php:88
+#: ../backend/modules/settings/templates/_paymentsForm.php:110
+#: ../backend/modules/settings/templates/_paymentsForm.php:159
+#: ../backend/modules/settings/templates/_paymentsForm.php:192
+#: ../backend/modules/settings/templates/_paymentsForm.php:229
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:12
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:70
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:9
-msgid "New Customer"
-msgstr ""
+#: ../backend/modules/notifications/Controller.php:56
+msgid "Sent successfully"
+msgstr "發送成功"
 
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:13
-msgid "Personal Information"
-msgstr ""
-
-#: ../backend/modules/customer/templates/ng-new_customer_dialog.php:100
-msgid "Create customer"
-msgstr ""
-
-#: ../backend/modules/notifications/AB_NotificationsController.php:40
-#: ../backend/modules/sms/AB_SmsController.php:103
-msgid "Notification settings were updated successfully."
-msgstr ""
-
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:89
-msgid "Notification to customer about appointment details"
-msgstr ""
-
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:90
-msgid "Notification to staff member about appointment details"
-msgstr ""
-
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:91
-msgid "Notification to staff member about appointment cancellation"
-msgstr ""
-
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:92
-msgid "Notification to customer about their WordPress user login details"
-msgstr ""
-
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:93
-msgid ""
-"Evening reminder to customer about next day appointment (requires cron setup)"
-msgstr ""
-
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:94
-msgid ""
-"Follow-up message in the same day after appointment (requires cron setup)"
-msgstr ""
-
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:95
-msgid ""
-"Evening notification with the next day agenda to staff member (requires cron "
-"setup)"
-msgstr ""
-
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:124
+#: ../backend/modules/notifications/forms/Notifications.php:112
 msgid "Subject"
-msgstr ""
+msgstr "主題"
 
-#: ../backend/modules/notifications/forms/AB_NotificationsForm.php:166
+#: ../backend/modules/notifications/forms/Notifications.php:136
+#: ../backend/modules/notifications/forms/Notifications.php:154
+#: ../lib/entities/Notification.php:95
+msgid "Message"
+msgstr "訊息"
+
+#: ../backend/modules/notifications/forms/Notifications.php:176
 msgid "Send copy to administrators"
-msgstr ""
+msgstr "發送副本給管理員"
 
-#: ../backend/modules/notifications/templates/_codes.php:2
-#: ../backend/modules/settings/templates/_woocommerce.php:60
-#: ../backend/modules/sms/templates/_notif_codes.php:2
-msgid "date of appointment"
-msgstr ""
+#: ../backend/modules/notifications/forms/Notifications.php:199
+msgid "Sending time"
+msgstr "傳送時間"
+
+#: ../backend/modules/notifications/forms/Notifications.php:200
+msgid "Set the time you want the notification to be sent."
+msgstr "設置要發送的通知的時間。"
 
 #: ../backend/modules/notifications/templates/_codes.php:3
-#: ../backend/modules/settings/templates/_woocommerce.php:61
-#: ../backend/modules/sms/templates/_notif_codes.php:3
-msgid "time of appointment"
-msgstr ""
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:3
+#: ../backend/modules/sms/templates/_codes.php:3
+msgid "date of appointment"
+msgstr "預約日期"
 
 #: ../backend/modules/notifications/templates/_codes.php:4
-#: ../backend/modules/sms/templates/_notif_codes.php:4
-msgid "cancel appointment link"
-msgstr ""
+#: ../backend/modules/settings/templates/_woocommerce_codes.php:4
+#: ../backend/modules/sms/templates/_codes.php:4
+msgid "time of appointment"
+msgstr "預約時間"
 
-#: ../backend/modules/notifications/templates/_codes.php:5
-#: ../backend/modules/sms/templates/_notif_codes.php:5
-msgid "URL for cancel appointment link (to use inside <a> tag)"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes.php:6
+#: ../backend/modules/sms/templates/_codes.php:6
+msgid "URL of approve appointment link (to use inside <a> tag)"
+msgstr "批准任命鏈接URL（以<a>標籤內使用）"
 
 #: ../backend/modules/notifications/templates/_codes.php:7
-#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:2
-#: ../backend/modules/sms/templates/_notif_codes.php:7
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:2
-msgid "email of client"
-msgstr ""
+msgid "cancel appointment link"
+msgstr "取消預約連結"
 
 #: ../backend/modules/notifications/templates/_codes.php:8
-#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:3
-#: ../backend/modules/sms/templates/_notif_codes.php:8
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:3
-msgid "name of client"
-msgstr ""
-
-#: ../backend/modules/notifications/templates/_codes.php:9
-#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:4
-#: ../backend/modules/sms/templates/_notif_codes.php:9
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:4
-msgid "phone of client"
-msgstr ""
+#: ../backend/modules/sms/templates/_codes.php:7
+msgid "URL of cancel appointment link (to use inside <a> tag)"
+msgstr "取消預約鏈接URL（以<a>標籤內使用）"
 
 #: ../backend/modules/notifications/templates/_codes.php:10
-#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:5
-#: ../backend/modules/sms/templates/_notif_codes.php:10
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:5
-msgid "name of your company"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes_cart.php:5
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:3
+#: ../backend/modules/sms/templates/_codes.php:9
+#: ../backend/modules/sms/templates/_codes_cart.php:5
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:3
+msgid "email of client"
+msgstr "客戶電郵"
 
 #: ../backend/modules/notifications/templates/_codes.php:11
-#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:6
-msgid "your company logo"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes_cart.php:6
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:4
+#: ../backend/modules/sms/templates/_codes.php:10
+#: ../backend/modules/sms/templates/_codes_cart.php:6
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:4
+msgid "name of client"
+msgstr "客戶姓名"
 
 #: ../backend/modules/notifications/templates/_codes.php:12
-#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:7
-#: ../backend/modules/sms/templates/_notif_codes.php:11
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:6
-msgid "address of your company"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes_cart.php:7
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:5
+#: ../backend/modules/sms/templates/_codes.php:11
+#: ../backend/modules/sms/templates/_codes_cart.php:7
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:5
+msgid "phone of client"
+msgstr "客戶電話"
 
 #: ../backend/modules/notifications/templates/_codes.php:13
-#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:8
-#: ../backend/modules/sms/templates/_notif_codes.php:12
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:7
-msgid "your company phone"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes_cart.php:8
+#: ../backend/modules/sms/templates/_codes.php:12
+#: ../backend/modules/sms/templates/_codes_cart.php:8
+msgid "name of company"
+msgstr "公司名稱"
 
 #: ../backend/modules/notifications/templates/_codes.php:14
-#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:9
-#: ../backend/modules/sms/templates/_notif_codes.php:13
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:8
-msgid "this web-site address"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes_cart.php:9
+msgid "company logo"
+msgstr "公司標誌"
 
 #: ../backend/modules/notifications/templates/_codes.php:15
-#: ../backend/modules/sms/templates/_notif_codes.php:14
-msgid "combined values of all custom fields"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes_cart.php:10
+#: ../backend/modules/sms/templates/_codes.php:13
+#: ../backend/modules/sms/templates/_codes_cart.php:9
+msgid "address of company"
+msgstr "公司地址"
 
 #: ../backend/modules/notifications/templates/_codes.php:16
+#: ../backend/modules/notifications/templates/_codes_cart.php:11
+#: ../backend/modules/sms/templates/_codes.php:14
+#: ../backend/modules/sms/templates/_codes_cart.php:10
+msgid "company phone"
+msgstr "公司電話"
+
+#: ../backend/modules/notifications/templates/_codes.php:17
+#: ../backend/modules/notifications/templates/_codes_cart.php:12
+#: ../backend/modules/sms/templates/_codes.php:15
+#: ../backend/modules/sms/templates/_codes_cart.php:11
+msgid "company web-site address"
+msgstr "公司網站地址"
+
+#: ../backend/modules/notifications/templates/_codes.php:18
+#: ../backend/modules/sms/templates/_codes.php:16
+msgid "combined values of all custom fields"
+msgstr "所有自訂欄位的組合值"
+
+#: ../backend/modules/notifications/templates/_codes.php:19
 msgid "combined values of all custom fields (formatted in 2 columns)"
-msgstr ""
+msgstr "所有的自定義字段的組合值（以2列格式）"
 
 #: ../backend/modules/notifications/templates/_codes.php:20
-#: ../backend/modules/sms/templates/_notif_codes.php:18
-msgid "email of staff"
-msgstr ""
+#: ../backend/modules/sms/templates/_codes.php:17
+msgid ""
+"URL for adding event to client's Google Calendar (to use inside <a> tag)"
+msgstr "新增活動到Google行事曆的連結 (插入 <a> 標籤)"
 
 #: ../backend/modules/notifications/templates/_codes.php:22
-#: ../backend/modules/sms/templates/_notif_codes.php:20
+#: ../backend/modules/notifications/templates/_codes_cart.php:13
+#: ../backend/modules/sms/templates/_codes.php:19
+#: ../backend/modules/sms/templates/_codes_cart.php:12
+msgid "payment type"
+msgstr "付款方式"
+
+#: ../backend/modules/notifications/templates/_codes.php:26
+#: ../backend/modules/sms/templates/_codes.php:23
+msgid "email of staff"
+msgstr "員工電郵"
+
+#: ../backend/modules/notifications/templates/_codes.php:29
+#: ../backend/modules/sms/templates/_codes.php:25
 msgid "phone of staff"
-msgstr ""
+msgstr "員工電話"
 
-#: ../backend/modules/notifications/templates/_codes.php:23
+#: ../backend/modules/notifications/templates/_codes.php:30
 msgid "photo of staff"
-msgstr ""
+msgstr "員工相片"
 
-#: ../backend/modules/notifications/templates/_codes.php:24
-#: ../backend/modules/sms/templates/_notif_codes.php:21
-msgid ""
-"total price of booking (service price multiplied by the number of persons)"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes.php:31
+#: ../backend/modules/notifications/templates/_codes_cart.php:14
+#: ../backend/modules/sms/templates/_codes.php:27
+#: ../backend/modules/sms/templates/_codes_cart.php:13
+msgid "total price of booking (sum of all cart items after applying coupon)"
+msgstr "預訂的總價格（所有購物車項目的總和申請優惠券之後）"
+
+#: ../backend/modules/notifications/templates/_codes_cart.php:3
+#: ../backend/modules/sms/templates/_codes_cart.php:3
+msgid "cart information"
+msgstr "車信息"
+
+#: ../backend/modules/notifications/templates/_codes_cart.php:4
+#: ../backend/modules/sms/templates/_codes_cart.php:4
+msgid "cart information with cancel"
+msgstr "車信息與取消"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:6
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:6
+msgid "name of your company"
+msgstr "本公司的名稱"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:7
+msgid "your company logo"
+msgstr "本公司的Logo"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:8
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:7
+msgid "address of your company"
+msgstr "本公司地址"
+
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:9
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:8
+msgid "your company phone"
+msgstr "本公司電話"
 
 #: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:10
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:9
-msgid "customer new username"
-msgstr ""
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:9
+msgid "this web-site address"
+msgstr "本網站地址"
 
 #: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:11
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:10
-msgid "customer new password"
-msgstr ""
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:10
+msgid "customer new username"
+msgstr "客戶新用戶名"
 
 #: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:12
-#: ../backend/modules/sms/templates/_notif_codes_client_new_wp_user.php:11
-msgid "site address"
-msgstr ""
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:11
+msgid "customer new password"
+msgstr "客戶新密碼"
 
-#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:2
-#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:2
-msgid "date of next day"
-msgstr ""
+#: ../backend/modules/notifications/templates/_codes_client_new_wp_user.php:13
+#: ../backend/modules/sms/templates/_codes_client_new_wp_user.php:12
+msgid "site address"
+msgstr "網站地址"
 
 #: ../backend/modules/notifications/templates/_codes_staff_agenda.php:3
-#: ../backend/modules/sms/templates/_notif_codes_staff_agenda.php:3
+#: ../backend/modules/sms/templates/_codes_staff_agenda.php:3
+msgid "date of next day"
+msgstr "下次的日期"
+
+#: ../backend/modules/notifications/templates/_codes_staff_agenda.php:4
+#: ../backend/modules/sms/templates/_codes_staff_agenda.php:4
 msgid "staff agenda for next day"
-msgstr ""
+msgstr "員工下一天日程"
 
-#: ../backend/modules/notifications/templates/index.php:18
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:12
+#: ../backend/modules/notifications/templates/index.php:142
+msgid "Test Email Notifications"
+msgstr "測試電子郵件通知"
+
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:16
+msgid "To email"
+msgstr "到電子郵件"
+
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:22
+#: ../backend/modules/notifications/templates/index.php:22
 msgid "Sender name"
-msgstr ""
+msgstr "發件人名稱"
 
-#: ../backend/modules/notifications/templates/index.php:27
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:28
+#: ../backend/modules/notifications/templates/index.php:28
 msgid "Sender email"
-msgstr ""
+msgstr "發件人電郵"
 
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:36
 #: ../backend/modules/notifications/templates/index.php:36
 msgid "Reply directly to customers"
-msgstr ""
+msgstr "直接回覆客戶"
 
-#: ../backend/modules/notifications/templates/index.php:42
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:42
+#: ../backend/modules/notifications/templates/index.php:45
+msgid "Send emails as"
+msgstr "發送郵件"
+
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:43
+#: ../backend/modules/notifications/templates/index.php:48
+msgid "HTML"
+msgstr "HTML"
+
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:43
+#: ../backend/modules/notifications/templates/index.php:48
+#: ../backend/modules/sms/templates/_sms_details.php:19
+msgid "Text"
+msgstr "文字"
+
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:51
+msgid "Notification templates"
+msgstr "通知模板"
+
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:60
+msgid "All templates"
+msgstr "所有模板"
+
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:81
+#: ../backend/modules/staff/templates/modal-feedback.php:23
+msgid "Send"
+msgstr "發送"
+
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:93
+#: ../backend/modules/notifications/templates/_test_email_notifications_modal.php:99
+#: ../backend/modules/payments/templates/_payment_details_dialog.php:7
+#: ../backend/modules/payments/templates/_payment_details_dialog.php:15
+#: ../backend/modules/settings/Controller.php:156
+#: ../backend/modules/staff/Controller.php:64
+#: ../backend/modules/staff/templates/modal-feedback.php:21
+msgid "Close"
+msgstr "關"
+
+#: ../backend/modules/notifications/templates/index.php:38
 msgid ""
 "If this option is enabled then the email address of the customer is used as "
 "a sender email address for notifications sent to staff members and "
 "administrators."
 msgstr ""
+"如果啟用此選項，客戶的電子郵件地址將作為發件人地址曏工作人員和管理員發送通"
+"知。"
 
 #: ../backend/modules/notifications/templates/index.php:47
-msgid "Send emails as"
-msgstr ""
-
-#: ../backend/modules/notifications/templates/index.php:50
-msgid "HTML"
-msgstr ""
-
-#: ../backend/modules/notifications/templates/index.php:50
-#: ../backend/modules/sms/templates/_sms_details.php:15
-msgid "Text"
-msgstr ""
-
-#: ../backend/modules/notifications/templates/index.php:53
 msgid ""
 "HTML allows formatting, colors, fonts, positioning, etc. With Text you must "
 "use Text mode of rich-text editors below. On some servers only text emails "
 "are sent successfully."
 msgstr ""
+"HTML 允許設定格式、 顏色、 字體、 定位等。若使用文字，您必須使用下面的rich-"
+"text編輯器的Text模式。在某些服務器上僅text郵件能成功發送。"
 
-#: ../backend/modules/notifications/templates/index.php:81
-#: ../backend/modules/sms/templates/_notifications.php:44
-msgid "Message"
-msgstr ""
+#: ../backend/modules/notifications/templates/index.php:53
+#: ../backend/modules/sms/templates/_notifications.php:23
+msgid "Single"
+msgstr "單"
 
-#: ../backend/modules/notifications/templates/index.php:88
+#: ../backend/modules/notifications/templates/index.php:78
+#: ../backend/modules/notifications/templates/index.php:115
 #: ../backend/modules/sms/templates/_notifications.php:51
+#: ../backend/modules/sms/templates/_notifications.php:97
 msgid "Codes"
-msgstr ""
+msgstr "代碼"
 
-#: ../backend/modules/notifications/templates/index.php:111
-#: ../backend/modules/sms/templates/_notifications.php:84
+#: ../backend/modules/notifications/templates/index.php:93
+#: ../backend/modules/sms/templates/_notifications.php:70
+msgid "Combined"
+msgstr "綜合"
+
+#: ../backend/modules/notifications/templates/index.php:128
+#: ../backend/modules/sms/templates/_notifications.php:113
+#, php-format
+msgid ""
+"To send scheduled notifications please refer to <a href=\"%1$s\">Bookly "
+"Multisite</a> add-on <a href=\"%2$s\">message</a>."
+msgstr ""
+"要發送計劃通知請參見<a href=“%1$s”>Bookly Multisite</a>add-on<a href=“%2$s”>​​"
+"message</a> 。"
+
+#: ../backend/modules/notifications/templates/index.php:130
+#: ../backend/modules/sms/templates/_notifications.php:115
 msgid ""
 "To send scheduled notifications please execute the following script hourly "
 "with your cron:"
-msgstr ""
+msgstr "如需發送計劃通知，請使用cron每小時執行以下script："
 
-#: ../backend/modules/payment/AB_PaymentController.php:33
-#: ../backend/modules/sms/AB_SmsController.php:113
+#: ../backend/modules/payments/Controller.php:57
+#: ../backend/modules/sms/Controller.php:130
 msgid "Last Month"
-msgstr ""
+msgstr "上月"
 
-#: ../backend/modules/payment/templates/_alert.php:3
+#: ../backend/modules/payments/Controller.php:71
 msgid "No payments for selected period and criteria."
-msgstr ""
+msgstr "所選期間和條件下沒有付款。"
 
-#: ../backend/modules/payment/templates/_body.php:18
-#: ../backend/modules/payment/templates/index.php:74 ../installer.php:196
-#: ../updates.php:590
-msgid "Coupon"
-msgstr ""
+#: ../backend/modules/payments/Controller.php:73
+#: ../backend/modules/staff/templates/edit.php:41 ../lib/Installer.php:264
+#: ../lib/Updater.php:1235
+msgid "Details"
+msgstr "細節"
 
-#: ../backend/modules/payment/templates/_body.php:20
-#: ../backend/modules/payment/templates/index.php:35
-msgid "Local"
-msgstr ""
+#: ../backend/modules/payments/Controller.php:143
+msgid "See details for more items"
+msgstr "有關詳情，請項的詳細信息"
 
-#: ../backend/modules/payment/templates/_body.php:34
-msgid "Total"
-msgstr ""
-
-#: ../backend/modules/payment/templates/index.php:23
-msgid "All payment types"
-msgstr ""
-
-#: ../backend/modules/payment/templates/index.php:42
-msgid "All customers"
-msgstr ""
-
-#: ../backend/modules/payment/templates/index.php:48
-msgid "All providers"
-msgstr ""
-
-#: ../backend/modules/payment/templates/index.php:54
-#: ../backend/modules/staff/templates/services.php:21
-msgid "All services"
-msgstr ""
-
-#: ../backend/modules/payment/templates/index.php:59
-#: ../backend/modules/sms/templates/_purchases.php:8
-#: ../backend/modules/sms/templates/_sms_details.php:8
-msgid "Filter"
-msgstr ""
-
-#: ../backend/modules/payment/templates/index.php:69
-#: ../backend/modules/sms/templates/_purchases.php:15
+#: ../backend/modules/payments/templates/details.php:19
+#: ../backend/modules/payments/templates/index.php:24
+#: ../backend/modules/payments/templates/index.php:60
+#: ../backend/modules/sms/templates/_purchases.php:19
 msgid "Type"
-msgstr ""
+msgstr "類型"
 
-#: ../backend/modules/payment/templates/index.php:73
-#: ../backend/modules/sms/templates/_purchases.php:18
+#: ../backend/modules/payments/templates/details.php:35
+#: ../frontend/modules/booking/Controller.php:506
+#: ../frontend/modules/booking/templates/4_cart.php:60
+msgid "Deposit"
+msgstr "存款"
+
+#: ../backend/modules/payments/templates/details.php:86
+msgid "Subtotal"
+msgstr "小計"
+
+#: ../backend/modules/payments/templates/details.php:94
+msgid "Discount"
+msgstr "折扣"
+
+#: ../backend/modules/payments/templates/details.php:117
+msgid "Paid"
+msgstr "付費"
+
+#: ../backend/modules/payments/templates/details.php:121
+msgid "Due"
+msgstr "應有"
+
+#: ../backend/modules/payments/templates/details.php:126
+msgid "Complete payment"
+msgstr "完成付款"
+
+#: ../backend/modules/payments/templates/index.php:65
+#: ../backend/modules/sms/templates/_auto_recharge.php:7
+#: ../backend/modules/sms/templates/_purchases.php:22
 msgid "Amount"
-msgstr ""
+msgstr "數量"
 
-#: ../backend/modules/payment/templates/index.php:75
-msgid "Appointment Date"
-msgstr ""
+#: ../backend/modules/services/Controller.php:213
+#: ../backend/modules/services/templates/_list.php:37
+#, php-format
+msgid "%d service"
+msgid_plural "%d services"
+msgstr[0] "%d服務"
 
-#: ../backend/modules/service/AB_ServiceController.php:50
-msgid "Please select at least one service."
-msgstr ""
-
-#: ../backend/modules/service/templates/_list.php:38
+#: ../backend/modules/services/templates/_list.php:62
+#: ../backend/modules/services/templates/_list.php:249
 msgid "Title"
-msgstr ""
+msgstr "標題"
 
-#: ../backend/modules/service/templates/_list.php:66
+#: ../backend/modules/services/templates/_list.php:68
+msgid "Color"
+msgstr "顏色"
+
+#: ../backend/modules/services/templates/_list.php:78
+#: ../backend/modules/staff/templates/edit.php:122
+msgid "Visibility"
+msgstr "能見度"
+
+#: ../backend/modules/services/templates/_list.php:79
+msgid ""
+"To make service invisible to your customers set the visibility to \"Private"
+"\"."
+msgstr "為了讓無形的服務給您的客戶設置的知名度，“專用”。"
+
+#: ../backend/modules/services/templates/_list.php:81
+#: ../backend/modules/staff/templates/edit.php:127
+msgid "Public"
+msgstr "上市"
+
+#: ../backend/modules/services/templates/_list.php:82
+#: ../backend/modules/staff/templates/edit.php:128
+msgid "Private"
+msgstr "私人的"
+
+#: ../backend/modules/services/templates/_list.php:95
+msgid ""
+"The maximum number of customers allowed to book the service for the certain "
+"time period."
+msgstr "同一時段內允許預約該服務的客戶最大數量。"
+
+#: ../backend/modules/services/templates/_list.php:110
 msgid "All day"
-msgstr ""
+msgstr "全日"
 
-#: ../backend/modules/service/templates/_list.php:71
+#: ../backend/modules/services/templates/_list.php:117
 msgid "Padding time (before and after)"
-msgstr ""
+msgstr "服務間隔時間 (之前和之後)"
 
-#: ../backend/modules/service/templates/_list.php:74
-#: ../backend/modules/service/templates/_list.php:87
-#: ../backend/modules/settings/forms/AB_BusinessHoursForm.php:51
-#: ../backend/modules/staff/templates/schedule.php:3
-msgid "OFF"
-msgstr ""
-
-#: ../backend/modules/service/templates/_list.php:101
+#: ../backend/modules/services/templates/_list.php:119
 msgid ""
 "Set padding time before and/or after an appointment. For example, if you "
 "require 15 minutes to prepare for the next appointment then you should set "
 "\"padding before\" to 15 min. If there is an appointment from 8:00 to 9:00 "
 "then the next available time slot will be 9:15 rather than 9:00."
 msgstr ""
+"設置服務間隔時間。例如，如果您需要 15 分鐘來準備下一次服務，你應該設置”填充前"
+"的”到 15 分鐘。如果預約從 8:00 到 9:00 下一個可用時段將是 9:15，而不是 9:00。"
 
-#: ../backend/modules/service/templates/_list.php:116
-msgid ""
-"The maximum number of customers allowed to book the service for the certain "
-"time period."
-msgstr ""
+#: ../backend/modules/services/templates/_list.php:123
+#: ../backend/modules/services/templates/_list.php:129
+#: ../backend/modules/services/templates/_list.php:270
+#: ../backend/modules/settings/forms/BusinessHours.php:56
+#: ../backend/modules/staff/templates/schedule.php:2
+msgid "OFF"
+msgstr "關閉"
 
-#: ../backend/modules/service/templates/_list.php:123
-#: ../backend/modules/tinymce/templates/appointment_list.php:8
-#: ../installer.php:187 ../updates.php:732
+#: ../backend/modules/services/templates/_list.php:142
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:18
+#: ../lib/Installer.php:271 ../lib/Updater.php:1238
 msgid "Category"
-msgstr ""
+msgstr "分類"
 
-#: ../backend/modules/service/templates/_list.php:134
+#: ../backend/modules/services/templates/_list.php:152
 msgid "Providers"
-msgstr ""
+msgstr "供應者"
 
-#: ../backend/modules/service/templates/index.php:12
-#: ../backend/modules/service/templates/index.php:55
-msgid "All Services"
-msgstr ""
+#: ../backend/modules/services/templates/_list.php:190
+#: ../backend/modules/staff/templates/edit.php:114
+msgid "Info"
+msgstr "資訊"
 
-#: ../backend/modules/service/templates/index.php:29
+#: ../backend/modules/services/templates/_list.php:193
+#: ../backend/modules/staff/templates/edit.php:116
+#, php-format
+msgid "This text can be inserted into notifications with %s code."
+msgstr "這個文本可以插入與%s代碼的通知。"
+
+#: ../backend/modules/services/templates/_list.php:209
+msgid "New Item"
+msgstr "新物品"
+
+#: ../backend/modules/services/templates/_list.php:237
+#: ../backend/modules/settings/templates/_companyForm.php:25
+#: ../backend/modules/staff/templates/edit.php:25
+msgid "Image"
+msgstr "圖片"
+
+#: ../backend/modules/services/templates/_list.php:279
+msgid "Max quantity"
+msgstr "最大數量"
+
+#: ../backend/modules/services/templates/index.php:24
 msgid "New Category"
-msgstr ""
+msgstr "新分類"
 
-#: ../backend/modules/service/templates/index.php:56
-#: ../backend/modules/staff/templates/services.php:92
-msgid "No services found. Please add services."
-msgstr ""
-
-#: ../backend/modules/service/templates/index.php:62
-#: ../backend/modules/staff/templates/services.php:93
+#: ../backend/modules/services/templates/index.php:55
+#: ../backend/modules/staff/templates/services.php:166
 msgid "Add Service"
-msgstr ""
+msgstr "添加服務"
 
-#: ../backend/modules/service/templates/index.php:73
+#: ../backend/modules/services/templates/index.php:60
+#: ../backend/modules/staff/templates/services.php:162
+msgid "No services found. Please add services."
+msgstr "找不到服務。請添加新服務。"
+
+#: ../backend/modules/services/templates/index.php:80
 msgid "Update service setting"
-msgstr ""
+msgstr "更新服務設定"
 
-#: ../backend/modules/service/templates/index.php:76
+#: ../backend/modules/services/templates/index.php:83
 msgid ""
 "You are about to change a service setting which is also configured "
 "separately for each staff member. Do you want to update it in staff settings "
 "too?"
 msgstr ""
+"您將要改變的服務設定其還分別配置為爲每個員工服務設定。你想同時更新工作人員的"
+"設定嗎？"
 
-#: ../backend/modules/service/templates/index.php:82
+#: ../backend/modules/services/templates/index.php:93
 msgid "No, update just here in services"
-msgstr ""
+msgstr "不，只更新在服務這裏"
 
-#: ../backend/modules/settings/AB_SettingsController.php:42
-#: ../backend/modules/staff/AB_StaffController.php:59
-msgid "We are not working on this day"
-msgstr ""
+#: ../backend/modules/settings/Controller.php:107
+#, php-format
+msgid ""
+"To use the cart, disable integration with WooCommerce <a href=\"%s\">here</"
+"a>."
+msgstr "要使用購物車，停止使用WooCommerce <a href=“%s”>here</a> 。"
 
-#: ../backend/modules/settings/AB_SettingsController.php:43
-#: ../backend/modules/staff/AB_StaffController.php:60
+#: ../backend/modules/settings/Controller.php:139
+#, php-format
+msgid ""
+"WooCommerce cart is not set up. Follow the <a href=\"%s\">link</a> to "
+"correct this problem."
+msgstr "WooCommerce 購物車未切立。請按照<a href=“%s”>鏈接</a>來解決此問題。"
+
+#: ../backend/modules/settings/Controller.php:160
+#: ../backend/modules/staff/Controller.php:67
 msgid "Repeat every year"
-msgstr ""
+msgstr "每年重複"
 
-#: ../backend/modules/settings/AB_SettingsController.php:176
+#: ../backend/modules/settings/Controller.php:161
+#: ../backend/modules/staff/Controller.php:75
+msgid "We are not working on this day"
+msgstr "我們這一天休息"
+
+#: ../backend/modules/settings/Controller.php:227
 msgid "Select product"
-msgstr ""
+msgstr "選擇產品"
 
-#: ../backend/modules/settings/templates/_companyForm.php:6
+#: ../backend/modules/settings/templates/_cartForm.php:5
+#: ../backend/modules/settings/templates/index.php:29 ../lib/Installer.php:263
+#: ../lib/Updater.php:399
+msgid "Cart"
+msgstr "購物車"
+
+#: ../backend/modules/settings/templates/_cartForm.php:6
+msgid ""
+"If cart is enabled then your clients will be able to book several "
+"appointments at once. Please note that WooCommerce integration must be "
+"disabled."
+msgstr ""
+"如果購物車已啟用，然後您的客戶將能夠在一次預定幾個約會。請註意，WooCommerce整"
+"合必須被停止。"
+
+#: ../backend/modules/settings/templates/_cartForm.php:10
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:16
+msgid "Columns"
+msgstr "列"
+
+#: ../backend/modules/settings/templates/_cartForm.php:33
+msgid "Combined notifications"
+msgstr "聯合通知"
+
+#: ../backend/modules/settings/templates/_cartForm.php:34
+msgid ""
+"If combined notifications are enabled then your clients will receive single "
+"notification for whole order instead of separate notification per each cart "
+"item. You will need to edit corresponding templates in Email and SMS "
+"Notifications."
+msgstr ""
+"如果合併啟用通知，然後你的客戶將收到整個秩序，而不是每車每件單獨通知單個通"
+"知。您將需要在電子郵件和短信通知編輯相應的模板。"
+
+#: ../backend/modules/settings/templates/_companyForm.php:37
 msgid "Company name"
-msgstr ""
+msgstr "公司名稱"
 
-#: ../backend/modules/settings/templates/_companyForm.php:12
-#: ../backend/modules/settings/templates/_companyForm.php:17
-msgid "Company logo"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_companyForm.php:27
+#: ../backend/modules/settings/templates/_companyForm.php:43
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
-#: ../backend/modules/settings/templates/_companyForm.php:39
+#: ../backend/modules/settings/templates/_companyForm.php:51
 msgid "Website"
-msgstr ""
+msgstr "網站"
 
-#: ../backend/modules/settings/templates/_customers.php:6
+#: ../backend/modules/settings/templates/_customers.php:4
 msgid "Create WordPress user account for customers"
-msgstr ""
+msgstr "為客戶建立WordPress的用戶帳戶"
 
-#: ../backend/modules/settings/templates/_customers.php:12
+#: ../backend/modules/settings/templates/_customers.php:5
 msgid ""
 "If this setting is enabled then Bookly will be creating WordPress user "
 "accounts for all new customers. If the user is logged in then the new "
 "customer will be associated with the existing user account."
 msgstr ""
+"如果啟用此設定，Bookly將為所有新客戶創建WordPress賬戶。如果用戶已登錄，則新的"
+"客戶將與現有的用戶帳戶相關聯。"
 
-#: ../backend/modules/settings/templates/_customers.php:17
+#: ../backend/modules/settings/templates/_customers.php:9
 msgid "Phone field default country"
-msgstr ""
+msgstr "電話號碼默認國家"
 
-#: ../backend/modules/settings/templates/_customers.php:21
-msgid "Guess country by user's IP address"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_customers.php:26
+#: ../backend/modules/settings/templates/_customers.php:10
 msgid ""
 "Select default country for the phone field in the 'Details' step of booking. "
 "You can also let Bookly determine the country based on the IP address of the "
 "client."
 msgstr ""
+"在預訂的”詳細信息“步驟中選擇電話號碼默認國家/地區。您還可以讓 Bookly 基於客戶"
+"端的 IP 地址確定國家。"
 
-#: ../backend/modules/settings/templates/_customers.php:31
+#: ../backend/modules/settings/templates/_customers.php:12
+#: ../backend/modules/settings/templates/_generalForm.php:26
+#: ../backend/modules/settings/templates/_generalForm.php:37
+#: ../backend/modules/settings/templates/_generalForm.php:79
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:35
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:41
+#: ../backend/modules/settings/templates/_paymentsForm.php:28
+#: ../backend/modules/settings/templates/_paymentsForm.php:40
+#: ../backend/modules/settings/templates/_paymentsForm.php:75
+#: ../backend/modules/settings/templates/_paymentsForm.php:100
+#: ../backend/modules/settings/templates/_paymentsForm.php:122
+#: ../backend/modules/settings/templates/_paymentsForm.php:146
+#: ../backend/modules/settings/templates/_paymentsForm.php:171
+#: ../backend/modules/settings/templates/_paymentsForm.php:204
+#: ../backend/modules/settings/templates/_paymentsForm.php:219
+#: ../lib/utils/Common.php:198 ../lib/utils/Common.php:239
+msgid "Disabled"
+msgstr "停用"
+
+#: ../backend/modules/settings/templates/_customers.php:13
+msgid "Guess country by user's IP address"
+msgstr "通過用戶的 IP 地址猜用戶所在的國家"
+
+#: ../backend/modules/settings/templates/_customers.php:18
 msgid "Default country code"
-msgstr ""
+msgstr "默認國家號碼"
 
-#: ../backend/modules/settings/templates/_customers.php:37
+#: ../backend/modules/settings/templates/_customers.php:18
 msgid ""
 "Your clients must have their phone numbers in international format in order "
 "to receive text messages. However you can specify a default country code "
@@ -1324,195 +1773,282 @@ msgid ""
 "client enters their phone as \"(600) 555-2222\" the resulting phone number "
 "to send the SMS to will be \"+1600555222\"."
 msgstr ""
+"如需接收短信，您的客戶電話號碼必須為國際格式。然而，您可以指定默認的國家代碼"
+"用在所有不以 “+ “或 “00” 開頭的號碼前面。例如，您選擇 “1”作為缺省國家代碼，一"
+"位客戶輸入的電話為”（600）555-2222”，則用來發送短信的號碼將是”+1600555222”。"
+
+#: ../backend/modules/settings/templates/_customers.php:21
+msgid "Cancel appointment action"
+msgstr "取消預約行動"
+
+#: ../backend/modules/settings/templates/_customers.php:22
+msgid ""
+"Select what happens when customer clicks cancel appointment link. With "
+"\"Delete\" the appointment will be deleted from the calendar. With \"Cancel"
+"\" only appointment status will be changed to \"Cancelled\"."
+msgstr ""
+"選擇當客戶點擊取消約會鏈接時，會發生什麽。與”刪除”將從日曆刪除預約。與”取"
+"消”只有預約狀態將更改為”已取消”。"
+
+#: ../backend/modules/settings/templates/_generalForm.php:5
+msgid "Time slot length"
+msgstr "時間間隔長度"
 
 #: ../backend/modules/settings/templates/_generalForm.php:6
-msgid "Time slot length"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_generalForm.php:21
 msgid ""
 "Select the time interval that will be used in frontend and backend, e.g. in "
 "calendar, second step of the booking process, while indicating the working "
 "hours, etc."
 msgstr ""
+"選擇將在前端和後端中使用的時間間隔，例如在日曆，預約過程的第二步驟中，在顯示"
+"工作時間時等。"
 
-#: ../backend/modules/settings/templates/_generalForm.php:26
+#: ../backend/modules/settings/templates/_generalForm.php:17
+msgid "Default appointment status"
+msgstr "默認預約狀態"
+
+#: ../backend/modules/settings/templates/_generalForm.php:18
+msgid "Select status for newly booked appointments."
+msgstr "為最新預約選擇默認狀態"
+
+#: ../backend/modules/settings/templates/_generalForm.php:19 ../lib/SMS.php:450
+#: ../lib/entities/CustomerAppointment.php:225 ../lib/entities/Payment.php:148
+msgid "Pending"
+msgstr "審批中"
+
+#: ../backend/modules/settings/templates/_generalForm.php:19 ../lib/SMS.php:454
+#: ../lib/entities/CustomerAppointment.php:226
+msgid "Approved"
+msgstr "已經獲批"
+
+#: ../backend/modules/settings/templates/_generalForm.php:22
 msgid "Minimum time requirement prior to booking"
-msgstr ""
+msgstr "最短提早預約時間"
 
-#: ../backend/modules/settings/templates/_generalForm.php:30
-#: ../backend/modules/settings/templates/_generalForm.php:79
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:68
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:80
-#: ../backend/modules/settings/templates/_paymentsForm.php:37
-#: ../backend/modules/settings/templates/_paymentsForm.php:63
-#: ../lib/utils/AB_Utils.php:168
-msgid "Disabled"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_generalForm.php:37
+#: ../backend/modules/settings/templates/_generalForm.php:23
 msgid ""
-"Set a minimum amount of time before the chosen appointment (for example, "
-"require the customer to book at least 1 hour before the appointment time)."
-msgstr ""
+"Set how late appointments can be booked (for example, require customers to "
+"book at least 1 hour before the appointment time)."
+msgstr "設定最遲的時間要求預約(例如，要求客戶預約時間之前至少 1 小時)。"
 
-#: ../backend/modules/settings/templates/_generalForm.php:42
-msgid "Number of days available for booking"
+#: ../backend/modules/settings/templates/_generalForm.php:33
+msgid "Minimum time requirement prior to canceling"
+msgstr "最遲要求取消預約時間"
+
+#: ../backend/modules/settings/templates/_generalForm.php:34
+msgid ""
+"Set how late appointments can be cancelled (for example, require customers "
+"to cancel at least 1 hour before the appointment time)."
 msgstr ""
+"設定最遲的時間要求取消預約(例如，要求客戶預約時間之前至少 1 小時前取消預約)。"
+
+#: ../backend/modules/settings/templates/_generalForm.php:44
+msgid "Approve appointment URL"
+msgstr "批准任命網址"
+
+#: ../backend/modules/settings/templates/_generalForm.php:45
+msgid ""
+"Set the URL of a page that is shown to staff after they approve their "
+"appointment."
+msgstr "將他們批准其任命後所顯示員工頁面的URL。"
 
 #: ../backend/modules/settings/templates/_generalForm.php:48
-msgid ""
-"Specify the number of days that should be available for booking at step 2 "
-"starting from the current day."
-msgstr ""
+#: ../backend/modules/settings/templates/_generalForm.php:55
+#: ../backend/modules/settings/templates/_generalForm.php:63
+#: ../backend/modules/settings/templates/_generalForm.php:87
+msgid "Enter a URL"
+msgstr "輸入一個URL"
 
-#: ../backend/modules/settings/templates/_generalForm.php:53
-msgid "Display available time slots in client's time zone"
-msgstr ""
+#: ../backend/modules/settings/templates/_generalForm.php:51
+msgid "Cancel appointment URL (success)"
+msgstr "取消預約的URL網址 (成功)"
+
+#: ../backend/modules/settings/templates/_generalForm.php:52
+msgid ""
+"Set the URL of a page that is shown to clients after they successfully "
+"cancelled their appointment."
+msgstr "設定URL顯示已成功安排取消預約客戶"
+
+#: ../backend/modules/settings/templates/_generalForm.php:58
+msgid "Cancel appointment URL (denied)"
+msgstr "取消預約的URL網址 (拒絕)"
 
 #: ../backend/modules/settings/templates/_generalForm.php:59
-msgid "The value is taken from client’s browser."
-msgstr ""
+msgid ""
+"Set the URL of a page that is shown to clients when the cancellation of "
+"appointment is not available anymore."
+msgstr "設定URL網頁顯示取消了的客戶預約已不存在。"
 
-#: ../backend/modules/settings/templates/_generalForm.php:64
-msgid "Cancel appointment page URL"
-msgstr ""
+#: ../backend/modules/settings/templates/_generalForm.php:66
+msgid "Number of days available for booking"
+msgstr "可供預訂的天數"
 
 #: ../backend/modules/settings/templates/_generalForm.php:67
-#: ../backend/modules/settings/templates/_generalForm.php:83
-msgid "Enter a URL"
-msgstr ""
+msgid "Set how far in the future the clients can book appointments."
+msgstr "設定客戶能夠預約將來多久。"
 
-#: ../backend/modules/settings/templates/_generalForm.php:70
-msgid ""
-"Insert a URL of a page that is shown to clients after they have cancelled "
-"their booking."
-msgstr ""
+#: ../backend/modules/settings/templates/_generalForm.php:71
+msgid "Display available time slots in client's time zone"
+msgstr "以客戶所在的時區顯示可預約時段"
 
-#: ../backend/modules/settings/templates/_generalForm.php:75
+#: ../backend/modules/settings/templates/_generalForm.php:72
+msgid "The value is taken from client’s browser."
+msgstr "該數值從客戶端瀏覽器產生。"
+
+#: ../backend/modules/settings/templates/_generalForm.php:76
 msgid "Final step URL"
+msgstr "最後一步URL"
+
+#: ../backend/modules/settings/templates/_generalForm.php:77
+msgid ""
+"Set the URL of a page that the user will be forwarded to after successful "
+"booking. If disabled then the default Done step is displayed."
 msgstr ""
+"設定用戶將成功預訂後跳到網頁的URL。如果停用，則會顯示默認的”完成”一步。"
 
 #: ../backend/modules/settings/templates/_generalForm.php:79
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:68
-#: ../lib/utils/AB_Utils.php:167
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:35
+#: ../backend/modules/settings/templates/_paymentsForm.php:28
+#: ../backend/modules/settings/templates/_paymentsForm.php:122
+#: ../backend/modules/settings/templates/_paymentsForm.php:146
+#: ../backend/modules/settings/templates/_paymentsForm.php:171
+#: ../backend/modules/settings/templates/_paymentsForm.php:204
+#: ../backend/modules/settings/templates/_paymentsForm.php:219
+#: ../lib/utils/Common.php:199 ../lib/utils/Common.php:240
 msgid "Enabled"
-msgstr ""
+msgstr "啟用"
 
-#: ../backend/modules/settings/templates/_generalForm.php:86
-msgid ""
-"Set a URL of a page that the user will be forwarded to after successful "
-"booking. If disabled then the default step 5 is displayed."
-msgstr ""
+#: ../backend/modules/settings/templates/_generalForm.php:90
+msgid "Allow staff members to edit their profiles"
+msgstr "容許員工編輯他們自己的資料"
 
 #: ../backend/modules/settings/templates/_generalForm.php:91
-msgid "Allow staff members to edit their profiles"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_generalForm.php:97
 msgid ""
 "If this option is enabled then all staff members who are associated with "
 "WordPress users will be able to edit their own profiles, services, schedule "
 "and days off."
 msgstr ""
+"如果啟用該選項，那麽與WordPress用戶相聯的所有員工將能夠編輯自己的個人描述，服"
+"務，時間表及休息日期。"
 
-#: ../backend/modules/settings/templates/_generalForm.php:102
+#: ../backend/modules/settings/templates/_generalForm.php:95
 msgid "Method to include Bookly JavaScript and CSS files on the page"
-msgstr ""
+msgstr "方法包括Bookly JavaScript和網頁CSS文件"
 
-#: ../backend/modules/settings/templates/_generalForm.php:111
+#: ../backend/modules/settings/templates/_generalForm.php:96
 msgid ""
 "With \"Enqueue\" method the JavaScript and CSS files of Bookly will be "
 "included on all pages of your website. This method should work with all "
 "themes. With \"Print\" method the files will be included only on the pages "
 "which contain Bookly booking form. This method may not work with all themes."
 msgstr ""
+"隨著“排隊”的方法Bookly的JavaScript和CSS文件將被包含在你的網站的所有網頁。此方"
+"法應可用於所有Wordpress主題。隨著“打印”方法中的文件將包含僅包含Bookly預訂表格"
+"頁面。這種方法可能無法用於所有Wordpress主題。"
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:7
-#: ../backend/modules/settings/templates/_purchaseCodeForm.php:7
-#: ../backend/modules/settings/templates/_woocommerce.php:7
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:5
+#: ../backend/modules/settings/templates/_paymentsForm.php:43
+#: ../backend/modules/settings/templates/_paymentsForm.php:125
+#: ../backend/modules/settings/templates/_purchaseCodeForm.php:4
+#: ../backend/modules/settings/templates/_woocommerce.php:5
 msgid "Instructions"
-msgstr ""
+msgstr "使用說明"
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:10
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:6
 msgid "To find your client ID and client secret, do the following:"
-msgstr ""
+msgstr "要查找您的客戶端D和客戶密鑰，請執行以下操作："
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:13
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:8
 msgid ""
 "Go to the <a href=\"https://console.developers.google.com/\" target=\"_blank"
 "\">Google Developers Console</a>."
 msgstr ""
+"前往<a href=\"https://console.developers.google.com/\" target=\"_blank"
+"\">Google Developers Console</a>."
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:9
+msgid "Select a project, or create a new one."
+msgstr "選擇或新增一項專案。"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:10
+msgid ""
+"Click in the upper left part to see a sliding sidebar. Next, click <b>API "
+"Manager</b>. In the list of APIs look for <b>Calendar API</b> and make sure "
+"it is enabled."
+msgstr ""
+"點擊左上方看到一個滑動側欄。接下來單擊<b>API管理器</b> 。在API的列表查找<b>日"
+"曆API</b>並確保它已啟用。"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:11
+msgid "In the sidebar on the left, select <b>Credentials</b>."
+msgstr "在左側邊欄，選擇<b>證書</b> 。"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:12
+msgid ""
+"Go to <b>OAuth consent screen</b> tab and give a name to the product, then "
+"click <b>Save</b>."
+msgstr "到<b>OAuth同意畫面</b>按Tab並提供一個名稱的產品，然後按<b>保存</b> 。"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:13
+msgid ""
+"Go to <b>Credentials</b> tab and in <b>New credentials</b> drop-down menu "
+"select <b>OAuth client ID</b>."
+msgstr ""
+"到 <b>証書</b> 按 Tab 及在 <b>新証書</b> 下拉菜單中選擇 <b>OAuth 用戶ID</b>."
 
 #: ../backend/modules/settings/templates/_googleCalendarForm.php:14
-msgid "Select a project, or create a new one."
+msgid ""
+"Select <b>Web application</b> and create your project's OAuth 2.0 "
+"credentials by providing the necessary information. For <b>Authorized "
+"redirect URIs</b> enter the <b>Redirect URI</b> found below on this page. "
+"Click <b>Create</b>."
 msgstr ""
+"選擇<b>Web應用程序</b> ，並提供必要的信息建立項目的OAuth 2.0憑據。對於<b>授權"
+"的重定向的URIs</b>輸入<b>重定向URI</b>下面找到這個網頁上。點擊<b>建立</b> 。"
 
 #: ../backend/modules/settings/templates/_googleCalendarForm.php:15
 msgid ""
-"In the sidebar on the left, expand <b>APIs & auth</b>. Next, click <b>APIs</"
-"b>. In the list of APIs, make sure the status is <b>ON</b> for the Google "
-"Calendar API."
+"In the popup window look for the <b>Client ID</b> and <b>Client secret</b>. "
+"Use them in the form below on this page."
 msgstr ""
+"在彈出的網頁查找<b>客戶ID</b>和<b>客戶密鑰</b> 。利用它們的形式下​​面這個頁面"
+"上。"
 
 #: ../backend/modules/settings/templates/_googleCalendarForm.php:16
-msgid "In the sidebar on the left, select <b>Credentials</b>."
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:17
 msgid ""
-"Create your project's OAuth 2.0 credentials by clicking <b>Create new Client "
-"ID</b>, selecting <b>Web application</b>, and providing the information "
-"needed to create the credentials. For <b>AUTHORIZED REDIRECT URIS</b> enter "
-"the <b>Redirect URI</b> found below on this page."
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:18
-msgid ""
-"Look for the <b>Client ID</b> and <b>Client secret</b> in the table "
-"associated with each of your credentials."
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:19
-msgid ""
-"Go to Staff Members, select a staff member and click on \"Connect\" which is "
+"Go to Staff Members, select a staff member and click <b>Connect</b> which is "
 "located at the bottom of the page."
-msgstr ""
+msgstr "轉到服務員工，選擇一名員工，然後按位於網頁底部的 <b>連接 </b>。"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:20
+msgid "Client ID"
+msgstr "客戶ID"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:20
+msgid "The client ID obtained from the Developers Console"
+msgstr "從開發者控製台獲得客戶ID"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:23
+msgid "Client secret"
+msgstr "客戶密匙"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:23
+msgid "The client secret obtained from the Developers Console"
+msgstr "從開發者控製台獲得客戶密匙"
+
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:26
+msgid "Redirect URI"
+msgstr "轉向連接URI"
 
 #: ../backend/modules/settings/templates/_googleCalendarForm.php:27
-#: ../backend/modules/settings/templates/index.php:13
-msgid "Google Calendar"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:32
-msgid "Client ID"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:38
-msgid "The client ID obtained from the Developers Console"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:43
-msgid "Client secret"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:49
-msgid "The client secret obtained from the Developers Console"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:54
-msgid "Redirect URI"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:60
 msgid "Enter this URL as a redirect URI in the Developers Console"
-msgstr ""
+msgstr "輸入此URL重定向URI的開發者控制台"
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:65
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:33
 msgid "2 way sync"
-msgstr ""
+msgstr "雙向同步"
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:71
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:34
 msgid ""
 "By default Bookly pushes new appointments and any further changes to Google "
 "Calendar. If you enable this option then Bookly will fetch events from "
@@ -1520,73 +2056,183 @@ msgid ""
 "second step of the booking form (this may lead to a delay when users click "
 "Next at the first step)."
 msgstr ""
+"基本設定的情況下Bookly自動推出新預約及其任何修改往Google日曆。如果啟用該選"
+"項, Bookly將獲取從Google日曆預約，並顯示在預訂表格的第二個步驟（當用戶點擊下"
+"一步在第一步驟, 可能導至延遲)之前刪除相應的時間段。"
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:76
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:38
 msgid "Limit number of fetched events"
-msgstr ""
+msgstr "獲取事件的數量限制"
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:86
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:39
 msgid ""
 "If there is a lot of events in Google Calendar sometimes this leads to a "
 "lack of memory in PHP when Bookly tries to fetch all events. You can limit "
 "the number of fetched events here. This only works when 2 way sync is "
 "enabled."
 msgstr ""
+"如果有很多Google日曆預約，有些時候會導至Bookly試圖獲取所有預約而引至PHP缺乏內"
+"存記憶。你可以在這裏限製取出的預約的數量。這僅當啟用雙向同步工作。"
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:91
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:47
 msgid "Template for event title"
-msgstr ""
+msgstr "預約標題的模板"
 
-#: ../backend/modules/settings/templates/_googleCalendarForm.php:97
+#: ../backend/modules/settings/templates/_googleCalendarForm.php:47
 msgid ""
-"Configure what information should be places in the title of Google Calendar "
-"event. Available codes are [[SERVICE_NAME]], [[STAFF_NAME]] and "
-"[[CLIENT_NAMES]]."
+"Configure what information should be placed in the title of Google Calendar "
+"event. Available codes are {service_name}, {staff_name} and {client_names}."
 msgstr ""
+"設定那些資料放置在Google日曆預約的標題。可用的代碼是{service_name}，"
+"{staff_name}和{client_names}。"
 
 #: ../backend/modules/settings/templates/_paymentsForm.php:6
 msgid "Currency"
-msgstr ""
+msgstr "貨幣"
 
-#: ../backend/modules/settings/templates/_paymentsForm.php:25
+#: ../backend/modules/settings/templates/_paymentsForm.php:24
 msgid "Service paid locally"
-msgstr ""
+msgstr "即場支付"
 
-#: ../backend/modules/settings/templates/_paymentsForm.php:41
-msgid "API Username"
-msgstr ""
+#: ../backend/modules/settings/templates/_paymentsForm.php:40
+msgid "2Checkout Standard Checkout"
+msgstr "2Checkout 標準結算"
 
 #: ../backend/modules/settings/templates/_paymentsForm.php:45
-msgid "API Password"
-msgstr ""
+msgid ""
+"In <b>Checkout Options</b> of your 2Checkout account do the following steps:"
+msgstr "在你的2Checkout帳號<b>結帳選項</b>執行以下步驟："
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:48
+msgid "In <b>Direct Return</b> select <b>Header Redirect (Your URL)</b>."
+msgstr "在<b>直接退運</b>選擇<b>頭重定向（你的URL）。</b>"
 
 #: ../backend/modules/settings/templates/_paymentsForm.php:49
-msgid "API Signature"
-msgstr ""
+msgid "In <b>Approved URL</b> enter the URL of your booking page."
+msgstr "在<b>已批準</b>的<b>網址</b>輸入您的預約頁面的URL。"
 
-#: ../backend/modules/settings/templates/_paymentsForm.php:53
-#: ../backend/modules/settings/templates/_paymentsForm.php:75
+#: ../backend/modules/settings/templates/_paymentsForm.php:52
+msgid "Finally provide the necessary information in the form below."
+msgstr "最後，提供下面的表格所需的信息。"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:56
+msgid "Account Number"
+msgstr "賬號"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:59
+msgid "Secret Word"
+msgstr "秘密字段"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:62
+#: ../backend/modules/settings/templates/_paymentsForm.php:87
+#: ../backend/modules/settings/templates/_paymentsForm.php:109
+#: ../backend/modules/settings/templates/_paymentsForm.php:158
+#: ../backend/modules/settings/templates/_paymentsForm.php:191
+#: ../backend/modules/settings/templates/_paymentsForm.php:228
 msgid "Sandbox Mode"
-msgstr ""
+msgstr "沙箱模式"
 
-#: ../backend/modules/settings/templates/_paymentsForm.php:55
-#: ../backend/modules/settings/templates/_paymentsForm.php:77
+#: ../backend/modules/settings/templates/_paymentsForm.php:63
+#: ../backend/modules/settings/templates/_paymentsForm.php:88
+#: ../backend/modules/settings/templates/_paymentsForm.php:110
+#: ../backend/modules/settings/templates/_paymentsForm.php:159
+#: ../backend/modules/settings/templates/_paymentsForm.php:192
+#: ../backend/modules/settings/templates/_paymentsForm.php:229
 msgid "No"
-msgstr ""
+msgstr "不"
 
-#: ../backend/modules/settings/templates/_paymentsForm.php:67
+#: ../backend/modules/settings/templates/_paymentsForm.php:78
+msgid "API Username"
+msgstr "API用戶名"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:81
+msgid "API Password"
+msgstr "API密碼"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:84
+msgid "API Signature"
+msgstr "API簽名"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:103
 msgid "API Login ID"
-msgstr ""
+msgstr "API 登錄 ID"
 
-#: ../backend/modules/settings/templates/_paymentsForm.php:71
+#: ../backend/modules/settings/templates/_paymentsForm.php:106
 msgid "API Transaction Key"
-msgstr ""
+msgstr "API交易密鑰"
 
-#: ../backend/modules/settings/templates/_paymentsForm.php:89
+#: ../backend/modules/settings/templates/_paymentsForm.php:127
+msgid ""
+"If <b>Publishable Key</b> is provided then Bookly will use <a href=\"https://"
+"stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>for "
+"collecting credit card details."
+msgstr ""
+"如果提供了<b>可發布鍵</b>然後Bookly將使用<a href=“https://stripe.com/docs/"
+"stripe.js” target=“_blank”>Stripe.js</a> <br/>收集信用卡信息。"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:131
 msgid "Secret Key"
+msgstr "客戶密匙"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:134
+msgid "Publishable Key"
+msgstr "公共鑰匙"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:149
+#: ../backend/modules/settings/templates/_paymentsForm.php:177
+#: ../backend/modules/settings/templates/_paymentsForm.php:207
+msgid "API Key"
+msgstr "API Key"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:152
+msgid "Account ID"
+msgstr "帳號ID"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:155
+msgid "Merchant ID"
+msgstr "商家ID"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:174
+msgid "Agent ID"
+msgstr "代理人ID"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:180
+msgid "Receiver Email (login)"
+msgstr "接收人電郵（登入）"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:183
+msgid "Funding"
+msgstr "融資"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:184
+msgid "Card"
+msgstr "卡"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:184
+msgid "Invoice"
+msgstr "發票"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:187
+msgid "Fees Payer"
+msgstr "付款人"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:188
+msgid "I am"
+msgstr "本人"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:188
+msgid "Client"
+msgstr "客戶"
+
+#: ../backend/modules/settings/templates/_paymentsForm.php:222
+msgid "Public key"
 msgstr ""
 
-#: ../backend/modules/settings/templates/_purchaseCodeForm.php:8
+#: ../backend/modules/settings/templates/_paymentsForm.php:225
+msgid "Private key"
+msgstr ""
+
+#: ../backend/modules/settings/templates/_purchaseCodeForm.php:5
 msgid ""
 "Upon providing the purchase code you will have access to free updates of "
 "Bookly. Updates may contain functionality improvements and important "
@@ -1594,963 +2240,1647 @@ msgid ""
 "this <a href=\"https://help.market.envato.com/hc/en-us/articles/202822600-"
 "Where-can-I-find-my-Purchase-Code-\" target=\"_blank\">page</a>."
 msgstr ""
+"請提供訂購代碼（purchase code）以獲得Bookly的更新服務。關於怎樣獲得訂購代碼請"
+"參見<a href=“https://help.market.envato.com/hc/en-us/articles/202822600-"
+"Where-can-I-find-my-Purchase-Code-“ target=“_blank”>這裏</a>."
 
-#: ../backend/modules/settings/templates/_purchaseCodeForm.php:14
-#: ../backend/modules/settings/templates/index.php:18
-msgid "Purchase Code"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_woocommerce.php:10
+#: ../backend/modules/settings/templates/_woocommerce.php:7
 msgid ""
 "You need to install and activate WooCommerce plugin before using the options "
 "below.<br/><br/>Once the plugin is activated do the following steps:"
 msgstr ""
+"您使用下面的選項之前需要安裝和激活WooCommerce插件。 <br/><br/>一旦插件被激活"
+"執行以下步驟："
 
-#: ../backend/modules/settings/templates/_woocommerce.php:13
+#: ../backend/modules/settings/templates/_woocommerce.php:10
 msgid "Create a product in WooCommerce that can be placed in cart."
-msgstr ""
+msgstr "在WooCommerce中建立一個可以放置在購物車裏的產品。"
 
-#: ../backend/modules/settings/templates/_woocommerce.php:14
+#: ../backend/modules/settings/templates/_woocommerce.php:11
 msgid "In the form below enable WooCommerce option."
-msgstr ""
+msgstr "在下面的表單中啟用WooCommerce選項。"
 
-#: ../backend/modules/settings/templates/_woocommerce.php:15
+#: ../backend/modules/settings/templates/_woocommerce.php:12
 msgid ""
 "Select the product that you created at step 1 in the drop down list of "
 "products."
-msgstr ""
+msgstr "從產品下拉列表中選擇第1步建立的產品。"
+
+#: ../backend/modules/settings/templates/_woocommerce.php:13
+msgid "If needed, edit item data which will be displayed in the cart."
+msgstr "如果需要，請編輯將要顯示在購物車裡的產品資訊。"
 
 #: ../backend/modules/settings/templates/_woocommerce.php:16
-msgid "If needed, edit item data which will be displayed in the cart."
-msgstr ""
-
-#: ../backend/modules/settings/templates/_woocommerce.php:19
 msgid ""
 "Note that once you have enabled WooCommerce option in Bookly the built-in "
 "payment methods will no longer work. All your customers will be redirected "
 "to WooCommerce cart instead of standard payment step."
 msgstr ""
+"請註意，一旦你在Bookly啟用WooCommerce選項內置的付款方式將不再起作用。您的所有"
+"客戶都將被重定向到WooCommerce購物車而不是標準支付步驟。"
 
-#: ../backend/modules/settings/templates/_woocommerce.php:35
+#: ../backend/modules/settings/templates/_woocommerce.php:26
 msgid "Booking product"
-msgstr ""
+msgstr "預約產品"
 
-#: ../backend/modules/settings/templates/_woocommerce.php:46
+#: ../backend/modules/settings/templates/_woocommerce.php:37
 msgid "Cart item data"
-msgstr ""
+msgstr "購物車內項目的資料"
 
-#: ../backend/modules/settings/templates/_woocommerce.php:49
-msgid "Enter a name"
-msgstr ""
-
-#: ../backend/modules/settings/templates/_woocommerce.php:53
+#: ../backend/modules/settings/templates/_woocommerce.php:40
 msgid "Enter a value"
-msgstr ""
+msgstr "輸入值"
 
-#: ../backend/modules/settings/templates/admin_notice.php:4
-msgid ""
-"Please do not forget to specify your purchase code in Bookly <a href=\"admin."
-"php?page=ab-settings\">settings</a>. Upon providing the code you will have "
-"access to free updates of Bookly. Updates may contain functionality "
-"improvements and important security fixes."
-msgstr ""
-
-#: ../backend/modules/settings/templates/admin_notice.php:5
-msgid ""
-"<b>Important!</b> Please be aware that if your copy of Bookly was not "
-"downloaded from Codecanyon (the only channel of Bookly distribution), you "
-"may put your website under significant risk - it is very likely that it "
-"contains a malicious code, a trojan or a backdoor. Please consider buying a "
-"licensed copy of Bookly <a href=\"http://booking-wp-plugin.com\" target="
-"\"_blank\">here</a>."
-msgstr ""
-
-#: ../backend/modules/settings/templates/admin_notice.php:6
-msgid "Dismiss"
-msgstr ""
-
-#: ../backend/modules/settings/templates/index.php:10
+#: ../backend/modules/settings/templates/index.php:14
 msgid "General"
-msgstr ""
-
-#: ../backend/modules/settings/templates/index.php:11
-msgid "Company"
-msgstr ""
-
-#: ../backend/modules/settings/templates/index.php:16
-msgid "Business hours"
-msgstr ""
+msgstr "通用"
 
 #: ../backend/modules/settings/templates/index.php:17
+msgid "Company"
+msgstr "公司"
+
+#: ../backend/modules/settings/templates/index.php:23
+msgid "Google Calendar"
+msgstr "Google日曆"
+
+#: ../backend/modules/settings/templates/index.php:36
+msgid "Business Hours"
+msgstr "營業時間"
+
+#: ../backend/modules/settings/templates/index.php:39
 msgid "Holidays"
-msgstr ""
+msgstr "假期"
 
-#: ../backend/modules/sms/AB_SmsController.php:60
-msgid "Your payment has been accepted for processing."
-msgstr ""
+#: ../backend/modules/settings/templates/index.php:42
+#: ../lib/base/Plugin.php:365
+msgid "Purchase Code"
+msgstr "訂購代碼"
 
-#: ../backend/modules/sms/AB_SmsController.php:63
-msgid "Your payment has been interrupted."
-msgstr ""
-
-#: ../backend/modules/sms/AB_SmsController.php:81
+#: ../backend/modules/sms/Controller.php:70
 msgid "Please accept terms and conditions."
-msgstr ""
+msgstr "請接受服務條款。"
 
-#: ../backend/modules/sms/AB_SmsController.php:126 ../lib/AB_SMS.php:48
-msgid "Passwords must be the same."
-msgstr ""
+#: ../backend/modules/sms/Controller.php:87
+#: ../frontend/modules/booking/Controller.php:676
+msgid "Your payment has been accepted for processing."
+msgstr "您的付款已被接受和正在處理。"
 
-#: ../backend/modules/sms/AB_SmsController.php:127
+#: ../backend/modules/sms/Controller.php:90
+msgid "Your payment has been interrupted."
+msgstr "您的付款已經中斷。"
+
+#: ../backend/modules/sms/Controller.php:108
+msgid "Auto-Recharge enabled."
+msgstr "自動儲值已生效。"
+
+#: ../backend/modules/sms/Controller.php:111
+msgid "You declined the Auto-Recharge of your balance."
+msgstr "您拒絕了自動儲值功能。"
+
+#: ../backend/modules/sms/Controller.php:137
 msgid "Please enter old password."
-msgstr ""
+msgstr "請輸入舊密碼。"
 
-#: ../backend/modules/sms/AB_SmsController.php:207
+#: ../backend/modules/sms/Controller.php:138 ../lib/SMS.php:60
+msgid "Passwords must be the same."
+msgstr "密碼必須相同。"
+
+#: ../backend/modules/sms/Controller.php:151
+msgid "Sender ID request is sent."
+msgstr "發件人ID發送請求。"
+
+#: ../backend/modules/sms/Controller.php:152
+msgid "Sender ID is reset to default."
+msgstr "發件人ID被重置為默認值。"
+
+#: ../backend/modules/sms/Controller.php:154
+msgid "No records for selected period."
+msgstr "沒有記錄時間選擇。"
+
+#: ../backend/modules/sms/Controller.php:155
+msgid "No records."
+msgstr "沒有記錄。"
+
+#: ../backend/modules/sms/Controller.php:202
+msgid "Auto-Recharge has failed, please replenish your balance directly."
+msgstr "自動充值失敗，請直接補充你的餘額。"
+
+#: ../backend/modules/sms/Controller.php:214
+msgid "Auto-Recharge disabled"
+msgstr "自動儲值已關閉"
+
+#: ../backend/modules/sms/Controller.php:216
+msgid ""
+"Error. Can't disable Auto-Recharge, you can perform this action in your "
+"PayPal account."
+msgstr "錯誤。無法禁用自動充值，您可以在您的PayPal帳戶執行此操作。"
+
+#: ../backend/modules/sms/Controller.php:241
 msgid "SMS has been sent successfully."
-msgstr ""
+msgstr "SMS短訊發送成功。"
 
-#: ../backend/modules/sms/AB_SmsController.php:209
+#: ../backend/modules/sms/Controller.php:243
 msgid "Failed to send SMS."
-msgstr ""
+msgstr "傳送SMS短訊失敗。"
 
-#: ../backend/modules/sms/AB_SmsController.php:213 ../lib/AB_SMS.php:152
+#: ../backend/modules/sms/Controller.php:247 ../lib/SMS.php:207
 msgid "Phone number is empty."
-msgstr ""
+msgstr "電話號碼沒有輸入。"
 
-#: ../backend/modules/sms/templates/_notifications.php:10
+#: ../backend/modules/sms/templates/_auto_recharge.php:3
+msgid ""
+"We will only charge your PayPal account when your balance falls below $10."
+msgstr "當您的餘額低於$ 10我們將只收取您的PayPal帳戶。"
+
+#: ../backend/modules/sms/templates/_auto_recharge.php:16
+msgid "Enable Auto-Recharge"
+msgstr "啟用自動儲值"
+
+#: ../backend/modules/sms/templates/_auto_recharge.php:17
+msgid "Disable Auto-Recharge"
+msgstr "停用自動儲值"
+
+#: ../backend/modules/sms/templates/_notifications.php:12
 msgid "Administrator phone"
-msgstr ""
+msgstr "管理員的電話"
 
-#: ../backend/modules/sms/templates/_notifications.php:16
-msgid "Send test SMS"
-msgstr ""
-
-#: ../backend/modules/sms/templates/_notifications.php:19
+#: ../backend/modules/sms/templates/_notifications.php:14
 msgid ""
 "Enter a phone number in international format. E.g. for the United States a "
 "valid phone number would be +17327572923."
 msgstr ""
+"輸入一個國際格式的電話號碼。例如，在美國的一個有效的電話號碼是+17327572923。"
 
-#: ../backend/modules/sms/templates/_price.php:6
+#: ../backend/modules/sms/templates/_notifications.php:17
+msgid "Send test SMS"
+msgstr "傳送測試SMS短訊"
+
+#: ../backend/modules/sms/templates/_price.php:7
 msgid "Country"
-msgstr ""
+msgstr "国家"
 
-#: ../backend/modules/sms/templates/_price.php:21
+#: ../backend/modules/sms/templates/_price.php:9
+msgid "Regular price"
+msgstr "正常價格"
+
+#: ../backend/modules/sms/templates/_price.php:10
+msgid "Price with custom Sender ID"
+msgstr "價格自定義發送者ID"
+
+#: ../backend/modules/sms/templates/_price.php:15
 msgid ""
 "If you do not see your country in the list please contact us at <a href="
 "\"mailto:support@ladela.com\">support@ladela.com</a>."
 msgstr ""
+"如果您沒有看到您的國家列表中，請跟我們聯繫<a href=“mailto:support@ladela."
+"com”>support@ladela.com</a> 。"
 
-#: ../backend/modules/sms/templates/_purchases.php:14
-#: ../backend/modules/sms/templates/_sms_details.php:14
-#: ../backend/modules/tinymce/templates/appointment_list.php:32
-#: ../installer.php:183 ../installer.php:232 ../updates.php:413
-#: ../updates.php:728
-msgid "Time"
-msgstr ""
-
-#: ../backend/modules/sms/templates/_purchases.php:16
+#: ../backend/modules/sms/templates/_purchases.php:20
 msgid "Order"
-msgstr ""
+msgstr "訂單"
 
-#: ../backend/modules/sms/templates/_purchases.php:17
-#: ../backend/modules/sms/templates/_sms_details.php:18
-msgid "Status"
+#: ../backend/modules/sms/templates/_sender_id.php:2
+msgid ""
+"Please take into account that not all countries by law allow custom SMS "
+"sender ID. Please check if particular country supports custom sender ID in "
+"our price list. Also please note that prices for messages with custom sender "
+"ID are usually 20% - 25% higher than normal message price."
 msgstr ""
+"請考慮到，並非所有國家在法律允許自定義短信發件人ID。請檢查特定國家支持我們的"
+"價格表自定義發件人ID。同時請注意，價格自定義發件人ID消息通常比正常價格的消息"
+"高出20％-25%。"
 
-#: ../backend/modules/sms/templates/_sms_details.php:17
+#: ../backend/modules/sms/templates/_sender_id.php:5
+msgid "Request Sender ID"
+msgstr "請求發件人ID"
+
+#: ../backend/modules/sms/templates/_sender_id.php:5
+msgid "or"
+msgstr "要么"
+
+#: ../backend/modules/sms/templates/_sender_id.php:5
+msgid "Reset to default"
+msgstr "重置為默認"
+
+#: ../backend/modules/sms/templates/_sender_id.php:6
+msgid "Can only contain letters or digits (up to 11 characters)."
+msgstr "只能包含字母或數字（最多11個字符）。"
+
+#: ../backend/modules/sms/templates/_sender_id.php:8
+msgid "Request"
+msgstr "請求"
+
+#: ../backend/modules/sms/templates/_sender_id.php:9
+msgid "Cancel request"
+msgstr "取消請求"
+
+#: ../backend/modules/sms/templates/_sender_id.php:16
+msgid "Requested ID"
+msgstr "請求ID"
+
+#: ../backend/modules/sms/templates/_sender_id.php:18
+msgid "Status Date"
+msgstr "狀態日期"
+
+#: ../backend/modules/sms/templates/_sms_details.php:21
+#: ../backend/modules/sms/templates/index.php:34
+#: ../backend/modules/sms/templates/index.php:58
+msgid "Sender ID"
+msgstr "發件人ID"
+
+#: ../backend/modules/sms/templates/_sms_details.php:22
 msgid "Cost"
-msgstr ""
+msgstr "成本"
 
-#: ../backend/modules/sms/templates/index.php:18
+#: ../backend/modules/sms/templates/index.php:17
 msgid "Your balance"
+msgstr "您的餘額"
+
+#: ../backend/modules/sms/templates/index.php:22
+msgid "Send email notification to administrators at low balance"
+msgstr "餘額過低時發電郵通知管理員"
+
+#: ../backend/modules/sms/templates/index.php:29
+msgid "Send email notification to administrators at weekly summary"
 msgstr ""
 
-#: ../backend/modules/sms/templates/index.php:30
-#: ../backend/modules/sms/templates/index.php:167
-msgid "Change password"
-msgstr ""
+#: ../backend/modules/sms/templates/index.php:34
+msgid "Change"
+msgstr "更改"
 
 #: ../backend/modules/sms/templates/index.php:36
+msgid "Approved at"
+msgstr "在批准"
+
+#: ../backend/modules/sms/templates/index.php:47
 msgid "Log out"
-msgstr ""
-
-#: ../backend/modules/sms/templates/index.php:48
-msgid "Notifications"
-msgstr ""
-
-#: ../backend/modules/sms/templates/index.php:49
-msgid "Add money"
-msgstr ""
-
-#: ../backend/modules/sms/templates/index.php:50
-msgid "Purchases"
-msgstr ""
-
-#: ../backend/modules/sms/templates/index.php:51
-msgid "SMS Details"
-msgstr ""
+msgstr "登出"
 
 #: ../backend/modules/sms/templates/index.php:52
-msgid "Price list"
-msgstr ""
+msgid "Notifications"
+msgstr "通知"
 
-#: ../backend/modules/sms/templates/index.php:75
+#: ../backend/modules/sms/templates/index.php:53
+msgid "Add money"
+msgstr "増值"
+
+#: ../backend/modules/sms/templates/index.php:54
+msgid "Auto-Recharge"
+msgstr "自動儲值"
+
+#: ../backend/modules/sms/templates/index.php:55
+msgid "Purchases"
+msgstr "購買"
+
+#: ../backend/modules/sms/templates/index.php:56
+msgid "SMS Details"
+msgstr "SMS短信內容"
+
+#: ../backend/modules/sms/templates/index.php:57
+msgid "Price list"
+msgstr "價目表"
+
+#: ../backend/modules/sms/templates/index.php:74
 msgid ""
 "SMS Notifications (or \"Bookly SMS\") is a service for notifying your "
-"customers via text messages which are sent to mobile phones.<br/>It is "
-"necessary to register in order to start using this service.<br/>After "
-"registration you will need to configure notification messages and top up "
-"your balance in order to start sending SMS."
-msgstr ""
+"customers via text messages which are sent to mobile phones."
+msgstr "短信通知（或“Bookly SMS”）是通過將其發送到手機短信通知您的客戶服務。"
+
+#: ../backend/modules/sms/templates/index.php:75
+msgid "It is necessary to register in order to start using this service."
+msgstr "它是必要的，以便註冊開始使用該服務。"
+
+#: ../backend/modules/sms/templates/index.php:76
+msgid ""
+"After registration you will need to configure notification messages and top "
+"up your balance in order to start sending SMS."
+msgstr "註冊後，您將需要配置通知消息，並以開始發送短信充值您的餘額。"
 
 #: ../backend/modules/sms/templates/index.php:83
 #: ../frontend/modules/booking/templates/_login_form.php:10
 msgid "Login"
-msgstr ""
+msgstr "登入"
 
 #: ../backend/modules/sms/templates/index.php:89
-#: ../backend/modules/sms/templates/index.php:109
+#: ../backend/modules/sms/templates/index.php:108
 msgid "Password"
-msgstr ""
+msgstr "密碼"
 
 #: ../backend/modules/sms/templates/index.php:93
-#: ../backend/modules/sms/templates/index.php:123
-#: ../backend/modules/sms/templates/index.php:145
-#: ../frontend/modules/booking/templates/_login_form.php:48
+#: ../backend/modules/sms/templates/index.php:126
+#: ../backend/modules/sms/templates/index.php:148
 msgid "Log In"
-msgstr ""
+msgstr "登入"
 
 #: ../backend/modules/sms/templates/index.php:94
-#: ../backend/modules/sms/templates/index.php:103
+#: ../backend/modules/sms/templates/index.php:102
 msgid "Registration"
-msgstr ""
+msgstr "注册"
 
 #: ../backend/modules/sms/templates/index.php:95
-#: ../backend/modules/sms/templates/index.php:130
+#: ../backend/modules/sms/templates/index.php:133
 msgid "Forgot password"
-msgstr ""
+msgstr "忘記密碼"
 
-#: ../backend/modules/sms/templates/index.php:113
+#: ../backend/modules/sms/templates/index.php:112
 msgid "Repeat password"
-msgstr ""
+msgstr "重覆密碼"
 
-#: ../backend/modules/sms/templates/index.php:117
+#: ../backend/modules/sms/templates/index.php:119
 msgid ""
 "Accept <a href=\"javascript:void(0)\" data-toggle=\"modal\" data-target="
 "\"#ab-tos\">Terms & Conditions</a>"
 msgstr ""
+"接受 <a href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#ab-"
+"tos\">條款</a>"
 
-#: ../backend/modules/sms/templates/index.php:122
+#: ../backend/modules/sms/templates/index.php:125
 msgid "Register"
-msgstr ""
-
-#: ../backend/modules/sms/templates/index.php:135
-msgid "Enter code from email"
-msgstr ""
+msgstr "註冊"
 
 #: ../backend/modules/sms/templates/index.php:138
-#: ../backend/modules/sms/templates/index.php:175
-#: ../backend/modules/sms/templates/index.php:176
-msgid "New password"
-msgstr ""
+msgid "Enter code from email"
+msgstr "從電郵輸入代碼"
 
 #: ../backend/modules/sms/templates/index.php:141
-#: ../backend/modules/sms/templates/index.php:179
-#: ../backend/modules/sms/templates/index.php:180
+#: ../backend/modules/sms/templates/index.php:177
+#: ../backend/modules/sms/templates/index.php:178
+msgid "New password"
+msgstr "新密碼"
+
+#: ../backend/modules/sms/templates/index.php:144
+#: ../backend/modules/sms/templates/index.php:181
+#: ../backend/modules/sms/templates/index.php:182
 msgid "Repeat new password"
-msgstr ""
+msgstr "重覆新密碼"
 
-#: ../backend/modules/sms/templates/index.php:171
-#: ../backend/modules/sms/templates/index.php:172
+#: ../backend/modules/sms/templates/index.php:147 ../lib/Installer.php:267
+#: ../lib/Updater.php:384
+msgid "Next"
+msgstr "下"
+
+#: ../backend/modules/sms/templates/index.php:169
+msgid "Change password"
+msgstr "修改密碼"
+
+#: ../backend/modules/sms/templates/index.php:173
+#: ../backend/modules/sms/templates/index.php:174
 msgid "Old password"
-msgstr ""
+msgstr "舊密碼"
 
-#: ../backend/modules/sms/templates/index.php:200
+#: ../backend/modules/sms/templates/index.php:201
 msgid "Terms & Conditions"
-msgstr ""
+msgstr "使用條款"
 
-#: ../backend/modules/staff/AB_StaffController.php:209
+#: ../backend/modules/staff/Controller.php:69
+msgid "All locations"
+msgstr "所有地點"
+
+#: ../backend/modules/staff/Controller.php:69
+msgid "No locations selected"
+msgstr "未選擇位置"
+
+#: ../backend/modules/staff/Controller.php:220
 msgid "The start time must be less than the end one"
-msgstr ""
+msgstr "開始時間應早於結束時間"
 
-#: ../backend/modules/staff/AB_StaffController.php:224
+#: ../backend/modules/staff/Controller.php:235
 msgid "The requested interval is not available"
-msgstr ""
+msgstr "要求的時段不可選"
 
-#: ../backend/modules/staff/AB_StaffController.php:277
+#: ../backend/modules/staff/Controller.php:274
 msgid "Error adding the break interval"
-msgstr ""
+msgstr "添加休息時段時錯誤"
 
-#: ../backend/modules/staff/AB_StaffController.php:312
-msgid "Calendar ID is not valid."
-msgstr ""
-
-#: ../backend/modules/staff/AB_StaffController.php:356
-#: ../lib/AB_Controller.php:95
-msgid "Bookly: You do not have sufficient permissions to access this page."
-msgstr ""
-
-#: ../backend/modules/staff/templates/_break.php:16
-#: ../backend/modules/staff/templates/schedule.php:60
-#: ../lib/utils/AB_Utils.php:244
-msgid "Save"
-msgstr ""
-
-#: ../backend/modules/staff/templates/_break.php:25
+#: ../backend/modules/staff/templates/_break.php:9
 msgid "Delete break"
-msgstr ""
+msgstr "刪除休息"
 
-#: ../backend/modules/staff/templates/_breaks.php:9
-msgid "breaks:"
-msgstr ""
+#: ../backend/modules/staff/templates/_breaks.php:10
+#: ../backend/modules/staff/templates/schedule.php:19
+msgid "Breaks"
+msgstr "暫停"
 
-#: ../backend/modules/staff/templates/edit.php:15
-msgid "Delete this staff member"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:20 ../installer.php:184
-#: ../updates.php:729
-msgid "Details"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:22
+#: ../backend/modules/staff/templates/edit.php:53
 msgid "Schedule"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:23
-msgid "Days off"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:37
-#: ../backend/modules/staff/templates/new.php:16
-msgid "Select from WP users"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:56
-msgid "Photo"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:59
-msgid "Avatar"
-msgstr ""
+msgstr "日程"
 
 #: ../backend/modules/staff/templates/edit.php:60
-msgid "Delete current photo"
-msgstr ""
+msgid "Days off"
+msgstr "休息日"
 
-#: ../backend/modules/staff/templates/edit.php:68
-#: ../backend/modules/staff/templates/new.php:25
+#: ../backend/modules/staff/templates/edit.php:72
+#: ../backend/modules/staff/templates/new.php:30
 msgid "Full name"
-msgstr ""
+msgstr "全名"
 
-#: ../backend/modules/staff/templates/edit.php:90
-msgid "Google Calendar integration"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:92
-msgid "Synchronize the data of the staff member bookings with Google Calendar."
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:101
-msgid "Connect"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:103
-msgid ""
-"Please configure Google Calendar <a href=\"?page=ab-"
-"settings&type=_google_calendar\">settings</a> first"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:106
-msgid "Connected"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:106
-msgid "disconnect"
-msgstr ""
-
-#: ../backend/modules/staff/templates/edit.php:114
-msgid "Calendar ID"
-msgstr ""
-
-#: ../backend/modules/staff/templates/list.php:38
+#: ../backend/modules/staff/templates/edit.php:80
+#: ../backend/modules/staff/templates/new.php:17
 msgid ""
 "If this staff member requires separate login to access personal calendar, a "
 "regular WP user needs to be created for this purpose."
-msgstr ""
+msgstr "如果員工需要獨立登入訪問個人日曆，則需要建立普通的Wordpress用戶賬號 。"
 
-#: ../backend/modules/staff/templates/list.php:39
+#: ../backend/modules/staff/templates/edit.php:81
+#: ../backend/modules/staff/templates/new.php:18
 msgid ""
 "User with \"Administrator\" role will have access to calendars and settings "
 "of all staff members, user with some other role will have access only to "
 "personal calendar and settings."
 msgstr ""
+"用戶以”管理員”的角色將有機會獲得日曆和所有工作人員的設定，與其他一些角色用戶"
+"將只能查看個人日曆和設定查看的權限。"
 
-#: ../backend/modules/staff/templates/list.php:40
+#: ../backend/modules/staff/templates/edit.php:82
+#: ../backend/modules/staff/templates/new.php:19
 msgid ""
 "If you will leave this field blank, this staff member will not be able to "
 "access personal calendar using WP backend."
-msgstr ""
+msgstr "如果你將這欄留空，這名員工將無法使用WordPress員工個人日曆。"
 
-#: ../backend/modules/staff/templates/list.php:43
+#: ../backend/modules/staff/templates/edit.php:86
+#: ../backend/modules/staff/templates/new.php:22
+msgid "Select from WP users"
+msgstr "從WordPress用戶中選擇"
+
+#: ../backend/modules/staff/templates/edit.php:124
 msgid ""
-"The Calendar ID can be found by clicking on \"Calendar settings\" next to "
-"the calendar you wish to display. The Calendar ID is then shown beside "
-"\"Calendar Address\"."
+"To make staff member invisible to your customers set the visibility to "
+"\"Private\"."
+msgstr "為了讓工作人員看不到客戶設置的知名度，“專用”。"
+
+#: ../backend/modules/staff/templates/edit.php:133
+msgid "Google Calendar integration"
+msgstr "Google日曆整合"
+
+#: ../backend/modules/staff/templates/edit.php:135
+msgid "Synchronize staff member appointments with Google Calendar."
+msgstr "同步預约資料到員工的Google日曆。"
+
+#: ../backend/modules/staff/templates/edit.php:140
+msgid "Connect"
+msgstr "連接"
+
+#: ../backend/modules/staff/templates/edit.php:142
+#, php-format
+msgid "Please configure Google Calendar <a href=\"%s\">settings</a> first"
+msgstr "請先調整Google日曆<a href=“%s”>設定</a>"
+
+#: ../backend/modules/staff/templates/edit.php:145
+msgid "Connected"
+msgstr "已連接"
+
+#: ../backend/modules/staff/templates/edit.php:145
+msgid "disconnect"
+msgstr "已中㫁連接"
+
+#: ../backend/modules/staff/templates/modal-feedback.php:11
+msgid "Leave as a message"
 msgstr ""
 
-#: ../backend/modules/staff/templates/list.php:44
-msgid "<b>Leave this field empty</b> to work with the default calendar."
-msgstr ""
-
-#: ../backend/modules/staff/templates/new.php:5
+#: ../backend/modules/staff/templates/new.php:8
 msgid "New Staff Member"
-msgstr ""
+msgstr "新員工"
 
-#: ../backend/modules/staff/templates/new.php:31
-msgid "Save Member"
-msgstr ""
-
-#: ../backend/modules/staff/templates/schedule.php:41
+#: ../backend/modules/staff/templates/schedule.php:70
 msgid "add break"
-msgstr ""
+msgstr "添加休息時間"
 
-#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:42
-#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:47
+#: ../backend/modules/tiny_mce/Plugin.php:43
+#: ../backend/modules/tiny_mce/Plugin.php:48
 msgid "Add Bookly booking form"
-msgstr ""
+msgstr "添加Bookly預約表格"
 
-#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:43
-#: ../backend/modules/tinymce/AB_TinyMCE_Plugin.php:48
-#: ../backend/modules/tinymce/templates/appointment_list.php:97
+#: ../backend/modules/tiny_mce/Plugin.php:44
+#: ../backend/modules/tiny_mce/Plugin.php:49
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:95
 msgid "Add Bookly appointments list"
-msgstr ""
+msgstr "添加Bookly預約列表"
 
-#: ../backend/modules/tinymce/templates/appointment_list.php:6
-msgid "Columns"
-msgstr ""
-
-#: ../backend/modules/tinymce/templates/appointment_list.php:20
-msgid "Staff"
-msgstr ""
-
-#: ../backend/modules/tinymce/templates/appointment_list.php:52
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:10
 msgid "Titles"
-msgstr ""
+msgstr "標題"
 
-#: ../backend/modules/tinymce/templates/appointment_list.php:64
-#: ../backend/modules/tinymce/templates/popup.php:57
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:30
+msgid "Staff"
+msgstr "員工"
+
+#: ../backend/modules/tiny_mce/templates/appointment_list.php:77
+#: ../backend/modules/tiny_mce/templates/popup.php:76
 msgid "Insert"
-msgstr ""
+msgstr "插入"
 
-#: ../backend/modules/tinymce/templates/popup.php:7
+#: ../backend/modules/tiny_mce/templates/popup.php:8
 msgid "Default value for category select"
-msgstr ""
+msgstr "分類選擇的默認值"
 
-#: ../backend/modules/tinymce/templates/popup.php:11 ../installer.php:200
-#: ../updates.php:743
+#: ../backend/modules/tiny_mce/templates/popup.php:12 ../lib/Installer.php:291
+#: ../lib/Updater.php:1249
 msgid "Select category"
-msgstr ""
+msgstr "選擇分類"
 
-#: ../backend/modules/tinymce/templates/popup.php:13
-#: ../backend/modules/tinymce/templates/popup.php:25
-#: ../backend/modules/tinymce/templates/popup.php:37
-#: ../backend/modules/tinymce/templates/popup.php:43
+#: ../backend/modules/tiny_mce/templates/popup.php:14
+#: ../backend/modules/tiny_mce/templates/popup.php:25
+#: ../backend/modules/tiny_mce/templates/popup.php:37
+#: ../backend/modules/tiny_mce/templates/popup.php:45
 msgid "Hide this field"
-msgstr ""
+msgstr "隱藏字段"
 
-#: ../backend/modules/tinymce/templates/popup.php:14
-#: ../backend/modules/tinymce/templates/popup.php:26
+#: ../backend/modules/tiny_mce/templates/popup.php:19
+msgid "Default value for service select"
+msgstr "已選服務的默認值"
+
+#: ../backend/modules/tiny_mce/templates/popup.php:23 ../lib/Installer.php:290
+#: ../lib/Updater.php:1248
+msgid "Select service"
+msgstr "選擇服務"
+
+#: ../backend/modules/tiny_mce/templates/popup.php:26
 msgid ""
 "Please be aware that a value in this field is required in the frontend. If "
 "you choose to hide this field, please be sure to select a default value for "
 "it"
 msgstr ""
+"請註意，頁麵要求此字段必須有一個值。如果您選擇隱藏這個字段，請先給它選擇一個"
+"默認值"
 
-#: ../backend/modules/tinymce/templates/popup.php:19
-msgid "Default value for service select"
-msgstr ""
-
-#: ../backend/modules/tinymce/templates/popup.php:23 ../installer.php:199
-#: ../updates.php:742
-msgid "Select service"
-msgstr ""
-
-#: ../backend/modules/tinymce/templates/popup.php:31
+#: ../backend/modules/tiny_mce/templates/popup.php:31
 msgid "Default value for employee select"
-msgstr ""
+msgstr "員工選擇的默認值"
 
-#: ../backend/modules/tinymce/templates/popup.php:35
-#: ../frontend/modules/booking/lib/AB_UserBookingData.php:401
-#: ../installer.php:201 ../updates.php:744
+#: ../backend/modules/tiny_mce/templates/popup.php:35
+#: ../frontend/modules/booking/Controller.php:1272 ../lib/Installer.php:292
+#: ../lib/Updater.php:1250
 msgid "Any"
-msgstr ""
+msgstr "任何"
 
-#: ../backend/modules/tinymce/templates/popup.php:48
-msgid "\"I'm available on …\" block"
-msgstr ""
-
-#: ../backend/modules/tinymce/templates/popup.php:51
+#: ../backend/modules/tiny_mce/templates/popup.php:54
+#: ../backend/modules/tiny_mce/templates/popup.php:62
+#: ../backend/modules/tiny_mce/templates/popup.php:70
 msgid "Hide this block"
-msgstr ""
+msgstr "隐藏此段"
 
-#: ../backend/modules/tinymce/templates/popup.php:98
+#: ../backend/modules/tiny_mce/templates/popup.php:59
+msgid "Week days"
+msgstr "工作日"
+
+#: ../backend/modules/tiny_mce/templates/popup.php:67
+msgid "Time range"
+msgstr "時間範圍"
+
+#: ../backend/modules/tiny_mce/templates/popup.php:121
 msgid "Insert Appointment Booking Form"
-msgstr ""
+msgstr "插入預約表"
 
-#: ../frontend/modules/authorize.net/AB_AuthorizeNetController.php:64
-#: ../frontend/modules/booking/AB_BookingController.php:236
-#: ../frontend/modules/booking/AB_BookingController.php:275
-#: ../frontend/modules/booking/AB_BookingController.php:336
-#: ../frontend/modules/booking/AB_BookingController.php:366
-#: ../frontend/modules/booking/AB_BookingController.php:463
-#: ../frontend/modules/booking/AB_BookingController.php:556
-#: ../frontend/modules/stripe/AB_StripeController.php:69
-#: ../frontend/modules/woocommerce/AB_WooCommerceController.php:171
-msgid "Session error."
-msgstr ""
+#: ../frontend/Frontend.php:92
+msgid "Show more"
+msgstr "顯示更多"
 
-#: ../frontend/modules/booking/AB_BookingController.php:177
-msgid "Form ID error."
-msgstr ""
-
-#: ../frontend/modules/booking/AB_BookingController.php:361
+#: ../frontend/modules/authorize_net/Controller.php:82
+#: ../frontend/modules/booking/Controller.php:812
+#: ../frontend/modules/booking/Controller.php:866
+#: ../frontend/modules/booking/Controller.php:894
+#: ../frontend/modules/stripe/Controller.php:77
 msgid ""
-"<h3>The selected time is not available anymore. Please, choose another time "
-"slot.</h3>"
-msgstr ""
+"The highlighted time is not available anymore. Please, choose another time "
+"slot."
+msgstr "所選時段已滿，請選擇其他的時段。"
 
-#: ../frontend/modules/booking/AB_BookingController.php:551
+#: ../frontend/modules/authorize_net/Controller.php:83
+#: ../frontend/modules/booking/Controller.php:813
+#: ../frontend/modules/booking/Controller.php:867
+#: ../frontend/modules/booking/Controller.php:895
+#: ../frontend/modules/stripe/Controller.php:78
+#: ../frontend/modules/woo_commerce/Controller.php:331
+msgid ""
+"The selected time is not available anymore. Please, choose another time slot."
+msgstr "所選時段已滿，請選擇其他的時段。"
+
+#: ../frontend/modules/authorize_net/Controller.php:87
+#: ../frontend/modules/booking/Controller.php:298
+#: ../frontend/modules/booking/Controller.php:376
+#: ../frontend/modules/booking/Controller.php:417
+#: ../frontend/modules/booking/Controller.php:526
+#: ../frontend/modules/booking/Controller.php:596
+#: ../frontend/modules/booking/Controller.php:653
+#: ../frontend/modules/booking/Controller.php:688
+#: ../frontend/modules/booking/Controller.php:817
+#: ../frontend/modules/booking/Controller.php:871
+#: ../frontend/modules/booking/Controller.php:1046
+#: ../frontend/modules/stripe/Controller.php:82
+#: ../frontend/modules/woo_commerce/Controller.php:334
+msgid "Session error."
+msgstr "Session 錯誤"
+
+#: ../frontend/modules/booking/Controller.php:251
+msgid "Form ID error."
+msgstr "表單ID錯誤。"
+
+#: ../frontend/modules/booking/Controller.php:803
+msgid "Pay locally is not available."
+msgstr "即場付款不可選。"
+
+#: ../frontend/modules/booking/Controller.php:874
+#: ../frontend/modules/booking/Controller.php:899
+msgid "Invalid gateway."
+msgstr "無效的Gateway。"
+
+#: ../frontend/modules/booking/Controller.php:1032
+#: ../frontend/modules/booking/Controller.php:1041
 msgid "This coupon code is invalid or has been used"
-msgstr ""
+msgstr "此優惠代碼無效或已經被使用"
 
-#: ../frontend/modules/booking/templates/1_service.php:103
-#: ../lib/AB_Validator.php:101
-msgid "The start time must be less than the end time"
-msgstr ""
-
-#: ../frontend/modules/booking/templates/2_time.php:37
+#: ../frontend/modules/booking/templates/3_time.php:34
 msgid "No time is available for selected criteria."
-msgstr ""
+msgstr "所選條件下沒有時段可供使用。"
 
-#: ../frontend/modules/booking/templates/cancel_appointment.php:9
+#: ../frontend/modules/booking/templates/5_details.php:78
+msgid "Another code"
+msgstr "另一代碼"
+
+#: ../frontend/modules/booking/templates/redirection.php:9
 msgid "Page Redirection"
-msgstr ""
+msgstr "網頁重定向"
 
-#: ../frontend/modules/booking/templates/cancel_appointment.php:12
+#: ../frontend/modules/booking/templates/redirection.php:12
 #, php-format
 msgid ""
 "If you are not redirected automatically, follow the <a href=\"%s\">link</a>."
-msgstr ""
+msgstr "如果您的頁面沒有自動跳轉，請點擊此<a href=“%s”>鏈接</a> 。"
 
 #: ../frontend/modules/booking/templates/short_code.php:9
 msgid "Loading..."
-msgstr ""
+msgstr "載入中…"
 
-#: ../frontend/modules/customer_profile/templates/short_code.php:44
+#: ../frontend/modules/customer_profile/templates/_rows.php:50
+msgid "Not allowed"
+msgstr "不允許"
+
+#: ../frontend/modules/customer_profile/templates/_rows.php:53
 msgid "Expired"
+msgstr "已過期"
+
+#: ../frontend/modules/customer_profile/templates/short_code.php:31
+msgid "No appointments found."
+msgstr "沒有約會找到。"
+
+#: ../frontend/modules/customer_profile/templates/short_code.php:38
+msgid "Show past appointments"
+msgstr "顯示過往的預約"
+
+#: ../frontend/modules/paypal/Controller.php:140
+#: ../frontend/modules/payu_latam/Controller.php:33
+#: ../frontend/modules/two_checkout/Controller.php:33
+msgid "Invalid token provided"
+msgstr "提供的代幣(Token)無效"
+
+#: ../frontend/modules/payu_latam/Controller.php:24
+msgid "Transaction rejected"
+msgstr "交易已被取消"
+
+#: ../frontend/modules/payu_latam/Controller.php:27
+#: ../frontend/modules/stripe/Controller.php:66 ../lib/SMS.php:373
+#: ../lib/SMS.php:405 ../lib/payment/Payson.php:96
+msgid "Error"
+msgstr "錯誤"
+
+#: ../frontend/modules/payu_latam/Controller.php:30
+msgid "Pending payment"
+msgstr "正在等待支付。"
+
+#: ../frontend/modules/two_checkout/Controller.php:73
+msgid "Invalid session"
+msgstr "Session 無效"
+
+#: ../frontend/modules/woo_commerce/Controller.php:74
+msgid ""
+"Sorry, the time slot %date_time% for %service% has been already occupied."
+msgstr "對不起，％date_time％的％service％已有其他預約。"
+
+#: ../frontend/modules/woo_commerce/Controller.php:260
+msgid "Service was not found"
 msgstr ""
 
-#: ../frontend/modules/customer_profile/templates/short_code.php:60
-msgid "No appointments found"
-msgstr ""
+#: ../lib/Cart.php:288
+#, php-format
+msgid " and %d more item"
+msgid_plural " and %d more items"
+msgstr[0] "和 %d 項目"
 
-#: ../installer.php:23
+#: ../lib/Config.php:57 ../lib/entities/Service.php:60
+msgid "Uncategorized"
+msgstr "未分類"
+
+#: ../lib/Installer.php:25 ../lib/Installer.php:32 ../lib/Installer.php:46
+#: ../lib/Installer.php:53 ../lib/Updater.php:181 ../lib/Updater.php:188
+#: ../lib/Updater.php:260
 msgid "Your appointment information"
-msgstr ""
+msgstr "您的預約信息"
 
-#: ../installer.php:24
+#: ../lib/Installer.php:26 ../lib/Installer.php:47
 msgid ""
-"Dear [[CLIENT_NAME]].\n"
+"Dear {client_name}.\n"
 "\n"
-"This is confirmation that you have booked [[SERVICE_NAME]].\n"
+"This is a confirmation that you have booked {service_name}.\n"
 "\n"
-"We are waiting you at [[COMPANY_ADDRESS]] on [[APPOINTMENT_DATE]] at "
-"[[APPOINTMENT_TIME]].\n"
+"We are waiting you at {company_address} on {appointment_date} at "
+"{appointment_time}.\n"
 "\n"
 "Thank you for choosing our company.\n"
 "\n"
-"[[COMPANY_NAME]]\n"
-"[[COMPANY_PHONE]]\n"
-"[[COMPANY_WEBSITE]]"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
 msgstr ""
+"親愛的 {client_name}.\n"
+"\n"
+"您預訂的{service_name}已確認.\n"
+"\n"
+"請在{appointment_date} {appointment_time}到達{company_address} \n"
+"\n"
+"再次感謝使用本公司的服務\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
 
-#: ../installer.php:30
+#: ../lib/Installer.php:33 ../lib/Installer.php:54 ../lib/Updater.php:182
+#: ../lib/Updater.php:189
+msgid ""
+"Dear {client_name}.\n"
+"\n"
+"This is a confirmation that you have booked the following items:\n"
+"\n"
+"{cart_info}\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"尊敬的{client_name}。\n"
+"\n"
+"這是您預訂下列項目的確認：\n"
+"\n"
+"{cart_info}\n"
+"\n"
+"感謝您選擇我們公司。\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: ../lib/Installer.php:39 ../lib/Installer.php:60 ../lib/Updater.php:267
 msgid "New booking information"
-msgstr ""
+msgstr "新預約信息"
 
-#: ../installer.php:31
+#: ../lib/Installer.php:40 ../lib/Installer.php:61 ../lib/Updater.php:268
 msgid ""
 "Hello.\n"
 "\n"
 "You have new booking.\n"
 "\n"
-"Service: [[SERVICE_NAME]]\n"
-"Date: [[APPOINTMENT_DATE]]\n"
-"Time: [[APPOINTMENT_TIME]]\n"
-"Client name: [[CLIENT_NAME]]\n"
-"Client phone: [[CLIENT_PHONE]]\n"
-"Client email: [[CLIENT_EMAIL]]"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
 msgstr ""
+"您好.\n"
+"\n"
+"你有一個新的顧客預約.\n"
+"\n"
+"服務: {service_name}\n"
+"日期: {appointment_date}\n"
+"時間: {appointment_time}\n"
+"顧客姓名: {client_name}\n"
+"顧客電話: {client_phone}\n"
+"顧客 Email: {client_email}"
 
-#: ../installer.php:37
-msgid "Your appointment at [[COMPANY_NAME]]"
-msgstr ""
-
-#: ../installer.php:38
-msgid ""
-"Dear [[CLIENT_NAME]].\n"
-"\n"
-"We would like to remind you that you have booked [[SERVICE_NAME]] tomorrow "
-"on [[APPOINTMENT_TIME]]. We are waiting you at [[COMPANY_ADDRESS]].\n"
-"\n"
-"Thank you for choosing our company.\n"
-"\n"
-"[[COMPANY_NAME]]\n"
-"[[COMPANY_PHONE]]\n"
-"[[COMPANY_WEBSITE]]"
-msgstr ""
-
-#: ../installer.php:44
-msgid "Your visit to [[COMPANY_NAME]]"
-msgstr ""
-
-#: ../installer.php:45
-msgid ""
-"Dear [[CLIENT_NAME]].\n"
-"\n"
-"Thank you for choosing [[COMPANY_NAME]]. We hope you were satisfied with "
-"your [[SERVICE_NAME]].\n"
-"\n"
-"Thank you and we look forward to seeing you again soon.\n"
-"\n"
-"[[COMPANY_NAME]]\n"
-"[[COMPANY_PHONE]]\n"
-"[[COMPANY_WEBSITE]]"
-msgstr ""
-
-#: ../installer.php:51
-msgid "Your agenda for [[TOMORROW_DATE]]"
-msgstr ""
-
-#: ../installer.php:52
-msgid ""
-"Hello.\n"
-"\n"
-"Your agenda for tomorrow is:\n"
-"\n"
-"[[NEXT_DAY_AGENDA]]"
-msgstr ""
-
-#: ../installer.php:58 ../updates.php:446
+#: ../lib/Installer.php:67 ../lib/Installer.php:74 ../lib/Updater.php:274
+#: ../lib/Updater.php:952
 msgid "Booking cancellation"
-msgstr ""
+msgstr "取消預約"
 
-#: ../installer.php:59 ../updates.php:447
+#: ../lib/Installer.php:68 ../lib/Updater.php:275
+msgid ""
+"Dear {client_name}.\n"
+"\n"
+"You have cancelled your booking of {service_name} on {appointment_date} at "
+"{appointment_time}.\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"親愛的{client_name}。\n"
+"\n"
+"您在{appointment_date} {appointment_time}預約的{service_name}已被取消。\n"
+"\n"
+"感謝您選擇我們公司。 希望下次再次為您服務!\n"
+"\n"
+"[COMPANY_NAME]] \n"
+"{company_phone} \n"
+"{company_website}"
+
+#: ../lib/Installer.php:75 ../lib/Updater.php:953
 msgid ""
 "Hello.\n"
 "\n"
 "The following booking has been cancelled.\n"
 "\n"
-"Service: [[SERVICE_NAME]]\n"
-"Date: [[APPOINTMENT_DATE]]\n"
-"Time: [[APPOINTMENT_TIME]]\n"
-"Client name: [[CLIENT_NAME]]\n"
-"Client phone: [[CLIENT_PHONE]]\n"
-"Client email: [[CLIENT_EMAIL]]"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
 msgstr ""
+"您好，\n"
+"\n"
+"以下預約已被取消。\n"
+"\n"
+"服務：{service_name}\n"
+"日期：{appointment_date}\n"
+"時間：{appointment_time}\n"
+"客戶名字：{client_name}\n"
+"客戶電話：{client_phone}\n"
+"客戶郵箱：{client_email}"
 
-#: ../installer.php:66 ../updates.php:454
+#: ../lib/Installer.php:82 ../lib/Updater.php:960
 msgid ""
 "Hello.\n"
 "\n"
-"An account was created for you at [[SITE_ADDRESS]]\n"
+"An account was created for you at {site_address}\n"
 "\n"
 "Your user details:\n"
-"user: [[NEW_USERNAME]]\n"
-"password: [[NEW_PASSWORD]]\n"
+"user: {new_username}\n"
+"password: {new_password}\n"
 "\n"
 "Thanks."
 msgstr ""
+"你好.\n"
+"\n"
+"您在 {site_address}上建立了一個賬號\n"
+"\n"
+"您的用戶詳情:\n"
+"用戶: {new_username}\n"
+"密碼: {new_password}\n"
+"\n"
+"謝謝."
 
-#: ../installer.php:75 ../updates.php:266
+#: ../lib/Installer.php:88
+msgid "Your appointment at {company_name}"
+msgstr "您到訪 {company_name} 的預約"
+
+#: ../lib/Installer.php:89
 msgid ""
-"Dear [[CLIENT_NAME]].\n"
-"This is confirmation that you have booked [[SERVICE_NAME]].\n"
-"We are waiting you at [[COMPANY_ADDRESS]] on [[APPOINTMENT_DATE]] at "
-"[[APPOINTMENT_TIME]].\n"
+"Dear {client_name}.\n"
+"\n"
+"We would like to remind you that you have booked {service_name} tomorrow on "
+"{appointment_time}. We are waiting you at {company_address}.\n"
+"\n"
 "Thank you for choosing our company.\n"
-"[[COMPANY_NAME]]\n"
-"[[COMPANY_PHONE]]\n"
-"[[COMPANY_WEBSITE]]"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
 msgstr ""
+"親愛的 {client_name}.\n"
+"\n"
+"你預訂的{service_name}在明天{appointment_time}。我們會恭候光臨。\n"
+"\n"
+"請在{appointment_date} {appointment_time}到達{company_address} \n"
+"\n"
+"再次感謝使用本公司的服務\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
 
-#: ../installer.php:82 ../updates.php:271
+#: ../lib/Installer.php:95
+msgid "Your visit to {company_name}"
+msgstr "您到訪 {company_name}"
+
+#: ../lib/Installer.php:96
+msgid ""
+"Dear {client_name}.\n"
+"\n"
+"Thank you for choosing {company_name}. We hope you were satisfied with your "
+"{service_name}.\n"
+"\n"
+"Thank you and we look forward to seeing you again soon.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"親愛的{client_name}，\n"
+"\n"
+"感謝您光顧{company_name}。我們希望您滿意這次的{service_name}服務。\n"
+"\n"
+"期待您的再次光臨。\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: ../lib/Installer.php:102
+msgid "Your agenda for {tomorrow_date}"
+msgstr "您的日程 {tomorrow_date}"
+
+#: ../lib/Installer.php:103
+msgid ""
+"Hello.\n"
+"\n"
+"Your agenda for tomorrow is:\n"
+"\n"
+"{next_day_agenda}"
+msgstr ""
+"您好。\n"
+"\n"
+"您明天的日程是：\n"
+"\n"
+"{next_day_agenda}"
+
+#: ../lib/Installer.php:111 ../lib/Installer.php:132
+msgid ""
+"Dear {client_name}.\n"
+"This is a confirmation that you have booked {service_name}.\n"
+"We are waiting you at {company_address} on {appointment_date} at "
+"{appointment_time}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"親愛的 {client_name}.\n"
+"您預訂的{service_name}已確認.\n"
+"請在{appointment_date} {appointment_time}到達{company_address} \n"
+"再次感謝使用本公司的服務\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: ../lib/Installer.php:118 ../lib/Installer.php:139 ../lib/Updater.php:197
+#: ../lib/Updater.php:204
+msgid ""
+"Dear {client_name}.\n"
+"This is a confirmation that you have booked the following items:\n"
+"{cart_info}\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"尊敬的{client_name}。\n"
+"這是您預訂下列項目的確認：\n"
+"{cart_info}\n"
+"感謝您選擇我們公司。\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: ../lib/Installer.php:125 ../lib/Installer.php:146 ../lib/Updater.php:290
+#: ../lib/Updater.php:777
 msgid ""
 "Hello.\n"
 "You have new booking.\n"
-"Service: [[SERVICE_NAME]]\n"
-"Date: [[APPOINTMENT_DATE]]\n"
-"Time: [[APPOINTMENT_TIME]]\n"
-"Client name: [[CLIENT_NAME]]\n"
-"Client phone: [[CLIENT_PHONE]]\n"
-"Client email: [[CLIENT_EMAIL]]"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
 msgstr ""
+"您好.\n"
+"您有新的預約.\n"
+"服務: {service_name}\n"
+"日期: {appointment_date}\n"
+"時間: {appointment_time}\n"
+"客戶名稱: {client_name}\n"
+"客戶電話: {client_phone}\n"
+"客戶電郵: {client_email}"
 
-#: ../installer.php:89 ../updates.php:276
+#: ../lib/Installer.php:153 ../lib/Updater.php:297
 msgid ""
-"Dear [[CLIENT_NAME]].\n"
-"We would like to remind you that you have booked [[SERVICE_NAME]] tomorrow "
-"on [[APPOINTMENT_TIME]]. We are waiting you at [[COMPANY_ADDRESS]].\n"
+"Dear {client_name}.\n"
+"You have cancelled your booking of {service_name} on {appointment_date} at "
+"{appointment_time}.\n"
 "Thank you for choosing our company.\n"
-"[[COMPANY_NAME]]\n"
-"[[COMPANY_PHONE]]\n"
-"[[COMPANY_WEBSITE]]"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
 msgstr ""
+"親愛的{client_name}。\n"
+"您在{appointment_date} {appointment_time}預約的{service_name}已被取消。\n"
+"感謝您選擇我們公司。 希望下次再次為您服務!\n"
+"[COMPANY_NAME]] \n"
+"{company_phone} \n"
+"{company_website}"
 
-#: ../installer.php:96 ../updates.php:281
-msgid ""
-"Dear [[CLIENT_NAME]].\n"
-"Thank you for choosing [[COMPANY_NAME]]. We hope you were satisfied with "
-"your [[SERVICE_NAME]].\n"
-"Thank you and we look forward to seeing you again soon.\n"
-"[[COMPANY_NAME]]\n"
-"[[COMPANY_PHONE]]\n"
-"[[COMPANY_WEBSITE]]"
-msgstr ""
-
-#: ../installer.php:103 ../updates.php:286
-msgid ""
-"Hello.\n"
-"Your agenda for tomorrow is:\n"
-"[[NEXT_DAY_AGENDA]]"
-msgstr ""
-
-#: ../installer.php:110 ../updates.php:291
+#: ../lib/Installer.php:160 ../lib/Updater.php:797
 msgid ""
 "Hello.\n"
 "The following booking has been cancelled.\n"
-"Service: [[SERVICE_NAME]]\n"
-"Date: [[APPOINTMENT_DATE]]\n"
-"Time: [[APPOINTMENT_TIME]]\n"
-"Client name: [[CLIENT_NAME]]\n"
-"Client phone: [[CLIENT_PHONE]]\n"
-"Client email: [[CLIENT_EMAIL]]"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
 msgstr ""
+"您好，\n"
+"以下預約已被取消。\n"
+"服務：{service_name}\n"
+"日期：{appointment_date}\n"
+"時間：{appointment_time}\n"
+"客戶名字：{client_name}\n"
+"客戶電話：{client_phone}\n"
+"客戶郵箱：{client_email}"
 
-#: ../installer.php:117 ../updates.php:296
+#: ../lib/Installer.php:167 ../lib/Updater.php:802
 msgid ""
 "Hello.\n"
-"An account was created for you at [[SITE_ADDRESS]]\n"
+"An account was created for you at {site_address}\n"
 "Your user details:\n"
-"user: [[NEW_USERNAME]]\n"
-"password: [[NEW_PASSWORD]]\n"
+"user: {new_username}\n"
+"password: {new_password}\n"
 "\n"
 "Thanks."
 msgstr ""
+"您好.\n"
+"我們已經為您在{site_address}開設了一個賬戶\n"
+"用戶詳情:\n"
+"用戶名稱: {new_username}\n"
+"用戶密碼: {new_password}\n"
+"\n"
+"謝謝."
 
-#: ../installer.php:174
-msgid "Please select service: "
-msgstr ""
-
-#: ../installer.php:175
+#: ../lib/Installer.php:174 ../lib/Updater.php:782
 msgid ""
-"Below you can find a list of available time slots for [[SERVICE_NAME]] by "
-"[[STAFF_NAME]].\n"
+"Dear {client_name}.\n"
+"We would like to remind you that you have booked {service_name} tomorrow on "
+"{appointment_time}. We are waiting you at {company_address}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"親愛的 {client_name}.\n"
+"你預訂的{service_name}在明天{appointment_time}。我們會恭候光臨。\n"
+"請在{appointment_date} {appointment_time}到達{company_address} \n"
+"再次感謝使用本公司的服務\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: ../lib/Installer.php:181 ../lib/Updater.php:787
+msgid ""
+"Dear {client_name}.\n"
+"Thank you for choosing {company_name}. We hope you were satisfied with your "
+"{service_name}.\n"
+"Thank you and we look forward to seeing you again soon.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"親愛的{client_name}，\n"
+"感謝您光顧{company_name}。我們希望您滿意這次的{service_name}服務。\n"
+"期待您的再次光臨。\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: ../lib/Installer.php:188 ../lib/Updater.php:792
+msgid ""
+"Hello.\n"
+"Your agenda for tomorrow is:\n"
+"{next_day_agenda}"
+msgstr ""
+"您好。\n"
+"您明天的日程是：\n"
+"{next_day_agenda}"
+
+#: ../lib/Installer.php:251
+msgid "Please select service: "
+msgstr "請選擇服務: "
+
+#: ../lib/Installer.php:252
+msgid ""
+"Below you can find a list of available time slots for {service_name} by "
+"{staff_name}.\n"
 "Click on a time slot to proceed with booking."
 msgstr ""
+"您可以在下方查詢 {service_name} 的 {staff_name} 可預約時間.\n"
+"選擇您的預約時間以進行預約。"
 
-#: ../installer.php:176
+#: ../lib/Installer.php:253 ../lib/Updater.php:400
 msgid ""
-"You selected a booking for [[SERVICE_NAME]] by [[STAFF_NAME]] at "
-"[[SERVICE_TIME]] on [[SERVICE_DATE]]. The price for the service is "
-"[[SERVICE_PRICE]].\n"
+"Below you can find a list of services selected for booking.\n"
+"Click BOOK MORE if you want to add more services."
+msgstr ""
+"您可以在下方看到預約項目列表.\n"
+"如果您想預約更多服務請點擊”繼續添加預約”."
+
+#: ../lib/Installer.php:254
+msgid ""
+"You selected a booking for {service_name} by {staff_name} at {service_time} "
+"on {service_date}. The price for the service is {service_price}.\n"
 "Please provide your details in the form below to proceed with booking."
 msgstr ""
+"您已選由 {staff_name} 負責的 {service_name} 服務預約為 {service_date}  "
+"{service_time}。預定的服務價格是 {service_price}。\n"
+"請在下個面的表格中留下您的詳細信息或說明，以便安排。"
 
-#: ../installer.php:178
+#: ../lib/Installer.php:256
 msgid "Please tell us how you would like to pay: "
-msgstr ""
+msgstr "請選擇您的支付方式: "
 
-#: ../installer.php:179
+#: ../lib/Installer.php:257
 msgid ""
 "Thank you! Your booking is complete. An email with details of your booking "
 "has been sent to you."
-msgstr ""
+msgstr "謝謝！ 您已完成預約。系統將會寄一封您預約的詳細資訊到您的電郵。 "
 
-#: ../installer.php:180 ../updates.php:591
-msgid "The price for the service is [[SERVICE_PRICE]]."
-msgstr ""
+#: ../lib/Installer.php:258
+msgid "The total price for the booking is {total_price}."
+msgstr "您預約的服務總價格是 {total_price}."
 
-#: ../installer.php:185 ../updates.php:730
-msgid "Payment"
-msgstr ""
-
-#: ../installer.php:186 ../updates.php:731
+#: ../lib/Installer.php:266 ../lib/Updater.php:1237
 msgid "Done"
-msgstr ""
+msgstr "已完成"
 
-#: ../installer.php:189 ../updates.php:734
+#: ../lib/Installer.php:268 ../lib/Updater.php:385
+msgid "Back"
+msgstr "返回"
+
+#: ../lib/Installer.php:270 ../lib/Updater.php:387
+msgid "Book More"
+msgstr "預約更多"
+
+#: ../lib/Installer.php:273 ../lib/Updater.php:1240
 msgid "Employee"
-msgstr ""
+msgstr "員工"
 
-#: ../installer.php:190 ../updates.php:735
+#: ../lib/Installer.php:274 ../lib/Updater.php:1241
 msgid "I'm available on or after"
-msgstr ""
+msgstr "我可以在此或之後"
 
-#: ../installer.php:191 ../updates.php:736
+#: ../lib/Installer.php:275 ../lib/Updater.php:1242
 msgid "Start from"
-msgstr ""
+msgstr "由"
 
-#: ../installer.php:192 ../updates.php:737
+#: ../lib/Installer.php:276 ../lib/Updater.php:1243
 msgid "Finish by"
-msgstr ""
+msgstr "完成於"
 
-#: ../installer.php:197 ../updates.php:525
+#: ../lib/Installer.php:280 ../lib/Updater.php:1096
+#: ../lib/entities/Payment.php:133
+msgid "Coupon"
+msgstr "優惠券"
+
+#: ../lib/Installer.php:281 ../lib/Updater.php:1031
 msgid "I will pay locally"
+msgstr "我會即場支付"
+
+#: ../lib/Installer.php:282 ../lib/Updater.php:352
+msgid "I will pay now with Mollie"
+msgstr "我會現在使用手機支付"
+
+#: ../lib/Installer.php:283 ../lib/Updater.php:503
+msgid "I will pay now with PayPal"
+msgstr "我會現在使用Paypal支付"
+
+#: ../lib/Installer.php:284 ../lib/Updater.php:20
+msgid "I will pay now with LiqPay"
 msgstr ""
 
-#: ../installer.php:231 ../updates.php:412
-msgid "Appointment"
-msgstr ""
+#: ../lib/Installer.php:285 ../lib/Updater.php:504
+msgid "I will pay now with Credit Card"
+msgstr "我會現在使用信用卡支付"
 
-#: ../lib/AB_Config.php:26 ../lib/entities/AB_Service.php:55
-msgid "Uncategorized"
-msgstr ""
+#: ../lib/Installer.php:286 ../lib/Updater.php:505
+msgid "Credit Card Number"
+msgstr "信用卡號碼"
 
-#: ../lib/AB_SMS.php:289
-msgid "Queued"
-msgstr ""
+#: ../lib/Installer.php:287 ../lib/Updater.php:506
+msgid "Expiration Date"
+msgstr "到期日"
 
-#: ../lib/AB_SMS.php:294 ../lib/AB_SMS.php:326
-msgid "Error"
-msgstr ""
+#: ../lib/Installer.php:288 ../lib/Updater.php:507
+msgid "Card Security Code"
+msgstr "信用卡驗證碼"
 
-#: ../lib/AB_SMS.php:298
-msgid "Out of credit"
-msgstr ""
+#: ../lib/Installer.php:294 ../lib/Updater.php:241
+msgid "Please select an employee"
+msgstr "請選擇一位員工"
 
-#: ../lib/AB_SMS.php:302
-msgid "Country out of service"
-msgstr ""
+#: ../lib/Installer.php:295 ../lib/Updater.php:369
+msgid "Please tell us your name"
+msgstr "請提供您的姓名"
 
-#: ../lib/AB_SMS.php:306
-msgid "Sending"
-msgstr ""
-
-#: ../lib/AB_SMS.php:310
-msgid "Sent"
-msgstr ""
-
-#: ../lib/AB_SMS.php:314
-msgid "Delivered"
-msgstr ""
-
-#: ../lib/AB_SMS.php:318
-msgid "Failed"
-msgstr ""
-
-#: ../lib/AB_SMS.php:322
-msgid "Undelivered"
-msgstr ""
-
-#: ../lib/AB_SMS.php:438
-msgid "Error connecting to server."
-msgstr ""
-
-#: ../lib/AB_SMS.php:479
-msgid "Recovery code expired."
-msgstr ""
-
-#: ../lib/AB_SMS.php:480
-msgid "Empty password."
-msgstr ""
-
-#: ../lib/AB_SMS.php:481
-msgid "Incorrect password."
-msgstr ""
-
-#: ../lib/AB_SMS.php:482
-msgid "Incorrect recovery code."
-msgstr ""
-
-#: ../lib/AB_SMS.php:483
-msgid "Incorrect email or password."
-msgstr ""
-
-#: ../lib/AB_SMS.php:484
-msgid "Invalid email."
-msgstr ""
-
-#: ../lib/AB_SMS.php:485
-msgid "Error sending email."
-msgstr ""
-
-#: ../lib/AB_SMS.php:486
-msgid "User not found."
-msgstr ""
-
-#: ../lib/AB_SMS.php:487
-msgid "Email already in use."
-msgstr ""
-
-#: ../lib/AB_Validator.php:15
-msgid "Invalid email"
-msgstr ""
-
-#: ../lib/AB_Validator.php:22
-msgid "This email is already in use"
-msgstr ""
-
-#: ../lib/AB_Validator.php:26
-msgid "Please tell us your email"
-msgstr ""
-
-#: ../lib/AB_Validator.php:39
-msgid "Invalid phone number"
-msgstr ""
-
-#: ../lib/AB_Validator.php:42
+#: ../lib/Installer.php:296 ../lib/Updater.php:370
 msgid "Please tell us your phone"
-msgstr ""
+msgstr "請提供您的電話"
 
-#: ../lib/AB_Validator.php:59
+#: ../lib/Installer.php:297 ../lib/Updater.php:371
+msgid "Please tell us your email"
+msgstr "請提供您的電子郵箱"
+
+#: ../lib/Installer.php:357 ../lib/Updater.php:918
+msgid "Appointment"
+msgstr "預約"
+
+#: ../lib/SMS.php:368
+msgid "Queued"
+msgstr "排列"
+
+#: ../lib/SMS.php:377
+msgid "Out of credit"
+msgstr "信用額度已全用"
+
+#: ../lib/SMS.php:381
+msgid "Country out of service"
+msgstr "國家暫停服務"
+
+#: ../lib/SMS.php:385
+msgid "Sending"
+msgstr "傳送中"
+
+#: ../lib/SMS.php:389
+msgid "Sent"
+msgstr "已發送"
+
+#: ../lib/SMS.php:393
+msgid "Delivered"
+msgstr "已發貨"
+
+#: ../lib/SMS.php:397
+msgid "Failed"
+msgstr "已失敗"
+
+#: ../lib/SMS.php:401
+msgid "Undelivered"
+msgstr "未送達"
+
+#: ../lib/SMS.php:445
+msgid "Default"
+msgstr "默認"
+
+#: ../lib/SMS.php:457
+msgid "Declined"
+msgstr "下降"
+
+#: ../lib/SMS.php:460 ../lib/entities/CustomerAppointment.php:227
+msgid "Cancelled"
+msgstr "已取消"
+
+#: ../lib/SMS.php:636
+msgid "Error connecting to server."
+msgstr "連線到伺服器發生錯誤。"
+
+#: ../lib/SMS.php:648
+#, php-format
+msgid ""
+"Dear Bookly SMS customer.\n"
+"We would like to notify you that your Bookly SMS balance fell lower than 5 "
+"USD. To use our service without interruptions please recharge your balance "
+"by visiting Bookly SMS page <a href='%s'>here</a>.\n"
+"\n"
+"If you want to stop receiving these notifications, please update your "
+"settings <a href='%s'>here</a>."
+msgstr ""
+"尊敬的BooklySMS短信的客戶。我們想告訴你，你Bookly短信餘額降至低於5美元。如要"
+"継績使用我們的服務，請訪問Bookly短信增值頁面您的餘額<a href=‘%s’>這裏</"
+"a> 。\n"
+"\n"
+"如果你想停止接收這些通知，請更新您的設置<a href=‘%s’>這裏</a> 。"
+
+#: ../lib/SMS.php:652
+msgid "Bookly SMS - Low Balance"
+msgstr "Bookly SMS - 餘額過低"
+
+#: ../lib/SMS.php:710
+msgid "Empty password."
+msgstr "空密碼。"
+
+#: ../lib/SMS.php:711
+msgid "Incorrect password."
+msgstr "錯誤密碼。"
+
+#: ../lib/SMS.php:712
+msgid "Incorrect recovery code."
+msgstr "不正確的復原碼。"
+
+#: ../lib/SMS.php:713
+msgid "Incorrect email or password."
+msgstr "郵件信箱或密碼錯誤"
+
+#: ../lib/SMS.php:714
+msgid "Incorrect sender ID"
+msgstr "不正確發送ID"
+
+#: ../lib/SMS.php:715
+msgid "Invalid email."
+msgstr "無效的郵件地址。"
+
+#: ../lib/SMS.php:716
+msgid "Pending sender ID already exists."
+msgstr "待發件人ID已經存在。"
+
+#: ../lib/SMS.php:717
+msgid "Recovery code expired."
+msgstr "復原碼已過期。"
+
+#: ../lib/SMS.php:718
+msgid "Error sending email."
+msgstr "發送電子郵件時出現錯誤。"
+
+#: ../lib/SMS.php:719
+msgid "User not found."
+msgstr "找不到用戶。"
+
+#: ../lib/SMS.php:720
+msgid "Email already in use."
+msgstr "該郵箱已被使用"
+
+#: ../lib/Updater.php:261
+msgid ""
+"Dear {client_name}.\n"
+"\n"
+"This is confirmation that you have booked {service_name}.\n"
+"\n"
+"We are waiting you at {company_address} on {appointment_date} at "
+"{appointment_time}.\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"親愛的 {client_name}.\n"
+"\n"
+"您預訂的{service_name}已確認.\n"
+"\n"
+"請在{appointment_date} {appointment_time}到達{company_address} \n"
+"\n"
+"再次感謝使用本公司的服務\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: ../lib/Updater.php:283 ../lib/Updater.php:772
+msgid ""
+"Dear {client_name}.\n"
+"This is confirmation that you have booked {service_name}.\n"
+"We are waiting you at {company_address} on {appointment_date} at "
+"{appointment_time}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+"親愛的 {client_name}.\n"
+"你預訂的{service_name}在明天{appointment_time}。我們會恭候光臨。\n"
+"請在{appointment_date} {appointment_time}到達{company_address} \n"
+"再次感謝使用本公司的服務\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: ../lib/Updater.php:1097
+msgid "The price for the service is {service_price}."
+msgstr "該服務的價格是{service_price}。"
+
+#: ../lib/Updater.php:1247
+msgid "Notes (optional)"
+msgstr "備註"
+
+#: ../lib/Validator.php:20
+msgid "Invalid email"
+msgstr "無效的電郵地址"
+
+#: ../lib/Validator.php:26
+msgid "This email is already in use"
+msgstr "該郵箱已被使用"
+
+#: ../lib/Validator.php:59
 #, php-format
 msgid "\"%s\" is too long (%d characters max)."
-msgstr ""
+msgstr "\"%s\" 太長 (最多%d 字)."
 
-#: ../lib/AB_Validator.php:65
+#: ../lib/Validator.php:65
 #, php-format
 msgid "\"%s\" is too short (%d characters min)."
-msgstr ""
+msgstr "\"%s\" 太短 (最少%d 字)."
 
-#: ../lib/AB_Validator.php:71
-msgid "Please tell us your name"
-msgstr ""
-
-#: ../lib/AB_Validator.php:86
+#: ../lib/Validator.php:86
 msgid "Invalid number"
-msgstr ""
+msgstr "無效數字"
 
-#: ../lib/AB_Validator.php:114
+#: ../lib/Validator.php:102
 msgid "Invalid date or time"
+msgstr "無效的日期或時間"
+
+#: ../lib/Validator.php:126
+msgid "Incorrect code"
+msgstr "代碼不正確"
+
+#: ../lib/base/Plugin.php:345
+#, php-format
+msgid ""
+"Please do not forget to specify your purchase code in Bookly <a href=\"%s"
+"\">settings</a>. Upon providing the code you will have access to free "
+"updates of %s. The updates may contain functionality improvements and "
+"important security fixes."
+msgstr ""
+"請不要忘記指定Bookly<a href=\"%s\">設置</a>您的申購代碼。一旦完成代碼，你將有"
+"機會獲得的%s免費更新。這些更新可能包含的功能改進和重要的安全修補程序。"
+
+#: ../lib/base/Plugin.php:350
+#, php-format
+msgid ""
+"<b>Important!</b> Please be aware that if your copy of %1$s was not "
+"downloaded from Codecanyon (the only channel of %1$s distribution), you may "
+"put your website under significant risk - it is very likely that it contains "
+"a malicious code, a trojan or a backdoor. Please consider buying a licensed "
+"copy of %1$s <a href=\"http://booking-wp-plugin.com\" target=\"_blank"
+"\">here</a>."
+msgstr ""
+"<b>重要</ b>請注意，如果你的%1$s的副本不是從Codecanyon（%1$s分佈的唯一通道）"
+"下載，你可以把你的網站下顯著的風險 - 這很可能包含惡意代碼，木馬或後門。請<a "
+"href=\"http://booking-wp-plugin.com\" target=\"_blank\">考慮在這裡</a>買%1$s"
+"的許可副本。"
+
+#: ../lib/base/Plugin.php:353
+msgid "Dismiss"
+msgstr "解除"
+
+#: ../lib/base/Plugin.php:387
+msgid ""
+"Unfortunately the service for checking the purchase code is not available at "
+"the moment, please try again later."
 msgstr ""
 
-#: ../lib/utils/AB_DateTimeUtils.php:246
+#: ../lib/base/Plugin.php:389
+#, php-format
+msgid "<strong>%s</strong> is not a valid purchase code for %s."
+msgstr "<strong>%s</strong>是不是一個有效申購為%s的代碼。"
+
+#: ../lib/base/Plugin.php:408 ../lib/utils/plugin-update-checker.php:637
+msgid "Check for updates"
+msgstr "按此檢查更新"
+
+#: ../lib/base/Plugin.php:413 ../lib/utils/plugin-update-checker.php:681
+msgid "This plugin is up to date."
+msgstr "這個插件是最新的。"
+
+#: ../lib/base/Plugin.php:414 ../lib/utils/plugin-update-checker.php:683
+msgid "A new version of this plugin is available."
+msgstr "這插件有的新版本。"
+
+#: ../lib/base/Plugin.php:415 ../lib/utils/plugin-update-checker.php:685
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr "更新檢查狀態“%s”不詳"
+
+#: ../lib/base/Plugin.php:451
+#, php-format
+msgid "To update - enter the <a href=\"%s\">Purchase Code</a>"
+msgstr "更新-輸入<a href=“%s”>訂購代碼</a>"
+
+#: ../lib/entities/Notification.php:106
+msgid "Notification to customer about approved appointment"
+msgstr "通知客戶已確定的預約資料"
+
+#: ../lib/entities/Notification.php:107
+msgid "Notification to customer about approved appointments"
+msgstr "通知客戶有關批准任命"
+
+#: ../lib/entities/Notification.php:108
+msgid "Notification to customer about cancelled appointment"
+msgstr "通知客戶已取消的預約資料"
+
+#: ../lib/entities/Notification.php:109
+msgid ""
+"Follow-up message in the same day after appointment (requires cron setup)"
+msgstr "服務完成後發送的跟進信息（需要cron的設置）"
+
+#: ../lib/entities/Notification.php:110
+msgid "Notification to customer about their WordPress user login details"
+msgstr "通知客戶關於他們的WordPress用戶登入信息"
+
+#: ../lib/entities/Notification.php:111
+msgid "Notification to customer about pending appointment"
+msgstr "通知客戶有關審核中的預約資料"
+
+#: ../lib/entities/Notification.php:112
+msgid "Notification to customer about pending appointments"
+msgstr "通知客戶有關未決約會"
+
+#: ../lib/entities/Notification.php:113
+msgid ""
+"Evening reminder to customer about next day appointment (requires cron setup)"
+msgstr "預約日前一天晚上的客戶提醒（需要cron的設置）"
+
+#: ../lib/entities/Notification.php:114
+msgid ""
+"Evening notification with the next day agenda to staff member (requires cron "
+"setup)"
+msgstr "通知員工第二天日程（需要cron的設置）"
+
+#: ../lib/entities/Notification.php:115
+msgid "Notification to staff member about approved appointment"
+msgstr "通知員工已確定的預約資料"
+
+#: ../lib/entities/Notification.php:116
+msgid "Notification to staff member about cancelled appointment"
+msgstr "通知員工已取消的預約資料"
+
+#: ../lib/entities/Notification.php:117
+msgid "Notification to staff member about pending appointment"
+msgstr "通知員工審核中的預約資料"
+
+#: ../lib/entities/Notification.php:119
+msgid "Test message"
+msgstr "測試消息"
+
+#: ../lib/entities/Payment.php:125
+msgid "Local"
+msgstr "即場"
+
+#: ../lib/entities/Payment.php:147
+msgid "Completed"
+msgstr "已完成"
+
+#: ../lib/payment/LiqPay.php:140
+msgid "LiqPay accepts payments in following currencies only: "
+msgstr ""
+
+#: ../lib/payment/LiqPay.php:183
+msgid "LiqPay error."
+msgstr ""
+
+#: ../lib/payment/Mollie.php:91
+msgid "Mollie accepts payments in Euro only."
+msgstr "Mollie 只接受歐元支付。"
+
+#: ../lib/payment/Mollie.php:128
+msgid "Mollie error."
+msgstr "Mollie 錯誤。"
+
+#: ../lib/payment/Payson.php:68
+msgid "Incorrect payment data"
+msgstr "不正確的付款資料"
+
+#: ../lib/payment/Payson.php:105
+msgid "Payment status"
+msgstr "付款狀態"
+
+#: ../lib/utils/Common.php:368
+msgid "Reset"
+msgstr "重置"
+
+#: ../lib/utils/Common.php:488
+msgid "Help"
+msgstr ""
+
+#: ../lib/utils/Common.php:492
+msgid "Support"
+msgstr ""
+
+#: ../lib/utils/DateTime.php:254
+#, php-format
+msgid "%d week"
+msgid_plural "%d weeks"
+msgstr[0] "%d 周"
+
+#: ../lib/utils/DateTime.php:257
+#, php-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d 天"
+
+#: ../lib/utils/DateTime.php:260
 #, php-format
 msgid "%d h"
-msgstr ""
+msgstr "%d 小時"
 
-#: ../lib/utils/AB_DateTimeUtils.php:252
+#: ../lib/utils/DateTime.php:263
 #, php-format
 msgid "%d min"
-msgstr ""
+msgstr "%d 分"
 
-#: ../lib/utils/AB_Utils.php:260
-msgid "Reset"
-msgstr ""
+#: ../lib/utils/send_notifications_cron.php:106
+msgid "Location"
+msgstr "位置"
 
-#: ../updates.php:741
-msgid "Notes (optional)"
-msgstr ""
+#~ msgid "Price for message sent with custom sender ID."
+#~ msgstr "價格與自定義的發件人ID發送消息。"

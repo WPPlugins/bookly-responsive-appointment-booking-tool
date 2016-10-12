@@ -1,12 +1,15 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<tr><td><input value="[[CLIENT_EMAIL]]" readonly="readonly" onclick="this.select()" /> - <?php _e('email of client', 'bookly') ?></td></tr>
-<tr><td><input value="[[CLIENT_NAME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('name of client', 'bookly') ?></td></tr>
-<tr><td><input value="[[CLIENT_PHONE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('phone of client', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_NAME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('name of your company', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_LOGO]]" readonly="readonly" onclick="this.select()" /> - <?php _e('your company logo', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_ADDRESS]]" readonly="readonly" onclick="this.select()" /> - <?php _e('address of your company', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_PHONE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('your company phone', 'bookly') ?></td></tr>
-<tr><td><input value="[[COMPANY_WEBSITE]]" readonly="readonly" onclick="this.select()" /> - <?php _e('this web-site address', 'bookly') ?></td></tr>
-<tr><td><input value="[[NEW_USERNAME]]" readonly="readonly" onclick="this.select()" /> - <?php _e('customer new username', 'bookly') ?></td></tr>
-<tr><td><input value="[[NEW_PASSWORD]]" readonly="readonly" onclick="this.select()" /> - <?php _e('customer new password', 'bookly') ?></td></tr>
-<tr><td><input value="[[SITE_ADDRESS]]" readonly="readonly" onclick="this.select()" /> - <?php _e('site address', 'bookly') ?></td></tr>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+$codes = array(
+    array( 'code' => 'client_email',    'description' => __( 'email of client', 'bookly' ) ),
+    array( 'code' => 'client_name',     'description' => __( 'name of client', 'bookly' ) ),
+    array( 'code' => 'client_phone',    'description' => __( 'phone of client', 'bookly' ) ),
+    array( 'code' => 'company_name',    'description' => __( 'name of your company', 'bookly' ) ),
+    array( 'code' => 'company_logo',    'description' => __( 'your company logo', 'bookly' ) ),
+    array( 'code' => 'company_address', 'description' => __( 'address of your company', 'bookly' ) ),
+    array( 'code' => 'company_phone',   'description' => __( 'your company phone', 'bookly' ) ),
+    array( 'code' => 'company_website', 'description' => __( 'this web-site address', 'bookly' ) ),
+    array( 'code' => 'new_username',    'description' => __( 'customer new username', 'bookly' ) ),
+    array( 'code' => 'new_password',    'description' => __( 'customer new password', 'bookly' ) ),
+    array( 'code' => 'site_address',    'description' => __( 'site address', 'bookly' ) ),
+);
+\BooklyLite\Lib\Utils\Common::Codes( $codes );

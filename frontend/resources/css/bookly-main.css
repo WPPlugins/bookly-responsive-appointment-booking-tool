@@ -1,4 +1,4 @@
-/* global class */
+/* Global */
 .ab-list-none { list-style: none; }
 .ab-left { float: left!important; }
 .ab-right { float: right!important; }
@@ -7,404 +7,925 @@
 .ab-bold { font-weight: bold!important; }
 .ab-list { margin-left: 10px!important; }
 .ab-clearBottom { margin-bottom: 0!important; }
-.ab-hidden { overflow: hidden; }
 .ab-none { display: none!important; }
 .ab-nowrap { white-space: nowrap; }
+.ab-inline-block { display: inline-block!important; }
 .ab-btn { text-decoration: none; }
 
-/* <booking-form> */
+/* Layout */
+.ab-row {
+    margin: 0 0 20px;
+    overflow: hidden;
+}
+.bookly-table {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+.bookly-table > * {
+    display: table-cell;
+    vertical-align: top;
+    width: auto;
+}
 
-    .ab-booking-form {
-        font-size: 14px!important;
-        color: #5f6267;
-        margin: 0 auto;
-    }
+/* Form Elements */
+.bookly-form {
+    margin: 0 auto;
+}
+.bookly-form * {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: inherit;
+}
+.bookly-form input[type="text"],
+.bookly-form input[type="password"],
+.bookly-form select,
+.bookly-form textarea {
+    font-size: 14px !important;
+    line-height: normal !important;
+    border: 1px solid silver !important;
+    border-radius: 4px !important;
+    width: 100% !important;
+}
+.bookly-form input[type="text"],
+.bookly-form input[type="password"],
+.bookly-form select {
+    height: auto !important;
+}
+.bookly-form input[type="checkbox"],
+.bookly-form input[type="radio"] {
+    width: auto !important;
+    height: auto !important;
+}
+.bookly-form input[type="text"],
+.bookly-form input[type="checkbox"],
+.bookly-form input[type="radio"],
+.bookly-form input[type="password"],
+.bookly-form select,
+.bookly-form textarea {
+    margin: 0 !important;
+    outline: none !important;
+}
+.bookly-form input[type="text"],
+.bookly-form input[type="password"],
+.bookly-form textarea {
+    padding: 6px 7px 5px !important;
+}
+.bookly-form select {
+    padding: 5px 6px 4px !important;
+}
+.bookly-form label {
+    float: none;
+    width: auto;
+    font-size: 14px;
+}
+.bookly-form .ab-label-error {
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+.ab-formGroup > label,
+.ab-formGroup > .ab-label {
+    display: inline-block;
+    font-weight: bold;
+    padding: 0 0 0 2px !important;
+    margin: 0 !important;
+}
+.ab-formGroup > div {
+    margin-right: 14px;
+    margin-top: 5px;
+}
 
-    .ab-booking-form label {
-        float: none;
+/* Buttons */
+.ab-nav-steps {
+    padding-top: 20px !important;
+    border-top: 1px solid silver !important;
+    overflow: hidden;
+}
+.ab-btn {
+    padding: 9px 18px!important;
+    border: 0!important;
+    min-width: 118px;
+    display: block;
+    text-align: center;
+    line-height: normal;
+    border-radius: 4px!important;
+    background: #f4662f;
+    cursor: pointer!important;
+    height: auto!important;
+    outline: none!important;
+}
+.ab-btn > span {
+    color: #fff!important;
+    font-size: 18px!important;
+    line-height: 17px!important;
+    font-weight: bold!important;
+    text-transform: uppercase!important;
+}
+button.ab-btn:hover,
+button.ab-btn:active {
+    background-image: none !important;
+}
+.ab-time-next,
+.ab-time-prev {
+    width: 60px;
+    min-width: inherit;
+    height: 35px!important;
+    padding: 0 5px!important;
+}
+.ab-time-next {
+    background-position: 50% -56px;
+    margin-left: 10px !important;
+}
+.ab-time-prev {
+    background-position: 50% 8px;
+}
+.bookly-round-button {
+    width: 29px;
+    height: 29px;
+    border-radius: 50%;
+    cursor: pointer!important;
+    padding: 0!important;
+    line-height: 0!important;
+    border: 0!important;
+    outline: none!important;
+}
+.bookly-round-button:first-child {
+    margin-right: 5px !important;
+}
+.ab-back-step {
+    margin-right: 10px;
+}
+.ab-mobile-prev-step {
+    margin-right: 10px;
+}
+
+/* Progress Tracker */
+.ab-progress-tracker {
+    margin: 0 0 20px !important;
+    padding: 0 !important;
+}
+.ab-progress-tracker > div {
+    padding-left: 4px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    overflow: hidden;
+}
+.ab-progress-tracker .step {
+    height: 15px;
+    background: #bec3c7;
+    margin-top: 5px;
+}
+.ab-progress-tracker > div:first-child .step {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.ab-progress-tracker > div:last-child .step {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.ab-progress-tracker > div:first-child {
+    padding-left: 0;
+}
+
+/* Service */
+.ab-service-step .ab-date-from {
+    cursor: text !important;
+}
+.ab-service-step .ab-available-date,
+.ab-service-step .ab-week-days,
+.ab-service-step .ab-time-range {
+    margin-bottom: 20px !important;
+}
+.ab-service-step .ab-available-date .ab-formGroup > div {
+    margin-right: 0;
+}
+.ab-service-step .ab-available-date,
+.ab-service-step .ab-week-days {
+    margin-right: 14px !important;
+}
+.ab-service-step .ab-week-days {
+    width: auto;
+}
+.ab-service-step .ab-week-days > div {
+    text-align: center;
+    min-width: 35px;
+}
+.ab-service-step .ab-week-days label {
+    display: block;
+    width: 23px;
+    height: 23px;
+    padding: 0;
+    margin: 10px auto 0;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.ab-service-step .ab-week-days label.active {
+    background: #f56530 url("../images/checkbox.png") 0 0 no-repeat;
+}
+.ab-service-step .ab-week-days label input {
+    visibility: hidden;
+}
+.ab-service-step .ab-time-range select {
+    width: auto !important;
+}
+.ab-mobile-step_1,
+.ab-details-step {
+    margin-right: -14px;
+}
+.ab-mobile-step_1 .ab-nav-steps {
+    display: none;
+}
+
+/* Extras */
+.extra-attachment-image {
+    max-width: 150px;
+}
+.ab-extra-step .bookly-extras-item {
+    display: inline-block;
+    width: 25%;
+    margin: 0 -2px!important;
+    margin-bottom: 2px!important;
+    vertical-align: top!important;
+}
+.ab-extra-step .bookly-extras-thumb {
+    border: 2px solid #bec3c7;
+    padding: 10px;
+    line-height: normal;
+    border-radius: 5px;
+    margin: 3px;
+    text-align: center;
+    cursor: pointer;
+}
+.ab-extra-step .bookly-extras-thumb img {
+    max-width: 100%;
+}
+.ab-extra-step .bookly-extras-thumb div {
+    background-position: center;
+}
+.ab-extra-step div.ab-summary {
+    display: inline-block;
+    font-weight: bold;
+}
+.ab-extra-step .bookly-extras-item .bookly-extras-count-controls {
+    margin-top: 10px;
+    text-align: center;
+}
+.ab-extra-step .bookly-extras-count-controls > * {
+    vertical-align: middle;
+}
+.ab-extra-step .bookly-extras-item .bookly-extras-total-price {
+    font-weight: bold;
+    margin-top: 5px;
+    text-align: center;
+}
+.ab-extra-step .bookly-extras-item input {
+    width: 3em !important;
+    text-align: center;
+}
+.ab-extra-step .bookly-extras-increment {
+    margin-left: 5px;
+}
+
+/* Time */
+.ab-time-step {
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 20px!important;
+    margin-left: auto;
+    margin-right: auto;
+}
+.ab-columnizer-wrap {
+    position: relative;
+}
+.ab-columnizer {
+    min-height: .01%;
+    white-space: nowrap;
+    position: relative;
+}
+.ab-columnizer .ab-time-screen {
+    display: inline-block;
+    *display: inline;
+    min-height: .01%;
+}
+#bookly-tbs .ab-columnizer .ab-time-screen {
+    overflow: hidden;
+    overflow-x: auto;
+}
+.ab-columnizer .ab-column {
+    min-width: 127px;
+    padding: 0 5px;
+    display: inline-block;
+    zoom: 1;
+    vertical-align: top;
+    float: none!important;
+}
+.ab-columnizer .ab-day,
+.ab-columnizer .ab-hour {
+    display: block !important;
+    min-width: 0;
+    width: 100%;
+    margin: 1.5px 0!important;
+    background: white;
+    height: 36px;
+    padding: 6px;
+    font-size: 13px!important;
+    line-height: 20px;
+    text-align: center;
+    float: none !important;
+    vertical-align: middle;
+    cursor: pointer;
+    text-transform: none;
+    border: 1px solid #cccccc !important;
+    border-radius: 4px;
+}
+
+.ab-columnizer .ab-hour {
+    background: white!important;
+}
+.ab-columnizer .ab-hour span {
+    font-weight: normal;
+    color: #333!important;
+}
+.ab-columnizer .ab-hour .ladda-label { margin: 0 -12px; display: inline-block; }
+.ab-columnizer .ab-day {
+    background: #f4662f;
+    color: white!important;
+    font-weight: bold!important;
+    border: 1px solid #f4662f;
+}
+.ab-columnizer .booked,
+.ab-columnizer .booked:hover { opacity: .5; cursor: default!important; }
+.ab-columnizer .booked span { text-decoration: line-through; }
+.ab-columnizer .ab-hour .ab-hour-icon {
+    display: block;
+    float: left;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    margin-right: 5px;
+    background: url("../images/success.png") 0 0 no-repeat;
+}
+.ab-columnizer .ab-hour:hover { border: 2px solid #f4662f; color: #f4662f; }
+.ab-columnizer .ab-hour.booked:hover { border: 1px solid #cccccc!important; color: #333333!important; }
+.ab-columnizer .ab-hour.booked:hover .ab-hour-icon span { visibility: hidden; }
+.ab-columnizer .ab-hour:hover .ab-hour-icon {
+    background: none;
+    border: 2px solid #f4662f;
+    color: #f4662f;
+    width: auto;
+    height: auto;
+    padding: 3px;
+    border-radius: 25px;
+    margin-right: 5px;
+}
+.ab-columnizer .ab-hour.booked:hover .ab-hour-icon { border: 2px solid #cccccc!important; }
+.ab-columnizer .ab-hour:hover .ab-hour-icon span {
+    background: #f4662f;
+    width: 8px;
+    height: 8px;
+    border-radius: 10px;
+    display: block;
+}
+.ab-time-step .ab-columnizer > button { display: none !important; }
+.ab-time-step .ab-columnizer > .ab-column { display: none !important; }
+
+.ab-slot-calendar {
+    margin: 0 20px 20px 0;
+    float: left;
+}
+.ab-slot-calendar .picker,
+.ab-slot-calendar .picker__holder {
+    position: static;
+}
+
+.ab-not-time-screen {
+    font-size: 16px;
+    height: 240px;
+    margin-left: 320px;
+    font-weight: bold;
+}
+
+.ab-not-time-screen.ab-not-calendar {
+    height: auto;
+    margin-left: 0;
+    padding-bottom: 15px;
+}
+
+.ab-spin-overlay {
+    position: relative;
+    opacity: .5;
+}
+
+.ab-spin-overlay .ab-spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -20px;
+    margin-top: -20px;
+}
+
+/* Cart */
+.ab-goto-cart {
+    margin-right: 10px;
+    width: 35px;
+    height: 35px;
+}
+.ab-cart .ab-mobile-version {
+    display: none;
+}
+.ab-cart table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: none!important;
+    table-layout: auto;
+    width: 100%;
+    margin: 0 !important;
+}
+.ab-cart th,
+.ab-cart td {
+    border: 1px solid rgba(51, 51, 51, 0.1);
+    border-width: 0 0 1px 0;
+    font-size: 14px !important;
+    padding: 0.4em!important;
+}
+.ab-cart th {
+    border-width: 0 0 1px 0;
+    font-weight: 700;
+    padding-top: 0!important;
+}
+.ab-cart table tfoot th,
+.ab-cart table tfoot td {
+    border-bottom: 0;
+}
+
+/* Details */
+.ab-details-step .ab-formGroup input[type="text"].ab-captcha {
+    display: block;
+    width: 160px !important;
+    margin: 10px 0 0 !important;
+}
+.ab-details-step .ab-formGroup .intl-tel-input {
+    display: block;
+}
+.ab-details-step .ab-formGroup .intl-tel-input input {
+    padding-left: 45px !important;
+}
+.ab-details-step .bookly-table,
+.ab-details-step .bookly-table > * {
+    overflow: visible !important;
+}
+.ab-details-step .ab-formGroup textarea {
+    resize: vertical;
+}
+.ab-details-step .ab-custom-field-row label,
+.ab-details-step .ab-custom-field-row label > input[type="radio"],
+.ab-details-step .ab-custom-field-row label > input[type="checkbox"] {
+    cursor: pointer;
+}
+.ab-details-step .ab-custom-field-row label > * {
+    vertical-align: middle;
+}
+
+/* Payment */
+.bookly-form input.ab-user-coupon {
+    width: 100px !important;
+    margin: 0 10px !important;
+}
+.bookly-form select.ab-card-exp {
+    width: auto !important;
+    margin-right: 10px !important;
+}
+.bookly-form input.ab-card-cvc {
+    width: 50px !important;
+}
+.bookly-form .btn-apply-coupon {
+    display: inline-block;
+}
+.bookly-form .btn-apply-coupon span {
+    text-transform: capitalize !important;
+    font-weight: normal !important;
+}
+.bookly-form .ab-payment-nav label,
+.bookly-form .ab-payment-nav label > input[type="radio"] {
+    cursor: pointer;
+}
+.bookly-form .ab-payment-nav label > * {
+    vertical-align: middle;
+}
+.bookly-form .ab-payment-nav label > img {
+    margin-left: 10px;
+}
+
+/* Login Form */
+.bookly-fade {
+    display: none;
+}
+.bookly-in {
+    display: block;
+}
+.bookly-close:hover,
+.bookly-close:focus,
+.bookly-close {
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2;
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    margin-top: -35px;
+}
+.bookly-close:focus,
+.bookly-close:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: .5;
+    background: none;
+}
+.bookly-modal {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+.bookly-modal .bookly-modal-dialog {
+    width: 400px;
+    position: absolute;
+    left: 50%;
+    margin-left: -200px;
+    top: 100px;
+}
+.bookly-modal .bookly-modal-content {
+    position: relative;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 6px;
+    outline: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+.bookly-modal .bookly-modal-content .bookly-modal-header {
+    min-height: 16.5px;
+    padding: 15px;
+    border-bottom: 1px solid #e5e5e5;
+    color: #666;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-header h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-footer {
+    padding: 15px;
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:focus,
+.bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:active,
+.bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:hover,
+.bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit {
+    display: inline-block;
+    padding: 6px 12px!important;
+    border: 0;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #fff;
+    text-transform: capitalize;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-cancel {
+    border: 0;
+    background: none;
+    color: #21759b;
+    cursor: pointer;
+    padding: 0;
+    vertical-align: -2px;
+    font-size: 14px;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-body {
+    position: relative;
+    padding: 15px;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-body .ab-formGroup label {
+    font-size: 14px;
+}
+@media (max-width: 768px) {
+    .bookly-modal .bookly-modal-dialog {
         width: auto;
+        left: 15px;
+        right: 15px;
+        margin: 30px auto;
+        top: 50px;
+    }
+}
+
+/* Picker */
+.bookly-form .picker__holder {
+    width: 310px!important;
+    overflow: hidden!important;
+    -webkit-border-radius: 5px 5px!important;
+    -moz-border-radius: 5px 5px!important;
+    border-radius: 5px 5px!important;
+    top: 2px;
+    left: 0px;
+    outline: none;
+    bottom: auto;
+}
+
+.bookly-form .picker {
+    width: auto!important;
+    right: auto!important;
+    top: auto!important;
+    bottom: auto!important;
+    left: auto!important;
+}
+
+.bookly-form .picker:before,
+.bookly-form .picker:after {
+    display: none!important;
+}
+
+.bookly-form .picker__frame * {
+    font-size: 14px!important;
+    font-weight: bold!important;
+    border: 0!important;
+    color: #fff !important;
+}
+
+.bookly-form .picker__frame {
+    position: static;
+    margin-bottom: 0!important;
+}
+
+.bookly-form .picker__weekday {
+    font-weight: normal!important;
+    text-align: center!important;
+    padding: 0!important;
+    padding-bottom: .5em!important;
+    border: 0!important;
+    background: none!important;
+}
+
+.bookly-form .picker__day--selected,
+.bookly-form .picker__day--selected:hover,
+.bookly-form .picker--focused .picker__day--selected,
+.bookly-form .picker__day--infocus:hover,
+.bookly-form .picker__day--outfocus:hover {
+    background: #fff!important;
+    border-radius: 4px!important;
+}
+
+.bookly-form .picker__day--highlighted {
+    border-color: #fff!important;
+}
+
+.bookly-form .picker__button--today:before {
+    display: none!important;
+}
+
+.bookly-form .picker__nav--prev:before {
+    border-left: 0!important;
+}
+
+.bookly-form .picker__nav--next:before {
+    border-right: 0!important;
+}
+
+.bookly-form .picker--focused .picker__day--highlighted {
+    background: none!important;
+    border-radius: 4px!important;
+}
+
+.bookly-form .picker--focused .picker__day--highlighted:hover {
+    background: white!important;
+}
+
+.bookly-form .picker--focused .picker__day--selected {
+    background: white!important;
+}
+
+.bookly-form .picker__button--today:hover,
+.bookly-form .picker__button--clear:hover {
+    background: white!important;
+    border-bottom-color: white!important;
+}
+
+.bookly-form .picker__table {
+    margin-top: .75em!important;
+    margin-bottom: .75em!important;
+    line-height: normal!important;
+    background: none!important;
+}
+
+.bookly-form .picker__table td {
+    text-align: center!important;
+    margin: 0!important;
+    padding: 0!important;
+    background: none!important;
+}
+
+.bookly-form .picker__table tr,
+.bookly-form .picker__table tbody,
+.bookly-form .picker__table thead {
+    background: none!important;
+}
+
+.bookly-form .picker__nav--prev {
+    left: 0;
+}
+
+.bookly-form .picker__nav--next {
+    right: 0;
+}
+
+.bookly-form .picker__nav--prev,
+.bookly-form .picker__nav--next {
+    box-sizing: content-box;
+    background: white!important;
+    border-radius: 50%;
+    padding: 6px;
+    top: -3px;
+}
+
+.bookly-form .picker__day--today {
+    border: 1px solid white!important;
+    -webkit-border-radius: 4px!important;
+    -moz-border-radius: 4px!important;
+    border-radius: 4px!important;
+}
+
+.bookly-form .picker__day--today:before {
+    display: none;
+}
+
+.bookly-form .picker__button--today,
+.bookly-form .picker__button--clear {
+    padding: 5px 0!important;
+    width: 33%!important;
+    -webkit-border-radius: 4px!important;
+    -moz-border-radius: 4px!important;
+    border-radius: 4px!important;
+    margin-bottom: 10px!important;
+    float: none!important;
+    background: white!important;
+}
+
+.bookly-form .picker__day--outfocus,
+.bookly-form .picker__day--disabled {
+    opacity: .5;
+    background: none!important;
+}
+
+.bookly-form .picker__day--disabled:hover {
+    background: white;
+}
+
+.bookly-form .picker__nav--disabled {
+    display: none;
+}
+
+/* Other */
+.ab--holder {
+    padding-top: 20px!important;
+    font-size: 100%!important;
+}
+::-webkit-input-placeholder {color:#bbb!important;}
+::-moz-placeholder          {color:#bbb!important;}/* Firefox 19+ */
+:-moz-placeholder           {color:#bbb!important;}/* Firefox 18- */
+:-ms-input-placeholder      {color:#bbb!important;}
+
+/* Mobile */
+@media screen and (max-width: 650px) {
+    .ab-formGroup label:empty {
+        display: none!important;
+    }
+    .ab-formGroup > div {
+        margin-right: 0 !important;
     }
 
-    /* <modal> */
-        .bookly-fade { display: none; }
-        .bookly-in { display: block; }
-
-        .bookly-close:hover,
-        .bookly-close:focus,
-        .bookly-close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 1px 0 #fff; filter: alpha(opacity=20); opacity: .2; -webkit-appearance: none; padding: 0; cursor: pointer; background: none; border: 0; margin-top: -35px; }
-        .bookly-close:focus,
-        .bookly-close:hover { color: #000; text-decoration: none; cursor: pointer; opacity: .5; background: none; }
-        .bookly-modal { position: fixed; width: 100%; left: 0; top: 0; z-index: 9999; bottom: 0; background-color: rgba(0, 0, 0, 0.7); }
-        .bookly-modal .bookly-modal-dialog { width: 400px; position: absolute; left: 50%; margin-left: -200px; top: 100px; }
-        .bookly-modal .bookly-modal-content { position: relative; background-color: #fff; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0,0,0,.2); border-radius: 6px; outline: 0; -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5); box-shadow: 0 3px 9px rgba(0,0,0,.5); }
-        .bookly-modal .bookly-modal-content .bookly-modal-header { min-height: 16.5px; padding: 15px; border-bottom: 1px solid #e5e5e5; color: #5f6267; }
-        .bookly-modal .bookly-modal-content .bookly-modal-header h4 { margin: 0; padding: 0; font-size: 22px; }
-        .bookly-modal .bookly-modal-content .bookly-modal-footer { padding: 15px; text-align: right; border-top: 1px solid #e5e5e5; }
-        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:focus,
-        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:active,
-        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit:hover,
-        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-submit { display: inline-block; padding: 6px 12px!important; border: 0; margin-bottom: 0; font-size: 14px; font-weight: 400; line-height: 1.42857143; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; border-radius: 4px; color: #fff; text-transform: capitalize; }
-        .bookly-modal .bookly-modal-content .bookly-modal-footer .bookly-btn-cancel { border: 0; background: none; color: #21759b; cursor: pointer; padding: 0; vertical-align: -2px; font-size: 14px; }
-        .bookly-modal .bookly-modal-content .bookly-modal-body { position: relative; padding: 15px; }
-        .bookly-modal .bookly-modal-content .bookly-modal-body .ab-formGroup .ab-formLabel { font-size: 14px; }
-        @media (max-width: 768px) {
-            .bookly-modal .bookly-modal-dialog {
-                width: auto;
-                left: 15px;
-                right: 15px;
-                margin: 30px auto;
-                top: 50px;
-            }
-        }
-
-    /* </modal> */
-
-    /* <progress-tracker> */
-        .ab-progress-tracker { display: table; width: 100%; margin-bottom: 20px!important; }
-        .ab-progress-bar { margin: 0 0 10px 0!important; overflow: hidden!important; display: table-row; padding: 0!important; }
-        .ab-progress-bar .ab-step-tabs { display: table-cell; padding-left: 4px; width: 20%; list-style: none; }
-        .ab-progress-bar .ab-step-tabs .step ~ .ab-step-tabs.active .step { background: red }
-        .ab-progress-tracker-four-steps .ab-progress-bar .ab-step-tabs { width: 25%; }
-        .ab-progress-bar .ab-step-tabs .step { height: 15px; background: #bec3c7; margin-top: 5px; }
-        .ab-progress-bar .ab-step-tabs.active .step { background: #f56530; }
-        .ab-progress-bar .ab-step-tabs.ab-first .step { border-top-left-radius: 5px; border-bottom-left-radius: 5px; }
-        .ab-progress-bar .ab-step-tabs.ab-last .step { border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
-        .ab-progress-bar .ab-step-tabs.ab-first { padding-left: 0; }
-        .ab-progress-bar .ab-step-tabs .arr {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 0;
-            height: 0;
-            margin-top: -7px;
-            border-top: 7px solid transparent;
-            border-bottom: 7px solid transparent;
-            border-left: 7px solid #4f92bd;
-        }
-        .ab-progress-bar .ab-step-tabs a {
-            display: block;
-            border: none;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            font-size: 14px;
-            color: #5f6267;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: default;
-            outline: none;
-        }
-        .ab-progress-bar .ab-step-tabs.active a { color: #f56530; }
-    /* </progress-tracker> */
-
-    /* <separator-button> */
-        .ab-mobile-step_1 { margin-right: -10px; }
-        .ab-mobile-step_1 .ab-nav-steps { display: none; }
-        .ab-nav-steps {
-            padding-top: 20px!important;
-            border-top: 1px solid silver!important;
-        }
-    /* </separator-button> */
-
-    /* <checkbox-list> */
-        .ab-first-step .ab-time-from { margin-right: 12px; }
-        .ab-first-step .ab-week-days { list-style: none!important; margin: 0!important; margin-bottom: 3px!important; float: left!important; padding: 0!important; }
-        .ab-first-step .ab-week-days li { float: left!important; min-width: 35px!important; text-align: center!important; margin: 0 1px 3px 1px!important; list-style: none!important; }
-        .ab-first-step .ab-week-days li label {
-            display: block;
-            width: 23px;
-            height: 23px;
-            padding: 0;
-            margin: 0 auto;
-            margin-top: 8px;
-            background: #f56530;
-            border-radius: 25px;
-            -moz-border-radius: 25px;
-            -webkit-border-radius: 25px;
-            cursor: pointer;
-        }
-        .ab-first-step .ab-week-days li label.active { background: #f56530 url("../images/checkbox.png") 0 0 no-repeat; }
-        .ab-first-step .ab-week-days li label input { visibility: hidden; }
-        .ab-to-third-step,
-        .ab-to-second-step { margin-right: 10px; }
-        /*.ab-third-step { overflow: hidden; }*/
-        .ab-textarea { width: 100% !important; clear: both; margin-top: 20px; }
-        .ab-textarea textarea {
-            width: 100%;
-            resize: vertical;
-            padding: 2px 6px!important;
-            border-radius: 4px!important;
-            border: 1px solid silver;
-            outline: none;
-            height: 70px;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-        }
-    /* </checkbox-list> */
-
-    /* <form-style> */
-        .ab-label-error {
-            color: rgb(245, 101, 48);
-            margin-left: 0;
-            font-size: 12px;
-            font-weight: bold;
-            /*line-height: 12px;*/
-            padding-top: 5px;
-        }
-        .ab-four-cols .ab-formGroup { width: 25%; }
-        .ab-formGroup { width: 33.33%; margin-bottom: 0; }
-        .ab-formGroup.ab-full { width: 100%; }
-        .ab-formGroup.ab-w-50 { width: 50%; }
-        .ab-formGroup.ab-lastGroup .ab-formField { margin-right: 0; }
-        .ab-formGroup .ab-formLabel { display: inline; line-height: normal; font-weight: bold; color: #f56530; }
-        .ab-formGroup .ab-formField { margin-right: 10px; padding: 0 7px; margin-top: 5px; }
-        .ab-formGroup .ab-formField .ab-formElement {
-            padding: 2px 6px!important;
-            border-radius: 4px!important;
-            border: 1px solid silver;
-            outline: none;
-            width: 100%;
-            /*white-space: nowrap;*/
-            height: 24px!important;
-            margin: 0 -7px;
-            box-sizing: content-box;
-            -moz-box-sizing: content-box;
-            -webkit-box-sizing: content-box;
-        }
-        .ab-formGroup .ab-formField .ab-formElement.ab-user-phone {
-            padding-left: 44px!important;
-            height: 30px!important;
-            margin: 0;
-            position: relative;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-        }
-        ::-webkit-input-placeholder {color:#bbb!important;}
-        ::-moz-placeholder          {color:#bbb!important;}/* Firefox 19+ */
-        :-moz-placeholder           {color:#bbb!important;}/* Firefox 18- */
-        :-ms-input-placeholder      {color:#bbb!important;}
-        .ab-formGroup .ab-formField .intl-tel-input { display: block; margin: 0 -7px; }
-        .ab-formGroup .ab-formField .ab-formElement.ab-user-coupon { width: 100px; display: inline-block; margin: 0 10px; }
-        .ab-formGroup .ab-formField textarea.ab-formElement { height: auto!important; }
-        .ab-date-from { cursor: text!important; }
-        .ab-formGroup .ab-formField .ab-user-email.ab-details-error,
-        .ab-formGroup .ab-formField .ab-full-name.ab-details-error,
-        .ab-formGroup .ab-formField .ab-custom-field.ab-details-error { padding: 2px 5px!important; }
-        .ab-formGroup .ab-formField .ab-user-phone.ab-details-error { padding: 2px 5px!important; padding-left: 44px!important; }
-        .ab-first-step .ab-service-form label { line-height: normal; font-weight: bold; display: inline; }
-        .ab-first-step .ab-select { width: 33.33%; margin-bottom: 0; }
-        .ab-first-step .ab-select label { color: #f56530; display: inline; }
-        .ab-first-step .ab-right { float: right!important; }
-        .ab-first-step .ab-time-from { margin-right: 12px; }
-        /*.ab-first-step .ab-available-date, .ab-first-step .ab-available-days { margin: 0 15px 12px 0; }*/
-        .ab-first-step .ab-time-range,
-        .ab-first-step .ab-available-date,
-        .ab-first-step .ab-available-days {
-            margin-bottom: 15px!important;
-            margin-right: 10px!important;
-            overflow: hidden;
-        }
-        .ab-first-step .ab-time-range { margin-bottom: 0!important; }
-        .ab-first-step .ab-time-range select {
-            padding: 4px 6px!important;
-            border-radius: 4px!important;
-            border: 1px solid silver;
-            width: 100px!important;
-            margin-bottom: 0;
-            margin-top: 5px;
-            line-height: normal;
-            height: 30px!important;
-            outline: none;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-        }
-        .ab-guest-desc { margin-top: 15px; }
-    /* </form-style> */
-
-    /* <grid-row> */
-        .ab-row-fluid {
-            overflow: hidden;
-            margin-bottom:20px!important;
-        }
-        .ab-row-fluid.last-row {
-            margin-bottom: 0!important;
-        }
-        .ab-row-fluid.ab-col-phone { overflow: visible!important; height: 63px; }
-    /* </grid-row> */
-
-    /* <button> */
-        .ab-btn {
-            padding: 9px 5px!important;
-            border: 0!important;
-            width: 118px;
-            display: block;
-            text-align: center;
-            border-radius: 4px!important;
-            background: #f4662f;
-            cursor: pointer!important;
-            height: auto!important;
-            line-height: 17px;
-            outline: none!important;
-        }
-        .ab-btn span {
-            color: #fff!important;
-            font-weight: bold!important;
-            text-transform: uppercase!important;
-        }
-        .ab-time-next,
-        .ab-time-prev {
-            width: 60px;
-            background: #f4662f;
-            height: 35px!important;
-            padding: 0 5px!important;
-        }
-        .ab-time-next { background-position: 50% -56px; margin-left: 10px; }
-        .ab-time-prev { background-position: 50% 8px; }
-        .btn-apply-coupon { display: inline-block; }
-        .btn-apply-coupon span { text-transform: capitalize!important; font-weight: normal!important; }
-        input.ab-user-coupon { margin: 10px 10px 0 10px; }
-    /* </button> */
-
-/* </booking-form> */
-
-
-/* <media-query> */
-    @media screen and (max-width: 650px) {
-
-        .ab-formGroup {
-            float: none!important;
-            margin: 0 0 20px 0!important;
-            width: 100%!important;
-            overflow: hidden;
-        }
-
-        .ab-formGroup.ab-clearBottom { margin-bottom: 0!important; }
-
-        .ab-first-step .ab-week-days {
-            text-align: center;
-            float: none!important;
-            margin-bottom: 0!important;
-        }
-
-        .ab-first-step .ab-week-days li {
-            margin: 0!important;
-            width: 13.5%!important;
-            float: none!important;
-            display: inline-block;
-        }
-
-        .ab-first-step .ab-date-wrap > input {
-            font-size: 20px;
-        }
-
-        .ab-mobile-step_2 {
-            display: none;
-        }
-
-        .ab-mobile-step_1 { margin-right: 0px; }
-
-        .ab-mobile-step_1 .ab-nav-steps { display: block; }
-
-        .ab-select-mobile {
-            width: 95%;
-            font-size: 20px;
-            margin-top: 5px;
-        }
-
-        .ab-mobile-next-step, .ab-mobile-prev-step {
-            display: block!important;
-        }
-
-        .ab-progress-tracker { display: none; }
-
-        .ab-formGroup .ab-formField { margin-right: 0; }
-
-        .ab-input-wrap .ab-date-wrap .ab-date-from {
-            width: 100%;
-            font-size: 14px;
-            box-sizing: border-box;
-           -webkit-box-sizing: border-box;
-           -moz-box-sizing: border-box;
-        }
-
-        .ab-first-step .ab-select {
-            float: none!important;
-            margin: 0 0 10px 0;
-            width: 100%;
-        }
-
-        .ab-third-step .ab-details-list {
-            float: none!important;
-            margin: 0 0 10px 0!important;
-            width: 100%!important;
-        }
-
-        .ab-third-step .ab-details-list .ab-details-wrap { margin-right: 0; }
-
-        .ab-time-range,
-        .ab-available-date,
-        .ab-available-days {
-            margin-bottom: 20px!important;
-            width: 100%;
-            overflow: hidden;
-            float: none;
-        }
-
-        .ab-first-step .ab-time-to,
-        .ab-first-step .ab-time-from {
-            float: none;
-            margin: 0;
-            display: inline-block;
-            width: 48%;
-        }
-
-        .ab-first-step .ab-time-range {
-            margin-bottom: 20px!important;
-        }
-
-        .ab-first-step .ab-time-range select {
-            width: 100%!important;
-        }
-
-        .ab-first-step .ab-time-to { float: right!important; }
-        .ab-first-step .ab-time-from { float: left!important; }
-
-        .ab-row-fluid { margin-bottom: 0!important; }
-
-        .ab-desc { margin-bottom: 15px!important; }
-
-        .ab-row-fluid.ab-list {
-            margin-bottom: 20px!important;
-        }
-
-        .ab-row-fluid.ab-list.ab-last {
-            margin-bottom: 20px!important;
-        }
-
-        .ab-not-time-screen {
-            height: auto!important;
-            margin-left: 0!important;
-            margin-bottom: 15px;
-            clear: both;
-        }
-
-        .ab-second-step {
-            clear: both;
-        }
-        .ab-formGroup .ab-formField .ab-formElement {
-            padding: 2px 5px!important;
-        }
-
-        .ab-row-fluid.ab-col-phone {
-            height: auto!important;
-        }
-        .ab-row-fluid.ab-col-phone .ab-formGroup {
-            overflow: visible!important;
-        }
+    .bookly-table > * {
+        display: block;
     }
-/* </media-query> */
+    .bookly-table .ab-formGroup {
+        margin: 0 0 20px;
+        width: 100% !important;
+    }
+    .bookly-table .ab-formGroup:last-child {
+        margin: 0;
+    }
+
+    .ab-progress-tracker {
+        display: none;
+    }
+
+    .ab-mobile-step_1 .ab-nav-steps {
+        display: block;
+    }
+    .ab-mobile-step_2 {
+        display: none;
+    }
+
+    .ab-select-mobile {
+        width: 95%;
+        margin-top: 5px;
+    }
+
+    .ab-mobile-next-step, .ab-mobile-prev-step {
+        display: block!important;
+    }
+
+    .ab-mob-float-none {
+        float: none !important;
+    }
+
+    /* Service */
+    .ab-service-step .ab-available-date,
+    .ab-service-step .ab-week-days {
+        margin-right: 0 !important;
+    }
+    .ab-service-step .ab-week-days {
+        width: 100%;
+    }
+    .ab-service-step .ab-week-days > div {
+        display: table-cell;
+    }
+    .ab-service-step .ab-time-to,
+    .ab-service-step .ab-time-from {
+        display: inline-block;
+        width: 48% !important;
+    }
+    .ab-service-step .ab-time-to {
+        float: right !important;
+    }
+    .ab-service-step .ab-time-range select {
+        width: 100%!important;
+    }
+    .ab-mobile-step_1 {
+        margin-right: 0;
+    }
+
+    .ab-not-time-screen {
+        height: auto!important;
+        margin-left: 0!important;
+        margin-bottom: 15px;
+        clear: both;
+    }
+    .ab-time-step {
+        clear: both;
+    }
+
+    .ab-btn {
+        width: auto!important;
+        min-width: 0;
+        padding: 9px 18px!important;
+        margin-bottom: 10px;
+        background-image: none !important;
+    }
+
+    .ab-goto-cart {
+        padding: 8px!important;
+        width: 35px!important;
+        height: 35px!important;
+    }
+
+    .bookly-form .picker__holder {
+        left: 0!important;
+    }
+
+    .ab-extra-step .bookly-extras-item {
+        width: 50%;
+    }
+
+    .ab-cart .ab-mobile-version {
+        display: table-row-group;
+    }
+
+    .ab-cart .ab-desktop-version {
+        display: none;
+    }
+}
+
 
 /* intlTelInput.js */
 .iti-flag{background-image:url("../images/flags.png");}

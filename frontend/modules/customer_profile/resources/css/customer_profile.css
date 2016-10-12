@@ -1,20 +1,21 @@
-.ab-customer-appointments p {
+.bookly-customer-appointment-list p {
     font-weight: bold;
 }
 
-.ab-customer-appointments h2 {
+.bookly-customer-appointment-list h2 {
     margin: 20px 0;
     font-size: 25px;
     padding-bottom: 15px;
     border-bottom: 1px solid silver;
 }
 
-.ab-customer-appointments .ab-appointments-table {
+.bookly-customer-appointment-list .ab-appointments-table {
     border: 1px solid silver;
     border-collapse: collapse;
+    table-layout: auto;
 }
 
-.ab-customer-appointments .ab-appointments-table th {
+.bookly-customer-appointment-list .ab-appointments-table th {
     background: #dddddd;
     font-size: 14px;
     padding: 5px;
@@ -23,7 +24,7 @@
     text-align: center;
 }
 
-.ab-customer-appointments .ab-appointments-table td {
+.bookly-customer-appointment-list table.ab-appointments-table td {
     font-size: 14px;
     padding: 5px;
     background: #EEEEEE;
@@ -32,8 +33,23 @@
     vertical-align: middle;
 }
 
-.ab-customer-appointments .ab-appointments-table td .ab-btn {
+.bookly-customer-appointment-list .ab-appointments-table td .ab-btn {
     padding: 5px 10px!important;
     width: auto;
+    min-width: auto;
     font-size: 11px!important;
+}
+
+.bookly-customer-appointment-list table.bookly-extras {
+    border: 0 !important;
+    hyphens: auto;
+    table-layout: auto;
+    margin: 0;
+}
+
+.bookly-customer-appointment-list table.bookly-extras td {
+    border: 0 !important;
+    padding: 0 0 0 2px;
+    white-space: nowrap;
+    text-align: left;
 }

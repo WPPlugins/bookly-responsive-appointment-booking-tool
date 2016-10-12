@@ -1,21 +1,40 @@
 jQuery(function($) {
-
-    var $name_input = $('#ab-newstaff-fullname'),
-        $email_input = $('#ab-newstaff-email'),
-        $list_item_number = $('#ab-list-item-number'),
-        $wp_user_select = $('#ab-newstaff-wpuser'),
-        $staff_list = $('#ab-staff-list'),
-        $staff_member = $('.ab-staff-member'),
-        $edit_form = $('#ab-edit-staff-member'),
-        $new_form = $('#ab-new-satff');
-
+    var $staff_list     = $('#bookly-staff-list'),
+        $new_form       = $('#bookly-new-staff'),
+        $wp_user_select = $('#bookly-new-staff-wpuser'),
+        $name_input     = $('#bookly-new-staff-fullname'),
+        $staff_count    = $('#bookly-staff-count'),
+        $edit_form      = $('#bookly-container-edit-staff')
+    ;
     function saveNewForm() {
-        $('#lite_notice').modal('show');
+        booklyAlert({error: [BooklyL10n.limitations]});
     }
 
-    // Saves new staff form
-    $('#ab-save-newstaff').on('click', function () {
-        saveNewForm();
+    $edit_form.on('click', '.bookly-pretty-indicator', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var frame = wp.media({
+            library: {type: 'image'},
+            multiple: false
+        });
+        frame.on('select', function () {
+            var selection = frame.state().get('selection').toJSON(),
+                img_src
+                ;
+            if (selection.length) {
+                if (selection[0].sizes['thumbnail'] !== undefined) {
+                    img_src = selection[0].sizes['thumbnail'].url;
+                } else {
+                    img_src = selection[0].url;
+                }
+                $edit_form.find('[name=attachment_id]').val(selection[0].id);
+                $('#bookly-js-staff-avatar').find('.bookly-js-image').css({'background-image': 'url(' + img_src + ')', 'background-size': 'cover'});
+                $('.bookly-thumb-delete').show();
+                $(this).hide();
+            }
+        });
+
+        frame.open();
     });
 
     // Save new staff on enter press
@@ -30,162 +49,349 @@ jQuery(function($) {
     $new_form.on('keypress', function (e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 27) {
-            $('.ab-popup-wrapper').ab_popup('close');
+            $('#ab-newstaff-member').popover('hide');
         }
     });
 
-    function loadEditForm() {
-        // Marks selected element as active
-        $(this).parent().find('.ab-active').removeClass('ab-active');
-        $(this).addClass('ab-active');
+    $staff_list.on('click', '.bookly-js-handle', function (e) {
+        e.stopPropagation();
+    });
 
-        var staff_id = $(this).data('staff-id');
-        var active_tab_id = $('ul.nav li.active a').attr('id');
-        $edit_form.html('<div class="loading-indicator"><span class="ab-loader"></span></div>');
+    /**
+     * Load staff profile on click on staff in the list.
+     */
+    $staff_list.on('click', 'li', function() {
+        var $this = $(this);
+        // Mark selected element as active
+        $staff_list.find('.active').removeClass('active');
+        $this.addClass('active');
+
+        var staff_id = 1;
+        var active_tab_id = $('.nav .active a').attr('id');
+        $edit_form.html('<div class="bookly-loading"></div>');
         $.get(ajaxurl, { action: 'ab_edit_staff', id: staff_id }, function (response) {
-            $edit_form.html(response);
-
-            var service_container  = $('#ab-staff-services-container'),
-                loading_indicator  = $('.loading-indicator'),
-                details_container  = $('#ab-staff-details-container'),
-                schedule_container = $('#ab-staff-schedule-container'),
-                holidays_container = $('#ab-staff-holidays-container'),
+            $edit_form.html(response.data.html);
+            booklyAlert(response.data.alert);
+            var $loading_indicator   = $('.bookly-loading'),
+                $details_container   = $('#bookly-details-container'),
+                $services_container  = $('#bookly-services-container'),
+                $schedule_container  = $('#bookly-schedule-container'),
+                $holidays_container  = $('#bookly-holidays-container'),
+                $delete_staff_button = $('#bookly-delete'),
+                $save_staff_button   = $('#bookly-save'),
+                $staff_full_name     = $('#bookly-full-name'),
+                $staff_wp_user       = $('#bookly-wp-user'),
+                $staff_email         = $('#bookly-email'),
+                $staff_phone         = $('#bookly-phone'),
                 $schedule_form,
-                services_form;
+                $services_form;
 
-            initHelps();
-            initNotices();
-            Ladda.bind( 'button[type=submit]' );
+            if (BooklyL10n.intlTelInput.enabled) {
+                $staff_phone.intlTelInput({
+                    preferredCountries: [BooklyL10n.intlTelInput.country],
+                    defaultCountry: BooklyL10n.intlTelInput.country,
+                    geoIpLookup: function (callback) {
+                        $.get(ajaxurl, {action: 'ab_ip_info'}, function () {}, 'json').always(function (resp) {
+                            var countryCode = (resp && resp.country) ? resp.country : '';
+                            callback(countryCode);
+                        });
+                    },
+                    utilsScript: BooklyL10n.intlTelInput.utils
+                });
+            }
 
-            // Deletes staff avatar
-            $('#ab-delete-avatar').on('click', function () {
-                $.post(ajaxurl, { action: 'ab_delete_staff_avatar', id: staff_id }, function () {
-                    $('#ab-staff-avatar-image', $edit_form).remove();
+            // Delete staff member.
+            $delete_staff_button.on('click', function (e) {
+                e.preventDefault();
+                if (confirm(BooklyL10n.are_you_sure)) {
+                    booklyAlert({error: [BooklyL10n.limitations]});
+                }
+            });
+
+            // Save staff member details.
+            $save_staff_button.on('click',function(e){
+                e.preventDefault();
+                var $form = $(this).closest('form'),
+                    data  = $form.serializeArray(),
+                    ladda = Ladda.create(this),
+                    phone;
+                try {
+                    phone = BooklyL10n.intlTelInput.enabled ? $staff_phone.intlTelInput('getNumber') : $staff_phone.val();
+                    if (phone == '') {
+                        phone = $staff_phone.val();
+                    }
+                } catch (error) {  // In case when intlTelInput can't return phone number.
+                    phone = $staff_phone.val();
+                }
+                data.push({name: 'action', value: 'ab_update_staff'});
+                data.push({name: 'phone',  value: phone});
+                ladda.start();
+                $.post(ajaxurl, data, function (response) {
+                    if (response.success) {
+                        booklyAlert({success : [BooklyL10n.saved]});
+                        // Update staff name throughout the page.
+                        $('.bookly-js-staff-name-' + staff_id).text($staff_full_name.val());
+                        // Update wp users in new staff form.
+                        $wp_user_select.children(':not(:first)').remove();
+                        $.each(response.data.wp_users, function (index, wp_user) {
+                            var $option = $('<option>')
+                                .data('email', wp_user.user_email)
+                                .val(wp_user.ID)
+                                .text(wp_user.display_name);
+                            $wp_user_select.append($option);
+                        });
+                    } else {
+                        booklyAlert({error : [response.data.error]});
+                    }
+                    ladda.stop();
                 });
             });
 
-            $('#ab-update-staff').on('click', function (e) {
-                if (!validateForm($edit_form)) {
-                    e.preventDefault(e);
-                    e.stopPropagation(e);
+            // Delete staff avatar
+            $('.bookly-thumb-delete').on('click', function () {
+                var $thumb = $(this).parents('.bookly-js-image');
+                $.post(ajaxurl, {action: 'ab_delete_staff_avatar', id: staff_id}, function () {
+                    $thumb.attr('style', '');
+                    $edit_form.find('[name=attachment_id]').val('');
+                });
+            });
+
+            $staff_wp_user.on('change', function () {
+                if (this.value) {
+                    $staff_full_name.val($staff_wp_user.find(':selected').text());
+                    $staff_email.val($staff_wp_user.find(':selected').data('email'));
+                }
+            });
+
+            $('input.all-locations, input.location').on('change', function () {
+                var $panel = $(this).parents('.locations-row');
+                if ($(this).hasClass('all-locations')) {
+                    $panel.find('.location').prop('checked', $(this).prop('checked'));
                 } else {
-                    $edit_form.phone = $("#ab-staff-phone").intlTelInput('getNumber');
+                    $panel.find('.all-locations').prop('checked', $panel.find('.location:not(:checked)').length == 0);
                 }
+                updateLocationsButton($panel);
             });
 
-            $('#ab-staff-wpuser').on('change', function () {
-                if ($(this).val()) {
-                    $('#ab-staff-full-name').val($(this).find(':selected').text());
-                    $('#ab-staff-email').val($(this).find(':selected').data('email'));
+            function updateLocationsButton($panel) {
+                var locations_checked = $panel.find('.location:checked').length;
+                if (locations_checked == 0) {
+                    $panel.find('.locations-count').text(BooklyL10n.selector.nothing_selected);
+                } else if (locations_checked == 1) {
+                    $panel.find('.locations-count').text($panel.find('.location:checked').data('location_name'));
+                } else {
+                    if (locations_checked == $panel.find('.location').length) {
+                        $panel.find('.locations-count').text(BooklyL10n.selector.all_selected);
+                    } else {
+                        $panel.find('.locations-count').text(locations_checked + '/' + $panel.find('.location').length);
+                    }
                 }
+            }
+            updateLocationsButton($('.locations-row'));
+
+            // Open details tab
+            $('#bookly-details-tab').on('click', function () {
+                $('.tab-pane > div').hide();
+                $details_container.show();
             });
 
-            // Opens services tab
-            $('#ab-staff-services-tab').on('click', function () {
-                activateTab.call($(this));
-                service_container.show();
+            // Open services tab
+            $('#bookly-services-tab').on('click', function () {
+                $('.tab-pane > div').hide();
+                $services_container.show();
 
-                // Loads services form
-                if (!service_container.children().length) {
-                    loading_indicator.show();
-                    $.post(ajaxurl, { action: 'ab_staff_services', id: staff_id }, function (response) {
-                        service_container.html(response);
-                        services_form = $('form', service_container);
+                // Load services form
+                if (!$services_container.children().length) {
+                    $loading_indicator.show();
+                    $.post(ajaxurl, {action: 'ab_staff_services', id: staff_id}, function (response) {
+                        $services_container.html(response);
+                        $services_form = $('form', $services_container);
 
-                        var auto_tick_checkboxes = function() {
+                        var autoTickCheckboxes = function () {
                             // Handle 'select category' checkbox.
-                            $('.ab-services-category .ab-category-checkbox').each(function() {
+                            $('.ab-services-category .bookly-category-checkbox').each(function () {
                                 $(this).prop(
                                     'checked',
-                                    $('.ab-category-services .ab-service-checkbox.ab-category-' + $(this).data('category-id') + ':not(:checked)').length == 0
+                                    $('.bookly-category-services .ab-service-checkbox.bookly-category-' + $(this).data('category-id') + ':not(:checked)').length == 0
                                 );
                             });
                             // Handle 'select all services' checkbox.
-                            $('#ab-all-services').prop(
+                            $('#bookly-check-all-entities').prop(
                                 'checked',
                                 $('.ab-service-checkbox:not(:checked)').length == 0
                             );
                         };
 
+                        // init 'add special period' functionality
+                        $('.bookly-js-special-hours-toggle-popover:not(.special-period)').popover({
+                            html     : true,
+                            placement: 'bottom',
+                            template : '<div class="popover" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                            trigger  : 'manual',
+                            content  : function () {
+                                return $($(this).data('popover-content')).html()
+                            }
+                        }).on('click', function () {
+                            $(this).popover('toggle');
+                        }).on('shown.bs.popover', function () {
+                            var $popover = $(this);
+                            // btn close popover
+                            $(this).next('.popover').find('.bookly-js-special-hours-toggle-popover').on('click', function () {
+                                $popover.popover('hide');
+                            });
+                        });
+
+                        $services_container.delegate('.special-period', 'click', function () {
+                            $('.popover').popover('hide');
+                            var period_id = $(this).parents('.special-period-wrapper').data('period_id');
+                            $(this).popover({
+                                html: true,
+                                placement: 'bottom',
+                                template: '<div class="popover" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                                content: function () {
+                                    return $('.bookly-js-special-hours-popover-content-' + period_id).html();
+                                },
+                                trigger: 'manual'
+                            }).on('shown.bs.popover', function () {
+                                var $popover = $(this);
+                                // btn close popover
+                                $(this).next('.popover').find('.bookly-js-special-hours-toggle-popover').on('click', function () {
+                                    $popover.popover('hide');
+                                });
+                            });
+
+                            $(this).popover('toggle');
+                        });
+
+                        $('input[name^="capacity"]', $services_container).on('change', function () {
+                            $(this).val(1);
+                            $(this).prop('readonly',true);
+                            booklyAlert({error: [BooklyL10n.limitations]});
+                        });
+
+                        $services_container.delegate('.bookly-js-save-period', 'click', function() {
+
+                            var $table                  = $(this).closest('.bookly-js-special-period-form'),
+                                $error                  = $table.parents('.ab-popup-wrapper').find('.error'),
+                                $special_period_wrapper = $table.parents('.special-period-wrapper').first(),
+                                $data                   = {
+                                    action                 : 'bookly_special_hours_staff_add_special_period',
+                                    period_start          : $table.find('.period-start > option:selected').val(),
+                                    period_end            : $table.find('.period-end > option:selected').val(),
+                                    price                 : $table.find('.special-period-price').val(),
+                                    staff_id              : staff_id,
+                                    service_id            : $table.parents('.row').data('service_id'),
+                                    period_id             : $table.parents('.special-period-wrapper').data('period_id')
+                                };
+
+                            $.post(ajaxurl, $data, function (response) {
+                                    if (response.success) {
+                                        if (response['item_content']) {
+                                            var $new_special_period_item = $(response['item_content']);
+                                            $new_special_period_item
+                                                .hide()
+                                                .appendTo($special_period_wrapper.find('.periods-list-content'))
+                                                .fadeIn('slow');
+                                            $new_special_period_item.find('.delete-period').on('click', function () {
+                                                deleteSpecialPeriod.call($(this));
+                                            });
+                                        } else if (response['new_interval']) {
+                                            $special_period_wrapper
+                                                .find('.special-period')
+                                                .text(response['new_interval']);
+                                        }
+
+                                        $('.popover').popover('hide');
+                                    } else {
+                                        $error.text(response['error_msg']);
+                                        $error.slideDown();
+                                        var t = setTimeout(function () {
+                                            $error.hide();
+                                            clearTimeout(t);
+                                        }, 3000);
+                                    }
+                                },
+                                'json'
+                            );
+
+                            return false;
+                        });
+
+
+                        $services_container.find('.special-period-wrapper .delete-period').on('click', function() {
+                            deleteSpecialPeriod.call($(this));
+                        });
+
                         // Select all services related to chosen category
-                        $('.ab-category-checkbox', services_form).bind('click', function () {
-                            $('.ab-category-services .ab-category-' + $(this).data('category-id')).prop('checked', $(this).is(':checked')).change();
-                            auto_tick_checkboxes();
+                        $('.bookly-category-checkbox', $services_form).on('click', function () {
+                            $('.bookly-category-services .bookly-category-' + $(this).data('category-id')).prop('checked', $(this).is(':checked')).change();
+                            autoTickCheckboxes();
                         });
 
                         // Check and uncheck all services
-                        $('#ab-all-services').on('click', function () {
-                            $('.ab-service-checkbox', services_form).prop('checked', $(this).is(':checked')).change();
-                            $('.ab-category-checkbox').prop('checked', $(this).is(':checked'));
+                        $('#bookly-check-all-entities').on('click', function () {
+                            $('.ab-service-checkbox', $services_form).prop('checked', $(this).is(':checked')).change();
+                            $('.bookly-category-checkbox').prop('checked', $(this).is(':checked'));
                         });
 
                         // Select service
-                        $('.ab-service-checkbox', services_form).on('click', function () {
-                            var $this  = $(this);
-                            var $price = $this.closest('li').find('.ab-price');
-                            $this.is(':checked') ? $price.removeAttr('disabled') : $price.attr('disabled', true);
-                            auto_tick_checkboxes();
+                        $('.ab-service-checkbox', $services_form).on('click', function () {
+                            autoTickCheckboxes();
+                        }).on('change', function () {
+                            var $this   = $(this);
+                            var $inputs = $this.closest('li').find('input:not(:checkbox)');
+                            $inputs.attr('disabled', ! $this.is(':checked'));
                         });
 
-                        $('.ab-service-checkbox',services_form).on('change', function(){
-                            var $input_fields = $('.ab-price[name="price['+$(this).val()+']"]').add('.ab-price[name="capacity['+$(this).val()+']"]');
-                            $(this).is(':checked') ? $input_fields.removeAttr('disabled') : $input_fields.attr('disabled', true);
-                        });
-
-                        // Saves services
-                        $('#ajax-send-service').on('click', function (e) {
+                        // Save services
+                        $('#bookly-services-save').on('click', function (e) {
                             e.preventDefault();
                             var ladda = Ladda.create(this);
                             ladda.start();
-                            $.post(ajaxurl, services_form.serialize(), function (response) {
+                            $.post(ajaxurl, $services_form.serialize(), function (response) {
                                 ladda.stop();
                                 if (response.success) {
-                                    showSuccessNotice();
+                                    booklyAlert({success : [BooklyL10n.saved]});
                                 }
                             });
                         });
 
                         // After reset auto tick group checkboxes.
-                        $('button[type=reset]').on('click', function() {
-                            setTimeout(auto_tick_checkboxes, 0);
+                        $('#bookly-services-reset').on('click', function () {
+                            setTimeout(function() {
+                                autoTickCheckboxes();
+                                $('.ab-service-checkbox', $services_form).trigger('change');
+                            }, 0);
                         });
 
-                        auto_tick_checkboxes();
-                        loading_indicator.hide();
-
-                        services_form.find('input[name^="capacity"]').on('change', function(){
-                            if($(this).val() > 1) {
-                                $(this).val(1);
-                                $('#lite_notice').modal('show');
-                            }
-                        });
+                        autoTickCheckboxes();
+                        $loading_indicator.hide();
                     });
                 }
             });
 
-            // Opens schedule tab
-            $('#ab-staff-schedule-tab').on('click', function () {
-                activateTab.call($(this));
-                schedule_container.show();
+            // Open schedule tab
+            $('#bookly-schedule-tab').on('click', function () {
+                $('.tab-pane > div').hide();
+                $schedule_container.show();
 
                 // Loads schedule list
-                if (!schedule_container.children().length) {
-                    loading_indicator.show();
-                    $.post(ajaxurl, { action: 'ab_staff_schedule', id: staff_id }, function (response) {
+                if (!$schedule_container.children().length) {
+                    $loading_indicator.show();
+                    $.post(ajaxurl, {action: 'ab_staff_schedule', id: staff_id}, function (response) {
                         // fill in the container
-                        schedule_container.html(response);
-                        $schedule_form = $('form', schedule_container);
+                        $schedule_container.html(response);
+                        $schedule_form = $('form', $schedule_container);
 
-                        initNotices();
                         // Resets initial values
-                        $('#ab-schedule-reset').on('click', function (e) {
+                        $('#bookly-schedule-reset').on('click', function (e) {
                             e.preventDefault();
-                            $('.working-start', schedule_container).each(function () {
+                            $('.working-start', $schedule_container).each(function () {
                                 $(this).val($(this).data('default_value'));
                                 $(this).trigger('change');
                             });
 
-                            $('.working-end', schedule_container).each(function () {
+                            $('.working-end', $schedule_container).each(function () {
                                 $(this).val($(this).data('default_value'));
                             });
 
@@ -198,50 +404,49 @@ jQuery(function($) {
                                 success  : function(response) {
                                     for (var k in response) {
                                         var $content = $(response[k]);
-
-                                        $("[data-staff_schedule_item_id=" + k +"] .breaks", schedule_container).html($content);
-
-                                        $content.find('.break-interval').on('click', function(){
-                                            markBreakIntervalActive.call($(this));
-                                        }).end().find('.break-interval-wrapper .delete-break').on('click', function(){
+                                        $('[data-staff_schedule_item_id=' + k +'] .breaks', $schedule_container).html($content);
+                                        $content.find('.break-interval-wrapper .delete-break').on('click', function(){
                                             deleteStaffScheduleBreakInterval.call($(this));
-                                        }).end().find('.break-start').on('change', function(){
-                                            var start = $(this);
-                                            var end   = start.parent().find('.break-end');
-                                            checkStaffScheduleBreakTimeRange(start,end);
                                         });
-
-                                        schedule_container.find('.ab-popup-wrapper').ab_popup();
                                     }
                                 }
                             });
                         });
 
-                        $('#ajax-send-staff-schedule', schedule_container).on('click', function (e) {
+                        $('#bookly-schedule-save').on('click', function (e) {
                             e.preventDefault();
                             var ladda = Ladda.create(this);
                             ladda.start();
                             var data = {};
-                            $('select.working-start, select.working-end, input:hidden', $schedule_form).each(function() {
+                            $('select.working-start, select.working-end, input:hidden', $schedule_form).each(function () {
                                 data[this.name] = this.value;
                             });
                             $.post(ajaxurl, $.param(data), function (response) {
                                 ladda.stop();
-                                showSuccessNotice();
+                                booklyAlert({success : [BooklyL10n.saved]});
                             });
                         });
 
-                        // init "add break" functionality
-                        schedule_container.find('.ab-popup-wrapper').ab_popup();
-                        schedule_container.find('.ab-popup-trigger:not(.break-interval)').on('click', function() {
-                            var $row                = $(this).closest('.staff-schedule-item-row'),
-                                working_start       = $row.find('.working-start').val(),
-                                $break_start        = $row.find('.add-break .break-start'),
-                                $break_end          = $row.find('.add-break .break-end'),
+                        // init 'add break' functionality
+                        $('.bookly-js-toggle-popover:not(.break-interval)').popover({
+                            html     : true,
+                            placement: 'bottom',
+                            template : '<div class="popover" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                            trigger  : 'manual',
+                            content  : function () {
+                                return $($(this).data('popover-content')).html()
+                            }
+                        }).on('click', function () {
+                            $(this).popover('toggle');
+                        }).on('shown.bs.popover', function () {
+                            var $popover = $(this),
+                                $row          = $popover.parents('.list-group-item .row'),
+                                working_start = $row.find('.working-start').val(),
+                                $break_start  = $row.find('.break-start'),
+                                $break_end    = $row.find('.break-end'),
                                 working_start_time  = working_start.split(':'),
-                                working_start_hours = parseInt(working_start_time[0], 10);
-
-                            var break_start_hours  = working_start_hours + 1;
+                                working_start_hours = parseInt(working_start_time[0], 10),
+                                break_start_hours   = working_start_hours + 1;
                             if (break_start_hours < 10) {
                                 break_start_hours = '0' + break_start_hours;
                             }
@@ -255,60 +460,40 @@ jQuery(function($) {
                             $break_start.val(break_start_hours_str);
                             // Set $break_end value after DOM update.
                             setTimeout(function() { $break_end.val(break_end_hours_str); }, 0);
-                        });
 
-                        // when the working day is disabled (working start time is set to "OFF")
-                        // hide all the elements inside the row
-                        schedule_container.find('.working-start').on('change', function(){
-                            var $this = $(this),
-                                $row  = $this.parents('.staff-schedule-item-row');
+                            checkStaffScheduleBreakTimeRange($break_start,$break_end);
 
-                            if (!$this.val()) {
-                                $row.find('.hide-on-non-working-day').attr('style','display:none!important;');
-                            } else {
-                                $row.find('.hide-on-non-working-day').show();
-                            }
-                        });
-
-                        $('.working-start', schedule_container).on('change', function () {
-                            var $this = $(this),
-                                $end_select = $this.nextAll('.working-end'),
-                                start_time = $this.val();
-
-                            // Hide end time options to keep them within 24 hours after start time.
-                            var parts = start_time.split(':');
-                            parts[0] = parseInt(parts[0]) + 24;
-                            var end_time = parts.join(':');
-                            $('option', $end_select).each(function () {
-                                var $this = $(this);
-                                if (this.value <= start_time || this.value > end_time) {
-                                    if ($this.parent().is(':not(span)')) {
-                                        $this.wrap("<span>").parent().hide();
-                                    }
-                                } else if ($this.parent().is('span')) {
-                                    $this.unwrap();
-                                }
+                            // btn close popover
+                            $(this).next('.popover').find('.bookly-js-toggle-popover').on('click', function () {
+                                $popover.popover('hide');
                             });
-                        }).trigger('change');
-
-                        schedule_container.find('.ab-popup-wrapper .break-interval').on('click', function(){
-                            markBreakIntervalActive.call($(this));
                         });
 
-                        schedule_container.find('.break-interval-wrapper .delete-break').on('click', function(){
-                            deleteStaffScheduleBreakInterval.call($(this));
+                        $schedule_container.delegate('.break-interval', 'click', function () {
+                            $('.popover').popover('hide');
+                            var break_id = $(this).parents('.break-interval-wrapper').data('break_id');
+                            $(this).popover({
+                                html: true,
+                                placement: 'bottom',
+                                template: '<div class="popover" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                                content: function () {
+                                    return $('.bookly-js-popover-content-' + break_id).html();
+                                },
+                                trigger: 'manual'
+                            }).on('shown.bs.popover', function () {
+                                var $popover = $(this);
+                                // btn close popover
+                                $(this).next('.popover').find('.bookly-js-toggle-popover').on('click', function () {
+                                    $popover.popover('hide');
+                                });
+                            });
+
+                            $(this).popover('toggle');
                         });
 
-                        schedule_container.find('.break-start').on('change', function(){
-                            var start = $(this);
-                            var end   = start.parent().find('.break-end');
-                            checkStaffScheduleBreakTimeRange(start,end);
-                        }).trigger('change');
-
-                        schedule_container.delegate('.ab-save-break', 'click', function() {
-                            var $table                  = $(this).closest('table'),
+                        $schedule_container.delegate('.bookly-js-save-break', 'click', function() {
+                            var $table                  = $(this).closest('.bookly-js-schedule-form'),
                                 $row                    = $table.parents('.staff-schedule-item-row').first(),
-                                $break_list_label       = $row.find('.breaks-list-label span'),
                                 $break_interval_wrapper = $table.parents('.break-interval-wrapper').first(),
                                 $error                  = $table.parents('.ab-popup-wrapper').find('.error'),
                                 $data                   = {
@@ -324,38 +509,27 @@ jQuery(function($) {
                                 $data['break_id'] = $break_interval_wrapper.data('break_id');
                             }
 
-                            $.post(
-                                ajaxurl,
-                                $data,
-                                function (response) {
-                                    if (response['success']) {
+                            $.post(ajaxurl, $data, function (response) {
+                                    if (response.success) {
                                         if (response['item_content']) {
                                             var $new_break_interval_item = $(response['item_content']);
                                             $new_break_interval_item
-                                              .hide()
-                                              .appendTo($row.find('.breaks-list-content'))
-                                              .fadeIn('slow');
-                                            $new_break_interval_item.find('.break-interval').on('click', function(){
-                                                markBreakIntervalActive.call($(this));
-                                            });
-                                            $new_break_interval_item.find('.delete-break').on('click', function(){
+                                                .hide()
+                                                .appendTo($row.find('.breaks-list-content'))
+                                                .fadeIn('slow');
+                                            $new_break_interval_item.find('.delete-break').on('click', function () {
                                                 deleteStaffScheduleBreakInterval.call($(this));
                                             });
-                                            if ($break_list_label.is(':hidden')) {
-                                                $break_list_label.fadeIn('slow');
-                                            }
-                                            schedule_container.find('.ab-popup-wrapper').ab_popup();
                                         } else if (response['new_interval']) {
                                             $break_interval_wrapper
-                                              .find('.break-interval.active')
-                                              .text(response['new_interval'])
-                                              .removeClass('active');
+                                                .find('.break-interval')
+                                                .text(response['new_interval']);
                                         }
-                                        $row.find('.ab-popup-wrapper').ab_popup('close');
+                                        $('.popover').popover('hide');
                                     } else {
                                         $error.text(response['error_msg']);
                                         $error.slideDown();
-                                        var t = setTimeout(function() {
+                                        var t = setTimeout(function () {
                                             $error.hide();
                                             clearTimeout(t);
                                         }, 3000);
@@ -366,35 +540,62 @@ jQuery(function($) {
 
                             return false;
                         });
-                        loading_indicator.hide();
+
+                        $schedule_container.delegate('.break-start', 'change', function() {
+                            var $start = $(this);
+                            var $end = $start.parents('.bookly-flexbox').find('.break-end');
+                            checkStaffScheduleBreakTimeRange($start, $end);
+                        }).trigger('change');
+
+                        $('.working-start', $schedule_container).on('change', function () {
+                            var $this = $(this),
+                                $end_select = $this.parents('.bookly-flexbox').find('.working-end'),
+                                start_time = $this.val();
+
+                            // Hide end time options to keep them within 24 hours after start time.
+                            var parts = start_time.split(':');
+                            parts[0] = parseInt(parts[0]) + 24;
+                            var end_time = parts.join(':');
+                            $('option', $end_select).each(function () {
+                                var $this = $(this);
+                                if (this.value <= start_time || this.value > end_time) {
+                                    if ($this.parent().is(':not(span)')) {
+                                        $this.wrap('<span>').parent().hide();
+                                    }
+                                } else if ($this.parent().is('span')) {
+                                    $this.unwrap();
+                                }
+                            });
+                            // when the working day is disabled (working start time is set to 'OFF')
+                            // hide all the elements inside the row
+                            if (!$this.val()) {
+                                $this.parents('.list-group-item .row').find('.hide-on-non-working-day').addClass('hidden');
+                            } else {
+                                $this.parents('.list-group-item .row').find('.hide-on-non-working-day').removeClass('hidden');
+                            }
+                        }).trigger('change');
+
+                        $schedule_container.find('.break-interval-wrapper .delete-break').on('click', function() {
+                            deleteStaffScheduleBreakInterval.call($(this));
+                        });
+
+                        $loading_indicator.hide();
                     });
                 }
             });
 
-            // Opens details tab
-            $('#ab-staff-details-tab').on('click', function () {
-                activateTab.call($(this));
-                details_container.show();
-            });
+            // Open 'Days off' tab
+            $('#bookly-holidays-tab').on('click', function () {
+                $('.tab-pane > div').hide();
+                $holidays_container.show();
 
-            // Opens "Days off" tab
-            $('#ab-staff-holidays-tab').on('click', function () {
-                activateTab.call($(this));
-                holidays_container.show();
-
-                if (!holidays_container.children().length) {
-                    loading_indicator.show();
-                    holidays_container.load(ajaxurl, { action: 'ab_staff_holidays', id: staff_id }, function(){ loading_indicator.hide(); });
+                if (!$holidays_container.children().length) {
+                    $loading_indicator.show();
+                    $holidays_container.load(ajaxurl, { action: 'ab_staff_holidays', id: staff_id }, function(){ $loading_indicator.hide(); });
                 }
             });
 
-            function markBreakIntervalActive() {
-                $(this).parents('.breaks-list-content').find('.break-interval').removeClass('.active');
-                $(this).addClass('active');
-            }
-
-            function checkStaffScheduleBreakTimeRange( start, end )
-            {
+            function checkStaffScheduleBreakTimeRange( start, end ) {
                 var start_time = start.val();
 
                 $('span > option', end).each(function () {
@@ -406,104 +607,54 @@ jQuery(function($) {
                 // Hides end time options with value less than in the start time
                 $('option', end).each(function () {
                     if ($(this).val() <= start_time) {
-                        $(this).wrap("<span>").parent().hide();
+                        $(this).wrap('<span>').parent().hide();
                     }
                 });
             }
 
             function deleteStaffScheduleBreakInterval() {
-                var $break_interval_wrapper = $(this).parent(),
-                    $row = $break_interval_wrapper.parents('.staff-schedule-item-row').first();
+                var $break_interval_wrapper = $(this).closest('.break-interval-wrapper');
                 if (confirm(BooklyL10n.are_you_sure)) {
                     $.post(ajaxurl, { action: 'ab_delete_staff_schedule_break', id: $break_interval_wrapper.data('break_id') }, function (response) {
-                        $break_interval_wrapper.fadeOut(700, function() {
-                            $(this).remove();
-                            if (!$row.find('.break-interval-wrapper').length) {
-                                $row.find('.breaks-list-label span').hide();
-                            }
-                        });
+                        if (response['success']) {
+                            $break_interval_wrapper.fadeOut(700, function () {
+                                $(this).remove();
+                            });
+                        }
                     });
                 }
             }
 
-            function activateTab() {
-                $('.ab-staff-tab-content').not(':hidden').hide();
+            function deleteSpecialPeriod() {
+                var $special_period_wrapper = $(this).closest('.special-period-wrapper');
+                if (confirm(BooklyL10n.are_you_sure)) {
+                    $.post(ajaxurl, { action: 'bookly_special_hours_delete_special_period', id: $special_period_wrapper.data('period_id') }, function (response) {
+                        if (response['success']) {
+                            $special_period_wrapper.fadeOut(700, function () {
+                                $(this).remove();
+                            });
+                        }
+                    });
+                }
             }
 
             $('#' + active_tab_id).click();
-
-            $("#ab-staff-phone").intlTelInput({
-                preferredCountries: [BooklyL10n.country],
-                defaultCountry: BooklyL10n.country,
-                geoIpLookup: function(callback) {
-                    $.get(ajaxurl, {action: 'ab_ip_info'}, function() {}, 'json').always(function(resp) {
-                        var countryCode = (resp && resp.country) ? resp.country : '';
-                        callback(countryCode);
-                    });
-                },
-                utilsScript: BooklyL10n.intlTelInput_utils
-            });
-
         });
-    }
-
-    function initHelps() {
-        // Popovers initialization.
-        $('.ab-popover').popover({
-            trigger : 'hover'
-        });
-        $('.ab-popover-ext').popover({
-            trigger : 'hover',
-            content: function() {
-                return $('#' + $(this).data('ext_id')).html()
-            },
-            html: true
-        });
-    }
-
-    function initNotices() {
-        $('.notice.is-dismissible').each( function() {
-            var $this = $(this),
-                $button = $('<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>'),
-                btnText = commonL10n.dismiss || '';
-
-            $button.find('.screen-reader-text').text(btnText);
-
-            $this.append($button);
-
-            $button.on('click.wp-dismiss-notice', function(event) {
-                event.preventDefault();
-                $this.fadeTo(100, 0, function() {
-                    $(this).slideUp(100);
-                });
-            });
-        });
-    }
-
-    function showSuccessNotice() {
-        $('.notice.notice-success').slideDown(100).fadeTo(100, 100);
-    }
+    }).find('li.active').click();
 
     $wp_user_select.on('change', function () {
-        if ($(this).val()) {
+        if (this.value) {
             $name_input.val($(this).find(':selected').text());
         }
     });
 
-    $staff_member.click(function () {
-        loadEditForm.call(this);
-    });
-    $staff_member.filter('[data-active="true"]').click();
 
-    initHelps();
-
-    var $staff = $('ul#ab-staff-list');
-    $staff.sortable({
+    $staff_list.sortable({
         axis   : 'y',
-        handle : '.ab-handle',
+        handle : '.bookly-js-handle',
         update : function( event, ui ) {
             var data = [];
-            $staff.children('li').each(function() {
+            $staff_list.children('li').each(function() {
                 var $this = $(this);
                 var position = $this.data('staff-id');
                 data.push(position);
@@ -516,4 +667,30 @@ jQuery(function($) {
         }
     });
 
+    $('#ab-newstaff-member').popover({
+        html: true,
+        placement: 'bottom',
+        template: '<div class="popover" style="width: calc(100% - 20px)" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+        content: $new_form.show().detach(),
+        trigger: 'manual'
+    }).on('click', function () {
+        $(this).popover('toggle');
+    }).on('shown.bs.popover', function () {
+        var $popover = $(this);
+        // Save new staff form
+        $(this).next('.popover').find('.bookly-js-save-form').off().on('click', function () {
+            saveNewForm();
+        });
+        // btn close popover
+        $(this).next('.popover').find('.bookly-js-toggle-popover').on('click', function (e) {
+            e.preventDefault();
+            $popover.popover('hide');
+        });
+        // focus input
+        $(this).next('.popover').find($name_input).focus();
+    }).on('hidden.bs.popover', function (e) {
+        //clear input
+        $name_input.val('');
+        $(e.target).data("bs.popover").inState.click = false;
+    });
 });

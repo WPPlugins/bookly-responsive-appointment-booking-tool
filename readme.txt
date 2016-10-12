@@ -2,10 +2,10 @@
 
 Contributors: Ladela
 Donate link: http://booking-wp-plugin.com/
-Tags: appointment, authorize.net, booking, business, calendar, google calendar, night shift, paypal, reservation, responsive, stripe, woocommerce, wpml 
+Tags: 2checkout, appointment, authorize.net, booking, calendar, cart, google calendar, paypal, payson, reservation, responsive, stripe, woocommerce, wordpress, wpml
 Requires at least: 3.7
-Tested up to: 4.3
-Stable tag: 7.6.1
+Tested up to: 4.6.1
+Stable tag: 11.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,33 +22,35 @@ Bookly Plugin – is a great easy-to-use and easy-to-manage booking tool for ser
 * Easy WordPress integration
 * Fully translatable with WPML support
 * Dozens of options to fit your business model
-* Weekly calendar view for each service provider
+* Monthly/weekly/daily calendar view for service provider
 * Unlimited colors
-* Translation ready
+* Customer profiles
 * Unlimited number of services
 * Variable timeslot length
-* Personalized provider week schedule with unlimited number of breaks
+* Personalized week schedule for provider with unlimited number of breaks
 * Configurable holidays and days-off
 * Importable and manageable list of customers
 * Customizable appearance settings
 * Export of bookings to CSV
 * Custom fields
-* Night shifts support
+* Night shift support
+* SMS notifications
+* SMS reminders
 
 = Features available in full version: =
 
 * Google Calendar integration
 * WooCommerce integration
-* Daily calendar overview for all or selected service providers
 * Unlimited number of service providers
-* Personalized price of service for a provider
+* More configurable settings for services
 * PayPal payments
 * Credit card payments through Authorize.Net and Stripe
 * Editable email notifications to customers and service providers
-* SMS notifications
-* Configurable email and SMS reminders
-* Configurable payments report
+* Configurable email reminders
+* Payment reports
 * Discount coupons
+* Built-in cart
+* Support for Bookly add-ons
 
 = Plugins Resources =
 
@@ -85,8 +87,8 @@ You can find a button “Add Booking Form” above content editor for a post or 
 
 = Minimum Requirements =
 
-* WordPress 3.6 or greater
-* PHP version 5.3 or greater
+* WordPress 3.7 or greater
+* PHP version 5.3.7 or greater
 * MySQL version 5.0 or greater
 
 = Automatic installation =
@@ -107,27 +109,248 @@ The manual installation method involves downloading our plugin and uploading it 
 
 When the title of the plugin has appeared on your dashboard, you may start the setup. The following steps are required to make it possible for customers use your newly installed plugin:
 
-* Enter company details (name, address, etc.);
-* Set company’s working hours;
+* Create staff members of your company;
 * Define category of services and list of services in each category;
 * Determine price and duration of services;
-* Determine service staff member;
+* Associate services with staff members;
 * Set working schedule for staff member;
-* Add a booking form to a website page.
+* Add booking form to a website page.
 
 Upon the completion of these steps, customers can book appointments. In the Calendar section of the administrators view, administrators can add the information about appointments manually. Site owner can also look through and set:
 
-* Appearance mode for appointment information;
+* Appearance mode of booking forms;
 * Individual schedule provided by each staff member;
 * Individual service prices provided by each staff member;
 * Set holidays for the whole company and for each staff member separately;
 * List of customers with contact information;
-* Notification by email;
+* Notifications by email and/or SMS;
 * Payment reports with filters on multiple criteria;
 * Payment methods;
-* Booking form appearance modes.
 
 == Changelog ==
+
+= 11.3 =
+* Fixed issue with daylight saving time and Google Calendar
+* Fixed formatting for {next_day_agenda}
+
+= 11.2 =
+* Fixed updating list of services when category is selected
+* Fixed an issue with linking coupons and services
+* For users of <a href="https://codecanyon.net/item/bookly-deposit-payments-addon/17956131?ref=ladela">Deposit Payments (Add-on)</a>: Please also update the add-on to version 1.1
+
+= 11.1 =
+* Added support for custom SMS sender IDs
+* Added locations and extras in staff agenda notifications
+* Added creating appointments for WooCommerce orders with status "On Hold"
+* Added cancellation of appointments for refunded/cancelled WooCommerce orders
+* For users of <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>: Please also update the add-on to version 1.3
+
+= 11.0 =
+* Added support for <a href="https://codecanyon.net/item/bookly-deposit-payments-addon/17956131?ref=ladela">Deposit Payments (Add-on)</a>
+* Added "Complete payment" for local payments
+* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.8
+* For users of <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>: Please also update the add-on to version 1.2
+
+= 10.12 =
+* Added creating appointments when WooCommerce order with status "Processing" is created
+* Fixed an issue with private services provided by public staff members
+
+= 10.11 =
+* Added new currency PKR
+* Fixed linking new coupons with services
+* Fixed updating list of services when location is selected
+* Fixed an issue with including Bookly assets in HTTPS pages
+
+= 10.10 =
+* Fixed saving appointments for some server configurations
+* Minor CSS adjustments
+
+= 10.9 =
+* Added ability to link coupons with services
+* Added new setting to show/hide service price next to employee name
+* Added more codes to WooCommerce cart item data
+* Added new currency BHD
+* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.7
+* For users of <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>: Please also update the add-on to version 1.1
+
+= 10.8 =
+* Added support for version 1.6 of Service Extras add-on
+
+= 10.7 =
+* Added support for version 1.5 of Service Extras add-on
+
+= 10.6 =
+* Added code [[PAYMENT_TYPE]] in notifications
+* Added ability to delete payments
+* Added ability to display custom fields in appointments list on the front-end
+* Fixed an issue with Google Calendar integration when days were marked as fully booked
+
+= 10.5 =
+* Fixed time zone issue in WooCommerce orders
+* CSS adjustments
+* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.4
+
+= 10.4 =
+* Minor CSS adjustments
+
+= 10.3 =
+* Added "Test Email Notifications" tool
+* Fixed JS error at Extras step
+
+= 10.2 =
+* Fixed time zone issue when the first step of booking is skipped
+* Fixed navigation with Back button from cart
+* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.3
+
+= 10.1 =
+* Fixed appointment time in notifications to clients
+
+= 10.0 =
+* New back-end design
+* Added support for <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>
+* Added support for <a href="https://codecanyon.net/item/bookly-chain-appointments-addon/17367838?ref=ladela">Chain Appointments (Add-on)</a>
+* Added support for <a href="https://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela">Multiply Appointments (Add-on)</a>
+* Added translation into Traditional Chinese
+* Added new currencies ZMW and MUR
+* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.2
+* For users of <a href="https://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela">Multisite (Add-on)</a>: Please also update the add-on to version 1.4
+
+= 9.4 =
+* Added ability to print appointments list
+* Fixed minor issues with appointments list filter
+
+= 9.3 =
+* Added booking numbers
+* Added new filters in Appointments
+* Added combined notifications for built-in cart
+* Added payment details
+* Added ability for staff members to approve appointments from email or SMS notifications
+* Added ability to hide particular staff members and services in booking form
+* Added internal note for appointments
+* Updated Authorize.Net to support Akamai network
+* For users of <a href="http://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.1
+
+= 9.2 =
+* Added ability to make staff selection required in the first step of booking
+* Added new currency LAK
+* Fixed padding for Google Calendar events
+* Fixed translation into German
+
+= 9.2 =
+* Added ability to make staff selection required in the first step of booking
+* Added new currency LAK
+* Fixed padding for Google Calendar events
+* Fixed translation into German
+
+= 9.1.1 =
+* Fixed selecting staff member in shortcode
+
+= 9.1 =
+* Added new setting "Cancel appointment action"
+* Fixed regression bug in cron notifications
+* Fixed auto-scroll when going back to the first step of booking
+* Fixed custom fields order in appointments export
+
+= 9.0 =
+* Added appointment statuses (pending, approved, cancelled)
+* Added new notification types for each appointment status
+* Added ability to reorder cart columns
+* Fixed displaying available days in calendar at the Time step
+
+= 8.5.2 =
+* Added new currency ARS
+* Fixed minor issues with scrolling of time slots on mobile
+* Fixed displaying Google Calendar errors
+
+= 8.5.1 =
+* Added new currency XOF
+* Fixed time zone issue in WooCommerce when "Display available time slots in client's time zone" is enabled
+
+= 8.5 =
+* Important! If you are using Bookly Mulisite add-on you need to update it to version 1.1 or higher
+* Added support for Bookly Service Extras add-on
+* Added support for Mollie (iDEAL payments available)
+* Added ability to set reminders sending time
+* Added ability to show/hide columns in built-in cart
+* Added ability to insert textual content in custom fields
+
+= 8.4 =
+* Added ability to bind custom fields to services
+* Added export of clients
+* Added new field Info in staff member profile
+* Added new codes [[STAFF_INFO]] and [[GOOGLE_CALENDAR_URL]] in Notifications
+
+= 8.3 =
+* Added pagination for [bookly-appointments-list] shortcode
+* Added ability to edit button labels in Appearance
+* Added new currency ISK
+* Fixed PHP warnings when paying with PayPal
+
+= 8.2 =
+* Added filling WooCommerce checkout form with data from Bookly details step
+* Fixed sending notifications when all payment methods are disabled
+
+= 8.1 =
+* Added built-in cart
+* Added 45 min slots
+* Added support for Payson invoice
+* Added new currencies AED, HRK, VND, NGN and UAH
+
+= 8.0 =
+* Added new setting "Minimum time requirement prior to cancellation"
+* Added support for WPML in custom fields
+* Added support for WPML in scheduled notifications
+* Added Auto-Recharge in Bookly SMS
+* Added notification about low balance in Bookly SMS
+* Improved back navigation when "Any" is selected for staff member
+
+= 7.9.1 =
+* Fixed an issue with validating emails
+* Fixed a problem with booking when reaching the limit of capacity
+
+= 7.9 =
+* Added support for Bookly Multisite add-on (sold separately)
+
+= 7.8.3 =
+* Fixed an issue with cancelling appointments in Google Calendar
+
+= 7.8.2 =
+* Fixed an issue with Google_Service_Exception
+
+= 7.8.1 =
+* Fixed regression bugs in custom fields and time zones
+
+= 7.8 =
+* Added Payson payment gateway
+* Added PayU Latam payment gateway
+* Added support for RTL
+* Added payment information in Calendar and Appointments
+* Fixed conflict with Ultimate Member plugin
+
+= 7.7.4 =
+* Fixed issue with service name in PayPal
+
+= 7.7.3 =
+* Removed shipping address in PayPal
+* Added OMR currency
+* Fixed issues with "padding" of services
+* Fixed issue with switching months in calendar at the second step
+
+= 7.7.2 =
+* Updated Dutch and Swedish translations
+* Fixed conflict with some themes due to hex2rgb function
+
+= 7.7.1 =
+* Fixed inserting shortcode
+
+= 7.7 =
+* Added 2Checkout payment gateway
+* Added captcha to custom fields
+* Added ability to disable country selection in phone field
+* Added ability to hide week days and/or time range in the first step of booking
+* Added support for Stripe.js
+* Now Bookly takes into account only Google Calendar events with status "busy"
+* Fixed some issues with WPML and double bookings in WooCommerce cart
 
 = 7.6.1 =
 * Fixed disabling SMS and email notifications
@@ -392,5 +615,5 @@ Upon the completion of these steps, customers can book appointments. In the Cale
 
 == Upgrade Notice ==
 
-= 7.6.1 =
+= 11.3 =
 Upgrade now to the most recent version of Bookly.
