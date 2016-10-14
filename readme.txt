@@ -5,7 +5,7 @@ Donate link: http://booking-wp-plugin.com/
 Tags: 2checkout, appointment, authorize.net, booking, calendar, cart, google calendar, paypal, payson, reservation, responsive, stripe, woocommerce, wordpress, wpml
 Requires at least: 3.7
 Tested up to: 4.6.1
-Stable tag: 11.3
+Stable tag: 11.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -128,6 +128,9 @@ Upon the completion of these steps, customers can book appointments. In the Cale
 * Payment methods;
 
 == Changelog ==
+
+= 11.3.1 =
+* Fixed issue with displaying appointments in back-end calendar in Bookly Lite
 
 = 11.3 =
 * Fixed issue with daylight saving time and Google Calendar

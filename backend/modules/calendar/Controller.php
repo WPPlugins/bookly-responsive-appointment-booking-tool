@@ -82,7 +82,7 @@ class Controller extends Lib\Base\Controller
 
         if ( Lib\Utils\Common::isCurrentUserAdmin() ) {
             $staff_members = Lib\Entities\Staff::query()
-                ->whereIn( 'id', 1 )
+                ->where( 'id', 1 )
                 ->find();
         } else {
             $staff_members[] = Lib\Entities\Staff::query()

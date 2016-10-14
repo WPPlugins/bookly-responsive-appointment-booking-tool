@@ -3,7 +3,7 @@
 Plugin Name: Bookly Lite
 Plugin URI: http://booking-wp-plugin.com
 Description: Bookly Plugin – is a great easy-to-use and easy-to-manage booking tool for service providers who think about their customers. The plugin supports a wide range of services provided by business and individuals who offer reservations through websites. Set up any reservation quickly, pleasantly and easily with Bookly!
-Version: 11.3
+Version: 11.3.1
 Author: Ladela Interactive
 Author URI: http://www.ladela.com
 Text Domain: bookly
