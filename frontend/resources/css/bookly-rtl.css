@@ -1,0 +1,158 @@
+/* global class */
+.ab-right {
+    float: left!important;
+}
+.ab-left {
+    float: right!important;
+}
+.ab-rtext {
+    text-align: left;
+}
+
+/* Form Elements */
+.ab-formGroup > div {
+    margin: 5px 0 0 14px;
+}
+.ab-formGroup:last-child > div {
+    margin-left: 0;
+}
+
+/* Login Form */
+.bookly-close:hover,
+.bookly-close:focus,
+.bookly-close {
+    float: left;
+}
+.bookly-modal {
+    right: 0;
+    left: auto;
+}
+.bookly-modal .bookly-modal-dialog {
+    right: 50%;
+    margin-right: -200px;
+    left: auto;
+    margin-left: auto;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-footer {
+    text-align: left;
+}
+@media (max-width: 768px) {
+    .bookly-modal .bookly-modal-content .bookly-modal-footer {
+        text-align: left;
+    }
+
+}
+/* Progress Tracker */
+.ab-progress-tracker > div {
+    padding: 0 4px 0 0;
+}
+.ab-progress-tracker > div:last-child .step {
+    border-radius: 5px 0 0 5px;
+}
+.ab-progress-tracker > div:first-child .step {
+    border-radius: 0 5px 5px 0;
+}
+.ab-progress-tracker > div:first-child {
+    padding-right: 0;
+}
+
+/* Service */
+.bookly-service-step .ab-available-date,
+.bookly-service-step .bookly-week-days {
+    margin-right: 0 !important;
+    margin-left: 14px !important;
+}
+.bookly-form .picker__holder {
+    left: auto!important;
+}
+.ab-mobile-step_1 {
+    margin-left: -14px;
+    margin-right: auto;
+}
+
+/* Time */
+.ab-slot-calendar {
+    float: right;
+}
+
+/* Buttons */
+.bookly-back-step {
+    margin-left: 10px;
+    margin-right: auto;
+    float: right!important;
+}
+.ab-time-next {
+    margin-right: 10px;
+    margin-left: 0;
+}
+.bookly-go-to-cart{
+    float: right!important;
+}
+/* Details */
+.ab-formGroup .intl-tel-input input {
+    padding-right: 45px !important;
+    padding-left: 0 !important;
+}
+.ab-list {
+    margin-right: 10px!important;
+    margin-left: auto;
+}
+.intl-tel-input input,
+.intl-tel-input input[type=text],
+.intl-tel-input input[type=tel] {
+    padding-right:48px;
+    margin-right:0;
+    padding-left: 0;
+    margin-left: auto;
+}
+.intl-tel-input .selected-flag {
+    padding:0 8px 0 0;
+}
+.intl-tel-input .selected-flag .arrow {
+    left:4px;
+    border-right:3px solid transparent;
+    border-left:3px solid transparent;
+    right: auto;
+}
+.intl-tel-input .country-list {
+    margin:0 -1px 0 0;
+}
+.intl-tel-input .country-list .flag,
+.intl-tel-input .country-list .country-name {
+    margin-left:6px;
+    margin-right: auto;
+}
+.intl-tel-input select {
+    right:0;
+    left: auto;
+}
+
+/* Other */
+.ladda-button[data-style="zoom-in"][data-loading] .ladda-spinner {
+    margin-left: -22px !important;
+}
+
+/* Mobile */
+@media screen and (max-width: 650px) {
+    .ab-mob-float-none {
+        float: none !important;
+    }
+    .ab-formGroup > div {
+        margin-left: 0 !important;
+    }
+    .bookly-service-step .ab-available-date,
+    .bookly-service-step .bookly-week-days {
+        margin-left: 0 !important;
+    }
+    .bookly-service-step .ab-time-to {
+        float: left !important;
+    }
+    .ab-mobile-step_1 {
+        margin-left: 0;
+    }
+
+    .ab-not-time-screen {
+        margin-right: 0!important;
+        margin-left: auto !important;
+    }
+}
