@@ -16,6 +16,7 @@ use BooklyLite\Lib\Entities\CustomerAppointment;
                             <option value="<?php echo CustomerAppointment::STATUS_PENDING ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_PENDING ) ) ?></option>
                             <option value="<?php echo CustomerAppointment::STATUS_APPROVED ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_APPROVED ) ) ?></option>
                             <option value="<?php echo CustomerAppointment::STATUS_CANCELLED ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_CANCELLED ) ) ?></option>
+                            <option value="<?php echo CustomerAppointment::STATUS_REJECTED ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_REJECTED ) ) ?></option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -70,7 +71,7 @@ use BooklyLite\Lib\Entities\CustomerAppointment;
                         <?php endforeach ?>
                     </div>
 
-                    <?php if ( $extras = apply_filters( 'bookly_extras_find_all', array() ) ) : ?>
+                    <?php if ( $extras = apply_filters( 'bookly_service_extras_find_all', array() ) ) : ?>
                         <h3 class="bookly-block-head bookly-color-gray">
                             <?php _e( 'Extras', 'bookly' ) ?>
                         </h3>
@@ -90,7 +91,7 @@ use BooklyLite\Lib\Entities\CustomerAppointment;
                 </div>
                 <div class="modal-footer">
                     <input type="button" data-customer="" ng-click=saveCustomFields() class="ab-popup-save btn btn-lg btn-success" value="<?php _e( 'Apply', 'bookly' ) ?>">
-                    <input type="button" class="ab-reset-form btn btn-lg btn-default" data-dismiss=modal value="<?php _e( 'Cancel', 'bookly' ) ?>" aria-hidden=true>
+                    <input type="button" class="btn btn-lg btn-default" data-dismiss=modal value="<?php _e( 'Cancel', 'bookly' ) ?>" aria-hidden=true>
                 </div>
             </form>
         </div><!-- /.modal-content -->

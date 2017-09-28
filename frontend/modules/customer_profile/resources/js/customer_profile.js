@@ -6,7 +6,7 @@
                $table = $self.prevAll('table.ab-appointments-table'),
                ladda = Ladda.create(this);
            ladda.start();
-           $.get(options.ajaxurl, {action: 'ab_get_past_appointments', columns: $table.data('columns'), custom_fields: $table.data('custom_fields'), page: $table.data('page') + 1 }, function () {
+           $.get(options.ajaxurl, {action: 'bookly_get_past_appointments', columns: $table.data('columns'), custom_fields: $table.data('custom_fields'), page: $table.data('page') + 1 }, function () {
            }, 'json').done(function (resp) {
                ladda.stop();
                if (resp.data.more) {

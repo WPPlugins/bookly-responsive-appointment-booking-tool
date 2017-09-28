@@ -10,12 +10,24 @@ jQuery(function($) {
         $service_filter    = $('#bookly-filter-service'),
         $status_filter     = $('#bookly-filter-status'),
         $add_button        = $('#bookly-add'),
-        $print_dialog      = $('#bookly-print-dialog'),
-        $print_button      = $('#bookly-print'),
         $export_dialog     = $('#bookly-export-dialog'),
         $export_button     = $('#bookly-export'),
-        $delete_button     = $('#bookly-delete')
+        $delete_button     = $('#bookly-delete'),
+        isMobile           = false
         ;
+
+    try {
+        document.createEvent("TouchEvent");
+        isMobile = true;
+    } catch (e) {
+
+    }
+
+    $.each(BooklyL10n.filter, function (field, value) {
+        if (value != -1) {
+            $('#bookly-filter-' + field).val(value);
+        }
+    });
 
     /**
      * Init DataTables.
@@ -24,14 +36,24 @@ jQuery(function($) {
         { data: 'id', responsivePriority: 2 },
         { data: 'start_date', responsivePriority: 2 },
         { data: 'staff.name', responsivePriority: 2 },
-        { data: 'customer.name', responsivePriority: 2 },
-        { data: 'customer.phone', responsivePriority: 3 },
-        { data: 'customer.email', responsivePriority: 3 },
+        { data: 'customer.name', render: $.fn.dataTable.render.text(), responsivePriority: 2 },
+        {
+            data: 'customer.phone',
+            responsivePriority: 3,
+            render: function (data, type, row, meta) {
+                if (isMobile) {
+                    return '<a href="tel:' + data + '">' + $.fn.dataTable.render.text().display(data) + '</a>';
+                } else {
+                    return $.fn.dataTable.render.text().display(data);
+                }
+            }
+        },
+        { data: 'customer.email', render: $.fn.dataTable.render.text(), responsivePriority: 3 },
         {
             data: 'service.title',
             responsivePriority: 2,
             render: function ( data, type, row, meta ) {
-                if(!$.isEmptyObject(row.service.extras)) {
+                if (row.service.extras.length) {
                     var extras = '<ul class="bookly-list list-dots">';
                     $.each(row.service.extras, function (key, item) {
                         extras += '<li><nobr>' + item.title + '</nobr></li>';
@@ -57,6 +79,7 @@ jQuery(function($) {
     $.each(BooklyL10n.cf_columns, function (i, cf_id) {
         columns.push({
             data: 'custom_fields.' + cf_id,
+            render: $.fn.dataTable.render.text(),
             responsivePriority: 4,
             orderable: false
         });
@@ -73,7 +96,7 @@ jQuery(function($) {
             url : ajaxurl,
             type: 'POST',
             data: function (d) {
-                return $.extend({action: 'ab_get_appointments'}, {
+                return $.extend({action: 'bookly_get_appointments'}, {
                     filter: {
                         id      : $id_filter.val(),
                         date    : $date_filter.data('date'),
@@ -178,34 +201,35 @@ jQuery(function($) {
      * Delete appointments.
      */
     $delete_button.on('click', function () {
-        if (confirm(BooklyL10n.are_you_sure)) {
-            var ladda = Ladda.create(this);
-            ladda.start();
+        var ladda = Ladda.create(this);
+        ladda.start();
 
-            var data = [];
-            var $checkboxes = $appointments_list.find('tbody input:checked');
-            $checkboxes.each(function () {
-                data.push(this.value);
-            });
+        var data = [];
+        var $checkboxes = $appointments_list.find('tbody input:checked');
+        $checkboxes.each(function () {
+            data.push(this.value);
+        });
 
-            $.ajax({
-                url  : ajaxurl,
-                type : 'POST',
-                data : {
-                    action : 'ab_delete_customer_appointments',
-                    data   : data
-                },
-                dataType : 'json',
-                success  : function(response) {
-                    ladda.stop();
-                    if (response.success) {
-                        dt.rows($checkboxes.closest('td')).remove().draw();
-                    } else {
-                        alert(response.data.message);
-                    }
+        $.ajax({
+            url  : ajaxurl,
+            type : 'POST',
+            data : {
+                action : 'bookly_delete_customer_appointments',
+                data   : data,
+                notify : $('#bookly-delete-notify').prop('checked') ? 1 : 0,
+                reason : $('#bookly-delete-reason').val()
+            },
+            dataType : 'json',
+            success  : function(response) {
+                ladda.stop();
+                $('#bookly-delete-dialog').modal('hide');
+                if (response.success) {
+                    dt.draw(false);
+                } else {
+                    alert(response.data.message);
                 }
-            });
-        }
+            }
+        });
     });
 
     /**

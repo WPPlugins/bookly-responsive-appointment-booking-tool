@@ -1,16 +1,18 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
         <div class="page-header text-right clearfix">
-            <div class="bookly-page-title">
-                <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
+            <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
+                <div class="bookly-page-title">
                     <?php _e( 'Staff Members', 'bookly' ) ?>
                     <span class="bookly-color-gray">(<span id="bookly-staff-count"><?php echo count( $staff_members ) ?></span>)</span>
-                <?php else : ?>
+                </div>
+                <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
+            <?php else : ?>
+                <div class="bookly-page-title">
                     <?php _e( 'Profile', 'bookly' ) ?>
-                <?php endif ?>
-            </div>
+                </div>
+            <?php endif ?>
         </div>
 
         <div class="row">
@@ -24,7 +26,7 @@
                         <?php include '_list_item.php' ?>
                     <?php endforeach ?>
                 </ul>
-                <?php include 'new.php' ?>
+                <?php include '_new.php' ?>
             </div>
 
             <div id="bookly-container-edit-staff" class="col-sm-8"></div>

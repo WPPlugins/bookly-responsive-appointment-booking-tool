@@ -13,13 +13,14 @@ class Appointment extends Lib\Base\Entity
 
     protected static $schema = array(
         'id'              => array( 'format' => '%d' ),
+        'series_id'       => array( 'format' => '%d', 'reference' => array( 'entity' => 'Series' ) ),
         'staff_id'        => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
         'service_id'      => array( 'format' => '%d', 'reference' => array( 'entity' => 'Service' ) ),
         'start_date'      => array( 'format' => '%s' ),
         'end_date'        => array( 'format' => '%s' ),
         'google_event_id' => array( 'format' => '%s' ),
         'extras_duration' => array( 'format' => '%d', 'default' => 0 ),
-        'internal_note'   => array( 'format' => '%s' )
+        'internal_note'   => array( 'format' => '%s' ),
     );
 
     protected static $cache = array();
@@ -62,6 +63,7 @@ class Appointment extends Lib\Base\Entity
                 ->where( 'ca.appointment_id', $this->get( 'id' ) );
             if ( ! $with_cancelled ) {
                 $appointments->whereNot( 'ca.status', Lib\Entities\CustomerAppointment::STATUS_CANCELLED );
+                $appointments->whereNot( 'ca.status', Lib\Entities\CustomerAppointment::STATUS_REJECTED );
             }
 
             foreach ( $appointments->fetchArray() as $data ) {
@@ -82,66 +84,60 @@ class Appointment extends Lib\Base\Entity
     /**
      * Set array of customers associated with this appointment.
      *
-     * @param array $data Array of customer IDs, custom_fields, number_of_persons, extras and status
-     * @return array      IDs of customer_appointment with changed status
+     * @param array  $cst_data  Array of customer IDs, custom_fields, number_of_persons, extras and status
+     * @return array            IDs of customer_appointment with changed status
      */
-    public function saveCustomerAppointments( array $data )
+    public function saveCustomerAppointments( array $cst_data )
     {
         $ca_status_changed = array();
-        $appointments = array();
-        foreach ( $data as $appointment ) {
-            if ( array_key_exists( 'ca_id', $appointment ) ) {
-                $ca_id = $appointment['ca_id'];
-            } else {
+        $ca_data = array();
+        foreach ( $cst_data as $item ) {
+            if ( array_key_exists( 'ca_id', $item ) ) {
+                $ca_id = $item['ca_id'];
+            } else do {
                 // New CustomerAppointment.
                 $ca_id = 'new-' . mt_rand( 1, 999 );
-                while ( array_key_exists( 'ca_id', $appointment ) === true ) {
-                    $ca_id = mt_rand( 1, 999 );
-                }
-            }
-            $appointments[ $ca_id ] = $appointment;
+            } while ( array_key_exists( $ca_id, $ca_data ) === true );
+            $ca_data[ $ca_id ] = $item;
         }
 
         // Retrieve customer appointments IDs currently associated with this appointment.
-        $current_ids = array_map( function( CustomerAppointment $ca ) { return $ca->get( 'id' ); }, $this->getCustomerAppointments( true ) );
-        $delete_cas  = array_diff( $current_ids, array_keys( $appointments ) );
-        if( ! empty( $delete_cas ) ) {
+        $current_ids   = array_map( function( CustomerAppointment $ca ) { return $ca->get( 'id' ); }, $this->getCustomerAppointments( true ) );
+        $ids_to_delete = array_diff( $current_ids, array_keys( $ca_data ) );
+        if ( ! empty ( $ids_to_delete ) ) {
             // Remove redundant customer appointments.
-            CustomerAppointment::query()->delete()->whereIn( 'id', $delete_cas )->execute();
+            CustomerAppointment::query()->delete()->whereIn( 'id', $ids_to_delete )->execute();
         }
-        $location_addon_enabled =  Lib\Config::locationsEnabled();
         // Add new customer appointments.
-        foreach ( array_diff( array_keys( $appointments ), $current_ids ) as $id ) {
+        foreach ( array_diff( array_keys( $ca_data ), $current_ids ) as $id ) {
             $customer_appointment = new CustomerAppointment();
-            $customer_appointment->set( 'appointment_id', $this->get( 'id' ) )
-                ->set( 'customer_id',    $appointments[ $id ]['id'] )
-                ->set( 'custom_fields',  json_encode( $appointments[ $id ]['custom_fields'] ) )
-                ->set( 'extras',         json_encode( $appointments[ $id ]['extras'] ) )
-                ->set( 'status',         $appointments[ $id ]['status'] )
-                ->set( 'number_of_persons', $appointments[ $id ]['number_of_persons'] );
-            if ( $location_addon_enabled ) {
-                $customer_appointment->set( 'location_id', empty( $appointments[ $id ]['location_id'] ) ? null : $appointments[ $id ]['location_id'] );
-            }
-            $customer_appointment->save();
+            $customer_appointment
+                ->set( 'appointment_id',    $this->get( 'id' ) )
+                ->set( 'customer_id',       $ca_data[ $id ]['id'] )
+                ->set( 'custom_fields',     json_encode( $ca_data[ $id ]['custom_fields'] ) )
+                ->set( 'extras',            json_encode( $ca_data[ $id ]['extras'] ) )
+                ->set( 'status',            $ca_data[ $id ]['status'] )
+                ->set( 'number_of_persons', $ca_data[ $id ]['number_of_persons'] )
+                ->set( 'location_id',       $ca_data[ $id ]['location_id'] ? $ca_data[ $id ]['location_id'] : null )
+                ->save();
             $ca_status_changed[] = $customer_appointment->get( 'id' );
         }
 
         // Update existing customer appointments.
-        foreach ( array_intersect( $current_ids, array_keys( $appointments ) ) as $id ) {
+        foreach ( array_intersect( $current_ids, array_keys( $ca_data ) ) as $id ) {
             $customer_appointment = new CustomerAppointment();
             $customer_appointment->load( $id );
 
-            if ( $customer_appointment->get( 'status' ) != $appointments[ $id ]['status'] ) {
+            if ( $customer_appointment->get( 'status' ) != $ca_data[ $id ]['status'] ) {
                 $ca_status_changed[] = $customer_appointment->get( 'id' );
-                $customer_appointment->set( 'status', $appointments[ $id ]['status'] );
+                $customer_appointment->set( 'status', $ca_data[ $id ]['status'] );
             }
-            $customer_appointment->set( 'number_of_persons', $appointments[ $id ]['number_of_persons'] )
-                ->set( 'custom_fields', json_encode( $appointments[ $id ]['custom_fields'] ) )
-                ->set( 'extras', json_encode( $appointments[ $id ]['extras'] ) );
-            if ( $location_addon_enabled ) {
-                $customer_appointment->set( 'location_id', empty( $appointments[ $id ]['location_id'] ) ? null : $appointments[ $id ]['location_id'] );
-            }
-            $customer_appointment->save();
+            $customer_appointment
+                ->set( 'number_of_persons', $ca_data[ $id ]['number_of_persons'] )
+                ->set( 'custom_fields',     json_encode( $ca_data[ $id ]['custom_fields'] ) )
+                ->set( 'extras',            json_encode( $ca_data[ $id ]['extras'] ) )
+                ->set( 'location_id',       $ca_data[ $id ]['location_id'] ? $ca_data[ $id ]['location_id'] : null )
+                ->save();
         }
 
         return $ca_status_changed;
@@ -160,7 +156,10 @@ class Appointment extends Lib\Base\Entity
             $modified = $this->getModified();
             if ( array_key_exists( 'staff_id', $modified ) ) {
                 // Delete event from the Google Calendar of the old staff if the staff was changed.
-                $this->set( 'staff_id', 1 );
+                $staff_id = $this->get( 'staff_id' );
+                $this->set( 'staff_id', $modified['staff_id'] );
+                $this->deleteGoogleCalendarEvent();
+                $this->set( 'staff_id', $staff_id );
                 $this->set( 'google_event_id', null );
             }
         }
@@ -176,9 +175,22 @@ class Appointment extends Lib\Base\Entity
      */
     public function delete()
     {
+        // Delete all CustomerAppointments for current appointments
+        $ca_list = Lib\Entities\CustomerAppointment::query()
+            ->where( 'appointment_id', $this->get( 'id' ) )
+            ->find();
+        /** @var Lib\Entities\CustomerAppointment $ca */
+        foreach ( $ca_list as $ca ) {
+            $ca->deleteCascade();
+        }
+
         $result = parent::delete();
-        if ( $result && $this->hasGoogleCalendarEvent() ) {
-            $this->deleteGoogleCalendarEvent();
+        if ( $result ) {
+            if ( $this->get( 'series_id' ) !== null ) {
+                if ( Appointment::query()->where( 'series_id', $this->get( 'series_id' ) )->count() === 0 ) {
+                    Series::query()->delete()->where( 'id', $this->get( 'series_id' ) )->execute();
+                }
+            }
         }
 
         return $result;
@@ -191,7 +203,7 @@ class Appointment extends Lib\Base\Entity
      */
     public function handleGoogleCalendar()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -211,15 +223,12 @@ class Appointment extends Lib\Base\Entity
      */
     public function createGoogleCalendarEvent()
     {
-        $google = new Lib\Google();
-
-
         return false;
     }
 
     public function updateGoogleCalendarEvent()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -229,7 +238,7 @@ class Appointment extends Lib\Base\Entity
      */
     public function deleteGoogleCalendarEvent()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -244,10 +253,11 @@ class Appointment extends Lib\Base\Entity
             ->select( 'extras' )
             ->where( 'appointment_id', $this->get( 'id' ) )
             ->whereNot( 'status', CustomerAppointment::STATUS_CANCELLED )
+            ->whereNot( 'status', CustomerAppointment::STATUS_REJECTED )
             ->fetchArray();
         foreach ( $customer_appointments as $customer_appointment ) {
             if ( $customer_appointment['extras'] != '[]' ) {
-                $extras_duration = apply_filters( 'bookly_extras_get_total_duration', 0, (array) json_decode( $customer_appointment['extras'], true ) );
+                $extras_duration = apply_filters( 'bookly_service_extras_get_total_duration', 0, (array) json_decode( $customer_appointment['extras'], true ) );
                 if ( $extras_duration > $duration ) {
                     $duration = $extras_duration;
                 }

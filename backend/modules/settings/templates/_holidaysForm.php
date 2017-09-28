@@ -27,9 +27,9 @@
             showMonths : 12,
             scrollSpeed: 350,
             events     : <?php echo $holidays ?>,
-            action     : 'ab_settings_holiday',
+            action     : 'bookly_settings_holiday',
             dayOffset  : <?php echo (int)get_option('start_of_week') ?>,
-            loadingImg : <?php echo json_encode( plugins_url( 'appointment-booking/backend/resources/images/loading.gif' ) ) ?>
+            loadingImg : <?php echo json_encode( plugins_url( 'bookly-responsive-appointment-booking-tool/backend/resources/images/loading.gif' ) ) ?>
         });
 
         $('.bookly-js-jCalBtn').on('click', function(e) {

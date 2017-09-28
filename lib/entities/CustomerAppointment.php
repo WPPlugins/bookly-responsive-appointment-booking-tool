@@ -12,6 +12,7 @@ class CustomerAppointment extends Lib\Base\Entity
     const STATUS_PENDING   = 'pending';
     const STATUS_APPROVED  = 'approved';
     const STATUS_CANCELLED = 'cancelled';
+    const STATUS_REJECTED  = 'rejected';
 
     protected static $table = 'ab_customer_appointments';
 
@@ -47,7 +48,7 @@ class CustomerAppointment extends Lib\Base\Entity
     {
         // Generate new token if it is not set.
         if ( $this->get( 'token' ) == '' ) {
-            $this->set( 'token', self::generateToken( 'token' ) );
+            $this->set( 'token', Lib\Utils\Common::generateToken( get_class( $this ), 'token' ) );
         }
         $this->set( 'locale', apply_filters( 'wpml_current_language', null ) );
 
@@ -150,17 +151,19 @@ class CustomerAppointment extends Lib\Base\Entity
     }
 
     /**
-     * Delete entity and delete payment, appointment if there are no more customers.
+     * Delete entity and appointment if there are no more customers.
      *
      * @param bool $compound
      */
     public function deleteCascade( $compound = false )
     {
         $this->delete();
-
-        // Load appointment.
+        $appointments = array();
         $appointment = new Appointment();
         if ( $appointment->load( $this->get( 'appointment_id' ) ) ) {
+            $appointments[] = $appointment;
+        }
+        foreach ( $appointments as $appointment ) {
             // Check if there are any customers left.
             if ( CustomerAppointment::query()->where( 'appointment_id', $appointment->get( 'id' ) )->count() == 0 ) {
                 // If no customers then delete the appointment.
@@ -178,6 +181,7 @@ class CustomerAppointment extends Lib\Base\Entity
                 $appointment->handleGoogleCalendar();
             }
             if ( $compound && $this->get( 'compound_token' ) ) {
+                // Remove compound CustomerAppointments
                 /** @var CustomerAppointment[] $ca_list */
                 $ca_list = CustomerAppointment::query()->where( 'compound_token', $this->get( 'compound_token' ) )->where( 'compound_service_id', $this->get( 'compound_service_id' ) )->find();
                 foreach ( $ca_list as $ca ) {
@@ -196,10 +200,14 @@ class CustomerAppointment extends Lib\Base\Entity
     {
         $appointment = new Appointment();
         if ( $appointment->load( $this->get( 'appointment_id' ) ) ) {
-            $this->set( 'status', CustomerAppointment::STATUS_CANCELLED );
-            Lib\NotificationSender::send( $this );
+            if ( $this->get( 'status' ) != CustomerAppointment::STATUS_CANCELLED
+                && $this->get( 'status' ) != CustomerAppointment::STATUS_REJECTED
+            ) {
+                $this->set( 'status', CustomerAppointment::STATUS_CANCELLED );
+                Lib\NotificationSender::send( $this );
+            }
 
-            if ( get_option( 'ab_settings_client_cancel_appointment_action' ) == 'delete' ) {
+            if ( get_option( 'bookly_cst_cancel_action' ) == 'delete' ) {
                 $this->deleteCascade( true );
             } else {
                 if ( $this->get( 'compound_token' ) ) {
@@ -225,25 +233,9 @@ class CustomerAppointment extends Lib\Base\Entity
             case self::STATUS_PENDING:   return __( 'Pending',   'bookly' );
             case self::STATUS_APPROVED:  return __( 'Approved',  'bookly' );
             case self::STATUS_CANCELLED: return __( 'Cancelled', 'bookly' );
+            case self::STATUS_REJECTED:  return __( 'Rejected',  'bookly' );
             default: return '';
         }
-    }
-
-    /**
-     * Generate unique token.
-     *
-     * @param $token_field
-     * @return string
-     */
-    static public function generateToken( $token_field )
-    {
-        $entity = new self();
-        do {
-            $token = md5( uniqid( time(), true ) );
-        }
-        while ( $entity->loadBy( array( $token_field => $token ) ) === true );
-
-        return $token;
     }
 
 }

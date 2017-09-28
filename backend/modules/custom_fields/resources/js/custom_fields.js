@@ -1,7 +1,7 @@
 jQuery(function($) {
 
     var $fields = $("#ab-custom-fields"),
-        $cf_per_service = $('#ab_custom_fields_per_service');
+        $cf_per_service = $('#bookly_custom_fields_per_service');
 
     $fields.sortable({
         axis   : 'y',
@@ -81,7 +81,7 @@ jQuery(function($) {
             type      : 'POST',
             url       : ajaxurl,
             xhrFields : { withCredentials: true },
-            data      : { action: 'ab_save_custom_fields', fields: JSON.stringify(data), cf_per_service: $cf_per_service.val() },
+            data      : { action: 'bookly_save_custom_fields', fields: JSON.stringify(data), cf_per_service: $cf_per_service.val() },
             complete  : function() {
                 ladda.stop();
                 booklyAlert({success : [BooklyL10n.saved]});

@@ -12,20 +12,20 @@ class BusinessHours extends Lib\Base\Form
     public function __construct()
     {
         $this->setFields( array(
-            'ab_settings_monday_start',
-            'ab_settings_monday_end',
-            'ab_settings_tuesday_start',
-            'ab_settings_tuesday_end',
-            'ab_settings_wednesday_start',
-            'ab_settings_wednesday_end',
-            'ab_settings_thursday_start',
-            'ab_settings_thursday_end',
-            'ab_settings_friday_start',
-            'ab_settings_friday_end',
-            'ab_settings_saturday_start',
-            'ab_settings_saturday_end',
-            'ab_settings_sunday_start',
-            'ab_settings_sunday_end',
+            'bookly_bh_monday_start',
+            'bookly_bh_monday_end',
+            'bookly_bh_tuesday_start',
+            'bookly_bh_tuesday_end',
+            'bookly_bh_wednesday_start',
+            'bookly_bh_wednesday_end',
+            'bookly_bh_thursday_start',
+            'bookly_bh_thursday_end',
+            'bookly_bh_friday_start',
+            'bookly_bh_friday_end',
+            'bookly_bh_saturday_start',
+            'bookly_bh_saturday_end',
+            'bookly_bh_sunday_start',
+            'bookly_bh_sunday_end',
         ) );
     }
 
@@ -47,10 +47,10 @@ class BusinessHours extends Lib\Base\Form
         $time_output    = Lib\Entities\StaffScheduleItem::WORKING_START_TIME;
         $time_end       = Lib\Entities\StaffScheduleItem::WORKING_END_TIME;
         $option_name    = $field_name . ( $is_start ? '_start' : '_end' );
-        $class_name     = $is_start ? 'select_start' : 'select_end hide-on-non-working-day';
+        $class_name     = $is_start ? 'select_start' : 'select_end bookly-hide-on-off';
         $selected_value = get_option( $option_name );
         $selected_seconds = Lib\Utils\DateTime::timeToSeconds( $selected_value );
-        $output         = "<select style='display:inline-block' class='form-control ab-auto-w {$class_name}' name={$option_name}>";
+        $output         = "<select style='display:inline-block' class='form-control {$class_name}' name={$option_name}>";
 
         if ( $is_start ) {
             $output .= '<option value="">' . __( 'OFF', 'bookly' ) . '</option>';

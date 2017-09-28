@@ -1,5 +1,5 @@
-.bookly-customer-appointment-list p {
-    font-weight: bold;
+.bookly-customer-appointment-list {
+    overflow: auto;
 }
 
 .bookly-customer-appointment-list h2 {
@@ -16,7 +16,7 @@
 }
 
 .bookly-customer-appointment-list .ab-appointments-table th {
-    background: #dddddd;
+    background: #ddd;
     font-size: 14px;
     padding: 5px;
     border: 0;
@@ -26,30 +26,28 @@
 
 .bookly-customer-appointment-list table.ab-appointments-table td {
     font-size: 14px;
-    padding: 5px;
-    background: #EEEEEE;
-    text-align: center;
+    padding: 5px !important;
+    background: #eee;
+    text-align: left !important;
+    vertical-align: top !important;
     border: 1px solid silver;
-    vertical-align: middle;
 }
 
 .bookly-customer-appointment-list .ab-appointments-table td .ab-btn {
     padding: 5px 10px!important;
     width: auto;
-    min-width: auto;
-    font-size: 11px!important;
+    min-width: 0;
 }
 
-.bookly-customer-appointment-list table.bookly-extras {
-    border: 0 !important;
-    hyphens: auto;
-    table-layout: auto;
-    margin: 0;
+.bookly-customer-appointment-list .ab-appointments-table td .ab-btn span {
+    font-size: 12px !important;
 }
 
-.bookly-customer-appointment-list table.bookly-extras td {
-    border: 0 !important;
-    padding: 0 0 0 2px;
-    white-space: nowrap;
-    text-align: left;
+.bookly-customer-appointment-list .ab-btn {
+    font-family: inherit;
+}
+
+.bookly-customer-appointment-list ul.bookly-extras {
+    list-style: disc outside !important;
+    margin-bottom: 0 !important;
 }

@@ -26,7 +26,7 @@ jQuery(function($) {
             url: ajaxurl,
             data: function ( d ) {
                 return $.extend( {}, d, {
-                    action: 'ab_get_payments',
+                    action: 'bookly_get_payments',
                     filter: {
                         created: $date_filter.data('date'),
                         type:    $type_filter.val(),
@@ -44,7 +44,7 @@ jQuery(function($) {
         columns: [
             { data: 'created' },
             { data: 'type' },
-            { data: 'customer' },
+            { data: 'customer', render: $.fn.dataTable.render.text() },
             { data: 'provider' },
             { data: 'service' },
             { data: 'start_date' },
@@ -161,7 +161,7 @@ jQuery(function($) {
                 url  : ajaxurl,
                 type : 'POST',
                 data : {
-                    action : 'ab_delete_payments',
+                    action : 'bookly_delete_payments',
                     data   : data
                 },
                 dataType : 'json',

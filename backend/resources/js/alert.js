@@ -26,10 +26,10 @@ function booklyAlert(alert) {
                 continue;
             }
             alert[type].forEach(function (message) {
-                var $alert = jQuery('<div class="alert"><button type="button" class="close" data-dismiss="alert"><span>&times;</span></button></div>');
+                var $alert = jQuery('<div class="alert"><i class="alert-icon"></i><button type="button" class="close" data-dismiss="alert"></button></div>');
                 $alert
                     .addClass(class_name)
-                    .append(message)
+                    .append('<div class="alert-title">' + message + '</div>')
                     .appendTo($container);
 
                 if (type == 'success') {

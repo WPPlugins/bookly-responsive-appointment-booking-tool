@@ -17,6 +17,16 @@ class Slots
     private $extras_duration;
     /** @var bool */
     private $is_all_day_service;
+    /** @var int */
+    private $time_slot_length;
+    /** @var int */
+    private $time_from;
+    /** @var int */
+    private $time_to;
+    /** @var array */
+    private $service_schedule = array();
+    /** @var array */
+    private $excluded_staff = array();
 
     /** @var array */
     public $data = array();
@@ -42,7 +52,15 @@ class Slots
         $this->number_of_persons  = $number_of_persons;
         $this->extras_duration    = $extras_duration;
         $this->is_all_day_service = $service->get( 'duration' ) == DAY_IN_SECONDS;
+        $this->time_slot_length   = Config::useServiceDurationAsSlotLength() ? $service->get( 'duration' ) : Config::getTimeSlotLength();
         $this->date               = clone $at->start_date;
+
+        // Find time constraints.
+        $this->time_from        = Utils\DateTime::timeToSeconds( $at->userData->get( 'time_from' ) );
+        $this->time_to          = Utils\DateTime::timeToSeconds( $at->userData->get( 'time_to' ) );
+        $this->service_schedule = apply_filters( 'bookly_service_schedule_get_schedule', array(), $service->get( 'id' ) );
+
+        $this->excluded_staff   = array();
     }
 
     /**
@@ -72,7 +90,7 @@ class Slots
      * @param int $timestamp
      * @return array|false
      */
-    public function get( $group, $timestamp )
+    private function get( $group, $timestamp )
     {
         do {
             $find_more_slots = false;
@@ -118,7 +136,7 @@ class Slots
         $stop_group = null;
         if ( $this->at->show_calendar ) {
             $next_month = clone $this->date;
-            if ( get_option( 'ab_settings_use_client_time_zone' ) ) {
+            if ( Config::useClientTimeZone() ) {
                 // Add one day since it was subtracted in AvailableTime::_prepareDates
                 //(when _findSlots is called the next time, this one day does not break anything).
                 $next_month->add( $this->at->one_day );
@@ -130,16 +148,18 @@ class Slots
         while ( true ) {
             $continue = false;
             // Check loop end conditions.
-            if ( $this->_findNextDay() ) {
-                if ( $this->at->show_calendar ) {
-                    if ( $this->date < $next_month ) {
-                        $continue = true;
-                    }
-                } else {
-                    if ( $this->at->show_day_per_column ) {
-                        $continue = true; // this loop will break when $groups reaches 10 (see loop body)
-                    } elseif ( $slots < 100 ) {
-                        $continue = true; // 10 slots/column * 10 columns
+            if ( $this->at->params['break_on_first_fetched_day'] == false || $slots == 0 ) {
+                if ( $this->_findNextDay() ) {
+                    if ( $this->at->show_calendar ) {
+                        if ( $this->date < $next_month ) {
+                            $continue = true;
+                        }
+                    } else {
+                        if ( $this->at->show_day_per_column ) {
+                            $continue = true; // this loop will break when $groups reaches 10 (see loop body)
+                        } elseif ( $slots < 100 ) {
+                            $continue = true; // 10 slots/column * 10 columns
+                        }
                     }
                 }
             }
@@ -153,11 +173,11 @@ class Slots
                 //   2. end minus service duration when nothing is set.
                 $end = null;
                 if ( isset ( $frame['blocked'] ) || isset ( $frame['not_full'] ) ) {
-                    $end = $frame['end'] - $this->at->time_slot_length;
+                    $end = $frame['end'] - $this->time_slot_length;
                 } else {
                     $end = $frame['end'] - $this->service->get( 'duration' ) - $this->extras_duration;
                 }
-                for ( $time = $frame['start']; $time <= $end; $time += $this->at->time_slot_length ) {
+                for ( $time = $frame['start']; $time <= $end; $time += $this->time_slot_length ) {
 
                     $timestamp        = $this->date->getTimestamp() + $time;
                     $client_timestamp = $timestamp - $this->at->client_diff;
@@ -189,7 +209,7 @@ class Slots
                                 ? strtotime( 'first day of this month', $next_timestamp )
                                 : $next_timestamp
                             );
-                            $padding = 0;
+                            $padding = $this->service->get( 'padding_right' ) + $this->next_slots->service->get( 'padding_left' );
                             // Look for available slot for previous service. There are 2 possible options:
                             // 1. previous service is done by another staff, then do not take into account padding
                             // 2. previous service is done by the same staff, then count padding
@@ -240,7 +260,7 @@ class Slots
                             $this->data[ $group ][ $client_timestamp ]['blocked']    = false;
                         } // Change staff member for this slot if the other staff member has higher price.
                         else {
-                            $staff_id = $this->data[ $group ][ $client_timestamp ]['data'][0][1];
+                            $staff_id = 1;
                             if ( $this->at->staff_data[ $staff_id ]['services'][ $this->service->get( 'id' ) ]['price'] <
                                 $this->at->staff_data[ $frame['staff_id'] ]['services'][ $this->service->get( 'id' ) ]['price'] ) {
                                 $this->data[ $group ][ $client_timestamp ]['data'][0][1] = $frame['staff_id'];
@@ -252,6 +272,12 @@ class Slots
 
             $this->date->add( $this->at->one_day );
         }
+
+        // Arrange slots in time.
+        foreach ( $this->data as $group => &$group_slots ) {
+            ksort( $group_slots );
+        }
+        ksort( $this->data );
 
         return $slots > 0;
     }
@@ -265,10 +291,19 @@ class Slots
      */
     private function _findNextDay()
     {
+        if (
+            $this->at->params['exclude_staff_with_day_off'] &&
+            count( $this->excluded_staff ) >= count( $this->at->staff_data )
+        ) {
+            // The search must stop if all staff have been excluded.
+            return false;
+        }
+
         $attempt = 0;
         // Find available day within requested days.
         $requested_days = $this->at->userData->get( 'days' );
-        while ( ! in_array( intval( $this->date->format( 'w' ) ) + 1, $requested_days ) ) {
+
+        while ( ! in_array( (int) $this->date->format( 'w' ) + 1, $requested_days ) ) {
             $this->date->add( $this->at->one_day );
             if ( ++ $attempt >= 7 ) {
                 return false;
@@ -286,56 +321,78 @@ class Slots
      */
     private function _findFrames()
     {
-        $result       = array();
-        $service_id   = $this->service->get( 'id' );
-        $date_Ymd     = $this->date->format( 'Y-m-d' );
-        $date_md      = $this->date->format( 'm-d' );
-        $day_of_week  = intval( $this->date->format( 'w' ) ) + 1; // 1-7
+        $result      = array();
+        $service_id  = $this->service->get( 'id' );
+        $date_Ymd    = $this->date->format( 'Y-m-d' );
+        $date_md     = $this->date->format( 'm-d' );
+        $day_of_week = (int) $this->date->format( 'w' ) + 1; // 1-7
+        $time_from   = $this->time_from;
+        $time_to     = $this->time_to;
+
+        $service_breaks = array();
+        if ( Config::isServiceScheduleEnabled() ) {
+            if ( isset ( $this->service_schedule[ $day_of_week ] ) ) {
+                $time_from = max( $time_from, $this->service_schedule[ $day_of_week ]['start_time'] );
+                $time_to   = min( $time_to,   $this->service_schedule[ $day_of_week ]['end_time'] );
+                $service_breaks = $this->service_schedule[ $day_of_week ]['breaks'];
+            } else {
+                if ( $this->at->params['exclude_staff_with_day_off'] && $this->date == $this->at->start_date ) {
+                    // Stop the search if the starting day is off due to service schedule.
+                    $this->excluded_staff = array_keys( $this->at->staff_data );
+                }
+                return $result;
+            }
+        }
 
         foreach ( $this->at->staff_data as $staff_id => $staff ) {
+            if ( $this->at->params['exclude_staff_with_day_off'] && in_array( $staff_id, $this->excluded_staff ) ) {
+                // Skip this staff if he or she has been excluded from the search.
+                continue;
+            }
 
             if ( ! isset ( $staff['services'][ $service_id ] ) ||
                 $staff['services'][ $service_id ]['capacity'] < $this->number_of_persons ) {
                 continue;
             }
 
-            if ( isset ( $staff['working_hours'][ $day_of_week ] ) &&  // working day
-                ! isset ( $staff['holidays'][ $date_Ymd ] ) &&         // no holiday
-                ! isset ( $staff['holidays'][ $date_md ] )             // no repeating holiday
+            // Find schedule for this day.
+            $schedule = null;
+            if ( isset ( $staff['special_days'][ $date_Ymd ] ) ) {
+                $schedule = $staff['special_days'][ $date_Ymd ];
+            }
+            if (
+                ! $schedule &&
+                isset ( $staff['working_hours'][ $day_of_week ] ) &&  // working day
+                ! isset ( $staff['holidays'][ $date_Ymd ] ) &&        // no holiday
+                ! isset ( $staff['holidays'][ $date_md ] )            // no repeating holiday
             ) {
+                $schedule = $staff['working_hours'][ $day_of_week ];
+            }
+
+            if ( $schedule ) {
                 if ( $this->is_all_day_service ) {
                     // For whole day services do not check staff working hours.
-                    $intersections = array( array(
+                    $intersection = array(
                         'start' => 0,
                         'end'   => DAY_IN_SECONDS,
-                    ) );
-                } else {
-                    // Find intersection between working and requested hours
-                    //(excluding time slots in the past).
-                    $intersections = $this->_findIntersections(
-                        Utils\DateTime::timeToSeconds( $staff['working_hours'][ $day_of_week ]['start_time'] ),
-                        Utils\DateTime::timeToSeconds( $staff['working_hours'][ $day_of_week ]['end_time'] ),
-                        Utils\DateTime::timeToSeconds( $this->at->userData->get( 'time_from' ) ),
-                        Utils\DateTime::timeToSeconds( $this->at->userData->get( 'time_to' ) )
                     );
+                } else {
+                    // Find intersection between staff schedule, service schedule and requested hours.
+                    $intersection = $this->_findIntersection( $schedule['start_time'], $schedule['end_time'], $time_from, $time_to );
                 }
 
-                foreach ( $intersections as $intersection ) {
+                if ( $intersection ) {
                     if ( $intersection['end'] - $intersection['start'] >= $this->service->get( 'duration' ) ) {
                         // Initialize time frames.
                         $frames = array( array(
                             'start'    => $intersection['start'],
                             'end'      => $intersection['end'],
-                            'staff_id' => $staff_id,
+                            'staff_id' => 1,
                         ) );
                         if ( ! $this->is_all_day_service ) {
                             // Remove breaks from time frames for non all day services only.
-                            foreach ( $staff['working_hours'][ $day_of_week ]['breaks'] as $break ) {
-                                $frames = $this->_removeTimePeriod(
-                                    $frames,
-                                    Utils\DateTime::timeToSeconds( $break['start'] ),
-                                    Utils\DateTime::timeToSeconds( $break['end'] )
-                                );
+                            foreach ( array_merge( $schedule['breaks'], $service_breaks ) as $break ) {
+                                $frames = $this->_removeTimePeriod( $frames, $break['start'], $break['end'], false );
                             }
                         }
                         // Remove bookings from time frames.
@@ -346,8 +403,9 @@ class Slots
                             if ( $end_time >= $intersection['start'] && $start_time <= $intersection['end'] ) {
                                 $frames = $this->_removeTimePeriod(
                                     $frames,
-                                    $start_time,
-                                    $end_time,
+                                    $start_time - $booking['padding_left'] - $this->service->get( 'padding_right' ),
+                                    $end_time + $booking['padding_right'] + $this->service->get( 'padding_left' ),
+                                    true,
                                     $removed
                                 );
 
@@ -359,13 +417,13 @@ class Slots
                                         $start_time >= $intersection['start'] &&
                                         $staff['services'][ $service_id ]['capacity'] - $booking['number_of_bookings'] >= $this->number_of_persons
                                     ) {
-                                        $booking_extras_duration = apply_filters( 'bookly_extras_get_total_duration', 0, (array) json_decode( $booking['extras'], true ) );
+                                        $booking_extras_duration = apply_filters( 'bookly_service_extras_get_total_duration', 0, (array) json_decode( $booking['extras'], true ) );
                                         if ( $booking_extras_duration >= $this->extras_duration ) {
                                             // Show the first slot as available.
                                             $frames[] = array(
                                                 'start'    => $start_time,
-                                                'end'      => $start_time + $this->at->time_slot_length,
-                                                'staff_id' => $staff_id,
+                                                'end'      => $start_time + $this->time_slot_length,
+                                                'staff_id' => 1,
                                                 'not_full' => true,
                                             );
                                         }
@@ -382,8 +440,11 @@ class Slots
                     }
                 }
             }
+            else if ( $this->at->params['exclude_staff_with_day_off'] && $this->date == $this->at->start_date ) {
+                // Exclude staff from the search if his or her starting day is off.
+                $this->excluded_staff[] = $staff_id;
+            }
         }
-        usort( $result, function ( $a, $b ) { return $a['start'] - $b['start']; } );
 
         return $result;
     }
@@ -395,25 +456,20 @@ class Slots
      * @param mixed $p1_end
      * @param mixed $p2_start
      * @param mixed $p2_end
-     * @return array
+     * @return array|null
      */
-    private function _findIntersections( $p1_start, $p1_end, $p2_start, $p2_end )
+    private function _findIntersection( $p1_start, $p1_end, $p2_start, $p2_end )
     {
-        $result = array();
+        $result = null;
 
-        if ( $p2_start > $p2_end ) {
-            $result[] = $this->_findIntersections( $p1_start, $p1_end, $p2_start, DAY_IN_SECONDS );
-            $result[] = $this->_findIntersections( $p1_start, $p1_end, 0, $p2_end );
-        } else {
-            if ( $p1_start <= $p2_start && $p1_end > $p2_start && $p1_end <= $p2_end ) {
-                $result[] = array( 'start' => $p2_start, 'end' => $p1_end );
-            } elseif ( $p1_start <= $p2_start && $p1_end >= $p2_end ) {
-                $result[] = array( 'start' => $p2_start, 'end' => $p2_end );
-            } elseif ( $p1_start >= $p2_start && $p1_start < $p2_end && $p1_end >= $p2_end ) {
-                $result[] = array( 'start' => $p1_start, 'end' => $p2_end );
-            } elseif ( $p1_start >= $p2_start && $p1_end <= $p2_end ) {
-                $result[] = array( 'start' => $p1_start, 'end' => $p1_end );
-            }
+        if ( $p1_start <= $p2_start && $p1_end > $p2_start && $p1_end <= $p2_end ) {
+            $result = array( 'start' => $p2_start, 'end' => $p1_end );
+        } elseif ( $p1_start <= $p2_start && $p1_end >= $p2_end ) {
+            $result = array( 'start' => $p2_start, 'end' => $p2_end );
+        } elseif ( $p1_start >= $p2_start && $p1_start < $p2_end && $p1_end >= $p2_end ) {
+            $result = array( 'start' => $p1_start, 'end' => $p2_end );
+        } elseif ( $p1_start >= $p2_start && $p1_end <= $p2_end ) {
+            $result = array( 'start' => $p1_start, 'end' => $p1_end );
         }
 
         return $result;
@@ -425,25 +481,36 @@ class Slots
      * @param array $frames
      * @param mixed $p_start
      * @param mixed $p_end
+     * @param bool  $round
      * @param bool& $removed  Whether the period was removed or not
      * @return array
      */
-    private function _removeTimePeriod( array $frames, $p_start, $p_end, &$removed = false )
+    private function _removeTimePeriod(array $frames, $p_start, $p_end, $round, &$removed = false )
     {
-        $show_blocked_slots = Config::showBlockedTimeSlots();
-        $service_duration   = $this->service->get( 'duration' );
+        $service_duration = $this->service->get( 'duration' );
 
         $result  = array();
         $removed = false;
 
         foreach ( $frames as $frame ) {
-            $intersections = $this->_findIntersections(
+            $intersection = $this->_findIntersection(
                 $frame['start'],
                 $frame['end'],
                 $p_start,
                 $p_end
             );
-            foreach ( $intersections as $intersection ) {
+
+            if ($intersection) {
+                if ( $round ) {
+                    // Round intersection start and end times to a multiple of the time slot length.
+                    $extra = ( $intersection['start'] - $frame['start'] ) % $this->time_slot_length;
+                    $intersection['start'] -= $extra;
+                    $extra = ( $intersection['end'] - $frame['start'] ) % $this->time_slot_length;
+                    if ( $extra ) {
+                        $intersection['end'] += $this->time_slot_length - $extra;
+                    }
+                }
+
                 $blocked_start = $frame['start'];
                 $blocked_end   = $frame['end'];
                 if ( $intersection['start'] - $frame['start'] >= $service_duration ) {
@@ -458,19 +525,17 @@ class Slots
                     ) );
                     $blocked_end = $intersection['end'];
                 }
-                if ( $show_blocked_slots ) {
+                if ( $this->at->show_blocked_slots ) {
                     // Show removed period as 'blocked'.
                     $result[] = array_merge( $frame, array(
                         'start'   => $blocked_start,
-                        'end'     => $this->is_all_day_service ? $this->at->time_slot_length : $blocked_end,
+                        'end'     => $this->is_all_day_service ? $this->time_slot_length : $blocked_end,
                         'blocked' => true,
                     ) );
                 }
-            }
-            if ( empty ( $intersections ) ) {
-                $result[] = $frame;
-            } else {
                 $removed = true;
+            } else {
+                $result[] = $frame;
             }
         }
 

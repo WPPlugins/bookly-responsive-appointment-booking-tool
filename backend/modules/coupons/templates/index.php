@@ -5,6 +5,7 @@
             <div class="bookly-page-title">
                 <?php _e( 'Coupons', 'bookly' ) ?>
             </div>
+            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
         </div>
         <div class="panel panel-default bookly-main">
             <div class="panel-body">
@@ -18,9 +19,7 @@
                     </div>
                 </div>
 
-                <table class="table table-striped"
-                       id="bookly-coupons-list"
-                       width="100%">
+                <table class="table table-striped" id="bookly-coupons-list" width="100%">
                     <thead>
                         <tr>
                             <th><?php _e( 'Code', 'bookly' ) ?></th>

@@ -16,11 +16,11 @@
                 element
                     .on('show.bs.modal', function (e, payment_id) {
                         if (payment_id === undefined) {
-                            payment_id = jQuery(e.relatedTarget).data('payment_id');
+                            payment_id = e.relatedTarget.getAttribute('data-payment_id');
                         }
                         jQuery.ajax({
                             url:      ajaxurl,
-                            data:     {action: 'ab_get_payment_details', payment_id: payment_id},
+                            data:     {action: 'bookly_get_payment_details', payment_id: payment_id},
                             dataType: 'json',
                             success:  function (response) {
                                 if (response.success) {
@@ -30,7 +30,7 @@
                                         ladda.start();
                                         jQuery.ajax({
                                             url:      ajaxurl,
-                                            data:     {action: 'ab_complete_payment', payment_id: payment_id},
+                                            data:     {action: 'bookly_complete_payment', payment_id: payment_id},
                                             dataType: 'json',
                                             type:     'POST',
                                             success:  function (response) {

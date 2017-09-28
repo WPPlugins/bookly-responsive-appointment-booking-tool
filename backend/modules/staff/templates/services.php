@@ -21,7 +21,7 @@
                                 </div>
                             </div>
 
-                            <?php do_action( 'bookly_deposit_staff_service_label' ) ?>
+                            <?php do_action( 'bookly_deposit_payments_staff_service_label' ) ?>
 
                             <div class="<?php echo apply_filters( 'bookly_staff_service_label_col_size', 'col-md-3' ) ?> hidden-xs hidden-sm">
                                 <div class="bookly-font-smaller bookly-color-gray bookly-truncate">
@@ -95,7 +95,7 @@
                                     <div class="bookly-font-smaller bookly-color-gray"><?php _e( 'Price', 'bookly' ) ?></div>
                                 </div>
 
-                                <?php do_action( 'bookly_deposit_staff_service_label' ) ?>
+                                <?php do_action( 'bookly_deposit_payments_staff_service_label' ) ?>
 
                                 <div class="<?php echo apply_filters( 'bookly_staff_service_label_col_size', 'col-xs-5 col-md-3')?> hidden-xs hidden-sm">
                                     <div class="bookly-font-smaller bookly-color-gray bookly-truncate"><?php _e( 'Capacity', 'bookly' ) ?></div>
@@ -150,7 +150,7 @@
                 <?php endforeach ?>
             <?php endif ?>
 
-            <input type="hidden" name="action" value="ab_staff_services_update">
+            <input type="hidden" name="action" value="bookly_staff_services_update">
             <input type="hidden" name="staff_id" value="<?php echo $staff_id ?>">
 
             <div class="panel-footer">

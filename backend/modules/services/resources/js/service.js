@@ -50,7 +50,7 @@ jQuery(function($) {
             $('#ab-services-list').html('<div class="bookly-loading"></div>');
             var $clicked = $(this);
 
-            $.get(ajaxurl, {action:'ab_get_category_services', category_id: $clicked.data('category-id')}, function(response) {
+            $.get(ajaxurl, {action:'bookly_get_category_services', category_id: $clicked.data('category-id')}, function(response) {
                 if ( response.success ) {
                     $('.bookly-category-item').not($clicked).removeClass('active');
                     $clicked.addClass('active');
@@ -78,7 +78,7 @@ jQuery(function($) {
                 field = $this.attr('name'),
                 value = $this.val(),
                 id    = $item.data('category-id'),
-                data  = { action: 'ab_update_category', id: id };
+                data  = { action: 'bookly_update_category', id: id };
             data[field] = value;
             $.post(ajaxurl, data, function(response) {
                 // Hide input field.
@@ -108,7 +108,7 @@ jQuery(function($) {
             // Ask user if he is sure.
             if (confirm(BooklyL10n.are_you_sure)) {
                 var $item = $(this).closest('.bookly-category-item');
-                var data = { action: 'ab_delete_category', id: $item.data('category-id') };
+                var data = { action: 'bookly_delete_category', id: $item.data('category-id') };
                 $.post(ajaxurl, data, function(response) {
                     // Remove category item from Services
                     $('select[name="category_id"] option[value="' + $item.data('category-id') + '"]').remove();
@@ -130,10 +130,9 @@ jQuery(function($) {
         // On click on 'Add Service' button.
         .on('click', '.add-service', function(e) {
             e.preventDefault();
-            var ladda = Ladda.create(this);
-            ladda.start();
+            var ladda = rangeTools.ladda(this);
             var selected_category_id = $('#bookly-categories-list .active').data('category-id'),
-                data = { action: 'ab_add_service' };
+                data = { action: 'bookly_add_service' };
             if (selected_category_id) {
                 data['category_id'] = selected_category_id;
             }
@@ -145,11 +144,10 @@ jQuery(function($) {
         // On click on 'Delete' button.
         .on('click', '#bookly-delete', function(e) {
             if (confirm(BooklyL10n.are_you_sure)) {
-                var ladda = Ladda.create(this);
-                ladda.start();
+                var ladda = rangeTools.ladda(this);
 
                 var $for_delete = $('.service-checker:checked'),
-                    data = { action: 'ab_remove_services' },
+                    data = { action: 'bookly_remove_services' },
                     services = [],
                     $panels = [];
 
@@ -236,9 +234,8 @@ jQuery(function($) {
 
     function submitServiceFrom($form, update_staff) {
         $form.find('input[name=update_staff]').val(update_staff ? 1 : 0);
-        var ladda = Ladda.create($form.find('button[type=submit]').get(0)),
+        var ladda = rangeTools.ladda($form.find('button.ajax-service-send[type=submit]').get(0)),
             data = $form.serializeArray();
-        ladda.start();
         if ($form.find('input[name=type]:checked').val() == 'compound') {
             $form.find('li[data-sub-service-id]').each(function () {
                 data.push({name: 'sub_services[]', value: $(this).data('sub-service-id')});
@@ -256,8 +253,6 @@ jQuery(function($) {
                 $panel.find('.bookly-js-service-title').html(response.data.title);
                 $panel.find('.bookly-js-service-duration').html(response.data.nice_duration);
                 $panel.find('.bookly-js-service-price').html(response.data.price);
-
-
                 $price.data('last_value', $price.val());
                 $capacity.data('last_value', $capacity.val());
                 booklyAlert({success : [BooklyL10n.saved]});
@@ -304,7 +299,7 @@ jQuery(function($) {
             $.ajax({
                 type : 'POST',
                 url  : ajaxurl,
-                data : { action: 'ab_update_category_position', position: data }
+                data : { action: 'bookly_update_category_position', position: data }
             });
         }
     });
@@ -330,7 +325,7 @@ jQuery(function($) {
                     $.ajax({
                         type : 'POST',
                         url  : ajaxurl,
-                        data : { action: 'ab_update_services_position', position: data }
+                        data : { action: 'bookly_update_services_position', position: data }
                     });
                 }
             });
@@ -410,12 +405,14 @@ jQuery(function($) {
                 var $color = $(this).parents('form').find('.wp-color-picker'),
                     $panel = $(this).parents('.bookly-js-collapse');
                 $color.val($color.data('last-color')).trigger('change');
+                $panel.find('.parent-range-start').trigger('change');
                 updateStaffButton($panel);
             });
             $panel.find('.ab-question').each(function () {
                 $(this).data('last_value', $(this).val());
             });
             $panel.unbind('show.bs.collapse.bookly');
+            $(document.body).trigger( 'service_list.service_expand', [ $panel, $panel.closest('.panel').data('service-id') ] );
         });
     }
     makeServicesSortable();
@@ -433,7 +430,7 @@ jQuery(function($) {
             $.ajax({
                 type : 'POST',
                 url  : ajaxurl,
-                data : { action: 'ab_update_extra_position', position: data }
+                data : { action: 'bookly_update_extra_position', position: data }
             });
         }
     });
@@ -493,6 +490,9 @@ jQuery(function($) {
         extra.find("[name='extras[" + extra.data('extra-id') + "][attachment_id]']").attr('value', '');
         extra.find('.extra-attachment-image').attr('style', '');
         extra.find('.extra-attachment').show();
+    }).on('change', '.popover-range-start, .popover-range-end', function () {
+        var $popover_content = $(this).closest('.popover-content');
+        rangeTools.hideInaccessibleBreaks($popover_content.find('.popover-range-start'), $popover_content.find('.popover-range-end'));
     });
 
     $(document).on('click', '.bookly-js-collapse .extra-delete', function (e) {

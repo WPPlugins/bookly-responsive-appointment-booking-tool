@@ -26,7 +26,7 @@
                 return;
             }
             var data = $.extend({
-                action           : 'ab_render_service',
+                action           : 'bookly_render_service',
                 form_id          : Options.form_id,
                 time_zone_offset : time_zone_offset
             }, params);
@@ -51,10 +51,10 @@
                             $select_nop       = $('.ab-select-number-of-persons', $container),
                             $select_quantity  = $('.ab-select-quantity', $container),
                             $date_from        = $('.ab-date-from', $container),
-                            $week_day         = $('.ab-week-day', $container),
+                            $week_day         = $('.bookly-week-day', $container),
                             $select_time_from = $('.ab-select-time-from', $container),
                             $select_time_to   = $('.ab-select-time-to', $container),
-                            $next_step        = $('.ab-next-step', $container),
+                            $next_step        = $('.bookly-next-step', $container),
                             $mobile_next_step = $('.ab-mobile-next-step', $container),
                             $mobile_prev_step = $('.ab-mobile-prev-step', $container),
                             locations         = response.locations,
@@ -85,12 +85,12 @@
                                 if ($.isNumeric(timestamp.select)) {
                                     // Checks appropriate day of the week
                                     var date = new Date(timestamp.select);
-                                    $('.ab-week-day[value="' + (date.getDay() + 1) + '"]:not(:checked)', $container).attr('checked', true).trigger('change');
+                                    $('.bookly-week-day[value="' + (date.getDay() + 1) + '"]:not(:checked)', $container).attr('checked', true).trigger('change');
                                 }
                             }
                         });
 
-                        $('.ab-goto-cart', $container).on('click', function (e) {
+                        $('.bookly-go-to-cart', $container).on('click', function (e) {
                             e.preventDefault();
                             ladda_start(this);
                             stepCart({from_step : 'service'});
@@ -355,7 +355,7 @@
                             $('.ab-available-date', $container).hide();
                         }
                         if (Options.attributes.hide_week_days) {
-                            $('.ab-week-days', $container).hide();
+                            $('.bookly-week-days', $container).hide();
                         }
                         if (Options.attributes.hide_time_range) {
                             $('.ab-time-range', $container).hide();
@@ -369,7 +369,7 @@
                                 .removeClass('bookly-js-draft')
                                 .css('display', 'table');
                             $chain_item_draft.find('select').each(function (i, select) {
-                                $chain_item.find('select').eq(i).val($(select).val());
+                                $chain_item.find('select:eq(' + i + ')').val(select.value);
                             });
                             last_chain_key = key;
                             if (key == 0) {
@@ -398,7 +398,7 @@
                                 case 'plus':
                                     var $new_chain = $chain_item_draft.clone();
                                     $chain_item_draft.find('select').each(function (i, select) {
-                                        $new_chain.find('select').eq(i).val($(select).val());
+                                        $new_chain.find('select:eq(' + i + ')').val(select.value);
                                     });
                                     $('.bookly-js-chain-item:last', $container)
                                         .after(
@@ -449,7 +449,7 @@
                             $select_time_to.val(end_time >= first_value ? end_time : first_value);
                         });
 
-                        var stepServiceValidator = function(button_type) {
+                        var stepServiceValidator = function() {
                             $('.ab-select-service-error',  $container).hide();
                             $('.ab-select-employee-error', $container).hide();
                             $('.ab-select-location-error', $container).hide();
@@ -502,7 +502,7 @@
                             }
 
                             // week days
-                            if (!$('.ab-week-day:checked', $container).length) {
+                            if (!$('.bookly-week-day:checked', $container).length) {
                                 valid = false;
                                 if ($scroll_to === null) {
                                     $scroll_to = $week_day;
@@ -520,7 +520,7 @@
                         $next_step.on('click', function (e) {
                             e.preventDefault();
 
-                            if (stepServiceValidator('simple')) {
+                            if (stepServiceValidator()) {
 
                                 ladda_start(this);
 
@@ -548,13 +548,14 @@
                                 });
                                 // Prepare days.
                                 var days = [];
-                                $('.ab-week-days .active input.ab-week-day', $container).each(function() {
+                                $('.bookly-week-days .active input.bookly-week-day', $container).each(function() {
                                     days.push(this.value);
                                 });
                                 $.ajax({
+                                    type : 'POST',
                                     url  : Options.ajaxurl,
                                     data : {
-                                        action    : 'ab_session_save',
+                                        action    : 'bookly_session_save',
                                         form_id   : Options.form_id,
                                         chain     : chain,
                                         date_from : $date_from.pickadate('picker').get('select', 'yyyy-mm-dd'),
@@ -578,8 +579,8 @@
 
 
                         //
-                        $mobile_next_step.on('click', function () {
-                            if (stepServiceValidator('mobile')) {
+                        $mobile_next_step.on('click', function (e,skip_scroll) {
+                            if (stepServiceValidator()) {
                                 if (Options.skip_steps.service_part2) {
                                     ladda_start(this);
                                     $next_step.trigger('click');
@@ -589,7 +590,9 @@
                                     if (Options.skip_steps.service) {
                                         $mobile_prev_step.remove();
                                     }
-                                    scrollTo($container);
+                                    if (skip_scroll != true) {
+                                        scrollTo($container);
+                                    }
                                 }
                             }
 
@@ -599,7 +602,6 @@
                         $mobile_prev_step.on('click', function () {
                             $('.ab-mobile-step_1', $container).show();
                             $('.ab-mobile-step_2', $container).hide();
-
                             if ($select_service.val()) {
                                 $('.ab-select-service', $container).parent().removeClass('ab-error');
                             }
@@ -607,7 +609,8 @@
                         });
 
                         if (Options.skip_steps.service_part1) {
-                            $mobile_next_step.trigger('click');
+                            // Skip scrolling
+                            $mobile_next_step.trigger('click', [true]);
                         }
                     }
                 } // ajax success
@@ -619,7 +622,7 @@
          */
         function stepExtras(params) {
             var data = $.extend({
-                action  : 'ab_render_extras',
+                action  : 'bookly_render_extras',
                 form_id : Options.form_id
             }, params);
             if (Options.skip_steps.service) {
@@ -638,11 +641,11 @@
                         if (params === undefined) { // Scroll when returning to the step Extras.
                             scrollTo($container);
                         }
-                        var $next_step = $('.ab-next-step', $container),
-                            $back_step = $('.ab-back-step', $container),
-                            $goto_cart = $('.ab-goto-cart', $container),
+                        var $next_step = $('.bookly-next-step', $container),
+                            $back_step = $('.bookly-back-step', $container),
+                            $goto_cart = $('.bookly-go-to-cart', $container),
                             $extras_items = $('.bookly-js-extras-item', $container),
-                            $extras_summary = $('.ab-summary span', $container),
+                            $extras_summary = $('.bookly-extras-summary span', $container),
                             currency = response.currency,
                             $this,
                             $input;
@@ -693,8 +696,7 @@
                         $next_step.on('click', function (e) {
                             e.preventDefault();
                             ladda_start(this);
-                            var extras = {},
-                                quantity;
+                            var extras = {};
                             $('.bookly-js-extras-container', $container).each(function () {
                                 var $extras_container = $(this);
                                 var chain_id = $extras_container.data('chain');
@@ -713,7 +715,7 @@
                                 type : 'POST',
                                 url  : Options.ajaxurl,
                                 data : {
-                                    action  : 'ab_session_save',
+                                    action  : 'bookly_session_save',
                                     form_id : Options.form_id,
                                     extras  : extras
                                 },
@@ -745,7 +747,7 @@
                 xhr_render_time = null;
             }
             var data = $.extend({
-                action: 'ab_render_time',
+                action: 'bookly_render_time',
                 form_id: Options.form_id
             }, params);
             if (Options.skip_steps.service) {
@@ -783,7 +785,7 @@
                         show_day_per_column = response.day_one_column
                     ;
                     // 'BACK' button.
-                    $('.ab-back-step', $container).on('click', function (e) {
+                    $('.bookly-back-step', $container).on('click', function (e) {
                         e.preventDefault();
                         ladda_start(this);
                         if (!Options.skip_steps.extras) {
@@ -793,7 +795,7 @@
                         }
                     }).toggle(!Options.skip_steps.service || !Options.skip_steps.extras);
 
-                    $('.ab-goto-cart', $container).on('click', function(e) {
+                    $('.bookly-go-to-cart', $container).on('click', function(e) {
                         e.preventDefault();
                         ladda_start(this);
                         stepCart({from_step : 'time'});
@@ -942,11 +944,11 @@
 
                                 // Render Next Time
                                 var data = {
-                                        action    : 'ab_render_next_time',
+                                        action    : 'bookly_render_next_time',
                                         form_id   : Options.form_id,
                                         last_slot : $button.val()
                                     },
-                                    ladda = ladda_start(document.querySelector('.ab-time-next'));
+                                    ladda = ladda_start(this);
 
                                 $.ajax({
                                     type : 'POST',
@@ -1120,7 +1122,7 @@
                             e.preventDefault();
                             var $this = $(this),
                                 data = {
-                                    action  : 'ab_session_save',
+                                    action  : 'bookly_session_save',
                                     form_id : Options.form_id,
                                     slots   : this.value
                                 };
@@ -1134,7 +1136,9 @@
                                 xhrFields : { withCredentials: true },
                                 crossDomain : 'withCredentials' in new XMLHttpRequest(),
                                 success : function (response) {
-                                    if (Options.cart.enabled) {
+                                    if (!Options.skip_steps.repeat) {
+                                        stepRepeat();
+                                    } else if (Options.cart.enabled) {
                                         stepCart({add_to_cart : true});
                                     } else {
                                         stepDetails({add_to_cart : true});
@@ -1155,6 +1159,448 @@
         }
 
         /**
+         * Repeat step.
+         */
+        function stepRepeat(params, error) {
+            if (Options.skip_steps.repeat) {
+                stepCart(params, error)
+            } else {
+                var data = $.extend({
+                    action  : 'bookly_render_repeat',
+                    form_id : Options.form_id
+                }, params);
+                $.ajax({
+                    url         : Options.ajaxurl,
+                    data        : data,
+                    dataType    : 'json',
+                    xhrFields   : { withCredentials: true },
+                    crossDomain : 'withCredentials' in new XMLHttpRequest(),
+                    success     : function (response) {
+                        if (response.success) {
+                            $container.html(response.html);
+                            scrollTo($container);
+
+                            var $repeat_enabled   = $('.bookly-repeat-appointment-enabled', $container),
+                                $next_step        = $('.bookly-next-step', $container),
+                                $repeat_container = $('.bookly-repeat-variants-container', $container),
+                                $variants         = $('[class^="bookly-variant"]', $repeat_container),
+                                $repeat_variant   = $('.bookly-repeat-variant', $repeat_container),
+                                $button_get_schedule = $('.bookly-get-schedule', $repeat_container),
+                                $variant_weekly   = $('.bookly-variant-weekly', $repeat_container),
+                                $variant_monthly  = $('.variant-monthly', $repeat_container),
+                                $date_until       = $('.bookly-repeat-until', $repeat_container),
+                                $monthly_specific_day = $('.bookly-monthly-specific-day', $repeat_container),
+                                $monthly_week_day = $('.bookly-monthly-week-day', $repeat_container),
+                                $repeat_every_day = $('.bookly-repeat-daily-every', $repeat_container),
+                                $week_day         = $('.bookly-week-day', $repeat_container),
+                                $schedule_container = $('.bookly-schedule-container', $container),
+                                $days_error       = $('.bookly-js-days-error', $repeat_container),
+                                $schedule_slots   = $('.bookly-schedule-slots',$schedule_container),
+                                $intersection_info = $('.bookly-intersection-info', $schedule_container),
+                                $info_help  = $('.bookly-js-schedule-help', $schedule_container),
+                                $info_wells = $('.bookly-well', $schedule_container),
+                                $pagination = $('.bookly-pagination', $schedule_container),
+                                $schedule_row_template = $('.bookly-schedule-row-template .bookly-schedule-row', $schedule_container),
+                                pages_warning_info = response.pages_warning_info,
+                                short_date_format = response.short_date_format,
+                                bound_date = {min: response.date_min || true, max: response.date_max || true},
+                                schedule = []
+                            ;
+                            var repeat = {
+                                prepareButtonNextState : function () {
+                                    // Disable/Enable next button
+                                    var is_disabled = $next_step.prop('disabled'),
+                                        new_prop_disabled = schedule.length == 0;
+                                    for (var i = 0; i < schedule.length; i++) {
+                                        if (is_disabled) {
+                                            if (!schedule[i].deleted) {
+                                                new_prop_disabled = false;
+                                                break;
+                                            }
+                                        } else if (schedule[i].deleted) {
+                                            new_prop_disabled = true;
+                                        } else {
+                                            new_prop_disabled = false;
+                                            break;
+                                        }
+                                    }
+                                    $next_step.prop('disabled', new_prop_disabled);
+                                },
+                                addTimeSlotControl : function ($schedule_row, options, prefer_time, current_time ) {
+                                    var $time = $('<select/>'),
+                                        prefer;
+                                    $.each(options, function (index, option) {
+                                        $time.append($('<option value="' + option.value + '">' + option.title + '</option>'));
+                                        if (!prefer) {
+                                            if (option.title == prefer_time) {
+                                                // Select by time title.
+                                                $time.val(option.value);
+                                                prefer = true;
+                                            } else if (option.title == current_time) {
+                                                $time.val(option.value);
+                                            }
+                                        }
+                                    });
+                                    $schedule_row.find('.bookly-schedule-time').html($time);
+                                },
+                                renderSchedulePage : function (page) {
+                                    var $row,
+                                        count = schedule.length,
+                                        rows_on_page = 5,
+                                        start = rows_on_page * page - rows_on_page,
+                                        warning_pages = [];
+                                    $schedule_slots.html('');
+                                    for (var i = start, j = 0; j < rows_on_page && i < count; i++, j++) {
+                                        $row = $schedule_row_template.clone();
+                                        $row.data('datetime', schedule[i].datetime);
+                                        $row.data('index', schedule[i].index);
+                                        $('> div:first-child', $row).html(schedule[i].index);
+                                        $('.bookly-schedule-date', $row).html(schedule[i].display_date);
+                                        $('.bookly-schedule-time', $row).html(schedule[i].display_time);
+                                        if (schedule[i].another_time) {
+                                            $('.bookly-schedule-intersect', $row).show();
+                                        }
+                                        if (schedule[i].deleted) {
+                                            $row.find('.bookly-schedule-appointment').addClass('bookly-appointment-hidden');
+                                        }
+                                        $schedule_slots.append($row);
+                                    }
+                                    if (count > rows_on_page) {
+                                        var $btn = $('<li/>').html('«');
+                                        $btn.on('click', function () {
+                                            var page = parseInt($pagination.find('.active').html());
+                                            if (page > 1) {
+                                                repeat.renderSchedulePage(page - 1);
+                                            }
+                                        });
+                                        $pagination.html($btn);
+                                        for (i = 0, j = 1; i < count; i += 5, j++) {
+                                            $btn = $('<li/>').html(j);
+                                            $pagination.append($btn);
+                                            $btn.on('click', function () {
+                                                repeat.renderSchedulePage($(this).html());
+                                            });
+                                        }
+                                        $pagination.find('li:eq(' + page + ')').addClass('active');
+                                        $btn = $('<li/>').html('»');
+                                        $btn.on('click', function () {
+                                            var page = parseInt($pagination.find('.active').html());
+                                            if (page < count / rows_on_page) {
+                                                repeat.renderSchedulePage(page + 1);
+                                            }
+                                        });
+                                        $pagination.append($btn).show();
+
+                                        for (i = 0; i < count; i++) {
+                                            if (schedule[i].another_time) {
+                                                page = parseInt(i / rows_on_page) + 1;
+                                                warning_pages.push(page);
+                                                i = page * rows_on_page - 1;
+                                            }
+                                        }
+                                        if (warning_pages.length > 0) {
+                                            $intersection_info.html(pages_warning_info.replace('{list}', warning_pages.join(', ')));
+                                        }
+                                        $info_wells.toggle(warning_pages.length > 0);
+                                        $pagination.toggle(count > rows_on_page);
+                                    } else {
+                                        $pagination.hide();
+                                        $info_wells.hide();
+                                        for (i = 0; i < count; i++) {
+                                            if (schedule[i].another_time) {
+                                                $info_help.show();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+
+                            var open_repeat_onchange = $repeat_enabled.on('change', function () {
+                                $repeat_container.toggle($(this).prop('checked'));
+                                if ($(this).prop('checked')) {
+                                    repeat.prepareButtonNextState();
+                                } else {
+                                    $next_step.prop('disabled', false);
+                                }
+                            });
+                            if (response.repeated) {
+                                $repeat_enabled.prop('checked', true);
+                            }
+                            open_repeat_onchange.trigger('change');
+
+                            if (!response.could_be_repeated) {
+                                $repeat_enabled.attr('disabled', true);
+                            }
+
+
+                            $repeat_variant.on('change', function () {
+                                $variants.hide();
+                                $repeat_container.find('.bookly-variant-' + this.value).show()
+                            }).trigger('change');
+
+                            $variant_monthly.on('change', function () {
+                                $monthly_week_day.toggle(this.value != 'specific');
+                                $monthly_specific_day.toggle(this.value == 'specific');
+                            }).trigger('change');
+
+                            $week_day.on('change', function () {
+                                var $this = $(this);
+                                if ($this.is(':checked')) {
+                                    $this.parent().not("[class*='active']").addClass('active');
+                                } else {
+                                    $this.parent().removeClass('active');
+                                }
+                            });
+
+                            $monthly_specific_day.val(response.date_min[2]);
+
+                            $date_until.pickadate({
+                                formatSubmit    : 'yyyy-mm-dd',
+                                format          : Options.date_format,
+                                min             : bound_date.min,
+                                max             : bound_date.max,
+                                clear           : false,
+                                close           : false,
+                                today           : BooklyL10n.today,
+                                monthsFull      : BooklyL10n.months,
+                                weekdaysFull    : BooklyL10n.days,
+                                weekdaysShort   : BooklyL10n.daysShort,
+                                labelMonthNext  : BooklyL10n.nextMonth,
+                                labelMonthPrev  : BooklyL10n.prevMonth,
+                                firstDay        : Options.start_of_week
+                            });
+
+                            $button_get_schedule.on('click', function () {
+                                $schedule_container.hide();
+                                var data = {
+                                        action : 'bookly_recurring_appointments_get_customer_schedule',
+                                        form_id: Options.form_id,
+                                        repeat : $repeat_variant.val(),
+                                        until  : $date_until.pickadate('picker').get('select', 'yyyy-mm-dd'),
+                                        params : {}
+                                    },
+                                    ladda = ladda_start(this);
+
+                                switch (data.repeat) {
+                                    case 'daily':
+                                        data.params = {every: $repeat_every_day.val()};
+                                        break;
+                                    case 'weekly':
+                                    case 'biweekly':
+                                        data.params.on = [];
+                                        $('.bookly-week-days input.bookly-week-day:checked', $variant_weekly).each(function () {
+                                            data.params.on.push(this.value);
+                                        });
+                                        if (data.params.on.length == 0) {
+                                            $days_error.toggle(true);
+                                            ladda.stop();
+                                            return false;
+                                        } else {
+                                            $days_error.toggle(false);
+                                        }
+                                        break;
+                                    case 'monthly':
+                                        if ($variant_monthly.val() == 'specific') {
+                                            data.params = {on: 'day', day: $monthly_specific_day.val()};
+                                        } else {
+                                            data.params = {on: $variant_monthly.val(), weekday: $monthly_week_day.val()};
+                                        }
+                                        break;
+                                }
+                                $schedule_slots.off('click');
+                                $.ajax({
+                                    url : Options.ajaxurl,
+                                    type: 'POST',
+                                    data: data,
+                                    dataType: 'json',
+                                    xhrFields: {withCredentials: true},
+                                    crossDomain: 'withCredentials' in new XMLHttpRequest(),
+                                    success: function (response) {
+                                        if (response.success) {
+                                            schedule = response.data;
+                                            // Prefer time is display time selected on step time.
+                                            var prefer_time = null;
+                                            $.each(schedule, function (index, item) {
+                                                if (!prefer_time && !item.another_time) {
+                                                    prefer_time = item.display_time;
+                                                }
+                                            });
+                                            repeat.renderSchedulePage(1);
+                                            $schedule_container.show();
+                                            ladda.stop();
+                                            $next_step.prop('disabled', schedule.length == 0);
+                                            $schedule_slots.on('click', 'button[data-action]', function () {
+                                                var $schedule_row = $(this).closest('.bookly-schedule-row');
+                                                var row_index = $schedule_row.data('index') - 1;
+                                                switch ($(this).data('action')) {
+                                                    case 'drop':
+                                                        schedule[row_index].deleted = true;
+                                                        $schedule_row.find('.bookly-schedule-appointment').addClass('bookly-appointment-hidden');
+                                                        repeat.prepareButtonNextState();
+                                                        break;
+                                                    case 'restore':
+                                                        schedule[row_index].deleted = false;
+                                                        $schedule_row.find('.bookly-schedule-appointment').removeClass('bookly-appointment-hidden');
+                                                        $next_step.prop('disabled', false);
+                                                        break;
+                                                    case 'edit':
+                                                        var $date = $('<input type="text"/>'),
+                                                            $edit_button = $(this),
+                                                            ladda_round = ladda_start(this);
+                                                        $schedule_row.find('.bookly-schedule-date').html($date);
+                                                        $date.pickadate({
+                                                            min             : bound_date.min,
+                                                            max             : bound_date.max,
+                                                            formatSubmit    : 'yyyy-mm-dd',
+                                                            format          : short_date_format,
+                                                            clear           : false,
+                                                            close           : false,
+                                                            today           : BooklyL10n.today,
+                                                            monthsFull      : BooklyL10n.months,
+                                                            weekdaysFull    : BooklyL10n.days,
+                                                            weekdaysShort   : BooklyL10n.daysShort,
+                                                            labelMonthNext  : BooklyL10n.nextMonth,
+                                                            labelMonthPrev  : BooklyL10n.prevMonth,
+                                                            firstDay        : Options.start_of_week,
+                                                            onSet: function() {
+                                                                var exclude = [];
+                                                                $.each(schedule, function (index, item) {
+                                                                    if ((row_index != index) && !item.deleted) {
+                                                                        exclude.push(item.slots);
+                                                                    }
+                                                                });
+                                                                $.ajax({
+                                                                    url : Options.ajaxurl,
+                                                                    type: 'POST',
+                                                                    data: {
+                                                                        action  : 'bookly_recurring_appointments_get_daily_customer_schedule',
+                                                                        date    : this.get('select', 'yyyy-mm-dd'),
+                                                                        form_id : Options.form_id,
+                                                                        exclude : exclude
+                                                                    },
+                                                                    dataType: 'json',
+                                                                    xhrFields: {withCredentials: true},
+                                                                    crossDomain: 'withCredentials' in new XMLHttpRequest(),
+                                                                    success: function (response) {
+                                                                        $edit_button.hide();
+                                                                        ladda_round.stop();
+                                                                        if (response.data.length) {
+                                                                            repeat.addTimeSlotControl($schedule_row, response.data[0].options, prefer_time, schedule[row_index].display_time);
+                                                                            $schedule_row.find('button[data-action="save"]').show();
+                                                                        } else {
+                                                                            repeat.addTimeSlotControl($schedule_row, [] );
+                                                                            $schedule_row.find('button[data-action="save"]').hide();
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+
+                                                        var slots = JSON.parse(schedule[row_index].slots);
+                                                        var date = new Date();
+                                                        date.setTime(slots[0][2] * 1000);
+                                                        $date.pickadate('picker').set('select', date);
+                                                        break;
+                                                    case 'save':
+                                                        $(this).hide();
+                                                        $schedule_row.find('button[data-action="edit"]').show();
+                                                        var $date_container = $schedule_row.find('.bookly-schedule-date'),
+                                                            $time_container = $schedule_row.find('.bookly-schedule-time'),
+                                                            $select = $time_container.find('select'),
+                                                            option = $select.find('option:selected');
+                                                        schedule[row_index].slots = $select.val();
+                                                        schedule[row_index].display_date = $date_container.find('input').val();
+                                                        schedule[row_index].display_time = option.text();
+                                                        $date_container.html(schedule[row_index].display_date);
+                                                        $time_container.html(schedule[row_index].display_time);
+                                                        break;
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            });
+
+                            $('.bookly-back-step', $container).on('click', function (e) {
+                                e.preventDefault();
+                                ladda_start(this);
+                                $.ajax({
+                                    type: 'POST',
+                                    url: Options.ajaxurl,
+                                    data: {
+                                        action: 'bookly_session_save',
+                                        form_id: Options.form_id,
+                                        unrepeat: 1
+                                    },
+                                    dataType: 'json',
+                                    xhrFields: {withCredentials: true},
+                                    crossDomain: 'withCredentials' in new XMLHttpRequest(),
+                                    success: function (response) {
+                                        stepTime();
+                                    }
+                                });
+                            });
+
+                            $('.bookly-go-to-cart', $container).on('click', function(e) {
+                                e.preventDefault();
+                                ladda_start(this);
+                                stepCart({from_step : 'repeat'});
+                            });
+
+                            $('.bookly-next-step', $container).on('click', function (e) {
+                                ladda_start(this);
+                                if ($repeat_enabled.is(':checked')) {
+                                    var slots_to_send = [];
+                                    var repeat = 0;
+                                    schedule.forEach(function (item) {
+                                        if (!item.deleted) {
+                                            var slots = JSON.parse(item.slots);
+                                            slots_to_send = slots_to_send.concat(slots);
+                                            repeat++;
+                                        }
+                                    });
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: Options.ajaxurl,
+                                        data: {
+                                            action: 'bookly_session_save',
+                                            form_id: Options.form_id,
+                                            slots: JSON.stringify(slots_to_send),
+                                            repeat: repeat
+                                        },
+                                        dataType: 'json',
+                                        xhrFields: {withCredentials: true},
+                                        crossDomain: 'withCredentials' in new XMLHttpRequest(),
+                                        success: function (response) {
+                                            stepCart({add_to_cart: true});
+                                        }
+                                    });
+                                } else {
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: Options.ajaxurl,
+                                        data: {
+                                            action: 'bookly_session_save',
+                                            form_id: Options.form_id,
+                                            unrepeat: 1
+                                        },
+                                        dataType: 'json',
+                                        xhrFields: {withCredentials: true},
+                                        crossDomain: 'withCredentials' in new XMLHttpRequest(),
+                                        success: function (response) {
+                                            stepCart({add_to_cart: true});
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
+        /**
          * Cart step.
          */
         function stepCart(params, error) {
@@ -1162,7 +1608,7 @@
                 stepDetails(params);
             } else {
                 var data = $.extend({
-                    action  : 'ab_render_cart',
+                    action  : 'bookly_render_cart',
                     form_id : Options.form_id
                 }, params);
                 $.ajax({
@@ -1181,7 +1627,7 @@
                                 $('.ab--holder.ab-label-error', $container).hide();
                             }
                             scrollTo($container);
-                            $('.ab-next-step', $container).on('click', function () {
+                            $('.bookly-next-step', $container).on('click', function () {
                                 ladda_start(this);
                                 stepDetails();
                             });
@@ -1190,15 +1636,25 @@
                                 stepService({new_chain : true});
                             });
                             // 'BACK' button.
-                            $('.ab-back-step', $container).on('click', function (e) {
+                            $('.bookly-back-step', $container).on('click', function (e) {
                                 e.preventDefault();
                                 ladda_start(this);
-                                if (params && params.from_step == 'service') {
-                                    stepService();
-                                } else if (params && params.from_step == 'extras') {
-                                    stepExtras();
-                                } else {
-                                    stepTime();
+                                if (params && params.from_step) { //if cart icon was clicked
+                                    if (params.from_step == 'service') {
+                                        stepService();
+                                    } else if (params.from_step == 'extras') {
+                                        stepExtras();
+                                    } else if (params.from_step === 'time') {
+                                        stepTime();
+                                    } else {
+                                        stepRepeat();
+                                    }
+                                } else { //if cart was reached in normal way
+                                    if (!Options.skip_steps.repeat) {
+                                        stepRepeat();
+                                    } else {
+                                        stepTime();
+                                    }
                                 }
                             });
                             $('.bookly-js-actions button', $container).on('click', function () {
@@ -1210,7 +1666,7 @@
                                         $.ajax({
                                             url: Options.ajaxurl,
                                             data: {
-                                                action   : 'ab_cart_drop_item',
+                                                action   : 'bookly_cart_drop_item',
                                                 form_id  : Options.form_id,
                                                 cart_key : $cart_item.data('cart-key')
                                             },
@@ -1227,8 +1683,8 @@
                                                         $('.bookly-js-total-deposit-price', $container).html(response.data.total_deposit_price);
                                                         $trs_to_remove.remove();
                                                         if ($('tr[data-cart-key]').length == 0) {
-                                                            $('.ab-back-step', $container).hide();
-                                                            $('.ab-next-step', $container).hide();
+                                                            $('.bookly-back-step', $container).hide();
+                                                            $('.bookly-next-step', $container).hide();
                                                         }
                                                     });
                                                 }
@@ -1251,7 +1707,7 @@
          */
         function stepDetails(params) {
             var data = $.extend({
-                action  : 'ab_render_details',
+                action  : 'bookly_render_details',
                 form_id : Options.form_id
             }, params);
             $.ajax({
@@ -1281,7 +1737,7 @@
                                 preferredCountries: [Options.intlTelInput.country],
                                 defaultCountry: Options.intlTelInput.country,
                                 geoIpLookup: function (callback) {
-                                    $.get(Options.ajaxurl, {action: 'ab_ip_info'}, function () {
+                                    $.get(Options.ajaxurl, {action: 'bookly_ip_info'}, function () {
                                     }, 'json').always(function (resp) {
                                         var countryCode = (resp && resp.country) ? resp.country : '';
                                         callback(countryCode);
@@ -1290,7 +1746,7 @@
                                 utilsScript: Options.intlTelInput.utils
                             });
                         }
-                        $('.ab-next-step', $container).on('click', function(e) {
+                        $('.bookly-next-step', $container).on('click', function(e) {
                             e.preventDefault();
                             var custom_fields = [],
                                 checkbox_values,
@@ -1359,7 +1815,7 @@
                                 phone_number = $phone_field.val();
                             }
                             var data = {
-                                action      : 'ab_session_save',
+                                action      : 'bookly_session_save',
                                 form_id     : Options.form_id,
                                 name        : $name_field.val(),
                                 phone       : phone_number,
@@ -1382,7 +1838,7 @@
                                     if (response.length == 0) {
                                         if (Options.woocommerce.enabled) {
                                             var data = {
-                                                action  : 'ab_add_to_woocommerce_cart',
+                                                action  : 'bookly_add_to_woocommerce_cart',
                                                 form_id : Options.form_id
                                             };
                                             $.ajax({
@@ -1447,11 +1903,13 @@
                             });
                         });
 
-                        $('.ab-back-step', $container).on('click', function (e) {
+                        $('.bookly-back-step', $container).on('click', function (e) {
                             e.preventDefault();
                             ladda_start(this);
                             if (Options.cart.enabled) {
                                 stepCart();
+                            } else if (!Options.skip_steps.repeat) {
+                                stepRepeat();
                             } else {
                                 stepTime();
                             }
@@ -1459,7 +1917,7 @@
 
                         $('.ab-captcha-refresh',  $container).on('click', function() {
                             $captcha.css('opacity','0.5');
-                            $.get(Options.ajaxurl, {action: 'ab_captcha_refresh', form_id: Options.form_id}, function(response) {
+                            $.get(Options.ajaxurl, {action: 'bookly_captcha_refresh', form_id: Options.form_id}, function(response) {
                                 if (response.success) {
                                     $captcha.attr('src', response.data.captcha_url).on('load', function() {
                                         $captcha.css('opacity', '1');
@@ -1477,8 +1935,9 @@
          */
         function stepPayment() {
             $.ajax({
+                type       : 'POST',
                 url        : Options.ajaxurl,
-                data       : {action: 'ab_render_payment', form_id: Options.form_id},
+                data       : {action: 'bookly_render_payment', form_id: Options.form_id, page_url: document.URL.split('#')[0]},
                 dataType   : 'json',
                 xhrFields  : {withCredentials: true},
                 crossDomain: 'withCredentials' in new XMLHttpRequest(),
@@ -1492,34 +1951,26 @@
 
                         $container.html(response.html);
                         scrollTo($container);
-
                         if (Options.status.booking == 'cancelled') {
                             Options.status.booking = 'ok';
                         }
 
                         var $payments  = $('.ab-payment', $container),
-                            $coupon_pay_button = $('.ab-coupon-payment-button', $container),
                             $apply_coupon_button = $('.btn-apply-coupon', $container),
                             $coupon_input = $('input.ab-user-coupon', $container),
                             $coupon_error = $('.ab-coupon-error', $container),
                             $coupon_info_text = $('.ab-info-text-coupon', $container),
                             $ab_payment_nav = $('.ab-payment-nav', $container),
-                            $buttons = $('.ab-paypal-payment-button,.ab-card-payment-button,form.ab-authorizenet,form.ab-stripe,.ab-local-payment-button,.ab-2checkout-payment-button,.ab-payulatam-payment-button,.ab-payson-payment-button,.ab-mollie-payment-button', $container),
-                            response_url = document.URL
+                            $buttons = $('.bookly-gateway-buttons,form.bookly-authorize-net,form.bookly-stripe', $container)
                         ;
-                        $('.ab-2checkout-form > input[name=x_receipt_link_url]', $container).val(response_url);
-                        response_url  = response_url.split('#')[0];
-                        response_url += (response_url.indexOf('?') == -1) ? '?' : '&';
-                        $('input[name=response_url]', $container).val(response_url); // for ab-payson-form && ab-mollie-form
-                        $('.ab-payulatam-form > input[name=responseUrl]', $container).val(response_url + 'action=ab-payulatam-checkout&ab_fid=' + Options.form_id );
-                        $('.ab-payulatam-form > input[name=confirmationUrl]', $container).val(response_url + 'action=ab-payulatam-ipn&ab_fid=' + Options.form_id );
                         $payments.on('click', function() {
                             $buttons.hide();
-                            $('.ab-' + $(this).val() + '-payment-button', $container).show();
+                            $('.bookly-gateway-buttons.pay-' + $(this).val(), $container).show();
                             if ($(this).val() == 'card') {
-                                $('form.ab-' + $(this).data('form'), $container).show();
+                                $('form.bookly-' + $(this).data('form'), $container).show();
                             }
                         });
+                        $payments.eq(0).trigger('click');
 
                         $apply_coupon_button.on('click', function (e) {
                             var ladda = ladda_start(this);
@@ -1527,7 +1978,7 @@
                             $coupon_input.removeClass('ab-field-error');
 
                             var data = {
-                                action : 'ab_apply_coupon',
+                                action : 'bookly_apply_coupon',
                                 form_id: Options.form_id,
                                 coupon : $coupon_input.val()
                             };
@@ -1547,19 +1998,18 @@
                                         if (response.total <= 0) {
                                             $ab_payment_nav.hide();
                                             $buttons.hide();
-                                            $coupon_pay_button.show('fast', function () {
-                                                $('.ab-coupon-free', $container).attr('checked', 'checked').val(data.coupon);
-                                            });
+                                            $('.bookly-gateway-buttons.pay-coupon', $container).show();
+                                            $('.bookly-coupon-free', $container).attr('checked', 'checked').val(data.coupon);
                                         } else {
                                             // Set new price for payment request
-                                            $('input.ab--coupon-change-price', $container).val(response.total);
-                                            var $payulatam_form = $('.ab-payulatam-form', $container);
-                                            if ($payulatam_form.length) {
-                                                $.post(Options.ajaxurl, {action: 'ab_payulatam_refresh_tokens', form_id: Options.form_id})
+                                            $('input.bookly-payment-amount', $container).val(response.total);
+                                            var $payu_latam_form = $('.bookly-payu_latam-form', $container);
+                                            if ($payu_latam_form.length) {
+                                                $.post(Options.ajaxurl, {action: 'bookly_payu_latam_refresh_tokens', form_id: Options.form_id})
                                                     .done(function(response){
                                                         if (response.success) {
-                                                            $payulatam_form.find('input[name=referenceCode]').val(response.data.referenceCode);
-                                                            $payulatam_form.find('input[name=signature]').val(response.data.signature);
+                                                            $payu_latam_form.find('input[name=referenceCode]').val(response.data.referenceCode);
+                                                            $payu_latam_form.find('input[name=signature]').val(response.data.signature);
                                                         }
                                                     }, 'json' );
                                             }
@@ -1578,7 +2028,7 @@
                             });
                         });
 
-                        $('.ab-next-step', $container).on('click', function (e) {
+                        $('.bookly-next-step', $container).on('click', function (e) {
                             var ladda = ladda_start(this),
                                 $form
                             ;
@@ -1589,8 +2039,8 @@
 
                             } else if ($('.ab-payment[value=card]', $container).is(':checked')) {
                                 var stripe = $('.ab-payment[data-form=stripe]', $container).is(':checked');
-                                var card_action = stripe ? 'ab_stripe' : 'ab_authorize_net_aim';
-                                $form = $container.find(stripe ? '.ab-stripe' : '.ab-authorizenet');
+                                var card_action = stripe ? 'bookly_stripe' : 'bookly_authorize_net_aim';
+                                $form = $container.find(stripe ? '.bookly-stripe' : '.bookly-authorize-net');
                                 e.preventDefault();
 
                                 var data = {
@@ -1644,38 +2094,42 @@
                                 } else {
                                     card_payment(data);
                                 }
-                            } else if (    $('.ab-payment[value=paypal]',    $container).is(':checked')
-                                        || $('.ab-payment[value=2checkout]', $container).is(':checked')
-                                        || $('.ab-payment[value=payulatam]', $container).is(':checked')
-                                        || $('.ab-payment[value=payson]',    $container).is(':checked')
-                                        || $('.ab-payment[value=mollie]',    $container).is(':checked')
+                            } else if (    $('.ab-payment[value=paypal]',     $container).is(':checked')
+                                        || $('.ab-payment[value=2checkout]',  $container).is(':checked')
+                                        || $('.ab-payment[value=payu_latam]', $container).is(':checked')
+                                        || $('.ab-payment[value=payson]',     $container).is(':checked')
+                                        || $('.ab-payment[value=mollie]',     $container).is(':checked')
                             ) {
                                 e.preventDefault();
                                 $form = $(this).closest('form');
-                                if ($form.find('input.ab--pending_appointments').length > 0 ) {
+                                if ($form.find('input.bookly-payment-id').length > 0 ) {
                                     $.ajax({
                                         type       : 'POST',
                                         url        : Options.ajaxurl,
                                         xhrFields  : {withCredentials: true},
                                         crossDomain: 'withCredentials' in new XMLHttpRequest(),
-                                        data       : {action: 'ab_save_pending_appointment', form_id: Options.form_id, gateway: $form.data('gateway')},
+                                        data       : {
+                                            action:       'bookly_save_pending_appointment',
+                                            form_id:      Options.form_id,
+                                            payment_type: $form.data('gateway')
+                                        },
                                         dataType   : 'json',
                                         success    : function (response) {
                                             if (response.success) {
-                                                $form.find('input.ab--pending_appointments').val(response.ca_ids);
+                                                $form.find('input.bookly-payment-id').val(response.payment_id);
                                                 $form.submit();
                                             } else if (response.error_code == 3) {
                                                 handle_error_3(response);
                                             }
                                         }
                                     });
-                                } else {
+                                } else  {
                                     $.ajax({
                                         type       : 'POST',
                                         url        : Options.ajaxurl,
                                         xhrFields  : {withCredentials: true},
                                         crossDomain: 'withCredentials' in new XMLHttpRequest(),
-                                        data       : {action: 'ab_check_cart', form_id: Options.form_id},
+                                        data       : {action: 'bookly_check_cart', form_id: Options.form_id},
                                         dataType   : 'json',
                                         success    : function (response) {
                                             if (response.success) {
@@ -1689,7 +2143,7 @@
                             }
                         });
 
-                        $('.ab-back-step', $container).on('click', function (e) {
+                        $('.bookly-back-step', $container).on('click', function (e) {
                             e.preventDefault();
                             ladda_start(this);
                             stepDetails();
@@ -1708,7 +2162,7 @@
             } else {
                 $.ajax({
                     url: Options.ajaxurl,
-                    data: {action: 'ab_render_complete', form_id: Options.form_id},
+                    data: {action: 'bookly_render_complete', form_id: Options.form_id},
                     dataType: 'json',
                     xhrFields: {withCredentials: true},
                     crossDomain: 'withCredentials' in new XMLHttpRequest(),
@@ -1731,7 +2185,7 @@
                 url         : Options.ajaxurl,
                 xhrFields   : { withCredentials: true },
                 crossDomain : 'withCredentials' in new XMLHttpRequest(),
-                data        : { action : 'ab_save_appointment', form_id : Options.form_id },
+                data        : { action : 'bookly_save_appointment', form_id : Options.form_id },
                 dataType    : 'json'
             }).done(function(response) {
                 if (response.success) {
@@ -1742,8 +2196,8 @@
             });
         }
 
-        function ladda_start($elem) {
-            var ladda = Ladda.create($elem);
+        function ladda_start(elem) {
+            var ladda = Ladda.create(elem);
             ladda.start();
             return ladda;
         }

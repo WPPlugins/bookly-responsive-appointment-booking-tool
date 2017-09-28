@@ -13,7 +13,27 @@ class Service extends Lib\Base\Form
 
     public function configure()
     {
-        $this->setFields( array( 'id', 'title', 'duration', 'price', 'category_id', 'color', 'capacity', 'info', 'type', 'sub_services', 'visibility' ) );
+        $fields = array(
+            'id',
+            'title',
+            'duration',
+            'price',
+            'category_id',
+            'color',
+            'capacity',
+            'padding_left',
+            'padding_right',
+            'info',
+            'type',
+            'sub_services',
+            'visibility',
+        );
+        if ( Lib\Config::isServiceScheduleEnabled() ) {
+            $fields[] = 'start_time';
+            $fields[] = 'end_time';
+        }
+
+        $this->setFields( $fields );
     }
 
     /**
@@ -24,8 +44,11 @@ class Service extends Lib\Base\Form
      */
     public function bind( array $_post, array $files = array() )
     {
-        if ( array_key_exists( 'category_id', $_post ) && ! $_post['category_id'] ) {
-            $_post['category_id'] = null;
+        // Fields with NULL
+        foreach ( array( 'category_id', 'start_time', 'end_time' ) as $field_name ) {
+            if ( array_key_exists( $field_name, $_post ) && ! $_post[ $field_name ] ) {
+                $_post[ $field_name ] = null;
+            }
         }
         parent::bind( $_post, $files );
     }

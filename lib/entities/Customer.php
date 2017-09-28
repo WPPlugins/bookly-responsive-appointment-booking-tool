@@ -137,7 +137,7 @@ class Customer extends Lib\Base\Entity
     /**
      * Create new WP user and send email notification.
      *
-     * @return bool|int
+     * @return int|false
      */
     private function _createWPUser()
     {
@@ -156,7 +156,7 @@ class Customer extends Lib\Base\Entity
         if ( ! $user_id instanceof \WP_Error ) {
             // Set the role
             $user = new \WP_User( $user_id );
-            $user->set_role( 'subscriber' );
+            $user->set_role( get_option( 'bookly_cst_new_account_role', 'subscriber' ) );
 
             // Send email notification.
             Lib\NotificationSender::sendEmailForNewUser( $this, $username, $password );

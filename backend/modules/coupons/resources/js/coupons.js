@@ -17,7 +17,6 @@ jQuery(function($) {
         processing: true,
         responsive: true,
         data: [],
-
         columns: [
             { data: "code" },
             { data: "discount" },
@@ -30,7 +29,7 @@ jQuery(function($) {
                 orderable: false,
                 searchable: false,
                 render: function ( data, type, row, meta ) {
-                    return '';
+                    return '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#bookly-coupon-modal"><i class="glyphicon glyphicon-edit"></i> ' + BooklyL10n.edit + '</button>';
                 }
             },
             {
@@ -38,7 +37,7 @@ jQuery(function($) {
                 orderable: false,
                 searchable: false,
                 render: function ( data, type, row, meta ) {
-                    return '';
+                    return '<input type="checkbox" value="' + row.id + '">';
                 }
             }
         ],

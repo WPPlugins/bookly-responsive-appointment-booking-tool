@@ -1,6 +1,9 @@
 <?php
 namespace BooklyLite\Lib;
 
+use BooklyLite\Lib\Entities\Series;
+use BooklyLite\Lib\Utils\Common;
+
 /**
  * Class Cart
  * @package BooklyLite\Lib
@@ -147,14 +150,38 @@ class Cart
     public function save( Entities\Customer $customer, $payment_id, $time_zone_offset, &$booking_numbers )
     {
         $ca_list = array();
+        $stored_series = array();
         foreach ( $this->getItems() as $cart_item ) {
+            $series_id = null;
+            if ( $cart_item->get( 'series_uniq_id' ) ) {
+                if ( !isset( $stored_series[ $cart_item->get( 'series_uniq_id' ) ] ) ) {
+                    $series = new Series();
+                    $series
+                        ->set( 'repeat', '{}' )
+                        ->set( 'token', Common::generateToken( get_class( $series ), 'token' ) )
+                        ->save();
+                    $stored_series[ $cart_item->get( 'series_uniq_id' ) ] = $series;
+                }
+                $series_id = $stored_series[ $cart_item->get( 'series_uniq_id' ) ]->get( 'id' );
+            }
+
+            if (
+                $cart_item->get( 'series_uniq_id' )
+                && get_option( 'bookly_recurring_appointments_payment' ) === 'first'
+                && ( ! $cart_item->get( 'first_in_series' ) )
+            ) {
+                $item_payment_id = null;
+            } else {
+                $item_payment_id = $payment_id;
+            }
+
             $ca_entity = null;
             $service   = $cart_item->getService();
             $compound_service_id = null;
             $compound_token      = null;
             if ( $service->get( 'type' ) == Entities\Service::TYPE_COMPOUND ) {
                 $compound_service_id = $service->get( 'id' );
-                $compound_token      = Entities\CustomerAppointment::generateToken( 'compound_token' );
+                $compound_token = Utils\Common::generateToken( '\BooklyLite\Lib\Entities\CustomerAppointment', 'compound_token' );
             }
 
             $extras = json_encode( $cart_item->get( 'extras' ) );
@@ -179,27 +206,27 @@ class Cart
                     $appointment->set( 'staff_id',   1 );
                     $appointment->set( 'start_date', date( 'Y-m-d H:i:s', $timestamp ) );
                     $appointment->set( 'end_date',   date( 'Y-m-d H:i:s', $timestamp + $service->get( 'duration' ) ) );
+                    $appointment->set( 'series_id',  $series_id );
                     $appointment->save();
                 }
 
                 // Create CustomerAppointment record.
                 $customer_appointment = new Entities\CustomerAppointment();
-                $location_id = $cart_item->get( 'location_id' );
                 $customer_appointment->set( 'customer_id', $customer->get( 'id' ) )
                     ->set( 'appointment_id',      $appointment->get( 'id' ) )
-                    ->set( 'location_id',         $location_id ?: null )
-                    ->set( 'payment_id',          $payment_id )
+                    ->set( 'location_id',         $cart_item->get( 'location_id' ) ?: null )
+                    ->set( 'payment_id',          $item_payment_id )
                     ->set( 'number_of_persons',   $cart_item->get( 'number_of_persons' ) )
                     ->set( 'extras',              $extras )
                     ->set( 'custom_fields',       $custom_fields )
-                    ->set( 'status',              get_option( 'ab_settings_default_appointment_status' ) )
+                    ->set( 'status',              get_option( 'bookly_gen_default_appointment_status' ) )
                     ->set( 'time_zone_offset',    $time_zone_offset )
                     ->set( 'compound_service_id', $compound_service_id )
                     ->set( 'compound_token',      $compound_token )
                     ->save();
 
                 // Handle extras duration.
-                if ( Config::extrasEnabled() ) {
+                if ( Config::isServiceExtrasEnabled() ) {
                     $appointment->set( 'extras_duration', $appointment->getMaxExtrasDuration() );
                     $appointment->save();
                 }
@@ -240,6 +267,14 @@ class Cart
         }
 
         foreach ( $this->items as $key => $item ) {
+            if (
+                $item->get( 'series_uniq_id' )
+                && get_option( 'bookly_recurring_appointments_payment' ) === 'first'
+                && ( ! $item->get( 'first_in_series' ) )
+            ) {
+                continue;
+            }
+
             $discount = array_key_exists( $item->getService()->get( 'id' ), $coupon_services );
             $item_price = $item->getServicePrice() * $item->get( 'number_of_persons' );
             if ( $discount ) {
@@ -247,7 +282,7 @@ class Cart
             }
 
             $total   += $item_price;
-            $deposit += apply_filters( 'bookly_deposit_get_deposit_amount', $item_price, $item->getDeposit(), $item->get( 'number_of_persons' ) );
+            $deposit += apply_filters( 'bookly_deposit_payments_get_deposit_amount', $item_price, $item->getDeposit(), $item->get( 'number_of_persons' ) );
         }
 
         if ( $coupon ) {
@@ -257,7 +292,7 @@ class Cart
             }
         }
 
-        if ( ! Config::depositEnabled() ) {
+        if ( ! Config::isDepositPaymentsEnabled() ) {
             $due = 0;
         } else {
             $due = max( $total - $deposit, 0 );
@@ -324,7 +359,7 @@ class Cart
                 if ( $is_compound ) {
                     $service = Entities\Service::find( $service_id );
                 }
-                $bound_beg = date_create( '@' . $timestamp );
+                $bound_start = date_create( '@' . $timestamp );
                 $bound_end = date_create( '@' . $timestamp )->modify( ( (int) $service->get( 'duration' ) + $cart_item->getExtrasDuration() ) . ' sec' );
 
                 if ( $bound_end < $max_date ) {
@@ -337,9 +372,10 @@ class Cart
                         ->leftJoin( 'Service', 's', 's.id = a.service_id' )
                         ->where( 'a.staff_id', 1 )
                         ->whereNot( 'ca.status', Entities\CustomerAppointment::STATUS_CANCELLED )
+                        ->whereNot( 'ca.status', Entities\CustomerAppointment::STATUS_REJECTED )
                         ->groupBy( 'a.service_id, a.start_date' )
                         ->havingRaw( '%s > bound_left AND bound_right > %s AND ( total_number_of_persons + %d ) > ss.capacity',
-                            array( $bound_end->format( 'Y-m-d H:i:s' ), $bound_beg->format( 'Y-m-d H:i:s' ), $cart_item->get( 'number_of_persons' ) ) )
+                            array( $bound_end->format( 'Y-m-d H:i:s' ), $bound_start->format( 'Y-m-d H:i:s' ), $cart_item->get( 'number_of_persons' ) ) )
                         ->limit( 1 );
                     $rows = $query->execute( Query::HYDRATE_NONE );
 
@@ -354,4 +390,25 @@ class Cart
         return null;
     }
 
+    /**
+     * Check if cart has hidden recurring appointments in case we'r showing only 1st appointment
+     *
+     * @return bool
+     */
+    public function hasHiddenRecurringAppointments()
+    {
+        $result = false;
+        if ( get_option( 'bookly_recurring_appointments_payment' ) === 'first' ) {
+            foreach ( $this->getItems() as $cart_key => $cart_item ) {
+                if (
+                    $cart_item->get( 'series_uniq_id' )
+                    && ( ! $cart_item->get( 'first_in_series' ) )
+                ) {
+                    $result = true;
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
 }

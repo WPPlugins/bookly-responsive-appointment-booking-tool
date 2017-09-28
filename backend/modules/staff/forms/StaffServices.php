@@ -73,13 +73,13 @@ class StaffServices extends Lib\Base\Form
         Lib\Entities\StaffService::query()->delete()->where( 'staff_id', 1 )->execute();
         if ( isset( $this->data['service'] ) ) {
             foreach ( $this->data['service'] as $service_id ) {
-                $staffService = new Lib\Entities\StaffService();
-                $staffService->set( 'service_id', $service_id );
-                $staffService->set( 'staff_id',   1 );
-                $staffService->set( 'price',      $this->data['price'][ $service_id ] );
-                $staffService->set( 'deposit',    empty( $this->data['deposit'] ) ? '100%' : $this->data['deposit'][ $service_id ] );
-                $staffService->set( 'capacity',   1 );
-                $staffService->save();
+                $staff_service = new Lib\Entities\StaffService();
+                $staff_service->set( 'capacity', 1 )
+                    ->set( 'deposit',    empty( $this->data['deposit'] ) ? '100%' : $this->data['deposit'][ $service_id ] )
+                    ->set( 'price',      $this->data['price'][ $service_id ] )
+                    ->set( 'service_id', $service_id )
+                    ->set( 'staff_id',   1 )
+                    ->save();
             }
         }
     }

@@ -85,11 +85,7 @@ abstract class Controller extends Components
 
         if ( is_null( $security ) ) {
             // Check if controller class has permission
-            $security = isset( $permissions['_this'] ) ? $permissions['_this'] : null;
-
-            if ( is_null( $security ) ) {
-                $security = 'admin';
-            }
+            $security = isset( $permissions['_this'] ) ? $permissions['_this'] : 'admin';
         }
         switch ( $security ) {
             case 'admin'     : return Lib\Utils\Common::isCurrentUserAdmin();

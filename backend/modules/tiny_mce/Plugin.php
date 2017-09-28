@@ -22,7 +22,7 @@ class Plugin
         }
     }
 
-    public function addButton( $buttons )
+    public function addButton( $editor_id )
     {
         // don't show on dashboard (QuickPress)
         $current_screen = get_current_screen();

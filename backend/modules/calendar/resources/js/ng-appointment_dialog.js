@@ -20,10 +20,26 @@
                 }
             },
             form : {
+                screen     : null,
                 id         : null,
                 staff      : null,
                 service    : null,
                 date       : null,
+                repeat     : {
+                    enabled  : null,
+                    repeat   : null,
+                    daily    : { every : null },
+                    weekly   : { on : null },
+                    biweekly : { on : null },
+                    monthly  : { on : null, day : null, weekday : null },
+                    until    : null
+                },
+                schedule   : {
+                    items : [],
+                    edit  : null,
+                    page  : null,
+                    another_time : []
+                },
                 start_time : null,
                 end_time   : null,
                 customers  : [],
@@ -34,7 +50,7 @@
                 if (!ds.loaded) {
                     jQuery.get(
                         ajaxurl,
-                        { action : 'ab_get_data_for_appointment_form' },
+                        { action : 'bookly_get_data_for_appointment_form' },
                         function(data) {
                             ds.loaded = true;
                             ds.data = data;
@@ -173,10 +189,20 @@
 
                 return result;
             },
-            getTotalNotCancelledNumberOfPersons: function () {
+            getTotalNumberOfNotCancelledPersons: function () {
                 var result = 0;
                 ds.form.customers.forEach(function (item) {
                     if (item.status != 'cancelled') {
+                        result += parseInt(item.number_of_persons);
+                    }
+                });
+
+                return result;
+            },
+            getTotalNumberOfCancelledPersons: function () {
+                var result = 0;
+                ds.form.customers.forEach(function (item) {
+                    if (item.status == 'cancelled') {
                         result += parseInt(item.number_of_persons);
                     }
                 });
@@ -191,7 +217,7 @@
     /**
      * Controller for 'create/edit appointment' dialog form.
      */
-    module.controller('appointmentDialogCtrl', function($scope, $element, dataSource) {
+    module.controller('appointmentDialogCtrl', function($scope, $element, dataSource, $filter) {
         // Set up initial data.
         $scope.$calendar = null;
         // Set up data source.
@@ -210,16 +236,32 @@
          * @param function _callback
          */
         $scope.configureNewForm = function(staff_id, start_date, _callback) {
-
+            var weekday = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][start_date.format('d')];
             jQuery.extend($scope.form, {
+                screen     : 'main',
                 id         : null,
                 staff      : dataSource.findStaff(staff_id),
                 service    : null,
                 date       : start_date.clone().local().toDate(),
                 start_time : dataSource.findTime('start', start_date.format('HH:mm')),
                 end_time   : null,
+                repeat     : {
+                    enabled  : 0,
+                    repeat   : 'daily',
+                    daily    : { every: 1 },
+                    weekly   : { on : [weekday] },
+                    biweekly : { on : [weekday] },
+                    monthly  : { on : 'day', day : start_date.format('D'), weekday : weekday },
+                    until    : start_date.clone().add(1, 'month').format('YYYY-MM-DD')
+                },
+                schedule   : {
+                    items : [],
+                    edit  : 0,
+                    page  : 0,
+                    another_time : []
+                },
                 customers  : [],
-                notification : 'no',
+                notification  : 'no',
                 internal_note : null
             });
             $scope.errors = {};
@@ -239,13 +281,14 @@
             $scope.loading = true;
             jQuery.post(
                 ajaxurl,
-                {action: 'ab_get_data_for_appointment', id: appointment_id},
+                {action: 'bookly_get_data_for_appointment', id: appointment_id},
                 function(response) {
                     $scope.$apply(function($scope) {
                         if (response.success) {
                             var start_date = moment(response.data.start_date),
                                 end_date   = moment(response.data.end_date);
                             jQuery.extend($scope.form, {
+                                screen     : 'main',
                                 id         : appointment_id,
                                 staff      : $scope.dataSource.findStaff(response.data.staff_id),
                                 service    : $scope.dataSource.findService(response.data.staff_id, response.data.service_id),
@@ -254,6 +297,21 @@
                                 end_time   : start_date.format('YYYY-MM-DD') == end_date.format('YYYY-MM-DD')
                                     ? $scope.dataSource.findTime('end', end_date.format('HH:mm'))
                                     : $scope.dataSource.findTime('end', (24 + end_date.hour()) + end_date.format(':mm')),
+                                repeat     : {
+                                    enabled  : 0,
+                                    repeat   : 'daily',
+                                    daily    : { every: 1 },
+                                    weekly   : { on : [] },
+                                    biweekly : { on : [] },
+                                    monthly  : { on : 'day', day : '1', weekday : 'mon' },
+                                    until    : start_date.clone().add(1, 'month').format('YYYY-MM-DD')
+                                },
+                                schedule   : {
+                                    items : [],
+                                    edit  : 0,
+                                    page  : 0,
+                                    another_time : []
+                                },
                                 customers  : [],
                                 notification : 'no',
                                 internal_note : response.data.internal_note
@@ -300,10 +358,10 @@
 
         var checkTimeInterval = function() {
             var dates = $scope.dataSource.getStartAndEndDates();
-            jQuery.get(
+            jQuery.post(
                 ajaxurl,
                 {
-                    action         : 'ab_check_appointment_date_selection',
+                    action         : 'bookly_check_appointment_date_selection',
                     start_date     : dates.start_date,
                     end_date       : dates.end_date,
                     appointment_id : $scope.form.id,
@@ -343,9 +401,17 @@
         $scope.processForm = function() {
             $scope.loading = true;
 
-            var dates = $scope.dataSource.getStartAndEndDates(),
+            var dates     = $scope.dataSource.getStartAndEndDates(),
+                schedule  = [],
                 customers = []
             ;
+
+            angular.forEach($scope.form.schedule.items, function (item) {
+                if (!item.deleted) {
+                    schedule.push(item.slots);
+                }
+            });
+
             $scope.form.customers.forEach(function (item, i, arr) {
                 var customer_extras = {};
                 if ($scope.form.service) {
@@ -370,14 +436,16 @@
             jQuery.post(
                 ajaxurl,
                 {
-                    action     : 'ab_save_appointment_form',
-                    id         : $scope.form.id,
-                    staff_id   : $scope.form.staff ? $scope.form.staff.id : null,
-                    service_id : $scope.form.service ? $scope.form.service.id : null,
-                    start_date : dates.start_date,
-                    end_date   : dates.end_date,
-                    customers  : JSON.stringify(customers),
-                    notification : $scope.form.notification,
+                    action        : 'bookly_save_appointment_form',
+                    id            : $scope.form.id,
+                    staff_id      : $scope.form.staff ? $scope.form.staff.id : null,
+                    service_id    : $scope.form.service ? $scope.form.service.id : null,
+                    start_date    : dates.start_date,
+                    end_date      : dates.end_date,
+                    repeat        : JSON.stringify($scope.form.repeat),
+                    schedule      : schedule,
+                    customers     : JSON.stringify(customers),
+                    notification  : $scope.form.notification,
                     internal_note : $scope.form.internal_note
                 },
                 function (response) {
@@ -406,12 +474,12 @@
         };
 
         $scope.reInitChosen = function () {
-            jQuery('#chosen')
+            jQuery('#bookly-chosen')
                 .chosen('destroy')
                 .chosen({
                     search_contains     : true,
                     width               : '100%',
-                    max_selected_options: dataSource.form.service ? dataSource.form.service.capacity : 0
+                    max_selected_options: dataSource.form.service ? dataSource.form.service.capacity + dataSource.getTotalNumberOfCancelledPersons() : 0
                 });
         };
 
@@ -454,7 +522,7 @@
                 dataSource.form.customers.push(new_customer);
             }
 
-            setTimeout(function() { jQuery('#chosen').trigger('chosen:updated'); }, 0);
+            setTimeout(function() { jQuery('#bookly-chosen').trigger('chosen:updated'); }, 0);
         };
 
         $scope.removeCustomer = function(customer) {
@@ -462,7 +530,7 @@
         };
 
         /**************************************************************************************************************
-         * Customer Details                                                                                            *
+         * Customer Details                                                                                           *
          **************************************************************************************************************/
 
         $scope.editCustomerDetails = function(customer) {
@@ -492,6 +560,7 @@
                 }
             });
 
+            $dialog.find('#bookly-extras .extras-count').val(0);
             angular.forEach(customer.extras, function (extra_count, extra_id) {
                 $dialog.find('#bookly-extras .extras-count[data-id="' + extra_id + '"]').val(extra_count);
             });
@@ -500,7 +569,7 @@
             var $number_of_persons = $dialog.find('#ab-edit-number-of-persons');
 
             var max = $scope.form.service
-                ? parseInt($scope.form.service.capacity) - $scope.dataSource.getTotalNotCancelledNumberOfPersons() + ( customer.status != 'cancelled' ? parseInt(customer.number_of_persons) : 0 )
+                ? parseInt($scope.form.service.capacity) - $scope.dataSource.getTotalNumberOfNotCancelledPersons() + ( customer.status != 'cancelled' ? parseInt(customer.number_of_persons) : 0 )
                 : 1;
             $number_of_persons.empty();
             for (var i = 1; i <= max; ++i) {
@@ -621,6 +690,169 @@
             });
         };
 
+        /**************************************************************************************************************
+         * Schedule of Recurring Appointments                                                                         *
+         **************************************************************************************************************/
+
+        $scope.schSchedule = function ($event) {
+            var extras = [];
+            $scope.form.customers.forEach(function (item, i, arr) {
+                extras.push(item.extras);
+            });
+
+            if (
+                ($scope.form.repeat.repeat == 'weekly' || $scope.form.repeat.repeat == 'biweekly') &&
+                $scope.form.repeat[$scope.form.repeat.repeat].on.length == 0
+            ) {
+                $scope.errors.repeat_weekdays_empty = true;
+            } else {
+                delete $scope.errors.repeat_weekdays_empty;
+                var ladda = Ladda.create($event.currentTarget);
+                ladda.start();
+                var dates = $scope.dataSource.getStartAndEndDates();
+                jQuery.post(
+                    ajaxurl,
+                    {
+                        action     : 'bookly_recurring_appointments_get_schedule',
+                        staff_id   : $scope.form.staff.id,
+                        service_id : $scope.form.service.id,
+                        datetime   : dates.start_date,
+                        until      : $scope.form.repeat.until,
+                        repeat     : $scope.form.repeat.repeat,
+                        params     : $scope.form.repeat[$scope.form.repeat.repeat],
+                        extras     : extras
+                    },
+                    function (response) {
+                        $scope.$apply(function($scope) {
+                            $scope.form.schedule.items = response.data;
+                            $scope.form.schedule.page  = 0;
+                            $scope.form.schedule.another_time = [];
+                            angular.forEach($scope.form.schedule.items, function (item) {
+                                if (item.another_time) {
+                                    var page = parseInt( ( item.index - 1 ) / 10 ) + 1;
+                                    if ($scope.form.schedule.another_time.indexOf(page) < 0) {
+                                        $scope.form.schedule.another_time.push(page);
+                                    }
+                                }
+                            });
+                            $scope.form.screen = 'schedule';
+                            ladda.stop();
+                        });
+                    },
+                    'json'
+                );
+            }
+        };
+        $scope.schFormatDate = function(date) {
+            var m = moment(date),
+                weekday = m.format('d'),
+                month   = m.format('M'),
+                day     = m.format('DD');
+
+            return BooklyL10nAppDialog.calendar.shortDays[weekday] + ', ' + BooklyL10nAppDialog.calendar.shortMonths[month-1] + ' ' + day;
+        };
+        $scope.schFormatTime = function(slots, options) {
+            for (var i = 0; i < options.length; ++ i) {
+                if (slots == options[i].value) {
+                    return options[i].title;
+                }
+            }
+        };
+        $scope.schFirstPage = function() {
+            return $scope.form.schedule.page == 0;
+        };
+        $scope.schLastPage = function() {
+            var lastPageNum = Math.ceil($scope.form.schedule.items.length / 10 - 1);
+            return $scope.form.schedule.page == lastPageNum;
+        };
+        $scope.schNumberOfPages = function() {
+            return Math.ceil($scope.form.schedule.items.length / 10);
+        };
+        $scope.schStartingItem = function() {
+            return $scope.form.schedule.page * 10;
+        };
+        $scope.schPageBack = function() {
+            $scope.form.schedule.page = $scope.form.schedule.page - 1;
+        };
+        $scope.schPageForward = function() {
+            $scope.form.schedule.page = $scope.form.schedule.page + 1;
+        };
+        $scope.schOnWeekdayClick = function (weekday) {
+            var idx = $scope.form.repeat.weekly.on.indexOf(weekday);
+
+            // is currently selected
+            if (idx > -1) {
+                $scope.form.repeat.weekly.on.splice(idx, 1);
+            }
+            // is newly selected
+            else {
+                $scope.form.repeat.weekly.on.push(weekday);
+            }
+            // copy weekly to biweekly
+            $scope.form.repeat.biweekly.on = $scope.form.repeat.weekly.on.slice();
+        };
+        $scope.schOnDateChange = function(item) {
+            var extras = [];
+            $scope.form.customers.forEach(function (item, i, arr) {
+                extras.push(item.extras);
+            });
+
+            var exclude = [];
+            angular.forEach($scope.form.schedule.items, function (_item) {
+                if (item.slots != _item.slots && !_item.deleted) {
+                    exclude.push(_item.slots);
+                }
+            });
+            jQuery.post(
+                ajaxurl,
+                {
+                    action       : 'bookly_recurring_appointments_get_schedule',
+                    staff_id     : $scope.form.staff.id,
+                    service_id   : $scope.form.service.id,
+                    datetime     : item.date + ' 00:00',
+                    until        : item.date,
+                    repeat       : 'daily',
+                    params       : {every: 1},
+                    with_options : 1,
+                    exclude      : exclude,
+                    extras       : extras
+                },
+                function (response) {
+                    $scope.$apply(function($scope) {
+                        if (response.data.length) {
+                            item.options = response.data[0].options;
+                            var found = false;
+                            jQuery.each(item.options, function (key, option) {
+                                if ( option.value == item.slots ) {
+                                    found = true;
+                                    return false;
+                                }
+                            });
+                            if (!found) {
+                                item.slots = item.options[0].value;
+                            }
+                        } else {
+                            item.options = [];
+                        }
+                    });
+                },
+                'json'
+            );
+        };
+        $scope.schIsScheduleEmpty = function () {
+            return $scope.form.schedule.items.every(function(item) {
+                return item.deleted;
+            });
+        };
+        $scope.schDateOptions = {
+            dateFormat      : 'D, M dd, yy',
+            dayNamesMin     : BooklyL10nAppDialog.calendar.shortDays,
+            dayNamesShort   : BooklyL10nAppDialog.calendar.shortDays,
+            monthNames      : BooklyL10nAppDialog.calendar.longMonths,
+            monthNamesShort : BooklyL10nAppDialog.calendar.shortMonths,
+            firstDay        : BooklyL10nAppDialog.startOfWeek
+        };
+
         /**
          * Datepicker options.
          */
@@ -686,6 +918,27 @@
                 placement: 'top',
                 template: '<div class="popover bookly-font-xs" style="width: 220px" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
             });
+        };
+    });
+
+    /**
+     * Filters for pagination in Schedule.
+     */
+    module.filter('startFrom', function() {
+        return function(input, start){
+            start = +start;
+            return input.slice(start);
+        }
+    });
+    module.filter('range', function() {
+        return function(input, total) {
+            total = parseInt(total);
+
+            for (var i = 1; i <= total; ++ i) {
+                input.push(i);
+            }
+
+            return input;
         };
     });
 })();

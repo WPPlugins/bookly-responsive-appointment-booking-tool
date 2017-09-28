@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $time_interval = get_option( 'ab_settings_time_slot_length' );
+    $time_interval = get_option( 'bookly_gen_time_slot_length' );
 ?>
 <?php if ( ! empty( $service_collection ) ) : ?>
     <div class="panel-group" id="services_list" role="tablist" aria-multiselectable="true">
@@ -86,7 +86,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="price_<?php echo $service_id ?>"><?php _e( 'Price', 'bookly' ) ?></label>
-                                        <input id="price_<?php echo $service_id ?>" class="form-control ab-question" type="number" min="0.00" step="any" name="price" value="<?php echo esc_attr( $service['price'] ) ?>">
+                                        <input id="price_<?php echo $service_id ?>" class="form-control ab-question" type="number" min="0" step="1" name="price" value="<?php echo esc_attr( $service['price'] ) ?>">
                                     </div>
                                 </div>
                                 <div class="col-sm-4 ab--for-simple">
@@ -140,7 +140,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="category_<?php echo $service_id ?>"><?php _e( 'Category', 'bookly' ) ?></label>
-                                        <select id="category_<?php echo $service_id ?>" class="form-control" name="category_id"><option value="0"></option>
+                                        <select id="category_<?php echo $service_id ?>" class="form-control" name="category_id"><option value="0"><?php _e( 'Uncategorized', 'bookly' ) ?></option>
                                             <?php foreach ( $category_collection as $category ) : ?>
                                                 <option value="<?php echo $category['id'] ?>" <?php selected( $category['id'], $service['category_id'] ) ?>><?php echo esc_html( $category['name'] ) ?></option>
                                             <?php endforeach ?>
@@ -196,20 +196,31 @@
                             </div>
 
                             <?php do_action( 'bookly_compound_render_sub_services', $service, $service_collection, $service['sub_services'] ) ?>
-                            <?php if ( has_filter( 'bookly_extras_find_by_service_id' ) ) : ?>
-                                <div class="ab--for-simple">
-                                    <a class="h3" href="#ab--container_<?php echo $service_id ?>" data-toggle="collapse" role="button">
-                                        <?php echo get_option( 'ab_appearance_text_step_extras' ) ?>
+
+                            <?php if ( has_action( 'bookly_service_schedule_render_service_settings' ) ) : ?>
+                                <div class="ab--for-simple bookly-margin-bottom-xs">
+                                    <a class="h4" href="#bookly_service_schedule_container_<?php echo $service_id ?>" data-toggle="collapse" role="button">
+                                        <?php _e( 'Schedule', 'bookly' ) ?>
                                     </a>
-                                    <div id="ab--container_<?php echo $service_id ?>" class="bookly-margin-top-lg collapse in">
+                                    <div id="bookly_service_schedule_container_<?php echo $service_id ?>" class="bookly-margin-top-lg collapse in">
+                                        <?php do_action( 'bookly_service_schedule_render_service_settings', $service ) ?>
+                                    </div>
+                                </div>
+                            <?php endif ?>
+
+                            <?php if ( has_filter( 'bookly_service_extras_find_by_service_id' ) ) : ?>
+                                <div class="ab--for-simple bookly-margin-bottom-xs">
+                                    <a class="h4" href="#bookly_service_extras_container_<?php echo $service_id ?>" data-toggle="collapse" role="button">
+                                        <?php echo get_option( 'bookly_l10n_step_extras' ) ?>
+                                    </a>
+                                    <div id="bookly_service_extras_container_<?php echo $service_id ?>" class="bookly-margin-top-lg collapse in">
                                         <ul class="list-group extras-container" data-service="<?php echo $service_id ?>">
                                             <div class="form-group text-right">
-                                                <button class="btn btn-lg btn-success-outline extra-new">
-                                                    <i class="dashicons dashicons-plus-alt"></i>
-                                                    <?php _e( 'New Item', 'bookly' ) ?>
+                                                <button type="button" class="btn btn-success extra-new" data-spinner-size="40" data-style="zoom-in">
+                                                    <span class="ladda-label"><i class="glyphicon glyphicon-plus"></i> <?php _e( 'New Item', 'bookly' ) ?></span>
                                                 </button>
                                             </div>
-                                            <?php foreach ( apply_filters( 'bookly_extras_find_by_service_id', array(), $service_id ) as $extra ) : ?>
+                                            <?php foreach ( apply_filters( 'bookly_service_extras_find_by_service_id', array(), $service_id ) as $extra ) : ?>
                                                 <li class="list-group-item extra" data-extra-id="<?php echo $extra->get( 'id' ) ?>">
                                                     <div class="row">
                                                         <div class="col-lg-3">
@@ -245,28 +256,28 @@
 
                                                         <div class="col-lg-9">
                                                             <div class="form-group">
-                                                                <label for="title_<?php echo $extra->get( 'id' ) ?>">
+                                                                <label for="title_extras_<?php echo $extra->get( 'id' ) ?>">
                                                                     <?php _e( 'Title', 'bookly' ) ?>
                                                                 </label>
-                                                                <input name="extras[<?php echo $extra->get( 'id' ) ?>][title]" class="form-control" type="text" id="title_<?php echo $extra->get( 'id' ) ?>" value="<?php echo $extra->get( 'title' ) ?>">
+                                                                <input name="extras[<?php echo $extra->get( 'id' ) ?>][title]" class="form-control" type="text" id="title_extras_<?php echo $extra->get( 'id' ) ?>" value="<?php echo $extra->get( 'title' ) ?>">
                                                             </div>
 
                                                             <div class="row">
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label for="price_<?php echo $extra->get( 'id' ) ?>">
+                                                                        <label for="price_extras_<?php echo $extra->get( 'id' ) ?>">
                                                                             <?php _e( 'Price', 'bookly' ) ?>
                                                                         </label>
-                                                                        <input name="extras[<?php echo $extra->get( 'id' ) ?>][price]" class="form-control" type="number" step="0.01" id="price_<?php echo $extra->get( 'id' ) ?>" min="0.00" value="<?php echo $extra->get( 'price' ) ?>">
+                                                                        <input name="extras[<?php echo $extra->get( 'id' ) ?>][price]" class="form-control" type="number" step="1" id="price_extras_<?php echo $extra->get( 'id' ) ?>" min="0.00" value="<?php echo $extra->get( 'price' ) ?>">
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label for="duration_<?php echo $extra->get( 'id' ) ?>">
+                                                                        <label for="duration_extras_<?php echo $extra->get( 'id' ) ?>">
                                                                             <?php _e( 'Duration', 'bookly' ) ?>
                                                                         </label>
-                                                                        <select name="extras[<?php echo $extra->get( 'id' ) ?>][duration]" id="duration_<?php echo $extra->get( 'id' ) ?>" class="form-control">
+                                                                        <select name="extras[<?php echo $extra->get( 'id' ) ?>][duration]" id="duration_extras_<?php echo $extra->get( 'id' ) ?>" class="form-control">
                                                                             <option value="0"><?php _e( 'OFF', 'bookly' ) ?></option>
                                                                             <?php for ( $j = $time_interval; $j <= 720; $j += $time_interval ) : ?><?php if ( $extra->get( 'duration' ) > 0 && $extra->get( 'duration' ) / 60 > $j - $time_interval && $extra->get( 'duration' ) / 60 < $j ) : ?><option value="<?php echo esc_attr( $extra->get( 'duration' ) ) ?>" selected><?php echo BooklyLite\Lib\Utils\DateTime::secondsToInterval( $extra->get( 'duration' ) ) ?></option><?php endif ?><option value="<?php echo $j * 60 ?>" <?php selected( $extra->get( 'duration' ), $j * 60 ) ?>><?php echo BooklyLite\Lib\Utils\DateTime::secondsToInterval( $j * 60 ) ?></option><?php endfor ?>
                                                                         </select>
@@ -275,10 +286,10 @@
 
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
-                                                                        <label for="max_quantity_<?php echo $extra->get( 'id' ) ?>">
+                                                                        <label for="max_quantity_extras_<?php echo $extra->get( 'id' ) ?>">
                                                                             <?php _e( 'Max quantity', 'bookly' ) ?>
                                                                         </label>
-                                                                        <input name="extras[<?php echo $extra->get( 'id' ) ?>][max_quantity]" class="form-control" type="number" step="1" id="max_quantity_<?php echo $extra->get( 'id' ) ?>" min="1" value="<?php echo $extra->get( 'max_quantity' ) ?>">
+                                                                        <input name="extras[<?php echo $extra->get( 'id' ) ?>][max_quantity]" class="form-control" type="number" step="1" id="max_quantity_extras_<?php echo $extra->get( 'id' ) ?>" min="1" value="<?php echo $extra->get( 'max_quantity' ) ?>">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -296,7 +307,7 @@
                             <?php endif ?>
 
                             <div class="panel-footer">
-                                <input type="hidden" name="action" value="ab_update_service">
+                                <input type="hidden" name="action" value="bookly_update_service">
                                 <input type="hidden" name="id" value="<?php echo esc_html( $service_id ) ?>">
                                 <input type="hidden" name="update_staff" value="0">
                                 <?php \BooklyLite\Lib\Utils\Common::submitButton( null, 'ajax-service-send' ) ?>

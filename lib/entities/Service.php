@@ -16,19 +16,21 @@ class Service extends Lib\Base\Entity
 
     protected static $schema = array(
         'id'            => array( 'format' => '%d' ),
+        'category_id'   => array( 'format' => '%d', 'reference' => array( 'entity' => 'Category' ) ),
         'title'         => array( 'format' => '%s' ),
         'duration'      => array( 'format' => '%d', 'default' => 900 ),
-        'price'         => array( 'format' => '%.2f', 'default' => '0' ),
-        'category_id'   => array( 'format' => '%d', 'reference' => array( 'entity' => 'Category' ) ),
+        'price'         => array( 'format' => '%f', 'default' => '0' ),
         'color'         => array( 'format' => '%s' ),
         'capacity'      => array( 'format' => '%d', 'default' => '1' ),
-        'position'      => array( 'format' => '%d', 'default' => 9999 ),
         'padding_left'  => array( 'format' => '%d', 'default' => '0' ),
         'padding_right' => array( 'format' => '%d', 'default' => '0' ),
         'info'          => array( 'format' => '%s' ),
         'type'          => array( 'format' => '%s', 'default' => 'simple' ),
         'sub_services'  => array( 'format' => '%s', 'default' => '[]' ),
+        'start_time'    => array( 'format' => '%s' ),
+        'end_time'      => array( 'format' => '%s' ),
         'visibility'    => array( 'format' => '%s', 'default' => 'public' ),
+        'position'      => array( 'format' => '%d', 'default' => 9999 ),
     );
 
     protected static $cache = array();

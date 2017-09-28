@@ -35,7 +35,7 @@ jQuery(function($) {
         var $pwd  = $form.find('input[name="password"]');
         var $username   = $form.find('input[name="username"]');
         var $pwd_repeat = $form.find('input[name="password_repeat"]');
-        var data  = { action: 'ab_forgot_password', step: $btn.data('step'), 'username': $username.val() };
+        var data  = { action: 'bookly_forgot_password', step: $btn.data('step'), 'username': $username.val() };
         switch ($(this).data('step')) {
             case 0:
                 forgot_helper( data, function() {
@@ -98,7 +98,7 @@ jQuery(function($) {
     $('.bookly-admin-notify').on('change', function () {
         var $checkbox = $(this);
         $checkbox.hide().prev('img').show();
-        $.get(ajaxurl, {action: 'ab_admin_notify', option_name: $checkbox.attr('name'), value: $checkbox.is(':checked') ? 1 : 0 }, function () {}, 'json').always(function () {
+        $.get(ajaxurl, {action: 'bookly_admin_notify', option_name: $checkbox.attr('name'), value: $checkbox.is(':checked') ? 1 : 0 }, function () {}, 'json').always(function () {
             $checkbox.show().prev('img').hide();
         });
     });
@@ -144,7 +144,7 @@ jQuery(function($) {
             preferredCountries: [BooklyL10n.intlTelInput.country],
             defaultCountry: BooklyL10n.intlTelInput.country,
             geoIpLookup: function (callback) {
-                $.get(ajaxurl, {action: 'ab_ip_info'}, function () {
+                $.get(ajaxurl, {action: 'bookly_ip_info'}, function () {
                 }, 'json').always(function (resp) {
                     var countryCode = (resp && resp.country) ? resp.country : '';
                     callback(countryCode);
@@ -158,14 +158,14 @@ jQuery(function($) {
         var ladda = Ladda.create(this);
         ladda.start();
         var $form = $(this).parents('form');
-        $form.ab_sms_administrator_phone = BooklyL10n.intlTelInput.enabled ? $phone_input.intlTelInput('getNumber') : $phone_input.val();
+        $form.bookly_sms_administrator_phone = BooklyL10n.intlTelInput.enabled ? $phone_input.intlTelInput('getNumber') : $phone_input.val();
         $form.submit();
     });
     $('#send_test_sms').on('click', function (e) {
         e.preventDefault();
         $.ajax({
             url         : ajaxurl,
-            data        : { action: 'ab_send_test_sms', phone_number: BooklyL10n.intlTelInput.enabled ? $phone_input.intlTelInput('getNumber') : $phone_input.val() },
+            data        : { action: 'bookly_send_test_sms', phone_number: BooklyL10n.intlTelInput.enabled ? $phone_input.intlTelInput('getNumber') : $phone_input.val() },
             dataType    : 'json',
             xhrFields   : { withCredentials: true },
             crossDomain : 'withCredentials' in new XMLHttpRequest(),
@@ -189,7 +189,7 @@ jQuery(function($) {
     $recharge_init.on('click', function () {
         var ladda = Ladda.create(this);
         ladda.start();
-        $.get(ajaxurl, {action: 'ab_init_auto_recharge', amount: $recharge_amount.val()}, function () {
+        $.get(ajaxurl, {action: 'bookly_init_auto_recharge', amount: $recharge_amount.val()}, function () {
         }, 'json').always(function (response) {
             if (response.success) {
                 window.location.replace(response.data.paypal_preapproval);
@@ -202,7 +202,7 @@ jQuery(function($) {
     $recharge_decline.on('click', function () {
         var ladda = Ladda.create(this);
         ladda.start();
-        $.get(ajaxurl, {action: 'ab_decline_auto_recharge'}, function () {}, 'json')
+        $.get(ajaxurl, {action: 'bookly_decline_auto_recharge'}, function () {}, 'json')
             .always(function (response) {
                 ladda.stop();
                 if (response.success) {
@@ -276,7 +276,7 @@ jQuery(function($) {
                 url : ajaxurl,
                 data: function (d) {
                     return {
-                        action: 'ab_get_purchases_list',
+                        action: 'bookly_get_purchases_list',
                         range:  $date_range.data('date')
                     };
                 },
@@ -330,7 +330,7 @@ jQuery(function($) {
                 url : ajaxurl,
                 data: function (d) {
                     return {
-                        action: 'ab_get_sms_list',
+                        action: 'bookly_get_sms_list',
                         range:  $date_range.data('date')
                     };
                 },
@@ -375,7 +375,7 @@ jQuery(function($) {
             responsive: true,
             ajax: {
                 url : ajaxurl,
-                data: { action: 'ab_get_price_list' },
+                data: { action: 'bookly_get_price_list' },
                 dataSrc: 'list'
             },
             columns: [
@@ -427,7 +427,7 @@ jQuery(function($) {
             responsive: true,
             ajax: {
                 url: ajaxurl,
-                data: { action: 'ab_get_sender_ids_list' },
+                data: { action: 'bookly_get_sender_ids_list' },
                 dataSrc: function (json) {
                     if (json.pending) {
                         $sender_id.val(json.pending);
@@ -456,7 +456,7 @@ jQuery(function($) {
             ladda.start();
             $.ajax({
                 url  : ajaxurl,
-                data : {action: 'ab_request_sender_id', 'sender_id': $sender_id.val()},
+                data : {action: 'bookly_request_sender_id', 'sender_id': $sender_id.val()},
                 dataType : 'json',
                 xhrFields: {withCredentials: true},
                 success: function (response) {
@@ -480,7 +480,7 @@ jQuery(function($) {
             if (confirm(BooklyL10n.are_you_sure)) {
                 $.ajax({
                     url: ajaxurl,
-                    data: {action: 'ab_reset_sender_id'},
+                    data: {action: 'bookly_reset_sender_id'},
                     dataType: 'json',
                     xhrFields: {withCredentials: true},
                     success: function (response) {
@@ -507,7 +507,7 @@ jQuery(function($) {
                 $.ajax({
                     method     : 'POST',
                     url        : ajaxurl,
-                    data:      {action: 'ab_cancel_sender_id'},
+                    data:      {action: 'bookly_cancel_sender_id'},
                     dataType   : 'json',
                     success    : function (response) {
                         if (response.success) {

@@ -12,11 +12,11 @@ class StaffScheduleItem extends Lib\Base\Entity
     protected static $table = 'ab_staff_schedule_items';
 
     protected static $schema = array(
-        'id'               => array( 'format' => '%d' ),
-        'staff_id'         => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
-        'day_index'        => array( 'format' => '%d' ),
-        'start_time'       => array( 'format' => '%s' ),
-        'end_time'         => array( 'format' => '%s' ),
+        'id'         => array( 'format' => '%d' ),
+        'staff_id'   => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
+        'day_index'  => array( 'format' => '%d' ),
+        'start_time' => array( 'format' => '%s' ),
+        'end_time'   => array( 'format' => '%s' ),
     );
 
     protected static $cache = array();
@@ -47,7 +47,7 @@ class StaffScheduleItem extends Lib\Base\Entity
     /**
      * Get list of breaks
      *
-     * @return array|mixed
+     * @return array
      */
     public function getBreaksList()
     {
@@ -59,8 +59,8 @@ class StaffScheduleItem extends Lib\Base\Entity
 
     public function save()
     {
-        $a = $this->getBreaksList();
-        foreach ( $a as $row ) {
+        $list = $this->getBreaksList();
+        foreach ( $list as $row ) {
             $break = new ScheduleItemBreak();
             $break->setFields( $row );
             if (

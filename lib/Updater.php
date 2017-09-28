@@ -7,9 +7,325 @@ namespace BooklyLite\Lib;
  */
 class Updater extends Base\Updater
 {
+    function update_13_0()
+    {
+        /** @global \wpdb $wpdb */
+        global $wpdb;
+
+        $dismiss_subscribe_notice = ! get_option( 'bookly_gen_show_subscribe_notice' );
+        foreach ( get_users( array( 'role' => 'administrator' ) ) as $admin ) {
+            delete_user_meta( $admin->ID, 'bookly_dismiss_admin_notice' );
+            if ( $dismiss_subscribe_notice ) {
+                update_user_meta( $admin->ID, 'bookly_dismiss_subscribe_notice', 1 );
+            }
+        }
+        delete_option( 'bookly_gen_show_subscribe_notice' );
+
+        add_option( 'bookly_lite_uninstall_remove_bookly_data', '0' );
+        add_option( 'bookly_api_server_error_time', '0' );
+        add_option( 'bookly_grace_notifications', array ( 'bookly' => '0', 'add-ons' => '0', 'sent' => '0' ) );
+        add_option( 'bookly_grace_hide_admin_notice_time', '0' );
+
+        $options = array(
+            'bookly_email_content_type'               => 'bookly_email_send_as',
+            'bookly_pmt_authorizenet'                 => 'bookly_pmt_authorize_net',
+            'bookly_pmt_authorizenet_api_login_id'    => 'bookly_pmt_authorize_net_api_login_id',
+            'bookly_pmt_authorizenet_transaction_key' => 'bookly_pmt_authorize_net_transaction_key',
+            'bookly_pmt_authorizenet_sandbox'         => 'bookly_pmt_authorize_net_sandbox',
+            'bookly_pmt_pay_locally'                  => 'bookly_pmt_local',
+        );
+        $this->rename_options( $options );
+
+        if ( get_option( 'bookly_email_content_type' ) == 'plain' ) {
+            update_option( 'bookly_email_content_type', 'text' );
+        }
+
+        // Authorize.Net => authorize_net.
+        $wpdb->query( 'ALTER TABLE ' . Entities\Payment::getTableName() . " CHANGE COLUMN `type` `type` ENUM('local','coupon','paypal','authorizeNet','authorize_net','stripe','2checkout','payu_latam','payson','mollie','woocommerce') NOT NULL DEFAULT 'local'" );
+        $wpdb->query( 'UPDATE ' . Entities\Payment::getTableName() . " SET `type` = 'authorize_net' WHERE `type` = 'authorizeNet'" );
+        $wpdb->query( 'ALTER TABLE ' . Entities\Payment::getTableName() . " CHANGE COLUMN `type` `type` ENUM('local','coupon','paypal','authorize_net','stripe','2checkout','payu_latam','payson','mollie','woocommerce') NOT NULL DEFAULT 'local'" );
+        $this->dropTableColumns( Entities\Payment::getTableName(), array( 'transaction_id', 'token' ) );
+
+        $wpdb->query( 'UPDATE ' . Entities\CustomerAppointment::getTableName() . ' CHANGE COLUMN `status` `status` ENUM(\'pending\',\'approved\',\'cancelled\',\'rejected\') NOT NULL DEFAULT \'approved\' AFTER `custom_fields`' );
+        $notifications = array(
+            array(
+                'gateway' => 'email',
+                'type'    => 'client_rejected_appointment',
+                'subject' => __( 'Booking rejection', 'bookly' ),
+                'message' => wpautop( __( "Dear {client_name}.\n\nYour booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n\nReason: {cancellation_reason}\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
+                'active'  => 1,
+            ),
+            array(
+                'gateway' => 'email',
+                'type'    => 'staff_rejected_appointment',
+                'subject' => __( 'Booking rejection', 'bookly' ),
+                'message' => wpautop( __( "Hello.\n\nThe following booking has been rejected.\n\nReason: {cancellation_reason}\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
+                'active'  => 1,
+            ),
+
+            array(
+                'gateway' => 'sms',
+                'type'    => 'client_rejected_appointment',
+                'subject' => '',
+                'message' => __( "Dear {client_name}.\nYour booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\nReason: {cancellation_reason}\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
+                'active'  => 1,
+            ),
+            array(
+                'gateway' => 'sms',
+                'type'    => 'staff_rejected_appointment',
+                'subject' => '',
+                'message' => __( "Hello.\nThe following booking has been rejected.\nReason: {cancellation_reason}\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
+                'active'  => 1,
+            ),
+        );
+        foreach ( $notifications as $data ) {
+            $notification = new Entities\Notification( $data );
+            $notification->save();
+        }
+
+        $this->dropTableColumns( Entities\CustomerAppointment::getTableName(), array( 'series' ) );
+        $wpdb->query(
+            'CREATE TABLE IF NOT EXISTS `' . Entities\Series::getTableName() . '` (
+                `id`     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `repeat` VARCHAR(255),
+                `token`  VARCHAR(255) NOT NULL
+            ) ENGINE = INNODB
+            DEFAULT CHARACTER SET = utf8
+            COLLATE = utf8_general_ci'
+        );
+        $wpdb->query( 'ALTER TABLE `' . Entities\Appointment::getTableName() . '` ADD COLUMN `series_id` INT UNSIGNED AFTER `id`' );
+        $wpdb->query( 'ALTER TABLE `' . Entities\Appointment::getTableName() . '` ADD CONSTRAINT FOREIGN KEY (series_id) REFERENCES ' . Entities\Series::getTableName() . '(id) ON DELETE CASCADE ON UPDATE CASCADE' );
+    }
+
+    function update_12_1()
+    {
+        global $wpdb;
+
+        $options = array(
+            'bookly_l10n_required_email'    => __( 'Please tell us your email', 'bookly' ),
+            'bookly_l10n_required_employee' => __( 'Please select an employee', 'bookly' ),
+            'bookly_l10n_required_name'     => __( 'Please tell us your name',  'bookly' ),
+            'bookly_l10n_required_phone'    => __( 'Please tell us your phone', 'bookly' ),
+            'bookly_l10n_required_service'  => __( 'Please select a service',   'bookly' ),
+        );
+        foreach ( $options as $option_name => $option_value ) {
+            if ( get_option( $option_name ) == '' ) {
+                $this->register_l10n_options( array( array( $option_name => $option_value ) ) );
+            }
+        }
+        $wpdb->query( 'ALTER TABLE `'. Entities\CustomerAppointment::getTableName() . '` ADD COLUMN `series` VARCHAR(255) NULL DEFAULT NULL' );
+    }
+
+    function update_12_0()
+    {
+        global $wpdb;
+
+        $wpdb->query( 'ALTER TABLE `' . Entities\Staff::getTableName() . '` CHANGE COLUMN `google_data` `google_data` TEXT' );
+    }
+
+    function update_11_7()
+    {
+        global $wpdb;
+
+        $wpdb->query( 'ALTER TABLE `'. Entities\Service::getTableName() . '` ADD COLUMN `start_time` TIME NULL, ADD COLUMN `end_time` TIME NULL' );
+
+        $options = array(
+            'ab_2checkout_api_secret_word'         => 'bookly_pmt_2checkout_api_secret_word',
+            'ab_2checkout_api_seller_id'           => 'bookly_pmt_2checkout_api_seller_id',
+            'ab_2checkout_sandbox'                 => 'bookly_pmt_2checkout_sandbox',
+            'ab_appearance_color'                  => 'bookly_app_color',
+            'ab_appearance_required_employee'      => 'bookly_app_required_employee',
+            'ab_appearance_show_blocked_timeslots' => 'bookly_app_show_blocked_timeslots',
+            'ab_appearance_show_calendar'          => 'bookly_app_show_calendar',
+            'ab_appearance_show_day_one_column'    => 'bookly_app_show_day_one_column',
+            'ab_appearance_show_progress_tracker'  => 'bookly_app_show_progress_tracker',
+            'ab_appearance_staff_name_with_price'  => 'bookly_app_staff_name_with_price',
+            'ab_authorizenet_api_login_id'         => 'bookly_pmt_authorizenet_api_login_id',
+            'ab_authorizenet_sandbox'              => 'bookly_pmt_authorizenet_sandbox',
+            'ab_authorizenet_transaction_key'      => 'bookly_pmt_authorizenet_transaction_key',
+            'ab_cart_show_columns'                 => 'bookly_cart_show_columns',
+            'ab_currency'                          => 'bookly_pmt_currency',
+            'ab_custom_fields'                     => 'bookly_custom_fields',
+            'ab_custom_fields_per_service'         => 'bookly_custom_fields_per_service',
+            'ab_data_loaded'                       => 'bookly_data_loaded',
+            'ab_db_version'                        => 'bookly_db_version',
+            'ab_email_content_type'                => 'bookly_email_content_type',
+            'ab_email_notification_reply_to_customers' => 'bookly_email_reply_to_customers',
+            'ab_envato_purchase_code'              => 'bookly_envato_purchase_code',
+            'ab_installation_time'                 => 'bookly_installation_time',
+            'ab_mollie_api_key'                    => 'bookly_pmt_mollie_api_key',
+            'ab_paypal_api_password'               => 'bookly_pmt_paypal_api_password',
+            'ab_paypal_api_signature'              => 'bookly_pmt_paypal_api_signature',
+            'ab_paypal_api_username'               => 'bookly_pmt_paypal_api_username',
+            'ab_paypal_ec_mode'                    => 'bookly_pmt_paypal_sandbox',
+            'ab_paypal_id'                         => 'bookly_pmt_paypal_id',
+            'ab_payson_api_agent_id'               => 'bookly_pmt_payson_api_agent_id',
+            'ab_payson_api_key'                    => 'bookly_pmt_payson_api_key',
+            'ab_payson_api_receiver_email'         => 'bookly_pmt_payson_api_receiver_email',
+            'ab_payson_fees_payer'                 => 'bookly_pmt_payson_fees_payer',
+            'ab_payson_funding'                    => 'bookly_pmt_payson_funding',
+            'ab_payson_sandbox'                    => 'bookly_pmt_payson_sandbox',
+            'ab_payulatam_api_account_id'          => 'bookly_pmt_payu_latam_api_account_id',
+            'ab_payulatam_api_key'                 => 'bookly_pmt_payu_latam_api_key',
+            'ab_payulatam_api_merchant_id'         => 'bookly_pmt_payu_latam_api_merchant_id',
+            'ab_payulatam_sandbox'                 => 'bookly_pmt_payu_latam_sandbox',
+            'ab_settings_allow_staff_members_edit_profile' => 'bookly_gen_allow_staff_edit_profile',
+            'ab_settings_approve_page_url'         => 'bookly_gen_approve_page_url',
+            'ab_settings_cancel_denied_page_url'   => 'bookly_gen_cancel_denied_page_url',
+            'ab_settings_cancel_page_url'          => 'bookly_gen_cancel_page_url',
+            'ab_settings_cart_notifications_combined' => 'bookly_cst_combined_notifications',
+            'ab_settings_client_cancel_appointment_action' => 'bookly_cst_client_cancel_action',
+            'ab_settings_company_address'          => 'bookly_co_address',
+            'ab_settings_company_logo_attachment_id'  => 'bookly_co_logo_attachment_id',
+            'ab_settings_company_name'             => 'bookly_co_name',
+            'ab_settings_company_phone'            => 'bookly_co_phone',
+            'ab_settings_company_website'          => 'bookly_co_website',
+            'ab_settings_coupons'                  => 'bookly_pmt_coupons',
+            'ab_settings_create_account'           => 'bookly_cst_create_account',
+            'ab_settings_cron_reminder'            => 'bookly_cron_reminder_times',
+            'ab_settings_default_appointment_status' => 'bookly_gen_default_appointment_status',
+            'ab_settings_final_step_url'           => 'bookly_gen_final_step_url',
+            'ab_settings_friday_end'               => 'bookly_bh_friday_end',
+            'ab_settings_friday_start'             => 'bookly_bh_friday_start',
+            'ab_settings_google_client_id'         => 'bookly_gc_client_id',
+            'ab_settings_google_client_secret'     => 'bookly_gc_client_secret',
+            'ab_settings_google_event_title'       => 'bookly_gc_event_title',
+            'ab_settings_google_limit_events'      => 'bookly_gc_limit_events',
+            'ab_settings_google_two_way_sync'      => 'bookly_gc_two_way_sync',
+            'ab_settings_link_assets_method'       => 'bookly_gen_link_assets_method',
+            'ab_settings_maximum_available_days_for_booking' => 'bookly_gen_max_days_for_booking',
+            'ab_settings_minimum_time_prior_booking' => 'bookly_gen_min_time_prior_booking',
+            'ab_settings_minimum_time_prior_cancel'  => 'bookly_gen_min_time_prior_cancel',
+            'ab_settings_monday_end'               => 'bookly_bh_monday_end',
+            'ab_settings_monday_start'             => 'bookly_bh_monday_start',
+            'ab_settings_new_account_role'         => 'bookly_cst_new_account_role',
+            'ab_settings_pay_locally'              => 'bookly_pmt_pay_locally',
+            'ab_settings_phone_default_country'    => 'bookly_cst_phone_default_country',
+            'ab_settings_saturday_end'             => 'bookly_bh_saturday_end',
+            'ab_settings_saturday_start'           => 'bookly_bh_saturday_start',
+            'ab_settings_sender_email'             => 'bookly_email_sender',
+            'ab_settings_sender_name'              => 'bookly_email_sender_name',
+            'ab_settings_step_cart_enabled'        => 'bookly_cart_enabled',
+            'ab_settings_sunday_end'               => 'bookly_bh_sunday_end',
+            'ab_settings_sunday_start'             => 'bookly_bh_sunday_start',
+            'ab_settings_thursday_end'             => 'bookly_bh_thursday_end',
+            'ab_settings_thursday_start'           => 'bookly_bh_thursday_start',
+            'ab_settings_time_slot_length'         => 'bookly_gen_time_slot_length',
+            'ab_settings_tuesday_end'              => 'bookly_bh_tuesday_end',
+            'ab_settings_tuesday_start'            => 'bookly_bh_tuesday_start',
+            'ab_settings_use_client_time_zone'     => 'bookly_gen_use_client_time_zone',
+            'ab_settings_wednesday_end'            => 'bookly_bh_wednesday_end',
+            'ab_settings_wednesday_start'          => 'bookly_bh_wednesday_start',
+            'ab_sms_administrator_phone'           => 'bookly_sms_administrator_phone',
+            'ab_sms_default_country_code'          => 'bookly_cst_default_country_code',
+            'ab_sms_notify_low_balance'            => 'bookly_sms_notify_low_balance',
+            'ab_sms_notify_weekly_summary'         => 'bookly_sms_notify_weekly_summary',
+            'ab_sms_notify_weekly_summary_sent'    => 'bookly_sms_notify_weekly_summary_sent',
+            'ab_sms_token'                         => 'bookly_sms_token',
+            'ab_stripe_publishable_key'            => 'bookly_pmt_stripe_publishable_key',
+            'ab_stripe_secret_key'                 => 'bookly_pmt_stripe_secret_key',
+            'ab_woocommerce_enabled'               => 'bookly_wc_enabled',
+            'ab_woocommerce_product'               => 'bookly_wc_product',
+            'bookly_payment_2checkout'             => 'bookly_pmt_2checkout',
+            'bookly_payment_authorizenet'          => 'bookly_pmt_authorizenet',
+            'bookly_payment_mollie'                => 'bookly_pmt_mollie',
+            'bookly_payment_paypal'                => 'bookly_pmt_paypal',
+            'bookly_payment_payson'                => 'bookly_pmt_payson',
+            'bookly_payment_payulatam'             => 'bookly_pmt_payu_latam',
+            'bookly_payment_stripe'                => 'bookly_pmt_stripe',
+        );
+        $this->rename_options( $options );
+        $appearance = array(
+            'ab_appearance_text_button_apply'      => 'bookly_l10n_button_apply',
+            'ab_appearance_text_button_back'       => 'bookly_l10n_button_back',
+            'ab_appearance_text_button_book_more'  => 'bookly_l10n_button_book_more',
+            'ab_appearance_text_button_next'       => 'bookly_l10n_button_next',
+            'ab_appearance_text_info_cart_step'    => 'bookly_l10n_info_cart_step',
+            'ab_appearance_text_info_complete_step' => 'bookly_l10n_info_complete_step',
+            'ab_appearance_text_info_coupon'       => 'bookly_l10n_info_coupon',
+            'ab_appearance_text_info_details_step' => 'bookly_l10n_info_details_step',
+            'ab_appearance_text_info_details_step_guest' => 'bookly_l10n_info_details_step_guest',
+            'ab_appearance_text_info_payment_step' => 'bookly_l10n_info_payment_step',
+            'ab_appearance_text_info_service_step' => 'bookly_l10n_info_service_step',
+            'ab_appearance_text_info_time_step'    => 'bookly_l10n_info_time_step',
+            'ab_appearance_text_label_category'    => 'bookly_l10n_label_category',
+            'ab_appearance_text_label_ccard_code'  => 'bookly_l10n_label_ccard_code',
+            'ab_appearance_text_label_ccard_expire'=> 'bookly_l10n_label_ccard_expire',
+            'ab_appearance_text_label_ccard_number'=> 'bookly_l10n_label_ccard_number',
+            'ab_appearance_text_label_coupon'      => 'bookly_l10n_label_coupon',
+            'ab_appearance_text_label_email'       => 'bookly_l10n_label_email',
+            'ab_appearance_text_label_employee'    => 'bookly_l10n_label_employee',
+            'ab_appearance_text_label_finish_by'   => 'bookly_l10n_label_finish_by',
+            'ab_appearance_text_label_name'        => 'bookly_l10n_label_name',
+            'ab_appearance_text_label_number_of_persons' => 'bookly_l10n_label_number_of_persons',
+            'ab_appearance_text_label_pay_ccard'   => 'bookly_l10n_label_pay_ccard',
+            'ab_appearance_text_label_pay_locally' => 'bookly_l10n_label_pay_locally',
+            'ab_appearance_text_label_pay_mollie'  => 'bookly_l10n_label_pay_mollie',
+            'ab_appearance_text_label_pay_paypal'  => 'bookly_l10n_label_pay_paypal',
+            'ab_appearance_text_label_phone'       => 'bookly_l10n_label_phone',
+            'ab_appearance_text_label_select_date' => 'bookly_l10n_label_select_date',
+            'ab_appearance_text_label_service'     => 'bookly_l10n_label_service',
+            'ab_appearance_text_label_start_from'  => 'bookly_l10n_label_start_from',
+            'ab_appearance_text_option_category'   => 'bookly_l10n_option_category',
+            'ab_appearance_text_option_employee'   => 'bookly_l10n_option_employee',
+            'ab_appearance_text_option_service'    => 'bookly_l10n_option_service',
+            'ab_appearance_text_required_email'    => 'bookly_l10n_required_email',
+            'ab_appearance_text_required_employee' => 'bookly_l10n_required_employee',
+            'ab_appearance_text_required_name'     => 'bookly_l10n_required_name',
+            'ab_appearance_text_required_phone'    => 'bookly_l10n_required_phone',
+            'ab_appearance_text_required_service'  => 'bookly_l10n_required_service',
+            'ab_appearance_text_step_cart'         => 'bookly_l10n_step_cart',
+            'ab_appearance_text_step_details'      => 'bookly_l10n_step_details',
+            'ab_appearance_text_step_done'         => 'bookly_l10n_step_done',
+            'ab_appearance_text_step_payment'      => 'bookly_l10n_step_payment',
+            'ab_appearance_text_step_service'      => 'bookly_l10n_step_service',
+            'ab_appearance_text_step_time'         => 'bookly_l10n_step_time',
+            'ab_woocommerce_cart_info_name'        => 'bookly_l10n_wc_cart_info_name',
+            'ab_woocommerce_cart_info_value'       => 'bookly_l10n_wc_cart_info_value',
+        );
+        $this->rename_l10n_strings( $appearance );
+        update_option( 'bookly_pmt_paypal_sandbox', ( get_option( 'bookly_pmt_paypal_sandbox' ) == '.sandbox' ) ? '1' : '0' );
+        foreach ( get_users( array( 'role' => 'administrator' ) ) as $admin ) {
+            add_user_meta( $admin->ID, 'bookly_dismiss_admin_notice', get_user_meta( $admin->ID, 'ab_dismiss_admin_notice' ) );
+            delete_user_meta( $admin->ID, 'ab_dismiss_admin_notice' );
+        }
+        $wpdb->query( 'ALTER TABLE ' . Entities\Payment::getTableName() . " CHANGE COLUMN `type` `type` ENUM('local','coupon','paypal','authorizeNet','stripe','2checkout','payulatam','payson','mollie','woocommerce','payu_latam') NOT NULL DEFAULT 'local'" );
+        $wpdb->query( 'UPDATE ' . Entities\Payment::getTableName() . " SET `type` = 'payu_latam' WHERE `type` = 'payulatam'" );
+        $wpdb->query( 'ALTER TABLE ' . Entities\Payment::getTableName() . " CHANGE COLUMN `type` `type` ENUM('local','coupon','paypal','authorizeNet','stripe','2checkout','payu_latam','payson','mollie','woocommerce') NOT NULL DEFAULT 'local'" );
+        add_option( 'bookly_gen_service_duration_as_slot_length', '0' );
+        add_option( 'bookly_gen_show_subscribe_notice', '1' );
+    }
+
+    function update_11_5()
+    {
+        add_option( 'ab_settings_new_account_role', 'subscriber' );
+        update_option( 'ab_sms_notify_weekly_summary', '1' );
+        $options = array(
+            'ab_2checkout'         => 'bookly_payment_2checkout',
+            'ab_authorizenet_type' => 'bookly_payment_authorizenet',
+            'ab_mollie'            => 'bookly_payment_mollie',
+            'ab_paypal_type'       => 'bookly_payment_paypal',
+            'ab_payson'            => 'bookly_payment_payson',
+            'ab_payulatam'         => 'bookly_payment_payulatam',
+            'ab_stripe'            => 'bookly_payment_stripe',
+        );
+        $this->rename_options( $options );
+    }
+
+    function update_11_4()
+    {
+        global $wpdb;
+
+        $options = array(
+            'ab_sms_notify_week_summary'      => 'ab_sms_notify_weekly_summary',
+            'ab_sms_notify_week_summary_sent' => 'ab_sms_notify_weekly_summary_sent',
+        );
+        $this->rename_options( $options );
+        $wpdb->query( 'ALTER TABLE ' . Entities\Payment::getTableName() . " CHANGE COLUMN `type` `type` ENUM('local','coupon','paypal','authorizeNet','stripe','2checkout','payulatam','payson','mollie','woocommerce') NOT NULL DEFAULT 'local'" );
+    }
+
     function update_11_1()
     {
-        add_option( 'ab_lite_uninstall_remove_bookly_data', '1' );
         add_option( 'ab_sms_notify_week_summary', '0' );
         add_option( 'ab_sms_notify_week_summary_sent', date( 'W' ) );
 
@@ -23,7 +339,6 @@ class Updater extends Base\Updater
 
     function update_11_0()
     {
-        /** @var \wpdb $wpdb */
         global $wpdb;
 
         $wpdb->query( 'ALTER TABLE `' . Entities\Payment::getTableName(). '` ADD COLUMN paid DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER total' );
@@ -38,7 +353,7 @@ class Updater extends Base\Updater
     {
         global $wpdb;
 
-        add_option( 'ab_appearance_staff_name_with_price', (int) ! Config::isPaymentDisabled() );
+        add_option( 'ab_appearance_staff_name_with_price', (int) ! Config::isPaymentStepDisabled() );
         $wpdb->query( 'ALTER TABLE `' . Entities\CustomerAppointment::getTableName(). '` ADD COLUMN `location_id` INT UNSIGNED NULL DEFAULT NULL AFTER `appointment_id`' );
         $wpdb->query(
             'CREATE TABLE IF NOT EXISTS `' . Entities\CouponService::getTableName() . '` (
@@ -138,7 +453,7 @@ class Updater extends Base\Updater
                 }
             }
         }
-        $this->drop_columns( Entities\Staff::getTableName(), array( 'avatar_url', 'avatar_path' ) );
+        $this->dropTableColumns( Entities\Staff::getTableName(), array( 'avatar_url', 'avatar_path' ) );
 
         $wpdb->query( 'UPDATE ' . Entities\Customer::getTableName() . ' SET `wp_user_id` = NULL WHERE `wp_user_id` = 0' );
     }
@@ -153,7 +468,7 @@ class Updater extends Base\Updater
             $wpdb->query( 'UPDATE ' . Entities\Service::getTableName() . ' SET `sub_services` = \'[]\'' );
             $wpdb->query( 'UPDATE ' . Entities\CustomerAppointment::getTableName() . ' SET `extras` = \'[]\' WHERE extras IS NULL' );
             $wpdb->query( 'UPDATE ' . Entities\CustomerAppointment::getTableName() . ' ca JOIN ' . Entities\Payment::getTableName() . ' p ON p.customer_appointment_id = ca.id SET ca.payment_id = p.id' );
-            $this->drop_columns( Entities\Payment::getTableName(), array( 'customer_appointment_id' ) );
+            $this->dropTableColumns( Entities\Payment::getTableName(), array( 'customer_appointment_id' ) );
             $wpdb->query( 'ALTER TABLE ' . Entities\Payment::getTableName() . ' ADD COLUMN `details` TEXT' );
             $wpdb->query( 'ALTER TABLE ' . Entities\Appointment::getTableName() . ' ADD COLUMN `internal_note` TEXT' );
             $wpdb->query( 'ALTER TABLE ' . Entities\CustomerAppointment::getTableName() . ' ADD CONSTRAINT FOREIGN KEY (payment_id) REFERENCES ' . Entities\Payment::getTableName() . '(id) ON DELETE SET NULL ON UPDATE CASCADE' );
@@ -174,7 +489,7 @@ class Updater extends Base\Updater
                     'type'    => 'client_approved_appointment_cart',
                     'subject' => __( 'Your appointment information', 'bookly' ),
                     'message' => wpautop( __( "Dear {client_name}.\n\nThis is a confirmation that you have booked the following items:\n\n{cart_info}\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
-                    'active'  => 0,
+                    'active'  => 1,
                 ),
 
                 array(
@@ -219,7 +534,7 @@ class Updater extends Base\Updater
                 $payment->setDetails( array( new Entities\CustomerAppointment( $fields ) ), $coupon )->save();
             }
         }
-        $this->drop_columns( Entities\CustomerAppointment::getTableName(), array( 'coupon_code', 'coupon_discount', 'coupon_deduction' ) );
+        $this->dropTableColumns( Entities\CustomerAppointment::getTableName(), array( 'coupon_code', 'coupon_discount', 'coupon_deduction' ) );
     }
 
     function update_9_2()
@@ -246,7 +561,7 @@ class Updater extends Base\Updater
                 'type'    => 'client_pending_appointment',
                 'subject' => __( 'Your appointment information', 'bookly' ),
                 'message' => wpautop( __( "Dear {client_name}.\n\nThis is confirmation that you have booked {service_name}.\n\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
-                'active'  => 0,
+                'active'  => 1,
             ),
             array(
                 'gateway' => 'email',
@@ -283,7 +598,7 @@ class Updater extends Base\Updater
                 'subject' => '',
                 'message' => __( "Dear {client_name}.\nYou have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
                 'active'  => 0,
-            )
+            ),
         );
         foreach ( $notifications as $data ) {
             $notification = new Entities\Notification( $data );
@@ -305,7 +620,7 @@ class Updater extends Base\Updater
             'sms_client_new_appointment'           => 'sms_client_approved_appointment',
             'sms_staff_new_appointment'            => 'sms_staff_approved_appointment',
         );
-        $this->rename_l10n_strings( $l10n_strings );
+        $this->rename_l10n_strings( $l10n_strings, false );
 
         $ab_cart_show_columns = array(
             'service'  => array( 'show' => 0 ),
@@ -355,7 +670,7 @@ class Updater extends Base\Updater
             'ab_appearance_text_required_service'  => __( 'Please select a service',   'bookly' ),
             'ab_appearance_text_required_name'     => __( 'Please tell us your name',  'bookly' ),
             'ab_appearance_text_required_phone'    => __( 'Please tell us your phone', 'bookly' ),
-            'ab_appearance_text_required_email'    => __( 'Please tell us your email', 'bookly' )
+            'ab_appearance_text_required_email'    => __( 'Please tell us your email', 'bookly' ),
         );
         foreach ( $options as $option_name => $option_value ) {
             add_option( $option_name, $option_value );
@@ -371,7 +686,7 @@ class Updater extends Base\Updater
             'ab_appearance_text_button_next'  => __( 'Next', 'bookly' ),
             'ab_appearance_text_button_back'  => __( 'Back', 'bookly' ),
             'ab_appearance_text_button_apply' => __( 'Apply', 'bookly' ),
-            'ab_appearance_text_button_book_more' => __( 'Book More', 'bookly' )
+            'ab_appearance_text_button_book_more' => __( 'Book More', 'bookly' ),
         );
         foreach ( $options as $option_name => $option_value ) {
             add_option( $option_name, $option_value );
@@ -394,11 +709,11 @@ class Updater extends Base\Updater
             'ab_appearance_text_info_third_step_guest' => 'ab_appearance_text_info_details_step_guest',
             'ab_appearance_text_info_fourth_step'      => 'ab_appearance_text_info_payment_step',
             'ab_appearance_text_info_fifth_step'       => 'ab_appearance_text_info_complete_step',
-            'ab_woocommerce'                           => 'ab_woocommerce_enabled'
+            'ab_woocommerce'                           => 'ab_woocommerce_enabled',
         );
         $this->rename_options( $options );
         unset( $options['ab_woocommerce'] );
-        $this->rename_l10n_strings( $options );
+        $this->rename_l10n_strings( $options, false );
     }
 
     function update_8_0()
@@ -473,8 +788,8 @@ class Updater extends Base\Updater
     {
         global $wpdb;
 
-        $wpdb->query( "ALTER TABLE " . Entities\Payment::getTableName() . " CHANGE COLUMN `type` `type` ENUM('local','coupon','paypal','authorizeNet','stripe','2checkout') NOT NULL DEFAULT 'local'" );
-        $wpdb->query( "ALTER TABLE " . Entities\Payment::getTableName() . " CHANGE COLUMN `transaction` `transaction_id` VARCHAR(255) NOT NULL" );
+        $wpdb->query( 'ALTER TABLE ' . Entities\Payment::getTableName() . " CHANGE COLUMN `type` `type` ENUM('local','coupon','paypal','authorizeNet','stripe','2checkout') NOT NULL DEFAULT 'local'" );
+        $wpdb->query( 'ALTER TABLE ' . Entities\Payment::getTableName() . ' CHANGE COLUMN `transaction` `transaction_id` VARCHAR(255) NOT NULL' );
 
         add_option( 'ab_currency', get_option( 'ab_paypal_currency', 'USD' ) );
         add_option( 'ab_2checkout', 'disabled' );
@@ -809,13 +1124,13 @@ class Updater extends Base\Updater
             'evening_after'      => 'client_follow_up',
             'event_next_day'     => 'staff_agenda',
             'cancel_appointment' => 'staff_cancelled_appointment',
-            'new_wp_user'        => 'client_new_wp_user'
+            'new_wp_user'        => 'client_new_wp_user',
         );
         foreach ( $notifications as $from => $to ) {
             $wpdb->query( "UPDATE `ab_notifications` SET `type` = '$to' WHERE `type` = '$from'" );
         }
 
-        $this->drop( 'ab_email_notification' );
+        $this->drop( array( 'ab_email_notification' ) );
 
         // Rename tables.
         $ab_tables = array(
@@ -838,26 +1153,26 @@ class Updater extends Base\Updater
         }
 
         $wpdb->query(
-            "CREATE TABLE IF NOT EXISTS  `" . Entities\SentNotification::getTableName() . "` (
+            'CREATE TABLE IF NOT EXISTS  `' . Entities\SentNotification::getTableName() . '` (
                 `id`                      INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `customer_appointment_id` INT UNSIGNED,
                 `staff_id`                INT UNSIGNED,
-                `gateway`                 ENUM('email','sms') NOT NULL DEFAULT 'email',
+                `gateway`                 ENUM(\'email\',\'sms\') NOT NULL DEFAULT \'email\',
                 `type`                    VARCHAR(60) NOT NULL,
                 `created`                 DATETIME NOT NULL,
-                CONSTRAINT fk_" . Entities\SentNotification::getTableName() . "_" . Entities\CustomerAppointment::getTableName() . "_id
+                CONSTRAINT fk_' . Entities\SentNotification::getTableName() . '_' . Entities\CustomerAppointment::getTableName() . '_id
                     FOREIGN KEY (customer_appointment_id)
-                    REFERENCES  " . Entities\CustomerAppointment::getTableName() . "(id)
+                    REFERENCES  ' . Entities\CustomerAppointment::getTableName() . '(id)
                     ON DELETE   CASCADE
                     ON UPDATE   CASCADE,
-                CONSTRAINT fk_" . Entities\SentNotification::getTableName() . "_" . Entities\Staff::getTableName() . "_id
+                CONSTRAINT fk_' . Entities\SentNotification::getTableName() . '_' . Entities\Staff::getTableName() . '_id
                     FOREIGN KEY (staff_id)
-                    REFERENCES  " . Entities\Staff::getTableName() . "(id)
+                    REFERENCES  ' . Entities\Staff::getTableName() . '(id)
                     ON DELETE   CASCADE
                     ON UPDATE   CASCADE
               ) ENGINE = INNODB
               DEFAULT CHARACTER SET = utf8
-              COLLATE = utf8_general_ci"
+              COLLATE = utf8_general_ci'
         );
 
         // Google Calendar.
@@ -875,7 +1190,7 @@ class Updater extends Base\Updater
         $wpdb->query( 'ALTER TABLE `ab_holiday` CHANGE `holiday` `date` DATE NOT NULL' );
 
         $wpdb->query(
-            "CREATE TABLE IF NOT EXISTS  `ab_email_notification` (
+            'CREATE TABLE IF NOT EXISTS  `ab_email_notification` (
                 `id`                      INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `customer_appointment_id` INT UNSIGNED,
                 `staff_id`                INT UNSIGNED,
@@ -893,7 +1208,7 @@ class Updater extends Base\Updater
                     ON UPDATE   CASCADE
               ) ENGINE = INNODB
               DEFAULT CHARACTER SET = utf8
-              COLLATE = utf8_general_ci"
+              COLLATE = utf8_general_ci'
         );
     }
 
@@ -913,11 +1228,11 @@ class Updater extends Base\Updater
         global $wpdb;
 
         // User profiles.
-        add_option('ab_settings_create_account', 0, '', 'yes');
-        $wpdb->query('ALTER TABLE `ab_customer` ADD `wp_user_id` BIGINT(20) UNSIGNED');
+        add_option( 'ab_settings_create_account', 0, '', 'yes' );
+        $wpdb->query( 'ALTER TABLE `ab_customer` ADD `wp_user_id` BIGINT(20) UNSIGNED' );
         // Move coupons from ab_payment to ab_customer_appointment.
-        $wpdb->query('ALTER TABLE `ab_customer_appointment` ADD `coupon_code` VARCHAR(255) DEFAULT NULL');
-        $wpdb->query('ALTER TABLE `ab_customer_appointment` ADD `coupon_discount` DECIMAL(10,2) DEFAULT NULL');
+        $wpdb->query( 'ALTER TABLE `ab_customer_appointment` ADD `coupon_code` VARCHAR(255) DEFAULT NULL' );
+        $wpdb->query( 'ALTER TABLE `ab_customer_appointment` ADD `coupon_discount` DECIMAL(10,2) DEFAULT NULL' );
         $payments = $wpdb->get_results( 'SELECT * FROM `ab_payment`', ARRAY_A );
         foreach ( $payments as $payment ) {
             if ( $payment['coupon'] ) {
@@ -926,7 +1241,7 @@ class Updater extends Base\Updater
                     'ab_customer_appointment',
                     array(
                         'coupon_code' => $payment['coupon'],
-                        'coupon_discount' => $discount ?: 0
+                        'coupon_discount' => $discount ?: 0,
                     ),
                     array( 'id' => $payment['customer_appointment_id'] )
                 );
@@ -948,34 +1263,33 @@ class Updater extends Base\Updater
             'active'  => 1,
         ) );
         // Link ab_email_notification to ab_customer_appointment.
-        $wpdb->query('TRUNCATE TABLE `ab_email_notification`');
-        $wpdb->query('ALTER TABLE `ab_email_notification` ADD `customer_appointment_id` INT UNSIGNED');
-        $wpdb->query('ALTER TABLE `ab_email_notification`
+        $wpdb->query( 'TRUNCATE TABLE `ab_email_notification`' );
+        $wpdb->query( 'ALTER TABLE `ab_email_notification` ADD `customer_appointment_id` INT UNSIGNED' );
+        $wpdb->query( 'ALTER TABLE `ab_email_notification`
             ADD CONSTRAINT fk_ab_email_notification_customer_appointment_id
               FOREIGN KEY (customer_appointment_id)
               REFERENCES  ab_customer_appointment(id)
               ON DELETE   CASCADE
-              ON UPDATE   CASCADE
-        ');
-        $wpdb->query('ALTER TABLE `ab_email_notification` DROP FOREIGN KEY fk_ab_email_notification_customer_id, DROP INDEX ab_email_notification_customer_id_idx');
-        $wpdb->query('ALTER TABLE `ab_email_notification` DROP `customer_id`');
+              ON UPDATE   CASCADE' );
+        $wpdb->query( 'ALTER TABLE `ab_email_notification` DROP FOREIGN KEY fk_ab_email_notification_customer_id, DROP INDEX ab_email_notification_customer_id_idx' );
+        $wpdb->query( 'ALTER TABLE `ab_email_notification` DROP `customer_id`' );
     }
 
     function update_4_6()
     {
         global $wpdb;
 
-        add_option('ab_appearance_text_label_number_of_persons', __( 'Number of persons', 'bookly' ), '', 'yes');
-        add_option('ab_settings_google_limit_events', 0, '', 'yes');
-        add_option('ab_appearance_show_calendar', 0, '', 'yes');
+        add_option( 'ab_appearance_text_label_number_of_persons', __( 'Number of persons', 'bookly' ), '', 'yes' );
+        add_option( 'ab_settings_google_limit_events', 0, '', 'yes' );
+        add_option( 'ab_appearance_show_calendar', 0, '', 'yes' );
 
-        $wpdb->query('ALTER TABLE `ab_customer_appointment` ADD time_zone_offset INT');
-        $wpdb->query('ALTER TABLE `ab_customer_appointment` ADD number_of_persons INT UNSIGNED NOT NULL DEFAULT 1');
+        $wpdb->query( 'ALTER TABLE `ab_customer_appointment` ADD time_zone_offset INT' );
+        $wpdb->query( 'ALTER TABLE `ab_customer_appointment` ADD number_of_persons INT UNSIGNED NOT NULL DEFAULT 1' );
     }
 
     function update_4_4()
     {
-        add_option('ab_settings_maximum_available_days_for_booking', 365, '', 'yes');
+        add_option( 'ab_settings_maximum_available_days_for_booking', 365, '', 'yes' );
     }
 
     function update_4_3()
@@ -983,45 +1297,45 @@ class Updater extends Base\Updater
         global $wpdb;
 
         // Positioning in lists.
-        $wpdb->query("ALTER TABLE `ab_staff` ADD `position` INT NOT NULL DEFAULT 9999;");
-        $wpdb->query("ALTER TABLE `ab_category` ADD `position` INT NOT NULL DEFAULT 9999;");
-        $wpdb->query("ALTER TABLE `ab_service` ADD `position` INT NOT NULL DEFAULT 9999;");
+        $wpdb->query( 'ALTER TABLE `ab_staff` ADD `position` INT NOT NULL DEFAULT 9999;' );
+        $wpdb->query( 'ALTER TABLE `ab_category` ADD `position` INT NOT NULL DEFAULT 9999;' );
+        $wpdb->query( 'ALTER TABLE `ab_service` ADD `position` INT NOT NULL DEFAULT 9999;' );
 
-        add_option('ab_appearance_show_blocked_timeslots', 0, '', 'yes');
-        add_option('ab_appearance_show_day_one_column', 0, '', 'yes');
+        add_option( 'ab_appearance_show_blocked_timeslots', 0, '', 'yes' );
+        add_option( 'ab_appearance_show_day_one_column', 0, '', 'yes' );
     }
 
     function update_4_2()
     {
         global $wpdb;
 
-        $wpdb->query( "ALTER TABLE ab_payment ADD `customer_appointment_id` INT UNSIGNED DEFAULT NULL" );
-        $payments = $wpdb->get_results('SELECT id, customer_id, appointment_id from `ab_payment` ');
+        $wpdb->query( 'ALTER TABLE ab_payment ADD `customer_appointment_id` INT UNSIGNED DEFAULT NULL' );
+        $payments = $wpdb->get_results( 'SELECT id, customer_id, appointment_id from `ab_payment`' );
 
-        foreach ($payments as $payment) {
-            $customer_appointment = $wpdb->get_row($wpdb->prepare('SELECT id from `ab_customer_appointment` WHERE `customer_id` = %d and `appointment_id` = %d LIMIT 1', $payment->customer_id, $payment->appointment_id));
-            if ($customer_appointment) {
-                $wpdb->update('ab_payment', array('customer_appointment_id' => $customer_appointment->id), array('id' => $payment->id));
+        foreach ( $payments as $payment ) {
+            $customer_appointment = $wpdb->get_row( $wpdb->prepare( 'SELECT id from `ab_customer_appointment` WHERE `customer_id` = %d and `appointment_id` = %d LIMIT 1', $payment->customer_id, $payment->appointment_id ) );
+            if ( $customer_appointment ) {
+                $wpdb->update( 'ab_payment', array( 'customer_appointment_id' => $customer_appointment->id ), array( 'id' => $payment->id ) );
             }
         }
 
-        $wpdb->query("ALTER TABLE ab_payment
-                        DROP FOREIGN KEY fk_ab_payment_customer_id, DROP FOREIGN KEY fk_ab_payment_appointment_id, DROP customer_id, DROP appointment_id,
-                        ADD INDEX ab_payment_customer_appointment_id_idx (customer_appointment_id),
-                        ADD CONSTRAINT fk_ab_payment_customer_appointment_id
-                          FOREIGN KEY ab_payment_customer_appointment_id_idx (customer_appointment_id)
-                          REFERENCES  ab_customer_appointment(id)
-                          ON DELETE   CASCADE
-                          ON UPDATE   CASCADE;
-            ");
+        $wpdb->query(
+            'ALTER TABLE ab_payment
+              DROP FOREIGN KEY fk_ab_payment_customer_id, DROP FOREIGN KEY fk_ab_payment_appointment_id, DROP customer_id, DROP appointment_id,
+               ADD INDEX ab_payment_customer_appointment_id_idx (customer_appointment_id),
+               ADD CONSTRAINT fk_ab_payment_customer_appointment_id
+              FOREIGN KEY ab_payment_customer_appointment_id_idx (customer_appointment_id)
+              REFERENCES  ab_customer_appointment(id)
+              ON DELETE   CASCADE
+              ON UPDATE   CASCADE;' );
 
-        add_option('ab_appearance_text_label_pay_locally', __( 'I will pay locally', 'bookly' ), '', 'yes');
-        add_option('ab_settings_google_two_way_sync', 1, '', 'yes');
+        add_option( 'ab_appearance_text_label_pay_locally', __( 'I will pay locally', 'bookly' ), '', 'yes' );
+        add_option( 'ab_settings_google_two_way_sync', 1, '', 'yes' );
     }
 
     function update_4_1()
     {
-        add_option('ab_settings_final_step_url', '', '', 'yes');
+        add_option( 'ab_settings_final_step_url', '', '', 'yes' );
     }
 
     function update_4_0()
@@ -1032,30 +1346,30 @@ class Updater extends Base\Updater
 
         // Create relation between customer and appointment
         $ab_customer_appointments = $wpdb->get_results('SELECT * from `ab_customer_appointment` ');
-        foreach ($ab_customer_appointments as $ab_customer_appointment){
+        foreach ( $ab_customer_appointments as $ab_customer_appointment ) {
             $wpdb->update(
                 'ab_customer_appointment',
-                array('notes' => json_encode(array(array('id' => 1, 'value' => $ab_customer_appointment->notes)))),
-                array('id' => $ab_customer_appointment->id)
+                array( 'notes' => json_encode( array( array( 'id' => 1, 'value' => $ab_customer_appointment->notes ) ) ) ),
+                array( 'id' => $ab_customer_appointment->id )
             );
         }
 
-        $wpdb->query( "ALTER TABLE ab_customer_appointment CHANGE `notes` `custom_fields` TEXT" );
+        $wpdb->query( 'ALTER TABLE ab_customer_appointment CHANGE `notes` `custom_fields` TEXT' );
 
         delete_option('ab_appearance_text_label_notes');
 
-        $wpdb->query( "ALTER TABLE ab_payment CHANGE `type` `type` ENUM('local', 'coupon', 'paypal', 'authorizeNet', 'stripe') NOT NULL DEFAULT 'local';" );
+        $wpdb->query( 'ALTER TABLE ab_payment CHANGE `type` `type` ENUM(\'local\', \'coupon\', \'paypal\', \'authorizeNet\', \'stripe\') NOT NULL DEFAULT \'local\';' );
     }
 
     function update_3_4()
     {
         global $wpdb;
 
-        $wpdb->query("ALTER TABLE `ab_payment` DROP `status`;");
+        $wpdb->query( 'ALTER TABLE `ab_payment` DROP `status`;' );
 
-        add_option('ab_settings_minimum_time_prior_booking', 0, '', 'yes');
+        add_option( 'ab_settings_minimum_time_prior_booking', 0, '', 'yes' );
 
-        delete_option('ab_settings_no_current_day_appointments');
+        delete_option( 'ab_settings_no_current_day_appointments' );
     }
 
     function update_3_2()
@@ -1063,28 +1377,28 @@ class Updater extends Base\Updater
         global $wpdb;
 
         // Google Calendar oAuth.
-        $wpdb->query("ALTER TABLE `ab_staff` DROP `google_user`, DROP `google_PASS`;");
-        $wpdb->query("ALTER TABLE `ab_staff` ADD `google_data` VARCHAR(255) DEFAULT NULL, ADD `google_calendar_id` VARCHAR(255) DEFAULT NULL;");
-        $wpdb->query("ALTER TABLE `ab_appointment` ADD `google_event_id` VARCHAR(255) DEFAULT NULL;");
+        $wpdb->query( 'ALTER TABLE `ab_staff` DROP `google_user`, DROP `google_PASS`;' );
+        $wpdb->query( 'ALTER TABLE `ab_staff` ADD `google_data` VARCHAR(255) DEFAULT NULL, ADD `google_calendar_id` VARCHAR(255) DEFAULT NULL;' );
+        $wpdb->query( 'ALTER TABLE `ab_appointment` ADD `google_event_id` VARCHAR(255) DEFAULT NULL;' );
 
         // Coupons
-        $wpdb->query("
+        $wpdb->query( '
             CREATE TABLE IF NOT EXISTS ab_coupons (
                 id        INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                code      VARCHAR ( 255 ) NOT NULL DEFAULT '',
-                discount  DECIMAL( 3, 0 ) NOT NULL DEFAULT  '0',
-                used      TINYINT ( 1 ) NOT NULL DEFAULT '0'
+                code      VARCHAR ( 255 ) NOT NULL DEFAULT \'\',
+                discount  DECIMAL( 3, 0 ) NOT NULL DEFAULT  \'0\',
+                used      TINYINT ( 1 ) NOT NULL DEFAULT \'0\'
             ) ENGINE = INNODB
             DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci;");
+            COLLATE = utf8_general_ci;' );
 
-        $wpdb->query("ALTER TABLE `ab_payment` ADD `coupon` VARCHAR(255) DEFAULT NULL;");
+        $wpdb->query( 'ALTER TABLE `ab_payment` ADD `coupon` VARCHAR(255) DEFAULT NULL;' );
 
-        add_option('ab_appearance_text_label_coupon', __( 'Coupon', 'bookly' ), '', 'yes');
-        add_option('ab_appearance_text_info_coupon', __( 'The price for the service is {service_price}.', 'bookly' ), '', 'yes');
-        add_option('ab_settings_coupons', '0', '', 'yes');
-        add_option('ab_settings_google_client_id', '', '', 'yes');
-        add_option('ab_settings_google_client_secret', '', '', 'yes');
+        add_option( 'ab_appearance_text_label_coupon', __( 'Coupon', 'bookly' ), '', 'yes' );
+        add_option( 'ab_appearance_text_info_coupon', __( 'The price for the service is {service_price}.', 'bookly' ), '', 'yes' );
+        add_option( 'ab_settings_coupons', '0', '', 'yes' );
+        add_option( 'ab_settings_google_client_id', '', '', 'yes' );
+        add_option( 'ab_settings_google_client_secret', '', '', 'yes' );
     }
 
     function update_3_0()
@@ -1093,7 +1407,7 @@ class Updater extends Base\Updater
 
         // Create new table with foreign keys
         $wpdb->query(
-            "CREATE TABLE IF NOT EXISTS ab_customer_appointment (
+            'CREATE TABLE IF NOT EXISTS ab_customer_appointment (
                 id              INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 customer_id     INT UNSIGNED NOT NULL,
                 appointment_id  INT UNSIGNED NOT NULL,
@@ -1113,7 +1427,7 @@ class Updater extends Base\Updater
                   ON UPDATE   CASCADE
             ) ENGINE = INNODB
             DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci"
+            COLLATE = utf8_general_ci'
         );
 
         // Create relation between customer and appointment
@@ -1123,44 +1437,44 @@ class Updater extends Base\Updater
                 'customer_id'   => $appointment->customer_id,
                 'appointment_id'=> $appointment->id,
                 'notes'         => $appointment->notes,
-                'token'         => $appointment->token
+                'token'         => $appointment->token,
             ));
         }
 
         // Refactor binding from customer to appointment (many - many)
-        $wpdb->query("ALTER TABLE ab_appointment DROP FOREIGN KEY fk_ab_appointment_customer_id;");
-        $wpdb->query("ALTER TABLE ab_appointment DROP customer_id, DROP notes, DROP token;");
+        $wpdb->query( 'ALTER TABLE ab_appointment DROP FOREIGN KEY fk_ab_appointment_customer_id;' );
+        $wpdb->query( 'ALTER TABLE ab_appointment DROP customer_id, DROP notes, DROP token;' );
 
         // Add Service and Staff capacity
-        $wpdb->query("ALTER TABLE ab_service ADD capacity INT NOT NULL DEFAULT '1';");
-        $wpdb->query("ALTER TABLE ab_staff_service ADD capacity INT NOT NULL DEFAULT '1';");
+        $wpdb->query( 'ALTER TABLE ab_service ADD capacity INT NOT NULL DEFAULT \'1\';' );
+        $wpdb->query( 'ALTER TABLE ab_staff_service ADD capacity INT NOT NULL DEFAULT \'1\';' );
 
         // Delete table ab_payment_appointment
-        $wpdb->query("ALTER TABLE ab_payment ADD appointment_id INT UNSIGNED DEFAULT NULL;");
+        $wpdb->query( 'ALTER TABLE ab_payment ADD appointment_id INT UNSIGNED DEFAULT NULL;' );
 
-        $payments_appointment = $wpdb->get_results('SELECT * from ab_payment_appointment ');
-        foreach ($payments_appointment as $payment_appointment) {
-            $wpdb->update('ab_payment', array('appointment_id' => $payment_appointment->appointment_id), array('id' => $payment_appointment->payment_id));
+        $payments_appointment = $wpdb->get_results( 'SELECT * from ab_payment_appointment' );
+        foreach ( $payments_appointment as $payment_appointment ) {
+            $wpdb->update( 'ab_payment', array( 'appointment_id' => $payment_appointment->appointment_id ), array( 'id' => $payment_appointment->payment_id ) );
         }
 
-        $wpdb->query('DROP TABLE ab_payment_appointment');
+        $wpdb->query( 'DROP TABLE ab_payment_appointment' );
 
-        $wpdb->query('
+        $wpdb->query( '
             ALTER TABLE `ab_payment`
             ADD INDEX ab_payment_appointment_id_idx ( `appointment_id` ),
             ADD CONSTRAINT fk_ab_payment_appointment_id
             FOREIGN KEY ab_payment_appointment_id_idx (appointment_id)
             REFERENCES  ab_appointment(id)
             ON DELETE   SET NULL
-            ON UPDATE   CASCADE;');
+            ON UPDATE   CASCADE;' );
 
         $wpdb->query( 'ALTER TABLE ab_staff_schedule_item DROP FOREIGN KEY fk_ab_staff_schedule_item_schedule_item_id' );
         $wpdb->query( 'ALTER TABLE ab_staff_schedule_item DROP INDEX ab_staff_schedule_item_unique_ids_idx' );
         $wpdb->query( 'ALTER TABLE ab_staff_schedule_item DROP INDEX ab_staff_schedule_item_schedule_item_id_idx' );
         $wpdb->query( 'DROP TABLE IF EXISTS ab_schedule_item' );
 
-        $wpdb->query( 'ALTER TABLE ab_staff_schedule_item CHANGE COLUMN schedule_item_id day_index int(10) UNSIGNED NOT NULL AFTER staff_id');
-        $wpdb->query( 'ALTER TABLE ab_staff_schedule_item ADD UNIQUE KEY ab_staff_schedule_item_unique_ids_idx (staff_id, day_index) ' );
+        $wpdb->query( 'ALTER TABLE ab_staff_schedule_item CHANGE COLUMN schedule_item_id day_index int(10) UNSIGNED NOT NULL AFTER staff_id' );
+        $wpdb->query( 'ALTER TABLE ab_staff_schedule_item ADD UNIQUE KEY ab_staff_schedule_item_unique_ids_idx (staff_id, day_index)' );
     }
 
     function update_2_2_0()
@@ -1168,7 +1482,7 @@ class Updater extends Base\Updater
         global $wpdb;
 
         // stripe.com
-        $wpdb->query( "ALTER TABLE ab_payment CHANGE `type` `type` ENUM('local', 'paypal', 'authorizeNet', 'stripe') NOT NULL DEFAULT 'local'" );
+        $wpdb->query( 'ALTER TABLE ab_payment CHANGE `type` `type` ENUM(\'local\', \'paypal\', \'authorizeNet\', \'stripe\') NOT NULL DEFAULT \'local\'' );
         add_option( 'ab_stripe', '0', '', 'yes' );
         add_option( 'ab_stripe_secret_key', '', '', 'yes' );
 

@@ -40,7 +40,7 @@ class DateTime
      */
     public static function formatDate( $iso_date )
     {
-        return date_i18n( get_option( 'date_format' ), is_numeric( $iso_date ) ? $iso_date : strtotime( $iso_date ) );
+        return date_i18n( get_option( 'date_format' ), is_numeric( $iso_date ) ? $iso_date : strtotime( $iso_date, current_time( 'timestamp' ) ) );
     }
 
     /**
@@ -51,7 +51,7 @@ class DateTime
      */
     public static function formatTime( $iso_time )
     {
-        return date_i18n( get_option( 'time_format' ), is_numeric( $iso_time ) ? $iso_time : strtotime( $iso_time ) );
+        return date_i18n( get_option( 'time_format' ), is_numeric( $iso_time ) ? $iso_time : strtotime( $iso_time, current_time( 'timestamp' ) ) );
     }
 
     /**
@@ -206,9 +206,9 @@ class DateTime
 
     public static function buildTimeString( $seconds, $show_seconds = true )
     {
-        $hours    = intval( $seconds / 3600 );
+        $hours    = (int) ( $seconds / 3600 );
         $seconds -= $hours * 3600;
-        $minutes  = intval( $seconds / 60 );
+        $minutes  = (int) ( $seconds / 60 );
         $seconds -= $minutes * 60;
 
         return $show_seconds
@@ -243,6 +243,8 @@ class DateTime
      */
     public static function secondsToInterval( $duration )
     {
+        $duration = (int) $duration;
+
         $weeks   = (int) ( $duration / WEEK_IN_SECONDS );
         $days    = (int) ( ( $duration % WEEK_IN_SECONDS ) / DAY_IN_SECONDS );
         $hours   = (int) ( ( $duration % DAY_IN_SECONDS ) / HOUR_IN_SECONDS );
@@ -264,6 +266,18 @@ class DateTime
         }
 
         return implode( ' ', $parts );
+    }
+
+    /**
+     * Return formated time interval
+     *
+     * @param string $start_time    like 08:00:00
+     * @param string $end_time      like 18:45:00
+     * @return string
+     */
+    public static function formatInterval( $start_time, $end_time )
+    {
+        return self::formatTime( self::timeToSeconds( $start_time ) ) . ' - ' . self::formatTime( self::timeToSeconds( $end_time ) );
     }
 
 }

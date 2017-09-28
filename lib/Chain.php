@@ -20,21 +20,6 @@ class Chain
     }
 
     /**
-     * Get chain item.
-     *
-     * @param integer $key
-     * @return CartItem|false
-     */
-    public function get( $key )
-    {
-        if ( isset ( $this->items[ $key ] ) ) {
-            return $this->items[ $key ];
-        }
-
-        return false;
-    }
-
-    /**
      * Drop all chain items.
      */
     public function clear()

@@ -1,8 +1,8 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $ab_settings_sender_name  = get_option( 'ab_settings_sender_name' ) == '' ?
-        get_option( 'blogname' )    : get_option( 'ab_settings_sender_name' );
-    $ab_settings_sender_email = get_option( 'ab_settings_sender_email' ) == '' ?
-        get_option( 'admin_email' ) : get_option( 'ab_settings_sender_email' );
+    $bookly_email_sender_name  = get_option( 'bookly_email_sender_name' ) == '' ?
+        get_option( 'blogname' )    : get_option( 'bookly_email_sender_name' );
+    $bookly_email_sender = get_option( 'bookly_email_sender' ) == '' ?
+        get_option( 'admin_email' ) : get_option( 'bookly_email_sender' );
     $collapse_id = 0;
     $form_data = $form->getData();
 ?>
@@ -12,44 +12,34 @@
             <div class="bookly-page-title">
                 <?php _e( 'Email Notifications', 'bookly' ) ?>
             </div>
+            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
         </div>
-        <form method="post" id="form1" action="">
+        <form method="post" action="">
             <div class="panel panel-default bookly-main" ng-controller="emailNotifications">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="sender_name"><?php _e( 'Sender name', 'bookly' ) ?></label>
-                                <input id="sender_name" name="ab_settings_sender_name" class="form-control" type="text" value="<?php echo esc_attr( $ab_settings_sender_name ) ?>">
+                                <input id="sender_name" name="bookly_email_sender_name" class="form-control" type="text" value="<?php echo esc_attr( $bookly_email_sender_name ) ?>">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="sender_email"><?php _e( 'Sender email', 'bookly' ) ?></label>
-                                <input id="sender_email" name="ab_settings_sender_email" class="form-control ab-inline-block ab-auto-w ab-sender" type="text" value="<?php echo esc_attr( $ab_settings_sender_email ) ?>">
-                            </div>
-                        </div>
-                        <div class="clearfix visible-md-block"></div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="ab_email_notification_reply_to_customers">
-                                    <?php _e( 'Reply directly to customers', 'bookly' ) ?>
-                                </label>
-                                <p class="help-block" style="display: none;"><?php _e( 'If this option is enabled then the email address of the customer is used as a sender email address for notifications sent to staff members and administrators.', 'bookly' ) ?></p>
-                                <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'ab_email_notification_reply_to_customers' ) ?>
+                                <input id="sender_email" name="bookly_email_sender" class="form-control ab-sender" type="text" value="<?php echo esc_attr( $bookly_email_sender ) ?>">
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="ab_email_content_type">
-                                    <?php _e( 'Send emails as', 'bookly' ) ?>
-                                </label>
-                                <p class="help-block" style="display: none;"><?php _e( 'HTML allows formatting, colors, fonts, positioning, etc. With Text you must use Text mode of rich-text editors below. On some servers only text emails are sent successfully.', 'bookly' ) ?></p>
-                                <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'ab_email_content_type', array( 't' => array( 'html', __( 'HTML',  'bookly' ) ), 'f' => array( 'plain', __( 'Text', 'bookly' ) ) ) ) ?>
-                            </div>
+                            <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_email_send_as', __( 'Send emails as', 'bookly' ), __( 'HTML allows formatting, colors, fonts, positioning, etc. With Text you must use Text mode of rich-text editors below. On some servers only text emails are sent successfully.', 'bookly' ),
+                                array( array( 'html', __( 'HTML', 'bookly' ) ), array( 'text', __( 'Text', 'bookly' ) ) )
+                            ) ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_email_reply_to_customers', __( 'Reply directly to customers', 'bookly' ), __( 'If this option is enabled then the email address of the customer is used as a sender email address for notifications sent to staff members and administrators.', 'bookly' ) ) ?>
                         </div>
                     </div>
-                    <?php if ( $form->types['combined'] ) : ?>
+                    <?php if ( $form->types['combined'] || \BooklyLite\Lib\Utils\Common::isPluginActive( 'bookly-addon-recurring-appointments/main.php' ) ) : ?>
                         <h4 class="bookly-block-head bookly-color-gray"><?php _e( 'Single', 'bookly' ) ?></h4>
                     <?php endif ?>
                     <div class="panel-group bookly-margin-vertical-xlg" id="single">
@@ -122,6 +112,8 @@
                             <?php endforeach ?>
                         </div>
                     <?php endif ?>
+
+                    <?php do_action( 'bookly_render_email_notifications', $form ) ?>
 
                     <div class="alert alert-info">
                         <?php if ( is_multisite() ) : ?>

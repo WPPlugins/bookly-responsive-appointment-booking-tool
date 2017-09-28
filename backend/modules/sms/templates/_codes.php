@@ -26,4 +26,4 @@ $codes = array(
     array( 'code' => 'staff_info',        'description' => __( 'info of staff', 'bookly' ) ),
     array( 'code' => 'total_price',       'description' => __( 'total price of booking (sum of all cart items after applying coupon)', 'bookly' ) ),
 );
-\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_notification_short_codes', $codes ) );
+\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_prepare_notification_short_codes', $codes ) );

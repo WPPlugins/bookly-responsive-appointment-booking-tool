@@ -3,7 +3,6 @@ namespace BooklyLite\Lib;
 
 /**
  * Class Google
- *
  * @package BooklyLite\Lib
  */
 class Google
@@ -50,9 +49,7 @@ class Google
      */
     public function loadByStaffId( $staff_id )
     {
-        $staff = Entities\Staff::find( 1 );
-
-        return $this->loadByStaff( $staff );
+        return false;
     }
 
     /**
@@ -84,9 +81,7 @@ class Google
      */
     public function getCalendarList()
     {
-        $result = array();
-
-        return $result;
+        return array();
     }
 
     /**
@@ -97,7 +92,7 @@ class Google
      */
     public function getCalendarEvents( \DateTime $startDate )
     {
-        return false;
+        return array();
     }
 
     /**
@@ -122,9 +117,6 @@ class Google
      */
     public function logout()
     {
-        $this->staff->set( 'google_data', null );
-        $this->staff->set( 'google_calendar_id', null );
-        $this->staff->save();
     }
 
     /**
@@ -133,8 +125,13 @@ class Google
      */
     public function createAuthUrl( $staff_id )
     {
+        $this->client->setRedirectUri( self::generateRedirectURI() );
+        $this->client->addScope( 'https://www.googleapis.com/auth/calendar' );
+        $this->client->setState( strtr( base64_encode( $staff_id ), '+/=', '-_,' ) );
+        $this->client->setApprovalPrompt( 'force' );
+        $this->client->setAccessType( 'offline' );
 
-        return null;
+        return $this->client->createAuthUrl();
     }
 
     /**
@@ -145,7 +142,17 @@ class Google
      */
     public function delete( $event_id )
     {
-        return true;
+        try {
+            if ( in_array( $this->getCalendarAccess(), array( 'writer', 'owner' ) ) ) {
+                $this->service->events->delete( $this->getCalendarID(), $event_id );
+
+                return true;
+            }
+        } catch ( \Exception $e ) {
+            $this->errors[] = $e->getMessage();
+        }
+
+        return false;
     }
 
     /**

@@ -5,116 +5,132 @@ namespace BooklyLite\Lib\Base;
  * Class Installer
  * @package BooklyLite\Lib\Base
  */
-abstract class Installer
+abstract class Installer extends Schema
 {
-    protected $notifications;
-    protected $options;
-    protected $tables;
+    protected $options = array();
+
+    /******************************************************************************************************************
+     * Public methods                                                                                                 *
+     ******************************************************************************************************************/
 
     /**
      * Install.
      */
     public function install()
     {
-        $plugin_class = $this->getPluginClass();
+        global $wpdb;
+
+        $plugin_class = Plugin::getPluginFor( $this );
         $data_loaded_option_name = $plugin_class::getPrefix() . 'data_loaded';
 
         // Create tables and load data if it hasn't been loaded yet.
         if ( ! get_option( $data_loaded_option_name ) ) {
-
-            $this->_create_tables();
-            $this->_load_data();
+            $this->createTables();
+            $this->loadData();
         }
-        update_option( $data_loaded_option_name, '1' );
-    }
 
-    /**
-     * Load data.
-     */
-    protected function _load_data()
-    {
-        // Add options.
-        foreach ( $this->options as $name => $value ) {
-            add_option( $name, $value );
-            if ( strpos( $name, 'ab_appearance_text_' ) === 0 ) {
-                do_action( 'wpml_register_single_string', 'bookly', $name, $value );
+        if ( false === \BooklyLite\Lib\Entities\Staff::find( 1 ) ) {
+            $wpdb->insert( \BooklyLite\Lib\Entities\Staff::getTableName(), array( 'full_name' => 'Employee', 'id' => 1, 'visibility' => 'public' ) );
+            \BooklyLite\Lib\Entities\StaffScheduleItem::query( 'ss' )
+                ->delete()->where( 'ss.staff_id', 1 )
+                ->execute();
+            $fields = array(
+                'staff_id'   => 1,
+                'day_index'  => 1,
+                'start_time' => '08:00:00',
+                'end_time'   => '18:00:00',
+            );
+            for ( $i = 1; $i <= 7; $i ++ ) {
+                $fields['day_index'] = $i;
+                $schedule            = new \BooklyLite\Lib\Entities\StaffScheduleItem();
+                $schedule->setFields( $fields );
+                $schedule->save();
             }
         }
-    }
 
-    /**
-     * Create tables in database.
-     */
-    protected function _create_tables() { }
+        update_option( $data_loaded_option_name, '1' );
+    }
 
     /**
      * Uninstall.
      */
     public function uninstall()
     {
-        if ( get_option( 'ab_lite_uninstall_remove_bookly_data', true ) ) {
-            $this->_remove_data();
-            $this->_drop_tables();
+        if ( get_option( 'bookly_lite_uninstall_remove_bookly_data' ) ) {
+            $this->removeData();
+            $this->dropPluginTables();
+        }
+    }
+
+    /**
+     * Get options.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Create tables.
+     */
+    public function createTables()
+    {
+
+    }
+
+    /**
+     * Drop tables (@see \BooklyLite\Backend\Modules\Debug\Controller ).
+     */
+    public function dropTables()
+    {
+        $this->dropPluginTables();
+    }
+
+    /**
+     * Load data.
+     */
+    public function loadData()
+    {
+        // Add default options.
+        $plugin_class  = Plugin::getPluginFor( $this );
+        $plugin_prefix = $plugin_class::getPrefix();
+        add_option( $plugin_prefix . 'data_loaded', '0' );
+        add_option( $plugin_prefix . 'db_version',  $plugin_class::getVersion() );
+        add_option( $plugin_prefix . 'installation_time', time() );
+        add_option( $plugin_prefix . 'grace_start', time() + 2 * WEEK_IN_SECONDS );
+        add_option( $plugin_class::getPurchaseCodeOption(), '' );
+        if ( Plugin::getPrefix() != 'bookly_' ) {
+            add_option( $plugin_prefix . 'enabled', '1' );
+        }
+
+        // Add plugin options.
+        foreach ( $this->options as $name => $value ) {
+            add_option( $name, $value );
+            if ( strpos( $name, 'bookly_l10n_' ) === 0 ) {
+                do_action( 'wpml_register_single_string', 'bookly', $name, $value );
+            }
         }
     }
 
     /**
      * Remove data.
      */
-    protected function _remove_data()
+    public function removeData()
     {
         // Remove options.
         foreach ( $this->options as $name => $value ) {
             delete_option( $name );
         }
-        $plugin_class = $this->getPluginClass();
-        $meta_dismiss_admin_notice = $plugin_class::getPrefix() . 'dismiss_admin_notice';
-        // Remove user meta.
-        foreach ( get_users( array( 'role' => 'administrator' ) ) as $admin ) {
-            delete_user_meta( $admin->ID, $meta_dismiss_admin_notice );
-        }
-    }
-
-    /**
-     * Drop Foreign Keys
-     * @param $tables
-     */
-    protected function _drop_fk( $tables )
-    {
-        /** @var \wpdb $wpdb */
-        global $wpdb;
-
-        $query_foreign_keys =
-            'SELECT table_name, constraint_name
-               FROM information_schema.key_column_usage
-              WHERE REFERENCED_TABLE_SCHEMA=SCHEMA()
-                AND REFERENCED_TABLE_NAME IN (' . implode( ', ', array_fill( 0, count( $tables ), '%s' ) ) .
-            ')';
-        $schema = $wpdb->get_results( $wpdb->prepare( $query_foreign_keys, $tables ) );
-        foreach ( $schema as $foreign_key )
-        {
-            $wpdb->query( "ALTER TABLE `$foreign_key->table_name` DROP FOREIGN KEY `$foreign_key->constraint_name`" );
-        }
-    }
-
-    /**
-     * Drop Tables
-     */
-    protected function _drop_tables()
-    {
-        /** @var \wpdb $wpdb */
-        global $wpdb;
-        $this->_drop_fk( $this->tables );
-        $wpdb->query( 'DROP TABLE IF EXISTS `' . implode( '`, `', $this->tables ) . '` CASCADE;' );
-    }
-
-    /**
-     * @return Plugin
-     */
-    private function getPluginClass()
-    {
-        $class = get_class( $this );
-        return substr( $class, 0, strpos( $class, '\\' ) ) . '\\Lib\\Plugin';
+        $plugin_class  = Plugin::getPluginFor( $this );
+        $plugin_prefix = $plugin_class::getPrefix();
+        delete_option( $plugin_prefix . 'data_loaded' );
+        delete_option( $plugin_prefix . 'db_version' );
+        delete_option( $plugin_prefix . 'installation_time' );
+        delete_option( $plugin_prefix . 'grace_start' );
+        delete_option( $plugin_prefix . 'enabled' );
+        delete_option( $plugin_class::getPurchaseCodeOption() );
     }
 
 }

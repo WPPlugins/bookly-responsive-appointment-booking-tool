@@ -17,11 +17,11 @@
                 <div class="form-group">
                     <div class="checkbox"><label><input checked value="0" type="checkbox" /><?php _e( 'No.', 'bookly' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="1" type="checkbox" /><?php _e( 'Booking Time', 'bookly' ) ?></label></div>
-                    <div class="checkbox"><label><input checked value="2" type="checkbox" /><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_employee' ) ?></label></div>
+                    <div class="checkbox"><label><input checked value="2" type="checkbox" /><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_employee' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="3" type="checkbox" /><?php _e( 'Customer Name', 'bookly' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="4" type="checkbox" /><?php _e( 'Customer Phone', 'bookly' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="5" type="checkbox" /><?php _e( 'Customer Email', 'bookly' ) ?></label></div>
-                    <div class="checkbox"><label><input checked value="6" type="checkbox" /><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_service' ) ?></label></div>
+                    <div class="checkbox"><label><input checked value="6" type="checkbox" /><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_service' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="7" type="checkbox" /><?php _e( 'Duration', 'bookly' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="8" type="checkbox" /><?php _e( 'Status', 'bookly' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="9" type="checkbox" /><?php _e( 'Payment', 'bookly' ) ?></label></div>

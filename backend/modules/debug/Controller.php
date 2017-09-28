@@ -9,6 +9,7 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
+    const page_slug = 'bookly-debug';
 
     const TABLE_STATUS_OK      = 1;
     const TABLE_STATUS_ERROR   = 0;
@@ -30,19 +31,18 @@ class Controller extends Lib\Base\Controller
         ) );
 
         $debug = array();
-        /** @var Lib\Base\Entity $entity */
-        foreach ( self::getEntities() as $entity ) {
-            $tableName = $entity::getTableName();
+        foreach ( Lib\Plugin::getEntityClasses() as $entity_class ) {
+            $tableName = $entity_class::getTableName();
             $debug[ $tableName ] = array(
                 'fields'      => null,
                 'constraints' => null,
                 'status'      => null,
             );
-            if ( self::tableExists( $tableName ) ) {
-                $tableStructure     = self::getTableStructure( $tableName );
-                $tableConstraints   = self::getTableConstraints( $tableName );
-                $entitySchema       = $entity::getSchema();
-                $entityConstraints  = $entity::getConstraints();
+            if ( $this->_tableExists( $tableName ) ) {
+                $tableStructure     = $this->_getTableStructure( $tableName );
+                $tableConstraints   = $this->_getTableConstraints( $tableName );
+                $entitySchema       = $entity_class::getSchema();
+                $entityConstraints  = $entity_class::getConstraints();
                 $debug[ $tableName ]['status'] = self::TABLE_STATUS_OK;
                 $debug[ $tableName ]['fields'] = array();
 
@@ -72,25 +72,137 @@ class Controller extends Lib\Base\Controller
                 $debug[ $tableName ]['status'] = self::TABLE_STATUS_ERROR;
             }
         }
-        $this->render( 'index', compact( 'debug', 'sql' ) );
+
+        $import_status = $this->getParameter( 'status' );
+        $this->render( 'index', compact( 'debug', 'import_status' ) );
     }
 
     /**
-     * Get entity class names.
-     *
-     * @return array
+     * Export database data.
      */
-    public function getEntities()
+    public function executeExportData()
     {
+        /** @var \wpdb $wpdb */
+        global $wpdb;
+
         $result = array();
-        foreach ( scandir( Lib\Plugin::getDirectory() . '/lib/entities' ) as $filename ) {
-            if ( $filename == '.' || $filename == '..' ) {
-                continue;
-            }
-            $result[] = '\\BooklyLite\\Lib\\Entities\\' . basename( $filename, '.php' );
+
+        $installer_class =  Lib\Plugin::getRootNamespace() . '\Lib\Installer';
+        /** @var Lib\Base\Installer $installer */
+        $installer = new $installer_class();
+
+        foreach (  Lib\Plugin::getEntityClasses() as $entity_class ) {
+            $table_name = $entity_class::getTableName();
+            $result['entities'][ $entity_class ] = array(
+                'fields' => $this->_getTableStructure( $table_name ),
+                'values' => $wpdb->get_results( 'SELECT * FROM ' . $table_name, ARRAY_N )
+            );
+        }
+        $plugin_prefix   =  Lib\Plugin::getPrefix();
+        $options_postfix = array( 'data_loaded', 'grace_start', 'db_version', 'installation_time' );
+        if ( $plugin_prefix != 'bookly_' ) {
+            $options_postfix[] = 'enabled';
+        }
+        foreach ( $options_postfix as $option ) {
+            $option_name = $plugin_prefix . $option;
+            $result['options'][ $option_name ] = get_option( $option_name );
         }
 
-        return apply_filters( 'bookly_tables', $result );
+        $result['options'][  Lib\Plugin::getPurchaseCodeOption() ] =  Lib\Plugin::getPurchaseCode();
+        foreach ( $installer->getOptions() as $option_name => $option_value ) {
+            $result['options'][ $option_name ] = get_option( $option_name );
+        }
+
+        header( 'Content-type: application/json' );
+        header( 'Content-Disposition: attachment; filename=bookly_db_export_' . date( 'YmdHis' ) . '.json' );
+        echo json_encode( $result );
+
+        exit ( 0 );
+    }
+
+    /**
+     * Import database data.
+     */
+    public function executeImportData()
+    {
+        /** @var \wpdb $wpdb */
+        global $wpdb;
+
+        if ( $file = $_FILES['import']['name'] ) {
+            $json = file_get_contents( $_FILES['import']['tmp_name'] );
+            if ( $json !== false ) {
+                $wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' );
+
+                $data = json_decode( $json, true );
+
+                $installer_class = Lib\Plugin::getRootNamespace() . '\Lib\Installer';
+                /** @var Lib\Base\Installer $installer */
+                $installer = new $installer_class();
+
+                // Drop all data and options.
+                $installer->removeData();
+                $installer->dropTables();
+                $installer->createTables();
+
+                // Insert tables data.
+                foreach ( Lib\Plugin::getEntityClasses() as $entity_class ) {
+                    if ( isset ( $data['entities'][ $entity_class ]['values'][0] ) ) {
+                        $table_name   = $entity_class::getTableName();
+                        $query        = sprintf(
+                            'INSERT INTO `%s` (`%s`) VALUES (%%s)',
+                            $table_name,
+                            implode( '`,`', $data['entities'][ $entity_class ]['fields'] )
+                        );
+                        $placeholders = array();
+                        $values       = array();
+                        $counter      = 0;
+                        foreach ( $data['entities'][ $entity_class ]['values'] as $row ) {
+                            $params = array();
+                            foreach ( $row as $value ) {
+                                if ( $value === null ) {
+                                    $params[] = 'NULL';
+                                } else {
+                                    $params[] = '%s';
+                                    $values[] = $value;
+                                }
+                            }
+                            $placeholders[] = implode( ',', $params );
+                            if ( ++ $counter > 50 ) {
+                                // Flush.
+                                $wpdb->query( $wpdb->prepare( sprintf( $query, implode( '),(', $placeholders ) ), $values ) );
+                                $placeholders = array();
+                                $values       = array();
+                                $counter      = 0;
+                            }
+                        }
+                        if ( ! empty ( $placeholders ) ) {
+                            $wpdb->query( $wpdb->prepare( sprintf( $query, implode( '),(', $placeholders ) ), $values ) );
+                        }
+                    }
+                }
+
+                // Insert options data.
+                foreach ( $installer->getOptions() as $option_name => $option_value ) {
+                    add_option( $option_name, $data['options'][ $option_name ] );
+                }
+
+                $plugin_prefix   = Lib\Plugin::getPrefix();
+                $options_postfix = array( 'data_loaded', 'grace_start', 'db_version' );
+                if ( $plugin_prefix != 'bookly_' ) {
+                    $options_postfix[] = 'enabled';
+                }
+                foreach ( $options_postfix as $option ) {
+                    $option_name = $plugin_prefix . $option;
+                    add_option( $option_name, $data['options'][ $option_name ] );
+                }
+            }
+
+            header( 'Location: ' . admin_url( 'admin.php?page=bookly-debug&status=imported' ) );
+        }
+
+        header( 'Location: ' . admin_url( 'admin.php?page=bookly-debug' ) );
+
+        exit ( 0 );
     }
 
     /**
@@ -99,7 +211,7 @@ class Controller extends Lib\Base\Controller
      * @param string $tableName
      * @return array
      */
-    public static function getTableStructure( $tableName )
+    private function _getTableStructure( $tableName )
     {
         global $wpdb;
 
@@ -120,7 +232,7 @@ class Controller extends Lib\Base\Controller
      * @param string $tableName
      * @return array
      */
-    public static function getTableConstraints( $tableName )
+    private function _getTableConstraints( $tableName )
     {
         global $wpdb;
 
@@ -158,7 +270,7 @@ class Controller extends Lib\Base\Controller
      * @param string $tableName
      * @return int
      */
-    public static function tableExists( $tableName )
+    private function _tableExists( $tableName )
     {
         global $wpdb;
 
@@ -168,14 +280,14 @@ class Controller extends Lib\Base\Controller
     // Protected methods.
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

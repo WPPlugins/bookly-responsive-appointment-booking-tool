@@ -186,7 +186,6 @@ abstract class Components
      * @param array $variables
      * @param bool $echo
      * @return string
-     * @throws \Exception
      */
     protected function render( $template, $variables = array(), $echo = true )
     {
@@ -232,9 +231,9 @@ abstract class Components
     {
         $func = ( $type == 'scripts' ) ? 'wp_enqueue_script' : 'wp_enqueue_style';
 
-        $class = get_class( $this );
+        $namespace = $this->reflection->getNamespaceName();
         /** @var Lib\Base\Plugin $plugin_class */
-        $plugin_class = substr( $class, 0, strpos( $class, '\\' ) ) . '\\Lib\\Plugin';
+        $plugin_class  = substr( $namespace, 0, strpos( $namespace, '\\' ) ) . '\Lib\Plugin';
 
         foreach ( $sources as $source => $files ) {
             switch ( $source ) {
@@ -264,9 +263,10 @@ abstract class Components
                 if ( $path === false ) {
                     call_user_func( $func, $file, false, $deps, $plugin_class::getVersion() );
                 } else {
-                    call_user_func( $func, 'ab-' . basename( $file ), plugins_url( $file, $path ), $deps, $plugin_class::getVersion() );
+                    call_user_func( $func, 'bookly-' . basename( $file ), plugins_url( $file, $path ), $deps, $plugin_class::getVersion() );
                 }
             }
         }
     }
+
 }

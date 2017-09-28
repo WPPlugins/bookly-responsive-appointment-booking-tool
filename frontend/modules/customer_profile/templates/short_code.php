@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $color = get_option( 'ab_appearance_color', '#f4662f' );
+    $color = get_option( 'bookly_app_color', '#f4662f' );
     $compound_tokens = array();
     $custom_fields = isset( $attributes['custom_fields'] ) ? explode( ',', $attributes['custom_fields'] ) : array();
     $columns = isset( $attributes['columns'] ) ? explode( ',', $attributes['columns'] ) : array();
@@ -30,12 +30,12 @@
                 <?php if ( empty( $appointments ) ) : ?>
                     <tr class="bookly--no-appointments"><td colspan="<?php echo count( $columns ) + count( $custom_fields ) ?>"><?php _e( 'No appointments found.', 'bookly' ) ?></td></tr>
                 <?php else : ?>
-                    <?php include '_row.php' ?>
+                    <?php include '_rows.php' ?>
                 <?php endif ?>
             </table>
-            <?php if( $more ) : ?>
+            <?php if ( $more ) : ?>
                 <button class="ab-btn ab--show-past ab-inline-block ab-right" style="background: <?php echo $color ?>!important; width: auto" data-spinner-size="40" data-style="zoom-in">
-                    <span class="ab_label"><?php _e( 'Show past appointments', 'bookly' ) ?></span>
+                    <span><?php _e( 'Show past appointments', 'bookly' ) ?></span>
                 </button>
             <?php endif ?>
         <?php endif ?>

@@ -7,6 +7,7 @@
             <div class="bookly-page-title">
                 <?php _e( 'SMS Notifications', 'bookly' ) ?>
             </div>
+            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
         </div>
         <div class="panel panel-default bookly-main">
             <div class="panel-body">
@@ -17,9 +18,16 @@
                                 <div class="bookly-page-title h4"><?php _e( 'Your balance', 'bookly' ) ?>: <b>$<?php echo $sms->getBalance() ?></b></div>
                                 <div class="checkbox">
                                     <label>
-                                        <img src="<?php echo plugins_url( 'appointment-booking/backend/resources/images/loading.gif' ) ?>" style="display: none; margin: 0 6px 0 -26px">
-                                        <input type="checkbox" name="ab_sms_notify_low_balance" class="bookly-admin-notify" value="1" <?php checked( get_option( 'ab_sms_notify_low_balance' ) ) ?> />
+                                        <img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/backend/resources/images/loading.gif' ) ?>" style="display: none; margin: 0 6px 0 -26px">
+                                        <input type="checkbox" name="bookly_sms_notify_low_balance" class="bookly-admin-notify" value="1" <?php checked( get_option( 'bookly_sms_notify_low_balance' ) ) ?> />
                                         <?php _e( 'Send email notification to administrators at low balance', 'bookly' ) ?>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/backend/resources/images/loading.gif' ) ?>" style="display: none; margin: 0 6px 0 -26px">
+                                        <input type="checkbox" name="bookly_sms_notify_weekly_summary" class="bookly-admin-notify" value="1" <?php checked( get_option( 'bookly_sms_notify_weekly_summary' ) ) ?> />
+                                        <?php _e( 'Send weekly summary to administrators', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -40,7 +48,7 @@
                                 <button class="btn btn-default" type="submit" name="form-logout"><?php _e( 'Log out', 'bookly' ) ?></button>
                             </form>
                         </div>
-                    </div><br>
+                    </div>
                     <ul class="bookly-nav bookly-nav-tabs" id="sms_tabs">
                         <li class="bookly-nav-item active" data-toggle="tab" data-target="#notifications"><?php _e( 'Notifications', 'bookly' ) ?></li>
                         <li class="bookly-nav-item" data-toggle="tab" data-target="#add_money"><?php _e( 'Add money', 'bookly' ) ?></li>
@@ -178,7 +186,7 @@
                             <div class="modal-footer">
                                 <?php \BooklyLite\Lib\Utils\Common::submitButton( 'ajax-send-change-password', 'btn-sm' ) ?>
                             </div>
-                            <input type="hidden" name="action" value="ab_change_password">
+                            <input type="hidden" name="action" value="bookly_change_password">
                         </div>
                     </div>
                 </form>

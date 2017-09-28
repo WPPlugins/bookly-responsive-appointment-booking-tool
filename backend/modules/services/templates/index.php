@@ -5,6 +5,7 @@
             <div class="bookly-page-title">
                 <?php _e( 'Services', 'bookly' ) ?>
             </div>
+            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
         </div>
         <div class="row">
             <div id="bookly-sidebar" class="col-sm-4">
@@ -30,7 +31,7 @@
                         <div class="form-field form-required">
                             <label for="bookly-category-name"><?php _e( 'Name', 'bookly' ) ?></label>
                             <input class="form-control" id="bookly-category-name" type="text" name="name" />
-                            <input type="hidden" name="action" value="ab_category_form" />
+                            <input type="hidden" name="action" value="bookly_category_form" />
                         </div>
                     </div>
 
@@ -51,7 +52,7 @@
                     <div class="panel-body">
                         <h4 class="bookly-block-head">
                             <span class="bookly-category-title"><?php _e( 'All Services', 'bookly' ) ?></span>
-                            <button type="button" class="add-service ladda-button pull-right btn btn-lg btn-success" data-spinner-size="40" data-style="zoom-in">
+                            <button type="button" class="add-service ladda-button pull-right btn btn-success" data-spinner-size="40" data-style="zoom-in">
                                 <span class="ladda-label"><i class="glyphicon glyphicon-plus"></i> <?php _e( 'Add Service', 'bookly' ) ?></span>
                             </button>
                         </h4>

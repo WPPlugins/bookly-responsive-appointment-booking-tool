@@ -13,34 +13,40 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="ab_to_mail"><?php _e( 'To email', 'bookly' ) ?></label>
-                                <input id="ab_to_mail" class="form-control" type="text" ng-model="toEmail"/>
+                                <label for="bookly_test_to_email"><?php _e( 'To email', 'bookly' ) ?></label>
+                                <input id="bookly_test_to_email" class="form-control" type="text" ng-model="toEmail"/>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="ab_sender_name"><?php _e( 'Sender name', 'bookly' ) ?></label>
-                                        <input id="ab_sender_name" class="form-control" type="text" ng-model="dataSource.ab_settings_sender_name"/>
+                                        <label for="bookly_test_sender_name"><?php _e( 'Sender name', 'bookly' ) ?></label>
+                                        <input id="bookly_test_sender_name" class="form-control" type="text" ng-model="dataSource.sender_name" />
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="ab_sender_email"><?php _e( 'Sender email', 'bookly' ) ?></label>
-                                        <input id="ab_sender_email" class="form-control" type="text" ng-model="dataSource.ab_settings_sender_email"/>
+                                        <label for="bookly_test_sender_email"><?php _e( 'Sender email', 'bookly' ) ?></label>
+                                        <input id="bookly_test_sender_email" class="form-control" type="text" ng-model="dataSource.sender_email" />
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label><?php _e( 'Reply directly to customers', 'bookly' ) ?></label>
-                                        <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'ab_email_notification_reply_to_customers' ) ?>
+                                        <label for="bookly_test_reply_to_customers"><?php _e( 'Reply directly to customers', 'bookly' ) ?></label>
+                                        <select id="bookly_test_reply_to_customers" class="form-control" ng-model="dataSource.reply_to_customers">
+                                            <option value="0"><?php _e( 'Disabled', 'bookly' ) ?></option>
+                                            <option value="1"><?php _e( 'Enabled', 'bookly' ) ?></option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label><?php _e( 'Send emails as', 'bookly' ) ?></label>
-                                        <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'ab_email_content_type', array( 't' => array( 'html', __( 'HTML',  'bookly' ) ), 'f' => array( 'plain', __( 'Text', 'bookly' ) ) ) ) ?>
+                                        <label for="bookly_test_send_as"><?php _e( 'Send emails as', 'bookly' ) ?></label>
+                                        <select id="bookly_test_send_as" class="form-control" ng-model="dataSource.send_as">
+                                            <option value="html"><?php _e( 'HTML', 'bookly' ) ?></option>
+                                            <option value="text"><?php _e( 'Text', 'bookly' ) ?></option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +62,7 @@
                                         <li class="bookly-padding-horizontal-md">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" id="bookly-check-all-entities" ng-model="allNotifications" ng-change="toggleAllNotifications()">
+                                                    <input type="checkbox" id="bookly-check-all-entities" ng-model="allNotifications" ng-change="toggleAllNotifications()" />
                                                     <?php _e( 'All templates', 'bookly' ) ?>
                                                 </label>
                                             </div>
@@ -66,12 +72,11 @@
                                         <li class="bookly-padding-horizontal-md" ng-repeat="notification in dataSource.notifications">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" id="" value="0" data-staff_name="" class="bookly-js-check-entity"
-                                                           ng-model="notification.active" ng-true-value="'1'" ng-false-value="'0'" ng-change="notificationChecked()"/>
+                                                    <input type="checkbox" ng-model="notification.active"
+                                                           ng-true-value="'1'" ng-false-value="'0'" ng-change="notificationChecked()" />
                                                     {{notification.name}}
                                                 </label>
                                             </div>
-
                                         </li>
                                     </ul>
                                 </div>

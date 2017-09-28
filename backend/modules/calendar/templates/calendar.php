@@ -1,9 +1,6 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $user_names = array();
-    $user_ids   = array();
-?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <style>
-    .fc-slats tr { height: <?php echo max( 21, intval( 620 / (1440 / get_option( 'ab_settings_time_slot_length' ) ) ) ) ?>px; }
+    .fc-slats tr { height: <?php echo max( 21, (int) ( 0.43 * get_option( 'bookly_gen_time_slot_length' ) ) ) ?>px; }
     .fc-time-grid-event.fc-short .fc-time::after { content: '' !important; }
 </style>
 <div id="bookly-tbs" class="wrap">
@@ -12,6 +9,9 @@
             <div class="bookly-page-title">
                 <?php _e( 'Calendar', 'bookly' ) ?>
             </div>
+            <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
+                <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
+            <?php endif ?>
         </div>
         <div class="panel panel-default bookly-main bookly-fc-inner">
             <div class="panel-body">
@@ -22,7 +22,7 @@
                             <?php _e( 'All', 'bookly' ) ?>
                         </li>
                     <?php endif ?>
-                    <?php foreach ( $staff_members as $i => $staff ) : ?>
+                    <?php foreach ( $staff_members as $staff ) : ?>
                         <li class="bookly-nav-item bookly-js-calendar-tab" data-staff_id="<?php echo $staff->id ?>" style="display: none">
                             <?php echo $staff->full_name ?>
                         </li>
@@ -40,7 +40,7 @@
                                         <label><input type="checkbox" id="bookly-check-all-entities"><?php _e( 'All staff', 'bookly' ) ?></label>
                                     </a>
                                 </li>
-                                <?php foreach ( $staff_members as $i => $staff ) : ?>
+                                <?php foreach ( $staff_members as $staff ) : ?>
                                     <li>
                                         <a class="checkbox" href="javascript:void(0)">
                                             <label>
@@ -68,7 +68,7 @@
                         <?php do_action( 'bookly_render_component_calendar' ) ?>
                     <?php else : ?>
                         <div class="well">
-                            <div class="h1"><?php _e( 'Welcome to Bookly!',  'bookly' ) ?></div>
+                            <div class="h1"><?php _e( 'Welcome to Bookly!', 'bookly' ) ?></div>
                             <h3><?php _e( 'Thank you for purchasing our product.', 'bookly' ) ?></h3>
                             <h3><?php _e( 'Bookly offers a simple solution for making appointments. With our plugin you will be able to easily manage your availability time and handle the flow of your clients.', 'bookly' ) ?></h3>
                             <p><?php _e( 'To start using Bookly, you need to follow these steps which are the minimum requirements to get it running!', 'bookly' ) ?></p>
@@ -88,5 +88,7 @@
                 </div>
             </div>
         </div>
+
+        <?php \BooklyLite\Backend\Modules\Calendar\Components::getInstance()->renderDeleteDialog(); ?>
     </div>
 </div>

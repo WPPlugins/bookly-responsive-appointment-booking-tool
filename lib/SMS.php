@@ -41,7 +41,7 @@ class SMS
 
     public function __construct()
     {
-        $this->token = get_option( 'ab_sms_token' );
+        $this->token = get_option( 'bookly_sms_token' );
     }
 
     /**
@@ -64,7 +64,7 @@ class SMS
 
         $response = $this->sendPostRequest( self::REGISTER, $data );
         if ( $response ) {
-            update_option( 'ab_sms_token', $response->token );
+            update_option( 'bookly_sms_token', $response->token );
             $this->token = $response->token;
 
             return true;
@@ -86,7 +86,7 @@ class SMS
 
         $response = $this->sendGetRequest( self::AUTHENTICATE, $data );
         if ( $response ) {
-            update_option( 'ab_sms_token', $response->token );
+            update_option( 'bookly_sms_token', $response->token );
             $this->token = $response->token;
 
             return true;
@@ -120,7 +120,7 @@ class SMS
      */
     public function logout()
     {
-        update_option( 'ab_sms_token', '' );
+        update_option( 'bookly_sms_token', '' );
 
         if ( $this->token ) {
             $this->sendGetRequest( self::LOG_OUT );
@@ -183,14 +183,15 @@ class SMS
     {
         if ( $this->token ) {
             $data = array(
-                'message' => $message,
-                'phone'   => $this->normalizePhoneNumber( $phone_number ),
-                'type'    => $type_id,
+                'message'  => $message,
+                'phone'    => $this->normalizePhoneNumber( $phone_number ),
+                'type'     => $type_id,
+                'site_url' => site_url(),
             );
             if ( $data['phone'] != '' ) {
                 $response = $this->sendPostRequest( self::SEND_SMS, $data );
                 if ( $response ) {
-                    if ( property_exists( $response, 'notify_low_balance' ) && get_option( 'ab_sms_notify_low_balance' ) ) {
+                    if ( property_exists( $response, 'notify_low_balance' ) && get_option( 'bookly_sms_notify_low_balance' ) ) {
                         if ( $response->notify_low_balance ) {
                             $this->_sendLowBalanceNotification();
                         }
@@ -222,16 +223,17 @@ class SMS
         // Remove everything except numbers and "+".
         $phone_number = preg_replace( '/[^\d\+]/', '', $phone_number );
 
-        if ( $phone_number{0} == '+' ) {
+        if ( strpos( $phone_number, '+' ) === 0 ) {
             // ok.
         } elseif ( strpos( $phone_number, '00' ) === 0 ) {
-            $phone_number = substr( $phone_number, 2 );
+            $phone_number = ltrim( $phone_number, '0' );
         } else {
-            $phone_number = get_option( 'ab_sms_default_country_code', '' ) . ltrim( $phone_number, '0' );
+            // Default country code can contain not permitted characters. Remove everything except numbers.
+            $phone_number = ltrim( preg_replace( '/\D/', '', get_option( 'bookly_cst_default_country_code', '' ) ), '0' )  . ltrim( $phone_number, '0' );
         }
 
-        // Remove everything except numbers again (default country code can contain not permitted characters).
-        return ltrim( preg_replace( '/\D/', '', $phone_number ), '0' );
+        // Finally remove "+" if there were any among digits.
+        return str_replace( '+', '', $phone_number );
     }
 
     /**
@@ -359,7 +361,7 @@ class SMS
                     $date_time  = Utils\DateTime::UTCToWPTimeZone( $item->datetime );
                     $item->date = Utils\DateTime::formatDate( $date_time );
                     $item->time = Utils\DateTime::formatTime( $date_time );
-                    $item->message = nl2br( $item->message );
+                    $item->message = nl2br( htmlspecialchars( $item->message ) );
                     $item->phone   = '+' . $item->phone;
                     $item->charge  = rtrim( $item->charge, '0' );
                     switch ( $item->status ) {
@@ -426,7 +428,7 @@ class SMS
             return $response;
         }
 
-        return array( 'success' => false, 'list' => array() );
+        return (object) array( 'success' => false, 'list' => array() );
     }
 
     /**
@@ -650,7 +652,7 @@ class SMS
         wp_mail(
             Utils\Common::getAdminEmails(),
             __( 'Bookly SMS - Low Balance', 'bookly' ),
-            get_option( 'ab_email_content_type' ) == 'plain' ? $message : wpautop( $message ),
+            get_option( 'bookly_email_send_as' ) == 'html' ? wpautop( $message ) : $message,
             Utils\Common::getEmailHeaders()
         );
     }

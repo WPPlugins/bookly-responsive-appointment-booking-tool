@@ -9,7 +9,7 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
-    const page_slug = 'ab-services';
+    const page_slug = 'bookly-services';
 
     /**
      * Index page.
@@ -29,20 +29,24 @@ class Controller extends Lib\Base\Controller
                 'bootstrap/js/bootstrap.min.js' => array( 'jquery' ),
                 'js/help.js'  => array( 'jquery' ),
                 'js/alert.js' => array( 'jquery' ),
+                'js/range_tools.js' => array( 'jquery' ),
             ),
             'module'   => array( 'js/service.js' => array( 'jquery-ui-sortable', 'jquery' ) ),
             'frontend' => array(
                 'js/spin.min.js'  => array( 'jquery' ),
-                'js/ladda.min.js' => array( 'ab-spin.min.js', 'jquery' ),
+                'js/ladda.min.js' => array( 'bookly-spin.min.js', 'jquery' ),
             )
         ) );
 
-        wp_localize_script( 'ab-service.js', 'BooklyL10n', array(
+        wp_localize_script( 'bookly-service.js', 'BooklyL10n', array(
             'are_you_sure' => __( 'Are you sure?', 'bookly' ),
             'saved'        => __( 'Settings saved.', 'bookly' ),
             'selector'     => array( 'nothing_selected' => __( 'No staff selected', 'bookly' ), ),
             'limitations'  => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>If you find the plugin useful for your business please consider buying a licence for the full version.<br>It costs just $59 and for this money you will get many useful functions, lifetime free updates and excellent support!<br>More information can be found here', 'bookly' ) . ': <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
         ) );
+
+        // Allow add-ons to enqueue their assets.
+        do_action( 'bookly_enqueue_assets_for_services' );
 
         $staff_collection    = $this->getStaffCollection();
         $category_collection = $this->getCategoryCollection();
@@ -129,6 +133,7 @@ class Controller extends Lib\Base\Controller
         $form->getObject()->set( 'duration', Lib\Config::getTimeSlotLength() );
         $service = $form->save();
         $this->setDataForServiceList( $service->get( 'category_id' ) );
+        do_action( 'bookly_service_created', $service, $this->getPostParameters() );
         wp_send_json_success( array( 'html' => $this->render( '_list', array(), false ), 'service_id' =>  $service->get( 'id' ) ) );
     }
 
@@ -169,7 +174,7 @@ class Controller extends Lib\Base\Controller
             foreach ( $staff_ids as $staff_id ) {
                 if ( ! in_array( $staff_id, $service_staff ) ) {
                     $staff_service = new Lib\Entities\StaffService();
-                    $staff_service->set( 'staff_id',   $staff_id );
+                    $staff_service->set( 'staff_id',   1 );
                     $staff_service->set( 'service_id', $service->get( 'id' ) );
                     $staff_service->set( 'price',      $service->get( 'price' ) );
                     $staff_service->set( 'capacity',   1 );
@@ -183,7 +188,7 @@ class Controller extends Lib\Base\Controller
         /** @var \BooklyServiceExtras\Lib\Entities\ServiceExtra[] $service_extras
          *  @var \BooklyServiceExtras\Lib\Entities\ServiceExtra[] $db_extras
          */
-        $service_extras = apply_filters( 'bookly_extras_find_by_service_id', array(), $service->get( 'id' ) );
+        $service_extras = apply_filters( 'bookly_service_extras_find_by_service_id', array(), $service->get( 'id' ) );
         $db_extras = array();
         foreach ( $service_extras as $extra ) {
             $db_extras[ $extra->get( 'id' ) ] = $extra;
@@ -267,7 +272,7 @@ class Controller extends Lib\Base\Controller
 
     public function executeUpdateExtraPosition()
     {
-        do_action( 'bookly_extras_reorder', $this->getParameter( 'position' ) );
+        do_action( 'bookly_service_extras_reorder', $this->getParameter( 'position' ) );
 
         wp_send_json_success();
     }
@@ -275,14 +280,14 @@ class Controller extends Lib\Base\Controller
     // Protected methods.
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

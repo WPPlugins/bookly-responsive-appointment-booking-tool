@@ -11,9 +11,7 @@
                 <div class="bookly-loading"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <?php _e( 'Close', 'bookly' ) ?>
-                </button>
+                <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn-lg btn-default', __( 'Close', 'bookly' ), array( 'data-dismiss' => 'modal' ) ) ?>
             </div>
         </div>
     </div>

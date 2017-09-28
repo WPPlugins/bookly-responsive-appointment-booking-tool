@@ -1,13 +1,13 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<div class="ab-row bookly-table">
+<div class="bookly-box bookly-table">
     <div class="ab-formGroup" style="width:200px!important">
-        <label><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_ccard_number' ) ?></label>
+        <label><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_ccard_number' ) ?></label>
         <div>
             <input type="text" name="ab_card_number" autocomplete="off" />
         </div>
     </div>
     <div class="ab-formGroup">
-        <label><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_ccard_expire' ) ?></label>
+        <label><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_ccard_expire' ) ?></label>
         <div>
             <select class="ab-card-exp" name="ab_card_exp_month">
                 <?php for ( $i = 1; $i <= 12; ++ $i ) : ?>
@@ -22,9 +22,9 @@
         </div>
     </div>
 </div>
-<div class="ab-row ab-clearBottom">
+<div class="bookly-box ab-clearBottom">
     <div class="ab-formGroup">
-        <label><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_ccard_code' ) ?></label>
+        <label><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_ccard_code' ) ?></label>
         <div>
             <input type="text" class="ab-card-cvc" name="ab_card_cvc" autocomplete="off" />
         </div>

@@ -17,6 +17,8 @@ class Notifications extends Lib\Base\Form
             'staff_approved_appointment',
             'client_cancelled_appointment',
             'staff_cancelled_appointment',
+            'client_rejected_appointment',
+            'staff_rejected_appointment',
             'client_new_wp_user',
             'client_reminder',
             'client_follow_up',
@@ -42,6 +44,7 @@ class Notifications extends Lib\Base\Form
          * allowed: tinymce - Visual Mode, html - Text Mode, test - no one Mode selected
          */
         add_filter( 'wp_default_editor', create_function( '', 'return \'tinymce\';' ) );
+        $this->types   = apply_filters( 'bookly_prepare_notification_types', $this->types );
         $this->gateway = $gateway;
         if ( ! Lib\Config::areCombinedNotificationsEnabled() ) {
             $this->types['combined'] = array();
@@ -150,8 +153,7 @@ class Notifications extends Lib\Base\Form
                 )
             );
 
-            echo '<div class="form-group">
-                <label>' . __( 'Message', 'bookly' ) . '</label>';
+            echo '<div class="form-group"><label>' . __( 'Message', 'bookly' ) . '</label>';
             wp_editor( $value, $id, $settings );
             echo '</div>';
         }
@@ -164,7 +166,7 @@ class Notifications extends Lib\Base\Form
      */
     public function renderCopy( $type )
     {
-        if ( in_array( $type, array( 'staff_pending_appointment', 'staff_approved_appointment', 'staff_cancelled_appointment' ) ) ) {
+        if ( in_array( $type, array( 'staff_pending_appointment', 'staff_approved_appointment', 'staff_cancelled_appointment', 'staff_rejected_appointment', 'staff_pending_recurring_appointment', 'staff_approved_recurring_appointment', 'staff_cancelled_recurring_appointment' ) ) ) {
             printf(
                 '<div class="form-group">
                     <input name="%1$s" type="hidden" value="0">
@@ -186,12 +188,12 @@ class Notifications extends Lib\Base\Form
     public function renderSendingTime( $type )
     {
         if ( in_array( $type, array( 'staff_agenda', 'client_follow_up', 'client_reminder' ) ) ) {
-            $cron_reminder = (array) get_option( 'ab_settings_cron_reminder' );
+            $cron_reminder = (array) get_option( 'bookly_cron_reminder_times' );
             printf(
                 '<div class="form-group">
                     <label for="%1$s">%2$s</label>
                     <p class="help-block">%3$s</p>
-                    <select class="form-control ab-auto-w" name="%1$s" id="%1$s">
+                    <select class="form-control" name="%1$s" id="%1$s">
                         %4$s
                     </select>
                 </div>',

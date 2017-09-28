@@ -32,17 +32,17 @@ jQuery(function($) {
             url: ajaxurl,
             data: function (d) {
                 return $.extend({}, d, {
-                    action: 'ab_get_customers',
+                    action: 'bookly_get_customers',
                     filter: $filter.val()
                 });
             }
         },
         columns: [
-            { data: 'name' },
-            { data: 'wp_user' },
-            { data: 'phone' },
-            { data: 'email' },
-            { data: 'notes' },
+            { data: 'name', render: $.fn.dataTable.render.text() },
+            { data: 'wp_user', render: $.fn.dataTable.render.text() },
+            { data: 'phone', render: $.fn.dataTable.render.text() },
+            { data: 'email', render: $.fn.dataTable.render.text() },
+            { data: 'notes', render: $.fn.dataTable.render.text() },
             { data: 'last_appointment' },
             { data: 'total_appointments' },
             { data: 'payments' },
@@ -177,7 +177,7 @@ jQuery(function($) {
             url  : ajaxurl,
             type : 'POST',
             data : {
-                action       : 'ab_delete_customers',
+                action       : 'bookly_delete_customers',
                 data         : data,
                 with_wp_user : with_wp_user
             },

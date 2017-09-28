@@ -57,8 +57,8 @@
 }
 
 /* Service */
-.ab-service-step .ab-available-date,
-.ab-service-step .ab-week-days {
+.bookly-service-step .ab-available-date,
+.bookly-service-step .bookly-week-days {
     margin-right: 0 !important;
     margin-left: 14px !important;
 }
@@ -76,15 +76,18 @@
 }
 
 /* Buttons */
-.ab-back-step {
+.bookly-back-step {
     margin-left: 10px;
     margin-right: auto;
+    float: right!important;
 }
 .ab-time-next {
     margin-right: 10px;
     margin-left: 0;
 }
-
+.bookly-go-to-cart{
+    float: right!important;
+}
 /* Details */
 .ab-formGroup .intl-tel-input input {
     padding-right: 45px !important;
@@ -137,11 +140,11 @@
     .ab-formGroup > div {
         margin-left: 0 !important;
     }
-    .ab-service-step .ab-available-date,
-    .ab-service-step .ab-week-days {
+    .bookly-service-step .ab-available-date,
+    .bookly-service-step .bookly-week-days {
         margin-left: 0 !important;
     }
-    .ab-service-step .ab-time-to {
+    .bookly-service-step .ab-time-to {
         float: left !important;
     }
     .ab-mobile-step_1 {

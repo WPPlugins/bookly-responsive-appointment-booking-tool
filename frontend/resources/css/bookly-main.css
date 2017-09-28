@@ -11,9 +11,12 @@
 .ab-nowrap { white-space: nowrap; }
 .ab-inline-block { display: inline-block!important; }
 .ab-btn { text-decoration: none; }
+.ab-btn[disabled] {
+    opacity: 0.5;
+}
 
 /* Layout */
-.ab-row {
+.bookly-box {
     margin: 0 0 20px;
     overflow: hidden;
 }
@@ -39,6 +42,7 @@
     line-height: inherit;
 }
 .bookly-form input[type="text"],
+.bookly-form input[type="number"],
 .bookly-form input[type="password"],
 .bookly-form select,
 .bookly-form textarea {
@@ -49,6 +53,7 @@
     width: 100% !important;
 }
 .bookly-form input[type="text"],
+.bookly-form input[type="number"],
 .bookly-form input[type="password"],
 .bookly-form select {
     height: auto !important;
@@ -61,6 +66,7 @@
 .bookly-form input[type="text"],
 .bookly-form input[type="checkbox"],
 .bookly-form input[type="radio"],
+.bookly-form input[type="number"],
 .bookly-form input[type="password"],
 .bookly-form select,
 .bookly-form textarea {
@@ -68,6 +74,7 @@
     outline: none !important;
 }
 .bookly-form input[type="text"],
+.bookly-form input[type="number"],
 .bookly-form input[type="password"],
 .bookly-form textarea {
     padding: 6px 7px 5px !important;
@@ -85,11 +92,16 @@
     font-weight: bold;
     margin-top: 5px;
 }
-.ab-formGroup > label,
-.ab-formGroup > .ab-label {
+.bookly-form-inline .ab-formGroup {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}
+
+.ab-formGroup > label {
     display: inline-block;
     font-weight: bold;
-    padding: 0 0 0 2px !important;
+    padding: 0 !important;
     margin: 0 !important;
 }
 .ab-formGroup > div {
@@ -98,7 +110,7 @@
 }
 
 /* Buttons */
-.ab-nav-steps {
+.bookly-nav-steps {
     padding-top: 20px !important;
     border-top: 1px solid silver !important;
     overflow: hidden;
@@ -124,7 +136,11 @@
     text-transform: uppercase!important;
 }
 button.ab-btn:hover,
-button.ab-btn:active {
+button.ab-btn:active,
+button.bookly-round:hover,
+button.bookly-round:active,
+button.bookly-square:hover,
+button.bookly-square:active {
     background-image: none !important;
 }
 .ab-time-next,
@@ -141,21 +157,74 @@ button.ab-btn:active {
 .ab-time-prev {
     background-position: 50% 8px;
 }
-.bookly-round-button {
-    width: 29px;
-    height: 29px;
+
+.bookly-square,
+.bookly-round {
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    cursor: pointer!important;
     padding: 0!important;
     line-height: 0!important;
     border: 0!important;
     outline: none!important;
+    background-repeat: no-repeat;
+}
+
+span.bookly-round {
+    display: block;
+}
+.bookly-square {
+    border-radius: 15%;
+}
+.bookly-checkbox-group > input[type='checkbox'] {
+    display: none;
+}
+.bookly-checkbox-group > input[type='checkbox']:not(:checked) + label > i {
+    background-image: url(../../../frontend/resources/images/square-24.png);
+}
+.bookly-checkbox-group > input[type='checkbox']:checked + label > i {
+    background-image: url(../../../frontend/resources/images/checkbox-16.png);
+}
+.bookly-checkbox-group > input[type='checkbox']:disabled + label > i {
+    background-image: url(../../../frontend/resources/images/x-24.png)!important;
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+.bookly-checkbox-group label {
+    font-weight: bold;
+}
+.bookly-row label {
+    vertical-align: text-top;
+}
+.bookly-checkbox-group label:nth-child(3) {
+    margin-left: 4px;
+}
+
+.bookly-round-button {
+    cursor: pointer !important;
 }
 .bookly-round-button:first-child {
     margin-right: 5px !important;
 }
-.ab-back-step {
+.bookly-round-button. img {
+    border: 0 !important;
+    box-shadow: none;
+}
+
+.bookly-triangle {
+    width: 29px;
+    height: 29px;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 26px solid;
+}
+
+.bookly-back-step {
     margin-right: 10px;
+    float: left!important;
+}
+.bookly-next-step {
+    float: right!important;
 }
 .ab-mobile-prev-step {
     margin-right: 10px;
@@ -191,30 +260,34 @@ button.ab-btn:active {
 }
 
 /* Service */
-.ab-service-step .ab-date-from {
+.bookly-service-step .ab-date-from {
     cursor: text !important;
 }
-.ab-service-step .ab-available-date,
-.ab-service-step .ab-week-days,
-.ab-service-step .ab-time-range {
+.bookly-service-step .ab-available-date,
+.bookly-service-step .bookly-week-days,
+.bookly-repeat-step .bookly-week-days,
+.bookly-service-step .ab-time-range {
     margin-bottom: 20px !important;
 }
-.ab-service-step .ab-available-date .ab-formGroup > div {
+.bookly-service-step .ab-available-date .ab-formGroup > div {
     margin-right: 0;
 }
-.ab-service-step .ab-available-date,
-.ab-service-step .ab-week-days {
+.bookly-service-step .ab-available-date,
+.bookly-service-step .bookly-week-days {
     margin-right: 14px !important;
 }
-.ab-service-step .ab-week-days {
+.bookly-service-step .bookly-week-days,
+.bookly-repeat-step .bookly-week-days {
     width: auto;
 }
-.ab-service-step .ab-week-days > div {
+.bookly-service-step .bookly-week-days > div,
+.bookly-repeat-step .bookly-week-days > div {
     text-align: center;
     min-width: 35px;
 }
-.ab-service-step .ab-week-days label {
-    display: block;
+.bookly-service-step .bookly-week-days label,
+.bookly-repeat-step .bookly-week-days label {
+    display: block !important;
     width: 23px;
     height: 23px;
     padding: 0;
@@ -222,20 +295,22 @@ button.ab-btn:active {
     border-radius: 50%;
     cursor: pointer;
 }
-.ab-service-step .ab-week-days label.active {
+.bookly-service-step .bookly-week-days label.active,
+.bookly-repeat-step .bookly-week-days label.active {
     background: #f56530 url("../images/checkbox.png") 0 0 no-repeat;
 }
-.ab-service-step .ab-week-days label input {
+.bookly-service-step .bookly-week-days label input,
+.bookly-repeat-step .bookly-week-days label input {
     visibility: hidden;
 }
-.ab-service-step .ab-time-range select {
+.bookly-service-step .ab-time-range select {
     width: auto !important;
 }
 .ab-mobile-step_1,
 .ab-details-step {
     margin-right: -14px;
 }
-.ab-mobile-step_1 .ab-nav-steps {
+.ab-mobile-step_1 .bookly-nav-steps {
     display: none;
 }
 
@@ -243,14 +318,14 @@ button.ab-btn:active {
 .extra-attachment-image {
     max-width: 150px;
 }
-.ab-extra-step .bookly-extras-item {
+.bookly-extra-step .bookly-extras-item {
     display: inline-block;
     width: 25%;
     margin: 0 -2px!important;
     margin-bottom: 2px!important;
     vertical-align: top!important;
 }
-.ab-extra-step .bookly-extras-thumb {
+.bookly-extra-step .bookly-extras-thumb {
     border: 2px solid #bec3c7;
     padding: 10px;
     line-height: normal;
@@ -259,33 +334,33 @@ button.ab-btn:active {
     text-align: center;
     cursor: pointer;
 }
-.ab-extra-step .bookly-extras-thumb img {
+.bookly-extra-step .bookly-extras-thumb img {
     max-width: 100%;
 }
-.ab-extra-step .bookly-extras-thumb div {
+.bookly-extra-step .bookly-extras-thumb div {
     background-position: center;
 }
-.ab-extra-step div.ab-summary {
+.bookly-extra-step div.bookly-extras-summary {
     display: inline-block;
     font-weight: bold;
 }
-.ab-extra-step .bookly-extras-item .bookly-extras-count-controls {
+.bookly-extra-step .bookly-extras-item .bookly-extras-count-controls {
     margin-top: 10px;
     text-align: center;
 }
-.ab-extra-step .bookly-extras-count-controls > * {
+.bookly-extra-step .bookly-extras-count-controls > * {
     vertical-align: middle;
 }
-.ab-extra-step .bookly-extras-item .bookly-extras-total-price {
+.bookly-extra-step .bookly-extras-item .bookly-extras-total-price {
     font-weight: bold;
     margin-top: 5px;
     text-align: center;
 }
-.ab-extra-step .bookly-extras-item input {
+.bookly-extra-step .bookly-extras-item input {
     width: 3em !important;
     text-align: center;
 }
-.ab-extra-step .bookly-extras-increment {
+.bookly-extra-step .bookly-extras-increment {
     margin-left: 5px;
 }
 
@@ -336,20 +411,20 @@ button.ab-btn:active {
     text-align: center;
     float: none !important;
     vertical-align: middle;
-    cursor: pointer;
     text-transform: none;
     border: 1px solid #cccccc !important;
     border-radius: 4px;
 }
-
 .ab-columnizer .ab-hour {
     background: white!important;
+    cursor: pointer;
 }
 .ab-columnizer .ab-hour span {
     font-weight: normal;
     color: #333!important;
 }
 .ab-columnizer .ab-hour .ladda-label { margin: 0 -12px; display: inline-block; }
+.bookly-schedule-date,
 .ab-columnizer .ab-day {
     background: #f4662f;
     color: white!important;
@@ -403,7 +478,7 @@ button.ab-btn:active {
 
 .ab-not-time-screen {
     font-size: 16px;
-    height: 240px;
+    height: 296px;
     margin-left: 320px;
     font-weight: bold;
 }
@@ -427,11 +502,286 @@ button.ab-btn:active {
     margin-top: -20px;
 }
 
+/* Repeat */
+.bookly-repeat-step {
+    margin-bottom: 20px !important;
+    min-width: 260px;
+}
+
+.bookly-repeat-step .bookly-row {
+    margin: 12px 0  12px 0 !important;
+}
+
+.bookly-repeat-step .bookly-week-days {
+    margin-bottom: 0 !important;
+}
+
+.bookly-repeat-step .bookly-get-schedule {
+    display: inline-block;
+}
+
+.bookly-repeat-step .bookly-schedule-date,
+.bookly-repeat-step .bookly-schedule-time
+{
+    width: 100px !important;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: none;
+    border-radius: 4px;
+    height: 28px;
+    margin-right: 6px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+}
+
+.bookly-repeat-step .bookly-schedule-time select {
+    border: 0 !important;
+    height: 26px !important;
+    background-color: #fff;
+    padding: 0!important;
+}
+
+.bookly-repeat-step .bookly-schedule-date input {
+    background-color: #fff;
+    border: 0 !important;
+    height: 26px !important;
+    float: none!important;
+}
+
+.bookly-repeat-step .bookly-schedule-row {
+    border: 1px solid #cccccc !important;
+    border-radius: 3px;
+    display: flex;
+}
+
+.bookly-schedule-row .bookly-rounds-group {
+    float: right !important;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    height: 28px;
+}
+
+.bookly-repeat-step .bookly-schedule-row > div {
+    float: left;
+    line-height: 25px;
+}
+
+.bookly-repeat-step .bookly-schedule-row .bookly-schedule-appointment > div,
+.bookly-repeat-step .bookly-schedule-row .bookly-schedule-intersect > div {
+    float: left;
+}
+
+.bookly-schedule-slots > div:not(:last-child) {
+    margin-bottom: 12px;
+}
+.bookly-repeat-step .bookly-schedule-row .bookly-schedule-intersect
+{
+    margin: 2px 2px 0 0;
+}
+
+.bookly-repeat-step .bookly-schedule-row > div:first-child {
+    width: 36px;
+    height: 36px;
+    padding: 4px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.bookly-repeat-step .bookly-schedule-row > div:last-child {
+    width: calc( 100% - 36px );
+    border-left: 1px solid #cccccc !important;
+    padding: 2px 4px 0 4px;
+}
+
+.bookly-repeat-step .bookly-schedule-row .bookly-schedule-time {
+    border: 1px solid #cccccc !important;
+    padding-right: 6px;
+    padding-left: 6px;
+    border-radius: 4px;
+}
+
+.bookly-repeat-step .bookly-schedule-row .bookly-hidden-info {
+    display: none;
+}
+
+.bookly-repeat-step .bookly-schedule-row .bookly-hidden-info > span {
+    line-height: 32px;
+}
+
+.bookly-schedule-appointment.bookly-appointment-hidden > * {
+    display: none !important;
+    height: 0;
+}
+
+.bookly-schedule-appointment.bookly-appointment-hidden .bookly-hidden-info {
+    display: block !important;
+    width: 100%;
+}
+
+/* pagination */
+.bookly-pagination {
+    display: inline-block;
+    padding-left: 0;
+    border-radius: 4px;
+    margin: 0 !important;
+}
+
+.bookly-pagination > li {
+    line-height: 32px;
+    display: inline-block;
+    border: 1px solid #cccccc !important;
+    border-right: 0 !important;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    cursor: pointer;
+    margin: 0!important;
+}
+
+.bookly-pagination > li:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.bookly-pagination > li:last-child {
+    border-right: 1px solid #cccccc !important;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.bookly-pagination > li.active {
+    color: #fff;
+}
+
+.bookly-visible-sm {
+    display: none;
+}
+
+/* well */
+.bookly-well {
+    border: 1px solid #cccccc !important;
+    padding-right: 6px;
+    padding-left: 6px;
+    border-radius: 4px;
+    background-color: #F2DEDE;
+    vertical-align: middle;
+    display: table;
+}
+
+.bookly-well > div:nth-child(1) {
+    margin: 5px 5px 5px 0;
+    float: left;
+}
+
+.bookly-well > div:nth-child(2) {
+    min-height: 38px;
+    vertical-align: middle;
+    display: table-cell;
+    width: 100%;
+}
+
+.popover .editable-container,
+.popover .control-group {
+    min-width: 300px;
+}
+
+label.bookly-checkbox-label input[type=checkbox]{
+    position: relative;
+    vertical-align: middle;
+    bottom: 1px;
+}
+
+.bookly-round-md {
+    width: 35px;
+    height: 35px;
+}
+
+.bookly-triangle-md {
+    margin: 5px 5px 5px 0;
+    width: 35px;
+    height: 35px;
+    border-left: 22px solid transparent;
+    border-right: 22px solid transparent;
+    border-bottom: 35px solid;
+    float: left;
+}
+
+.bookly-icon-sm {
+    height: 100%;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.bookly-icon-sm i {
+    margin: 0;
+    padding: 0;
+}
+
+.bookly-icon-md {
+    height: 24px;
+    width: 24px;
+    display: block;
+    margin-left: 6px;
+    background-repeat: no-repeat;
+}
+
+.bookly-triangle .bookly-icon-sm {
+    margin-left: -2px;
+    margin-top: 11px;
+    height: 16px;
+    padding-left: 4px;
+}
+
+.bookly-round-md .bookly-icon-md {
+    margin: 6px;
+}
+
+.bookly-round .bookly-icon-md {
+    margin: 6px;
+}
+
+button.bookly-round,
+label.bookly-square {
+    cursor: pointer;
+}
+
+.bookly-round .ladda-label {
+    display: inline !important;
+}
+
+.bookly-icon-sm.bookly-icon-restore {
+    background-image: url(../../../frontend/resources/images/redo-16.png);
+}
+
+.bookly-icon-sm.bookly-icon-exclamation {
+    background-image: url(../../../frontend/resources/images/exclamation-16.png);
+}
+
+.bookly-icon-sm.bookly-icon-i {
+    background-image: url(../../../frontend/resources/images/info-16.png);
+}
+.bookly-icon-sm.bookly-icon-edit {
+    background-image: url(../../../frontend/resources/images/edit-16.png);
+}
+.bookly-icon-sm.bookly-icon-plus {
+    background-image: url(../../../frontend/resources/images/plus-16.png);
+}
+.bookly-icon-sm.bookly-icon-minus {
+    background-image: url(../../../frontend/resources/images/minus-16.png);
+}
+.bookly-icon-sm.bookly-icon-drop {
+    background-image: url(../../../frontend/resources/images/delete-16.png);
+}
+.bookly-icon-sm.bookly-icon-check {
+    background-image: url(../../../frontend/resources/images/check-16.png);
+}
+
 /* Cart */
-.ab-goto-cart {
+.bookly-go-to-cart {
     margin-right: 10px;
     width: 35px;
     height: 35px;
+    float: left!important;
 }
 .ab-cart .ab-mobile-version {
     display: none;
@@ -480,12 +830,12 @@ button.ab-btn:active {
 .ab-details-step .ab-formGroup textarea {
     resize: vertical;
 }
-.ab-details-step .ab-custom-field-row label,
-.ab-details-step .ab-custom-field-row label > input[type="radio"],
-.ab-details-step .ab-custom-field-row label > input[type="checkbox"] {
+.ab-details-step .ab-custom-field-row > div > div > label,
+.ab-details-step .ab-custom-field-row > div > div > label > input[type="radio"],
+.ab-details-step .ab-custom-field-row > div > div > label > input[type="checkbox"] {
     cursor: pointer;
 }
-.ab-details-step .ab-custom-field-row label > * {
+.ab-details-step .ab-custom-field-row > div > div > label > * {
     vertical-align: middle;
 }
 
@@ -508,14 +858,14 @@ button.ab-btn:active {
     text-transform: capitalize !important;
     font-weight: normal !important;
 }
-.bookly-form .ab-payment-nav label,
-.bookly-form .ab-payment-nav label > input[type="radio"] {
+.bookly-form .ab-payment-nav > div > label,
+.bookly-form .ab-payment-nav > div > label > input[type="radio"] {
     cursor: pointer;
 }
-.bookly-form .ab-payment-nav label > * {
+.bookly-form .ab-payment-nav > div > label > * {
     vertical-align: middle;
 }
-.bookly-form .ab-payment-nav label > img {
+.bookly-form .ab-payment-nav > div > label > img {
     margin-left: 10px;
 }
 
@@ -804,6 +1154,81 @@ button.ab-btn:active {
 .bookly-form .picker__nav--disabled {
     display: none;
 }
+.bookly-row .bookly-text,
+.bookly-row .bookly-text-center,
+.bookly-row .bookly-label {
+    padding-top: 6px;
+    margin-bottom: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bookly-row .bookly-text-center {
+    text-align: center;
+}
+
+.bookly-row .bookly-label {
+    text-align: right;
+}
+
+.bookly-row {
+    margin: 0!important;
+    overflow: hidden;
+}
+.bookly-col-1,
+.bookly-col-2,
+.bookly-col-3,
+.bookly-col-4,
+.bookly-col-5,
+.bookly-col-6,
+.bookly-col-7,
+.bookly-col-8,
+.bookly-col-9,
+.bookly-col-10,
+.bookly-col-11,
+.bookly-col-12 {
+    float: left!important;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.bookly-col-12 {
+    width: 100%;
+}
+.bookly-col-11 {
+    width: 91.66666667%;
+}
+.bookly-col-10 {
+    width: 83.33333333%;
+}
+.bookly-col-9 {
+    width: 75%;
+}
+.bookly-col-8 {
+    width: 66.66666667%;
+}
+.bookly-col-7 {
+    width: 58.33333333%;
+}
+.bookly-col-6 {
+    width: 50%;
+}
+.bookly-col-5 {
+    width: 41.66666667%;
+}
+.bookly-col-4 {
+    width: 33.33333333%;
+}
+.bookly-col-3 {
+    width: 25%;
+}
+.bookly-col-2 {
+    width: 16.66666667%;
+}
+.bookly-col-1 {
+    width: 8.33333333%;
+}
+
 
 /* Other */
 .ab--holder {
@@ -827,6 +1252,9 @@ button.ab-btn:active {
     .bookly-table > * {
         display: block;
     }
+    .bookly-repeat-step .bookly-table > * {
+        display: table-cell;
+    }
     .bookly-table .ab-formGroup {
         margin: 0 0 20px;
         width: 100% !important;
@@ -839,7 +1267,7 @@ button.ab-btn:active {
         display: none;
     }
 
-    .ab-mobile-step_1 .ab-nav-steps {
+    .ab-mobile-step_1 .bookly-nav-steps {
         display: block;
     }
     .ab-mobile-step_2 {
@@ -860,25 +1288,26 @@ button.ab-btn:active {
     }
 
     /* Service */
-    .ab-service-step .ab-available-date,
-    .ab-service-step .ab-week-days {
+    .bookly-service-step .ab-available-date,
+    .bookly-service-step .bookly-week-days {
         margin-right: 0 !important;
     }
-    .ab-service-step .ab-week-days {
+    .bookly-service-step .bookly-week-days,
+    .bookly-repeat-step .bookly-week-days {
         width: 100%;
     }
-    .ab-service-step .ab-week-days > div {
+    .bookly-service-step .bookly-week-days > div {
         display: table-cell;
     }
-    .ab-service-step .ab-time-to,
-    .ab-service-step .ab-time-from {
+    .bookly-service-step .ab-time-to,
+    .bookly-service-step .ab-time-from {
         display: inline-block;
         width: 48% !important;
     }
-    .ab-service-step .ab-time-to {
+    .bookly-service-step .ab-time-to {
         float: right !important;
     }
-    .ab-service-step .ab-time-range select {
+    .bookly-service-step .ab-time-range select {
         width: 100%!important;
     }
     .ab-mobile-step_1 {
@@ -899,11 +1328,10 @@ button.ab-btn:active {
         width: auto!important;
         min-width: 0;
         padding: 9px 18px!important;
-        margin-bottom: 10px;
         background-image: none !important;
     }
 
-    .ab-goto-cart {
+    .bookly-go-to-cart {
         padding: 8px!important;
         width: 35px!important;
         height: 35px!important;
@@ -913,7 +1341,7 @@ button.ab-btn:active {
         left: 0!important;
     }
 
-    .ab-extra-step .bookly-extras-item {
+    .bookly-extra-step .bookly-extras-item {
         width: 50%;
     }
 
@@ -924,8 +1352,42 @@ button.ab-btn:active {
     .ab-cart .ab-desktop-version {
         display: none;
     }
-}
 
+    .bookly-col-12,
+    .bookly-col-11,
+    .bookly-col-10,
+    .bookly-col-9,
+    .bookly-col-8,
+    .bookly-col-7,
+    .bookly-col-6,
+    .bookly-col-5,
+    .bookly-col-4,
+    .bookly-col-3,
+    .bookly-col-2,
+    .bookly-col-1{
+        width: 100%;
+        padding: 0;
+    }
+
+    .bookly-visible-sm {
+        display: block;
+    }
+
+    .bookly-visible-md {
+        display: none!important;
+    }
+
+    .bookly-margin-top {
+        margin-top: 12px;
+    }
+
+    .bookly-row .bookly-label,
+    .bookly-row .bookly-text-center {
+        text-align: left;
+        text-transform: capitalize;
+        padding-top: 0;
+    }
+}
 
 /* intlTelInput.js */
 .iti-flag{background-image:url("../images/flags.png");}

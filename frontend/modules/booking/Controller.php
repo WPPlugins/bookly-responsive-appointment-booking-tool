@@ -28,28 +28,28 @@ class Controller extends Lib\Base\Controller
 
         $assets = '';
 
-        if ( get_option( 'ab_settings_link_assets_method' ) == 'print' ) {
+        if ( get_option( 'bookly_gen_link_assets_method' ) == 'print' ) {
             $this->print_assets = ! wp_script_is( 'bookly', 'done' );
             if ( $this->print_assets ) {
                 ob_start();
 
                 // The styles and scripts are registered in Frontend.php
-                wp_print_styles( 'ab-intlTelInput' );
-                wp_print_styles( 'ab-ladda-min' );
-                wp_print_styles( 'ab-picker' );
-                wp_print_styles( 'ab-picker-date' );
-                wp_print_styles( 'ab-main' );
+                wp_print_styles( 'bookly-intlTelInput' );
+                wp_print_styles( 'bookly-ladda-min' );
+                wp_print_styles( 'bookly-picker' );
+                wp_print_styles( 'bookly-picker-date' );
+                wp_print_styles( 'bookly-main' );
 
-                wp_print_scripts( 'ab-spin' );
-                wp_print_scripts( 'ab-ladda' );
-                wp_print_scripts( 'ab-picker' );
-                wp_print_scripts( 'ab-picker-date' );
-                wp_print_scripts( 'ab-hammer' );
-                wp_print_scripts( 'ab-jq-hammer' );
-                wp_print_scripts( 'ab-intlTelInput' );
+                wp_print_scripts( 'bookly-spin' );
+                wp_print_scripts( 'bookly-ladda' );
+                wp_print_scripts( 'bookly-picker' );
+                wp_print_scripts( 'bookly-picker-date' );
+                wp_print_scripts( 'bookly-hammer' );
+                wp_print_scripts( 'bookly-jq-hammer' );
+                wp_print_scripts( 'bookly-intlTelInput' );
                 // Android animation.
                 if ( stripos( strtolower( $_SERVER['HTTP_USER_AGENT'] ), 'android' ) !== false ) {
-                    wp_print_scripts( 'ab-jquery-animate-enhanced' );
+                    wp_print_scripts( 'bookly-jquery-animate-enhanced' );
                 }
                 wp_print_scripts( 'bookly' );
 
@@ -93,17 +93,17 @@ class Controller extends Lib\Base\Controller
         // Handle shortcode attributes.
         $hide_date_and_time = (bool) @$attributes['hide_date_and_time'];
         $fields_to_hide = isset ( $attributes['hide'] ) ? explode( ',', $attributes['hide'] ) : array();
-        $staff_member_id = intval( @$_GET['staff_id'] ?: @$attributes['staff_member_id'] );
+        $staff_member_id = (int) ( @$_GET['staff_id'] ?: @$attributes['staff_member_id'] );
 
         $attrs = array(
-            'location_id'            => intval( @$_GET['loc_id']     ?: @$attributes['location_id'] ),
-            'category_id'            => intval( @$_GET['cat_id']     ?: @$attributes['category_id'] ),
-            'service_id'             => intval( @$_GET['service_id'] ?: @$attributes['service_id'] ),
+            'location_id'            => (int) ( @$_GET['loc_id']     ?: @$attributes['location_id'] ),
+            'category_id'            => (int) ( @$_GET['cat_id']     ?: @$attributes['category_id'] ),
+            'service_id'             => (int) ( @$_GET['service_id'] ?: @$attributes['service_id'] ),
             'staff_member_id'        => $staff_member_id,
             'hide_categories'        => in_array( 'categories',      $fields_to_hide ) ? true : (bool) @$attributes['hide_categories'],
             'hide_services'          => in_array( 'services',        $fields_to_hide ) ? true : (bool) @$attributes['hide_services'],
             'hide_staff_members'     => ( in_array( 'staff_members', $fields_to_hide ) ? true : (bool) @$attributes['hide_staff_members'] )
-                                     && ( get_option( 'ab_appearance_required_employee' ) ? $staff_member_id : true ),
+                                     && ( get_option( 'bookly_app_required_employee' ) ? $staff_member_id : true ),
             'hide_date'              => $hide_date_and_time ? true : in_array( 'date',       $fields_to_hide ),
             'hide_week_days'         => $hide_date_and_time ? true : in_array( 'week_days',  $fields_to_hide ),
             'hide_time_range'        => $hide_date_and_time ? true : in_array( 'time_range', $fields_to_hide ),
@@ -113,10 +113,10 @@ class Controller extends Lib\Base\Controller
             'hide_quantity'          => true,
         );
         // Set service step attributes for Add-ons.
-        if ( Lib\Config::locationsEnabled() ) {
+        if ( Lib\Config::isLocationsEnabled() ) {
             $attrs['hide_locations'] = in_array( 'locations', $fields_to_hide );
         }
-        if ( Lib\Config::multiplyAppointmentsEnabled() ) {
+        if ( Lib\Config::isMultiplyAppointmentsEnabled() ) {
             $attrs['hide_quantity']  = in_array( 'quantity',  $fields_to_hide );
         }
 
@@ -142,7 +142,8 @@ class Controller extends Lib\Base\Controller
         $this->skip_steps = array(
             'service_part1' => (int) $service_part1,
             'service_part2' => (int) $service_part2,
-            'extras' => (int) ( ! Lib\Config::extrasEnabled() )
+            'extras' => (int) ( ! Lib\Config::isServiceExtrasEnabled() ),
+            'repeat' => (int) ( ! Lib\Config::isRecurringAppointmentsEnabled() ),
         );
         // Prepare URL for AJAX requests.
         $this->ajax_url = admin_url( 'admin-ajax.php' );
@@ -150,22 +151,22 @@ class Controller extends Lib\Base\Controller
         if ( $sitepress instanceof \SitePress ) {
             $this->ajax_url .= ( strpos( $this->ajax_url, '?' ) ? '&' : '?' ) . 'lang=' . $sitepress->get_current_language();
         }
-        $woocommerce_enabled = (int) Lib\Config::WooCommerceEnabled();
+        $woocommerce_enabled = (int) Lib\Config::isWooCommerceEnabled();
         $options = array(
             'intlTelInput' => array( 'enabled' => 0 ),
             'woocommerce'  => array( 'enabled' => $woocommerce_enabled, 'cart_url' => $woocommerce_enabled ? WC()->cart->get_cart_url() : '' ),
             'cart'         => array( 'enabled' => $woocommerce_enabled ? 0 : (int) Lib\Config::showStepCart() ),
         );
-        if ( get_option( 'ab_settings_phone_default_country' ) != 'disabled' ) {
+        if ( get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ) {
             $options['intlTelInput']['enabled'] = 1;
             $options['intlTelInput']['utils']   = plugins_url( 'intlTelInput.utils.js', Lib\Plugin::getDirectory() . '/frontend/resources/js/intlTelInput.utils.js' );
-            $options['intlTelInput']['country'] = get_option( 'ab_settings_phone_default_country' );
+            $options['intlTelInput']['country'] = get_option( 'bookly_cst_phone_default_country' );
         }
         $required = array(
-            'staff' => (int) get_option( 'ab_appearance_required_employee' )
+            'staff' => (int) get_option( 'bookly_app_required_employee' )
         );
-        if ( Lib\Config::locationsEnabled() ) {
-            $required['location'] = (int) get_option( 'ab_appearance_required_location' );
+        if ( Lib\Config::isLocationsEnabled() ) {
+            $required['location'] = (int) get_option( 'bookly_app_required_location' );
         }
 
         return $assets . $this->render( 'short_code', compact( 'attrs', 'options', 'required' ), false );
@@ -195,7 +196,7 @@ class Controller extends Lib\Base\Controller
                 $userData->setChainFromCartItem( $cart_key );
             }
 
-            if ( get_option( 'ab_settings_use_client_time_zone' ) ) {
+            if ( Lib\Config::useClientTimeZone() ) {
                 $time_zone_offset = $this->getParameter( 'time_zone_offset' );
                 $userData->set( 'time_zone_offset', $time_zone_offset );
                 $userData->set(
@@ -210,7 +211,7 @@ class Controller extends Lib\Base\Controller
             }
 
             $this->_prepareProgressTracker( 1, $userData );
-            $this->info_text = $this->_prepareInfoText( 1, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_service_step' ), $userData );
+            $this->info_text = $this->_prepareInfoText( 1, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_service_step' ), $userData );
 
             // Available days and times.
             $days_times = Lib\Config::getDaysAndTimes( $userData->get( 'time_zone_offset' ) );
@@ -281,7 +282,7 @@ class Controller extends Lib\Base\Controller
             }
 
             $this->_prepareProgressTracker( 2, $userData );
-            $info_text = $this->_prepareInfoText( 2, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_extras_step' ), $userData );
+            $info_text = $this->_prepareInfoText( 2, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_extras_step' ), $userData );
             $show_cart_btn = $this->_showCartButton( $userData );
 
             // Prepare money format for JavaScript.
@@ -292,7 +293,7 @@ class Controller extends Lib\Base\Controller
             $response = array(
                 'success'  => true,
                 'currency' => array( 'format' => $format, 'precision' => $precision ),
-                'html'     => apply_filters( 'bookly_extras_render_booking_step', '', $userData, $show_cart_btn, $info_text, $this->progress_tracker ),
+                'html'     => apply_filters( 'bookly_service_extras_render_step', '', $userData, $show_cart_btn, $info_text, $this->progress_tracker ),
             );
         } else {
             $response = array( 'success' => false, 'error_code' => 1, 'error' => __( 'Session error.', 'bookly' ) );
@@ -328,26 +329,26 @@ class Controller extends Lib\Base\Controller
                 $userData->setChainFromCartItem( $cart_key );
             }
 
-            $availableTime = new Lib\AvailableTime( $userData );
+            $at = new Lib\AvailableTime( $userData );
             if ( $this->hasParameter( 'selected_date' ) ) {
-                $availableTime->setSelectedDate( $this->getParameter( 'selected_date' ) );
+                $at->setSelectedDate( $this->getParameter( 'selected_date' ) );
             } else {
-                $availableTime->setSelectedDate( $userData->get( 'date_from' ) );
+                $at->setSelectedDate( $userData->get( 'date_from' ) );
             }
-            $availableTime->load();
+            $at->prepare()->load();
 
             $this->_prepareProgressTracker( 3, $userData );
-            $this->info_text = $this->_prepareInfoText( 3, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_time_step' ), $userData );
+            $this->info_text = $this->_prepareInfoText( 3, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_time_step' ), $userData );
 
             // Render slots by groups (day or month).
             $slots = $userData->get( 'slots' );
             $selected_timestamp = isset ( $slots[0][2] ) ? $slots[0][2] : null;
             $slots = array();
-            foreach ( $availableTime->getSlots() as $group => $group_slots ) {
+            foreach ( $at->getSlots() as $group => $group_slots ) {
                 $slots[ $group ] = preg_replace( '/>\s+</', '><', $this->render( '_time_slots', array(
                     'group' => $group,
                     'slots' => $group_slots,
-                    'is_all_day_service' => $availableTime->isAllDayService(),
+                    'is_all_day_service' => $at->isAllDayService(),
                     'selected_timestamp' => $selected_timestamp,
                 ), false ) );
             }
@@ -356,11 +357,11 @@ class Controller extends Lib\Base\Controller
             $response = array(
                 'success'        => true,
                 'has_slots'      => ! empty ( $slots ),
-                'has_more_slots' => $availableTime->hasMoreSlots(),
+                'has_more_slots' => $at->hasMoreSlots(),
                 'day_one_column' => Lib\Config::showDayPerColumn(),
                 'slots'          => $slots,
                 'html'           => $this->render( '3_time', array(
-                    'date'          => Lib\Config::showCalendar() ? $availableTime->getSelectedDateForPickadate() : null,
+                    'date'          => Lib\Config::showCalendar() ? $at->getSelectedDateForPickadate() : null,
                     'has_slots'     => ! empty ( $slots ),
                     'show_cart_btn' => $this->_showCartButton( $userData )
                 ), false ),
@@ -370,7 +371,7 @@ class Controller extends Lib\Base\Controller
                 $bounding = Lib\Config::getBoundingDaysForPickadate( $userData->get( 'time_zone_offset' ) );
                 $response['date_max'] = $bounding['date_max'];
                 $response['date_min'] = $bounding['date_min'];
-                $response['disabled_days'] = $availableTime->getDisabledDaysForPickadate();
+                $response['disabled_days'] = $at->getDisabledDaysForPickadate();
             }
         } else {
             $response = array( 'success' => false, 'error_code' => 1, 'error' => __( 'Session error.', 'bookly' ) );
@@ -390,18 +391,18 @@ class Controller extends Lib\Base\Controller
         $userData = new Lib\UserBookingData( $this->getParameter( 'form_id' ) );
 
         if ( $userData->load() ) {
-            $availableTime = new Lib\AvailableTime( $userData );
-            $availableTime->setLastFetchedSlot( $this->getParameter( 'last_slot' ) );
-            $availableTime->load();
+            $at = new Lib\AvailableTime( $userData );
+            $at->setLastFetchedSlot( $this->getParameter( 'last_slot' ) );
+            $at->prepare()->load();
 
             $slots = $userData->get( 'slots' );
             $selected_timestamp = isset ( $slots[0][2] ) ? $slots[0][2] : null;
             $html = '';
-            foreach ( $availableTime->getSlots() as $group => $group_slots ) {
+            foreach ( $at->getSlots() as $group => $group_slots ) {
                 $html .= $this->render( '_time_slots', array(
                     'group' => $group,
                     'slots' => $group_slots,
-                    'is_all_day_service' => $availableTime->isAllDayService(),
+                    'is_all_day_service' => $at->isAllDayService(),
                     'selected_timestamp' => $selected_timestamp,
                 ), false );
             }
@@ -411,7 +412,7 @@ class Controller extends Lib\Base\Controller
                 'success'        => true,
                 'html'           => preg_replace( '/>\s+</', '><', $html ),
                 'has_slots'      => $html != '',
-                'has_more_slots' => $availableTime->hasMoreSlots(), // show/hide the next button
+                'has_more_slots' => $at->hasMoreSlots(), // show/hide the next button
             );
         } else {
             $response = array( 'success' => false, 'error_code' => 1, 'error' => __( 'Session error.', 'bookly' ) );
@@ -422,25 +423,69 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * 4. Step cart.
+     * 4. Step repeat.
+     *
+     * response JSON
+     */
+    public function executeRenderRepeat()
+    {
+        $form_id = $this->getParameter( 'form_id' );
+        $userData = new Lib\UserBookingData( $form_id );
+
+        if ( $userData->load() ) {
+            $this->_prepareProgressTracker( 4, $userData );
+            $info_text = $this->_prepareInfoText( 4, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_repeat_step' ), $userData );
+
+            // Available days and times.
+            $bounding  = Lib\Config::getBoundingDaysForPickadate( $userData->get( 'time_zone_offset' ) );
+            $show_cart_btn = $this->_showCartButton( $userData );
+            $slots    = $userData->get( 'slots' );
+            $date_min = array(
+                (int) date( 'Y', $slots[0][2] ),
+                (int) date( 'n', $slots[0][2] ) - 1,
+                (int) date( 'j', $slots[0][2] ),
+            );
+
+            $response = array(
+                'success'  => true,
+                'html'     => apply_filters( 'bookly_recurring_appointments_render_step', '', $userData, $show_cart_btn, $info_text, $this->progress_tracker ),
+                'date_max' => $bounding['date_max'],
+                'date_min' => $date_min,
+                'repeated' => (int) $userData->get( 'repeated' ),
+                'short_date_format'  => Lib\Utils\DateTime::convertFormat( 'D, M d', Lib\Utils\DateTime::FORMAT_PICKADATE ),
+                'pages_warning_info' => nl2br( Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_repeat_schedule_help' ) ),
+                'could_be_repeated'  => apply_filters( 'bookly_recurring_appointments_could_be_repeated', true, $userData ),
+            );
+        } else {
+            $response = array( 'success' => false, 'error_code' => 1, 'error' => __( 'Session error.', 'bookly' ) );
+        }
+        // Output JSON response.
+        wp_send_json( $response );
+    }
+
+    /**
+     * 5. Step cart.
      *
      * response JSON
      */
     public function executeRenderCart()
     {
         $userData = new Lib\UserBookingData( $this->getParameter( 'form_id' ) );
-        $deposit_enabled = Lib\Config::depositEnabled();
+        $deposit_enabled = Lib\Config::isDepositPaymentsEnabled();
 
         if ( $userData->load() ) {
             if ( $this->hasParameter( 'add_to_cart' ) ) {
                 $userData->addChainToCart();
             }
-            $this->_prepareProgressTracker( 4, $userData );
-            $this->info_text = $this->_prepareInfoText( 4, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_cart_step' ), $userData );
+            $this->_prepareProgressTracker( 5, $userData );
+            $this->info_text = $this->_prepareInfoText( 5, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_cart_step' ), $userData );
             $cart_items = array();
-            $use_client_time_zone = get_option( 'ab_settings_use_client_time_zone' );
-            $cart_columns = get_option( 'ab_cart_show_columns', array() );
+            $use_client_time_zone = Lib\Config::useClientTimeZone();
+            $cart_columns = get_option( 'bookly_cart_show_columns', array() );
             foreach ( $userData->cart->getItems() as $cart_key => $cart_item ) {
+                if ( apply_filters( 'bookly_recurring_appointments_hide_child_appointments', false, $cart_item ) ) {
+                    continue;
+                }
                 $nop_prefix = ( $cart_item->get( 'number_of_persons' ) > 1 ? $cart_item->get( 'number_of_persons' ) . ' &times; ' : '' );
                 $slots = $cart_item->get( 'slots' );
                 $timestamp = $slots[0][2];
@@ -468,7 +513,7 @@ class Controller extends Lib\Base\Controller
                             case 'deposit':
                                 if ( $deposit_enabled ) {
                                     $cart_items[ $cart_key ][] = apply_filters(
-                                        'bookly_deposit_format_deposit',
+                                        'bookly_deposit_payments_format_deposit',
                                         $cart_item->getDepositPrice(),
                                         $cart_item->getDeposit()
                                     );
@@ -486,7 +531,7 @@ class Controller extends Lib\Base\Controller
                 if ( $attr['show'] ) {
                     switch ( $column ) {
                         case 'service':
-                            $columns[] = Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_service' );
+                            $columns[] = Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_service' );
                             break;
                         case 'date':
                             $columns[] = __( 'Date', 'bookly' );
@@ -495,7 +540,7 @@ class Controller extends Lib\Base\Controller
                             $columns[] = __( 'Time', 'bookly' );
                             break;
                         case 'employee':
-                            $columns[] = Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_employee' );
+                            $columns[] = Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_employee' );
                             break;
                         case 'price':
                             $columns[] = __( 'Price', 'bookly' );
@@ -513,13 +558,14 @@ class Controller extends Lib\Base\Controller
             list( $total, $deposit ) = $userData->cart->getInfo( false );   // without coupon
             $response = array(
                 'success' => true,
-                'html'    => $this->render( '4_cart', array(
+                'html'    => $this->render( '5_cart', array(
                     'cart_items'      => $cart_items,
-                    'total'           => $total,
-                    'deposit_total'   => $deposit,
                     'columns'         => $columns,
-                    'price_position'  => $price_position,
                     'deposit_enabled' => $deposit_enabled,
+                    'deposit_total'   => $deposit,
+                    'price_position'  => $price_position,
+                    'total'           => $total,
+                    'info_message'    => apply_filters( 'bookly_prepare_info_message', '', $userData, 5 ),
                 ), false ),
             );
         } else {
@@ -531,13 +577,14 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * 5. Step details.
+     * 6. Step details.
      *
      * response JSON
      */
     public function executeRenderDetails()
     {
-        $userData = new Lib\UserBookingData( $this->getParameter( 'form_id' ) );
+        $form_id  = $this->getParameter( 'form_id' );
+        $userData = new Lib\UserBookingData( $form_id );
 
         if ( $userData->load() ) {
             if ( ! Lib\Config::showStepCart() ) {
@@ -575,21 +622,23 @@ class Controller extends Lib\Base\Controller
                 );
             }
 
-            $this->_prepareProgressTracker( 5, $userData );
-            $this->info_text = $this->_prepareInfoText( 5, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_details_step' ), $userData );
-            $this->info_text_guest = ( get_current_user_id() == 0 ) ? $this->_prepareInfoText( 3, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_details_step_guest' ), $userData ) : '';
-            if ( strpos( get_option( 'ab_custom_fields' ), '"captcha"' ) !== false ) {
+            $this->_prepareProgressTracker( 6, $userData );
+            $this->info_text = $this->_prepareInfoText( 6, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_details_step' ), $userData );
+            $this->info_text_guest = ( get_current_user_id() == 0 ) ? $this->_prepareInfoText( 3, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_details_step_guest' ), $userData ) : '';
+            if ( strpos( get_option( 'bookly_custom_fields' ), '"captcha"' ) !== false ) {
                 // Init Captcha.
-                Lib\Captcha\Captcha::init( $this->getParameter( 'form_id' ) );
+                Lib\Captcha\Captcha::init( $form_id );
             }
 
             $response = array(
                 'success' => true,
-                'html'    => $this->render( '5_details', array(
-                    'userData'    => $userData,
-                    'cf_data'     => $cf_data,
-                    'captcha_url' => admin_url( 'admin-ajax.php?action=ab_captcha&form_id=' . $this->getParameter( 'form_id' ) . '&' . microtime( true ) ),
+                'html'    => $this->render( '6_details', array(
+                    'form_id'      => $form_id,
+                    'userData'     => $userData,
+                    'cf_data'      => $cf_data,
+                    'captcha_url'  => admin_url( 'admin-ajax.php?action=bookly_captcha&form_id=' . $form_id . '&' . microtime( true ) ),
                     'show_service_title' => Lib\Config::customFieldsPerService() && count( $cf_data ) > 1,
+                    'info_message' => apply_filters( 'bookly_prepare_info_message', '', $userData, 6 ),
                 ), false )
             );
         } else {
@@ -601,7 +650,7 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * 6. Step payment.
+     * 7. Step payment.
      *
      * response JSON
      */
@@ -610,7 +659,7 @@ class Controller extends Lib\Base\Controller
         $userData = new Lib\UserBookingData( $this->getParameter( 'form_id' ) );
 
         if ( $userData->load() ) {
-            $payment_disabled = Lib\Config::isPaymentDisabled();
+            $payment_disabled = Lib\Config::isPaymentStepDisabled();
             if ( ! Lib\Config::showStepCart() ) {
                 $userData->addChainToCart();
             }
@@ -621,25 +670,30 @@ class Controller extends Lib\Base\Controller
 
             if ( $payment_disabled == false ) {
                 $this->form_id   = $this->getParameter( 'form_id' );
-                $this->_prepareProgressTracker( 6, $userData );
-                $this->info_text = $this->_prepareInfoText( 6, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_payment_step' ), $userData );
-                $this->info_text_coupon = $this->_prepareInfoText( 6, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_coupon' ), $userData );
+                $this->_prepareProgressTracker( 7, $userData );
+                $this->info_text = $this->_prepareInfoText( 7, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_payment_step' ), $userData );
+                $this->info_text_coupon = $this->_prepareInfoText( 7, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_coupon' ), $userData );
 
                 // Set response.
                 $response = array(
                     'success'  => true,
                     'disabled' => false,
-                    'html'     => $this->render( '6_payment', array(
-                        'coupon_code'      => $userData->get( 'coupon' ),
-                        'payment'          => $userData->extractPaymentStatus(),
-                        'pay_2checkout'    => ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_2CHECKOUT ),
-                        'pay_authorizenet' => ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_AUTHORIZENET ),
-                        'pay_local'        => ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_LOCAL ),
-                        'pay_mollie'       => ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_MOLLIE ),
-                        'pay_paypal'       => ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_PAYPAL ),
-                        'pay_payson'       => ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_PAYSON ),
-                        'pay_payulatam'    => ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_PAYULATAM ),
-                        'pay_stripe'       => ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_STRIPE ),
+                    'html'     => $this->render( '7_payment', array(
+                        'coupon_code'     => $userData->get( 'coupon' ),
+                        'payment'         => $userData->extractPaymentStatus(),
+                        'pay_2checkout'   => Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_2CHECKOUT ),
+                        'pay_authorize_net' => Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_AUTHORIZENET ),
+                        'pay_local'       => Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_LOCAL ),
+                        'pay_mollie'      => Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_MOLLIE ),
+                        'pay_paypal'      => Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_PAYPAL )
+                            ? Lib\Config::getPaymentTypeOption( Lib\Entities\Payment::TYPE_PAYPAL )
+                            : false,
+                        'pay_payson'      => Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_PAYSON ),
+                        'pay_payu_latam'  => Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_PAYULATAM ),
+                        'pay_stripe'      => Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_STRIPE ),
+                        'url_cards_image' => plugins_url( 'frontend/resources/images/cards.png', Lib\Plugin::getMainFile() ),
+                        'page_url'        => $this->getParameter( 'page_url' ),
+                        'info_message'    => apply_filters( 'bookly_prepare_info_message', '', $userData, 7 ),
                     ), false )
                 );
             } else {
@@ -657,7 +711,7 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * 7. Step done ( complete ).
+     * 8. Step done ( complete ).
      *
      * response JSON
      */
@@ -666,7 +720,7 @@ class Controller extends Lib\Base\Controller
         $userData = new Lib\UserBookingData( $this->getParameter( 'form_id' ) );
 
         if ( $userData->load() ) {
-            $this->_prepareProgressTracker( 7, $userData );
+            $this->_prepareProgressTracker( 8, $userData );
             $payment = $userData->extractPaymentStatus();
             do {
                 if ( $payment ) {
@@ -676,12 +730,12 @@ class Controller extends Lib\Base\Controller
                             break ( 2 );
                     }
                 }
-                $this->info_text = $this->_prepareInfoText( 7, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_complete_step' ), $userData );
+                $this->info_text = $this->_prepareInfoText( 8, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_complete_step' ), $userData );
             } while ( 0 );
 
             $response = array (
                 'success' => true,
-                'html'    => $this->render( '7_complete', array(), false ),
+                'html'    => $this->render( '8_complete', array(), false ),
             );
         } else {
             $response = array( 'success' => false, 'error_code' => 1, 'error' => __( 'Session error.', 'bookly' ) );
@@ -718,9 +772,11 @@ class Controller extends Lib\Base\Controller
                     $parameters['captcha_ids'] = json_decode( $parameters['captcha_ids'], true );
                     foreach ( $parameters['cart'] as &$cart_item ) {
                         // Remove captcha from custom fields.
-                        $cart_item['custom_fields'] = array_filter( json_decode( $cart_item['custom_fields'], true ), function ( $field ) use ( $parameters ) {
+                        $custom_fields = array_filter( json_decode( $cart_item['custom_fields'], true ), function ( $field ) use ( $parameters ) {
                             return ! in_array( $field['id'], $parameters['captcha_ids'] );
                         } );
+                        // Index the array numerically.
+                        $cart_item['custom_fields'] = array_values( $custom_fields );
                     }
                     if ( ! Lib\Config::customFieldsPerService() ) {
                         // Copy custom fields to all cart items.
@@ -732,6 +788,9 @@ class Controller extends Lib\Base\Controller
                     }
                 }
                 $userData->fillData( $parameters );
+                if( Lib\Utils\Common::isHHVM() ) {
+                    $userData = null;
+                }
             }
         }
 
@@ -750,8 +809,8 @@ class Controller extends Lib\Base\Controller
             $failed_cart_key = $userData->cart->getFailedKey();
             if ( $failed_cart_key === null ) {
                 list( $total, $deposit ) = $userData->cart->getInfo();
-                $is_payment_disabled  = Lib\Config::isPaymentDisabled();
-                $is_pay_locally_enabled = ! Lib\Config::isPaymentDisabled( Lib\Entities\Payment::TYPE_LOCAL );
+                $is_payment_disabled  = Lib\Config::isPaymentStepDisabled();
+                $is_pay_locally_enabled = Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_LOCAL );
                 if ( $is_payment_disabled || $is_pay_locally_enabled || $deposit <= 0 ) {
                     // Handle coupon.
                     $coupon = $userData->getCoupon();
@@ -769,7 +828,7 @@ class Controller extends Lib\Base\Controller
                             // Create fake payment record for 100% discount coupons.
                             $payment->set( 'type', Lib\Entities\Payment::TYPE_COUPON )
                                 ->set( 'total', 0 )
-                                ->set( 'paid', 0 )
+                                ->set( 'paid',  0 )
                                 ->save();
                             $payment_id = $payment->get( 'id' );
                         } elseif ( $is_pay_locally_enabled && $deposit > 0 ) {
@@ -802,8 +861,8 @@ class Controller extends Lib\Base\Controller
             } else {
                 $response = array(
                     'success'         => false,
-                    'error_code'      => 3,
                     'failed_cart_key' => $failed_cart_key,
+                    'error_code'      => 3,
                     'error'           => Lib\Config::showStepCart()
                         ? __( 'The highlighted time is not available anymore. Please, choose another time slot.', 'bookly' )
                         : __( 'The selected time is not available anymore. Please, choose another time slot.', 'bookly' ),
@@ -821,43 +880,40 @@ class Controller extends Lib\Base\Controller
      */
     public function executeSavePendingAppointment()
     {
-        // List of gateways valid for this action.
-        $valid_gateways = array(
-            Lib\Entities\Payment::TYPE_PAYULATAM
-        );
-
-        $gateway = $this->getParameter( 'gateway' );
-
-        if ( in_array( $gateway, $valid_gateways ) && get_option( 'ab_' . $gateway ) ) {
+        if (
+            Lib\Config::isPaymentTypeEnabled (Lib\Entities\Payment::TYPE_PAYULATAM ) ||
+            Lib\Config::getPaymentTypeOption( Lib\Entities\Payment::TYPE_PAYPAL ) == Lib\Payment\PayPal::TYPE_PAYMENTS_STANDARD
+        ) {
             $userData = new Lib\UserBookingData( $this->getParameter( 'form_id' ) );
             if ( $userData->load() ) {
                 $failed_cart_key = $userData->cart->getFailedKey();
                 if ( $failed_cart_key === null ) {
-                    $coupon    = $userData->getCoupon();
+                    $coupon = $userData->getCoupon();
                     if ( $coupon ) {
                         $coupon->claim();
                         $coupon->save();
                     }
-                    list( $total, $deposit ) = $userData->cart->getInfo();
-                    $payment   = new Lib\Entities\Payment();
-                    $payment->set( 'type', $this->getParameter( 'gateway' ) )
-                        ->set( 'status',   Lib\Entities\Payment::STATUS_PENDING )
-                        ->set( 'total',    $total )
-                        ->set( 'paid',     $deposit )
-                        ->set( 'created',  current_time( 'mysql' ) )
+                    list ( $total, $deposit ) = $userData->cart->getInfo();
+                    $payment = new Lib\Entities\Payment();
+                    $payment
+                        ->set( 'type',    $this->getParameter( 'payment_type' ) )
+                        ->set( 'status',  Lib\Entities\Payment::STATUS_PENDING )
+                        ->set( 'total',   $total )
+                        ->set( 'paid',    $deposit )
+                        ->set( 'created', current_time( 'mysql' ) )
                         ->save();
                     $payment_id = $payment->get( 'id' );
                     $ca_list = $userData->save( $payment_id );
                     $payment->setDetails( $ca_list, $coupon )->save();
                     $response = array(
-                        'success' => true,
-                        'ca_ids'  => implode( ',', array_keys( $ca_list ) )
+                        'success'    => true,
+                        'payment_id' => $payment_id,
                     );
                 } else {
                     $response = array(
                         'success'         => false,
-                        'error_code'      => 3,
                         'failed_cart_key' => $failed_cart_key,
+                        'error_code'      => 3,
                         'error'           => Lib\Config::showStepCart()
                             ? __( 'The highlighted time is not available anymore. Please, choose another time slot.', 'bookly' )
                             : __( 'The selected time is not available anymore. Please, choose another time slot.', 'bookly' ),
@@ -884,8 +940,8 @@ class Controller extends Lib\Base\Controller
             } else {
                 $response = array(
                     'success'         => false,
-                    'error_code'      => 3,
                     'failed_cart_key' => $failed_cart_key,
+                    'error_code'      => 3,
                     'error'           => Lib\Config::showStepCart()
                         ? __( 'The highlighted time is not available anymore. Please, choose another time slot.', 'bookly' )
                         : __( 'The selected time is not available anymore. Please, choose another time slot.', 'bookly' )
@@ -908,7 +964,7 @@ class Controller extends Lib\Base\Controller
         $allow_cancel = true;
         if ( $customer_appointment->loadBy( array( 'token' => $this->getParameter( 'token' ) ) ) ) {
             $appointment = new Lib\Entities\Appointment();
-            $minimum_time_prior_cancel = (int) get_option( 'ab_settings_minimum_time_prior_cancel', 0 );
+            $minimum_time_prior_cancel = (int) get_option( 'bookly_gen_min_time_prior_cancel', 0 );
             if ( $minimum_time_prior_cancel > 0
                  && $appointment->load( $customer_appointment->get( 'appointment_id' ) )
             ) {
@@ -922,21 +978,21 @@ class Controller extends Lib\Base\Controller
             }
         }
 
-        if ( $this->url = $allow_cancel ? get_option( 'ab_settings_cancel_page_url' ) : get_option( 'ab_settings_cancel_denied_page_url' ) ) {
-            wp_redirect( $this->url );
-            $this->render( 'redirection' );
+        if ( $url = $allow_cancel ? get_option( 'bookly_gen_cancel_page_url' ) : get_option( 'bookly_gen_cancel_denied_page_url' ) ) {
+            wp_redirect( $url );
+            $this->render( 'redirection', compact( 'url' ) );
             exit;
         }
 
-        $this->url = home_url();
+        $url = home_url();
         if ( isset ( $_SERVER['HTTP_REFERER'] ) ) {
-            if ( parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) == parse_url( $this->url, PHP_URL_HOST ) ) {
+            if ( parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) == parse_url( $url, PHP_URL_HOST ) ) {
                 // Redirect back if user came from our site.
-                $this->url = $_SERVER['HTTP_REFERER'];
+                $url = $_SERVER['HTTP_REFERER'];
             }
         }
-        wp_redirect( $this->url );
-        $this->render( 'redirection' );
+        wp_redirect( $url );
+        $this->render( 'redirection', compact( 'url' ) );
         exit;
     }
 
@@ -968,22 +1024,22 @@ class Controller extends Lib\Base\Controller
             if ( $send_notification ) {
                 Lib\NotificationSender::send( $customer_appointment );
             }
-            if ( $this->url = get_option( 'ab_settings_approve_page_url' ) ) {
-                wp_redirect( $this->url );
-                $this->render( 'redirection' );
+            if ( $url = get_option( 'bookly_gen_approve_page_url' ) ) {
+                wp_redirect( $url );
+                $this->render( 'redirection', compact( 'url' ) );
                 exit;
             }
         }
 
-        $this->url = home_url();
+        $url = home_url();
         if ( isset ( $_SERVER['HTTP_REFERER'] ) ) {
-            if ( parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) == parse_url( $this->url, PHP_URL_HOST ) ) {
+            if ( parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) == parse_url( $url, PHP_URL_HOST ) ) {
                 // Redirect back if user came from our site.
-                $this->url = $_SERVER['HTTP_REFERER'];
+                $url = $_SERVER['HTTP_REFERER'];
             }
         }
-        wp_redirect( $this->url );
-        $this->render( 'redirection' );
+        wp_redirect( $url );
+        $this->render( 'redirection', compact( 'url' ) );
         exit;
     }
 
@@ -992,7 +1048,7 @@ class Controller extends Lib\Base\Controller
      */
     public function executeApplyCoupon()
     {
-        if ( ! get_option( 'ab_settings_coupons' ) ) {
+        if ( ! get_option( 'bookly_pmt_coupons' ) ) {
             wp_send_json_error();
         }
 
@@ -1014,11 +1070,11 @@ class Controller extends Lib\Base\Controller
                 }
                 if ( $coupon->valid( $service_ids ) ) {
                     $userData->fillData( array( 'coupon' => $coupon_code ) );
-                    list( $total ) = $userData->cart->getInfo();
+                    list( $total, $deposit ) = $userData->cart->getInfo();
                     $response = array(
                         'success' => true,
-                        'text'    => $this->_prepareInfoText( 6, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_coupon' ), $userData ),
-                        'total'   => $total
+                        'text'    => $this->_prepareInfoText( 7, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_coupon' ), $userData ),
+                        'total'   => $deposit
                     );
                 } else {
                     $userData->fillData( array( 'coupon' => null ) );
@@ -1026,7 +1082,7 @@ class Controller extends Lib\Base\Controller
                         'success'    => false,
                         'error_code' => 6,
                         'error'      => __( 'This coupon code is invalid or has been used', 'bookly' ),
-                        'text'       => $this->_prepareInfoText( 6, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_coupon' ), $userData )
+                        'text'       => $this->_prepareInfoText( 7, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_coupon' ), $userData )
                     );
                 }
             } else {
@@ -1035,7 +1091,7 @@ class Controller extends Lib\Base\Controller
                     'success'    => false,
                     'error_code' => 6,
                     'error'      => __( 'This coupon code is invalid or has been used', 'bookly' ),
-                    'text'       => $this->_prepareInfoText( 6, Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_info_coupon' ), $userData )
+                    'text'       => $this->_prepareInfoText( 7, Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_info_coupon' ), $userData )
                 );
             }
         } else {
@@ -1059,14 +1115,14 @@ class Controller extends Lib\Base\Controller
             $customer = new Lib\Entities\Customer();
             if ( $customer->loadBy( array( 'wp_user_id' => $user->ID ) ) ) {
                 $user_info = array(
-                    'name'  => $customer->get( 'name' ),
                     'email' => $customer->get( 'email' ),
-                    'phone' => $customer->get( 'phone' )
+                    'name'  => $customer->get( 'name' ),
+                    'phone' => $customer->get( 'phone' ),
                 );
             } else {
                 $user_info  = array(
+                    'email' => $user->user_email,
                     'name'  => $user->display_name,
-                    'email' => $user->user_email
                 );
             }
             $userData = new Lib\UserBookingData( $this->getParameter( 'form_id' ) );
@@ -1136,7 +1192,7 @@ class Controller extends Lib\Base\Controller
     public function executeCaptchaRefresh()
     {
         Lib\Captcha\Captcha::init( $this->getParameter( 'form_id' ) );
-        wp_send_json_success( array( 'captcha_url' => admin_url( 'admin-ajax.php?action=ab_captcha&form_id=' . $this->getParameter( 'form_id' ) . '&' . microtime( true ) ) ) );
+        wp_send_json_success( array( 'captcha_url' => admin_url( 'admin-ajax.php?action=bookly_captcha&form_id=' . $this->getParameter( 'form_id' ) . '&' . microtime( true ) ) ) );
     }
 
     /**
@@ -1147,15 +1203,15 @@ class Controller extends Lib\Base\Controller
      */
     private function _prepareProgressTracker( $step, Lib\UserBookingData $userData )
     {
-        if ( get_option( 'ab_appearance_show_progress_tracker' ) ) {
-            $payment_disabled = Lib\Config::isPaymentDisabled();
+        if ( get_option( 'bookly_app_show_progress_tracker' ) ) {
+            $payment_disabled = Lib\Config::isPaymentStepDisabled();
             if ( ! $payment_disabled && $step > 1 ) {
-                if ( $step < 4 ) {
+                if ( $step < 5 ) {  // step Cart.
                     // Assume that payment is disabled and check chain items.
                     // If one is incomplete or its price is more than zero then the payment step should be displayed.
                     $payment_disabled = true;
                     foreach ( $userData->chain->getItems() as $item ) {
-                        if ( $item->getExtrasAmount() > 0 ) {
+                        if ( $item->hasPayableExtras() ) {
                             $payment_disabled = false;
                             break;
                         } else {
@@ -1219,9 +1275,10 @@ class Controller extends Lib\Base\Controller
     private function _prepareInfoText( $step, $text, $userData )
     {
         if ( empty ( $this->info_text_codes ) ) {
+            $use_client_time_zone = Lib\Config::useClientTimeZone();
             if ( $step == 1 ) {
                 // No replacements.
-            } elseif ( $step < 4 ) {
+            } elseif ( $step < 5 ) {
                 $data = array(
                     'category_names'      => array(),
                     'numbers_of_persons'  => array(),
@@ -1235,6 +1292,17 @@ class Controller extends Lib\Base\Controller
                     'total_deposit_price' => 0,
                     'total_price'         => 0,
                 );
+                //
+                $slots = $userData->get( 'slots' );
+                $service_datetime = date( 'Y-m-d H:i:s', $slots[0][2] );
+                if ( $use_client_time_zone ) {
+                    $service_datetime = Lib\Utils\DateTime::applyTimeZoneOffset(
+                        $service_datetime, $userData->get( 'time_zone_offset' )
+                    );
+                }
+                $data['service_times'][] = Lib\Utils\DateTime::formatDate( $service_datetime );
+                $data['service_dates'][] = Lib\Utils\DateTime::formatTime( $service_datetime );
+
                 /** @var Lib\ChainItem $chain_item */
                 foreach ( $userData->chain->getItems() as $chain_item ) {
                     $data['numbers_of_persons'][] = $chain_item->get( 'number_of_persons' );
@@ -1245,9 +1313,9 @@ class Controller extends Lib\Base\Controller
                     $data['category_names'][] = $service->getCategoryName();
                     /** @var Lib\Entities\Staff $staff */
                     $staff     = null;
-                    $staff_ids = array( 1 );
+                    $staff_ids = $chain_item->get( 'staff_ids' );
                     if ( count( $staff_ids ) == 1 ) {
-                        $staff = Lib\Entities\Staff::find( $staff_ids[0] );
+                        $staff = Lib\Entities\Staff::find( 1 );
                     }
                     if ( $staff ) {
                         $data['staff_names'][] = $staff->getName();
@@ -1262,7 +1330,7 @@ class Controller extends Lib\Base\Controller
                                 'service_id' => $service->get( 'id' ),
                             ) );
                             $price = $staff_service->get( 'price' );
-                            $deposit_price = apply_filters( 'bookly_deposit_get_deposit_amount', ( $chain_item->get( 'number_of_persons' ) * $price ), $staff_service->get( 'deposit' ), $chain_item->get( 'number_of_persons' ) );
+                            $deposit_price = apply_filters( 'bookly_deposit_payments_get_deposit_amount', ( $chain_item->get( 'number_of_persons' ) * $price ), $staff_service->get( 'deposit' ), $chain_item->get( 'number_of_persons' ) );
                         }
                     } else {
                         $data['staff_names'][] = __( 'Any', 'bookly' );
@@ -1307,12 +1375,17 @@ class Controller extends Lib\Base\Controller
                     'staff_name'        => array(),
                 );
                 /** @var Lib\CartItem $cart_item */
-                foreach ( $userData->cart->getItems() as $cart_key => $cart_item ) {
+                foreach ( $userData->cart->getItems() as $cart_item ) {
                     $service = $cart_item->getService();
                     $slot    = $cart_item->get( 'slots' );
                     $service_datetime = date( 'Y-m-d H:i:s', $slot[0][2] );
-                    $data['category_name'][]      = $service->getCategoryName();
-                    $data['number_of_persons'][]  = $cart_item->get( 'number_of_persons' );
+                    if ( $use_client_time_zone ) {
+                        $service_datetime = Lib\Utils\DateTime::applyTimeZoneOffset(
+                            $service_datetime, $userData->get( 'time_zone_offset' )
+                        );
+                    }
+                    $data['category_name'][]     = $service->getCategoryName();
+                    $data['number_of_persons'][] = $cart_item->get( 'number_of_persons' );
                     $data['service_date'][]  = Lib\Utils\DateTime::formatDate( $service_datetime );
                     $data['service_info'][]  = $service->getInfo();
                     $data['service_name'][]  = $service->getTitle();
@@ -1324,7 +1397,7 @@ class Controller extends Lib\Base\Controller
                     $data = apply_filters( 'bookly_prepare_cart_item_info_text', $data, $cart_item );
                 }
 
-                list( $total, $deposit, $due ) = $userData->cart->getInfo( $step >= 6 );  // >= step payment
+                list( $total, $deposit, $due ) = $userData->cart->getInfo( $step >= 7 );  // >= step payment
 
                 $this->info_text_codes = array(
                     '{amount_due}'        => '<b>' . Lib\Utils\Common::formatPrice( $due ) . '</b>',
@@ -1366,12 +1439,7 @@ class Controller extends Lib\Base\Controller
      */
     private function _showCartButton( Lib\UserBookingData $userData )
     {
-        if ( Lib\Config::showStepCart() ) {
-            if ( count( $userData->cart->getItems() ) ) {
-                return true;
-            }
-        }
-        return false;
+        return Lib\Config::showStepCart() && count( $userData->cart->getItems() );
     }
 
     /**
@@ -1394,7 +1462,7 @@ class Controller extends Lib\Base\Controller
         }
         // Date.
         $date_from = date_create( '@' . current_time( 'timestamp' ) )->modify( '+' . Lib\Config::getMinimumTimePriorBooking() . ' sec' );
-        if ( get_option( 'ab_settings_use_client_time_zone' ) ) {
+        if ( Lib\Config::useClientTimeZone() ) {
             $time_zone_offset = $this->getParameter( 'time_zone_offset' );
             $userData->set( 'time_zone_offset', $time_zone_offset );
             $date_from->modify( '-' . ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS + $time_zone_offset * MINUTE_IN_SECONDS ) . ' sec' );
@@ -1406,32 +1474,32 @@ class Controller extends Lib\Base\Controller
 
         $userData->chain->clear();
         $chain_item = new Lib\ChainItem();
-        $chain_item->set( 'service_id', $attrs['service_id'] );
-        $chain_item->set( 'staff_ids', $staff_ids );
         $chain_item->set( 'number_of_persons', 1 );
         $chain_item->set( 'quantity', 1 );
+        $chain_item->set( 'service_id', $attrs['service_id'] );
+        $chain_item->set( 'staff_ids',  $staff_ids );
         $userData->chain->add( $chain_item );
 
         $userData->fillData( array(
             'date_from'      => $date_from->format( 'Y-m-d' ),
             'days'           => array_keys( $days_times['days'] ),
+            'edit_cart_keys' => array(),
+            'slots'          => array(),
             'time_from'      => $time_from,
             'time_to'        => key( $days_times['times'] ),
-            'slots'          => array(),
-            'edit_cart_keys' => array(),
         ) );
     }
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
-        parent::registerWpActions( 'wp_ajax_nopriv_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
+        parent::registerWpActions( 'wp_ajax_nopriv_bookly_' );
     }
 
 }

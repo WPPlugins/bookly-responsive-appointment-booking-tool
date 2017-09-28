@@ -10,11 +10,6 @@ class UserBookingData
     private $form_id = null;
 
     /**
-     * @var array
-     */
-    private $booking_numbers = array();
-
-    /**
      * Data provided by user at booking steps
      * and stored in PHP session.
      * @var array
@@ -37,6 +32,7 @@ class UserBookingData
         'coupon'           => null,
         // Cart item keys being edited
         'edit_cart_keys'   => array(),
+        'repeated'         => 0,
     );
 
     /**
@@ -53,6 +49,16 @@ class UserBookingData
      * @var Entities\Coupon|null
      */
     private $coupon = null;
+
+    /**
+     * @var array
+     */
+    private $booking_numbers = array();
+
+    /**
+     * @var integer|null
+     */
+    private $payment_id = null;
 
     /**
      * Constructor.
@@ -93,10 +99,12 @@ class UserBookingData
                 'SUBSTRING_INDEX(MAX(end_time), ":", 2) AS max_end_time' )
             ->whereNot( 'start_time', null )
             ->fetchRow();
+        $times = apply_filters( 'bookly_special_days_adjust_min_and_max_times', $times );
         $this->set( 'time_from',      $times['min_end_time'] );
         $this->set( 'time_to',        $times['max_end_time'] );
         $this->set( 'slots',          array() );
         $this->set( 'edit_cart_keys', array() );
+        $this->set( 'repeated',       0 );
     }
 
     /**
@@ -104,11 +112,12 @@ class UserBookingData
      */
     public function __destruct()
     {
-        Session::setFormVar( $this->form_id, 'data',  $this->data );
-        Session::setFormVar( $this->form_id, 'cart',  $this->cart->getItemsData() );
-        Session::setFormVar( $this->form_id, 'chain', $this->chain->getItemsData() );
+        Session::setFormVar( $this->form_id, 'data',            $this->data );
+        Session::setFormVar( $this->form_id, 'cart',            $this->cart->getItemsData() );
+        Session::setFormVar( $this->form_id, 'chain',           $this->chain->getItemsData() );
         Session::setFormVar( $this->form_id, 'booking_numbers', $this->booking_numbers );
-        Session::setFormVar( $this->form_id, 'last_touched', time() );
+        Session::setFormVar( $this->form_id, 'payment_id',      $this->payment_id );
+        Session::setFormVar( $this->form_id, 'last_touched',    time() );
     }
 
     /**
@@ -151,6 +160,7 @@ class UserBookingData
             $this->chain->setItemsData( Session::getFormVar( $this->form_id, 'chain' ) );
             $this->cart->setItemsData( Session::getFormVar( $this->form_id, 'cart' ) );
             $this->booking_numbers = Session::getFormVar( $this->form_id, 'booking_numbers' );
+            $this->payment_id = Session::getFormVar( $this->form_id, 'payment_id' );
 
             return true;
         }
@@ -186,6 +196,10 @@ class UserBookingData
                         $item->set( $_name, $_value );
                     }
                 }
+            } elseif ($name === 'repeat') {
+                $this->set( 'repeated', $value );
+            } elseif ($name === 'unrepeat') {
+                $this->set( 'repeated', 0 );
             }
         }
     }
@@ -203,12 +217,14 @@ class UserBookingData
         $this->set( 'time_from', $cart_item->get( 'time_from' ) );
         $this->set( 'time_to',   $cart_item->get( 'time_to' ) );
         $this->set( 'slots',     $cart_item->get( 'slots' ) );
+        $this->set( 'repeated',  0 );
 
         $chain_item = new ChainItem();
         $chain_item->set( 'service_id',        $cart_item->get( 'service_id' ) );
         $chain_item->set( 'staff_ids',         $cart_item->get( 'staff_ids' ) );
         $chain_item->set( 'number_of_persons', $cart_item->get( 'number_of_persons' ) );
         $chain_item->set( 'extras',            $cart_item->get( 'extras' ) );
+        $chain_item->set( 'series_uniq_id',    $cart_item->get( 'series_uniq_id' ) );
         $chain_item->set( 'quantity',          1 );
 
         $this->chain->clear();
@@ -225,37 +241,82 @@ class UserBookingData
         $eck_idx        = 0;
         $slots          = $this->get( 'slots' );
         $slots_idx      = 0;
-        foreach ( $this->chain->getItems() as $chain_item ) {
-            for ( $q = 0; $q < $chain_item->get( 'quantity' ); ++ $q ) {
-                $cart_item_slots = array();
+        $repeated       = $this->get( 'repeated' ) ? $this->get( 'repeated' ) : 1;
+        if ( $this->get( 'repeated' ) ) {
+            $series_uniq_id = microtime() . rand(0, PHP_INT_MAX);
+        } else {
+            $series_uniq_id = 0;
+        }
 
-                if ( $chain_item->getService()->get( 'type' ) == Entities\Service::TYPE_COMPOUND ) {
-                    foreach ( $chain_item->getSubServices() as $sub_service ) {
+        $cart_items_repeats = array();
+        for ( $i = 0; $i < $repeated; $i++ ) {
+            $items_in_repeat = array();
+            foreach ( $this->chain->getItems() as $chain_item ) {
+                for ( $q = 0; $q < $chain_item->get( 'quantity' ); ++ $q ) {
+                    $cart_item_slots = array();
+
+                    if ( $chain_item->getService()->get( 'type' ) == Entities\Service::TYPE_COMPOUND ) {
+                        foreach ( $chain_item->getSubServices() as $sub_service ) {
+                            $cart_item_slots[] = $slots[ $slots_idx ++ ];
+                        }
+                    } else {
                         $cart_item_slots[] = $slots[ $slots_idx ++ ];
                     }
-                } else {
-                    $cart_item_slots[] = $slots[ $slots_idx ++ ];
+                    $cart_item = new CartItem();
+
+                    $cart_item->set( 'date_from', $this->get( 'date_from' ) );
+                    $cart_item->set( 'days',      $this->get( 'days' ) );
+                    $cart_item->set( 'time_from', $this->get( 'time_from' ) );
+                    $cart_item->set( 'time_to',   $this->get( 'time_to' ) );
+
+                    $cart_item->set( 'series_uniq_id', $chain_item->get( 'series_uniq_id' ) ?
+                                                          $chain_item->get( 'series_uniq_id' ) :
+                                                          $series_uniq_id
+                    );
+                    $cart_item->set( 'extras',            $chain_item->get( 'extras' ) );
+                    $cart_item->set( 'location_id',       $chain_item->get( 'location_id' ) );
+                    $cart_item->set( 'number_of_persons', $chain_item->get( 'number_of_persons' ) );
+                    $cart_item->set( 'service_id',        $chain_item->get( 'service_id' ) );
+                    $cart_item->set( 'slots',             $cart_item_slots );
+                    $cart_item->set( 'staff_ids',         $chain_item->get( 'staff_ids' ) );
+                    $cart_item->set( 'first_in_series',   false );
+                    if ( isset ( $edit_cart_keys[ $eck_idx ] ) ) {
+                        $cart_item->set( 'custom_fields', $this->cart->get( $edit_cart_keys[ $eck_idx ] )->get( 'custom_fields' ) );
+                        ++ $eck_idx;
+                    }
+
+                    $items_in_repeat[] = $cart_item;
                 }
-                $cart_item = new CartItem();
-
-                $cart_item->set( 'date_from', $this->get( 'date_from' ) );
-                $cart_item->set( 'days',      $this->get( 'days' ) );
-                $cart_item->set( 'time_from', $this->get( 'time_from' ) );
-                $cart_item->set( 'time_to',   $this->get( 'time_to' ) );
-
-                $cart_item->set( 'extras',            $chain_item->get( 'extras' ) );
-                $cart_item->set( 'location_id',       $chain_item->get( 'location_id' ) );
-                $cart_item->set( 'number_of_persons', $chain_item->get( 'number_of_persons' ) );
-                $cart_item->set( 'service_id',        $chain_item->get( 'service_id' ) );
-                $cart_item->set( 'slots',             $cart_item_slots );
-                $cart_item->set( 'staff_ids',         $chain_item->get( 'staff_ids' ) );
-                if ( isset ( $edit_cart_keys[ $eck_idx ] ) ) {
-                    $cart_item->set( 'custom_fields', $this->cart->get( $edit_cart_keys[ $eck_idx ] )->get( 'custom_fields' ) );
-                    ++ $eck_idx;
-                }
-
-                $cart_items[] = $cart_item;
             }
+            $cart_items_repeats[] = $items_in_repeat;
+        }
+
+        /**
+         * Searching for minimum time to find first client visiting
+         */
+        $first_visit_time = $slots[0][2];
+        $first_visit_repeat = 0;
+        foreach ( $cart_items_repeats as $repeat_id => $items_in_repeat ) {
+            foreach ($items_in_repeat as $cart_item) {
+                /** @var CartItem $cart_item */
+                $slots = $cart_item->get( 'slots' );
+                foreach ($slots as $slot) {
+                    if ( $slot[2] < $first_visit_time ) {
+                        $first_visit_time = $slots[2];
+                        $first_visit_repeat = $repeat_id;
+                    }
+                }
+
+            }
+
+        }
+        foreach ( $cart_items_repeats[ $first_visit_repeat ] as $cart_item ) {
+            /** @var CartItem $cart_item */
+            $cart_item->set( 'first_in_series', true );
+        }
+
+        foreach ( $cart_items_repeats as $items_in_repeat) {
+            $cart_items = array_merge( $cart_items, $items_in_repeat );
         }
 
         $count = count( $edit_cart_keys );
@@ -320,6 +381,8 @@ class UserBookingData
      */
     public function save( $payment_id = null )
     {
+        $this->payment_id = $payment_id;
+
         $user_id  = get_current_user_id();
         $customer = new Entities\Customer();
         if ( $user_id > 0 ) {
@@ -336,7 +399,7 @@ class UserBookingData
         $customer->set( 'email', $this->get( 'email' ) );
         $customer->set( 'name',  $this->get( 'name' ) );
         $customer->set( 'phone', $this->get( 'phone' ) );
-        if ( get_option( 'ab_settings_create_account', 0 ) && ! $customer->get( 'wp_user_id' ) ) {
+        if ( get_option( 'bookly_cst_create_account', 0 ) && ! $customer->get( 'wp_user_id' ) ) {
             // Create WP user and link it to customer.
             $customer->setWPUser( $user_id );
         }
@@ -352,19 +415,7 @@ class UserBookingData
      */
     public function getCoupon()
     {
-        if ( $this->coupon === null ) {
-            $coupon = new Entities\Coupon();
-            $coupon->loadBy( array(
-                'code' => $this->get( 'coupon' ),
-            ) );
-            if ( $coupon->isLoaded() && $coupon->get( 'used' ) < $coupon->get( 'usage_limit' ) ) {
-                $this->coupon = $coupon;
-            } else {
-                $this->coupon = false;
-            }
-        }
-
-        return $this->coupon;
+        return false;
     }
 
     /**
@@ -373,6 +424,7 @@ class UserBookingData
      * @param string $gateway
      * @param string $status
      * @param mixed  $data
+     * @todo use $status as const
      */
     public function setPaymentStatus( $gateway, $status, $data = null )
     {
@@ -409,4 +461,13 @@ class UserBookingData
         return $this->booking_numbers;
     }
 
+    /**
+     * Get payment ID.
+     *
+     * @return int|null
+     */
+    public function getPaymentId()
+    {
+        return $this->payment_id;
+    }
 }

@@ -1,7 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     echo $progress_tracker;
 ?>
-<div class="ab-row">
+<div class="bookly-box">
     <div><?php echo $info_text ?></div>
     <div class="ab--holder ab-label-error ab-bold"></div>
 </div>
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div class="ab-row ab-nav-steps ab-clear">
+    <div class="bookly-box bookly-nav-steps ab-clear">
         <button class="ab-time-next ab-btn ab-right ladda-button" data-style="zoom-in" data-spinner-size="40">
             <span class="ladda-label">&gt;</span>
         </button>
@@ -33,14 +33,14 @@
     <div class="ab-not-time-screen<?php if ( ! \BooklyLite\Lib\Config::showCalendar() ) : ?> ab-not-calendar<?php endif ?>">
         <?php _e( 'No time is available for selected criteria.', 'bookly' ) ?>
     </div>
-    <div class="ab-row ab-nav-steps">
+    <div class="bookly-box bookly-nav-steps">
 <?php endif ?>
-        <button class="ab-left ab-back-step ab-btn ladda-button" data-style="zoom-in" data-spinner-size="40">
-            <span class="ladda-label"><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_button_back' ) ?></span>
+        <button class="bookly-back-step ab-btn ladda-button" data-style="zoom-in" data-spinner-size="40">
+            <span class="ladda-label"><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_button_back' ) ?></span>
         </button>
         <?php if ( $show_cart_btn ) : ?>
-            <button class="ab-left ab-goto-cart bookly-round-button ladda-button" data-style="zoom-in" data-spinner-size="30">
-                <span class="ladda-label"><img src="<?php echo plugins_url( 'appointment-booking/frontend/resources/images/cart.png' ) ?>" /></span>
+            <button class="bookly-go-to-cart bookly-round bookly-round-md ladda-button" data-style="zoom-in" data-spinner-size="30">
+                <span class="ladda-label"><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span>
             </button>
         <?php endif ?>
     </div>

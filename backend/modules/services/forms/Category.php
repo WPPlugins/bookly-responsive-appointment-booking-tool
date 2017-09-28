@@ -1,7 +1,7 @@
 <?php
 namespace BooklyLite\Backend\Modules\Services\Forms;
 
-use \BooklyLite\Lib;
+use BooklyLite\Lib;
 
 /**
  * Class Category

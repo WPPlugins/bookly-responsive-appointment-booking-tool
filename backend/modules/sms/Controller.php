@@ -9,7 +9,7 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
-    const page_slug = 'ab-sms';
+    const page_slug = 'bookly-sms';
 
     public function index()
     {
@@ -18,7 +18,7 @@ class Controller extends Lib\Base\Controller
         $this->enqueueStyles( array(
             'frontend' => array_merge(
                 array( 'css/ladda.min.css', ),
-                get_option( 'ab_settings_phone_default_country' ) == 'disabled'
+                get_option( 'bookly_cst_phone_default_country' ) == 'disabled'
                     ? array()
                     : array( 'css/intlTelInput.css' )
             ),
@@ -41,7 +41,7 @@ class Controller extends Lib\Base\Controller
                     'js/spin.min.js'  => array( 'jquery' ),
                     'js/ladda.min.js' => array( 'jquery' ),
                 ),
-                get_option( 'ab_settings_phone_default_country' ) == 'disabled'
+                get_option( 'bookly_cst_phone_default_country' ) == 'disabled'
                     ? array()
                     : array( 'js/intlTelInput.min.js' => array( 'jquery' ) )
             ),
@@ -52,7 +52,7 @@ class Controller extends Lib\Base\Controller
         $prices = array();
         $form   = new \BooklyLite\Backend\Modules\Notifications\Forms\Notifications( 'sms' );
         $sms    = new Lib\SMS();
-        $cron_reminder = (array) get_option( 'ab_settings_cron_reminder' );
+        $cron_reminder = (array) get_option( 'bookly_cron_reminder_times' );
 
         if ( $this->hasParameter( 'form-login' ) ) {
             $sms->login( $this->getParameter( 'username' ), $this->getParameter( 'password' ) );
@@ -91,7 +91,7 @@ class Controller extends Lib\Base\Controller
                     break;
             }
             if ( $this->hasParameter( 'form-notifications' ) ) {
-                update_option( 'ab_sms_administrator_phone', $this->getParameter( 'ab_sms_administrator_phone' ) );
+                update_option( 'bookly_sms_administrator_phone', $this->getParameter( 'bookly_sms_administrator_phone' ) );
 
                 $form->bind( $this->getPostParameters() );
                 $form->save();
@@ -100,7 +100,7 @@ class Controller extends Lib\Base\Controller
                 foreach ( array( 'staff_agenda', 'client_follow_up', 'client_reminder' ) as $type ) {
                     $cron_reminder[ $type ] = $this->getParameter( $type . '_cron_hour' );
                 }
-                update_option( 'ab_settings_cron_reminder', $cron_reminder );
+                update_option( 'bookly_cron_reminder_times', $cron_reminder );
             }
             if ( $this->hasParameter( 'tab' ) ) {
                 switch ( $this->getParameter( 'auto-recharge' ) ) {
@@ -115,13 +115,13 @@ class Controller extends Lib\Base\Controller
         }
         $current_tab = $this->hasParameter( 'tab' ) ? $this->getParameter( 'tab' ) : 'notifications';
         $alert['error'] = array_merge( $alert['error'], $sms->getErrors() );
-        wp_localize_script( 'ab-daterangepicker.js', 'BooklyL10n',
+        wp_localize_script( 'bookly-daterangepicker.js', 'BooklyL10n',
             array(
                 'alert'         => $alert,
                 'apply'         => __( 'Apply', 'bookly' ),
                 'are_you_sure'  => __( 'Are you sure?', 'bookly' ),
                 'cancel'        => __( 'Cancel', 'bookly' ),
-                'country'       => get_option( 'ab_settings_phone_default_country' ),
+                'country'       => get_option( 'bookly_cst_phone_default_country' ),
                 'current_tab'   => $current_tab,
                 'custom_range'  => __( 'Custom Range', 'bookly' ),
                 'from'          => __( 'From', 'bookly' ),
@@ -137,8 +137,8 @@ class Controller extends Lib\Base\Controller
                 'input_old_password' => __( 'Please enter old password.',  'bookly' ),
                 'passwords_no_same'  => __( 'Passwords must be the same.', 'bookly' ),
                 'intlTelInput'  => array(
-                    'country' => get_option( 'ab_settings_phone_default_country' ),
-                    'enabled' => get_option( 'ab_settings_phone_default_country' ) != 'disabled',
+                    'country' => get_option( 'bookly_cst_phone_default_country' ),
+                    'enabled' => get_option( 'bookly_cst_phone_default_country' ) != 'disabled',
                     'utils'   => plugins_url( 'intlTelInput.utils.js', Lib\Plugin::getDirectory() . '/frontend/resources/js/intlTelInput.utils.js' ),
                 ),
                 'calendar'      => array(
@@ -316,21 +316,21 @@ class Controller extends Lib\Base\Controller
      */
     public function executeAdminNotify()
     {
-        if ( in_array( $this->getParameter( 'option_name' ), array( 'ab_sms_notify_low_balance', 'ab_sms_notify_week_summary' ) ) ) {
+        if ( in_array( $this->getParameter( 'option_name' ), array( 'bookly_sms_notify_low_balance', 'bookly_sms_notify_weekly_summary' ) ) ) {
             update_option( $this->getParameter( 'option_name' ), $this->getParameter( 'value' ) );
         }
         wp_send_json_success();
     }
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

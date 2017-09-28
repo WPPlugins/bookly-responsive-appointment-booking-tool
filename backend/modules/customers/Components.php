@@ -16,25 +16,25 @@ class Components extends Lib\Base\Components
     public function renderCustomerDialog()
     {
         $this->enqueueStyles( array(
-            'frontend' => get_option( 'ab_settings_phone_default_country' ) == 'disabled'
+            'frontend' => get_option( 'bookly_cst_phone_default_country' ) == 'disabled'
                 ? array()
                 : array( 'css/intlTelInput.css' ),
         ) );
 
         $this->enqueueScripts( array(
             'backend' => array( 'js/angular.min.js' => array( 'jquery' ), ),
-            'frontend' => get_option( 'ab_settings_phone_default_country' ) == 'disabled'
+            'frontend' => get_option( 'bookly_cst_phone_default_country' ) == 'disabled'
                 ? array()
                 : array( 'js/intlTelInput.min.js' => array( 'jquery' ) ),
-            'module' => array( 'js/ng-customer_dialog.js' => array( 'ab-angular.min.js' ), )
+            'module' => array( 'js/ng-customer_dialog.js' => array( 'bookly-angular.min.js' ), )
         ) );
 
-        wp_localize_script( 'ab-ng-customer_dialog.js', 'BooklyL10nCustDialog', array(
-            'default_status' => get_option( 'ab_settings_default_appointment_status' ),
+        wp_localize_script( 'bookly-ng-customer_dialog.js', 'BooklyL10nCustDialog', array(
+            'default_status' => get_option( 'bookly_gen_default_appointment_status' ),
             'intlTelInput'   => array(
-                'enabled' => ( get_option( 'ab_settings_phone_default_country' ) != 'disabled' ),
+                'enabled' => get_option( 'bookly_cst_phone_default_country' ) != 'disabled',
                 'utils'   => plugins_url( 'intlTelInput.utils.js', Lib\Plugin::getDirectory() . '/frontend/resources/js/intlTelInput.utils.js' ),
-                'country' => get_option( 'ab_settings_phone_default_country' ),
+                'country' => get_option( 'bookly_cst_phone_default_country' ),
             ),
         ) );
 

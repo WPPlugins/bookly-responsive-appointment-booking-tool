@@ -46,12 +46,8 @@
             </div>
             <div class="modal-footer">
                 <div ng-hide=loading>
-                    <button ng-click="processForm()" class="btn btn-lg btn-success">
-                        <?php _e( 'Create customer', 'bookly' ) ?>
-                    </button>
-                    <button type="button" class="ab-reset-form btn btn-lg btn-default" data-dismiss="modal">
-                        <?php _e( 'Cancel', 'bookly' ) ?>
-                    </button>
+                    <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn-success btn-lg', __( 'Create customer', 'bookly' ), array( 'ng-click' => 'processForm()' ) ) ?>
+                    <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn-default btn-lg', __( 'Cancel', 'bookly' ), array( 'data-dismiss' => 'modal' ) ) ?>
                 </div>
             </div>
         </div>

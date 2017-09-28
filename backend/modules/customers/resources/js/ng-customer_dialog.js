@@ -29,7 +29,7 @@
                             preferredCountries: [BooklyL10nCustDialog.intlTelInput.country],
                             defaultCountry: BooklyL10nCustDialog.intlTelInput.country,
                             geoIpLookup: function (callback) {
-                                jQuery.get(ajaxurl, {action: 'ab_ip_info'}, function () {
+                                jQuery.get(ajaxurl, {action: 'bookly_ip_info'}, function () {
                                 }, 'json').always(function (resp) {
                                     var countryCode = (resp && resp.country) ? resp.country : '';
                                     callback(countryCode);
@@ -76,7 +76,7 @@
                     jQuery.ajax({
                         url  : ajaxurl,
                         type : 'POST',
-                        data : jQuery.extend({ action : 'ab_save_customer' }, scope.form),
+                        data : jQuery.extend({ action : 'bookly_save_customer' }, scope.form),
                         dataType : 'json',
                         success : function ( response ) {
                             scope.$apply(function(scope) {

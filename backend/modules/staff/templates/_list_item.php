@@ -2,7 +2,7 @@
     $img = wp_get_attachment_image_src( $staff['attachment_id'], 'thumbnail' );
     /** @var \BooklyLite\Lib\Entities\Staff $staff */
 ?>
-<li class="bookly-nav-item active" id="bookly-staff-1" data-staff-id="1">
+<li class="bookly-nav-item<?php if ( $active_staff_id == $staff['id'] ) : ?> active<?php endif ?>" id="bookly-staff-<?php echo $staff['id'] ?>" data-staff-id="<?php echo $staff['id'] ?>">
     <div class="bookly-flexbox">
         <div class="bookly-flex-cell bookly-vertical-middle" style="width: 1%">
             <i class="bookly-js-handle bookly-icon bookly-icon-draghandle bookly-margin-right-sm bookly-cursor-move" title="<?php _e( 'Reorder', 'bookly' ) ?>"></i>

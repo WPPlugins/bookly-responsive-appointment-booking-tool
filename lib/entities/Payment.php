@@ -13,11 +13,12 @@ class Payment extends Lib\Base\Entity
     const TYPE_COUPON       = 'coupon';  // when price reduced to zero due to coupon
     const TYPE_PAYPAL       = 'paypal';
     const TYPE_STRIPE       = 'stripe';
-    const TYPE_AUTHORIZENET = 'authorizeNet';
+    const TYPE_AUTHORIZENET = 'authorize_net';
     const TYPE_2CHECKOUT    = '2checkout';
-    const TYPE_PAYULATAM    = 'payulatam';
+    const TYPE_PAYULATAM    = 'payu_latam';
     const TYPE_PAYSON       = 'payson';
     const TYPE_MOLLIE       = 'mollie';
+    const WOO_COMMERCE      = 'woocommerce';
 
     const STATUS_COMPLETED  = 'completed';
     const STATUS_PENDING    = 'pending';
@@ -28,10 +29,8 @@ class Payment extends Lib\Base\Entity
         'id'                => array( 'format' => '%d' ),
         'created'           => array( 'format' => '%s' ),
         'type'              => array( 'format' => '%s' ),
-        'token'             => array( 'format' => '%s', 'default' => '' ),
-        'transaction_id'    => array( 'format' => '%s', 'default' => '' ),
-        'total'             => array( 'format' => '%.2f' ),
-        'paid'              => array( 'format' => '%.2f' ),
+        'total'             => array( 'format' => '%f' ),
+        'paid'              => array( 'format' => '%f' ),
         'status'            => array( 'format' => '%s', 'default' => self::STATUS_COMPLETED ),
         'details'           => array( 'format' => '%s' ),
     );
@@ -48,6 +47,9 @@ class Payment extends Lib\Base\Entity
         $details = array( 'items' => array(), 'coupon' => null, 'customer' => null );
 
         foreach ( $ca_list as $ca ) {
+            if ( $this->get( 'id' ) != $ca->get( 'payment_id' ) ) {
+                continue;
+            }
             $ca_id = $ca->get( 'id' );
             $total_service_price = 0;
             $data = Appointment::query( 'a' )
@@ -66,7 +68,7 @@ class Payment extends Lib\Base\Entity
             if ( $ca->get( 'extras' ) != '[]' ) {
                 /** @var \BooklyServiceExtras\Lib\Entities\ServiceExtra $extra */
                 $_extras = json_decode( $ca->get( 'extras' ), true );
-                foreach ( apply_filters( 'bookly_extras_find_by_ids', array(), array_keys( $_extras ) ) as $extra ) {
+                foreach ( apply_filters( 'bookly_service_extras_find_by_ids', array(), array_keys( $_extras ) ) as $extra ) {
                     $quantity = $_extras[ $extra->get( 'id' ) ];
                     $extras[] = array(
                         'title' => $extra->get( 'title' ),
@@ -77,11 +79,13 @@ class Payment extends Lib\Base\Entity
                 }
             }
 
+            $start_at = new \DateTime( $data['start_date'] );
+
             $details['items'][] = array(
                 'ca_id'             => $ca_id,
                 'appointment_date'  => $data['start_date'],
                 'service_name'      => $data['service_name'],
-                'service_price'     => $data['service_price'],
+                'service_price'     => apply_filters( 'bookly_special_hours_get_price', $data['service_price'], $data['staff_id'], $data['service_id'], $start_at->format( 'H:i:s' ) ),
                 'deposit'           => $data['deposit'],
                 'number_of_persons' => $data['number_of_persons'],
                 'staff_name'        => $data['staff_name'],
@@ -129,6 +133,7 @@ class Payment extends Lib\Base\Entity
             case self::TYPE_PAYSON:       return 'Payson';
             case self::TYPE_MOLLIE:       return 'Mollie';
             case self::TYPE_COUPON:       return __( 'Coupon', 'bookly' );
+            case self::WOO_COMMERCE:      return 'WooCommerce';
             default:                      return '';
         }
     }

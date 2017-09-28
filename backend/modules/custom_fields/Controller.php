@@ -9,6 +9,8 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
+    const page_slug = 'bookly-custom-fields';
+
     /**
      *  Default Action
      */
@@ -31,8 +33,8 @@ class Controller extends Lib\Base\Controller
             ),
         ) );
 
-        wp_localize_script( 'ab-custom_fields.js', 'BooklyL10n', array(
-            'custom_fields' => get_option( 'ab_custom_fields' ),
+        wp_localize_script( 'bookly-custom_fields.js', 'BooklyL10n', array(
+            'custom_fields' => get_option( 'bookly_custom_fields' ),
             'saved'    => __( 'Settings saved.', 'bookly' ),
             'selector' => array(
                 'all_selected'     => __( 'All services', 'bookly' ),
@@ -69,20 +71,20 @@ class Controller extends Lib\Base\Controller
                     break;
             }
         }
-        update_option( 'ab_custom_fields', $custom_fields );
-        update_option( 'ab_custom_fields_per_service', '0' );
+        update_option( 'bookly_custom_fields', $custom_fields );
+        update_option( 'bookly_custom_fields_per_service', '0' );
         wp_send_json_success();
     }
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

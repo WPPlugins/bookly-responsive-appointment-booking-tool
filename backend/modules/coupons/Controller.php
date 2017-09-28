@@ -9,6 +9,8 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
+    const page_slug = 'bookly-coupons';
+
     /**
      * Default action
      */
@@ -32,7 +34,7 @@ class Controller extends Lib\Base\Controller
             'module' => array( 'js/coupons.js' => array( 'jquery' ) )
         ) );
 
-        wp_localize_script( 'ab-coupons.js', 'BooklyL10n', array(
+        wp_localize_script( 'bookly-coupons.js', 'BooklyL10n', array(
             'edit'         => __( 'Edit', 'bookly' ),
             'zeroRecords'  => __( 'No coupons found.', 'bookly' ),
             'processing'   => __( 'Processing...', 'bookly' ),
@@ -51,14 +53,14 @@ class Controller extends Lib\Base\Controller
     // Protected methods.
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

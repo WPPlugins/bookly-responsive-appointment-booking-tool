@@ -5,28 +5,24 @@
 <div class="bookly-form">
     <?php include '_progress_tracker.php' ?>
 
-    <div class="ab-service-step">
-        <div class="ab-row">
-            <span data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_info_service_step' ) ) ?>"
-                  class="ab_editable ab-bold ab-desc" id="ab-text-info-service"
-                  data-rows="7" data-type="textarea"><?php echo esc_html( get_option( 'ab_appearance_text_info_service_step' ) ) ?></span>
+    <div class="bookly-service-step">
+        <div class="bookly-box">
+            <span data-option-default="<?php form_option( 'bookly_l10n_info_service_step' ) ?>"
+                  class="bookly-editable ab-bold ab-desc" id="bookly_l10n_info_service_step"
+                  data-rows="7" data-type="textarea"><?php echo esc_html( get_option( 'bookly_l10n_info_service_step' ) ) ?></span>
         </div>
-        <div class="ab-mobile-step_1 ab-row">
-            <div class="bookly-js-chain-item bookly-table ab-row">
-                <?php if ( \BooklyLite\Lib\Config::locationsEnabled() ) : ?>
+        <div class="ab-mobile-step_1 bookly-box">
+            <div class="bookly-js-chain-item bookly-table bookly-box">
+                <?php if ( \BooklyLite\Lib\Config::isLocationsEnabled() ) : ?>
                     <div class="ab-formGroup">
                         <?php do_action( 'bookly_locations_render_appearance' ) ?>
                     </div>
                 <?php endif ?>
                 <div class="ab-formGroup">
-                    <label data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_label_category' ) ) ?>"
-                           class="text_category_label"
-                           id="ab-text-label-category" data-type="multiple"
-                           data-option-id="ab-text-option-category"
-                    ><?php echo esc_html( get_option( 'ab_appearance_text_label_category' ) ) ?></label>
+                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_category', 'bookly_l10n_option_category', ) ) ?>
                     <div>
                         <select class="ab-select-mobile ab-select-category">
-                            <option value="" class="editable" id="ab-text-option-category" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_option_category' ) ) ?>"><?php echo esc_html( get_option( 'ab_appearance_text_option_category' ) ) ?></option>
+                            <option value="" id="bookly_l10n_option_category"><?php echo esc_html( get_option( 'bookly_l10n_option_category' ) ) ?></option>
                             <option value="1">Cosmetic Dentistry</option>
                             <option value="2">Invisalign</option>
                             <option value="3">Orthodontics</option>
@@ -35,20 +31,14 @@
                     </div>
                 </div>
                 <div class="ab-formGroup">
-                    <label>
-                        <span
-                            data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_label_service' ) ) ?>"
-                            data-default-error="<?php echo esc_attr( get_option( 'ab_appearance_text_required_service' ) ) ?>"
-                            data-error-id="ab_appearance_text_required_service"
-                            id="ab-text-label-service"
-                            data-mirror="text_services"
-                            data-type="multiple"
-                            data-option-id="ab-text-option-service"
-                        ><?php echo esc_html( get_option( 'ab_appearance_text_label_service' ) ) ?></span>
-                    </label>
+                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array(
+                        'bookly_l10n_label_service',
+                        'bookly_l10n_option_service',
+                        'bookly_l10n_required_service',
+                    ) ) ?>
                     <div>
                         <select class="ab-select-mobile ab-select-service">
-                            <option class="editable" id="ab-text-option-service" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_option_service' ) ) ?>"><?php echo esc_html( get_option( 'ab_appearance_text_option_service' ) ) ?></option>
+                            <option id="bookly_l10n_option_service"><?php echo esc_html( get_option( 'bookly_l10n_option_service' ) ) ?></option>
                             <option>Crown and Bridge</option>
                             <option>Teeth Whitening</option>
                             <option>Veneers</option>
@@ -61,20 +51,14 @@
                     </div>
                 </div>
                 <div class="ab-formGroup">
-                    <label class="text_employee_label">
-                        <span
-                            data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_label_employee' ) ) ?>"
-                            data-default-error="<?php echo esc_attr( get_option( 'ab_appearance_text_required_employee' ) ) ?>"
-                            data-error-id="ab_appearance_text_required_employee"
-                            id="ab-text-label-employee"
-                            data-mirror="text_employee"
-                            data-type="multiple"
-                            data-option-id="ab-text-option-employee"
-                        ><?php echo esc_html( get_option( 'ab_appearance_text_label_employee' ) ) ?></span>
-                        </label>
+                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array(
+                        'bookly_l10n_label_employee',
+                        'bookly_l10n_option_employee',
+                        'bookly_l10n_required_employee',
+                    ) ) ?>
                     <div>
                         <select class="ab-select-mobile ab-select-employee">
-                            <option value="0" class="editable" id="ab-text-option-employee" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_option_employee' ) ) ?>"><?php echo esc_html( get_option( 'ab_appearance_text_option_employee' ) ) ?></option>
+                            <option value="0" id="bookly_l10n_option_employee"><?php echo esc_html( get_option( 'bookly_l10n_option_employee' ) ) ?></option>
                             <option value="1" class="employee-name-price">Nick Knight (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 350 ) ?>)</option>
                             <option value="-1" class="employee-name">Nick Knight</option>
                             <option value="2" class="employee-name-price">Jane Howard (<?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 375 ) ?>)</option>
@@ -99,7 +83,7 @@
                     </div>
                 </div>
                 <div class="ab-formGroup">
-                    <label data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_label_number_of_persons' ) ) ?>" class="ab_editable" data-type="text" id="ab-text-label-number-of-persons"><?php echo esc_html( get_option( 'ab_appearance_text_label_number_of_persons' ) ) ?></label>
+                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_number_of_persons', ) ) ?>
                     <div>
                         <select class="ab-select-mobile ab-select-number-of-persons">
                             <option>1</option>
@@ -108,42 +92,42 @@
                         </select>
                     </div>
                 </div>
-                <?php if ( \BooklyLite\Lib\Config::multiplyAppointmentsEnabled() ) : ?>
+                <?php if ( \BooklyLite\Lib\Config::isMultiplyAppointmentsEnabled() ) : ?>
                     <div class="ab-formGroup">
-                        <?php do_action( 'bookly_multiply_render_appearance' ) ?>
+                        <?php do_action( 'bookly_multiply_appointments_render_appearance' ) ?>
                     </div>
                 <?php endif ?>
-                <?php if ( \BooklyLite\Lib\Config::chainAppointmentsEnabled() ) : ?>
+                <?php if ( \BooklyLite\Lib\Config::isChainAppointmentsEnabled() ) : ?>
                     <div class="ab-formGroup">
                         <label></label>
-                        <div class="bookly-js-actions">
-                            <button type="button" class="bookly-round-button" data-action="plus"><img src="<?php echo plugins_url( 'appointment-booking/frontend/resources/images/plus.png' ) ?>" /></button>
+                        <div>
+                            <button class="bookly-round" ><i class="bookly-icon-sm bookly-icon-plus"></i></button>
                         </div>
                     </div>
                 <?php endif ?>
             </div>
 
             <div class="ab-right ab-mobile-next-step ab-btn ab-none" onclick="return false">
-                <span class="text_next ab_editable" id="ab-text-button-next" data-mirror="text_next" data-type="text" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_button_next' ) ) ?>"><?php echo esc_html( get_option( 'ab_appearance_text_button_next' ) ) ?></span>
+                <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_next' ), 'bookly-js-text-next' ) ?>
             </div>
         </div>
         <div class="ab-mobile-step_2">
-            <div class="ab-row">
+            <div class="bookly-box">
                 <div class="ab-left">
                     <div class="ab-available-date ab-left">
                         <div class="ab-formGroup">
-                            <label data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_label_select_date' ) ) ?>" class="ab_editable" id="ab-text-label-select_date" data-type="text"><?php echo esc_html( get_option( 'ab_appearance_text_label_select_date' ) ) ?></label>
+                            <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_select_date', ) ) ?>
                             <div>
                                <input class="ab-date-from" style="background-color: #fff;" type="text" data-value="<?php echo date( 'Y-m-d' ) ?>" />
                             </div>
                         </div>
                     </div>
-                    <div class="ab-week-days bookly-table ab-left">
+                    <div class="bookly-week-days bookly-table ab-left">
                         <?php foreach ( $wp_locale->weekday_abbrev as $weekday_abbrev ) : ?>
                             <div>
                                 <div class="bookly-font-bold"><?php echo $weekday_abbrev ?></div>
                                 <label class="active">
-                                    <input class="ab-week-day" value="1" checked="checked" type="checkbox">
+                                    <input class="bookly-week-day" value="1" checked="checked" type="checkbox">
                                 </label>
                             </div>
                         <?php endforeach ?>
@@ -151,7 +135,7 @@
                 </div>
                 <div class="ab-time-range ab-left">
                     <div class="ab-formGroup ab-time-from ab-left">
-                        <label data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_label_start_from' ) ) ?>" class="ab_editable" id="ab-text-label-start_from" data-type="text"><?php echo esc_html( get_option( 'ab_appearance_text_label_start_from' ) ) ?></label>
+                        <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_start_from', ) ) ?>
                         <div>
                             <select class="ab-select-time-from">
                                 <?php for ( $i = 28800; $i <= 64800; $i += 3600 ) : ?>
@@ -161,7 +145,7 @@
                         </div>
                     </div>
                     <div class="ab-formGroup ab-time-to ab-left">
-                        <label data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_label_finish_by' ) ) ?>" class="ab_editable" id="ab-text-label-finish_by" data-type="text"><?php echo esc_html( get_option( 'ab_appearance_text_label_finish_by' ) ) ?></label>
+                        <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderLabel( array( 'bookly_l10n_label_finish_by', ) ) ?>
                         <div>
                             <select class="ab-select-time-to">
                                 <?php for ( $i = 28800; $i <= 64800; $i += 3600 ) : ?>
@@ -172,24 +156,24 @@
                     </div>
                 </div>
             </div>
-            <div class="ab-row ab-nav-steps">
+            <div class="bookly-box bookly-nav-steps">
                 <div class="ab-right ab-mobile-prev-step ab-btn ab-none">
-                    <span class="text_back ab_editable" id="ab-text-button-back" data-mirror="text_back" data-type="text" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_button_back' ) ) ?>"><?php echo esc_html( get_option( 'ab_appearance_text_button_back' ) ) ?></span>
+                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_back' ), 'bookly-js-text-back' ) ?>
                 </div>
-                <div class="ab-right ab-next-step ab-btn">
-                    <span class="text_next ab_editable" id="ab-text-button-next" data-mirror="text_next" data-type="text" data-default="<?php echo esc_attr( get_option( 'ab_appearance_text_button_next' ) ) ?>"><?php echo esc_html( get_option( 'ab_appearance_text_button_next' ) ) ?></span>
+                <div class="bookly-next-step ab-btn">
+                    <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_next' ), 'bookly-js-text-next' ) ?>
                 </div>
-                <button class="ab-left ab-goto-cart bookly-round-button ladda-button"><span><img src="<?php echo plugins_url( 'appointment-booking/frontend/resources/images/cart.png' ) ?>" /></span></button>
+                <button class="bookly-go-to-cart bookly-round bookly-round-md ladda-button"><span><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
             </div>
         </div>
     </div>
 </div>
 <div style="display: none">
-    <?php foreach ( array( 'ab_appearance_text_required_service', 'ab_appearance_text_required_name', 'ab_appearance_text_required_phone', 'ab_appearance_text_required_email', 'ab_appearance_text_required_employee', 'ab_appearance_text_required_location' ) as $validator ) : ?>
+    <?php foreach ( array( 'bookly_l10n_required_service', 'bookly_l10n_required_name', 'bookly_l10n_required_phone', 'bookly_l10n_required_email', 'bookly_l10n_required_employee', 'bookly_l10n_required_location' ) as $validator ) : ?>
         <div id="<?php echo $validator ?>"><?php echo get_option( $validator ) ?></div>
     <?php endforeach ?>
 </div>
 <style id="ab--style-arrow">
-    .picker__nav--next:before { border-left: 6px solid <?php echo get_option( 'ab_appearance_color' ) ?>!important; }
-    .picker__nav--prev:before { border-right: 6px solid <?php echo get_option( 'ab_appearance_color' ) ?>!important; }
+    .picker__nav--next:before { border-left: 6px solid <?php echo get_option( 'bookly_app_color' ) ?>!important; }
+    .picker__nav--prev:before { border-right: 6px solid <?php echo get_option( 'bookly_app_color' ) ?>!important; }
 </style>

@@ -5,18 +5,13 @@
             <div class="bookly-page-title">
                 <?php _e( 'Custom Fields', 'bookly' ) ?>
             </div>
+            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
         </div>
         <div class="panel panel-default bookly-main">
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="ab_custom_fields_per_service">
-                                <?php _e( 'Bind fields to services', 'bookly' ) ?>
-                            </label>
-                            <p class="help-block"><?php _e( 'When this setting is enabled you will be able to create service specific custom fields.', 'bookly' ) ?></p>
-                            <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'ab_custom_fields_per_service' ) ?>
-                        </div>
+                        <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_custom_fields_per_service', __( 'Bind fields to services', 'bookly' ), __( 'When this setting is enabled you will be able to create service specific custom fields.', 'bookly' ) ) ?>
                     </div>
                 </div>
 

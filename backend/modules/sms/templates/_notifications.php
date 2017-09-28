@@ -1,6 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     /** @var BooklyLite\Backend\Modules\Notifications\Forms\Notifications $form */
-    $administrator_phone = get_option( 'ab_sms_administrator_phone' );
     $collapse_id = 0;
     $form_data = $form->getData();
 ?>
@@ -13,13 +12,12 @@
             </label>
             <p class="help-block"><?php _e( 'Enter a phone number in international format. E.g. for the United States a valid phone number would be +17327572923.', 'bookly' ) ?></p>
             <div>
-                <input class="form-control" id="admin_phone" name="ab_sms_administrator_phone" type="text" value="<?php echo esc_attr( $administrator_phone ) ?>">
+                <input class="form-control" id="admin_phone" name="bookly_sms_administrator_phone" type="text" value="<?php form_option( 'bookly_sms_administrator_phone' ) ?>">
                 <button class="btn btn-success" id="send_test_sms"><?php _e( 'Send test SMS', 'bookly' ) ?></button>
             </div>
         </div>
     </div>
-
-    <?php if ( $form->types['combined'] ) : ?>
+    <?php if ( $form->types['combined'] || \BooklyLite\Lib\Utils\Common::isPluginActive( 'bookly-addon-recurring-appointments/main.php' ) ) : ?>
         <h4 class="bookly-block-head bookly-color-gray"><?php _e( 'Single', 'bookly' ) ?></h4>
     <?php endif ?>
     <div class="panel-group bookly-margin-vertical-xlg" id="accordion" role="tablist" aria-multiselectable="true">
@@ -28,13 +26,9 @@
                 <div class="panel-heading" role="tab">
                     <div class="checkbox bookly-margin-remove">
                         <label>
-                            <input name="<?php echo $type ?>[active]" value="0" type="checkbox" checked="checked" class="hidden" />
+                            <input name="<?php echo $type ?>[active]" value="0" type="checkbox" checked="checked" class="hidden"/>
                             <input id="<?php echo $type ?>_active" name="<?php echo $type ?>[active]" value="1" type="checkbox" <?php checked( $form_data[ $type ]['active'] ) ?> />
-                            <a class="collapsed panel-title"
-                               role="button"
-                               data-toggle="collapse"
-                               data-parent="#accordion"
-                               href="#collapse_<?php echo ++ $collapse_id ?>">
+                            <a class="collapsed panel-title" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php echo ++ $collapse_id ?>">
                                 <?php echo $form_data[ $type ]['name'] ?>
                             </a>
                         </label>
@@ -49,15 +43,11 @@
 
                         <div class="form-group">
                             <label><?php _e( 'Codes', 'bookly' ) ?></label>
-                            <table class="bookly-codes">
-                                <tbody>
-                                    <?php switch ( $type ) :
-                                        case 'staff_agenda':        include '_codes_staff_agenda.php';        break;
-                                        case 'client_new_wp_user':  include '_codes_client_new_wp_user.php';  break;
-                                        default:                    include '_codes.php';
-                                    endswitch ?>
-                                </tbody>
-                            </table>
+                            <?php switch ( $type ) :
+                                case 'staff_agenda':        include '_codes_staff_agenda.php';          break;
+                                case 'client_new_wp_user':  include '_codes_client_new_wp_user.php';    break;
+                                default:                    include '_codes.php';
+                            endswitch ?>
                         </div>
                     </div>
 
@@ -76,30 +66,21 @@
                             <label>
                                 <input name="<?php echo $type ?>[active]" value="0" type="checkbox" class="hidden" checked>
                                 <input id="<?php echo $type ?>_active" name="<?php echo $type ?>[active]" value="1" type="checkbox" <?php checked( $form_data[ $type ]['active'] ) ?>>
-                                <a class="collapsed panel-title"
-                                           role="button"
-                                           data-toggle="collapse"
-                                           data-parent="#accordion"
-                                           href="#collapse_<?php echo ++ $collapse_id ?>">
-                                            <?php echo $form_data[ $type ]['name'] ?>
-                                        </a>
+                                <a class="collapsed panel-title" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php echo ++ $collapse_id ?>">
+                                    <?php echo $form_data[ $type ]['name'] ?>
+                                </a>
                             </label>
                         </div>
                     </div>
                     <div id="collapse_<?php echo $collapse_id ?>" class="panel-collapse collapse">
                         <div class="panel-body">
-
                             <?php $form->renderSendingTime( $type ) ?>
                             <?php $form->renderEditor( $type ) ?>
                             <?php $form->renderCopy( $type ) ?>
 
                             <div class="form-group">
                                 <label><?php _e( 'Codes', 'bookly' ) ?></label>
-                                <table class="bookly-codes">
-                                    <tbody>
-                                        <?php include '_codes_cart.php' ?>
-                                    </tbody>
-                                </table>
+                                <?php include '_codes_cart.php' ?>
                             </div>
                         </div>
                     </div>
@@ -107,6 +88,8 @@
             <?php endforeach ?>
         </div>
     <?php endif ?>
+
+    <?php do_action( 'bookly_render_sms_notifications', $form ) ?>
 
     <div class="alert alert-info">
         <?php if ( is_multisite() ) : ?>

@@ -13,4 +13,4 @@ $codes = array(
     array( 'code' => 'payment_type',    'description' => __( 'payment type', 'bookly' ) ),
     array( 'code' => 'total_price',     'description' => __( 'total price of booking (sum of all cart items after applying coupon)', 'bookly' ) ),
 );
-\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_deposit_notification_short_codes', $codes ) );
+\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_prepare_cart_notification_short_codes', $codes ) );

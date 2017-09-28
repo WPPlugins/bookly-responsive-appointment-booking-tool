@@ -2,12 +2,12 @@
 $codes = array(
     array( 'code' => 'category_name',  'description' => __( 'name of category', 'bookly' ), ),
     array( 'code' => 'login_form',     'description' => __( 'login form', 'bookly' ),
-        'step'        => 5,
+        'step'        => 6,
         'login'       => true,
     ),
     array( 'code' => 'number_of_persons', 'description' => __( 'number of persons', 'bookly' ), ),
     array( 'code' => 'booking_number', 'description' => __( 'booking number', 'bookly' ),
-        'step'        => 7,
+        'step'        => 8,
     ),
     array( 'code' => 'service_date',   'description' => __( 'date of service', 'bookly' ),
         'min_step'    => 3,
@@ -22,4 +22,4 @@ $codes = array(
     array( 'code' => 'staff_name',     'description' => __( 'name of staff', 'bookly' ), ),
     array( 'code' => 'total_price',    'description' => __( 'total price of booking', 'bookly' ), ),
 );
-\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_appearance_short_codes', $codes ), $step, isset( $login ) ? $login : false );
+\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_prepare_appearance_short_codes', $codes ), $step, isset( $login ) ? $login : false );

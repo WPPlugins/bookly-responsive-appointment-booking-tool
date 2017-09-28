@@ -9,7 +9,7 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
-    const page_slug = 'ab-settings';
+    const page_slug = 'bookly-settings';
 
     public function index()
     {
@@ -28,7 +28,7 @@ class Controller extends Lib\Base\Controller
                 'js/jCal.js'  => array( 'jquery' ),
                 'js/alert.js' => array( 'jquery' ),
             ),
-            'module'   => array( 'js/settings.js' => array( 'jquery', 'ab-intlTelInput.min.js', 'jquery-ui-sortable' ) ),
+            'module'   => array( 'js/settings.js' => array( 'jquery', 'bookly-intlTelInput.min.js', 'jquery-ui-sortable' ) ),
             'frontend' => array(
                 'js/intlTelInput.min.js' => array( 'jquery' ),
                 'js/spin.min.js'  => array( 'jquery' ),
@@ -44,6 +44,14 @@ class Controller extends Lib\Base\Controller
             switch ( $this->getParameter( 'tab' ) ) {
                 case 'payments':  // Payments form.
                     $form = new Forms\Payments();
+                    update_option( 'bookly_pmt_paypal'        ,'disabled' );
+                    update_option( 'bookly_pmt_coupons'       ,'0' );
+                    update_option( 'bookly_pmt_authorize_net' ,'disabled' );
+                    update_option( 'bookly_pmt_stripe'        ,'disabled' );
+                    update_option( 'bookly_pmt_2checkout'     ,'disabled' );
+                    update_option( 'bookly_pmt_payu_latam'    ,'disabled' );
+                    update_option( 'bookly_pmt_payson'        ,'disabled' );
+                    update_option( 'bookly_pmt_mollie'        ,'disabled' );
                     break;
                 case 'business_hours':  // Business hours form.
                     $form = new Forms\BusinessHours();
@@ -51,51 +59,63 @@ class Controller extends Lib\Base\Controller
                 case 'purchase_code':  // Purchase Code form.
                     break;
                 case 'general':  // General form.
-                    $ab_settings_time_slot_length = $this->getParameter( 'ab_settings_time_slot_length' );
-                    if ( in_array( $ab_settings_time_slot_length, array( 5, 10, 12, 15, 20, 30, 45, 60, 90, 120, 180, 240, 360 ) ) ) {
-                        update_option( 'ab_settings_time_slot_length', $ab_settings_time_slot_length );
+                    $bookly_gen_time_slot_length = $this->getParameter( 'bookly_gen_time_slot_length' );
+                    if ( in_array( $bookly_gen_time_slot_length, array( 5, 10, 12, 15, 20, 30, 45, 60, 90, 120, 180, 240, 360 ) ) ) {
+                        update_option( 'bookly_gen_time_slot_length', $bookly_gen_time_slot_length );
                     }
-                    update_option( 'ab_settings_allow_staff_members_edit_profile', (int) $this->getParameter( 'ab_settings_allow_staff_members_edit_profile' ) );
-                    update_option( 'ab_settings_approve_page_url',      $this->getParameter( 'ab_settings_approve_page_url' ) );
-                    update_option( 'ab_settings_cancel_denied_page_url', $this->getParameter( 'ab_settings_cancel_denied_page_url' ) );
-                    update_option( 'ab_settings_cancel_page_url',       $this->getParameter( 'ab_settings_cancel_page_url' ) );
-                    update_option( 'ab_settings_default_appointment_status', $this->getParameter( 'ab_settings_default_appointment_status' ) );
-                    update_option( 'ab_settings_final_step_url',        '' );
-                    update_option( 'ab_settings_link_assets_method',    $this->getParameter( 'ab_settings_link_assets_method' ) );
-                    update_option( 'ab_settings_maximum_available_days_for_booking', (int) $this->getParameter( 'ab_settings_maximum_available_days_for_booking' ) );
-                    update_option( 'ab_settings_minimum_time_prior_booking', (int) $this->getParameter( 'ab_settings_minimum_time_prior_booking' ) );
-                    update_option( 'ab_settings_minimum_time_prior_cancel', $this->getParameter( 'ab_settings_minimum_time_prior_cancel' ) );
-                    update_option( 'ab_settings_use_client_time_zone',  (int) $this->getParameter( 'ab_settings_use_client_time_zone' ) );
-                    update_option( 'ab_lite_uninstall_remove_bookly_data',  (int) $this->getParameter( 'ab_lite_uninstall_remove_bookly_data' ) );
+                    update_option( 'bookly_lite_uninstall_remove_bookly_data', (int) $this->getParameter( 'bookly_lite_uninstall_remove_bookly_data' ) );
+                    update_option( 'bookly_gen_service_duration_as_slot_length', (int) $this->getParameter( 'bookly_gen_service_duration_as_slot_length' ) );
+                    update_option( 'bookly_gen_allow_staff_edit_profile', (int) $this->getParameter( 'bookly_gen_allow_staff_edit_profile' ) );
+                    update_option( 'bookly_gen_approve_page_url',       $this->getParameter( 'bookly_gen_approve_page_url' ) );
+                    update_option( 'bookly_gen_cancel_denied_page_url', $this->getParameter( 'bookly_gen_cancel_denied_page_url' ) );
+                    update_option( 'bookly_gen_cancel_page_url',        $this->getParameter( 'bookly_gen_cancel_page_url' ) );
+                    update_option( 'bookly_gen_default_appointment_status', $this->getParameter( 'bookly_gen_default_appointment_status' ) );
+                    update_option( 'bookly_gen_final_step_url',         '' );
+                    update_option( 'bookly_gen_link_assets_method',     $this->getParameter( 'bookly_gen_link_assets_method' ) );
+                    update_option( 'bookly_gen_max_days_for_booking',   (int) $this->getParameter( 'bookly_gen_max_days_for_booking' ) );
+                    update_option( 'bookly_gen_min_time_prior_booking', (int) $this->getParameter( 'bookly_gen_min_time_prior_booking' ) );
+                    update_option( 'bookly_gen_min_time_prior_cancel',  $this->getParameter( 'bookly_gen_min_time_prior_cancel' ) );
+                    update_option( 'bookly_gen_use_client_time_zone',   (int) $this->getParameter( 'bookly_gen_use_client_time_zone' ) );
                     $alert['success'][] = __( 'Settings saved.', 'bookly' );
                     break;
                 case 'google_calendar':  // Google calendar form.
                     break;
                 case 'customers':  // Customers form.
-                    update_option( 'ab_settings_client_cancel_appointment_action', $this->getParameter( 'ab_settings_client_cancel_appointment_action' ) );
-                    update_option( 'ab_settings_create_account',        (int) $this->getParameter( 'ab_settings_create_account' ) );
-                    update_option( 'ab_settings_phone_default_country', $this->getParameter( 'ab_settings_phone_default_country' ) );
-                    update_option( 'ab_sms_default_country_code',       $this->getParameter( 'ab_sms_default_country_code' ) );
+                    update_option( 'bookly_cst_cancel_action',          $this->getParameter( 'bookly_cst_cancel_action' ) );
+                    update_option( 'bookly_cst_create_account',         (int) $this->getParameter( 'bookly_cst_create_account' ) );
+                    update_option( 'bookly_cst_default_country_code',   $this->getParameter( 'bookly_cst_default_country_code' ) );
+                    update_option( 'bookly_cst_new_account_role',       $this->getParameter( 'bookly_cst_new_account_role' ) );
+                    update_option( 'bookly_cst_combined_notifications', $this->getParameter( 'bookly_cst_combined_notifications' ) );
+                    update_option( 'bookly_cst_phone_default_country',  $this->getParameter( 'bookly_cst_phone_default_country' ) );
                     $alert['success'][] = __( 'Settings saved.', 'bookly' );
                     break;
                 case 'woocommerce':  // WooCommerce form.
-                    break;
-                case 'cart':  // Cart form.
-                    update_option( 'ab_cart_show_columns',              $this->getParameter( 'ab_cart_show_columns', array() ) );
-                    update_option( 'ab_settings_cart_notifications_combined', $this->getParameter( 'ab_settings_cart_notifications_combined' ) );
-                    update_option( 'ab_settings_step_cart_enabled',     '0' );
+                    foreach ( array( 'bookly_l10n_wc_cart_info_name', 'bookly_l10n_wc_cart_info_value' ) as $option_name ) {
+                        update_option( $option_name, $this->getParameter( $option_name ) );
+                        do_action( 'wpml_register_single_string', 'bookly', $option_name,  $this->getParameter( $option_name ) );
+                    }
+                    update_option( 'bookly_wc_enabled', $this->getParameter( 'bookly_wc_enabled' ) );
+                    update_option( 'bookly_wc_product', $this->getParameter( 'bookly_wc_product' ) );
                     $alert['success'][] = __( 'Settings saved.', 'bookly' );
                     break;
+                case 'cart':  // Cart form.
+                    update_option( 'bookly_cart_show_columns', $this->getParameter( 'bookly_cart_show_columns', array() ) );
+                    update_option( 'bookly_cart_enabled',      0 );
+                    $alert['success'][] = __( 'Settings saved.', 'bookly' );
+                    if ( get_option( 'bookly_wc_enabled' ) && $this->getParameter( 'bookly_cart_enabled' ) ) {
+                        $alert['error'][] = sprintf( __( 'To use the cart, disable integration with WooCommerce <a href="%s">here</a>.', 'bookly' ), Lib\Utils\Common::escAdminUrl( self::page_slug, array( 'tab' => 'woocommerce' ) ) );
+                    }
+                    break;
                 case 'company':  // Company form.
-                    update_option( 'ab_settings_company_address',       $this->getParameter( 'ab_settings_company_address' ) );
-                    update_option( 'ab_settings_company_logo_attachment_id', $this->getParameter( 'ab_settings_company_logo_attachment_id' ) );
-                    update_option( 'ab_settings_company_name',          $this->getParameter( 'ab_settings_company_name' ) );
-                    update_option( 'ab_settings_company_phone',         $this->getParameter( 'ab_settings_company_phone' ) );
-                    update_option( 'ab_settings_company_website',       $this->getParameter( 'ab_settings_company_website' ) );
+                    update_option( 'bookly_co_address', $this->getParameter( 'bookly_co_address' ) );
+                    update_option( 'bookly_co_logo_attachment_id', $this->getParameter( 'bookly_co_logo_attachment_id' ) );
+                    update_option( 'bookly_co_name',    $this->getParameter( 'bookly_co_name' ) );
+                    update_option( 'bookly_co_phone',   $this->getParameter( 'bookly_co_phone' ) );
+                    update_option( 'bookly_co_website', $this->getParameter( 'bookly_co_website' ) );
                     $alert['success'][] = __( 'Settings saved.', 'bookly' );
                     break;
                 default:
-                    // Let add-ons save their settings.
+                    // Let Add-ons save their settings.
                     $alert = apply_filters( 'bookly_save_settings', $alert, $this->getParameter( 'tab' ), $this->getPostParameters() );
             }
 
@@ -111,7 +131,7 @@ class Controller extends Lib\Base\Controller
         $candidates = $this->getCandidatesBooklyProduct();
 
         // Check if WooCommerce cart exists.
-        if ( get_option( 'ab_woocommerce_enabled' ) && class_exists( 'WooCommerce', false ) ) {
+        if ( get_option( 'bookly_wc_enabled' ) && class_exists( 'WooCommerce', false ) ) {
             $post = get_post( wc_get_page_id( 'cart' ) );
             if ( $post === null || $post->post_status != 'publish' ) {
                 $alert['error'][] = sprintf(
@@ -121,16 +141,15 @@ class Controller extends Lib\Base\Controller
             }
         }
         $cart_columns = array(
-            'service'  => Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_service' ),
+            'service'  => Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_service' ),
             'date'     => __( 'Date',  'bookly' ),
             'time'     => __( 'Time',  'bookly' ),
-            'employee' => Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_employee' ),
+            'employee' => Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_employee' ),
             'price'    => __( 'Price', 'bookly' ),
+            'deposit'  => __( 'Deposit', 'bookly' ),
         );
 
-        $cart_columns = apply_filters( 'bookly_settings_cart_columns', $cart_columns );
-
-        wp_localize_script( 'ab-jCal.js', 'BooklyL10n',  array(
+        wp_localize_script( 'bookly-jCal.js', 'BooklyL10n',  array(
             'alert'       => $alert,
             'close'       => __( 'Close', 'bookly' ),
             'current_tab' => $current_tab,
@@ -138,10 +157,29 @@ class Controller extends Lib\Base\Controller
             'months'      => array_values( $wp_locale->month ),
             'repeat'      => __( 'Repeat every year', 'bookly' ),
             'we_are_not_working' => __( 'We are not working on this day', 'bookly' ),
+            'default_country' => get_option( 'bookly_cst_phone_default_country' ),
             'limitations' => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>If you find the plugin useful for your business please consider buying a licence for the full version.<br>It costs just $59 and for this money you will get many useful functions, lifetime free updates and excellent support!<br>More information can be found here', 'bookly' ) . ': <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
         ) );
+        $values = array(
+            'bookly_gc_limit_events' => array( array( '0', __( 'Disabled', 'bookly' ) ), array( 25, 25 ), array( 50, 50 ), array( 100, 100 ), array( 250, 250 ), array( 500, 500 ), array( 1000, 1000), array( 2500, 2500 ) ),
+            'bookly_gen_min_time_prior_booking' => array( array( '0', __( 'Disabled', 'bookly' ) ) ),
+            'bookly_gen_min_time_prior_cancel'  => array( array( '0', __( 'Disabled', 'bookly' ) ) ),
+        );
+        $wp_roles = new \WP_Roles();
+        foreach ( $wp_roles->get_names() as $role => $name ) {
+            $values['bookly_cst_new_account_role'][] = array( $role, $name );
+        }
+        foreach ( array( 5, 10, 12, 15, 20, 30, 45, 60, 90, 120, 180, 240, 360 ) as $duration ) {
+            $values['bookly_gen_time_slot_length'][] = array( $duration, Lib\Utils\DateTime::secondsToInterval( $duration * MINUTE_IN_SECONDS ) );
+        }
+        foreach ( array_merge( range( 1, 12 ), range( 24, 144, 24 ), range( 168, 672, 168 ) ) as $hour ) {
+            $values['bookly_gen_min_time_prior_booking'][] = array( $hour, Lib\Utils\DateTime::secondsToInterval( $hour * HOUR_IN_SECONDS ) );
+        }
+        foreach ( array_merge( array( 1 ), range( 2, 12, 2 ), range( 24, 168, 24 ) ) as $hour ) {
+            $values['bookly_gen_min_time_prior_cancel'][] = array( $hour, Lib\Utils\DateTime::secondsToInterval( $hour * HOUR_IN_SECONDS ) );
+        }
 
-        $this->render( 'index', compact( 'holidays', 'candidates', 'cart_columns' ) );
+        $this->render( 'index', compact( 'holidays', 'candidates', 'cart_columns', 'values' ) );
     }
 
     /**
@@ -159,17 +197,17 @@ class Controller extends Lib\Base\Controller
         // update or delete the event
         if ( $id ) {
             if ( $holiday ) {
-                $wpdb->update( Lib\Entities\Holiday::getTableName(), array( 'repeat_event' => intval( $repeat ) ), array( 'id' => $id ), array( '%d' ) );
-                $wpdb->update( Lib\Entities\Holiday::getTableName(), array( 'repeat_event' => intval( $repeat ) ), array( 'parent_id' => $id ), array( '%d' ) );
+                $wpdb->update( Lib\Entities\Holiday::getTableName(), array( 'repeat_event' => (int) $repeat ), array( 'id' => $id ), array( '%d' ) );
+                $wpdb->update( Lib\Entities\Holiday::getTableName(), array( 'repeat_event' => (int) $repeat ), array( 'parent_id' => $id ), array( '%d' ) );
             } else {
                 Lib\Entities\Holiday::query()->delete()->where( 'id', $id )->where( 'parent_id', $id, 'OR' )->execute();
             }
             // add the new event
         } elseif ( $holiday && $day ) {
-            $holiday = new Lib\Entities\Holiday( array( 'date' => $day, 'repeat_event' => intval( $repeat ) ) );
+            $holiday = new Lib\Entities\Holiday( array( 'date' => $day, 'repeat_event' => (int) $repeat ) );
             $holiday->save();
             foreach ( Lib\Entities\Staff::query()->fetchArray() as $employee ) {
-                $staff_holiday = new Lib\Entities\Holiday( array( 'date' => $day, 'repeat_event' => intval( $repeat ), 'staff_id'  => $employee['id'], 'parent_id' => $holiday->get( 'id' ) ) );
+                $staff_holiday = new Lib\Entities\Holiday( array( 'date' => $day, 'repeat_event' => (int) $repeat, 'staff_id'  => $employee['id'], 'parent_id' => $holiday->get( 'id' ) ) );
                 $staff_holiday->save();
             }
         }
@@ -180,7 +218,7 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * @return mixed|string|void
+     * @return string
      */
     protected function getHolidays()
     {
@@ -189,12 +227,12 @@ class Controller extends Lib\Base\Controller
         if ( count( $collection ) ) {
             foreach ( $collection as $holiday ) {
                 $holidays[ $holiday['id'] ] = array(
-                    'm' => intval( date( 'm', strtotime( $holiday['date'] ) ) ),
-                    'd' => intval( date( 'd', strtotime( $holiday['date'] ) ) ),
+                    'm' => (int) date( 'm', strtotime( $holiday['date'] ) ),
+                    'd' => (int) date( 'd', strtotime( $holiday['date'] ) ),
                 );
                 // If not repeated holiday, add the year
                 if ( ! $holiday['repeat_event'] ) {
-                    $holidays[ $holiday['id'] ]['y'] = intval( date( 'Y', strtotime( $holiday['date'] ) ) );
+                    $holidays[ $holiday['id'] ]['y'] = (int) date( 'Y', strtotime( $holiday['date'] ) );
                 }
             }
         }
@@ -220,22 +258,14 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * Ajax request to dismiss admin notice for current user.
-     */
-    public function executeDismissAdminNotice()
-    {
-        update_user_meta( get_current_user_id(), $this->getParameter( 'prefix' ) . 'dismiss_admin_notice', 1 );
-    }
-
-    /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

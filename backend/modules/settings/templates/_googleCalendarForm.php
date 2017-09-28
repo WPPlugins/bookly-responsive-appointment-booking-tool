@@ -1,6 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'google_calendar' ) ) ?>"
-      enctype="multipart/form-data" class="ab-settings-form">
+<form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'google_calendar' ) ) ?>">
     <div class="form-group">
         <h4 class="bookly-bold"><?php _e( 'Instructions', 'bookly' ) ?></h4>
         <p><?php _e( 'To find your client ID and client secret, do the following:', 'bookly' ) ?></p>
@@ -16,12 +15,8 @@
             <li><?php _e( 'Go to Staff Members, select a staff member and click <b>Connect</b> which is located at the bottom of the page.', 'bookly' ) ?></li>
         </ol>
     </div>
-    <div class="form-group">
-        <?php \BooklyLite\Lib\Utils\Common::optionText( __( 'Client ID', 'bookly' ), 'ab_settings_google_client_id', __( 'The client ID obtained from the Developers Console', 'bookly' ) ) ?>
-    </div>
-    <div class="form-group">
-        <?php \BooklyLite\Lib\Utils\Common::optionText( __( 'Client secret', 'bookly' ), 'ab_settings_google_client_secret', __( 'The client secret obtained from the Developers Console', 'bookly' ) ) ?>
-    </div>
+        <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_gc_client_id', __( 'Client ID', 'bookly' ), __( 'The client ID obtained from the Developers Console', 'bookly' ) ) ?>
+        <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_gc_client_secret', __( 'Client secret', 'bookly' ), __( 'The client secret obtained from the Developers Console', 'bookly' ) ) ?>
     <div class="form-group">
         <label for="ab_redirect_uri"><?php _e( 'Redirect URI', 'bookly' ) ?></label>
         <p class="help-block"><?php _e( 'Enter this URL as a redirect URI in the Developers Console', 'bookly' ) ?></p>
@@ -29,26 +24,12 @@
                value="<?php echo \BooklyLite\Lib\Google::generateRedirectURI() ?>" onclick="this.select();"
                style="cursor: pointer;"/>
     </div>
-    <div class="form-group">
-        <label for="ab_settings_google_two_way_sync"><?php _e( '2 way sync', 'bookly' ) ?></label>
-        <p class="help-block"><?php _e( 'By default Bookly pushes new appointments and any further changes to Google Calendar. If you enable this option then Bookly will fetch events from Google Calendar and remove corresponding time slots before displaying the second step of the booking form (this may lead to a delay when users click Next at the first step).', 'bookly' ) ?></p>
-        <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'ab_settings_google_two_way_sync', array( array( '0', __( 'Disabled', 'bookly' ) ), array( '1', __( 'Enabled', 'bookly' ) ) ) ) ?>
-    </div>
-    <div class="form-group">
-        <label for="ab_settings_google_limit_events"><?php _e( 'Limit number of fetched events', 'bookly' ) ?></label>
-        <p class="help-block"><?php _e( 'If there is a lot of events in Google Calendar sometimes this leads to a lack of memory in PHP when Bookly tries to fetch all events. You can limit the number of fetched events here. This only works when 2 way sync is enabled.', 'bookly' ) ?></p>
-        <select id="ab_settings_google_limit_events" class="form-control" name="ab_settings_google_limit_events">
-            <?php foreach ( array( __( 'Disabled', 'bookly' ) => '0', 25 => 25, 50 => 50, 100 => 100, 250 => 250, 500 => 500, 1000 => 1000, 2500 => 2500 ) as $text => $limit ) : ?>
-                <option value="<?php echo $limit ?>" <?php selected( get_option( 'ab_settings_google_limit_events' ), $limit ) ?> ><?php echo $text ?></option>
-            <?php endforeach ?>
-        </select>
-    </div>
-    <div class="form-group">
-        <?php \BooklyLite\Lib\Utils\Common::optionText( __( 'Template for event title', 'bookly' ), 'ab_settings_google_event_title', __( 'Configure what information should be placed in the title of Google Calendar event. Available codes are {service_name}, {staff_name} and {client_names}.', 'bookly' ) ) ?>
-    </div>
-
+    <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_gc_two_way_sync', __( '2 way sync', 'bookly' ), __( 'By default Bookly pushes new appointments and any further changes to Google Calendar. If you enable this option then Bookly will fetch events from Google Calendar and remove corresponding time slots before displaying the second step of the booking form (this may lead to a delay when users click Next at the first step).', 'bookly' ) ) ?>
+    <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_gc_limit_events', __( 'Limit number of fetched events', 'bookly' ), __( 'If there is a lot of events in Google Calendar sometimes this leads to a lack of memory in PHP when Bookly tries to fetch all events. You can limit the number of fetched events here. This only works when 2 way sync is enabled.', 'bookly' ),
+        $values['bookly_gc_limit_events'] ) ?>
+    <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_gc_event_title', __( 'Template for event title', 'bookly' ), __( 'Configure what information should be placed in the title of Google Calendar event. Available codes are {service_name}, {staff_name} and {client_names}.', 'bookly' ) ) ?>
     <div class="panel-footer">
-        <?php \BooklyLite\Lib\Utils\Common::submitButton( null, 'bookly-limitation' ) ?>
+        <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn btn-lg btn-success bookly-limitation' ) ?>
         <?php \BooklyLite\Lib\Utils\Common::resetButton() ?>
     </div>
 </form>

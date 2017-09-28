@@ -1,7 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     /** @var \BooklyLite\Lib\Entities\Staff $staff */
 ?>
-
 <div class="panel panel-default bookly-main">
     <div class="panel-body">
         <div class="bookly-flexbox bookly-margin-bottom-md">
@@ -53,6 +52,7 @@
                     <span class="bookly-nav-tabs-title"><?php _e( 'Schedule', 'bookly' ) ?></span>
                 </a>
             </li>
+            <?php do_action( 'bookly_special_days_render_tab' ) ?>
             <li>
                 <a id="bookly-holidays-tab" href="#daysoff" data-toggle="tab">
                     <i class="bookly-icon bookly-icon-daysoff"></i>
@@ -114,7 +114,7 @@
                             <p class="help-block">
                                 <?php printf( __( 'This text can be inserted into notifications with %s code.', 'bookly' ), '{staff_info}' ) ?>
                             </p>
-                            <textarea id="bookly-info" name="info" rows="3" type="text" class="form-control"><?php echo esc_textarea( $staff->get( 'info' ) ) ?></textarea>
+                            <textarea id="bookly-info" name="info" rows="3" class="form-control"><?php echo esc_textarea( $staff->get( 'info' ) ) ?></textarea>
                         </div>
 
                         <div class="form-group">

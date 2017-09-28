@@ -23,9 +23,9 @@ class CartItem
         'slots'             => null,
         // Step details
         'custom_fields'     => array(),
+        'series_uniq_id'    => 0,
+        'first_in_series'   => false,
     );
-
-    public static $service_prices = array();
 
     /**
      * Constructor.
@@ -75,7 +75,9 @@ class CartItem
      */
     public function setData( array $data )
     {
-        $this->data = $data;
+        foreach ( $data as $name => $value ) {
+            $this->set( $name, $value );
+        }
     }
 
     /**
@@ -95,34 +97,37 @@ class CartItem
      */
     public function getServicePrice()
     {
+        static $service_prices_cache = array();
+
         $service = $this->getService();
-        $price   = 0.0;
+        $slots   = $this->get( 'slots' );
+        list ( $service_id, $null ) = $slots[0];
+        $staff_id = 1;
+        $special_hours_enabled = Config::isSpecialHoursEnabled();
 
-        $slots  = $this->get( 'slots' );
-        list ( $service_id, $staff_id ) = $slots[0];
-
-        $service_start = date( 'H:i:s', $slots[0][2] );
-        if ( get_option( 'ab_settings_use_client_time_zone' ) ) {
-            $service_start = Utils\DateTime::applyTimeZoneOffset( $service_start,  $this->get( 'time_zone_offset' ) );
-        }
-
-        if ( $service->get( 'type' ) == Entities\Service::TYPE_COMPOUND ) {
-            $service_price = apply_filters( 'bookly_special_hours_apply_special_period_price', $service->get( 'price' ), $service_start, $service_id, $staff_id );
-            $price += $service_price;
+        if ( $special_hours_enabled ) {
+            $service_start = date( 'H:i:s', $slots[0][2] );
         } else {
-            if ( ! isset ( self::$service_prices[ $staff_id ][ $service_id ] ) ) {
-                $staff_service = new Entities\StaffService();
-                $staff_service->loadBy( array(
-                    'staff_id'   => $staff_id,
-                    'service_id' => $service_id,
-                ) );
-                $service_price = apply_filters( 'bookly_special_hours_apply_special_period_price', $staff_service->get( 'price' ), $service_start, $service_id, $staff_id );
-                self::$service_prices[ $staff_id ][ $service_id ] = $service_price;
-            }
-            $price += self::$service_prices[ $staff_id ][ $service_id ];
+            $service_start = 'unused'; //the price is the same for all services in day
         }
 
-        return $price + $this->getExtrasAmount();
+        if ( isset ( $service_prices_cache[ $staff_id ][ $service_id ][ $service_start ] ) ) {
+            $service_price = $service_prices_cache[ $staff_id ][ $service_id ][ $service_start ];
+        } else {//if record absentee in cache
+            if ( $service->get( 'type' ) == Entities\Service::TYPE_COMPOUND ) {
+                $service_price = $service->get( 'price' );
+            } else {
+                $staff_service = new Entities\StaffService();
+                $staff_service->loadBy( compact( 'staff_id', 'service_id' ) );
+                $service_price = $staff_service->get( 'price' );
+            }
+            if ( $special_hours_enabled ) {
+                $service_price = apply_filters( 'bookly_special_hours_get_price', $service_price, $staff_id, $service_id, $service_start );
+            }
+            $service_prices_cache[ $staff_id ][ $service_id ][ $service_start ] = $service_price;
+        }
+
+        return $service_price + $this->getExtrasAmount();
     }
 
     /**
@@ -133,12 +138,13 @@ class CartItem
     public function getDeposit()
     {
         $slots = $this->get( 'slots' );
-        list ( $service_id, $staff_id ) = $slots[0];
+        list ( $service_id ) = $slots[0];
         $staff_service = new Entities\StaffService();
         $staff_service->loadBy( array(
-            'staff_id'   => $staff_id,
+            'staff_id'   => 1,
             'service_id' => $service_id,
         ) );
+
         return $staff_service->get( 'deposit' );
     }
 
@@ -151,7 +157,7 @@ class CartItem
     {
         $nop = $this->get( 'number_of_persons' );
 
-        return apply_filters( 'bookly_deposit_get_deposit_amount',
+        return apply_filters( 'bookly_deposit_payments_get_deposit_amount',
             $nop * $this->getServicePrice(),
             $this->getDeposit(),
             $nop );
@@ -177,10 +183,7 @@ class CartItem
      */
     public function getStaff()
     {
-        $slots = $this->get( 'slots' );
-        $staff_id = $slots[0][1];
-
-        return Entities\Staff::find( $staff_id );
+        return Entities\Staff::find( 1 );
     }
 
     /**
@@ -190,13 +193,14 @@ class CartItem
      */
     public function getExtrasAmount()
     {
-        $amount = 0.0;
+        $amount  = 0.0;
         $_extras = $this->get( 'extras' );
         /** @var \BooklyServiceExtras\Lib\Entities\ServiceExtra[] $extras */
-        $extras = apply_filters( 'bookly_extras_find_by_ids', array(), array_keys( $_extras ) );
+        $extras = apply_filters( 'bookly_service_extras_find_by_ids', array(), array_keys( $_extras ) );
         foreach ( $extras as $extra ) {
             $amount += $extra->get( 'price' ) * $_extras[ $extra->get( 'id' ) ];
         }
+
         return $amount;
     }
 
@@ -207,24 +211,12 @@ class CartItem
      */
     public function getExtrasDuration()
     {
-        return apply_filters( 'bookly_extras_get_total_duration', 0, $this->get( 'extras' ) );
+        return apply_filters( 'bookly_service_extras_get_total_duration', 0, $this->get( 'extras' ) );
     }
 
     public function isFirstSubService( $service_id )
     {
         return $this->data['slots'][0][0] == $service_id;
-    }
-
-    /**
-     * @return \BooklyLocations\Lib\Entities\Location|false
-     */
-    public function getLocation()
-    {
-        if ( Config::locationsEnabled() ) {
-            return \BooklyLocations\Lib\Entities\Location::find( $this->get( 'location_id' ) );
-        }
-
-        return false;
     }
 
 }

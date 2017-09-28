@@ -2,7 +2,7 @@
 namespace BooklyLite\Backend\Modules\Staff;
 
 use BooklyLite\Lib;
-use BooklyLite\Backend\Modules\Staff\Forms\Widgets;
+use BooklyLite\Backend\Modules\Staff\Forms\Widgets\TimeChoice;
 
 /**
  * Class Controller
@@ -10,11 +10,11 @@ use BooklyLite\Backend\Modules\Staff\Forms\Widgets;
  */
 class Controller extends Lib\Base\Controller
 {
-    const page_slug = 'ab-system-staff';
+    const page_slug = 'bookly-staff';
 
     protected function getPermissions()
     {
-        return get_option( 'ab_settings_allow_staff_members_edit_profile' ) ? array( '_this' => 'user' ) : array();
+        return get_option( 'bookly_gen_allow_staff_edit_profile' ) ? array( '_this' => 'user' ) : array();
     }
 
     public function index()
@@ -26,11 +26,11 @@ class Controller extends Lib\Base\Controller
         $this->enqueueStyles( array(
             'frontend' => array_merge(
                 array( 'css/ladda.min.css', ),
-                get_option( 'ab_settings_phone_default_country' ) == 'disabled'
+                get_option( 'bookly_cst_phone_default_country' ) == 'disabled'
                     ? array()
                     : array( 'css/intlTelInput.css' )
             ),
-            'backend'  => array( 'bootstrap/css/bootstrap-theme.min.css', )
+            'backend'  => array( 'bootstrap/css/bootstrap-theme.min.css', 'css/jquery-ui-theme/jquery-ui.min.css' )
         ) );
 
         $this->enqueueScripts( array(
@@ -38,20 +38,21 @@ class Controller extends Lib\Base\Controller
                 'bootstrap/js/bootstrap.min.js' => array( 'jquery' ),
                 'js/jCal.js'  => array( 'jquery' ),
                 'js/alert.js' => array( 'jquery' ),
+                'js/range_tools.js' => array( 'jquery' ),
             ),
             'frontend' => array_merge(
                 array(
                     'js/spin.min.js'  => array( 'jquery' ),
                     'js/ladda.min.js' => array( 'jquery' ),
                 ),
-                get_option( 'ab_settings_phone_default_country' ) == 'disabled'
+                get_option( 'bookly_cst_phone_default_country' ) == 'disabled'
                     ? array()
                     : array( 'js/intlTelInput.min.js' => array( 'jquery' ) )
             ),
-            'module' => array( 'js/staff.js' => array( 'jquery-ui-sortable', 'jquery' ) ),
+            'module' => array( 'js/staff.js' => array( 'jquery-ui-sortable', 'jquery', 'jquery-ui-datepicker', 'bookly-range_tools.js' ) ),
         ) );
 
-        wp_localize_script( 'ab-staff.js', 'BooklyL10n',  array(
+        wp_localize_script( 'bookly-staff.js', 'BooklyL10n', array(
             'are_you_sure' => __( 'Are you sure?', 'bookly' ),
             'close'        => __( 'Close', 'bookly' ),
             'days'         => array_values( $wp_locale->weekday_abbrev ),
@@ -60,13 +61,16 @@ class Controller extends Lib\Base\Controller
             'saved'        => __( 'Settings saved.', 'bookly' ),
             'selector'     => array( 'all_selected' => __( 'All locations', 'bookly' ), 'nothing_selected' => __( 'No locations selected', 'bookly' ), ),
             'intlTelInput' => array(
-                'enabled' => ( get_option( 'ab_settings_phone_default_country' ) != 'disabled' ),
+                'enabled' => get_option( 'bookly_cst_phone_default_country' ) != 'disabled',
                 'utils'   => plugins_url( 'intlTelInput.utils.js', Lib\Plugin::getDirectory() . '/frontend/resources/js/intlTelInput.utils.js' ),
-                'country' => get_option( 'ab_settings_phone_default_country' ),
+                'country' => get_option( 'bookly_cst_phone_default_country' ),
             ),
             'we_are_not_working' => __( 'We are not working on this day', 'bookly' ),
             'limitations'  => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>If you find the plugin useful for your business please consider buying a licence for the full version.<br>It costs just $59 and for this money you will get many useful functions, lifetime free updates and excellent support!<br>More information can be found here', 'bookly' ) . ': <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
         ) );
+
+        // Allow add-ons to enqueue their assets.
+        do_action( 'bookly_enqueue_assets_for_staff_profile' );
 
         $active_staff_id = 1;
         $staff_members = Lib\Entities\Staff::query()->where( 'id', $active_staff_id )->fetchArray();
@@ -134,11 +138,11 @@ class Controller extends Lib\Base\Controller
 
     public function executeStaffSchedule()
     {
+        $staff_id = 1;
         $staff = new Lib\Entities\Staff();
-        $staff->load( 1 );
+        $staff->load( $staff_id );
         $schedule_items = $staff->getScheduleItems();
-        $default_breaks_json = json_encode( array( 'staff_id' => 1 ) );
-        $this->render( 'schedule', compact( 'schedule_items', 'default_breaks_json' ) );
+        $this->render( 'schedule', compact( 'schedule_items', 'staff_id' ) );
         exit;
     }
 
@@ -181,7 +185,9 @@ class Controller extends Lib\Base\Controller
             /** @var Lib\Entities\StaffScheduleItem $item */
             $html_breaks[ $item->get( 'id' ) ] = $this->render( '_breaks', array(
                 'day_is_not_available' => null === $item->get( 'start_time' ),
-                'item' => $item,
+                'item'        => $item,
+                'break_start' => new TimeChoice( array( 'use_empty' => false, 'type' => 'from' ) ),
+                'break_end'   => new TimeChoice( array( 'use_empty' => false, 'type' => 'to' ) ),
             ), false );
         }
 
@@ -196,10 +202,7 @@ class Controller extends Lib\Base\Controller
         $working_end   = $this->getParameter( 'working_end' );
 
         if ( Lib\Utils\DateTime::timeToSeconds( $start_time ) >= Lib\Utils\DateTime::timeToSeconds( $end_time ) ) {
-            wp_send_json( array(
-                'success'   => false,
-                'error_msg' => __( 'The start time must be less than the end one', 'bookly' ),
-            ) );
+            wp_send_json_error( array( 'message' => __( 'The start time must be less than the end one', 'bookly' ), ) );
         }
 
         $staffScheduleItem = new Lib\Entities\StaffScheduleItem();
@@ -211,10 +214,7 @@ class Controller extends Lib\Base\Controller
         $in_working_time = $working_start <= $start_time && $start_time <= $working_end
             && $working_start <= $end_time && $end_time <= $working_end;
         if ( !$in_working_time || ! $staffScheduleItem->isBreakIntervalAvailable( $start_time, $end_time, $break_id ) ) {
-            wp_send_json( array(
-                'success'   => false,
-                'error_msg' => __( 'The requested interval is not available', 'bookly' ),
-            ) );
+            wp_send_json_error( array( 'message' => __( 'The requested interval is not available', 'bookly' ), ) );
         }
 
         $formatted_start    = Lib\Utils\DateTime::formatTime( Lib\Utils\DateTime::timeToSeconds( $start_time ) );
@@ -228,18 +228,15 @@ class Controller extends Lib\Base\Controller
             $break->set( 'end_time', $end_time );
             $break->save();
 
-            wp_send_json( array(
-                'success'      => true,
-                'new_interval' => $formatted_interval,
-            ) );
+            wp_send_json_success( array( 'interval' => $formatted_interval, ) );
         } else {
             $form = new Forms\StaffScheduleItemBreak();
             $form->bind( $this->getPostParameters() );
 
             $staffScheduleItemBreak = $form->save();
             if ( $staffScheduleItemBreak ) {
-                $breakStart = new Widgets\TimeChoice( array( 'use_empty' => false, 'type' => 'from', 'bound' => $bound ) );
-                $breakEnd   = new Widgets\TimeChoice( array( 'use_empty' => false, 'type' => 'bound', 'bound' => $bound ) );
+                $breakStart = new TimeChoice( array( 'use_empty' => false, 'type' => 'from', 'bound' => $bound ) );
+                $breakEnd   = new TimeChoice( array( 'use_empty' => false, 'type' => 'bound', 'bound' => $bound ) );
                 wp_send_json( array(
                     'success'      => true,
                     'item_content' => $this->render( '_break', array(
@@ -250,10 +247,7 @@ class Controller extends Lib\Base\Controller
                     ), false ),
                 ) );
             } else {
-                wp_send_json( array(
-                    'success'   => false,
-                    'error_msg' => __( 'Error adding the break interval', 'bookly' ),
-                ) );
+                wp_send_json_error( array( 'message' => __( 'Error adding the break interval', 'bookly' ), ) );
             }
         }
     }
@@ -286,7 +280,7 @@ class Controller extends Lib\Base\Controller
         $staff->load( 1 );
 
         if ( $staff->get( 'google_data' ) == '' ) {
-            if ( get_option( 'ab_settings_google_client_id' ) == '' ) {
+            if ( get_option( 'bookly_gc_client_id' ) == '' ) {
                 $authUrl = false;
             } else {
                 $google  = new Lib\Google();
@@ -326,7 +320,7 @@ class Controller extends Lib\Base\Controller
         if ( ! Lib\Utils\Common::isCurrentUserAdmin() ) {
             // Check permissions to prevent one staff member from updating profile of another staff member.
             do {
-                if ( get_option( 'ab_settings_allow_staff_members_edit_profile' ) ) {
+                if ( get_option( 'bookly_gen_allow_staff_edit_profile' ) ) {
                     $staff = new Lib\Entities\Staff();
                     $staff->load( $this->getParameter( 'id' ) );
                     if ( $staff->get( 'wp_user_id' ) == get_current_user_id() ) {
@@ -400,13 +394,13 @@ class Controller extends Lib\Base\Controller
             // Update or delete the event.
             if ( $id ) {
                 if ( $holiday ) {
-                    $wpdb->update( Lib\Entities\Holiday::getTableName(), array( 'repeat_event' => intval( $repeat ) ), array( 'id' => $id ), array( '%d' ) );
+                    $wpdb->update( Lib\Entities\Holiday::getTableName(), array( 'repeat_event' => (int) $repeat ), array( 'id' => $id ), array( '%d' ) );
                 } else {
                     Lib\Entities\Holiday::query()->delete()->where( 'id', $id )->execute();
                 }
                 // Add the new event.
             } elseif ( $holiday && $day ) {
-                $wpdb->insert( Lib\Entities\Holiday::getTableName(), array( 'date' => $day, 'repeat_event' => intval( $repeat ), 'staff_id' => $staff_id ), array( '%s', '%d', '%d' ) );
+                $wpdb->insert( Lib\Entities\Holiday::getTableName(), array( 'date' => $day, 'repeat_event' => (int) $repeat, 'staff_id' => $staff_id ), array( '%s', '%d', '%d' ) );
             }
 
             // And return refreshed events.
@@ -424,12 +418,12 @@ class Controller extends Lib\Base\Controller
         foreach ( $collection as $holiday ) {
             list ( $Y, $m, $d ) = explode( '-', $holiday['date'] );
             $holidays[ $holiday['id'] ] = array(
-                'm' => intval( $m ),
-                'd' => intval( $d ),
+                'm' => (int) $m,
+                'd' => (int) $d,
             );
             // if not repeated holiday, add the year
             if ( ! $holiday['repeat_event'] ) {
-                $holidays[ $holiday['id'] ]['y'] = intval( $Y );
+                $holidays[ $holiday['id'] ]['y'] = (int) $Y;
             }
         }
 
@@ -501,14 +495,14 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

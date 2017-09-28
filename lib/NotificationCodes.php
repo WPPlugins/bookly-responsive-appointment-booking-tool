@@ -12,40 +12,41 @@ class NotificationCodes
      * @var array
      */
     private $data = array(
-        'amount_due'         => '',
-        'amount_paid'        => '',
-        'appointment_end'    => '',
-        'appointment_start'  => '',
-        'appointment_token'  => '',
-        'cart_info'          => array(),
-        'category_name'      => '',
-        'client_email'       => '',
-        'client_name'        => '',
-        'client_phone'       => '',
-        'custom_fields'      => '',
-        'custom_fields_2c'   => '',
+        'amount_due'          => '',
+        'amount_paid'         => '',
+        'appointment_end'     => '',
+        'appointment_start'   => '',
+        'appointment_token'   => '',
+        'cancellation_reason' => '',
+        'cart_info'           => array(),
+        'category_name'       => '',
+        'client_email'        => '',
+        'client_name'         => '',
+        'client_phone'        => '',
+        'custom_fields'       => '',
+        'custom_fields_2c'    => '',
+        'new_password'        => '',
+        'new_username'        => '',
+        'next_day_agenda'     => '',
+        'number_of_persons'   => '',
+        'payment_type'        => '',
+        'service_info'        => '',
+        'service_name'        => '',
+        'service_price'       => '',
+        'site_address'        => '',
+        'staff_email'         => '',
+        'staff_info'          => '',
+        'staff_name'          => '',
+        'staff_phone'         => '',
+        'staff_photo'         => '',
+        'total_price'         => '',
+        // Extras
         'extras'             => '',
-        'extras_total_price' => '',
-        'new_password'       => '',
-        'new_username'       => '',
-        'next_day_agenda'    => '',
-        'number_of_persons'  => '',
-        'payment_type'       => '',
-        'service_info'       => '',
-        'service_name'       => '',
-        'service_price'      => '',
-        'site_address'       => '',
-        'staff_email'        => '',
-        'staff_info'         => '',
-        'staff_name'         => '',
-        'staff_phone'        => '',
-        'staff_photo'        => '',
-        'total_price'        => '',
+        'extras_total_price' => 0,
+        // Recurring Appointments
+        'appointment_schedule'       => '',
+        'appointment_schedule_c'     => '',
     );
-
-    private $content_type;
-    /** @var Entities\StaffService $staff_service */
-    private $staff_service;
 
     /**
      * Set data parameter.
@@ -75,22 +76,20 @@ class NotificationCodes
      *
      * @since 10.9 format codes {code}, [[CODE]] is deprecated.
      *
-     * @param        $text
-     * @param string $gateway
-     * @param null   $content_type
+     * @param string $text
+     * @param string $format
      * @return string
      */
-    public function replace( $text, $gateway = 'email', $content_type = null )
+    public function replace( $text, $format = 'text' )
     {
-        $html         = false;
         $company_logo = '';
         $staff_photo  = '';
         $cart_info_c  = $cart_info = '';
+        $format = 'text';
 
         // Approve/Cancel appointment URL and <a> tag.
-        $approve_appointment_url = admin_url( 'admin-ajax.php?action=ab_approve_appointment&token=' . urlencode( Utils\Common::xorEncrypt( $this->get( 'appointment_token' ), 'approve' ) ) );
-        $cancel_appointment = $cancel_appointment_url = admin_url( 'admin-ajax.php?action=ab_cancel_appointment&token=' . $this->get( 'appointment_token' ) );
-        $this->content_type = $content_type ?: $this->getContentType();
+        $approve_appointment_url = admin_url( 'admin-ajax.php?action=bookly_approve_appointment&token=' . urlencode( Utils\Common::xorEncrypt( $this->get( 'appointment_token' ), 'approve' ) ) );
+        $cancel_appointment = $cancel_appointment_url = admin_url( 'admin-ajax.php?action=bookly_cancel_appointment&token=' . $this->get( 'appointment_token' ) );
 
         // Add to Google Calendar link.
         $google_calendar_url = sprintf( 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=%s&dates=%s/%s&details=%s',
@@ -103,13 +102,13 @@ class NotificationCodes
         // Cart info.
         $cart_info_data = $this->get( 'cart_info' );
         if ( ! empty ( $cart_info_data ) ) {
-            $cart_columns = get_option( 'ab_cart_show_columns', array() );
+            $cart_columns = get_option( 'bookly_cart_show_columns', array() );
             $ths = array();
             foreach ( $cart_columns as $column => $attr ) {
                 if ( $attr['show'] ) {
                     switch ( $column ) {
                         case 'service':
-                            $ths[] = Utils\Common::getTranslatedOption( 'ab_appearance_text_label_service' );
+                            $ths[] = Utils\Common::getTranslatedOption( 'bookly_l10n_label_service' );
                             break;
                         case 'date':
                             $ths[] = __( 'Date', 'bookly' );
@@ -118,7 +117,7 @@ class NotificationCodes
                             $ths[] = __( 'Time', 'bookly' );
                             break;
                         case 'employee':
-                            $ths[] = Utils\Common::getTranslatedOption( 'ab_appearance_text_label_employee' );
+                            $ths[] = Utils\Common::getTranslatedOption( 'bookly_l10n_label_employee' );
                             break;
                         case 'price':
                             $ths[] = __( 'Price', 'bookly' );
@@ -133,14 +132,13 @@ class NotificationCodes
                     if ( $attr['show'] ) {
                         switch ( $column ) {
                             case 'service':
-                                $data = apply_filters( 'bookly_appointment_data', array( 'extras' => $codes['extras'] ), true );
                                 $service_name = $codes['service_name'];
-                                if ( isset( $data['extras'] ) ) {
-                                    $info = '';
-                                    foreach ( $data['extras'] as $extra ) {
-                                        $info .= ', ' . str_replace( '&nbsp;&times;&nbsp;', ' x ', $extra['title'] );
+                                if ( ! empty ( $codes['extras'] ) ) {
+                                    $extras = '';
+                                    foreach ( $codes['extras'] as $extra ) {
+                                        $extras .= ', ' . str_replace( '&nbsp;&times;&nbsp;', ' x ', $extra['title'] );
                                     }
-                                    $service_name .= $info;
+                                    $service_name .= $extras;
                                 }
                                 $tds[] = $service_name;
                                 break;
@@ -162,7 +160,6 @@ class NotificationCodes
                 $tds[] = $codes['cancel_url'];
                 $trs[] = $tds;
             }
-
             foreach ( $trs as $tr ) {
                 $cancel_url = array_pop( $tr );
                 foreach ( $ths as $position => $column ) {
@@ -189,13 +186,13 @@ class NotificationCodes
             '{client_email}'           => $this->get( 'client_email' ),
             '{client_name}'            => $this->get( 'client_name' ),
             '{client_phone}'           => $this->get( 'client_phone' ),
-            '{company_address}'        => $html ? nl2br( get_option( 'ab_settings_company_address' ) ) : get_option( 'ab_settings_company_address' ),
+            '{company_address}'        => get_option( 'bookly_co_address' ),
             '{company_logo}'           => $company_logo,
-            '{company_name}'           => get_option( 'ab_settings_company_name' ),
-            '{company_phone}'          => get_option( 'ab_settings_company_phone' ),
-            '{company_website}'        => get_option( 'ab_settings_company_website' ),
+            '{company_name}'           => get_option( 'bookly_co_name' ),
+            '{company_phone}'          => get_option( 'bookly_co_phone' ),
+            '{company_website}'        => get_option( 'bookly_co_website' ),
             '{custom_fields}'          => $this->get( 'custom_fields' ),
-            '{custom_fields_2c}'       => $html ? $this->get( 'custom_fields_2c' ) : $this->get( 'custom_fields' ),
+            '{custom_fields_2c}'       => $this->get( 'custom_fields' ),
             '{google_calendar_url}'    => $google_calendar_url,
             '{new_password}'           => $this->get( 'new_password' ),
             '{new_username}'           => $this->get( 'new_username' ),
@@ -213,8 +210,9 @@ class NotificationCodes
             '{staff_photo}'            => $staff_photo,
             '{tomorrow_date}'          => Utils\DateTime::formatDate( $this->get( 'appointment_start' ) ),
             '{total_price}'            => Utils\Common::formatPrice( $this->get( 'total_price' ) ),
+            '{cancellation_reason}'    => $this->get( 'cancellation_reason' ),
         );
-        $codes = apply_filters( 'bookly_replace_notification_codes', $codes, $this );
+        $codes = apply_filters( 'bookly_replace_notification_codes', $codes, $this, $format );
 
         // Support deprecated codes [[CODE]]
         foreach ( array_keys( $codes ) as $code_key ) {
@@ -227,37 +225,4 @@ class NotificationCodes
 
         return strtr( $text, $codes );
     }
-
-    /**
-     * @return string
-     */
-    public function getContentType()
-    {
-        if ( $this->content_type === null ) {
-            $this->content_type = get_option( 'ab_email_content_type', 'html' );
-        }
-
-        return $this->content_type;
-    }
-
-    /**
-     * Gets staff_service
-     *
-     * @return Entities\StaffService
-     */
-    public function getStaffService()
-    {
-        return $this->staff_service;
-    }
-
-    /**
-     * Sets staff_service
-     *
-     * @param Entities\StaffService $staff_service
-     */
-    public function setStaffService( Entities\StaffService $staff_service )
-    {
-        $this->staff_service = $staff_service;
-    }
-
 }

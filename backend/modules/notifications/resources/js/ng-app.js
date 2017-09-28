@@ -3,25 +3,25 @@
 
     module.factory('dataSource', function($q, $rootScope) {
         var ds = {
-            ab_settings_sender_name : '',
-            ab_settings_sender_email : '',
+            sender_name : '',
+            sender_email : '',
             reply_to_customers : false,
-            content_type : 'html',
+            send_as : 'html',
             notifications : [],
             loadData  : function(params) {
                 var deferred = $q.defer();
                 jQuery.ajax({
                     url  : ajaxurl,
                     type : 'POST',
-                    data : jQuery.extend({ action : 'ab_get_email_notifications_data' }, params),
+                    data : jQuery.extend({ action : 'bookly_get_email_notifications_data' }, params),
                     dataType : 'json',
                     success  : function(response) {
                         if (response.success) {
-                            ds.ab_settings_sender_name = response.data.ab_settings_sender_name;
-                            ds.ab_settings_sender_email  = response.data.ab_settings_sender_email;
+                            ds.sender_name = response.data.sender_name;
+                            ds.sender_email  = response.data.sender_email;
                             ds.reply_to_customers = response.data.reply_to_customers;
-                            ds.content_type = response.data.sender_email;
-                            ds.notifications = response.data.ab_notifications;
+                            ds.send_as = response.data.send_as;
+                            ds.notifications = response.data.notifications;
                         }
                         $rootScope.$apply(deferred.resolve);
                     },

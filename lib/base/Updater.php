@@ -5,17 +5,20 @@ namespace BooklyLite\Lib\Base;
  * Class Updater
  * @package BooklyLite\Lib\Base
  */
-abstract class Updater
+abstract class Updater extends Schema
 {
     public function run()
     {
         $updater = $this;
         add_action( 'plugins_loaded', function () use ( $updater ) {
-            $class = get_class( $updater );
-            /** @var Plugin $plugin_class */
-            $plugin_class        = substr( $class, 0, strpos( $class, '\\' ) ) . '\\Lib\\Plugin';
+            $plugin_class        = Plugin::getPluginFor( $updater );
             $version_option_name = $plugin_class::getPrefix() . 'db_version';
-            $db_version          = get_option( $version_option_name );
+            $db_version = get_option( $version_option_name );
+            if ( $plugin_class == 'BooklyLite\Lib\Plugin' ) {
+                /** @deprecate option ab_db_version Bookly < 11.7 */
+                // get MAX db_version
+                $db_version = strnatcmp( get_option( 'ab_db_version' ), $db_version ) <= 0 ? $db_version : get_option( 'ab_db_version' );
+            }
             if ( $db_version !== false && version_compare( $plugin_class::getVersion(), $db_version, '>' ) ) {
                 set_time_limit( 0 );
 
@@ -39,44 +42,17 @@ abstract class Updater
         } );
     }
 
-    protected function drop( $tables )
-    {
-        global $wpdb;
-
-        if ( ! is_array( $tables ) ) {
-            $tables = array( $tables );
-        }
-        $get_ab_foreign_keys = "SELECT table_name, constraint_name FROM information_schema.key_column_usage WHERE REFERENCED_TABLE_SCHEMA=SCHEMA() AND REFERENCED_TABLE_NAME IN (" . implode( ', ', array_fill( 0, count( $tables ), '%s' ) ) . ")";
-        $schema = $wpdb->get_results( $wpdb->prepare( $get_ab_foreign_keys, $tables ) );
-        foreach ( $schema as $foreign_key ) {
-            $wpdb->query( "ALTER TABLE `$foreign_key->table_name` DROP FOREIGN KEY `$foreign_key->constraint_name`" );
-        }
-        $wpdb->query( 'DROP TABLE IF EXISTS `' . implode( "`,\r\n `", $tables ) . '` CASCADE;' );
-    }
-
-    protected function drop_columns( $table, array $columns )
-    {
-        global $wpdb;
-
-        $get_foreign_keys = "SELECT constraint_name FROM information_schema.key_column_usage WHERE REFERENCED_TABLE_SCHEMA=SCHEMA() AND table_name = '$table' AND column_name IN (" . implode( ', ', array_fill( 0, count( $columns ), '%s' ) ) . ")";
-        $constraints = $wpdb->get_results( $wpdb->prepare( $get_foreign_keys, $columns ) );
-        foreach ( $constraints as $foreign_key ) {
-            $wpdb->query( "ALTER TABLE `$table` DROP FOREIGN KEY `$foreign_key->constraint_name`" );
-        }
-        foreach ( $columns as $column ) {
-            $wpdb->query( "ALTER TABLE `$table` DROP COLUMN `$column`" );
-        }
-    }
-
     protected function rename_options( array $options )
     {
+        /** @global \wpdb $wpdb */
+        global $wpdb;
+
         foreach ( $options as $deprecated_name => $option_name ) {
-            add_option( $option_name, get_option( $deprecated_name ) );
-            delete_option( $deprecated_name );
+            $wpdb->query( $wpdb->prepare( 'UPDATE `' . $wpdb->options . '` SET option_name = %s WHERE option_name = %s', $option_name, $deprecated_name ) );
         }
     }
 
-    protected function rename_l10n_strings( array $strings )
+    protected function rename_l10n_strings( array $strings, $with_options = true )
     {
         global $wpdb;
         // WPML 'move' customer translations
@@ -95,14 +71,9 @@ abstract class Updater
                 }
             }
         }
-    }
-
-    protected function field_exist( $table, $field )
-    {
-        global $wpdb;
-        $query = "SELECT count(*) FROM information_schema.COLUMNS WHERE COLUMN_NAME = '$field' AND TABLE_NAME = '$table' AND TABLE_SCHEMA=SCHEMA()";
-
-        return (boolean) $wpdb->get_var( $query );
+        if ( $with_options ) {
+            $this->rename_options( $strings );
+        }
     }
 
     protected function register_l10n_options( array $options )

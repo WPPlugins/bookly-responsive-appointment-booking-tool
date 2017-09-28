@@ -25,7 +25,7 @@ class Components extends Lib\Base\Components
                 'js/spin.min.js'  => array( 'jquery' ),
                 'js/ladda.min.js' => array( 'jquery' ),
             ),
-            'module' => array( 'js/ng-payment_details_dialog.js' => array( 'ab-angular.min.js' ), ),
+            'module' => array( 'js/ng-payment_details_dialog.js' => array( 'bookly-angular.min.js' ), ),
         ) );
 
         $this->render( '_payment_details_dialog' );

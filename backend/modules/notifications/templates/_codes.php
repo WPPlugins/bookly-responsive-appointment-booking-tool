@@ -6,6 +6,7 @@ $codes = array(
     array( 'code' => 'approve_appointment_url', 'description' => esc_html__( 'URL of approve appointment link (to use inside <a> tag)', 'bookly' ) ),
     array( 'code' => 'cancel_appointment',  'description' => __( 'cancel appointment link', 'bookly' ) ),
     array( 'code' => 'cancel_appointment_url', 'description' => esc_html__( 'URL of cancel appointment link (to use inside <a> tag)', 'bookly' ) ),
+    array( 'code' => 'cancellation_reason', 'description' => __( 'reason you mentioned while deleting appointment', 'bookly' ) ),
     array( 'code' => 'category_name',       'description' => __( 'name of category', 'bookly' ) ),
     array( 'code' => 'client_email',        'description' => __( 'email of client', 'bookly' ) ),
     array( 'code' => 'client_name',         'description' => __( 'name of client', 'bookly' ) ),
@@ -30,4 +31,4 @@ $codes = array(
     array( 'code' => 'staff_photo',         'description' => __( 'photo of staff', 'bookly' ) ),
     array( 'code' => 'total_price',         'description' => __( 'total price of booking (sum of all cart items after applying coupon)', 'bookly' ) ),
 );
-\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_notification_short_codes', $codes ) );
+\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_prepare_notification_short_codes', $codes ) );

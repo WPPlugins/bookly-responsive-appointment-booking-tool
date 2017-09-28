@@ -70,7 +70,9 @@ class ChainItem
      */
     public function setData( array $data )
     {
-        $this->data = $data;
+        foreach ( $data as $name => $value ) {
+            $this->set( $name, $value );
+        }
     }
 
     /**
@@ -110,33 +112,36 @@ class ChainItem
      */
     public function getStaffIdsForSubService( Entities\Service $sub_service )
     {
-        return array( 1 );
+        $staff_ids = array();
+        $sub_services = $this->getSubServices();
+        if ( $sub_service->get( 'id' ) == $sub_services[0]->get( 'id' ) ) {
+            $staff_ids = $this->get( 'staff_ids' );
+        } else {
+            $res = Entities\StaffService::query()
+                ->select( 'staff_id' )
+                ->where( 'service_id', $sub_service->get( 'id' ) )
+                ->fetchArray();
+            foreach ( $res as $item ) {
+                $staff_ids[] = $item['staff_id'];
+            }
+        }
+
+        return $staff_ids;
     }
 
     /**
-     * Get summary price of service's extras.
+     * Check if exist payable extras.
      *
      * @return int
      */
-    public function getExtrasAmount()
+    public function hasPayableExtras()
     {
-        $amount = 0.0;
         /** @var \BooklyServiceExtras\Lib\Entities\ServiceExtra[] $extras */
-        $extras = apply_filters( 'bookly_extras_find_by_ids', array(), array_keys( $this->get( 'extras' ) ) );
+        $extras = apply_filters( 'bookly_service_extras_find_by_ids', array(), array_keys( $this->get( 'extras' ) ) );
         foreach ( $extras as $extra ) {
-            $amount += $extra->get( 'price' );
-        }
-
-        return $amount;
-    }
-
-    /**
-     * @return \BooklyLocations\Lib\Entities\Location|false
-     */
-    public function getLocation()
-    {
-        if ( Config::locationsEnabled() ) {
-            return \BooklyLocations\Lib\Entities\Location::find( $this->get( 'location_id' ) );
+            if ( $extra->get( 'price' ) > 0 ) {
+                return true;
+            }
         }
 
         return false;

@@ -23,7 +23,7 @@ class Notification extends Lib\Base\Entity
 
     protected static $cache = array();
 
-    protected static $type_list = array();
+    public static $type_list = array();
 
     public static $type_ids = array(
         /** @see \BooklyLite\Backend\Modules\Sms\Controller::executeSendTestSms */
@@ -41,6 +41,9 @@ class Notification extends Lib\Base\Entity
         'staff_approved_appointment'       => 10,
         'staff_cancelled_appointment'      => 11,
         'staff_pending_appointment'        => 12,
+        'client_rejected_appointment'      => 13,
+        'staff_rejected_appointment'       => 14,
+        // Recurring Appointments add        [31-38]
     );
 
     public function save()
@@ -106,6 +109,7 @@ class Notification extends Lib\Base\Entity
                 'client_approved_appointment'      => __( 'Notification to customer about approved appointment', 'bookly' ),
                 'client_approved_appointment_cart' => __( 'Notification to customer about approved appointments', 'bookly' ),
                 'client_cancelled_appointment'     => __( 'Notification to customer about cancelled appointment', 'bookly' ),
+                'client_rejected_appointment'      => __( 'Notification to customer about rejected appointment', 'bookly' ),
                 'client_follow_up'                 => __( 'Follow-up message in the same day after appointment (requires cron setup)', 'bookly' ),
                 'client_new_wp_user'               => __( 'Notification to customer about their WordPress user login details', 'bookly' ),
                 'client_pending_appointment'       => __( 'Notification to customer about pending appointment', 'bookly' ),
@@ -114,10 +118,13 @@ class Notification extends Lib\Base\Entity
                 'staff_agenda'                     => __( 'Evening notification with the next day agenda to staff member (requires cron setup)', 'bookly' ),
                 'staff_approved_appointment'       => __( 'Notification to staff member about approved appointment', 'bookly' ),
                 'staff_cancelled_appointment'      => __( 'Notification to staff member about cancelled appointment', 'bookly' ),
+                'staff_rejected_appointment'       => __( 'Notification to staff member about rejected appointment', 'bookly' ),
                 'staff_pending_appointment'        => __( 'Notification to staff member about pending appointment', 'bookly' ),
                 /** @see \BooklyLite\Backend\Modules\Sms\Controller::executeSendTestSms */
                 'test_message'                     => __( 'Test message', 'bookly' ),
             );
+
+            self::$type_list = apply_filters( 'bookly_prepare_notification_titles', self::$type_list );
         }
     }
 

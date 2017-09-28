@@ -15,7 +15,7 @@ class Captcha
      * @param $form_id
      * @param array $config
      */
-    static function init( $form_id, $config = array() )
+    public static function init( $form_id, $config = array() )
     {
         // Check for GD library
         if ( ! function_exists( 'gd_info' ) ) {
@@ -45,7 +45,7 @@ class Captcha
             'characters' => 'ABCDEFGHJKLMNPRSTUVWXYZabcdefghjkmnprstuvwxyz23456789',
             'min_font_size' => 36,
             'max_font_size' => 36,
-            'color' => get_option( 'ab_appearance_color' ),
+            'color' => get_option( 'bookly_app_color' ),
             'angle_min' => 0,
             'angle_max' => 5,
             'shadow' => true,

@@ -31,7 +31,7 @@ class ScheduleItemBreak extends Lib\Base\Entity
             'DELETE `break` FROM `' . self::getTableName() . '` AS `break`
             LEFT JOIN `' . StaffScheduleItem::getTableName() . '` AS `item` ON `item`.`id` = `break`.`staff_schedule_item_id`
             WHERE `item`.`staff_id` = %d',
-            1
+            $staff_id
         ) );
     }
 

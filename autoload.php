@@ -1,7 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
- * Bookly Lite autoload.
+ * BooklyLite autoload.
  * @param $class
  */
 function bookly_lite_loader( $class )

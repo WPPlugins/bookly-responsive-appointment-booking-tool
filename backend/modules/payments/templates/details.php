@@ -54,9 +54,9 @@
                         </td>
                         <td><?php echo \BooklyLite\Lib\Utils\DateTime::formatDateTime( $item['appointment_date'] ) ?></td>
                         <td><?php echo $item['staff_name'] ?></td>
-                        <?php $deposit = apply_filters( 'bookly_deposit_get_deposit_amount', $item['number_of_persons'] * ( $item['service_price'] + $extras_price ), $item['deposit'], $item['number_of_persons'] ) ?>
+                        <?php $deposit = apply_filters( 'bookly_deposit_payments_get_deposit_amount', $item['number_of_persons'] * ( $item['service_price'] + $extras_price ), $item['deposit'], $item['number_of_persons'] ) ?>
                         <?php if ( $deposit_enabled ) : ?>
-                            <td class="text-right"><?php echo apply_filters( 'bookly_deposit_format_deposit', $deposit, $item['deposit'] ) ?></td>
+                            <td class="text-right"><?php echo apply_filters( 'bookly_deposit_payments_format_deposit', $deposit, $item['deposit'] ) ?></td>
                         <?php endif ?>
                         <td class="text-right">
                             <?php $service_price = \BooklyLite\Lib\Utils\Common::formatPrice( $item['service_price'] ) ?>

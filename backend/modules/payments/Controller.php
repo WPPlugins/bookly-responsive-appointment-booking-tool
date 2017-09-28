@@ -9,6 +9,8 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
+    const page_slug = 'bookly-payments';
+
     /**
      * @return array
      */
@@ -45,10 +47,10 @@ class Controller extends Lib\Base\Controller
                 'js/spin.min.js'  => array( 'jquery' ),
                 'js/ladda.min.js' => array( 'jquery' ),
             ),
-            'module' => array( 'js/payments.js' => array( 'ab-datatables.min.js', 'ab-ng-payment_details_dialog.js' ) ),
+            'module' => array( 'js/payments.js' => array( 'bookly-datatables.min.js', 'bookly-ng-payment_details_dialog.js' ) ),
         ) );
 
-        wp_localize_script( 'ab-daterangepicker.js', 'BooklyL10n', array(
+        wp_localize_script( 'bookly-daterangepicker.js', 'BooklyL10n', array(
             'today'         => __( 'Today', 'bookly' ),
             'yesterday'     => __( 'Yesterday', 'bookly' ),
             'last_7'        => __( 'Last 7 Days', 'bookly' ),
@@ -84,6 +86,7 @@ class Controller extends Lib\Base\Controller
             Lib\Entities\Payment::TYPE_PAYSON,
             Lib\Entities\Payment::TYPE_MOLLIE,
             Lib\Entities\Payment::TYPE_COUPON,
+            Lib\Entities\Payment::WOO_COMMERCE,
         );
         $providers = Lib\Entities\Staff::query()->select( 'id, full_name' )->sortBy( 'full_name' )->fetchArray();
         $services  = Lib\Entities\Service::query()->select( 'id, title' )->sortBy( 'title' )->fetchArray();
@@ -207,7 +210,7 @@ class Controller extends Lib\Base\Controller
                     'paid'     => $payment['paid'],
                 ),
                 'items' => $details['items'],
-                'deposit_enabled' => Lib\Config::depositEnabled()
+                'deposit_enabled' => Lib\Config::isDepositPaymentsEnabled()
             );
         }
 
@@ -250,14 +253,14 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

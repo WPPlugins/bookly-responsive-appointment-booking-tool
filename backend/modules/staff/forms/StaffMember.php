@@ -13,12 +13,9 @@ class StaffMember extends Lib\Base\Form
 
     protected $wp_users;
 
-    // Help methods for rendering widgets.
-
     /**
      * Get list of users available for particular staff.
      *
-     * @global string $table_prefix
      * @param integer $staff_id If null then it means new staff
      * @return array
      */
@@ -32,7 +29,7 @@ class StaffMember extends Lib\Base\Form
                WHERE ID NOT IN(SELECT DISTINCT IFNULL( wp_user_id, 0 ) FROM ' . Lib\Entities\Staff::getTableName() . ' %s)
                ORDER BY display_name',
                 $staff_id !== null
-                    ? 'WHERE ' . Lib\Entities\Staff::getTableName() . '.id <> ' . intval( $staff_id )
+                    ? 'WHERE ' . Lib\Entities\Staff::getTableName() . '.id <> ' . (int) $staff_id
                     : ''
             );
             $users = $wpdb->get_results( $query );

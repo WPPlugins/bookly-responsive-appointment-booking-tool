@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $custom_fields = array_filter( json_decode( get_option( 'ab_custom_fields' ) ), function ( $field ) {
+    $custom_fields = array_filter( json_decode( get_option( 'bookly_custom_fields' ) ), function ( $field ) {
         return ! in_array( $field->type, array( 'captcha', 'text-content' ) );
     } );
 ?>

@@ -7,6 +7,8 @@ namespace BooklyLite\Lib;
  */
 abstract class Config
 {
+    private static $addons = array();
+
     /**
      * Get categories, services and staff members for drop down selects
      * for the 1st step of booking wizard.
@@ -26,9 +28,9 @@ abstract class Config
         $rows = Entities\Category::query()->fetchArray();
         foreach ( $rows as $row ) {
             $result['categories'][ $row['id'] ] = array(
-                'id'   => intval( $row['id'] ),
+                'id'   => (int) $row['id'],
                 'name' => Utils\Common::getTranslatedString( 'category_' . $row['id'], $row['name'] ),
-                'pos'  => intval( $row['position'] ),
+                'pos'  => (int) $row['position'],
             );
         }
 
@@ -42,13 +44,13 @@ abstract class Config
             ->fetchArray();
         foreach ( $rows as $row ) {
             $result['services'][ $row['id'] ] = array(
-                'id'          => intval( $row['id'] ),
-                'category_id' => intval( $row['category_id'] ),
+                'id'          => (int) $row['id'],
+                'category_id' => (int) $row['category_id'],
                 'name'        => $row['title'] == ''
                     ? __( 'Untitled', 'bookly' )
                     : Utils\Common::getTranslatedString( 'service_' . $row['id'], $row['title'] ),
-                'max_capacity' => intval( $row['max_capacity'] ),
-                'pos'          => intval( $row['position'] ),
+                'max_capacity' => (int) $row['max_capacity'],
+                'pos'          => (int) $row['position'],
             );
 
             if ( ! $row['category_id'] && ! isset ( $result['categories'][0] ) ) {
@@ -71,15 +73,15 @@ abstract class Config
         foreach ( $rows as $row ) {
             if ( ! isset ( $result['staff'][ $row['id'] ] ) ) {
                 $result['staff'][ $row['id'] ] = array(
-                    'id'       => intval( $row['id'] ),
+                    'id'       => (int) $row['id'],
                     'name'     => Utils\Common::getTranslatedString( 'staff_' . $row['id'], $row['full_name'] ),
                     'services' => array(),
-                    'pos'      => intval( $row['position'] ),
+                    'pos'      => (int) $row['position'],
                 );
             }
             $result['staff'][ $row['id'] ]['services'][ $row['service_id'] ] = array(
-                'capacity' => intval( $row['capacity'] ),
-                'price'    => get_option( 'ab_appearance_staff_name_with_price' )
+                'capacity' => (int) $row['capacity'],
+                'price'    => get_option( 'bookly_app_staff_name_with_price' )
                     ? html_entity_decode( Utils\Common::formatPrice( $row['price'] ) )
                     : null,
             );
@@ -104,27 +106,42 @@ abstract class Config
 
         $result = array(
             'days'  => array(),
-            'times' => array()
+            'times' => array(),
         );
 
-        $start_of_week = get_option( 'start_of_week' );
         $data = Entities\StaffScheduleItem::query()
             ->select(
-                "GROUP_CONCAT(
-                    DISTINCT `r`.`day_index`
-                    ORDER BY IF (`r`.`day_index` + 10 - {$start_of_week} > 10, `r`.`day_index` + 10 - {$start_of_week}, 16 + `r`.`day_index`)
-                ) AS `day_ids`,
-                SUBSTRING_INDEX(MIN(`r`.`start_time`), ':', 2) AS `min_start_time`,
-                SUBSTRING_INDEX(MAX(`r`.`end_time`), ':', 2)   AS `max_end_time`"
+                'GROUP_CONCAT(DISTINCT `r`.`day_index`) AS `day_ids`,
+                SUBSTRING_INDEX(MIN(`r`.`start_time`), ":", 2) AS `min_start_time`,
+                SUBSTRING_INDEX(MAX(`r`.`end_time`), ":", 2)   AS `max_end_time`'
             )
             ->whereNot( 'start_time', null )
             ->fetchRow();
 
-        if ( $data['day_ids'] ) {
-            $week_days = array_values( $wp_locale->weekday_abbrev );
-            foreach ( explode( ',', $data['day_ids'] ) as $day_id ) {
-                $result['days'][ $day_id ] = $week_days[ $day_id - 1 ];
+        $data['day_ids'] = $data['day_ids'] ? explode( ',', $data['day_ids'] ) : array();
+
+        $data = apply_filters( 'bookly_special_days_adjust_config_days_and_times', $data );
+
+        $start_of_week = get_option( 'start_of_week' );
+        $week_days     = array_values( $wp_locale->weekday_abbrev );
+
+        // Sort days considering start_of_week;
+        usort( $data['day_ids'], function ( $a, $b ) use ( $start_of_week ) {
+            $a -= $start_of_week;
+            $b -= $start_of_week;
+            if ( $a < 1 ) {
+                $a += 7;
             }
+            if ( $b < 1 ) {
+                $b += 7;
+            }
+
+            return $a - $b;
+        } );
+
+        // Fill days.
+        foreach ( $data['day_ids'] as $day_id ) {
+            $result['days'][ $day_id ] = $week_days[ $day_id - 1 ];
         }
 
         if ( $data['min_start_time'] && $data['max_end_time'] ) {
@@ -158,7 +175,7 @@ abstract class Config
      */
     public static function getCurrencyCodes()
     {
-        return array( 'AED', 'ARS', 'AUD', 'BGN', 'BHD', 'BRL', 'CAD', 'CHF', 'CLP', 'COP', 'CRC', 'CZK', 'DKK', 'EGP', 'EUR', 'GBP', 'GTQ', 'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KRW', 'KZT', 'LAK', 'MUR', 'MXN', 'MYR', 'NAD', 'NGN', 'NOK', 'NZD', 'OMR', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RMB', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'UAH', 'UGX', 'USD', 'VND', 'XOF', 'ZAR', 'ZMW', );
+        return array( 'AED', 'ARS', 'AUD', 'BGN', 'BHD', 'BRL', 'CAD', 'CHF', 'CLP', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'EGP', 'EUR', 'GBP', 'GEL', 'GTQ', 'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KES', 'KRW', 'KZT', 'LAK', 'MUR', 'MXN', 'MYR', 'NAD', 'NGN', 'NOK', 'NZD', 'OMR', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RMB', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'UAH', 'UGX', 'USD', 'VND', 'XAF', 'XOF', 'ZAR', 'ZMW', );
     }
 
     /**
@@ -177,52 +194,62 @@ abstract class Config
         $result['date_min'] = array(
             (int) date( 'Y', $time ),
             (int) date( 'n', $time ) - 1,
-            (int) date( 'j', $time )
+            (int) date( 'j', $time ),
         );
         $time += ( self::getMaximumAvailableDaysForBooking() - 1 ) * DAY_IN_SECONDS;
         $result['date_max'] = array(
             (int) date( 'Y', $time ),
             (int) date( 'n', $time ) - 1,
-            (int) date( 'j', $time )
+            (int) date( 'j', $time ),
         );
 
         return $result;
     }
 
     /**
-     * Check if payment methods are disabled.
+     * Get value of option for given payment type.
      *
-     * @param null $gateway
+     * @param string $type
+     * @return string
+     */
+    public static function getPaymentTypeOption( $type )
+    {
+        return get_option( 'bookly_pmt_' . $type, 'disabled' );
+    }
+
+    /**
+     * Check whether given payment type is enabled.
+     *
+     * @param string $type
      * @return bool
      */
-    public static function isPaymentDisabled( $gateway = null )
+    public static function isPaymentTypeEnabled( $type )
     {
-        $gateways = array(
-            Entities\Payment::TYPE_2CHECKOUT    => 'ab_2checkout',
-            Entities\Payment::TYPE_AUTHORIZENET => 'ab_authorizenet_type',
-            Entities\Payment::TYPE_LOCAL        => 'ab_settings_pay_locally',
-            Entities\Payment::TYPE_MOLLIE       => 'ab_mollie',
-            Entities\Payment::TYPE_PAYPAL       => 'ab_paypal_type',
-            Entities\Payment::TYPE_PAYSON       => 'ab_payson',
-            Entities\Payment::TYPE_PAYULATAM    => 'ab_payulatam',
-            Entities\Payment::TYPE_STRIPE       => 'ab_stripe',
+        return self::getPaymentTypeOption( $type ) != 'disabled';
+    }
+
+    /**
+     * Check whether payment step is disabled.
+     *
+     * @return bool
+     */
+    public static function isPaymentStepDisabled()
+    {
+        $types = array(
+            Entities\Payment::TYPE_2CHECKOUT,
+            Entities\Payment::TYPE_AUTHORIZENET,
+            Entities\Payment::TYPE_LOCAL,
+            Entities\Payment::TYPE_MOLLIE,
+            Entities\Payment::TYPE_PAYPAL,
+            Entities\Payment::TYPE_PAYSON,
+            Entities\Payment::TYPE_PAYULATAM,
+            Entities\Payment::TYPE_STRIPE,
         );
-        switch ( $gateway ) {
-            case Entities\Payment::TYPE_2CHECKOUT:
-            case Entities\Payment::TYPE_AUTHORIZENET:
-            case Entities\Payment::TYPE_LOCAL:
-            case Entities\Payment::TYPE_MOLLIE:
-            case Entities\Payment::TYPE_PAYPAL:
-            case Entities\Payment::TYPE_PAYSON:
-            case Entities\Payment::TYPE_PAYULATAM:
-            case Entities\Payment::TYPE_STRIPE:
-                return get_option( $gateways[ $gateway ] ) == 'disabled';
-            default:
-                foreach ( $gateways as $gateway ) {
-                    if ( get_option( $gateway ) != 'disabled' ) {
-                        return false;
-                    }
-                }
+
+        foreach ( $types as $type ) {
+            if ( self::isPaymentTypeEnabled( $type ) ) {
+                return false;
+            }
         }
 
         return true;
@@ -235,7 +262,27 @@ abstract class Config
      */
     public static function getTimeSlotLength()
     {
-        return (int) get_option( 'ab_settings_time_slot_length' ) * MINUTE_IN_SECONDS;
+        return (int) get_option( 'bookly_gen_time_slot_length', 15 ) * MINUTE_IN_SECONDS;
+    }
+
+    /**
+     * Check whether service duration should be used instead of slot length on the frontend.
+     *
+     * @return bool
+     */
+    public static function useServiceDurationAsSlotLength()
+    {
+        return (bool) get_option( 'bookly_gen_service_duration_as_slot_length', false );
+    }
+
+    /**
+     * Check whether use client time zone.
+     *
+     * @return bool
+     */
+    public static function useClientTimeZone()
+    {
+        return (bool) get_option( 'bookly_gen_use_client_time_zone' );
     }
 
     /**
@@ -245,7 +292,7 @@ abstract class Config
      */
     public static function getMinimumTimePriorBooking()
     {
-        return (int) get_option( 'ab_settings_minimum_time_prior_booking' ) * 3600;
+        return (int) get_option( 'bookly_gen_min_time_prior_booking' ) * 3600;
     }
 
     /**
@@ -253,7 +300,7 @@ abstract class Config
      */
     public static function getMaximumAvailableDaysForBooking()
     {
-        return (int) get_option( 'ab_settings_maximum_available_days_for_booking', 365 );
+        return (int) get_option( 'bookly_gen_max_days_for_booking', 365 );
     }
 
     /**
@@ -263,7 +310,7 @@ abstract class Config
      */
     public static function showCalendar()
     {
-        return (bool) get_option( 'ab_appearance_show_calendar', false );
+        return (bool) get_option( 'bookly_app_show_calendar', false );
     }
 
     /**
@@ -273,7 +320,7 @@ abstract class Config
      */
     public static function showBlockedTimeSlots()
     {
-        return (bool) get_option( 'ab_appearance_show_blocked_timeslots', false );
+        return (bool) get_option( 'bookly_app_show_blocked_timeslots', false );
     }
 
     /**
@@ -283,93 +330,9 @@ abstract class Config
      */
     public static function showDayPerColumn()
     {
-        return (bool) get_option( 'ab_appearance_show_day_one_column', false );
+        return (bool) get_option( 'bookly_app_show_day_one_column', false );
     }
 
-    /**
-     * Whether step Extras is enabled or not.
-     *
-     * @return bool
-     */
-    public static function extrasEnabled()
-    {
-        return self::isAddonEnabled( 'service-extras' );
-    }
-
-    /**
-     * Chain Appointment Add-on enabled or not.
-     *
-     * @return bool
-     */
-    public static function chainAppointmentsEnabled()
-    {
-        return self::isAddonEnabled( 'chain-appointments' );
-    }
-
-    /**
-     * Locations Add-on enabled or not.
-     *
-     * @return bool
-     */
-    public static function locationsEnabled()
-    {
-        return Utils\Common::isPluginActive( 'bookly-addon-locations/main.php' );
-    }
-
-    /**
-     * Multiply Appointments Add-on enabled or not.
-     *
-     * @return bool
-     */
-    public static function multiplyAppointmentsEnabled()
-    {
-        return Utils\Common::isPluginActive( 'bookly-addon-multiply-appointments/main.php' );
-    }
-
-    /**
-     * Deposit Add-on enabled or not.
-     *
-     * @return bool
-     */
-    public static function depositEnabled()
-    {
-        return self::isAddonEnabled( 'deposit-payments' );
-    }
-
-    /**
-     * Add-on enabled or not.
-     *
-     * @param $addon
-     * @return bool
-     */
-    private static function isAddonEnabled( $addon )
-    {
-        if ( get_option( 'bookly_' . str_replace( '-', '_', $addon ) . '_enabled' ) == 1 ) {
-            return Utils\Common::isPluginActive( 'bookly-addon-' . $addon . '/main.php' );
-        }
-
-        return false;
-    }
-
-    /**
-     * Whether step Cart is enabled or not.
-     *
-     * @return bool
-     */
-    public static function showStepCart()
-    {
-        return false;
-    }
-
-    /**
-     * WooCommerce Plugin enabled or not.
-     *
-     * @return bool
-     */
-    public static function WooCommerceEnabled()
-    {
-        return false;
-    }
 
     /**
      * Whether custom fields attached to services or not.
@@ -388,8 +351,136 @@ abstract class Config
      */
     public static function areCombinedNotificationsEnabled()
     {
-        return get_option( 'ab_settings_cart_notifications_combined' ) == 1;
+        return get_option( 'bookly_cst_combined_notifications' ) == 1;
     }
+
+    /**
+     * Whether step Cart is enabled or not.
+     *
+     * @return bool
+     */
+    public static function showStepCart()
+    {
+        return get_option( 'bookly_cart_enabled' ) == 1 && ! Config::isWooCommerceEnabled();
+    }
+
+    /**
+     * Check if emails are sent as HTML or plain text.
+     *
+     * @return bool
+     */
+    public static function sendEmailAsHtml()
+    {
+        return get_option( 'bookly_email_send_as' ) == 'html';
+    }
+
+    /******************************************************************************************************************
+     * Add-ons                                                                                                        *
+     ******************************************************************************************************************/
+
+    /**
+     * Check whether Extras add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isServiceExtrasEnabled()
+    {
+        return self::_isAddOnEnabled( 'service-extras' );
+    }
+
+    /**
+     * Check whether Service Schedule add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isServiceScheduleEnabled()
+    {
+        return self::_isAddOnEnabled( 'service-schedule' );
+    }
+
+    /**
+     * Check whether Chain Appointment add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isChainAppointmentsEnabled()
+    {
+        return self::_isAddOnEnabled( 'chain-appointments' );
+    }
+
+    /**
+     * Check whether Locations add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isLocationsEnabled()
+    {
+        return self::_isAddOnEnabled( 'locations' );
+    }
+
+    /**
+     * Check whether Multiply Appointments add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isMultiplyAppointmentsEnabled()
+    {
+        return self::_isAddOnEnabled( 'multiply-appointments' );
+    }
+
+    /**
+     * Check whether Deposit Payments add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isDepositPaymentsEnabled()
+    {
+        return self::_isAddOnEnabled( 'deposit-payments' );
+    }
+
+    /**
+     * Check whether Special Days add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isSpecialDaysEnabled()
+    {
+        return self::_isAddOnEnabled( 'special-days' );
+    }
+
+    /**
+     * Check whether Special Hours add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isSpecialHoursEnabled()
+    {
+        return self::_isAddOnEnabled( 'special-hours' );
+    }
+
+    /**
+     * Check whether Recurring Appointments add-on is enabled or not.
+     *
+     * @return bool
+     */
+    public static function isRecurringAppointmentsEnabled()
+    {
+        return self::_isAddOnEnabled( 'recurring-appointments' );
+    }
+
+    /**
+     * WooCommerce Plugin enabled or not.
+     *
+     * @return bool
+     */
+    public static function isWooCommerceEnabled()
+    {
+        return ( get_option( 'bookly_wc_enabled' ) && get_option( 'bookly_wc_product' ) && class_exists( 'WooCommerce', false ) && ( WC()->cart->get_cart_url() !== false ) );
+    }
+
+    /******************************************************************************************************************
+     * Private methods                                                                                                *
+     ******************************************************************************************************************/
 
     /**
      * Round time in seconds to precision in minutes.
@@ -403,6 +494,25 @@ abstract class Config
         $precision = 60 * $precision;
 
         return round( $timestamp / $precision ) * $precision;
+    }
+
+    /**
+     * Check whether given add-on enabled or not.
+     *
+     * @param string $add_on
+     * @return bool
+     */
+    private static function _isAddOnEnabled( $add_on )
+    {
+        if ( ! array_key_exists( $add_on, self::$addons ) ) {
+            $enabled = get_option( 'bookly_' . str_replace( '-', '_', $add_on ) . '_enabled' ) == 1;
+            if ( $enabled ) {
+                $enabled = Utils\Common::isPluginActive( 'bookly-addon-' . $add_on . '/main.php' );
+            }
+            self::$addons[ $add_on ] = $enabled;
+        }
+
+        return self::$addons[ $add_on ];
     }
 
 }

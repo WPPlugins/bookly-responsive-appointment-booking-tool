@@ -9,7 +9,7 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
-    const page_slug = 'ab-customers';
+    const page_slug = 'bookly-customers';
 
     protected function getPermissions()
     {
@@ -40,11 +40,11 @@ class Controller extends Lib\Base\Controller
                 'js/ladda.min.js' => array( 'jquery' ),
             ),
             'module' => array(
-                'js/customers.js' => array( 'ab-datatables.min.js', 'ab-ng-customer_dialog.js' ),
+                'js/customers.js' => array( 'bookly-datatables.min.js', 'bookly-ng-customer_dialog.js' ),
             ),
         ) );
 
-        wp_localize_script( 'ab-customers.js', 'BooklyL10n', array(
+        wp_localize_script( 'bookly-customers.js', 'BooklyL10n', array(
             'edit'            => __( 'Edit', 'bookly' ),
             'are_you_sure'    => __( 'Are you sure?', 'bookly' ),
             'wp_users'        => get_users( array( 'fields' => array( 'ID', 'display_name' ), 'orderby' => 'display_name' ) ),
@@ -77,13 +77,24 @@ class Controller extends Lib\Base\Controller
         $total = $query->count();
 
         $query
-            ->select( 'SQL_CALC_FOUND_ROWS c.*, MAX(a.start_date) AS last_appointment,
-                COUNT(DISTINCT a.id) AS total_appointments,
-                SUM(p.total)*COUNT(DISTINCT p.id)/COUNT(*) AS payments,
+            ->select( 'SQL_CALC_FOUND_ROWS c.*,
+                (
+                    SELECT MAX(a.start_date) FROM ' . Lib\Entities\Appointment::getTableName() . ' a
+                        LEFT JOIN ' . Lib\Entities\CustomerAppointment::getTableName() . ' ca ON ca.appointment_id = a.id
+                            WHERE ca.customer_id = c.id
+                ) AS last_appointment,
+                (
+                    SELECT COUNT(DISTINCT ca.appointment_id) FROM ' . Lib\Entities\CustomerAppointment::getTableName() . ' ca
+                        WHERE ca.customer_id = c.id
+                ) AS total_appointments,
+                (
+                    SELECT SUM(p.total) FROM ' . Lib\Entities\Payment::getTableName() . ' p
+                        WHERE p.id IN (
+                            SELECT DISTINCT ca.payment_id FROM ' . Lib\Entities\CustomerAppointment::getTableName() . ' ca
+                                WHERE ca.customer_id = c.id
+                        )
+                ) AS payments,
                 wpu.display_name AS wp_user' )
-            ->leftJoin( 'CustomerAppointment', 'ca', 'ca.customer_id = c.id' )
-            ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
-            ->leftJoin( 'Payment', 'p', 'p.id = ca.payment_id' )
             ->tableJoin( $wpdb->users, 'wpu', 'wpu.ID = c.wp_user_id' )
             ->groupBy( 'c.id' );
 
@@ -176,29 +187,18 @@ class Controller extends Lib\Base\Controller
     {
         @ini_set( 'auto_detect_line_endings', true );
 
-        $csv_mime_types = array(
-            'text/csv',
-            'application/csv',
-            'text/comma-separated-values',
-            'application/excel',
-            'application/vnd.ms-excel',
-            'application/vnd.msexcel'
-        );
-
-        if ( in_array( $_FILES['import_customers_file']['type'], $csv_mime_types ) ) {
-            $file = fopen( $_FILES['import_customers_file']['tmp_name'], 'r' );
-            while ( $line = fgetcsv( $file, null, $this->getParameter( 'import_customers_delimiter' ) ) ) {
-                if ( $line[0] != '' ) {
-                    $customer = new Lib\Entities\Customer();
-                    $customer->set( 'name', $line[0] );
-                    if ( isset( $line[1] ) ) {
-                        $customer->set( 'phone', $line[1] );
-                    }
-                    if ( isset( $line[2] ) ) {
-                        $customer->set( 'email', $line[2] );
-                    }
-                    $customer->save();
+        $file = fopen( $_FILES['import_customers_file']['tmp_name'], 'r' );
+        while ( $line = fgetcsv( $file, null, $this->getParameter( 'import_customers_delimiter' ) ) ) {
+            if ( $line[0] != '' ) {
+                $customer = new Lib\Entities\Customer();
+                $customer->set( 'name', $line[0] );
+                if ( isset( $line[1] ) ) {
+                    $customer->set( 'phone', $line[1] );
                 }
+                if ( isset( $line[2] ) ) {
+                    $customer->set( 'email', $line[2] );
+                }
+                $customer->save();
             }
         }
     }
@@ -222,14 +222,14 @@ class Controller extends Lib\Base\Controller
     public function executeExportCustomers() { exit; }
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

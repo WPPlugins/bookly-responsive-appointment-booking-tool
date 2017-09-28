@@ -7,6 +7,11 @@ namespace BooklyLite\Lib;
  */
 class AvailableTime
 {
+    public $params = array(
+        'break_on_first_fetched_day' => false,  // find first available day only
+        'exclude_staff_with_day_off' => false,  // exclude staff whose first searched day is off
+    );
+
     private $last_fetched_slot = null;
 
     private $selected_date = null;
@@ -20,8 +25,9 @@ class AvailableTime
     /** @var \DateInterval */
     public $one_day;
     public $show_calendar;
-    public $time_slot_length;
     public $show_day_per_column;
+    public $show_blocked_slots;
+    public $show_cart;
     public $client_diff;
     public $current_timestamp;
     /** @var \DateTime */
@@ -41,25 +47,42 @@ class AvailableTime
         $this->userData            = $userData;
         $this->one_day             = new \DateInterval( 'P1D' );
         $this->show_calendar       = Config::showCalendar();
-        $this->time_slot_length    = Config::getTimeSlotLength();
         $this->show_day_per_column = Config::showDayPerColumn();
-        $this->client_diff         = get_option( 'ab_settings_use_client_time_zone' )
+        $this->show_blocked_slots  = Config::showBlockedTimeSlots();
+        $this->show_cart           = Config::showStepCart();
+        $this->client_diff         = Config::useClientTimeZone()
             ? get_option( 'gmt_offset' ) * HOUR_IN_SECONDS + $userData->get( 'time_zone_offset' ) * 60
             : 0;
     }
 
     /**
-     * Load and init.
+     * Prepare dates and staff data.
+     *
+     * @return $this
      */
-    public function load()
+    public function prepare()
     {
         $this->_prepareDates();
         $this->_prepareStaffData();
+
+        return $this;
+    }
+
+    /**
+     * Load and init.
+     *
+     * @param array $params
+     */
+    public function load( array $params = array() )
+    {
+        // Override default params.
+        $this->params = array_merge( $this->params, $params );
+
         /** @var ChainItem $chain_item */
         /** @var Slots $next_slots */
         $next_slots = null;
         foreach ( array_reverse( $this->userData->chain->getItems() ) as $chain_item ) {
-            $extras_duration = apply_filters( 'bookly_extras_get_total_duration', 0, $chain_item->get( 'extras' ) );
+            $extras_duration = apply_filters( 'bookly_service_extras_get_total_duration', 0, $chain_item->get( 'extras' ) );
             for ( $q = 0; $q < $chain_item->get( 'quantity' ); ++ $q ) {
                 $sub_services = $chain_item->getSubServices();
                 $last_key     = count( $sub_services ) - 1;
@@ -93,13 +116,13 @@ class AvailableTime
               * We increase it by 1 day to get the date to start with. */
             $this->start_date->add( $this->one_day );
         } else {
-            $this->start_date = new \DateTime( $this->selected_date ? $this->selected_date : $this->userData->get( 'date_from' ) );
+            $this->start_date = new \DateTime( $this->selected_date ?: $this->userData->get( 'date_from' ) );
             if ( $this->show_calendar ) {
                 // Get slots for selected month.
                 $this->start_date->modify( 'first day of this month' );
             }
             $this->req_timestamp = $this->start_date->getTimestamp();
-            if ( get_option( 'ab_settings_use_client_time_zone' ) ) {
+            if ( Config::useClientTimeZone() ) {
                 // The userData::date_from is in client's time zone so we need to check the previous day too
                 // because some available slots can be found in the previous day due to time zone offset.
                 $this->start_date->sub( $this->one_day );
@@ -152,6 +175,7 @@ class AvailableTime
                     'holidays'      => array(),
                     'bookings'      => array(),
                     'working_hours' => array(),
+                    'special_days'  => array(),
                 );
             }
             $this->staff_data[ $staff_id ]['services'][ $staff_service['service_id'] ] = array(
@@ -181,15 +205,34 @@ class AvailableTime
         foreach ( $working_schedule as $item ) {
             if ( ! isset ( $this->staff_data[ $item['staff_id'] ]['working_hours'][ $item['day_index'] ] ) ) {
                 $this->staff_data[ $item['staff_id'] ]['working_hours'][ $item['day_index'] ] = array(
-                    'start_time' => $item['start_time'],
-                    'end_time'   => $item['end_time'],
+                    'start_time' => Utils\DateTime::timeToSeconds( $item['start_time'] ),
+                    'end_time'   => Utils\DateTime::timeToSeconds( $item['end_time'] ),
                     'breaks'     => array(),
                 );
             }
             if ( $item['break_start'] ) {
                 $this->staff_data[ $item['staff_id'] ]['working_hours'][ $item['day_index'] ]['breaks'][] = array(
-                    'start' => $item['break_start'],
-                    'end'   => $item['break_end'],
+                    'start' => Utils\DateTime::timeToSeconds( $item['break_start'] ),
+                    'end'   => Utils\DateTime::timeToSeconds( $item['break_end'] ),
+                );
+            }
+        }
+
+        // Load special days.
+        $special_days = apply_filters( 'bookly_special_days_get_data_for_available_time', array(), array_keys( $this->staff_data ), $this->start_date, $this->max_date );
+
+        foreach ( $special_days as $day ) {
+            if ( ! isset ( $this->staff_data[ $day['staff_id'] ]['special_days'][ $day['date'] ] ) ) {
+                $this->staff_data[ $day['staff_id'] ]['special_days'][ $day['date'] ] = array(
+                    'start_time' => Utils\DateTime::timeToSeconds( $day['start_time'] ),
+                    'end_time'   => Utils\DateTime::timeToSeconds( $day['end_time'] ),
+                    'breaks'     => array(),
+                );
+            }
+            if ( $day['break_start'] ) {
+                $this->staff_data[ $day['staff_id'] ]['special_days'][ $day['date'] ]['breaks'][] = array(
+                    'start' => Utils\DateTime::timeToSeconds( $day['break_start'] ),
+                    'end'   => Utils\DateTime::timeToSeconds( $day['break_end'] ),
                 );
             }
         }
@@ -202,18 +245,21 @@ class AvailableTime
                 `a`.`start_date`,
                 DATE_ADD(`a`.`end_date`, INTERVAL `a`.`extras_duration` SECOND) AS `end_date`,
                 `ca`.`extras`,
+                COALESCE(`s`.`padding_left`,0) AS `padding_left`,
+                COALESCE(`s`.`padding_right`,0) AS `padding_right`,
                 SUM(`ca`.`number_of_persons`) AS `number_of_bookings`'
             )
             ->leftJoin( 'Appointment', 'a', '`a`.`id` = `ca`.`appointment_id`' )
             ->leftJoin( 'StaffService', 'ss', '`ss`.`staff_id` = `a`.`staff_id` AND `ss`.`service_id` = `a`.`service_id`' )
             ->leftJoin( 'Service', 's', '`s`.`id` = `a`.`service_id`' )
             ->whereNot( 'ca.status', Entities\CustomerAppointment::STATUS_CANCELLED )
+            ->whereNot( 'ca.status', Entities\CustomerAppointment::STATUS_REJECTED )
             ->where( 'a.staff_id', 1 )
             ->whereGte( 'a.start_date', $this->start_date->format( 'Y-m-d' ) )
             ->groupBy( 'a.id' )
             ->fetchArray();
         foreach ( $bookings as $booking ) {
-            $this->staff_data[ $booking['staff_id'] ]['bookings'][] = array(
+            $this->staff_data[ 1 ]['bookings'][] = array(
                 'from_google'        => false,
                 'service_id'         => $booking['service_id'],
                 'start_time'         => strtotime( $booking['start_date'] ),
@@ -226,58 +272,51 @@ class AvailableTime
         }
 
         // Handle cart bookings.
-        if ( Config::showStepCart() ) {
-            foreach ( $this->userData->cart->getItems() as $cart_key => $cart_item ) {
-                if ( ! in_array( $cart_key, $this->userData->get( 'edit_cart_keys' ) ) ) {
-                    $extras_duration = apply_filters( 'bookly_extras_get_total_duration', 0, $cart_item->get( 'extras' ) );
-                    foreach ( $cart_item->get( 'slots' ) as $slot ) {
-                        list ( $service_id, $staff_id, $timestamp ) = $slot;
-                        $staff_id = 1;
-                        $service = Entities\Service::find( $service_id );
-                        $s_time  = $timestamp;
-                        $e_time  = $s_time + $service->get( 'duration' ) + $extras_duration;
-                        $extras_duration = 0;
-                        $booking_exists = false;
-                        foreach ( $this->staff_data[ $staff_id ]['bookings'] as &$booking ) {
-                            // If such booking exists increase number_of_bookings.
-                            if ( $booking['from_google'] == false
-                                && $booking['service_id'] == $service_id
-                                && $booking['start_time'] == $s_time
-                                && $booking['end_time'] >= $e_time
-                            ) {
-                                $booking['number_of_bookings'] += $cart_item->get( 'number_of_persons' );
-                                $booking_exists = true;
-                                break;
-                            }
-                        }
-                        if ( ! $booking_exists ) {
-                            // Add cart item to staff bookings array.
-                            $this->staff_data[ $staff_id ]['bookings'][] = array(
-                                'from_google'        => false,
-                                'service_id'         => $service_id,
-                                'start_time'         => $s_time,
-                                'end_time'           => $e_time,
-                                'padding_left'       => 0,
-                                'padding_right'      => 0,
-                                'number_of_bookings' => 1,
-                                'extras'             => $cart_item->isFirstSubService( $service_id ) ? json_encode( $cart_item->get( 'extras' ) ) : '[]',
-                            );
+        if ( $this->show_cart ) {
+            $this->handleCartBookings();
+        }
+    }
+
+    /**
+     * Add cart items to staff bookings arrays.
+     */
+    public function handleCartBookings()
+    {
+        foreach ( $this->userData->cart->getItems() as $cart_key => $cart_item ) {
+            if ( ! in_array( $cart_key, $this->userData->get( 'edit_cart_keys' ) ) ) {
+                $extras_duration = apply_filters( 'bookly_service_extras_get_total_duration', 0, $cart_item->get( 'extras' ) );
+                foreach ( $cart_item->get( 'slots' ) as $slot ) {
+                    list ( $service_id, $staff_id, $timestamp ) = $slot;
+                    $service = Entities\Service::find( $service_id );
+                    $s_time  = $timestamp;
+                    $e_time  = $s_time + $service->get( 'duration' ) + $extras_duration;
+                    $extras_duration = 0;
+                    $booking_exists = false;
+                    foreach ( $this->staff_data[ $staff_id ]['bookings'] as &$booking ) {
+                        // If such booking exists increase number_of_bookings.
+                        if ( $booking['from_google'] == false
+                            && $booking['service_id'] == $service_id
+                            && $booking['start_time'] == $s_time
+                            && $booking['end_time'] >= $e_time
+                        ) {
+                            $booking['number_of_bookings'] += $cart_item->get( 'number_of_persons' );
+                            $booking_exists = true;
+                            break;
                         }
                     }
-                }
-            }
-        }
-
-        // Handle Google Calendar events.
-        if ( get_option( 'ab_settings_google_two_way_sync' ) ) {
-            $query = Entities\Staff::query( 's' )->whereIn( 's.id', array_keys( $this->staff_data ) )->whereNot( 'google_data', null );
-            foreach ( $query->find() as $staff ) {
-                $google = new Google();
-                if ( $google->loadByStaff( $staff ) ) {
-                    $this->staff_data[ $staff->get( 'id' ) ]['bookings'] = array_merge(
-                        $this->staff_data[ $staff->get( 'id' ) ]['bookings'],
-                        $google->getCalendarEvents( $this->start_date ) ?: array()
-                    );
+                    if ( ! $booking_exists ) {
+                        // Add cart item to staff bookings array.
+                        $this->staff_data[ $staff_id ]['bookings'][] = array(
+                            'from_google'        => false,
+                            'service_id'         => $service_id,
+                            'start_time'         => $s_time,
+                            'end_time'           => $e_time,
+                            'padding_left'       => $service->get( 'padding_left' ),
+                            'padding_right'      => $service->get( 'padding_right' ),
+                            'number_of_bookings' => $cart_item->get( 'number_of_persons' ),
+                            'extras'             => $cart_item->isFirstSubService( $service_id ) ? json_encode( $cart_item->get( 'extras' ) ) : '[]',
+                        );
+                    }
                 }
             }
         }
@@ -291,7 +330,7 @@ class AvailableTime
     public function getDisabledDaysForPickadate()
     {
         $result = array();
-        $date = new \DateTime( $this->selected_date ? $this->selected_date : $this->userData->get( 'date_from' ) );
+        $date = new \DateTime( $this->selected_date ?: $this->userData->get( 'date_from' ) );
         $date->modify( 'first day of this month' );
         $end_date = clone $date;
         $end_date->modify( 'first day of next month' );

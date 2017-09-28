@@ -507,7 +507,7 @@ class Query
      * Compose & execute our query.
      *
      * @param int $hydrate
-     * @return array|false|int
+     * @return array|int|false
      */
     public function execute( $hydrate = self::HYDRATE_NONE )
     {
@@ -525,24 +525,25 @@ class Query
             case self::HYDRATE_ENTITY:
             case self::HYDRATE_ARRAY:
             default:
-                $results = $wpdb->get_results( $query, ARRAY_A );
-                if ( $results && ( $hydrate == self::HYDRATE_ENTITY || $this->index_by !== null ) ) {
-                    $entity   = $this->entity;
+                $results = $wpdb->get_results( $query, OBJECT );
+                if ( $results !== null ) {
                     $results2 = array();
-                    foreach ( $results as $index => $result ) {
-                        $i = $this->index_by !== null ? $result[ $this->index_by ] : $index;
+                    $entity   = $this->entity;
+                    $index_by = $this->index_by;
+                    foreach ( $results as $index => $object ) {
+                        $i = $index_by !== null ? $object->{$index_by} : $index;
                         if ( $hydrate == self::HYDRATE_ENTITY ) {
                             $results2[ $i ] = new $entity();
-                            $results2[ $i ]->setFields( $result, true );
+                            $results2[ $i ]->setFields( get_object_vars( $object ), true );
                         } else {
-                            $results2[ $i ] = $result;
+                            $results2[ $i ] = get_object_vars( $object );
                         }
                     }
 
                     return $results2;
                 }
 
-                return $results;
+                return false;
         }
     }
 
@@ -781,15 +782,15 @@ class Query
 
         // Query
         if ( $only_count ) {
-            return $this->prepare( "SELECT COUNT(*) FROM `{$table}` AS `{$this->alias}`{$join}{$where}{$group}{$having}", $values );
+            return $this->_prepare( "SELECT COUNT(*) FROM `{$table}` AS `{$this->alias}`{$join}{$where}{$group}{$having}", $values );
         }
 
         switch ( $this->type ) {
             case self::TYPE_DELETE:
-                return $this->prepare( "DELETE {$this->target} FROM `{$table}` AS `{$this->alias}`{$join}{$where}", $values );
+                return $this->_prepare( "DELETE {$this->target} FROM `{$table}` AS `{$this->alias}`{$join}{$where}", $values );
             case self::TYPE_SELECT:
             default:
-                return $this->prepare( "SELECT {$this->target} FROM `{$table}` AS `{$this->alias}`{$join}{$where}{$group}{$having}{$order}{$limit}{$offset}", $values );
+                return $this->_prepare( "SELECT {$this->target} FROM `{$table}` AS `{$this->alias}`{$join}{$where}{$group}{$having}{$order}{$limit}{$offset}", $values );
         }
     }
 
@@ -807,7 +808,7 @@ class Query
      * @param $args
      * @return false|null|string
      */
-    private function prepare( $query, $args )
+    private function _prepare( $query, $args )
     {
         global $wpdb;
 
@@ -819,7 +820,6 @@ class Query
      *
      * @param string $column
      * @return array
-     * @throws \Exception
      */
     private function _normalize( $column )
     {

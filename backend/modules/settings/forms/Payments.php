@@ -1,7 +1,7 @@
 <?php
 namespace BooklyLite\Backend\Modules\Settings\Forms;
 
-use \BooklyLite\Lib;
+use BooklyLite\Lib;
 
 /**
  * Class Payments
@@ -12,8 +12,8 @@ class Payments extends Lib\Base\Form
     public function __construct()
     {
         $this->setFields( array(
-            'ab_currency',
-            'ab_settings_pay_locally',
+            'bookly_pmt_currency',
+            'bookly_pmt_local',
         ) );
     }
 

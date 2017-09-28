@@ -1,6 +1,6 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly ?>
-<form enctype="multipart/form-data" method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'woocommerce' ) ) ?>"
-      class="ab-settings-form" id="woocommerce">
+<form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'woocommerce' ) ) ?>"
+      id="woocommerce">
     <div class="form-group">
         <h4><?php _e( 'Instructions', 'bookly' ) ?></h4>
         <p>
@@ -17,32 +17,28 @@
         </p>
     </div>
 
-    <div class="form-group">
-        <label for="ab_woocommerce_enabled">WooCommerce</label>
-        <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'ab_woocommerce_enabled' ) ?>
-    </div>
+    <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_wc_enabled', 'WooCommerce' ) ?>
 
     <div class="form-group">
-        <label for="ab_woocommerce_product"><?php _e( 'Booking product', 'bookly' ) ?></label>
-        <select id="ab_woocommerce_product" class="form-control" name="ab_woocommerce_product">
+        <label for="bookly_wc_product"><?php _e( 'Booking product', 'bookly' ) ?></label>
+        <select id="bookly_wc_product" class="form-control" name="bookly_wc_product">
             <?php foreach ( $candidates as $item ) : ?>
-                <option value="<?php echo $item['id'] ?>" <?php selected( get_option( 'ab_woocommerce_product' ), $item['id'] ) ?>>
+                <option value="<?php echo $item['id'] ?>" <?php selected( get_option( 'bookly_wc_product' ), $item['id'] ) ?>>
                     <?php echo $item['name'] ?>
                 </option>
             <?php endforeach ?>
         </select>
     </div>
 
+    <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_l10n_wc_cart_info_name', __( 'Cart item data', 'bookly' ) ) ?>
     <div class="form-group">
-        <?php \BooklyLite\Lib\Utils\Common::optionText( __( 'Cart item data', 'bookly' ), 'ab_woocommerce_cart_info_name' ) ?>
-        <br/>
-        <textarea class="form-control" rows="8" name="ab_woocommerce_cart_info_value"
-                  placeholder="<?php _e( 'Enter a value', 'bookly' ) ?>"><?php echo esc_textarea( get_option( 'ab_woocommerce_cart_info_value' ) ) ?></textarea><br/>
+        <textarea class="form-control" rows="8" name="bookly_l10n_wc_cart_info_value"
+                  placeholder="<?php _e( 'Enter a value', 'bookly' ) ?>"><?php echo esc_textarea( get_option( 'bookly_l10n_wc_cart_info_value' ) ) ?></textarea><br/>
         <?php $this->render( '_woocommerce_codes' ) ?>
     </div>
 
     <div class="panel-footer">
-        <?php \BooklyLite\Lib\Utils\Common::submitButton() ?>
+        <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn btn-lg btn-success bookly-limitation' ) ?>
         <?php \BooklyLite\Lib\Utils\Common::resetButton() ?>
     </div>
 </form>

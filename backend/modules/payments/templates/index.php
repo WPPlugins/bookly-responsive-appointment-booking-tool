@@ -5,6 +5,7 @@
             <div class="bookly-page-title">
                 <?php _e( 'Payments', 'bookly' ) ?>
             </div>
+            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
         </div>
         <div class="panel panel-default bookly-main">
             <div class="panel-body">
@@ -14,7 +15,7 @@
                             <button type="button" class="btn btn-block btn-default" id="bookly-filter-date" data-date="<?php echo date( 'Y-m-d', strtotime( '-30 day' ) ) ?> - <?php echo date( 'Y-m-d' ) ?>">
                                 <i class="dashicons dashicons-calendar-alt"></i>
                                 <span>
-                                    <?php echo date_i18n( get_option( 'date_format' ), strtotime( '-30 day' ) ) ?> - <?php echo date_i18n( get_option( 'date_format' ) ) ?>
+                                    <?php echo \BooklyLite\Lib\Utils\DateTime::formatDate( '-30 days' ) ?> - <?php echo \BooklyLite\Lib\Utils\DateTime::formatDate( 'today' ) ?>
                                 </span>
                             </button>
                         </div>

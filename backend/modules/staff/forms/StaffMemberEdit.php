@@ -3,8 +3,6 @@ namespace BooklyLite\Backend\Modules\Staff\Forms;
 
 use BooklyLite\Lib;
 
-if ( ! function_exists( 'wp_handle_upload' ) ) { require_once( ABSPATH . 'wp-admin/includes/file.php' ); }
-
 /**
  * Class StaffMemberEdit
  * @package BooklyLite\Backend\Modules\Staff\Forms
@@ -29,7 +27,7 @@ class StaffMemberEdit extends StaffMember
     }
 
     /**
-     * @return bool|object
+     * @return Lib\Entities\Staff|false
      */
     public function save()
     {

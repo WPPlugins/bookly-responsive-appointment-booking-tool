@@ -20,14 +20,14 @@ class Validator
                 $this->errors[ $field ] = __( 'Invalid email', 'bookly' );
             }
             // Check email for uniqueness when a new WP account will be created.
-            if ( get_option( 'ab_settings_create_account', 0 ) && $data['name'] && ! get_current_user_id() ) {
+            if ( get_option( 'bookly_cst_create_account', 0 ) && $data['name'] && ! get_current_user_id() ) {
                 $wp_user = Entities\Customer::query( 'c' )->where( 'c.name', $data['name'] )->where( 'c.email', $data['email'] )->fetchRow();
                 if ( $wp_user == null && email_exists( $data['email'] ) ) {
                     $this->errors[ $field ] = __( 'This email is already in use', 'bookly' );
                 }
             }
         } else {
-            $this->errors[ $field ] = Utils\Common::getTranslatedOption( 'ab_appearance_text_required_email' );
+            $this->errors[ $field ] = Utils\Common::getTranslatedOption( 'bookly_l10n_required_email' );
         }
     }
 
@@ -39,7 +39,7 @@ class Validator
     public function validatePhone( $field, $phone, $required = false )
     {
         if ( empty( $phone ) && $required ) {
-            $this->errors[ $field ] = Utils\Common::getTranslatedOption( 'ab_appearance_text_required_phone' );
+            $this->errors[ $field ] = Utils\Common::getTranslatedOption( 'bookly_l10n_required_phone' );
         }
     }
 
@@ -68,7 +68,7 @@ class Validator
                 );
             }
         } elseif ( $required && $is_name ) {
-            $this->errors[ $field ] =  Utils\Common::getTranslatedOption( 'ab_appearance_text_required_name' );
+            $this->errors[ $field ] =  Utils\Common::getTranslatedOption( 'bookly_l10n_required_name' );
         } elseif ( $required ) {
             $this->errors[ $field ] = __( 'Required', 'bookly' );
         }
@@ -115,11 +115,10 @@ class Validator
     {
         $decoded_value = json_decode( $value );
         $fields = array();
-        foreach ( json_decode( get_option( 'ab_custom_fields' ) ) as $field ) {
+        foreach ( json_decode( get_option( 'bookly_custom_fields' ) ) as $field ) {
             $fields[ $field->id ] = $field;
         }
 
-        $custom_fields = array();
         foreach ( $decoded_value as $field ) {
             if ( isset( $fields[ $field->id ] ) ) {
                 if ( ( $fields[ $field->id ]->type == 'captcha' ) && ! Captcha\Captcha::validate( $form_id, $field->value ) ) {
@@ -127,7 +126,15 @@ class Validator
                 } elseif ( $fields[ $field->id ]->required && empty ( $field->value ) && $field->value != '0' ) {
                     $this->errors['custom_fields'][ $cart_key ][ $field->id ] = __( 'Required', 'bookly' );
                 } else {
-                    $custom_fields[ $field->id ] = $field;
+                    /**
+                     * Custom field validation for a third party,
+                     * if the value is not valid then please add an error message like in the above example.
+                     *
+                     * @param \stdClass
+                     * @param ref array
+                     * @param \stdClass
+                     */
+                    do_action_ref_array( 'bookly_validate_custom_field', array( $field, &$this->errors, $fields[ $field->id ] ) );
                 }
             }
         }

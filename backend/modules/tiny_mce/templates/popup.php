@@ -39,13 +39,13 @@
             </tr>
             <tr>
                 <td>
-                    <label for="ab-hide-number-of-persons"><?php echo esc_html( get_option( 'ab_appearance_text_label_number_of_persons' ) ) ?></label>
+                    <label for="ab-hide-number-of-persons"><?php echo esc_html( get_option( 'bookly_l10n_label_number_of_persons' ) ) ?></label>
                 </td>
                 <td>
                     <label><input type="checkbox" id="ab-hide-number-of-persons" checked /><?php _e( 'Hide this field', 'bookly' ) ?></label>
                 </td>
             </tr>
-            <?php do_action( 'bookly_render_popup_after_number_of_persons' ) ?>
+            <?php do_action( 'bookly_render_popup_controls' ) ?>
             <tr>
                 <td>
                     <label for="ab-hide-date"><?php _e( 'Date', 'bookly' ) ?></label>

@@ -17,49 +17,49 @@ abstract class Plugin
     protected static $prefix;
 
     /**
-     * Plugin title (used in method "title").
+     * Plugin title.
      *
      * @staticvar string
      */
     protected static $title;
 
     /**
-     * Plugin version (used in method "version").
+     * Plugin version.
      *
      * @staticvar string
      */
     protected static $version;
 
     /**
-     * Plugin slug (used in method "slug").
+     * Plugin slug.
      *
      * @staticvar string
      */
     protected static $slug;
 
     /**
-     * Path to plugin directory (used in method "directory").
+     * Path to plugin directory.
      *
      * @staticvar string
      */
     protected static $directory;
 
     /**
-     * Path to plugin main file (used in method "mainFile").
+     * Path to plugin main file.
      *
      * @staticvar string
      */
     protected static $main_file;
 
     /**
-     * Plugin basename (used in method "basename").
+     * Plugin basename.
      *
      * @staticvar string
      */
     protected static $basename;
 
     /**
-     * Plugin text domain (used in method "textDomain").
+     * Plugin text domain.
      *
      * @staticvar string
      */
@@ -71,6 +71,10 @@ abstract class Plugin
      * @staticvar string
      */
     protected static $root_namespace;
+
+    /******************************************************************************************************************
+     * Public methods                                                                                                 *
+     ******************************************************************************************************************/
 
     /**
      * Start Bookly plugin.
@@ -143,16 +147,6 @@ abstract class Plugin
         }
 
         return static::$prefix;
-    }
-
-    /**
-     * Get plugin purchase code option.
-     *
-     * @return string
-     */
-    public static function getPurchaseCode()
-    {
-        return static::getPrefix() . 'envato_purchase_code';
     }
 
     /**
@@ -288,6 +282,78 @@ abstract class Plugin
     }
 
     /**
+     * Get entity classes.
+     *
+     * @return Lib\Base\Entity[]
+     */
+    public static function getEntityClasses()
+    {
+        $result = array();
+
+        $dir = static::getDirectory() . '/lib/entities';
+        if ( is_dir( $dir ) ) {
+            foreach ( scandir( $dir ) as $filename ) {
+                if ( $filename == '.' || $filename == '..' ) {
+                    continue;
+                }
+                $result[] = static::getRootNamespace() . '\Lib\Entities\\' . basename( $filename, '.php' );
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get plugin purchase code option name.
+     *
+     * @return string
+     */
+    public static function getPurchaseCodeOption()
+    {
+        return static::getPrefix() . 'envato_purchase_code';
+    }
+
+    /**
+     * Get plugin purchase code.
+     *
+     * @param int $blog_id
+     * @return string
+     */
+    public static function getPurchaseCode( $blog_id = null )
+    {
+        $option = static::getPurchaseCodeOption();
+
+        return $blog_id ? get_blog_option( $blog_id, $option ) : get_option( $option );
+    }
+
+    /**
+     * Update plugin purchase code.
+     *
+     * @param string $value
+     * @param int    $blog_id
+     */
+    public static function updatePurchaseCode( $value, $blog_id = null )
+    {
+        $option = static::getPurchaseCodeOption();
+
+        if ( $blog_id ) {
+            update_blog_option( $blog_id, $option, $value );
+        } else {
+            update_option( $option, $value );
+        }
+    }
+
+    /**
+     * Get plugin installation time.
+     *
+     * @return int
+     */
+    public static function getInstallationTime()
+    {
+        return get_option( static::getPrefix() . 'installation_time' );
+    }
+
+    /**
      * Check whether the plugin is network active.
      *
      * @return bool
@@ -298,7 +364,25 @@ abstract class Plugin
     }
 
     /**
+     * Get plugin class for given object.
+     *
+     * @param $object
+     * @return static
+     */
+    public static function getPluginFor( $object )
+    {
+        $class = get_class( $object );
+
+        return substr( $class, 0, strpos( $class, '\\' ) ) . '\Lib\Plugin';
+    }
+
+    /******************************************************************************************************************
+     * Protected methods                                                                                              *
+     ******************************************************************************************************************/
+
+    /**
      * Register hooks.
+     * @todo Change to protected.
      */
     public static function registerHooks()
     {
@@ -314,19 +398,15 @@ abstract class Plugin
             load_plugin_textdomain( $plugin_class::getTextDomain(), false, $plugin_class::getSlug() . '/languages' );
         } );
 
-        if ( is_admin() ) {
-            // Add handlers to Bookly filters.
-            add_filter( 'bookly_plugins', function ( array $plugins ) use ( $plugin_class ) {
-                $plugins[ $plugin_class::getSlug() ] = $plugin_class;
-
-                return $plugins;
-            } );
+        // For admin notices about SMS weekly summary and etc.
+        if ( ! wp_next_scheduled( 'bookly_daily_routine' ) ) {
+            wp_schedule_event( time(), 'daily', 'bookly_daily_routine' );
         }
     }
 
     /**
      * Init update checker.
      */
-    public static function initUpdateChecker() { }
+    protected static function initUpdateChecker() { }
 
 }

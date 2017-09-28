@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-use \BooklyLite\Lib\Entities\CustomerAppointment;
+use BooklyLite\Lib\Entities\CustomerAppointment;
 ?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
@@ -7,6 +7,7 @@ use \BooklyLite\Lib\Entities\CustomerAppointment;
             <div class="bookly-page-title">
                 <?php _e( 'Appointments', 'bookly' ) ?>
             </div>
+            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
         </div>
         <div class="panel panel-default bookly-main">
             <div class="panel-body">
@@ -33,14 +34,14 @@ use \BooklyLite\Lib\Entities\CustomerAppointment;
                             <button type="button" class="btn btn-block btn-default" id="bookly-filter-date" data-date="<?php echo date( 'Y-m-d', strtotime( 'first day of' ) ) ?> - <?php echo date( 'Y-m-d', strtotime( 'last day of' ) ) ?>">
                                 <i class="dashicons dashicons-calendar-alt"></i>
                                 <span>
-                                    <?php echo date_i18n( get_option( 'date_format' ), strtotime( 'first day of' ) ) ?> - <?php echo date_i18n( get_option( 'date_format' ), strtotime( 'last day of' ) ) ?>
+                                    <?php echo \BooklyLite\Lib\Utils\DateTime::formatDate( 'first day of this month' ) ?> - <?php echo \BooklyLite\Lib\Utils\DateTime::formatDate( 'last day of this month' ) ?>
                                 </span>
                             </button>
                         </div>
                     </div>
                     <div class="col-md-4 col-lg-2">
                         <div class="form-group">
-                            <select class="form-control bookly-js-chosen-select" id="bookly-filter-staff" data-placeholder="<?php echo esc_attr( \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_employee' ) ) ?>">
+                            <select class="form-control bookly-js-chosen-select" id="bookly-filter-staff" data-placeholder="<?php echo esc_attr( \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_employee' ) ) ?>">
                                 <option value="-1"></option>
                                 <?php foreach ( $staff_members as $staff ) : ?>
                                     <option value="<?php echo $staff['id'] ?>"><?php esc_html_e( $staff['full_name'] ) ?></option>
@@ -61,7 +62,7 @@ use \BooklyLite\Lib\Entities\CustomerAppointment;
                     </div>
                     <div class="col-md-4 col-lg-2">
                         <div class="form-group">
-                            <select class="form-control bookly-js-chosen-select" id="bookly-filter-service" data-placeholder="<?php echo esc_attr( \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_service' ) ) ?>">
+                            <select class="form-control bookly-js-chosen-select" id="bookly-filter-service" data-placeholder="<?php echo esc_attr( \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_service' ) ) ?>">
                                 <option value="-1"></option>
                                 <?php foreach ( $services as $service ) : ?>
                                     <option value="<?php echo $service['id'] ?>"><?php esc_html_e( $service['title'] ) ?></option>
@@ -76,6 +77,7 @@ use \BooklyLite\Lib\Entities\CustomerAppointment;
                                 <option value="<?php echo CustomerAppointment::STATUS_PENDING ?>"><?php echo CustomerAppointment::statusToString( CustomerAppointment::STATUS_PENDING ) ?></option>
                                 <option value="<?php echo CustomerAppointment::STATUS_APPROVED ?>"><?php echo CustomerAppointment::statusToString( CustomerAppointment::STATUS_APPROVED ) ?></option>
                                 <option value="<?php echo CustomerAppointment::STATUS_CANCELLED ?>"><?php echo CustomerAppointment::statusToString( CustomerAppointment::STATUS_CANCELLED ) ?></option>
+                                <option value="<?php echo CustomerAppointment::STATUS_REJECTED ?>"><?php echo CustomerAppointment::statusToString( CustomerAppointment::STATUS_REJECTED ) ?></option>
                             </select>
                         </div>
                     </div>
@@ -86,11 +88,11 @@ use \BooklyLite\Lib\Entities\CustomerAppointment;
                         <tr>
                             <th><?php _e( 'No.', 'bookly' ) ?></th>
                             <th><?php _e( 'Appointment Date', 'bookly' ) ?></th>
-                            <th><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_employee' ) ?></th>
+                            <th><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_employee' ) ?></th>
                             <th><?php _e( 'Customer Name', 'bookly' ) ?></th>
                             <th><?php _e( 'Customer Phone', 'bookly' ) ?></th>
                             <th><?php _e( 'Customer Email', 'bookly' ) ?></th>
-                            <th><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'ab_appearance_text_label_service' ) ?></th>
+                            <th><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_service' ) ?></th>
                             <th><?php _e( 'Duration', 'bookly' ) ?></th>
                             <th><?php _e( 'Status', 'bookly' ) ?></th>
                             <th><?php _e( 'Payment', 'bookly' ) ?></th>
@@ -104,11 +106,12 @@ use \BooklyLite\Lib\Entities\CustomerAppointment;
                 </table>
 
                 <div class="text-right bookly-margin-top-lg">
-                    <?php \BooklyLite\Lib\Utils\Common::deleteButton() ?>
+                    <?php \BooklyLite\Lib\Utils\Common::deleteButton( '', '', '#bookly-delete-dialog' ) ?>
                 </div>
             </div>
         </div>
 
+        <?php \BooklyLite\Backend\Modules\Calendar\Components::getInstance()->renderDeleteDialog(); ?>
         <?php include '_export_dialog.php' ?>
         <?php include '_print_dialog.php' ?>
 

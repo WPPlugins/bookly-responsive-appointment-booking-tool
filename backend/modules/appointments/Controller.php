@@ -9,6 +9,8 @@ use BooklyLite\Lib;
  */
 class Controller extends Lib\Base\Controller
 {
+    const page_slug = 'bookly-appointments';
+
     public function index()
     {
         /** @var \WP_Locale $wp_locale */
@@ -28,21 +30,20 @@ class Controller extends Lib\Base\Controller
                 'js/datatables.min.js'  => array( 'jquery' ),
                 'js/moment.min.js',
                 'js/daterangepicker.js' => array( 'jquery' ),
-                'js/alert.js' => array( 'jquery' ),
             ),
             'frontend' => array(
                 'js/spin.min.js'  => array( 'jquery' ),
                 'js/ladda.min.js' => array( 'jquery' ),
             ),
-            'module'   => array( 'js/appointments.js' => array( 'ab-datatables.min.js' ), ),
+            'module'   => array( 'js/appointments.js' => array( 'bookly-datatables.min.js' ), ),
         ) );
 
         // Custom fields without captcha field.
-        $custom_fields = array_filter( json_decode( get_option( 'ab_custom_fields' ) ), function( $field ) {
+        $custom_fields = array_filter( json_decode( get_option( 'bookly_custom_fields' ) ), function( $field ) {
             return ! in_array( $field->type, array( 'captcha', 'text-content' ) );
         } );
 
-        wp_localize_script( 'ab-appointments.js', 'BooklyL10n', array(
+        wp_localize_script( 'bookly-appointments.js', 'BooklyL10n', array(
             'tomorrow'      => __( 'Tomorrow', 'bookly' ),
             'today'         => __( 'Today', 'bookly' ),
             'yesterday'     => __( 'Yesterday', 'bookly' ),
@@ -68,6 +69,7 @@ class Controller extends Lib\Base\Controller
             'processing'    => __( 'Processing...', 'bookly' ),
             'edit'          => __( 'Edit', 'bookly' ),
             'cf_columns'    => array_map( function ( $custom_field ) { return $custom_field->id; }, $custom_fields ),
+            'filter'        => (array) get_user_meta( get_current_user_id(), 'bookly_filter_appointments_list', true ),
             'limitations'   => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>If you find the plugin useful for your business please consider buying a licence for the full version.<br>It costs just $59 and for this money you will get many useful functions, lifetime free updates and excellent support!<br>More information can be found here', 'bookly' ) . ': <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
         ) );
 
@@ -145,7 +147,7 @@ class Controller extends Lib\Base\Controller
         }
 
         $custom_fields = array();
-        $fields_data = array_filter( json_decode( get_option( 'ab_custom_fields' ) ), function( $field ) {
+        $fields_data = array_filter( json_decode( get_option( 'bookly_custom_fields' ) ), function( $field ) {
             return ! in_array( $field->type, array( 'captcha', 'text-content' ) );
         } );
         foreach ( $fields_data as $field_data ) {
@@ -183,9 +185,6 @@ class Controller extends Lib\Base\Controller
                 $custom_fields[ $custom_field['id'] ] = $custom_field['value'];
             }
 
-            // Add extras
-            $row = apply_filters( 'bookly_appointment_data', $row, false );
-
             $data[] = array(
                 'id'         => $row['id'],
                 'start_date' => Lib\Utils\DateTime::formatDateTime( $row['start_date'] ),
@@ -200,7 +199,7 @@ class Controller extends Lib\Base\Controller
                 'service'    => array(
                     'title'    => $row['service_title'],
                     'duration' => $service_duration,
-                    'extras'   => is_array( $row['extras'] ) ? $row['extras'] : array(),
+                    'extras'   => apply_filters( 'bookly_service_extras_get_data_for_appointment', array(), $row['extras'], false ),
                 ),
                 'status'        => $row['status'],
                 'payment'       => $payment_title,
@@ -211,6 +210,9 @@ class Controller extends Lib\Base\Controller
 
             $custom_fields = array_map( function () { return ''; }, $custom_fields );
         }
+
+        unset( $filter['date'] );
+        update_user_meta( get_current_user_id(), 'bookly_filter_appointments_list', $filter );
 
         wp_send_json( array(
             'draw'            => ( int ) $this->getParameter( 'draw' ),
@@ -227,20 +229,28 @@ class Controller extends Lib\Base\Controller
     {
         /** @var Lib\Entities\CustomerAppointment $ca */
         foreach ( Lib\Entities\CustomerAppointment::query()->whereIn( 'id', $this->getParameter( 'data', array() ) )->find() as $ca ) {
+            if ( $this->getParameter( 'notify' ) ) {
+                if ( $ca->get('status') === Lib\Entities\CustomerAppointment::STATUS_PENDING ) {
+                    $ca->set( 'status', Lib\Entities\CustomerAppointment::STATUS_REJECTED );
+                } else { // STATUS_APPROVED
+                    $ca->set( 'status', Lib\Entities\CustomerAppointment::STATUS_CANCELLED );
+                }
+                \BooklyLite\Lib\NotificationSender::send( $ca, array( 'cancellation_reason' => $this->getParameter( 'reason' ) ) );
+            }
             $ca->deleteCascade();
         }
         wp_send_json_success();
     }
 
     /**
-     * Override parent method to add 'wp_ajax_ab_' prefix
+     * Override parent method to add 'wp_ajax_bookly_' prefix
      * so current 'execute*' methods look nicer.
      *
      * @param string $prefix
      */
     protected function registerWpActions( $prefix = '' )
     {
-        parent::registerWpActions( 'wp_ajax_ab_' );
+        parent::registerWpActions( 'wp_ajax_bookly_' );
     }
 
 }

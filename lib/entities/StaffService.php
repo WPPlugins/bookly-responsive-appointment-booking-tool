@@ -15,7 +15,7 @@ class StaffService extends Lib\Base\Entity
         'id'            => array( 'format' => '%d' ),
         'staff_id'      => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
         'service_id'    => array( 'format' => '%d', 'reference' => array( 'entity' => 'Service' ) ),
-        'price'         => array( 'format' => '%.2f', 'default' => '0' ),
+        'price'         => array( 'format' => '%f', 'default' => '0' ),
         'capacity'      => array( 'format' => '%d', 'default' => '1' ),
         'deposit'       => array( 'format' => '%s', 'default' => '100%' ),
     );

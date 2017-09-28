@@ -26,7 +26,7 @@
                     <div class="ab-label-error"></div>
                     <div class="ab-formGroup">
                         <label>
-                            <input name="action" value="ab_wp_user_login" type="hidden" />
+                            <input name="action" value="bookly_wp_user_login" type="hidden" />
                             <input name="form_id" value="0" type="hidden" />
                             <input type="checkbox" name="rememberme" />
                         </label>

@@ -3,6 +3,34 @@
     <div class="bookly-tbs-body">
         <div class="page-header text-right clearfix">
             <div class="bookly-page-title">
+                Data management
+            </div>
+        </div>
+        <?php if ( $import_status ) : ?>
+            <div class="alert alert-success">
+                Data successfully imported
+            </div>
+        <?php endif ?>
+
+        <div class="panel-group" id="data-management">
+            <div class="bookly-data-button">
+            <form action="<?php echo admin_url( 'admin-ajax.php?action=bookly_export_data' ) ?>" method="POST">
+                <button id="bookly-export" type="submit" class="btn btn-lg btn-success">
+                    <span class="ladda-label">Export data</span>
+                </button>
+            </form>
+            </div>
+            <div class="bookly-data-button">
+            <form id="bookly_import" action="<?php echo admin_url( 'admin-ajax.php?action=bookly_import_data' ) ?>" method="POST" enctype="multipart/form-data">
+                <div id="bookly-import" class="btn btn-lg btn-primary btn-file">
+                    <span class="ladda-label">Import data</span>
+                    <input type="file" id="bookly_import_file" name="import">
+                </div>
+            </form>
+          </div>
+        </div>
+        <div class="page-header text-right clearfix">
+            <div class="bookly-page-title">
                 Database Integrity
             </div>
         </div>
