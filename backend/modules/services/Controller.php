@@ -42,7 +42,7 @@ class Controller extends Lib\Base\Controller
             'are_you_sure' => __( 'Are you sure?', 'bookly' ),
             'saved'        => __( 'Settings saved.', 'bookly' ),
             'selector'     => array( 'nothing_selected' => __( 'No staff selected', 'bookly' ), ),
-            'limitations'  => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>If you find the plugin useful for your business please consider buying a licence for the full version.<br>It costs just $59 and for this money you will get many useful functions, lifetime free updates and excellent support!<br>More information can be found here', 'bookly' ) . ': <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
+            'limitations'  => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Standard version of Bookly.<br>For more information visit', 'bookly' ) . ' <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
         ) );
 
         // Allow add-ons to enqueue their assets.

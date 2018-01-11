@@ -1,11 +1,11 @@
 === Bookly #1 WordPress Booking Plugin (Lite Version) ===
 Contributors: Ladela
 Tags: 2checkout, appointment plugin, authorize.net, booking plugin, calendar, cart, google calendar, paypal, payson, reservation, responsive, stripe, woocommerce, wordpress, wpm
-Donate link: http://booking-wp-plugin.com/
+Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
-Tested up to: 4.8.2
+Tested up to: 4.8.3
 Requires PHP: 5.3.7
-Stable tag: 13.1
+Stable tag: 13.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,9 +16,9 @@ Bookly Lite is a WordPress plugin that lets you automate booking and online sche
 Bookly Lite is a **WordPress plugin** that lets you automate **booking and online scheduling** of your services, save time and money, *manage your appointments* and client base - all in one place. 
 Join almost 16000 businesses all around the world that have already *automated their booking* process!
 
-[Bookly Homepage](https://1.envato.market/c/291148/275988/4415?subId1=wordpress.org&subId2=description+&u=https%3A%2F%2Fcodecanyon.net%2Fitem%2Fbookly-booking-plugin-responsive-appointment-booking-and-scheduling%2F7226091) | [Features](http://booking-wp-plugin.com/features/) (full version) | [Bookly Help Center](https://support.booking-wp-plugin.com/hc/en-us)  | [Demo](http://demo.booking-wp-plugin.com/)  
+[Bookly Homepage](https://www.booking-wp-plugin.com) | [Features](https://www.booking-wp-plugin.com/features/) (full version) | [Bookly Help Center](https://support.booking-wp-plugin.com/hc/en-us)  | [Demo](https://www.booking-wp-plugin.com/demo-list/)  
 
-Disclaimer: *Please note that email notifications, payments, custom fields and unlimited number of staff members* are NOT AVAILABLE in the **lite version**. All Bookly functions are available for review in our demo <http://demo.booking-wp-plugin.com>.  
+Disclaimer: *Please note that email notifications, payments, custom fields and unlimited number of staff members* are NOT AVAILABLE in the **lite version**. All Bookly functions are available for review in our demo <https://www.booking-wp-plugin.com/demo-list/>.  
 
 ## 1. Benefits for the customers
 
@@ -108,7 +108,7 @@ Bookly Lite for WordPress is designed to be used by local businesses or individu
 
 = Where can I try the standard version of Bookly? =
 
-To check out the standard version with all of its features, please visit <http://demo.booking-wp-plugin.com/>.  
+To check out the standard version with all of its features, please visit <https://www.booking-wp-plugin.com/demo-list/>.  
 
 = How to upgrade to standard version of Bookly? =
 
@@ -116,7 +116,7 @@ The standard version of Bookly is available for purchase and download [here](htt
 
 = How much does it cost? =
 
-Bookly Lite is a free version of Bookly which can be used for the unlimited period and contains most of the basic features. The standard version of Bookly costs $59 and includes six months of customer support and lifetime free updates of the plugin.  
+Bookly Lite is a free version of Bookly which can be used for the unlimited period and contains most of the basic features. The standard version of Bookly costs $89 and includes six months of customer support and lifetime free updates of the plugin.  
 
 = I’ve installed Bookly Lite. How do I get it running? = 
 
@@ -361,7 +361,7 @@ Upon the completion of these steps, customers can book appointments. In the Cale
 * Added ability to hide particular staff members and services in booking form
 * Added internal note for appointments
 * Updated Authorize.Net to support Akamai network
-* For users of <a href="http://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.1
+* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.1
 
 = 9.2 =
 * Added ability to make staff selection required in the first step of booking
