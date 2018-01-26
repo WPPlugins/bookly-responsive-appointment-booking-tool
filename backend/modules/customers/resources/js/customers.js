@@ -29,16 +29,20 @@ jQuery(function($) {
         responsive: true,
         serverSide: true,
         ajax: {
-            url: ajaxurl,
+            url : ajaxurl,
+            type: 'POST',
             data: function (d) {
                 return $.extend({}, d, {
                     action: 'bookly_get_customers',
+                    csrf_token : BooklyL10n.csrf_token,
                     filter: $filter.val()
                 });
             }
         },
         columns: [
-            { data: 'name', render: $.fn.dataTable.render.text() },
+            { data: 'full_name', render: $.fn.dataTable.render.text(), visible: BooklyL10n.first_last_name == 0 },
+            { data: 'first_name', render: $.fn.dataTable.render.text(), visible: BooklyL10n.first_last_name == 1 },
+            { data: 'last_name', render: $.fn.dataTable.render.text(), visible: BooklyL10n.first_last_name == 1 },
             { data: 'wp_user', render: $.fn.dataTable.render.text() },
             { data: 'phone', render: $.fn.dataTable.render.text() },
             { data: 'email', render: $.fn.dataTable.render.text() },
@@ -73,14 +77,14 @@ jQuery(function($) {
     });
 
     /**
-     * Select all coupons.
+     * Select all customers.
      */
     $check_all_button.on('change', function () {
         $customers_list.find('tbody input:checkbox').prop('checked', this.checked);
     });
 
     /**
-     * On coupon select.
+     * On customer select.
      */
     $customers_list.on('change', 'tbody input:checkbox', function () {
         $check_all_button.prop('checked', $customers_list.find('tbody input:not(:checked)').length == 0);
@@ -94,7 +98,7 @@ jQuery(function($) {
     });
 
     /**
-     * New coupon.
+     * New customer.
      */
     $add_button.on('click', function () {
         row = null;
@@ -108,30 +112,28 @@ jQuery(function($) {
         var $button = $customer_dialog.find('.modal-footer button:first');
         var customer;
         if (row) {
-            customer = row.data();
+            customer = $.extend({}, row.data());
             $title.text(BooklyL10n.edit_customer);
             $button.text(BooklyL10n.save);
         } else {
             customer = {
                 id         : '',
                 wp_user_id : '',
-                name       : '',
+                full_name  : '',
+                first_name : '',
+                last_name  : '',
                 phone      : '',
                 email      : '',
-                notes      : ''
+                notes      : '',
+                birthday   : ''
             };
             $title.text(BooklyL10n.new_customer);
-            $button.text(BooklyL10n.create);
+            $button.text(BooklyL10n.create_customer);
         }
 
         var $scope = angular.element(this).scope();
         $scope.$apply(function ($scope) {
-            $scope.customer.id         = customer.id;
-            $scope.customer.wp_user_id = customer.wp_user_id;
-            $scope.customer.name       = customer.name;
-            $scope.customer.phone      = customer.phone;
-            $scope.customer.email      = customer.email;
-            $scope.customer.notes      = customer.notes;
+            $scope.customer = customer;
             setTimeout(function() {
                 $customer_dialog.find('#phone').intlTelInput('setNumber', customer.phone);
             }, 0);
@@ -142,7 +144,7 @@ jQuery(function($) {
      * Delete customers.
      */
     $delete_button.on('click', function () {
-        if (!remembered_choice) {
+        if (remembered_choice === undefined) {
             $delete_dialog.modal('show');
         } else {
             deleteCustomers(this, remembered_choice);
@@ -178,8 +180,9 @@ jQuery(function($) {
             type : 'POST',
             data : {
                 action       : 'bookly_delete_customers',
+                csrf_token   : BooklyL10n.csrf_token,
                 data         : data,
-                with_wp_user : with_wp_user
+                with_wp_user : with_wp_user ? 1 : 0
             },
             dataType : 'json',
             success  : function(response) {
@@ -210,10 +213,13 @@ jQuery(function($) {
         $scope.customer = {
             id         : '',
             wp_user_id : '',
-            name       : '',
+            full_name  : '',
+            first_name : '',
+            last_name  : '',
             phone      : '',
             email      : '',
-            notes      : ''
+            notes      : '',
+            birthday   : ''
         };
         $scope.saveCustomer = function(customer) {
             jQuery('#bookly-customers-list').DataTable().ajax.reload(null, false);

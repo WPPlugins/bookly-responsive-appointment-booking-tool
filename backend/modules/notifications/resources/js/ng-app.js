@@ -13,7 +13,7 @@
                 jQuery.ajax({
                     url  : ajaxurl,
                     type : 'POST',
-                    data : jQuery.extend({ action : 'bookly_get_email_notifications_data' }, params),
+                    data : jQuery.extend({ action : 'bookly_get_email_notifications_data', csrf_token : BooklyL10n.csrf_token }, params),
                     dataType : 'json',
                     success  : function(response) {
                         if (response.success) {
@@ -85,6 +85,31 @@
         };
 
         $scope.testEmailNotifications = function(){
+            var data = {
+                action: 'bookly_test_email_notifications',
+                csrf_token : BooklyL10n.csrf_token,
+                notifications: [],
+                to_email : $scope.toEmail,
+                sender_name : $scope.dataSource.sender_name,
+                sender_email : $scope.dataSource.sender_email,
+                reply_to_customers : $scope.dataSource.reply_to_customers,
+                send_as : $scope.dataSource.send_as
+            };
+            angular.forEach($scope.dataSource.notifications, function(notification) {
+                if (notification.active == '1') {
+                    data.notifications.push(notification.type);
+                }
+            });
+            jQuery.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    booklyAlert({success : [BooklyL10n.sent_successfully]});
+                    Ladda.stopAll();
+                }
+            });
         };
 
     });
@@ -92,5 +117,5 @@
 })();
 
 var showTestEmailNotificationDialog = function () {
-    jQuery('#ab_test_email_notifications_dialog').modal('show');
+    jQuery('#bookly-test-email-notifications-dialog').modal('show');
 };

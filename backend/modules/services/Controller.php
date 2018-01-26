@@ -38,20 +38,26 @@ class Controller extends Lib\Base\Controller
             )
         ) );
 
+        $data = $this->getCaSeStSpCollections();
+        $staff = array();
+        foreach ( $data['staff_collection'] as $employee ) {
+            $staff[ $employee['id'] ] = $employee['full_name'];
+        }
+
         wp_localize_script( 'bookly-service.js', 'BooklyL10n', array(
-            'are_you_sure' => __( 'Are you sure?', 'bookly' ),
-            'saved'        => __( 'Settings saved.', 'bookly' ),
-            'selector'     => array( 'nothing_selected' => __( 'No staff selected', 'bookly' ), ),
-            'limitations'  => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Standard version of Bookly.<br>For more information visit', 'bookly' ) . ' <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
+            'csrf_token'            => Lib\Utils\Common::getCsrfToken(),
+            'capacity_error'        => __( 'Min capacity should not be greater than max capacity.', 'bookly' ),
+            'are_you_sure'          => __( 'Are you sure?', 'bookly' ),
+            'service_special_day'   => Lib\Config::specialDaysEnabled() && Lib\Config::specialDaysEnabled(),
+            'reorder'               => esc_attr__( 'Reorder', 'bookly' ),
+            'staff'                 => $staff,
+            'limitations'           => __( '<b class="h4">This function is not available in the Lite version of Bookly.</b><br><br>To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Standard version of Bookly.<br>For more information visit', 'bookly' ) . ' <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
         ) );
 
         // Allow add-ons to enqueue their assets.
-        do_action( 'bookly_enqueue_assets_for_services' );
+        Lib\Proxy\Shared::enqueueAssetsForServices();
 
-        $staff_collection    = $this->getStaffCollection();
-        $category_collection = $this->getCategoryCollection();
-        $service_collection  = $this->getServiceCollection();
-        $this->render( 'index', compact( 'staff_collection', 'category_collection', 'service_collection' ) );
+        $this->render( 'index', $data );
     }
 
     /**
@@ -59,23 +65,25 @@ class Controller extends Lib\Base\Controller
      */
     public function executeGetCategoryServices()
     {
-        $this->setDataForServiceList();
-        wp_send_json_success( $this->render( '_list', array(), false ) );
+        wp_send_json_success( $this->render( '_list', $this->getCaSeStSpCollections(), false ) );
     }
 
     /**
      *
      */
-    public function executeCategoryForm()
+    public function executeAddCategory()
     {
+        $html = '';
         if ( ! empty ( $_POST ) ) {
-            $form = new Forms\Category();
-            $form->bind( $this->getPostParameters() );
-            if ( $category = $form->save() ) {
-                $this->render( '_category_item', array( 'category' => $category->getFields() ) );
+            if ( $this->csrfTokenValid() ) {
+                $form = new Forms\Category();
+                $form->bind( $this->getPostParameters() );
+                if ( $category = $form->save() ) {
+                    $html = $this->render( '_category_item', array( 'category' => $category->getFields() ), false );
+                }
             }
         }
-        exit;
+        wp_send_json_success( compact( 'html' ) );
     }
 
     /**
@@ -97,7 +105,7 @@ class Controller extends Lib\Base\Controller
         foreach ( $category_sorts as $position => $category_id ) {
             $category_sort = new Lib\Entities\Category();
             $category_sort->load( $category_id );
-            $category_sort->set( 'position', $position );
+            $category_sort->setPosition( $position );
             $category_sort->save();
         }
     }
@@ -111,9 +119,37 @@ class Controller extends Lib\Base\Controller
         foreach ( $services_sorts as $position => $service_ids ) {
             $services_sort = new Lib\Entities\Service();
             $services_sort->load( $service_ids );
-            $services_sort->set( 'position', $position );
+            $services_sort->setPosition( $position );
             $services_sort->save();
         }
+    }
+
+    /**
+     * Reorder staff preferences for service
+     */
+    public function executeUpdateServiceStaffPreferenceOrders()
+    {
+        $service_id  = $this->getParameter( 'service_id' );
+        $positions = (array) $this->getParameter( 'positions' );
+        /** @var Lib\Entities\StaffPreferenceOrder[] $staff_preferences */
+        $staff_preferences = Lib\Entities\StaffPreferenceOrder::query()
+            ->where( 'service_id', $service_id )
+            ->indexBy( 'staff_id' )
+            ->find();
+        foreach ( $positions as $position => $staff_id ) {
+            if ( array_key_exists( $staff_id, $staff_preferences ) ) {
+                $staff_preferences[ $staff_id ]->setPosition( $position )->save();
+            } else {
+                $preference = new Lib\Entities\StaffPreferenceOrder();
+                $preference
+                    ->setServiceId( $service_id )
+                    ->setStaffId( $staff_id )
+                    ->setPosition( $position )
+                    ->save();
+            }
+        }
+
+        wp_send_json_success();
     }
 
     /**
@@ -122,7 +158,7 @@ class Controller extends Lib\Base\Controller
     public function executeDeleteCategory()
     {
         $category = new Lib\Entities\Category();
-        $category->set( 'id', $this->getParameter( 'id', 0 ) );
+        $category->setId( $this->getParameter( 'id', 0 ) );
         $category->delete();
     }
 
@@ -130,19 +166,23 @@ class Controller extends Lib\Base\Controller
     {
         $form = new Forms\Service();
         $form->bind( $this->getPostParameters() );
-        $form->getObject()->set( 'duration', Lib\Config::getTimeSlotLength() );
+        $form->getObject()->setDuration( Lib\Config::getTimeSlotLength() );
         $service = $form->save();
-        $this->setDataForServiceList( $service->get( 'category_id' ) );
-        do_action( 'bookly_service_created', $service, $this->getPostParameters() );
-        wp_send_json_success( array( 'html' => $this->render( '_list', array(), false ), 'service_id' =>  $service->get( 'id' ) ) );
+        $data = $this->getCaSeStSpCollections( $service->getCategoryId() );
+        Lib\Proxy\Shared::serviceCreated( $service, $this->getPostParameters() );
+        wp_send_json_success( array( 'html' => $this->render( '_list', $data, false ), 'service_id' => $service->getId() ) );
     }
 
     public function executeRemoveServices()
     {
         $service_ids = $this->getParameter( 'service_ids', array() );
         if ( is_array( $service_ids ) && ! empty ( $service_ids ) ) {
+            foreach ( $service_ids as $service_id ) {
+                Lib\Proxy\Shared::serviceDeleted( $service_id );
+            }
             Lib\Entities\Service::query( 's' )->delete()->whereIn( 's.id', $service_ids )->execute();
         }
+        wp_send_json_success();
     }
 
     /**
@@ -158,82 +198,80 @@ class Controller extends Lib\Base\Controller
         $service = $form->save();
 
         $staff_ids = $this->getParameter( 'staff_ids', array() );
-        if ( empty( $staff_ids ) ) {
-            Lib\Entities\StaffService::query()->delete()->where( 'service_id', $service->get( 'id' ) )->execute();
+        if ( empty ( $staff_ids ) ) {
+            Lib\Entities\StaffService::query()->delete()->where( 'service_id', $service->getId() )->execute();
         } else {
-            Lib\Entities\StaffService::query()->delete()->where( 'service_id', $service->get( 'id' ) )->whereNotIn( 'staff_id', $staff_ids )->execute();
-            if ( $this->getParameter( 'update_staff', false ) ) {
-                $wpdb->update( Lib\Entities\StaffService::getTableName(), array( 'price' => $this->getParameter( 'price' ) ), array( 'service_id' => $this->getParameter( 'id' ) ) );
-                $wpdb->update( Lib\Entities\StaffService::getTableName(), array( 'capacity' => 1 ), array( 'service_id' => $this->getParameter( 'id' ) ) );
-            }
-            $service_staff_exists = Lib\Entities\StaffService::query()->select( 'staff_id' )->where( 'service_id', $service->get( 'id' ) )->fetchArray();
-            $service_staff = array();
-            foreach ( $service_staff_exists as $staff ) {
-                $service_staff[] = $staff['staff_id'];
-            }
-            foreach ( $staff_ids as $staff_id ) {
-                if ( ! in_array( $staff_id, $service_staff ) ) {
-                    $staff_service = new Lib\Entities\StaffService();
-                    $staff_service->set( 'staff_id',   1 );
-                    $staff_service->set( 'service_id', $service->get( 'id' ) );
-                    $staff_service->set( 'price',      $service->get( 'price' ) );
-                    $staff_service->set( 'capacity',   1 );
-                    $staff_service->save();
+            Lib\Entities\StaffService::query()->delete()->where( 'service_id', $service->getId() )->whereNotIn( 'staff_id', $staff_ids )->execute();
+            if ( $service->getType() == Lib\Entities\Service::TYPE_SIMPLE ) {
+                if ( $this->getParameter( 'update_staff', false ) ) {
+                    $data = array(
+                        'price'        => $this->getParameter( 'price' ),
+                        'capacity_min' => 1,
+                        'capacity_max' => 1,
+                    );
+                    $wpdb->update(
+                        Lib\Entities\StaffService::getTableName(),
+                        $data,
+                        array( 'service_id' => $this->getParameter( 'id' ) )
+                    );
                 }
-            }
-        }
-
-        do_action( 'bookly_update_service', $service, $this->getPostParameters() );
-
-        /** @var \BooklyServiceExtras\Lib\Entities\ServiceExtra[] $service_extras
-         *  @var \BooklyServiceExtras\Lib\Entities\ServiceExtra[] $db_extras
-         */
-        $service_extras = apply_filters( 'bookly_service_extras_find_by_service_id', array(), $service->get( 'id' ) );
-        $db_extras = array();
-        foreach ( $service_extras as $extra ) {
-            $db_extras[ $extra->get( 'id' ) ] = $extra;
-        }
-        $new_extras = array();
-        // Find id for new extras.
-        foreach ( $this->getParameter( 'extras', array() ) as $_post_id => $_post_extra ) {
-            if ( isset( $db_extras[ $_post_id ] ) ) {
-                unset( $db_extras[ $_post_id ] );
-            } else {
-                foreach ( $db_extras as $id => $extra ) {
-                    if ( $extra->get( 'title' ) == $_post_extra['title']
-                         && $extra->get( 'price' ) == $_post_extra['price']
-                         && $extra->get( 'duration' ) == $_post_extra['duration']
-                    ) {
-                        $new_extras[ $_post_id ] = $id;
-                        unset( $db_extras[ $id ] );
-                        break;
+                // Create records for newly linked staff.
+                $existing_staff_ids = array();
+                $res = Lib\Entities\StaffService::query()
+                    ->select( 'staff_id' )
+                    ->where( 'service_id', $service->getId() )
+                    ->fetchArray();
+                foreach ( $res as $staff ) {
+                    $existing_staff_ids[] = $staff['staff_id'];
+                }
+                foreach ( $staff_ids as $staff_id ) {
+                    if ( ! in_array( $staff_id, $existing_staff_ids ) ) {
+                        $staff_service = new Lib\Entities\StaffService();
+                        $staff_service->setStaffId( $staff_id )
+                            ->setServiceId( $service->getId() )
+                            ->setPrice( $service->getPrice() )
+                            ->setCapacityMin( 1 )
+                            ->setCapacityMax( 1 )
+                            ->save();
                     }
                 }
             }
         }
 
-        $price = Lib\Utils\Common::formatPrice( $service->get( 'price' ) );
-        if ( $service->get( 'type' ) == Lib\Entities\Service::TYPE_SIMPLE ) {
-            $nice_duration = Lib\Utils\DateTime::secondsToInterval( $service->get( 'duration' ) );
-        } else {
-            $nice_duration = sprintf( _n( '%d service', '%d services', count( json_decode( $service->get( 'sub_services' ), true ) ), 'bookly' ), count( json_decode( $service->get( 'sub_services' ), true ) ) );
-        }
+        // Update services in addons.
+        $alert = Lib\Proxy\Shared::updateService( array( 'success' => array( __( 'Settings saved.', 'bookly' ) ) ), $service, $this->getPostParameters() );
 
-        wp_send_json_success( array( 'title' => $service->get( 'title' ), 'price' => $price, 'color' => $service->get( 'color' ), 'nice_duration' => $nice_duration, 'new_extras' => $new_extras ) );
+        $price = Lib\Utils\Price::format( $service->getPrice() );
+        $nice_duration = Lib\Utils\DateTime::secondsToInterval( $service->getDuration() );
+        $title = $service->getTitle();
+        $colors = array_fill( 0, 3, $service->getColor() );
+        wp_send_json_success( Lib\Proxy\Shared::prepareUpdateServiceResponse( compact( 'title', 'price', 'colors', 'nice_duration', 'alert' ), $service, $this->getPostParameters() ) );
     }
 
     /**
+     * Array for rendering service list.
+     *
      * @param int $category_id
+     * @return array
      */
-    private function setDataForServiceList( $category_id = 0 )
+    private function getCaSeStSpCollections( $category_id = 0 )
     {
         if ( ! $category_id ) {
             $category_id = $this->getParameter( 'category_id', 0 );
         }
 
-        $this->service_collection  = $this->getServiceCollection( $category_id );
-        $this->staff_collection    = $this->getStaffCollection();
-        $this->category_collection = $this->getCategoryCollection();
+        return array(
+            'service_collection'  => $this->getServiceCollection( $category_id ),
+            'staff_collection'    => $this->getStaffCollection(),
+            'category_collection' => $this->getCategoryCollection(),
+            'staff_preference'    => array(
+                Lib\Entities\Service::PREFERRED_ORDER           => __( 'Specified order', 'bookly' ),
+                Lib\Entities\Service::PREFERRED_LEAST_OCCUPIED  => __( 'Least occupied that day', 'bookly' ),
+                Lib\Entities\Service::PREFERRED_MOST_OCCUPIED   => __( 'Most occupied that day', 'bookly' ),
+                Lib\Entities\Service::PREFERRED_LEAST_EXPENSIVE => __( 'Least expensive', 'bookly' ),
+                Lib\Entities\Service::PREFERRED_MOST_EXPENSIVE  => __( 'Most expensive', 'bookly' ),
+            ),
+        );
     }
 
     /**
@@ -259,35 +297,36 @@ class Controller extends Lib\Base\Controller
     private function getServiceCollection( $id = 0 )
     {
         $services = Lib\Entities\Service::query( 's' )
-            ->select( 's.*, COUNT(staff.id) AS total_staff, GROUP_CONCAT(DISTINCT staff.id) AS staff_ids' )
+            ->select( 's.*, COUNT(staff.id) AS total_staff, GROUP_CONCAT(DISTINCT staff.id) AS staff_ids, GROUP_CONCAT(DISTINCT sp.staff_id ORDER BY sp.position ASC) AS pref_staff_ids' )
             ->leftJoin( 'StaffService', 'ss', 'ss.service_id = s.id' )
+            ->leftJoin( 'StaffPreferenceOrder', 'sp', 'sp.service_id = s.id' )
             ->leftJoin( 'Staff', 'staff', 'staff.id = ss.staff_id' )
             ->whereRaw( 's.category_id = %d OR !%d', array( $id, $id ) )
             ->groupBy( 's.id' )
             ->indexBy( 'id' )
             ->sortBy( 's.position' );
+        if ( ! Lib\Config::packagesActive() ) {
+            $services->whereNot( 's.type', Lib\Entities\Service::TYPE_PACKAGE );
+        }
+        $result = $services->fetchArray();
+        foreach ( $result as &$service ) {
+            $service['sub_services'] = Lib\Entities\SubService::query()
+                ->where( 'service_id', $service['id'] )
+                ->sortBy( 'position' )
+                ->fetchArray()
+            ;
+            $service['sub_services_count'] = array_sum( array_map( function ( $sub_service ) {
+                return (int) ( $sub_service['type'] == Lib\Entities\SubService::TYPE_SERVICE );
+            }, $service['sub_services'] ) );
+            $service['colors'] = Lib\Proxy\Shared::prepareServiceColors( array_fill( 0, 3, $service['color'] ), $service['id'], $service['type'] );
+        }
 
-        return $services->fetchArray();
+        return $result;
     }
 
     public function executeUpdateExtraPosition()
     {
-        do_action( 'bookly_service_extras_reorder', $this->getParameter( 'position' ) );
-
+        Lib\Proxy\ServiceExtras::reorder( $this->getParameter( 'position' ) );
         wp_send_json_success();
     }
-
-    // Protected methods.
-
-    /**
-     * Override parent method to add 'wp_ajax_bookly_' prefix
-     * so current 'execute*' methods look nicer.
-     *
-     * @param string $prefix
-     */
-    protected function registerWpActions( $prefix = '' )
-    {
-        parent::registerWpActions( 'wp_ajax_bookly_' );
-    }
-
 }

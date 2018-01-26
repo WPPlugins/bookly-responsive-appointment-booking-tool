@@ -9,6 +9,10 @@ use BooklyLite\Lib;
  */
 abstract class Plugin
 {
+    /******************************************************************************************************************
+     * Protected properties                                                                                           *
+     ******************************************************************************************************************/
+
     /**
      * Prefix for options and metas.
      *
@@ -72,6 +76,23 @@ abstract class Plugin
      */
     protected static $root_namespace;
 
+    /**
+     *
+     * @staticvar bool
+     */
+    protected static $embedded;
+
+    /******************************************************************************************************************
+     * Private properties                                                                                             *
+     ******************************************************************************************************************/
+
+    /**
+     * Array of plugin classes for objects.
+     *
+     * @var static[]
+     */
+    private static $plugin_classes = array();
+
     /******************************************************************************************************************
      * Public methods                                                                                                 *
      ******************************************************************************************************************/
@@ -82,7 +103,9 @@ abstract class Plugin
     public static function run()
     {
         static::registerHooks();
-        static::initUpdateChecker();
+        if ( ! static::embedded() ) {
+            static::initUpdateChecker();
+        }
         // Run updates.
         $updater_class = static::getRootNamespace() . '\Lib\Updater';
         $updater = new $updater_class();
@@ -133,6 +156,32 @@ abstract class Plugin
             $installer = new $installer_class();
             $installer->uninstall();
         }
+    }
+
+    /**
+     * Check if plugin is enabled (applicable to add-ons).
+     *
+     * @return bool
+     */
+    public static function enabled()
+    {
+        return get_option( static::getPrefix() . 'enabled' ) == 1;
+    }
+
+    /**
+     * Enable plugin (applicable to add-ons).
+     */
+    public static function enable()
+    {
+        update_option( static::getPrefix() . 'enabled', 1 );
+    }
+
+    /**
+     * Disable plugin (applicable to add-ons).
+     */
+    public static function disable()
+    {
+        update_option( static::getPrefix() . 'enabled', 0 );
     }
 
     /**
@@ -373,7 +422,25 @@ abstract class Plugin
     {
         $class = get_class( $object );
 
-        return substr( $class, 0, strpos( $class, '\\' ) ) . '\Lib\Plugin';
+        if ( ! isset ( self::$plugin_classes[ $class ] ) ) {
+            self::$plugin_classes[ $class ] = substr( $class, 0, strpos( $class, '\\' ) ) . '\Lib\Plugin';
+        }
+
+        return self::$plugin_classes[ $class ];
+    }
+
+    /**
+     * Check if add-on is embedded.
+     *
+     * @return bool
+     */
+    public static function embedded()
+    {
+        if ( static::$embedded === null ) {
+            static::$embedded = strpos( static::getDirectory(), '/lib/addons/' ) > 0;
+        }
+
+        return static::$embedded;
     }
 
     /******************************************************************************************************************
@@ -389,19 +456,18 @@ abstract class Plugin
         /** @var Plugin $plugin_class */
         $plugin_class = get_called_class();
 
-        register_activation_hook( static::getMainFile(),   array( $plugin_class, 'activate' ) );
-        register_deactivation_hook( static::getMainFile(), array( $plugin_class, 'deactivate' ) );
-        register_uninstall_hook( static::getMainFile(),    array( $plugin_class, 'uninstall' ) );
+        if ( $plugin_class::embedded() ) {
+            add_action( 'deactivate_' . Lib\Plugin::getBasename(), array( $plugin_class, 'deactivate' ), 99, 1 );
+        } else {
+            register_activation_hook( static::getMainFile(),   array( $plugin_class, 'activate' ) );
+            register_deactivation_hook( static::getMainFile(), array( $plugin_class, 'deactivate' ) );
+            register_uninstall_hook( static::getMainFile(),    array( $plugin_class, 'uninstall' ) );
+        }
 
         add_action( 'plugins_loaded', function () use ( $plugin_class ) {
             // l10n.
             load_plugin_textdomain( $plugin_class::getTextDomain(), false, $plugin_class::getSlug() . '/languages' );
         } );
-
-        // For admin notices about SMS weekly summary and etc.
-        if ( ! wp_next_scheduled( 'bookly_daily_routine' ) ) {
-            wp_schedule_event( time(), 'daily', 'bookly_daily_routine' );
-        }
     }
 
     /**

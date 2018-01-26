@@ -9,11 +9,22 @@ use BooklyLite\Lib;
  */
 abstract class Entity
 {
+
+    // Entity properties
+
+    /**
+     * Entity field id
+     * @var   int
+     */
+    protected $id;
+
+    // Protected static properties
+
     /**
      * Reference to global database object.
      * @var \wpdb
      */
-    protected $wpdb;
+    protected static $wpdb;
 
     /**
      * Name of table in database without WordPress prefix.
@@ -21,7 +32,7 @@ abstract class Entity
      * @static
      * @var string
      */
-    protected static $table = null;
+    protected static $table;
 
     /**
      * Schema of entity fields in database.
@@ -35,10 +46,10 @@ abstract class Entity
      * @static
      * @var array
      */
-    protected static $schema = null;
+    protected static $schema;
 
     /**
-     * Array of cached entities indexed by id.
+     * Array of cached entities indexed by class_name & id.
      * @var array
      */
     protected static $cache = array();
@@ -50,12 +61,6 @@ abstract class Entity
      * @var string
      */
     private $table_name = null;
-
-    /**
-     * Values of fields.
-     * @var array
-     */
-    private $fields = array();
 
     /**
      * Values loaded from the database.
@@ -73,67 +78,16 @@ abstract class Entity
      */
     public function __construct( $fields = array() )
     {
-        /** @var \wpdb $wpdb */
-        global $wpdb;
+        if ( self::$wpdb === null ) {
+            /** @var \wpdb $wpdb */
+            global $wpdb;
 
-        // Reference to global database object.
-        $this->wpdb = $wpdb;
-
-        $this->table_name = self::getTableName();
-
-        // Initialize field values.
-        foreach ( static::$schema as $field_name => $options ) {
-            $this->fields[ $field_name ]  = array_key_exists( 'default', $options ) ? $options['default'] : null;
+            self::$wpdb = $wpdb;
         }
 
+        $this->table_name = static::getTableName();
+
         $this->setFields( $fields );
-    }
-
-    /**
-     * Set value to field.
-     *
-     * @param $field
-     * @param $value
-     * @return $this
-     */
-    public function set( $field, $value )
-    {
-        $this->fields[ $field ] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get value of field.
-     *
-     * @param string $field
-     * @return mixed
-     */
-    public function get( $field )
-    {
-        return $this->fields[ $field ];
-    }
-
-    /**
-     * Magic set method.
-     *
-     * @param string $field
-     * @param mixed $value
-     */
-    public function __set( $field, $value )
-    {
-        $this->set( $field, $value );
-    }
-
-    /**
-     * Magic get method.
-     *
-     * @param string $field
-     * @return mixed
-     */
-    public function __get( $field )
-    {
-        return $this->get( $field );
     }
 
     /**
@@ -173,13 +127,13 @@ abstract class Entity
             implode( ' AND ', $where )
         );
 
-        $row = $this->wpdb->get_row(
-            empty ( $values ) ? $query : $this->wpdb->prepare( $query, $values )
+        $row = self::$wpdb->get_row(
+            empty ( $values ) ? $query : self::$wpdb->prepare( $query, $values )
         );
 
         if ( $row ) {
             $this->setFields( $row );
-            $this->loaded_values = $this->fields;
+            $this->loaded_values = $this->getFields();
         } else {
             $this->loaded_values = null;
         }
@@ -201,23 +155,26 @@ abstract class Entity
      * Set values to fields.
      * The method can be used to update only some fields.
      *
-     * @param array|object $data
+     * @param array|\stdClass $data
      * @param bool $overwrite_loaded_values
+     * @return $this
      */
     public function setFields( $data, $overwrite_loaded_values = false )
     {
-        if ( is_array( $data ) || $data instanceof \stdClass ) {
-            foreach ( $data as $field => $value ) {
-                if ( array_key_exists( $field, $this->fields ) ) {
-                    $this->fields[ $field ] = $value;
+        if ( $data = (array) $data ) {
+            foreach ( static::$schema as $field => $meta ) {
+                if ( array_key_exists( $field, $data ) ) {
+                    $this->{$field} = $data[ $field ];
                 }
             }
-
-            // This parameter is used by \BooklyLite\Lib\Query.
-            if ( $overwrite_loaded_values ) {
-                $this->loaded_values = $this->fields;
-            }
         }
+
+        // This parameter is used by \BooklyLite\Lib\Query.
+        if ( $overwrite_loaded_values ) {
+            $this->loaded_values = $this->getFields();
+        }
+
+        return $this;
     }
 
     /**
@@ -227,7 +184,11 @@ abstract class Entity
      */
     public function getFields()
     {
-        return $this->fields;
+        $data = array();
+        foreach ( static::$schema as $field => $format ) {
+            $data[ $field ] = $this->{$field};
+        }
+        return $data;
     }
 
     /**
@@ -237,7 +198,7 @@ abstract class Entity
      */
     public function getModified()
     {
-        return array_diff_assoc( $this->loaded_values ?: array(), $this->fields );
+        return array_diff_assoc( $this->loaded_values ?: array(), $this->getFields() );
     }
 
     /**
@@ -250,30 +211,31 @@ abstract class Entity
         // Prepare query data.
         $set    = array();
         $values = array();
-        foreach ( $this->fields as $field => $value ) {
+        foreach ( static::$schema as $field => $data ) {
             if ( $field == 'id' ) {
                 continue;
             }
+            $value = $this->{$field};
             if ( $value === null ) {
-                $set[] = sprintf( '`%s` = NULL', $field );
+                $set[]    = sprintf( '`%s` = NULL', $field );
             } else {
                 $set[] = sprintf( '`%s` = %s', $field, static::$schema[ $field ]['format'] );
                 $values[] = $value;
             }
         }
         // Run query.
-        if ( $this->fields['id'] ) {
-            $res = $this->wpdb->query( $this->wpdb->prepare(
+        if ( $this->getId() ) {
+            $res = self::$wpdb->query( self::$wpdb->prepare(
                 sprintf(
                     'UPDATE `%s` SET %s WHERE `id` = %d',
                     $this->table_name,
                     implode( ', ', $set ),
-                    $this->fields['id']
+                    $this->getId()
                 ),
                 $values
             ) );
         } else {
-            $res = $this->wpdb->query( $this->wpdb->prepare(
+            $res = self::$wpdb->query( self::$wpdb->prepare(
                 sprintf(
                     'INSERT INTO `%s` SET %s',
                     $this->table_name,
@@ -282,13 +244,13 @@ abstract class Entity
                 $values
             ) );
             if ( $res ) {
-                $this->fields['id'] = $this->wpdb->insert_id;
+                $this->setId( self::$wpdb->insert_id );
             }
         }
 
         if ( $res ) {
             // Update loaded values.
-            $this->loaded_values = $this->fields;
+            $this->loaded_values = $this->getFields();
         }
 
         return $res;
@@ -301,10 +263,10 @@ abstract class Entity
      */
     public function delete()
     {
-        if ( $this->fields['id'] ) {
+        if ( $this->getId() ) {
             // Delete from cache.
-            unset( static::$cache[ $this->fields['id'] ] );
-            return $this->wpdb->delete( $this->table_name, array( 'id' => $this->fields['id'] ), array( '%d' ) );
+            unset( Entity::$cache[ get_called_class() ][ $this->getId() ] );
+            return self::$wpdb->delete( $this->table_name, array( 'id' => $this->getId() ), array( '%d' ) );
         }
 
         return false;
@@ -383,22 +345,42 @@ abstract class Entity
      */
     public static function find( $id, $use_cache = true )
     {
-        if ( $use_cache && isset ( static::$cache[ $id ] ) ) {
-            return static::$cache[ $id ];
+        $called_class = get_called_class();
+
+        if ( $use_cache && isset ( Entity::$cache[ $called_class ][ $id ] ) ) {
+            return Entity::$cache[ $called_class ][ $id ];
         }
 
-        $called_class = get_called_class();
         /** @var static $entity */
         $entity = new $called_class();
         if ( $entity->loadBy( array( 'id' => $id ) ) ) {
             if ( $use_cache ) {
-                static::$cache[ $id ] = $entity;
+                Entity::$cache[ $called_class ][ $id ] = $entity;
             }
 
             return $entity;
         }
 
         return false;
+    }
+
+    /** @return int */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Sets id
+     *
+     * @param int $id
+     * @return $this
+     */
+    public function setId( $id )
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
 }

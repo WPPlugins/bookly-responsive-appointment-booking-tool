@@ -28,6 +28,7 @@
     <?php endfor ?>
 
     <div class="panel-footer">
+        <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
         <?php \BooklyLite\Lib\Utils\Common::submitButton() ?>
         <?php \BooklyLite\Lib\Utils\Common::resetButton( 'bookly-hours-reset' ) ?>
     </div>

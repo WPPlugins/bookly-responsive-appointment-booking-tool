@@ -31,10 +31,12 @@
                 <table id="bookly-customers-list" class="table table-striped" width="100%">
                     <thead>
                         <tr>
-                            <th><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_name' ) ?></th>
+                            <th><?php echo esc_html( get_option( 'bookly_l10n_label_name' ) ) ?></th>
+                            <th><?php echo esc_html( get_option( 'bookly_l10n_label_first_name' ) ) ?></th>
+                            <th><?php echo esc_html( get_option( 'bookly_l10n_label_last_name' ) ) ?></th>
                             <th><?php _e( 'User', 'bookly' ) ?></th>
-                            <th><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_phone' ) ?></th>
-                            <th><?php echo \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_label_email' ) ?></th>
+                            <th><?php echo esc_html( get_option( 'bookly_l10n_label_phone' ) ) ?></th>
+                            <th><?php echo esc_html( get_option( 'bookly_l10n_label_email' ) ) ?></th>
                             <th><?php _e( 'Notes', 'bookly' ) ?></th>
                             <th><?php _e( 'Last appointment', 'bookly' ) ?></th>
                             <th><?php _e( 'Total appointments', 'bookly' ) ?></th>
@@ -52,7 +54,6 @@
         </div>
 
         <?php include '_import.php' ?>
-        <?php include '_export.php' ?>
 
         <div id="bookly-delete-dialog" class="modal fade" tabindex=-1 role="dialog">
             <div class="modal-dialog">

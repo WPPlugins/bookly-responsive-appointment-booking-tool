@@ -10,7 +10,19 @@ jQuery(function($) {
         $payment_total    = $('#bookly-payment-total'),
         $delete_button    = $('#bookly-delete')
         ;
-
+    $('.bookly-js-select')
+        .val(null)
+        .on('select2:unselecting', function(e) {
+            e.preventDefault();
+            $(this).val(null).trigger('change');
+        })
+        .select2({
+            allowClear: true,
+            theme: 'bootstrap',
+            language: {
+                noResults: function() { return BooklyL10n.no_result_found; }
+            }
+        });
     /**
      * Init DataTables.
      */
@@ -24,9 +36,11 @@ jQuery(function($) {
         serverSide: true,
         ajax: {
             url: ajaxurl,
+            type: 'POST',
             data: function ( d ) {
                 return $.extend( {}, d, {
                     action: 'bookly_get_payments',
+                    csrf_token: BooklyL10n.csrf_token,
                     filter: {
                         created: $date_filter.data('date'),
                         type:    $type_filter.val(),
@@ -131,13 +145,7 @@ jQuery(function($) {
         }
     );
 
-    /**
-     * On filters change.
-     */
-    $('.bookly-js-chosen-select').chosen({
-        allow_single_deselect: true,
-        disable_search_threshold: 10
-    });
+
     $date_filter.on('apply.daterangepicker', function () { dt.ajax.reload(); });
     $type_filter.on('change', function () { dt.ajax.reload(); });
     $staff_filter.on('change', function () { dt.ajax.reload(); });
@@ -162,16 +170,17 @@ jQuery(function($) {
                 type : 'POST',
                 data : {
                     action : 'bookly_delete_payments',
-                    data   : data
+                    csrf_token : BooklyL10n.csrf_token,
+                    data : data
                 },
                 dataType : 'json',
                 success  : function(response) {
-                    ladda.stop();
                     if (response.success) {
                         dt.rows($checkboxes.closest('td')).remove().draw();
                     } else {
                         alert(response.data.message);
                     }
+                    ladda.stop();
                 }
             });
         }

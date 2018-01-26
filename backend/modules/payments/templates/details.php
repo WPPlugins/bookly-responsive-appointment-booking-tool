@@ -1,6 +1,11 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $subtotal = 0;
-    $subtotal_deposit = 0;
+use BooklyLite\Lib\Utils\Price;
+use BooklyLite\Lib\Utils\DateTime;
+use BooklyLite\Lib\Entities;
+use BooklyLite\Lib\Proxy;
+
+$subtotal = 0;
+$subtotal_deposit = 0;
 ?>
 <?php if ( $payment ) : ?>
     <div class="table-responsive">
@@ -15,9 +20,9 @@
                 <tr>
                     <td><?php echo $payment['customer'] ?></td>
                     <td>
-                        <div><?php _e( 'Date', 'bookly' ) ?>: <?php echo \BooklyLite\Lib\Utils\DateTime::formatDateTime( $payment['created'] ) ?></div>
-                        <div><?php _e( 'Type', 'bookly' ) ?>: <?php echo \BooklyLite\Lib\Entities\Payment::typeToString( $payment['type'] ) ?></div>
-                        <div><?php _e( 'Status', 'bookly' ) ?>: <?php echo \BooklyLite\Lib\Entities\Payment::statusToString( $payment['status'] ) ?></div>
+                        <div><?php _e( 'Date', 'bookly' ) ?>: <?php echo DateTime::formatDateTime( $payment['created'] ) ?></div>
+                        <div><?php _e( 'Type', 'bookly' ) ?>: <?php echo Entities\Payment::typeToString( $payment['type'] ) ?></div>
+                        <div><?php _e( 'Status', 'bookly' ) ?>: <?php echo Entities\Payment::statusToString( $payment['status'] ) ?></div>
                     </td>
                 </tr>
             </tbody>
@@ -52,14 +57,14 @@
                                 </ul>
                             <?php endif ?>
                         </td>
-                        <td><?php echo \BooklyLite\Lib\Utils\DateTime::formatDateTime( $item['appointment_date'] ) ?></td>
+                        <td><?php echo DateTime::formatDateTime( $item['appointment_date'] ) ?></td>
                         <td><?php echo $item['staff_name'] ?></td>
-                        <?php $deposit = apply_filters( 'bookly_deposit_payments_get_deposit_amount', $item['number_of_persons'] * ( $item['service_price'] + $extras_price ), $item['deposit'], $item['number_of_persons'] ) ?>
+                        <?php $deposit = Proxy\DepositPayments::prepareAmount( $item['number_of_persons'] * ( $item['service_price'] + $extras_price ), $item['deposit'], $item['number_of_persons'] ) ?>
                         <?php if ( $deposit_enabled ) : ?>
-                            <td class="text-right"><?php echo apply_filters( 'bookly_deposit_payments_format_deposit', $deposit, $item['deposit'] ) ?></td>
+                            <td class="text-right"><?php echo Proxy\DepositPayments::formatDeposit( $deposit, $item['deposit'] ) ?></td>
                         <?php endif ?>
                         <td class="text-right">
-                            <?php $service_price = \BooklyLite\Lib\Utils\Common::formatPrice( $item['service_price'] ) ?>
+                            <?php $service_price = Price::format( $item['service_price'] ) ?>
                             <?php if ( $item['number_of_persons'] > 1 ) $service_price = $item['number_of_persons'] . '&nbsp;&times;&nbsp' . $service_price ?>
                             <?php echo $service_price ?>
                             <ul class="bookly-list">
@@ -68,7 +73,7 @@
                                     <?php printf( '%s%s%s',
                                         ( $item['number_of_persons'] > 1 ) ? $item['number_of_persons'] . '&nbsp;&times;&nbsp;' : '',
                                         ( $extra['quantity'] > 1 ) ? $extra['quantity'] . '&nbsp;&times;&nbsp;' : '',
-                                        \BooklyLite\Lib\Utils\Common::formatPrice( $extra['price'] )
+                                        Price::format( $extra['price'] )
                                     ) ?>
                                 </li>
                                 <?php $subtotal += $item['number_of_persons'] * $extra['price'] * $extra['quantity'] ?>
@@ -85,9 +90,9 @@
                     <th rowspan="3" style="border-left-color: white; border-bottom-color: white;"></th>
                     <th colspan="2"><?php _e( 'Subtotal', 'bookly' ) ?></th>
                     <?php if ( $deposit_enabled ) : ?>
-                        <th class="text-right"><?php echo \BooklyLite\Lib\Utils\Common::formatPrice( $subtotal_deposit ) ?></th>
+                        <th class="text-right"><?php echo Price::format( $subtotal_deposit ) ?></th>
                     <?php endif ?>
-                    <th class="text-right"><?php echo \BooklyLite\Lib\Utils\Common::formatPrice( $subtotal ) ?></th>
+                    <th class="text-right"><?php echo Price::format( $subtotal ) ?></th>
                 </tr>
                 <tr>
                     <th colspan="<?php echo 2 + (int) $deposit_enabled ?>">
@@ -100,26 +105,26 @@
                                 <div>-<?php echo $payment['coupon']['discount'] ?>%</div>
                             <?php endif ?>
                             <?php if ( $payment['coupon']['deduction'] ) : ?>
-                                <div><?php echo \BooklyLite\Lib\Utils\Common::formatPrice( - $payment['coupon']['deduction'] ) ?></div>
+                                <div><?php echo Price::format( -$payment['coupon']['deduction'] ) ?></div>
                             <?php endif ?>
                         <?php else : ?>
-                            <?php echo \BooklyLite\Lib\Utils\Common::formatPrice( 0 ) ?>
+                            <?php echo Price::format( 0 ) ?>
                         <?php endif ?>
                     </th>
                 </tr>
                 <tr>
                     <th colspan="<?php echo 2 + (int) $deposit_enabled ?>"><?php _e( 'Total', 'bookly' ) ?></th>
-                    <th class="text-right"><?php echo \BooklyLite\Lib\Utils\Common::formatPrice( $payment['total'] ) ?></th>
+                    <th class="text-right"><?php echo Price::format( $payment['total'] ) ?></th>
                 </tr>
                 <?php if ( $payment['total'] != $payment['paid'] ) : ?>
                     <tr>
                         <td rowspan="2" style="border-left-color:#fff;border-bottom-color:#fff;"></td>
                         <td colspan="<?php echo 2 + (int) $deposit_enabled ?>"><i><?php _e( 'Paid', 'bookly' ) ?></i></td>
-                        <td class="text-right"><i><?php echo \BooklyLite\Lib\Utils\Common::formatPrice( $payment['paid'] ) ?></i></td>
+                        <td class="text-right"><i><?php echo Price::format( $payment['paid'] ) ?></i></td>
                     </tr>
                     <tr>
                         <td colspan="<?php echo 2 + (int) $deposit_enabled ?>"><i><?php _e( 'Due', 'bookly' ) ?></i></td>
-                        <td class="text-right"><i><?php echo \BooklyLite\Lib\Utils\Common::formatPrice( $payment['total'] - $payment['paid'] ) ?></i></td>
+                        <td class="text-right"><i><?php echo Price::format( $payment['total'] - $payment['paid'] ) ?></i></td>
                     </tr>
                     <tr>
                         <td style="border-left-color:#fff;border-bottom-color:#fff;"></td>

@@ -40,14 +40,17 @@ class Plugin
 
         if ( $version < 3.5 ) {
             // show button for v 3.4 and below
-            echo '<a href="#TB_inline?width=640&inlineId=ab-tinymce-popup&height=650" id="add-bookly-form" title="' . esc_attr__( 'Add Bookly booking form', 'bookly' ) . '">' . __( 'Add Bookly booking form', 'bookly' ) . '</a>';
-            echo '<a href="#TB_inline?width=400&amp;inlineId=ab-tinymce-appointment-popup&amp;height=250" id="add-ap-appointment" title="' . esc_attr__( 'Add Bookly appointments list', 'bookly' ) . '">' . __( 'Add Bookly appointments list', 'bookly' ) . '</a>';
+            echo '<a href="#TB_inline?width=640&inlineId=bookly-tinymce-popup&height=650" id="add-bookly-form" title="' . esc_attr__( 'Add Bookly booking form', 'bookly' ) . '">' . __( 'Add Bookly booking form', 'bookly' ) . '</a>';
+            echo '<a href="#TB_inline?width=400&amp;inlineId=bookly-tinymce-appointment-popup&amp;height=250" id="add-ap-appointment" title="' . esc_attr__( 'Add Bookly appointments list', 'bookly' ) . '">' . __( 'Add Bookly appointments list', 'bookly' ) . '</a>';
+            echo '<a href="#" id="add-cancellation-confirmation" title="' . esc_attr__( 'Add appointment cancellation confirmation', 'bookly' ) . '">' . __( 'Add appointment cancellation confirmation', 'bookly' ) . '</a>';
         } else {
             // display button matching new UI
-            $img = '<span class="ab-media-icon"></span> ';
-            echo '<a href="#TB_inline?width=640&inlineId=ab-tinymce-popup&height=650" id="add-bookly-form" class="thickbox button ab-media-button" title="' . esc_attr__( 'Add Bookly booking form', 'bookly' ) . '">' . $img . __( 'Add Bookly booking form', 'bookly' ) . '</a>';
-            echo '<a href="#TB_inline?width=400&amp;inlineId=ab-tinymce-appointment-popup&amp;height=250" id="add-ap-appointment" class="thickbox button ab-media-button" title="' . esc_attr__( 'Add Bookly appointments list', 'bookly' ) . '">' . $img . __( 'Add Bookly appointments list', 'bookly' ) . '</a>';
+            $img = '<span class="bookly-media-icon"></span> ';
+            echo '<a href="#TB_inline?width=640&inlineId=bookly-tinymce-popup&height=650" id="add-bookly-form" class="thickbox button bookly-media-button" title="' . esc_attr__( 'Add Bookly booking form', 'bookly' ) . '">' . $img . __( 'Add Bookly booking form', 'bookly' ) . '</a>';
+            echo '<a href="#TB_inline?width=400&amp;inlineId=bookly-tinymce-appointment-popup&amp;height=250" id="add-ap-appointment" class="thickbox button bookly-media-button" title="' . esc_attr__( 'Add Bookly appointments list', 'bookly' ) . '">' . $img . __( 'Add Bookly appointments list', 'bookly' ) . '</a>';
+            echo '<a href="#" id="add-cancellation-confirmation" class="thickbox button bookly-media-button" title="' . esc_attr__( 'Add appointment cancellation confirmation', 'bookly' ) . '">' . $img . __( 'Add appointment cancellation confirmation', 'bookly' ) . '</a>';
         }
+        Lib\Proxy\Shared::renderMediaButtons( $version );
     }
 
     public function renderPopup()
@@ -61,12 +64,14 @@ class Plugin
         try {
             include 'templates/popup.php';
             include 'templates/appointment_list.php';
+            include 'templates/cancellation_confirmation.php';
         } catch ( \Exception $e ) {
             ob_end_clean();
             throw $e;
         }
 
         echo ob_get_clean();
+        Lib\Proxy\Shared::renderTinyMceComponent();
     }
 
 }

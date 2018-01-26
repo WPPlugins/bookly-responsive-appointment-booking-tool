@@ -14,11 +14,14 @@ class Customer extends Lib\Base\Form
     public function configure()
     {
         $this->setFields( array(
-            'name',
             'wp_user_id',
+            'full_name',
+            'first_name',
+            'last_name',
             'phone',
             'email',
-            'notes'
+            'notes',
+            'birthday',
         ) );
     }
 

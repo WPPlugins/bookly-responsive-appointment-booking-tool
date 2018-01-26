@@ -34,6 +34,7 @@ class Controller extends Lib\Base\Controller
                 'js/datatables.min.js'  => array( 'jquery' ),
                 'js/moment.min.js',
                 'js/daterangepicker.js' => array( 'jquery' ),
+                'js/help.js'  => array( 'jquery' ),
                 'js/alert.js' => array( 'jquery' ),
             ),
             'frontend' => array_merge(
@@ -50,7 +51,7 @@ class Controller extends Lib\Base\Controller
 
         $alert  = array( 'success' => array(), 'error' => array() );
         $prices = array();
-        $form   = new \BooklyLite\Backend\Modules\Notifications\Forms\Notifications( 'sms' );
+        $form   = new \BooklyLite\Backend\Modules\Notifications\Forms\Notifications( 'sms', Components::getInstance() );
         $sms    = new Lib\SMS();
         $cron_reminder = (array) get_option( 'bookly_cron_reminder_times' );
 
@@ -92,13 +93,17 @@ class Controller extends Lib\Base\Controller
             }
             if ( $this->hasParameter( 'form-notifications' ) ) {
                 update_option( 'bookly_sms_administrator_phone', $this->getParameter( 'bookly_sms_administrator_phone' ) );
+                update_option( 'bookly_ntf_processing_interval', (int) $this->getParameter( 'bookly_ntf_processing_interval' ) );
 
                 $form->bind( $this->getPostParameters() );
                 $form->save();
                 $alert['success'][] = __( 'Settings saved.', 'bookly' );
 
-                foreach ( array( 'staff_agenda', 'client_follow_up', 'client_reminder' ) as $type ) {
+                foreach ( array( 'staff_agenda', 'client_follow_up', 'client_reminder', 'client_birthday_greeting' ) as $type ) {
                     $cron_reminder[ $type ] = $this->getParameter( $type . '_cron_hour' );
+                }
+                foreach ( array( 'client_reminder_1st', 'client_reminder_2nd', 'client_reminder_3rd', ) as $type ) {
+                    $cron_reminder[ $type ] = $this->getParameter( $type . '_cron_before_hour' );
                 }
                 update_option( 'bookly_cron_reminder_times', $cron_reminder );
             }
@@ -117,6 +122,7 @@ class Controller extends Lib\Base\Controller
         $alert['error'] = array_merge( $alert['error'], $sms->getErrors() );
         wp_localize_script( 'bookly-daterangepicker.js', 'BooklyL10n',
             array(
+                'csrf_token'    => Lib\Utils\Common::getCsrfToken(),
                 'alert'         => $alert,
                 'apply'         => __( 'Apply', 'bookly' ),
                 'are_you_sure'  => __( 'Are you sure?', 'bookly' ),
@@ -156,9 +162,12 @@ class Controller extends Lib\Base\Controller
                 'processing'    => __( 'Processing...', 'bookly' ),
             )
         );
-        $cron_path = realpath( Lib\Plugin::getDirectory() . '/lib/utils/send_notifications_cron.php' );
-
-        $this->render( 'index', compact( 'form', 'sms', 'is_logged_in', 'prices', 'cron_path', 'cron_reminder' ) );
+        $cron_uri = plugins_url( 'lib/utils/send_notifications_cron.php', Lib\Plugin::getMainFile() );
+        $statuses = Lib\Entities\CustomerAppointment::getStatuses();
+        foreach ( range( 1, 23 ) as $hours ) {
+            $bookly_ntf_processing_interval_values[] = array( $hours, Lib\Utils\DateTime::secondsToInterval( $hours * HOUR_IN_SECONDS ) );
+        }
+        $this->render( 'index', compact( 'form', 'sms', 'is_logged_in', 'prices', 'cron_uri', 'cron_reminder', 'statuses', 'bookly_ntf_processing_interval_values' ) );
     }
 
     public function executeGetPurchasesList()
@@ -234,18 +243,20 @@ class Controller extends Lib\Base\Controller
     public function executeSendTestSms()
     {
         $sms = new Lib\SMS();
-        $phone_number = $this->getParameter( 'phone_number' );
-        if ( $phone_number != '' ) {
-            $response = array( 'success' => $sms->sendSms( $phone_number, 'Bookly test SMS.', Lib\Entities\Notification::$type_ids['test_message'] ) );
-            if ( $response['success'] ) {
-                $response['message'] = __( 'SMS has been sent successfully.', 'bookly' );
-            } else {
-                $response['message'] = __( 'Failed to send SMS.', 'bookly' );
-            }
-            wp_send_json( $response );
+
+        $response = array( 'success' => $sms->sendSms(
+            $this->getParameter( 'phone_number' ),
+            'Bookly test SMS.',
+            Lib\Entities\Notification::$type_ids['test_message']
+        ) );
+
+        if ( $response['success'] ) {
+            $response['message'] = __( 'SMS has been sent successfully.', 'bookly' );
         } else {
-            wp_send_json( array( 'success' => false, 'message' => __( 'Phone number is empty.', 'bookly' ) ) );
+            $response['message'] = implode( ' ', $sms->getErrors() );
         }
+
+        wp_send_json( $response );
     }
 
     public function executeForgotPassword()
@@ -323,14 +334,27 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * Override parent method to add 'wp_ajax_bookly_' prefix
-     * so current 'execute*' methods look nicer.
-     *
-     * @param string $prefix
+     * Create new custom sms notification
      */
-    protected function registerWpActions( $prefix = '' )
+    public function executeCreateCustomSms()
     {
-        parent::registerWpActions( 'wp_ajax_bookly_' );
+        $notification = new Lib\Entities\Notification();
+        $notification
+            ->setType( Lib\Entities\Notification::TYPE_APPOINTMENT_START_TIME )
+            ->setToCustomer( 1 )
+            ->setToStaff( 1 )
+            ->setSettings( json_encode( Lib\DataHolders\Notification\Settings::getDefault() ) )
+            ->setGateway( 'sms' )
+            ->save();
+
+        $notification = $notification->getFields();
+        $id           = $notification['id'];
+
+        $form = new \BooklyLite\Backend\Modules\Notifications\Forms\Notifications( 'sms', Components::getInstance() );
+        $statuses = Lib\Entities\CustomerAppointment::getStatuses();
+
+        $html = $this->render( '_custom_notification', compact( 'form', 'notification', 'statuses' ), false );
+        wp_send_json_success( compact( 'html', 'id' ) );
     }
 
 }

@@ -4,10 +4,54 @@ namespace BooklyLite\Lib;
 /**
  * Class Config
  * @package BooklyLite\Lib
+ *
+ * @method static bool authorizeNetActive()            Check whether Authorize.Net add-on is active or not.
+ * @method static bool chainAppointmentsActive()       Check whether Chain Appointment add-on is active or not.
+ * @method static bool compoundServicesActive()        Check whether Compound Services add-on is active or not.
+ * @method static bool couponsActive()                 Check whether Coupons add-on is active or not.
+ * @method static bool customFieldsActive()            Check whether Custom Fields add-on is active or not.
+ * @method static bool depositPaymentsActive()         Check whether Deposit Payments add-on is active or not.
+ * @method static bool locationsActive()               Check whether Locations add-on is active or not.
+ * @method static bool mollieActive()                  Check whether Mollie add-on is active or not.
+ * @method static bool multiplyAppointmentsActive()    Check whether Multiply Appointments add-on is active or not.
+ * @method static bool packagesActive()                Check whether Packages add-on is active or not.
+ * @method static bool paysonActive()                  Check whether Payson add-on is active or not.
+ * @method static bool payuLatamActive()               Check whether PayU Latam add-on is active or not.
+ * @method static bool recurringAppointmentsActive()   Check whether Recurring Appointments add-on is active or not.
+ * @method static bool serviceExtrasActive()           Check whether Extras add-on is active or not.
+ * @method static bool serviceScheduleActive()         Check whether Service Schedule add-on is active or not.
+ * @method static bool specialDaysActive()             Check whether Special Days add-on is active or not.
+ * @method static bool specialHoursActive()            Check whether Special Hours add-on is active or not.
+ * @method static bool staffCabinetActive()            Check whether Staff Cabinet add-on is active or not.
+ * @method static bool stripeActive()                  Check whether Stripe add-on is active or not.
+ * @method static bool waitingListActive()             Check whether Waiting List add-on is active or not.
+ *
+ *
+ * @method static bool authorizeNetEnabled()           Check whether Authorize.Net add-on is enabled or not.
+ * @method static bool chainAppointmentsEnabled()      Check whether Chain Appointment add-on is enabled or not.
+ * @method static bool compoundServicesEnabled()       Check whether Compound Services add-on is enabled or not.
+ * @method static bool couponsEnabled()                Check whether Coupons add-on is enabled or not.
+ * @method static bool customFieldsEnabled()           Check whether Custom Fields add-on is enabled or not.
+ * @method static bool depositPaymentsEnabled()        Check whether Deposit Payments add-on is enabled or not.
+ * @method static bool locationsEnabled()              Check whether Locations add-on is enabled or not.
+ * @method static bool mollieEnabled()                 Check whether Mollie add-on is enabled or not.
+ * @method static bool multiplyAppointmentsEnabled()   Check whether Multiply Appointments add-on is enabled or not.
+ * @method static bool packagesEnabled()               Check whether Packages add-on is enabled or not.
+ * @method static bool paysonEnabled()                 Check whether Payson add-on is enabled or not.
+ * @method static bool payuLatamEnabled()              Check whether PayU Latam add-on is enabled or not.
+ * @method static bool recurringAppointmentsEnabled()  Check whether Recurring Appointments add-on is enabled or not.
+ * @method static bool serviceExtrasEnabled()          Check whether Extras add-on is enabled or not.
+ * @method static bool serviceScheduleEnabled()        Check whether Service Schedule add-on is enabled or not.
+ * @method static bool specialDaysEnabled()            Check whether Special Days add-on is enabled or not.
+ * @method static bool specialHoursEnabled()           Check whether Special Hours add-on is enabled or not.
+ * @method static bool staffCabinetEnabled()           Check whether Staff Cabinet add-on is enabled or not.
+ * @method static bool stripeEnabled()                 Check whether Stripe add-on is enabled or not.
+ * @method static bool waitingListEnabled()            Check whether Waiting List add-on is enabled or not.
  */
 abstract class Config
 {
-    private static $addons = array();
+    /** @var string */
+    private static $wp_timezone;
 
     /**
      * Get categories, services and staff members for drop down selects
@@ -36,7 +80,8 @@ abstract class Config
 
         // Services.
         $rows = Entities\Service::query( 's' )
-            ->select( 's.id, s.category_id, s.title, s.position, MAX(ss.capacity) AS max_capacity' )
+            ->select( 's.id, s.category_id, s.title, s.position, s.duration,
+                MIN(ss.capacity_min) AS min_capacity, MAX(ss.capacity_max) AS max_capacity' )
             ->innerJoin( 'StaffService', 'ss', 'ss.service_id = s.id' )
             ->where( 's.type',  Entities\Service::TYPE_SIMPLE )
             ->whereNot( 's.visibility', 'private' )
@@ -49,7 +94,10 @@ abstract class Config
                 'name'        => $row['title'] == ''
                     ? __( 'Untitled', 'bookly' )
                     : Utils\Common::getTranslatedString( 'service_' . $row['id'], $row['title'] ),
+                'duration'     => \BooklyLite\Lib\Utils\DateTime::secondsToInterval( $row['duration'] ),
+                'min_capacity' => (int) $row['min_capacity'],
                 'max_capacity' => (int) $row['max_capacity'],
+                'has_extras'   => (int) ( \BooklyLite\Lib\Proxy\ServiceExtras::findByServiceId( $row['id'] ) ),
                 'pos'          => (int) $row['position'],
             );
 
@@ -64,7 +112,7 @@ abstract class Config
 
         // Staff.
         $rows = Entities\Staff::query( 'st' )
-            ->select( 'st.id, st.full_name, st.position, ss.service_id, ss.capacity, ss.price' )
+            ->select( 'st.id, st.full_name, st.position, ss.service_id, ss.capacity_min, ss.capacity_max, ss.price' )
             ->innerJoin( 'StaffService', 'ss', 'ss.staff_id = st.id' )
             ->leftJoin( 'Service', 's', 's.id = ss.service_id' )
             ->whereNot( 'st.visibility', 'private' )
@@ -80,26 +128,24 @@ abstract class Config
                 );
             }
             $result['staff'][ $row['id'] ]['services'][ $row['service_id'] ] = array(
-                'capacity' => (int) $row['capacity'],
-                'price'    => get_option( 'bookly_app_staff_name_with_price' )
-                    ? html_entity_decode( Utils\Common::formatPrice( $row['price'] ) )
+                'min_capacity' => (int) $row['capacity_min'],
+                'max_capacity' => (int) $row['capacity_max'],
+                'price'        => get_option( 'bookly_app_staff_name_with_price' )
+                    ? html_entity_decode( Utils\Price::format( $row['price'] ) )
                     : null,
             );
         }
 
-        $result = apply_filters( 'bookly_prepare_casest', $result );
-
-        return $result;
+        return Proxy\Shared::prepareCaSeSt( $result );
     }
 
     /**
      * Get available days and available time ranges
      * for the 1st step of booking wizard.
      *
-     * @param $time_zone_offset
      * @return array
      */
-    public static function getDaysAndTimes( $time_zone_offset = null )
+    public static function getDaysAndTimes()
     {
         /** @var \WP_Locale $wp_locale */
         global $wp_locale;
@@ -109,24 +155,63 @@ abstract class Config
             'times' => array(),
         );
 
-        $data = Entities\StaffScheduleItem::query()
-            ->select(
-                'GROUP_CONCAT(DISTINCT `r`.`day_index`) AS `day_ids`,
-                SUBSTRING_INDEX(MIN(`r`.`start_time`), ":", 2) AS `min_start_time`,
-                SUBSTRING_INDEX(MAX(`r`.`end_time`), ":", 2)   AS `max_end_time`'
-            )
-            ->whereNot( 'start_time', null )
-            ->fetchRow();
+        $res = array_merge(
+            Entities\StaffScheduleItem::query()
+                ->select( '`r`.`day_index`, MIN(`r`.`start_time`) AS `start_time`, MAX(`r`.`end_time`) AS `end_time`' )
+                ->leftJoin( 'Staff', 's', '`s`.`id` = `r`.`staff_id`' )
+                ->whereNot( 'r.start_time', null )
+                ->whereNot( 's.visibility', 'private' )
+                ->groupBy( 'day_index' )
+                ->fetchArray(),
+            (array) Proxy\SpecialDays::getDaysAndTimes()
+        );
 
-        $data['day_ids'] = $data['day_ids'] ? explode( ',', $data['day_ids'] ) : array();
+        /** @var Slots\TimePoint $min_start_time */
+        /** @var Slots\TimePoint $max_end_time */
+        $min_start_time = null;
+        $max_end_time   = null;
+        $days           = array();
 
-        $data = apply_filters( 'bookly_special_days_adjust_config_days_and_times', $data );
+        foreach ( $res as $row ) {
+            $start_time = Slots\TimePoint::fromStr( $row['start_time'] );
+            $end_time   = Slots\TimePoint::fromStr( $row['end_time'] );
+
+            if ( $min_start_time === null || $min_start_time->gt( $start_time ) ) {
+                $min_start_time = $start_time;
+            }
+            if ( $max_end_time === null || $max_end_time->lt( $end_time ) ) {
+                $max_end_time = $end_time;
+            }
+
+            // Convert to client time zone.
+            $start_time = $start_time->toClientTz();
+            $end_time   = $end_time->toClientTz();
+
+            // Add day(s).
+            if ( $start_time->value() < 0 ) {
+                $prev_day = $row['day_index'] - 1;
+                if ( $prev_day < 1 ) {
+                    $prev_day = 7;
+                }
+                $days[ $prev_day ] = true;
+            }
+            if ( $start_time->value() < HOUR_IN_SECONDS * 24 && $end_time->value() > 0 ) {
+                $days[ $row['day_index'] ] = true;
+            }
+            if ( $end_time->value() > HOUR_IN_SECONDS * 24 ) {
+                $next_day = $row['day_index'] + 1;
+                if ( $next_day > 7 ) {
+                    $next_day = 1;
+                }
+                $days[ $next_day ] = true;
+            }
+        }
 
         $start_of_week = get_option( 'start_of_week' );
         $week_days     = array_values( $wp_locale->weekday_abbrev );
 
         // Sort days considering start_of_week;
-        usort( $data['day_ids'], function ( $a, $b ) use ( $start_of_week ) {
+        uksort( $days, function ( $a, $b ) use ( $start_of_week ) {
             $a -= $start_of_week;
             $b -= $start_of_week;
             if ( $a < 1 ) {
@@ -140,92 +225,52 @@ abstract class Config
         } );
 
         // Fill days.
-        foreach ( $data['day_ids'] as $day_id ) {
+        foreach ( array_keys( $days ) as $day_id ) {
             $result['days'][ $day_id ] = $week_days[ $day_id - 1 ];
         }
 
-        if ( $data['min_start_time'] && $data['max_end_time'] ) {
-            $start        = Utils\DateTime::timeToSeconds( $data['min_start_time'] );
-            $end          = Utils\DateTime::timeToSeconds( $data['max_end_time'] );
-            $client_start = $start;
-            $client_end   = $end;
+        if ( $min_start_time && $max_end_time ) {
+            $start        = $min_start_time;
+            $end          = $max_end_time;
+            $client_start = $start->toClientTz();
+            $client_end   = $end->toClientTz();
 
-            if ( $time_zone_offset !== null ) {
-                $client_start -= $time_zone_offset * MINUTE_IN_SECONDS + get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-                $client_end   -= $time_zone_offset * MINUTE_IN_SECONDS + get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-            }
-
-            while ( $start <= $end ) {
-                $result['times'][ Utils\DateTime::buildTimeString( $start, false ) ] = Utils\DateTime::formatTime( $client_start );
+            while ( $start->lte( $end ) ) {
+                $result['times'][ Utils\DateTime::buildTimeString( $start->value(), false ) ] = $client_start->formatI18nTime();
                 // The next value will be rounded to integer number of hours, i.e. e.g. 8:00, 9:00, 10:00 and so on.
-                $start        = self::_roundTime( $start + 30 * 60 );
-                $client_start = self::_roundTime( $client_start + 30 * 60 );
+                $start        = $start->modify( HOUR_IN_SECONDS - ( $start->value() % HOUR_IN_SECONDS ) );
+                $client_start = $client_start->modify( HOUR_IN_SECONDS - ( $client_start->value() % HOUR_IN_SECONDS ) );
             }
             // The last value should always be the end time.
-            $result['times'][ Utils\DateTime::buildTimeString( $end, false ) ] = Utils\DateTime::formatTime( $client_end );
+            $result['times'][ Utils\DateTime::buildTimeString( $end->value(), false ) ] = $client_end->formatI18nTime();
         }
 
         return $result;
-    }
-
-    /**
-     * Currency list
-     *
-     * @return array
-     */
-    public static function getCurrencyCodes()
-    {
-        return array( 'AED', 'ARS', 'AUD', 'BGN', 'BHD', 'BRL', 'CAD', 'CHF', 'CLP', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'EGP', 'EUR', 'GBP', 'GEL', 'GTQ', 'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KES', 'KRW', 'KZT', 'LAK', 'MUR', 'MXN', 'MYR', 'NAD', 'NGN', 'NOK', 'NZD', 'OMR', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RMB', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'UAH', 'UGX', 'USD', 'VND', 'XAF', 'XOF', 'ZAR', 'ZMW', );
     }
 
     /**
      * Get array with bounding days for Pickadate.
      *
-     * @param $time_zone_offset
      * @return array
      */
-    public static function getBoundingDaysForPickadate( $time_zone_offset = null )
+    public static function getBoundingDaysForPickadate()
     {
         $result = array();
-        $time   = current_time( 'timestamp' ) + self::getMinimumTimePriorBooking();
-        if ( $time_zone_offset !== null ) {
-            $time -= $time_zone_offset * MINUTE_IN_SECONDS + get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-        }
+
+        $dp = Slots\DatePoint::now()->modify( self::getMinimumTimePriorBooking() )->toClientTz();
         $result['date_min'] = array(
-            (int) date( 'Y', $time ),
-            (int) date( 'n', $time ) - 1,
-            (int) date( 'j', $time ),
+            (int) $dp->format( 'Y'),
+            (int) $dp->format( 'n' ) - 1,
+            (int) $dp->format( 'j' ),
         );
-        $time += ( self::getMaximumAvailableDaysForBooking() - 1 ) * DAY_IN_SECONDS;
+        $dp = $dp->modify( ( self::getMaximumAvailableDaysForBooking() - 1 ) . ' days' );
         $result['date_max'] = array(
-            (int) date( 'Y', $time ),
-            (int) date( 'n', $time ) - 1,
-            (int) date( 'j', $time ),
+            (int) $dp->format( 'Y' ),
+            (int) $dp->format( 'n' ) - 1,
+            (int) $dp->format( 'j' ),
         );
 
         return $result;
-    }
-
-    /**
-     * Get value of option for given payment type.
-     *
-     * @param string $type
-     * @return string
-     */
-    public static function getPaymentTypeOption( $type )
-    {
-        return get_option( 'bookly_pmt_' . $type, 'disabled' );
-    }
-
-    /**
-     * Check whether given payment type is enabled.
-     *
-     * @param string $type
-     * @return bool
-     */
-    public static function isPaymentTypeEnabled( $type )
-    {
-        return self::getPaymentTypeOption( $type ) != 'disabled';
     }
 
     /**
@@ -233,26 +278,50 @@ abstract class Config
      *
      * @return bool
      */
-    public static function isPaymentStepDisabled()
+    public static function paymentStepDisabled()
     {
-        $types = array(
-            Entities\Payment::TYPE_2CHECKOUT,
-            Entities\Payment::TYPE_AUTHORIZENET,
-            Entities\Payment::TYPE_LOCAL,
-            Entities\Payment::TYPE_MOLLIE,
-            Entities\Payment::TYPE_PAYPAL,
-            Entities\Payment::TYPE_PAYSON,
-            Entities\Payment::TYPE_PAYULATAM,
-            Entities\Payment::TYPE_STRIPE,
+        return ! ( Config::payLocallyEnabled()
+            || Config::twoCheckoutEnabled()
+            || Config::authorizeNetEnabled()
+            || Config::mollieEnabled()
+            || Config::paysonEnabled()
+            || Config::payuLatamEnabled()
+            || Config::stripeEnabled()
+            || Config::paypalEnabled()
         );
+    }
 
-        foreach ( $types as $type ) {
-            if ( self::isPaymentTypeEnabled( $type ) ) {
-                return false;
-            }
-        }
+    /**
+     * @return bool
+     */
+    public static function twoCheckoutEnabled()
+    {
+        return self::__callStatic( '2checkoutEnabled', array() );
+    }
 
-        return true;
+    /**
+     * @return bool
+     */
+    public static function payLocallyEnabled()
+    {
+        return get_option( 'bookly_pmt_local' ) == 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function paypalEnabled()
+    {
+        return get_option( 'bookly_paypal_enabled' ) != '0';
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public static function twoCheckoutActive()
+    {
+        return self::__callStatic( '2checkoutActive', array() );
     }
 
     /**
@@ -292,7 +361,7 @@ abstract class Config
      */
     public static function getMinimumTimePriorBooking()
     {
-        return (int) get_option( 'bookly_gen_min_time_prior_booking' ) * 3600;
+        return (int) ( get_option( 'bookly_gen_min_time_prior_booking' ) * 3600 );
     }
 
     /**
@@ -311,6 +380,26 @@ abstract class Config
     public static function showCalendar()
     {
         return (bool) get_option( 'bookly_app_show_calendar', false );
+    }
+
+    /**
+     * Whether to use first and last customer name instead full name.
+     *
+     * @return bool
+     */
+    public static function showFirstLastName()
+    {
+        return (bool) get_option( 'bookly_cst_first_last_name', false );
+    }
+
+    /**
+     * Whether to show notes field.
+     *
+     * @return bool
+     */
+    public static function showNotes()
+    {
+        return (bool) get_option( 'bookly_app_show_notes', false );
     }
 
     /**
@@ -333,6 +422,15 @@ abstract class Config
         return (bool) get_option( 'bookly_app_show_day_one_column', false );
     }
 
+    /**
+     * Whether phone field is required at the Details step or not.
+     *
+     * @return bool
+     */
+    public static function phoneRequired()
+    {
+        return get_option( 'bookly_cst_required_phone' ) == 1;
+    }
 
     /**
      * Whether custom fields attached to services or not.
@@ -341,7 +439,17 @@ abstract class Config
      */
     public static function customFieldsPerService()
     {
-        return false;
+        return get_option( 'bookly_custom_fields_per_service' ) == 1;
+    }
+
+    /**
+     * Whether to show single instance of custom fields for repeating services.
+     *
+     * @return bool
+     */
+    public static function customFieldsMergeRepeating()
+    {
+        return get_option( 'bookly_custom_fields_merge_repeating' ) == 1;
     }
 
     /**
@@ -349,7 +457,7 @@ abstract class Config
      *
      * @return bool
      */
-    public static function areCombinedNotificationsEnabled()
+    public static function combinedNotificationsEnabled()
     {
         return get_option( 'bookly_cst_combined_notifications' ) == 1;
     }
@@ -361,7 +469,7 @@ abstract class Config
      */
     public static function showStepCart()
     {
-        return get_option( 'bookly_cart_enabled' ) == 1 && ! Config::isWooCommerceEnabled();
+        return false;
     }
 
     /**
@@ -374,145 +482,59 @@ abstract class Config
         return get_option( 'bookly_email_send_as' ) == 'html';
     }
 
+    /**
+     * Get WordPress time zone setting.
+     *
+     * @return string
+     */
+    public static function getWPTimeZone()
+    {
+        if ( self::$wp_timezone === null ) {
+            if ( $timezone = get_option( 'timezone_string' ) ) {
+                // If site timezone string exists, return it.
+                self::$wp_timezone = $timezone;
+            } else {
+                // Otherwise return offset.
+                $gmt_offset = get_option( 'gmt_offset' );
+                self::$wp_timezone = sprintf( '%s%02d:%02d', $gmt_offset >= 0 ? '+' : '-', abs( $gmt_offset ), abs( $gmt_offset ) * 60 % 60 );
+            }
+        }
+
+        return self::$wp_timezone;
+    }
+
     /******************************************************************************************************************
      * Add-ons                                                                                                        *
      ******************************************************************************************************************/
-
-    /**
-     * Check whether Extras add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isServiceExtrasEnabled()
-    {
-        return self::_isAddOnEnabled( 'service-extras' );
-    }
-
-    /**
-     * Check whether Service Schedule add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isServiceScheduleEnabled()
-    {
-        return self::_isAddOnEnabled( 'service-schedule' );
-    }
-
-    /**
-     * Check whether Chain Appointment add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isChainAppointmentsEnabled()
-    {
-        return self::_isAddOnEnabled( 'chain-appointments' );
-    }
-
-    /**
-     * Check whether Locations add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isLocationsEnabled()
-    {
-        return self::_isAddOnEnabled( 'locations' );
-    }
-
-    /**
-     * Check whether Multiply Appointments add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isMultiplyAppointmentsEnabled()
-    {
-        return self::_isAddOnEnabled( 'multiply-appointments' );
-    }
-
-    /**
-     * Check whether Deposit Payments add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isDepositPaymentsEnabled()
-    {
-        return self::_isAddOnEnabled( 'deposit-payments' );
-    }
-
-    /**
-     * Check whether Special Days add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isSpecialDaysEnabled()
-    {
-        return self::_isAddOnEnabled( 'special-days' );
-    }
-
-    /**
-     * Check whether Special Hours add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isSpecialHoursEnabled()
-    {
-        return self::_isAddOnEnabled( 'special-hours' );
-    }
-
-    /**
-     * Check whether Recurring Appointments add-on is enabled or not.
-     *
-     * @return bool
-     */
-    public static function isRecurringAppointmentsEnabled()
-    {
-        return self::_isAddOnEnabled( 'recurring-appointments' );
-    }
 
     /**
      * WooCommerce Plugin enabled or not.
      *
      * @return bool
      */
-    public static function isWooCommerceEnabled()
+    public static function wooCommerceEnabled()
     {
-        return ( get_option( 'bookly_wc_enabled' ) && get_option( 'bookly_wc_product' ) && class_exists( 'WooCommerce', false ) && ( WC()->cart->get_cart_url() !== false ) );
-    }
-
-    /******************************************************************************************************************
-     * Private methods                                                                                                *
-     ******************************************************************************************************************/
-
-    /**
-     * Round time in seconds to precision in minutes.
-     *
-     * @param $timestamp
-     * @param int $precision
-     * @return float
-     */
-    private static function _roundTime( $timestamp, $precision = 60 )
-    {
-        $precision = 60 * $precision;
-
-        return round( $timestamp / $precision ) * $precision;
+        return false;
     }
 
     /**
-     * Check whether given add-on enabled or not.
+     * Call magic functions.
      *
-     * @param string $add_on
-     * @return bool
+     * @param $name
+     * @param array $arguments
+     * @return mixed
      */
-    private static function _isAddOnEnabled( $add_on )
+    public static function __callStatic( $name , array $arguments )
     {
-        if ( ! array_key_exists( $add_on, self::$addons ) ) {
-            $enabled = get_option( 'bookly_' . str_replace( '-', '_', $add_on ) . '_enabled' ) == 1;
-            if ( $enabled ) {
-                $enabled = Utils\Common::isPluginActive( 'bookly-addon-' . $add_on . '/main.php' );
-            }
-            self::$addons[ $add_on ] = $enabled;
+        // <add-on>Active
+        // <add-on>Enabled
+        if ( preg_match( '/^(\w+)(Active|Enabled)/', $name, $match ) ) {
+            /** @var Base\Plugin $plugin_class */
+            $plugin_class = sprintf( '\Bookly%s\Lib\Plugin', ucfirst( $match[1] ) );
+
+            return class_exists( $plugin_class, false ) && ( $match[2] == 'Active' || $plugin_class::enabled() );
         }
 
-        return self::$addons[ $add_on ];
+        return null;
     }
-
 }

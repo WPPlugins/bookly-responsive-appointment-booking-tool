@@ -1,19 +1,17 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $custom_fields = array_filter( json_decode( get_option( 'bookly_custom_fields' ) ), function ( $field ) {
-        return ! in_array( $field->type, array( 'captcha', 'text-content' ) );
-    } );
+    $custom_fields = (array) \BooklyLite\Lib\Proxy\CustomFields::getWhichHaveData();
 ?>
-<div id="ab-tinymce-appointment-popup" style="display: none">
-    <form id="ab-shortcode-form">
+<div id="bookly-tinymce-appointment-popup" style="display: none">
+    <form id="bookly-shortcode-form">
         <table>
             <tr>
-                <th class="ab-title-col"><?php _e( 'Titles', 'bookly' ) ?></th>
+                <th class="bookly-title-col"><?php _e( 'Titles', 'bookly' ) ?></th>
                 <td>
-                    <label><input type="checkbox" id="ab-show-column-titles" /><?php _e( 'Yes', 'bookly' ) ?></label>
+                    <label><input type="checkbox" id="bookly-show-column-titles" /><?php _e( 'Yes', 'bookly' ) ?></label>
                 </td>
             </tr>
             <tr>
-                <th class="ab-title-col"><?php _e( 'Columns', 'bookly' ) ?></th>
+                <th class="bookly-title-col"><?php _e( 'Columns', 'bookly' ) ?></th>
                 <td>
                     <label><input type="checkbox" data-column="category" /><?php _e( 'Category', 'bookly' ) ?></label>
                 </td>
@@ -65,7 +63,7 @@
             </tr>
             <?php foreach ( $custom_fields as $field ) : ?>
                 <tr>
-                    <td class="ab-cf-col"><?php echo $field->label ?></td>
+                    <td class="bookly-cf-col"><?php echo $field->label ?></td>
                     <td>
                         <label><input type="checkbox" data-custom_field="<?php echo $field->id ?>" /><?php _e( 'Yes', 'bookly' ) ?></label>
                     </td>
@@ -74,7 +72,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <input class="button button-primary" id="ab-insert-ap-shortcode" type="submit" value="<?php esc_attr_e( 'Insert', 'bookly' ) ?>" />
+                    <input class="button button-primary" id="bookly-insert-ap-shortcode" type="submit" value="<?php esc_attr_e( 'Insert', 'bookly' ) ?>" />
                 </td>
             </tr>
         </table>
@@ -82,14 +80,14 @@
 </div>
 
 <style type="text/css">
-    #ab-shortcode-form table td { padding: 5px; vertical-align: 0; }
-    #ab-shortcode-form table th.ab-title-col { width: 80px; }
+    #bookly-shortcode-form table td { padding: 5px; vertical-align: 0; }
+    #bookly-shortcode-form table th.bookly-title-col { width: 80px; }
 </style>
 
 <script type="text/javascript">
     jQuery(function ($) {
         var $add_button_appointment = $('#add-ap-appointment');
-        var $insert                 = $('#ab-insert-ap-shortcode');
+        var $insert                 = $('#bookly-insert-ap-shortcode');
 
         $add_button_appointment.on('click', function () {
             window.parent.tb_show(<?php echo json_encode( __( 'Add Bookly appointments list', 'bookly' ) ) ?>, this.href);
@@ -127,7 +125,7 @@
             }
 
 
-            if ($('#ab-show-column-titles:checked').length) {
+            if ($('#bookly-show-column-titles:checked').length) {
                 shortcode += ' show_column_titles="1"';
             }
 

@@ -19,9 +19,6 @@ class Controller extends Lib\Base\Controller
 
     public function index()
     {
-        /** @var \WP_Locale $wp_locale */
-        global $wp_locale;
-
         wp_enqueue_media();
         $this->enqueueStyles( array(
             'frontend' => array_merge(
@@ -49,28 +46,31 @@ class Controller extends Lib\Base\Controller
                     ? array()
                     : array( 'js/intlTelInput.min.js' => array( 'jquery' ) )
             ),
-            'module' => array( 'js/staff.js' => array( 'jquery-ui-sortable', 'jquery', 'jquery-ui-datepicker', 'bookly-range_tools.js' ) ),
+            'module' => array(
+                'js/staff-details.js'  => array( 'bookly-alert.js', ),
+                'js/staff-services.js' => array( 'bookly-staff-details.js' ),
+                'js/staff-schedule.js' => array( 'bookly-staff-services.js' ),
+                'js/staff-days-off.js' => array( 'bookly-staff-schedule.js' ),
+                'js/staff.js'          => array( 'jquery-ui-sortable', 'jquery-ui-datepicker', 'bookly-range_tools.js', 'bookly-staff-days-off.js' ),
+            ),
         ) );
 
         wp_localize_script( 'bookly-staff.js', 'BooklyL10n', array(
-            'are_you_sure' => __( 'Are you sure?', 'bookly' ),
-            'close'        => __( 'Close', 'bookly' ),
-            'days'         => array_values( $wp_locale->weekday_abbrev ),
-            'months'       => array_values( $wp_locale->month ),
-            'repeat'       => __( 'Repeat every year', 'bookly' ),
-            'saved'        => __( 'Settings saved.', 'bookly' ),
-            'selector'     => array( 'all_selected' => __( 'All locations', 'bookly' ), 'nothing_selected' => __( 'No locations selected', 'bookly' ), ),
-            'intlTelInput' => array(
+            'are_you_sure'      => __( 'Are you sure?', 'bookly' ),
+            'saved'             => __( 'Settings saved.', 'bookly' ),
+            'capacity_error'    => __( 'Min capacity should not be greater than max capacity.', 'bookly' ),
+            'selector'          => array( 'all_selected' => __( 'All locations', 'bookly' ), 'nothing_selected' => __( 'No locations selected', 'bookly' ), ),
+            'intlTelInput'      => array(
                 'enabled' => get_option( 'bookly_cst_phone_default_country' ) != 'disabled',
                 'utils'   => plugins_url( 'intlTelInput.utils.js', Lib\Plugin::getDirectory() . '/frontend/resources/js/intlTelInput.utils.js' ),
                 'country' => get_option( 'bookly_cst_phone_default_country' ),
             ),
-            'we_are_not_working' => __( 'We are not working on this day', 'bookly' ),
-            'limitations' => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Standard version of Bookly.<br>For more information visit', 'bookly' ) . ' <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
+            'csrf_token'        => Lib\Utils\Common::getCsrfToken(),
+            'limitations'       => __( '<b class="h4">This function is not available in the Lite version of Bookly.</b><br><br>To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Standard version of Bookly.<br>For more information visit', 'bookly' ) . ' <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
         ) );
 
         // Allow add-ons to enqueue their assets.
-        do_action( 'bookly_enqueue_assets_for_staff_profile' );
+        Lib\Proxy\Shared::enqueueAssetsForStaffProfile();
 
         $active_staff_id = 1;
         $staff_members = Lib\Entities\Staff::query()->where( 'id', $active_staff_id )->fetchArray();
@@ -83,7 +83,7 @@ class Controller extends Lib\Base\Controller
             if ( $success_auth ) {
                 $staff = new Lib\Entities\Staff();
                 $staff->load( 1 );
-                $staff->set( 'google_data', null );
+                $staff->setGoogleData( $google->getAccessToken() );
                 $staff->save();
 
                 exit ( '<script>location.href="' . Lib\Google::generateRedirectURI() . '&staff_id=1";</script>' );
@@ -107,9 +107,8 @@ class Controller extends Lib\Base\Controller
     {
         $staff = new Lib\Entities\Staff();
         if ( $staff ) {
-            $this->render( '_list_item', array( 'staff' => $staff->getFields() ) );
+            wp_send_json_success( array( 'html' => $this->render( '_list_item', array( 'staff' => $staff->getFields() ), false ) ) );
         }
-        exit;
     }
 
     public function executeUpdateStaffPosition()
@@ -118,12 +117,12 @@ class Controller extends Lib\Base\Controller
         foreach ( $staff_sorts as $position => $staff_id ) {
             $staff_sort = new Lib\Entities\Staff();
             $staff_sort->load( $staff_id );
-            $staff_sort->set( 'position', $position );
+            $staff_sort->setPosition( $position );
             $staff_sort->save();
         }
     }
 
-    public function executeStaffServices()
+    public function executeGetStaffServices()
     {
         $form = new Forms\StaffServices();
         $staff_id   = 1;
@@ -132,18 +131,18 @@ class Controller extends Lib\Base\Controller
         $services_data = $form->getServicesData();
         $uncategorized_services = $form->getUncategorizedServices();
 
-        $this->render( 'services', compact( 'categories', 'services_data', 'uncategorized_services', 'staff_id' ) );
-        exit;
+        $html = $this->render( 'services', compact( 'categories', 'services_data', 'uncategorized_services', 'staff_id' ), false );
+        wp_send_json_success( compact( 'html' ) );
     }
 
-    public function executeStaffSchedule()
+    public function executeGetStaffSchedule()
     {
         $staff_id = 1;
-        $staff = new Lib\Entities\Staff();
+        $staff    = new Lib\Entities\Staff();
         $staff->load( $staff_id );
         $schedule_items = $staff->getScheduleItems();
-        $this->render( 'schedule', compact( 'schedule_items', 'staff_id' ) );
-        exit;
+        $html = $this->render( 'schedule', compact( 'schedule_items', 'staff_id' ), false );
+        wp_send_json_success( compact( 'html' ) );
     }
 
     public function executeStaffScheduleUpdate()
@@ -151,7 +150,6 @@ class Controller extends Lib\Base\Controller
         $form = new Forms\StaffSchedule();
         $form->bind( $this->getPostParameters() );
         $form->save();
-
         wp_send_json_success();
     }
 
@@ -161,12 +159,12 @@ class Controller extends Lib\Base\Controller
      */
     public function executeResetBreaks()
     {
-        $breaks = $this->getParameter( 'breaks' );
+        $breaks      = $this->getParameter( 'breaks' );
+        $html_breaks = array();
 
         // Remove all breaks for staff member.
         $break = new Lib\Entities\ScheduleItemBreak();
         $break->removeBreaksByStaffId( 1 );
-        $html_breaks = array();
 
         // Restore previous breaks.
         if ( isset( $breaks['breaks'] ) && is_array( $breaks['breaks'] ) ) {
@@ -183,11 +181,11 @@ class Controller extends Lib\Base\Controller
         // Make array with breaks (html) for each day.
         foreach ( $staff->getScheduleItems() as $item ) {
             /** @var Lib\Entities\StaffScheduleItem $item */
-            $html_breaks[ $item->get( 'id' ) ] = $this->render( '_breaks', array(
-                'day_is_not_available' => null === $item->get( 'start_time' ),
-                'item'        => $item,
-                'break_start' => new TimeChoice( array( 'use_empty' => false, 'type' => 'from' ) ),
-                'break_end'   => new TimeChoice( array( 'use_empty' => false, 'type' => 'to' ) ),
+            $html_breaks[ $item->getId() ] = $this->render( '_breaks', array(
+                'day_is_not_available' => null === $item->getStartTime(),
+                'item'                 => $item,
+                'break_start'          => new TimeChoice( array( 'use_empty' => false, 'type' => 'break_from' ) ),
+                'break_end'            => new TimeChoice( array( 'use_empty' => false, 'type' => 'to' ) ),
             ), false );
         }
 
@@ -205,15 +203,14 @@ class Controller extends Lib\Base\Controller
             wp_send_json_error( array( 'message' => __( 'The start time must be less than the end one', 'bookly' ), ) );
         }
 
-        $staffScheduleItem = new Lib\Entities\StaffScheduleItem();
-        $staffScheduleItem->load( $this->getParameter( 'staff_schedule_item_id' ) );
+        $res_schedule = new Lib\Entities\StaffScheduleItem();
+        $res_schedule->load( $this->getParameter( 'staff_schedule_item_id' ) );
 
-        $bound = array( $staffScheduleItem->get( 'start_time' ), $staffScheduleItem->get( 'end_time' ) );
         $break_id = $this->getParameter( 'break_id', 0 );
 
         $in_working_time = $working_start <= $start_time && $start_time <= $working_end
             && $working_start <= $end_time && $end_time <= $working_end;
-        if ( !$in_working_time || ! $staffScheduleItem->isBreakIntervalAvailable( $start_time, $end_time, $break_id ) ) {
+        if ( ! $in_working_time || ! $res_schedule->isBreakIntervalAvailable( $start_time, $end_time, $break_id ) ) {
             wp_send_json_error( array( 'message' => __( 'The requested interval is not available', 'bookly' ), ) );
         }
 
@@ -224,23 +221,23 @@ class Controller extends Lib\Base\Controller
         if ( $break_id ) {
             $break = new Lib\Entities\ScheduleItemBreak();
             $break->load( $break_id );
-            $break->set( 'start_time', $start_time );
-            $break->set( 'end_time', $end_time );
-            $break->save();
+            $break->setStartTime( $start_time )
+                ->setEndTime( $end_time )
+                ->save();
 
             wp_send_json_success( array( 'interval' => $formatted_interval, ) );
         } else {
             $form = new Forms\StaffScheduleItemBreak();
             $form->bind( $this->getPostParameters() );
 
-            $staffScheduleItemBreak = $form->save();
-            if ( $staffScheduleItemBreak ) {
-                $breakStart = new TimeChoice( array( 'use_empty' => false, 'type' => 'from', 'bound' => $bound ) );
-                $breakEnd   = new TimeChoice( array( 'use_empty' => false, 'type' => 'bound', 'bound' => $bound ) );
+            $res_schedule_break = $form->save();
+            if ( $res_schedule_break ) {
+                $breakStart = new TimeChoice( array( 'use_empty' => false, 'type' => 'break_from' ) );
+                $breakEnd   = new TimeChoice( array( 'use_empty' => false, 'type' => 'to' ) );
                 wp_send_json( array(
                     'success'      => true,
                     'item_content' => $this->render( '_break', array(
-                        'staff_schedule_item_break_id' => $staffScheduleItemBreak->get( 'id' ),
+                        'staff_schedule_item_break_id' => $res_schedule_break->getId(),
                         'formatted_interval'           => $formatted_interval,
                         'break_start_choices'          => $breakStart->render( '', $start_time, array( 'class' => 'break-start form-control' ) ),
                         'break_end_choices'            => $breakEnd->render( '', $end_time, array( 'class' => 'break-end form-control' ) ),
@@ -255,7 +252,7 @@ class Controller extends Lib\Base\Controller
     public function executeDeleteStaffScheduleBreak()
     {
         $break = new Lib\Entities\ScheduleItemBreak();
-        $break->set( 'id', $this->getParameter( 'id', 0 ) );
+        $break->setId( $this->getParameter( 'id', 0 ) );
         $break->delete();
 
         wp_send_json_success();
@@ -266,20 +263,26 @@ class Controller extends Lib\Base\Controller
         $form = new Forms\StaffServices();
         $form->bind( $this->getPostParameters() );
         $form->save();
-
         wp_send_json_success();
     }
 
     public function executeEditStaff()
     {
-        $calendar_list = array();
-        $authUrl = null;
         $alert   = array( 'error' => array() );
-        $form    = new Forms\StaffMemberEdit();
         $staff   = new Lib\Entities\Staff();
         $staff->load( 1 );
 
-        if ( $staff->get( 'google_data' ) == '' ) {
+        if ( $gc_errors = Lib\Session::get( 'staff_google_auth_error' ) ) {
+            foreach ( (array) json_decode( $gc_errors, true ) as $error ) {
+                $alert['error'][] = $error;
+            }
+            Lib\Session::destroy( 'staff_google_auth_error' );
+        }
+
+        $google_calendars = array();
+        $authUrl = null;
+        $form  = new Forms\StaffMemberEdit();
+        if ( $staff->getGoogleData() == '' ) {
             if ( get_option( 'bookly_gc_client_id' ) == '' ) {
                 $authUrl = false;
             } else {
@@ -289,7 +292,7 @@ class Controller extends Lib\Base\Controller
         } else {
             $google = new Lib\Google();
             if ( $google->loadByStaff( $staff ) ) {
-                $calendar_list = $google->getCalendarList();
+                $google_calendars = $google->getCalendarList();
             } else {
                 foreach ( $google->getErrors() as $error ) {
                     $alert['error'][] = $error;
@@ -297,20 +300,17 @@ class Controller extends Lib\Base\Controller
             }
         }
 
-        if ( $gc_errors = Lib\Session::get( 'staff_google_auth_error' ) ) {
-            foreach ( (array) json_decode( $gc_errors, true ) as $error ) {
-                $alert['error'][] = $error;
-            }
-            Lib\Session::destroy( 'staff_google_auth_error' );
-        }
-
-        $users_for_staff = Lib\Utils\Common::isCurrentUserAdmin() ? $form->getUsersForStaff( $staff->get( 'id' ) ) : array();
+        $users_for_staff = Lib\Utils\Common::isCurrentUserAdmin() ? $form->getUsersForStaff( $staff->getId() ) : array();
 
         wp_send_json_success( array(
-            'html'  => $this->render( 'edit', compact( 'staff', 'users_for_staff', 'authUrl', 'calendar_list' ), false ),
+            'html'   => array(
+                'edit'    => $this->render( 'edit', compact( 'staff' ), false ),
+                'details' => $this->render( '_details', compact( 'staff', 'authUrl', 'google_calendars', 'users_for_staff' ), false )
+            ),
             'alert' => $alert,
         ) );
     }
+
 
     /**
      * Update staff from POST request.
@@ -323,7 +323,7 @@ class Controller extends Lib\Base\Controller
                 if ( get_option( 'bookly_gen_allow_staff_edit_profile' ) ) {
                     $staff = new Lib\Entities\Staff();
                     $staff->load( $this->getParameter( 'id' ) );
-                    if ( $staff->get( 'wp_user_id' ) == get_current_user_id() ) {
+                    if ( $staff->getWpUserId() == get_current_user_id() ) {
                         unset ( $_POST['wp_user_id'] );
                         break;
                     }
@@ -332,11 +332,12 @@ class Controller extends Lib\Base\Controller
                 wp_die( 'Bookly: ' . __( 'You do not have sufficient permissions to access this page.' ) );
             } while ( 0 );
         }
-        $form = new Forms\StaffMemberEdit();
+        $form  = new Forms\StaffMemberEdit();
+
         $form->bind( $this->getPostParameters(), $_FILES );
         $employee = $form->save();
 
-        do_action( 'bookly_staff_update', $this->getPostParameters() );
+        Lib\Proxy\Shared::updateStaff( $this->getPostParameters() );
 
         if ( $employee === false && array_key_exists( 'google_calendar_error', $form->getErrors() ) ) {
             $errors = $form->getErrors();
@@ -344,7 +345,7 @@ class Controller extends Lib\Base\Controller
         } else {
             $wp_users = array();
             if ( Lib\Utils\Common::isCurrentUserAdmin() ) {
-                $form = new Forms\StaffMember();
+                $form     = new Forms\StaffMember();
                 $wp_users = $form->getUsersForStaff();
             }
 
@@ -368,17 +369,28 @@ class Controller extends Lib\Base\Controller
     {
         $staff = new Lib\Entities\Staff();
         $staff->load( 1 );
-        $staff->set( 'attachment_id', null );
+        $staff->setAttachmentId( null );
         $staff->save();
+
         wp_send_json_success();
     }
 
     public function executeStaffHolidays()
     {
-        $staff_id = $this->getParameter( 'id', 0 );
-        $holidays = $this->getHolidays( $staff_id );
-        $this->render( 'holidays', compact ( 'holidays', 'staff_id' ) );
-        exit;
+        /** @var \WP_Locale $wp_locale */
+        global $wp_locale;
+
+        $staff_id           = 1;
+        $holidays           = $this->getHolidays( $staff_id );
+        $loading_img        = plugins_url( 'bookly-responsive-appointment-booking-tool/backend/resources/images/loading.gif' );
+        $start_of_week      = (int) get_option( 'start_of_week' );
+        $days               = array_values( $wp_locale->weekday_abbrev );
+        $months             = array_values( $wp_locale->month );
+        $close              = __( 'Close', 'bookly' );
+        $repeat             = __( 'Repeat every year', 'bookly' );
+        $we_are_not_working = __( 'We are not working on this day', 'bookly' );
+        $html               = $this->render( 'holidays', array(), false );
+        wp_send_json_success( compact( 'html', 'holidays', 'days', 'months', 'start_of_week', 'loading_img', 'we_are_not_working', 'repeat', 'close' ) );
     }
 
     public function executeStaffHolidaysUpdate()
@@ -400,11 +412,10 @@ class Controller extends Lib\Base\Controller
                 }
                 // Add the new event.
             } elseif ( $holiday && $day ) {
-                $wpdb->insert( Lib\Entities\Holiday::getTableName(), array( 'date' => $day, 'repeat_event' => (int) $repeat, 'staff_id' => $staff_id ), array( '%s', '%d', '%d' ) );
+                $wpdb->insert( Lib\Entities\Holiday::getTableName(), array( 'date' => $day, 'repeat_event' => (int) $repeat, 'staff_id' => 1 ), array( '%s', '%d', '%d' ) );
             }
-
             // And return refreshed events.
-            echo $this->getHolidays( $staff_id );
+            echo json_encode( $this->getHolidays( $staff_id ) );
         }
         exit;
     }
@@ -427,7 +438,7 @@ class Controller extends Lib\Base\Controller
             }
         }
 
-        return json_encode( $holidays );
+        return $holidays;
     }
 
     /**
@@ -439,43 +450,44 @@ class Controller extends Lib\Base\Controller
     protected function hasAccess( $action )
     {
         if ( parent::hasAccess( $action ) ) {
-
             if ( ! Lib\Utils\Common::isCurrentUserAdmin() ) {
                 $staff = new Lib\Entities\Staff();
 
                 switch ( $action ) {
                     case 'executeEditStaff':
                     case 'executeDeleteStaffAvatar':
-                    case 'executeStaffServices':
                     case 'executeStaffSchedule':
                     case 'executeStaffHolidays':
                     case 'executeUpdateStaff':
+                    case 'executeGetStaffDetails':
                         $staff->load( $this->getParameter( 'id' ) );
                         break;
+                    case 'executeGetStaffServices':
+                    case 'executeGetStaffSchedule':
                     case 'executeStaffServicesUpdate':
                     case 'executeStaffHolidaysUpdate':
                         $staff->load( $this->getParameter( 'staff_id' ) );
                         break;
                     case 'executeStaffScheduleHandleBreak':
-                        $staffScheduleItem = new Lib\Entities\StaffScheduleItem();
-                        $staffScheduleItem->load( $this->getParameter( 'staff_schedule_item_id' ) );
-                        $staff->load( $staffScheduleItem->get( 'staff_id' ) );
+                        $res_schedule = new Lib\Entities\StaffScheduleItem();
+                        $res_schedule->load( $this->getParameter( 'staff_schedule_item_id' ) );
+                        $staff->load( $res_schedule->getStaffId() );
                         break;
                     case 'executeDeleteStaffScheduleBreak':
                         $break = new Lib\Entities\ScheduleItemBreak();
                         $break->load( $this->getParameter( 'id' ) );
-                        $staffScheduleItem = new Lib\Entities\StaffScheduleItem();
-                        $staffScheduleItem->load( $break->get( 'staff_schedule_item_id' ) );
-                        $staff->load( $staffScheduleItem->get( 'staff_id' ) );
+                        $res_schedule = new Lib\Entities\StaffScheduleItem();
+                        $res_schedule->load( $break->getStaffScheduleItemId() );
+                        $staff->load( $res_schedule->getStaffId() );
                         break;
                     case 'executeStaffScheduleUpdate':
                         if ( $this->hasParameter( 'days' ) ) {
                             foreach ( $this->getParameter( 'days' ) as $id => $day_index ) {
-                                $staffScheduleItem = new Lib\Entities\StaffScheduleItem();
-                                $staffScheduleItem->load( $id );
+                                $res_schedule = new Lib\Entities\StaffScheduleItem();
+                                $res_schedule->load( $id );
                                 $staff = new Lib\Entities\Staff();
-                                $staff->load( $staffScheduleItem->get( 'staff_id' ) );
-                                if ( $staff->get( 'wp_user_id' ) != get_current_user_id() ) {
+                                $staff->load( $res_schedule->getStaffId() );
+                                if ( $staff->getWpUserId() != get_current_user_id() ) {
                                     return false;
                                 }
                             }
@@ -485,7 +497,7 @@ class Controller extends Lib\Base\Controller
                         return false;
                 }
 
-                return $staff->get( 'wp_user_id' ) == get_current_user_id();
+                return $staff->getWpUserId() == get_current_user_id();
             }
 
             return true;
@@ -493,16 +505,4 @@ class Controller extends Lib\Base\Controller
 
         return false;
     }
-
-    /**
-     * Override parent method to add 'wp_ajax_bookly_' prefix
-     * so current 'execute*' methods look nicer.
-     *
-     * @param string $prefix
-     */
-    protected function registerWpActions( $prefix = '' )
-    {
-        parent::registerWpActions( 'wp_ajax_bookly_' );
-    }
-
 }

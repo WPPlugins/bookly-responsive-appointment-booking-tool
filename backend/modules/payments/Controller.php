@@ -28,11 +28,12 @@ class Controller extends Lib\Base\Controller
         global $wp_locale;
 
         $this->enqueueStyles( array(
-            'backend' => array(
-                'bootstrap/css/bootstrap-theme.min.css',
+            'frontend' => array( 'css/ladda.min.css', ),
+            'backend'  => array(
+                'css/select2.min.css',
+                'bootstrap/css/bootstrap-theme.min.css' => array( 'bookly-select2.min.css' ),
                 'css/daterangepicker.css',
             ),
-            'frontend' => array( 'css/ladda.min.css', ),
         ) );
 
         $this->enqueueScripts( array(
@@ -41,7 +42,7 @@ class Controller extends Lib\Base\Controller
                 'js/datatables.min.js'    => array( 'jquery' ),
                 'js/moment.min.js',
                 'js/daterangepicker.js'   => array( 'jquery' ),
-                'js/chosen.jquery.min.js' => array( 'jquery' ),
+                'js/select2.full.min.js'  => array( 'jquery' ),
             ),
             'frontend' => array(
                 'js/spin.min.js'  => array( 'jquery' ),
@@ -51,6 +52,7 @@ class Controller extends Lib\Base\Controller
         ) );
 
         wp_localize_script( 'bookly-daterangepicker.js', 'BooklyL10n', array(
+            'csrf_token'    => Lib\Utils\Common::getCsrfToken(),
             'today'         => __( 'Today', 'bookly' ),
             'yesterday'     => __( 'Yesterday', 'bookly' ),
             'last_7'        => __( 'Last 7 Days', 'bookly' ),
@@ -74,6 +76,7 @@ class Controller extends Lib\Base\Controller
             'processing'    => __( 'Processing...', 'bookly' ),
             'details'       => __( 'Details', 'bookly' ),
             'are_you_sure'  => __( 'Are you sure?', 'bookly' ),
+            'no_result_found' => __( 'No result found', 'bookly' )
         ) );
 
         $types = array(
@@ -86,7 +89,7 @@ class Controller extends Lib\Base\Controller
             Lib\Entities\Payment::TYPE_PAYSON,
             Lib\Entities\Payment::TYPE_MOLLIE,
             Lib\Entities\Payment::TYPE_COUPON,
-            Lib\Entities\Payment::WOO_COMMERCE,
+            Lib\Entities\Payment::TYPE_WOOCOMMERCE,
         );
         $providers = Lib\Entities\Staff::query()->select( 'id, full_name' )->sortBy( 'full_name' )->fetchArray();
         $services  = Lib\Entities\Service::query()->select( 'id, title' )->sortBy( 'title' )->fetchArray();
@@ -104,7 +107,7 @@ class Controller extends Lib\Base\Controller
         $filter  = $this->getParameter( 'filter' );
 
         $query = Lib\Entities\Payment::query( 'p' )
-            ->select( 'p.id, p.created, p.type, p.paid, p.total, p.status, p.details, c.name customer, st.full_name provider, s.title service, a.start_date' )
+            ->select( 'p.id, p.created, p.type, p.paid, p.total, p.status, p.details, c.full_name customer, st.full_name provider, s.title service, a.start_date' )
             ->leftJoin( 'CustomerAppointment', 'ca', 'ca.payment_id = p.id' )
             ->leftJoin( 'Customer', 'c', 'c.id = ca.customer_id' )
             ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
@@ -118,15 +121,15 @@ class Controller extends Lib\Base\Controller
 
         $query->whereBetween( 'p.created', $start, $end );
 
-        if ( $filter['type'] != -1 ) {
+        if ( $filter['type'] != '' ) {
             $query->where( 'p.type', $filter['type'] );
         }
 
-        if ( $filter['staff'] != -1 ) {
+        if ( $filter['staff'] != '' ) {
             $query->where( 'st.id', $filter['staff'] );
         }
 
-        if ( $filter['service']  != -1 ) {
+        if ( $filter['service'] != '' ) {
             $query->where( 's.id', $filter['service'] );
         }
 
@@ -145,9 +148,9 @@ class Controller extends Lib\Base\Controller
                 ? ' <span class="glyphicon glyphicon-shopping-cart" title="' . esc_attr( __( 'See details for more items', 'bookly' ) ) . '"></span>'
                 : ''  ;
 
-            $paid_title = Lib\Utils\Common::formatPrice( $payment['paid'] );
+            $paid_title = Lib\Utils\Price::format( $payment['paid'] );
             if ( $payment['paid'] != $payment['total'] ) {
-                $paid_title = sprintf( __( '%s of %s', 'bookly' ), $paid_title, Lib\Utils\Common::formatPrice( $payment['total'] ) );
+                $paid_title = sprintf( __( '%s of %s', 'bookly' ), $paid_title, Lib\Utils\Price::format( $payment['total'] ) );
             }
 
             $data[] = array(
@@ -173,7 +176,7 @@ class Controller extends Lib\Base\Controller
             'recordsTotal'    => count( $data ),
             'recordsFiltered' => count( $data ),
             'data'            => $data,
-            'total'           => Lib\Utils\Common::formatPrice( $total ),
+            'total'           => Lib\Utils\Price::format( $total ),
         ) );
     }
 
@@ -192,7 +195,7 @@ class Controller extends Lib\Base\Controller
                 p.type,
                 p.details,
                 p.paid,
-                c.name AS customer' )
+                c.full_name AS customer' )
             ->leftJoin( 'CustomerAppointment', 'ca', 'ca.payment_id = p.id' )
             ->leftJoin( 'Customer', 'c', 'c.id = ca.customer_id' )
             ->where( 'p.id', $this->getParameter( 'payment_id' ) )
@@ -210,7 +213,7 @@ class Controller extends Lib\Base\Controller
                     'paid'     => $payment['paid'],
                 ),
                 'items' => $details['items'],
-                'deposit_enabled' => Lib\Config::isDepositPaymentsEnabled()
+                'deposit_enabled' => Lib\Config::depositPaymentsEnabled()
             );
         }
 
@@ -234,33 +237,21 @@ class Controller extends Lib\Base\Controller
     {
         $payment = Lib\Entities\Payment::find( $this->getParameter( 'payment_id' ) );
         $payment
-            ->set( 'paid', $payment->get( 'total' ) )
-            ->set( 'status', Lib\Entities\Payment::STATUS_COMPLETED )
+            ->setPaid( $payment->getTotal() )
+            ->setStatus( Lib\Entities\Payment::STATUS_COMPLETED )
             ->save();
 
-        $payment_title = Lib\Utils\Common::formatPrice( $payment->get( 'paid' ) );
-        if ( $payment->get( 'paid' ) != $payment->get( 'total' ) ) {
-            $payment_title = sprintf( __( '%s of %s', 'bookly' ), $payment_title, Lib\Utils\Common::formatPrice( $payment->get( 'total' ) ) );
+        $payment_title = Lib\Utils\Price::format( $payment->getPaid() );
+        if ( $payment->getPaid() != $payment->getTotal() ) {
+            $payment_title = sprintf( __( '%s of %s', 'bookly' ), $payment_title, Lib\Utils\Price::format( $payment->getTotal() ) );
         }
         $payment_title .= sprintf(
             ' %s <span%s>%s</span>',
-            Lib\Entities\Payment::typeToString( $payment->get( 'type' ) ),
-            $payment->get( 'status' ) == Lib\Entities\Payment::STATUS_PENDING ? ' class="text-danger"' : '',
-            Lib\Entities\Payment::statusToString( $payment->get( 'status' ) )
+            Lib\Entities\Payment::typeToString( $payment->getType() ),
+            $payment->getStatus() == Lib\Entities\Payment::STATUS_PENDING ? ' class="text-danger"' : '',
+            Lib\Entities\Payment::statusToString( $payment->getStatus() )
         );
 
         wp_send_json_success( array( 'payment_title' => $payment_title ) );
     }
-
-    /**
-     * Override parent method to add 'wp_ajax_bookly_' prefix
-     * so current 'execute*' methods look nicer.
-     *
-     * @param string $prefix
-     */
-    protected function registerWpActions( $prefix = '' )
-    {
-        parent::registerWpActions( 'wp_ajax_bookly_' );
-    }
-
 }

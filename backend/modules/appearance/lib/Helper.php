@@ -4,55 +4,66 @@ namespace BooklyLite\Backend\Modules\Appearance\Lib;
 class Helper
 {
     /**
-     * Render ui for editing frontend messages. <span>
+     * Render editable string (single line).
      *
-     * @param array $data           l10n option name
-     * @param null  $mirror_class   the updated value will be displayed also for the objects with css class
+     * @param array $options
      */
-    public static function renderSpan( array $data, $mirror_class = null )
+    public static function renderString(array $options )
     {
-        $id      = $data[0];
-        $options = array();
-        foreach ( $data as $option_name ) {
-            $options[ $option_name ] = get_option( $option_name );
-        }
-        if ( count( $options ) > 1 ) {
-            printf( '<span id="%s" data-options-default=\'%s\' data-type="multiple"%s%s>%s</span>',
-                $id, json_encode( $options ), $mirror_class ? ' class="' . $mirror_class . '"' : '',
-                $mirror_class ? ' data-mirror="' . $mirror_class . '"' : '', esc_html( $options[ $id ] )
-            );
-        } else {
-            printf( '<span id="%s" data-option-default=\'%s\' data-type="text" class="bookly-editable%s"%s>%s</span>',
-                $id, esc_attr( $options[ $id ] ), $mirror_class ? ' ' . $mirror_class : '',
-                $mirror_class ? ' data-mirror="' . $mirror_class . '"' : '', esc_html( $options[ $id ] )
-            );
-        }
+        self::_renderEditable( $options, 'span' );
     }
 
     /**
-     * Render ui for editing frontend messages. <label>
+     * Render editable label.
      *
-     * @param array $data           l10n option name
-     * @param null  $mirror_class   the updated value will be displayed also for the objects with css class
+     * @param array $options
      */
-    public static function renderLabel( array $data, $mirror_class = null )
+    public static function renderLabel( array $options )
     {
-        $id      = $data[0];
-        $options = array();
-        foreach ( $data as $option_name ) {
-            $options[ $option_name ] = get_option( $option_name );
-        }
-        if ( count( $options ) > 1 ) {
-            printf( '<label id="%s" data-type="multiple" data-options-default=\'%s\'%s%s>%s</label>',
-                $id, json_encode( $options ), $mirror_class ? ' class="' . $mirror_class . '"' : '',
-                $mirror_class ? ' data-mirror="' . $mirror_class . '"' : '', esc_html( $options[ $id ] )
-            );
-        } else {
-            printf( '<label id="%s" data-option-default=\'%s\' data-type="text" class="bookly-editable%s"%s>%s</label>',
-                $id, esc_attr( $options[ $id ] ), $mirror_class ? ' ' . $mirror_class : '',
-                $mirror_class ? ' data-mirror="' . $mirror_class . '"' : '', esc_html( $options[ $id ] )
-            );
-        }
+        self::_renderEditable( $options, 'label' );
     }
 
+    /**
+     * Render editable text (multi-line).
+     *
+     * @param string $option_name
+     * @param string $codes
+     * @param string $placement
+     * @param string $title
+     */
+    public static function renderText( $option_name, $codes = '', $placement = 'bottom', $title = '' )
+    {
+        $option_value = get_option( $option_name );
+
+        printf( '<span class="bookly-js-editable bookly-js-option %s editable-pre-wrapped" data-type="bookly" data-fieldType="textarea" data-values="%s" data-codes="%s" data-title="%s" data-placement="%s">%s</span>',
+            $option_name,
+            esc_attr( json_encode( array( $option_name => $option_value ) ) ),
+            esc_attr( $codes ),
+            esc_attr( $title ),
+            $placement,
+            esc_html( $option_value )
+        );
+    }
+
+    /**
+     * Render editable element.
+     *
+     * @param array $options
+     * @param string $tag
+     */
+    private static function _renderEditable( array $options, $tag )
+    {
+        $data = array();
+        foreach ( $options as $option_name ) {
+            $data[ $option_name ] = get_option( $option_name );
+        }
+
+        printf( '<%s class="bookly-js-editable bookly-js-option %s" data-type="bookly" data-values="%s">%s</%s>',
+            $tag,
+            $options[0],
+            esc_attr( json_encode( $data ) ),
+            esc_html( $data[ $options[0] ] ),
+            $tag
+        );
+    }
 }

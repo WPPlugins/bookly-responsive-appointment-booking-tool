@@ -1,69 +1,60 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use BooklyLite\Backend\Modules\Appearance\Components;
+/** @var BooklyLite\Backend\Modules\Appearance\Lib\Helper $editable */
+?>
 <div class="bookly-form">
     <?php include '_progress_tracker.php' ?>
-    <div class="bookly-box">
-        <span data-option-default="<?php form_option( 'bookly_l10n_info_coupon' ) ?>" data-notes="<?php echo esc_attr( $this->render( '_codes', array( 'step' => 7 ), false ) ) ?>" class="bookly-editable" id="bookly_l10n_info_coupon" data-type="textarea"><?php echo esc_html( get_option( 'bookly_l10n_info_coupon' ) ) ?></span>
-    </div>
+    <?php \BooklyLite\Lib\Proxy\Coupons::renderAppearance() ?>
 
-    <div class="bookly-box ab-list">
-        <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_label_coupon', ) ) ?>
-        <div class="ab-inline-block">
-            <input class="ab-user-coupon" type="text" />
-            <div class="ab-btn btn-apply-coupon">
-                <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_apply', ) ) ?>
-            </div>
+    <div class="bookly-payment-nav">
+        <div class="bookly-box bookly-js-payment-single-app">
+            <?php $editable::renderText( 'bookly_l10n_info_payment_step_single_app', Components::getInstance()->renderCodes( array( 'step' => 7 ), false ), 'right' ) ?>
         </div>
-    </div>
-    <div class="ab-payment-nav">
-        <div class="bookly-box">
-            <span data-option-default="<?php form_option( 'bookly_l10n_info_payment_step' ) ?>" data-notes="<?php echo esc_attr( $this->render( '_codes', compact( 'step' ), false ) ) ?>" class="bookly-editable" id="bookly_l10n_info_payment_step" data-type="textarea"><?php echo esc_html( get_option( 'bookly_l10n_info_payment_step' ) ) ?></span>
+        <div class="bookly-box bookly-js-payment-several-apps" style="display:none">
+            <?php $editable::renderText( 'bookly_l10n_info_payment_step_several_apps', Components::getInstance()->renderCodes( array( 'step' => 7, 'extra_codes' => 1 ), false ), 'right' ) ?>
         </div>
 
-        <div class="bookly-box ab-list">
+        <div class="bookly-box bookly-list">
             <label>
                 <input type="radio" name="payment" checked="checked" />
-                <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_label_pay_locally', ) ) ?>
+                <?php $editable::renderString( array( 'bookly_l10n_label_pay_locally', ) ) ?>
             </label>
         </div>
 
-        <div class="bookly-box ab-list">
+        <div class="bookly-box bookly-list">
             <label>
                 <input type="radio" name="payment" />
-                <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_label_pay_paypal', ) ) ?>
+                <?php $editable::renderString( array( 'bookly_l10n_label_pay_paypal', ) ) ?>
                 <img src="<?php echo plugins_url( 'frontend/resources/images/paypal.png', \BooklyLite\Lib\Plugin::getMainFile() ) ?>" alt="paypal" />
             </label>
         </div>
 
-        <div class="bookly-box ab-list">
+        <div class="bookly-box bookly-list"
+            <?php if ( BooklyLite\Lib\Proxy\Shared::appearanceRequiredInterfaceCreditCard( false ) == false ) : ?>
+             style="display: none"
+            <?php endif ?>
+        >
             <label>
-                <input type="radio" name="payment" class="ab-card-payment" />
-                <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_label_pay_ccard', ) ) ?>
+                <input type="radio" name="payment" id="bookly-card-payment" />
+                <?php $editable::renderString( array( 'bookly_l10n_label_pay_ccard', ) ) ?>
                 <img src="<?php echo plugins_url( 'frontend/resources/images/cards.png', \BooklyLite\Lib\Plugin::getMainFile() ) ?>" alt="cards" />
             </label>
-            <form class="ab-card-form ab-clearBottom" style="margin-top:15px;display: none;">
+            <form class="bookly-card-form bookly-clear-bottom" style="margin-top:15px;display: none;">
                 <?php include '_card_payment.php' ?>
             </form>
         </div>
 
-        <div class="bookly-box ab-list">
-            <label>
-                <input type="radio" name="payment" />
-                <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_label_pay_mollie', ) ) ?>
-                <img src="<?php echo plugins_url( 'frontend/resources/images/mollie.png', \BooklyLite\Lib\Plugin::getMainFile() ) ?>" alt="mollie" />
-            </label>
-        </div>
-
-        <?php do_action( 'bookly_render_appearance_payment_gateway_selector' ) ?>
+        <?php \BooklyLite\Lib\Proxy\Shared::renderAppearancePaymentGatewaySelector() ?>
     </div>
 
-    <?php do_action( 'bookly_recurring_appointments_render_editable_message_info' ) ?>
+    <?php \BooklyLite\Lib\Proxy\RecurringAppointments::renderAppearanceEditableInfoMessage() ?>
 
     <div class="bookly-box bookly-nav-steps">
-        <div class="bookly-back-step ab-btn">
-            <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_back' ), 'bookly-js-text-back' ) ?>
+        <div class="bookly-back-step bookly-js-back-step bookly-btn">
+            <?php $editable::renderString( array( 'bookly_l10n_button_back' ) ) ?>
         </div>
-        <div class="bookly-next-step ab-btn">
-            <?php \BooklyLite\Backend\Modules\Appearance\Lib\Helper::renderSpan( array( 'bookly_l10n_button_next' ), 'bookly-js-text-next' ) ?>
+        <div class="bookly-next-step bookly-js-next-step bookly-btn">
+            <?php $editable::renderString( array( 'bookly_l10n_step_payment_button_next' ) ) ?>
         </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <div ng-controller=testEmailNotificationsDialogCtrl>
-    <div id=ab_test_email_notifications_dialog class="modal fade" tabindex=-1 role="dialog">
+    <div id=bookly-test-email-notifications-dialog class="modal fade" tabindex=-1 role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div ng-show=loading class="bookly-loading"></div>
@@ -83,6 +83,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
                             <?php \BooklyLite\Lib\Utils\Common::submitButton( '', '', __( 'Send', 'bookly' ) ) ?>
                         </div>
                     </form>
@@ -91,7 +92,7 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <div class="modal fade" id="ab--modal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="bookly-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

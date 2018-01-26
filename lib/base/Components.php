@@ -16,12 +16,6 @@ abstract class Components
     protected $reflection = null;
 
     /**
-     * User created variables
-     * @var array
-     */
-    private $vars = array();
-
-    /**
      * Array of child class instances
      * @var Components[]
      */
@@ -44,54 +38,6 @@ abstract class Components
         }
 
         return self::$instances[ $class ];
-    }
-
-    /**
-     * Set template variable.
-     *
-     * @param string $name
-     * @param string $value
-     */
-    public function __set( $name, $value )
-    {
-        $this->vars[ $name ] = $value;
-    }
-
-    /**
-     * Checks whether variable exists.
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function __isset( $name )
-    {
-        return isset ( $this->vars[ $name ] );
-    }
-
-    /**
-     * Get template variable.
-     *
-     * @param string $name
-     * @return mixed
-     */
-    public function __get( $name )
-    {
-        if ( array_key_exists( $name, $this->vars ) ) {
-            return $this->vars[ $name ];
-        }
-
-        $trace = debug_backtrace();
-        trigger_error(
-            sprintf(
-                'Undefined property via __get(): %s in %s on line %s',
-                $name,
-                $trace[0]['file'],
-                $trace[0]['line']
-            ),
-            E_USER_NOTICE
-        );
-
-        return null;
     }
 
     /******************************************************************************************************************
@@ -182,14 +128,14 @@ abstract class Components
     /**
      * Render a template file.
      *
-     * @param $template
-     * @param array $variables
-     * @param bool $echo
-     * @return string
+     * @throws \Exception
+     * @param string $template
+     * @param array  $variables
+     * @param bool   $echo
+     * @return string|void
      */
     protected function render( $template, $variables = array(), $echo = true )
     {
-        extract( $this->vars );
         extract( $variables );
 
         // Start output buffering.
@@ -231,9 +177,8 @@ abstract class Components
     {
         $func = ( $type == 'scripts' ) ? 'wp_enqueue_script' : 'wp_enqueue_style';
 
-        $namespace = $this->reflection->getNamespaceName();
-        /** @var Lib\Base\Plugin $plugin_class */
-        $plugin_class  = substr( $namespace, 0, strpos( $namespace, '\\' ) ) . '\Lib\Plugin';
+        $plugin_class   = Lib\Base\Plugin::getPluginFor( $this );
+        $assets_version = $plugin_class::getVersion();
 
         foreach ( $sources as $source => $files ) {
             switch ( $source ) {
@@ -251,6 +196,7 @@ abstract class Components
                     break;
                 case 'bookly':
                     $path = Lib\Plugin::getDirectory() . '/path';
+                    $assets_version = Lib\Plugin::getVersion();
                     break;
                 default:
                     $path = $source . '/path';
@@ -261,9 +207,9 @@ abstract class Components
                 $deps = is_array( $value ) ? $value : array();
 
                 if ( $path === false ) {
-                    call_user_func( $func, $file, false, $deps, $plugin_class::getVersion() );
+                    call_user_func( $func, $file, false, $deps, $assets_version );
                 } else {
-                    call_user_func( $func, 'bookly-' . basename( $file ), plugins_url( $file, $path ), $deps, $plugin_class::getVersion() );
+                    call_user_func( $func, 'bookly-' . basename( $file ), plugins_url( $file, $path ), $deps, $assets_version );
                 }
             }
         }

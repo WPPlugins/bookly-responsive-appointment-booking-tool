@@ -9,6 +9,15 @@ use BooklyLite\Lib;
  */
 class StaffScheduleItem extends Lib\Base\Entity
 {
+    /** @var  int */
+    protected $staff_id;
+    /** @var  int */
+    protected $day_index;
+    /** @var  int */
+    protected $start_time;
+    /** @var  int */
+    protected $end_time;
+
     protected static $table = 'ab_staff_schedule_items';
 
     protected static $schema = array(
@@ -18,11 +27,6 @@ class StaffScheduleItem extends Lib\Base\Entity
         'start_time' => array( 'format' => '%s' ),
         'end_time'   => array( 'format' => '%s' ),
     );
-
-    protected static $cache = array();
-
-    const WORKING_START_TIME = 0;     // 00:00:00
-    const WORKING_END_TIME   = 86400; // 24:00:00
 
     /**
      * Checks if
@@ -35,12 +39,10 @@ class StaffScheduleItem extends Lib\Base\Entity
     public function isBreakIntervalAvailable( $start_time, $end_time, $break_id = 0 )
     {
         return ScheduleItemBreak::query()
-            ->where( 'staff_schedule_item_id', $this->get( 'id' ) )
+            ->where( 'staff_schedule_item_id', $this->getId() )
             ->whereNot( 'id', $break_id )
-            ->whereRaw(
-                'start_time > %s AND start_time < %s OR (end_time > %s AND end_time < %s) OR (start_time < %s AND end_time > %s) OR (start_time = %s AND end_time = %s)',
-                array( $start_time, $end_time, $start_time, $end_time, $start_time, $end_time, $start_time, $end_time )
-            )
+            ->whereLt( 'start_time', $end_time )
+            ->whereGt( 'end_time', $start_time )
             ->count() == 0;
     }
 
@@ -52,10 +54,110 @@ class StaffScheduleItem extends Lib\Base\Entity
     public function getBreaksList()
     {
         return ScheduleItemBreak::query()
-            ->where( 'staff_schedule_item_id', $this->get( 'id' ) )
+            ->where( 'staff_schedule_item_id', $this->getId() )
             ->sortBy( 'start_time, end_time' )
             ->fetchArray();
     }
+
+    /**************************************************************************
+     * Entity Fields Getters & Setters                                        *
+     **************************************************************************/
+
+    /**
+     * Gets staff_id
+     *
+     * @return int
+     */
+    public function getStaffId()
+    {
+        return $this->staff_id;
+    }
+
+    /**
+     * Sets staff_id
+     *
+     * @param int $staff_id
+     * @return $this
+     */
+    public function setStaffId( $staff_id )
+    {
+        $this->staff_id = $staff_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets day_index
+     *
+     * @return int
+     */
+    public function getDayIndex()
+    {
+        return $this->day_index;
+    }
+
+    /**
+     * Sets day_index
+     *
+     * @param int $day_index
+     * @return $this
+     */
+    public function setDayIndex( $day_index )
+    {
+        $this->day_index = $day_index;
+
+        return $this;
+    }
+
+    /**
+     * Gets start_time
+     *
+     * @return int
+     */
+    public function getStartTime()
+    {
+        return $this->start_time;
+    }
+
+    /**
+     * Sets start_time
+     *
+     * @param int $start_time
+     * @return $this
+     */
+    public function setStartTime( $start_time )
+    {
+        $this->start_time = $start_time;
+
+        return $this;
+    }
+
+    /**
+     * Gets end_time
+     *
+     * @return int
+     */
+    public function getEndTime()
+    {
+        return $this->end_time;
+    }
+
+    /**
+     * Sets end_time
+     *
+     * @param int $end_time
+     * @return $this
+     */
+    public function setEndTime( $end_time )
+    {
+        $this->end_time = $end_time;
+
+        return $this;
+    }
+
+    /**************************************************************************
+     * Overridden Methods                                                     *
+     **************************************************************************/
 
     public function save()
     {
@@ -64,10 +166,10 @@ class StaffScheduleItem extends Lib\Base\Entity
             $break = new ScheduleItemBreak();
             $break->setFields( $row );
             if (
-                $this->get( 'start_time' )     >= $break->get( 'start_time' )
-                || $break->get( 'start_time' ) >= $this->get( 'end_time' )
-                || $this->get( 'start_time' )  >= $break->get( 'end_time' )
-                || $break->get( 'end_time' )   >= $this->get( 'end_time' )
+                $this->getStartTime()     >= $break->getStartTime()
+                || $break->getStartTime() >= $this->getEndTime()
+                || $this->getStartTime()  >= $break->getEndTime()
+                || $break->getEndTime()   >= $this->getEndTime()
             ) {
                 $break->delete();
             }

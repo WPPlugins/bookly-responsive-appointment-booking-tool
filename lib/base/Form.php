@@ -19,11 +19,11 @@ abstract class Form
     /**
      * @staticvar string
      */
-    protected static $namespace = '\\BooklyLite\\Lib\\Entities';
+    protected static $namespace = '\BooklyLite\Lib\Entities';
 
     /**
      * Entity object.
-     * @var object
+     * @var Entity
      */
     protected $object = null;
 
@@ -106,17 +106,13 @@ abstract class Form
     /**
      * Save data to database.
      *
-     * @return object Entity
+     * @return Entity
      */
     public function save()
     {
-        foreach ( $this->object->getFields() as $field => $value ) {
-            if ( array_key_exists( $field, $this->data ) ) {
-                $this->object->set( $field, $this->data[ $field ] );
-            }
-        }
-
-        $this->object->save();
+        $this->object
+            ->setFields( $this->data )
+            ->save();
 
         return $this->object;
     }
@@ -132,7 +128,7 @@ abstract class Form
     /**
      * Get entity object.
      *
-     * @return object
+     * @return Entity
      */
     public function getObject()
     {

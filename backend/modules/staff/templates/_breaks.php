@@ -1,4 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+    /** @var \BooklyLite\Lib\Entities\StaffScheduleItem $item */
     $breaks_list = $item->getBreaksList();
 ?>
 <div class="breaks-list">

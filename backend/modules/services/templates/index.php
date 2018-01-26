@@ -14,7 +14,7 @@
                         <div class="bookly-padding-vertical-xs"><?php _e( 'All Services', 'bookly' ) ?></div>
                     </div>
                      <ul id="bookly-category-item-list">
-                        <?php foreach ( $category_collection as $category ) include '_category_item.php'; ?>
+                        <?php foreach ( $category_collection as $category ) $this->render( '_category_item', compact( 'category' ) ) ?>
                     </ul>
                 </div>
 
@@ -31,7 +31,8 @@
                         <div class="form-field form-required">
                             <label for="bookly-category-name"><?php _e( 'Name', 'bookly' ) ?></label>
                             <input class="form-control" id="bookly-category-name" type="text" name="name" />
-                            <input type="hidden" name="action" value="bookly_category_form" />
+                            <input type="hidden" name="action" value="bookly_add_category" />
+                            <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
                         </div>
                     </div>
 
@@ -61,7 +62,7 @@
                             <?php _e( 'No services found. Please add services.', 'bookly' ) ?>
                         </p>
 
-                        <div class="bookly-margin-top-xlg" id="ab-services-list">
+                        <div class="bookly-margin-top-xlg" id="bookly-js-services-list">
                             <?php include '_list.php' ?>
                         </div>
                         <div class="text-right">
@@ -73,7 +74,7 @@
         </div>
     </div>
 
-    <div id="ab-staff-update" class="modal fade" tabindex=-1 role="dialog">
+    <div id="bookly-update-service-settings" class="modal fade" tabindex=-1 role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -84,22 +85,18 @@
                     <p><?php _e( 'You are about to change a service setting which is also configured separately for each staff member. Do you want to update it in staff settings too?', 'bookly' ) ?></p>
                     <div class="checkbox">
                         <label>
-                            <input id="ab-remember-my-choice" type="checkbox">
+                            <input id="bookly-remember-my-choice" type="checkbox">
                             <?php _e( 'Remember my choice', 'bookly' ) ?>
                         </label>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-default ab-no" data-dismiss="modal" aria-hidden="true">
+                    <button type="reset" class="btn btn-default bookly-no" data-dismiss="modal" aria-hidden="true">
                         <?php _e( 'No, update just here in services', 'bookly' ) ?>
                     </button>
-                    <button type="submit" class="btn btn-success ab-yes"><?php _e( 'Yes', 'bookly' ) ?></button>
+                    <button type="submit" class="btn btn-success bookly-yes"><?php _e( 'Yes', 'bookly' ) ?></button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="hidden">
-    <?php do_action( 'bookly_render_after_service_list', $service_collection ) ?>
 </div>

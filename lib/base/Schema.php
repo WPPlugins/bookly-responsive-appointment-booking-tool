@@ -56,7 +56,9 @@ abstract class Schema
             $tables[] = $entity_class::getTableName();
         }
 
-        $this->drop( $tables );
+        if ( ! empty ( $tables ) ) {
+            $this->drop( $tables );
+        }
     }
 
     /**
@@ -71,7 +73,7 @@ abstract class Schema
 
         $get_foreign_keys = sprintf(
             'SELECT constraint_name FROM information_schema.key_column_usage
-                WHERE REFERENCED_TABLE_SCHEMA = SCHEMA() AND table_name = "%s" AND column_name IN (%s)',
+                WHERE TABLE_SCHEMA = SCHEMA() AND table_name = "%s" AND column_name IN (%s)',
             $table,
             implode( ', ', array_fill( 0, count( $columns ), '%s' ) )
         );
@@ -103,6 +105,18 @@ abstract class Schema
         );
 
         return trim ( $wpdb->get_var( $get_enum ), '()' );
+    }
+
+    /**
+     * Count of affected rows
+     *
+     * @return int|null
+     */
+    public static function getAffectedRows()
+    {
+        global $wpdb;
+
+        return $wpdb->rows_affected;
     }
 
 }

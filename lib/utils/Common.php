@@ -9,81 +9,9 @@ use BooklyLite\Lib;
  */
 abstract class Common
 {
-    /**
-     * Format price based on currency settings (Settings -> Payments).
-     *
-     * @param  $price
-     * @return string
-     */
-    public static function formatPrice( $price )
-    {
-        $price  = (float) $price;
-        switch ( get_option( 'bookly_pmt_currency' ) ) {
-            case 'AED' : return number_format_i18n( $price, 2 ) . ' AED';
-            case 'ARS' : return '$' . number_format_i18n( $price, 2 );
-            case 'AUD' : return 'A$' . number_format_i18n( $price, 2 );
-            case 'BGN' : return number_format_i18n( $price, 2 ) . ' лв.';
-            case 'BHD' : return 'BHD ' . number_format_i18n( $price, 2 );
-            case 'BRL' : return 'R$ ' . number_format_i18n( $price, 2 );
-            case 'CAD' : return 'C$' . number_format_i18n( $price, 2 );
-            case 'CHF' : return number_format_i18n( $price, 2 ) . ' CHF';
-            case 'CLP' : return 'CLP $' . number_format_i18n( $price, 2 );
-            case 'COP' : return '$' . number_format_i18n( $price ) . ' COP';
-            case 'CRC' : return '₡' . number_format_i18n( $price, 2 );
-            case 'CZK' : return number_format_i18n( $price, 2 ) . ' Kč';
-            case 'DKK' : return number_format_i18n( $price, 2 ) . ' kr';
-            case 'DOP' : return 'RD$' . number_format_i18n( $price, 2 );
-            case 'EGP' : return 'EGP ' . number_format_i18n( $price, 2 );
-            case 'EUR' : return '€' . number_format_i18n( $price, 2 );
-            case 'GBP' : return '£' . number_format_i18n( $price, 2 );
-            case 'GEL' : return number_format_i18n( $price, 2 ) . ' lari';
-            case 'GTQ' : return 'Q' . number_format_i18n( $price, 2 );
-            case 'HKD' : return 'HK$' . number_format_i18n( $price, 2 );
-            case 'HRK' : return number_format_i18n( $price, 2 ) . ' kn';
-            case 'HUF' : return number_format_i18n( $price, 2 ) . ' Ft';
-            case 'IDR' : return number_format_i18n( $price, 2 ) . ' Rp';
-            case 'ILS' : return number_format_i18n( $price, 2 ) . ' ₪';
-            case 'INR' : return number_format_i18n( $price, 2 ) . ' ₹';
-            case 'ISK' : return number_format_i18n( $price ) . ' kr';
-            case 'JPY' : return '¥' . number_format_i18n( $price );
-            case 'KES' : return 'KSh ' . number_format_i18n( $price, 2 );
-            case 'KRW' : return number_format_i18n( $price, 2 ) . ' ₩';
-            case 'KZT' : return number_format_i18n( $price, 2 ) . ' тг.';
-            case 'LAK' : return number_format_i18n( $price ) . ' ₭';
-            case 'MUR' : return 'Rs' . number_format_i18n( $price, 2 );
-            case 'MXN' : return '$' . number_format_i18n( $price, 2 );
-            case 'MYR' : return number_format_i18n( $price, 2 ) . ' RM';
-            case 'NAD' : return 'N$' . number_format_i18n( $price, 2 );
-            case 'NGN' : return '₦' . number_format_i18n( $price, 2 );
-            case 'NOK' : return 'Kr ' . number_format_i18n( $price, 2 );
-            case 'NZD' : return '$' . number_format_i18n( $price, 2 );
-            case 'OMR' : return number_format_i18n( $price, 3 ) . ' OMR';
-            case 'PEN' : return 'S/.' . number_format_i18n( $price, 2 );
-            case 'PHP' : return number_format_i18n( $price, 2 ) . ' ₱';
-            case 'PKR' : return 'Rs. ' . number_format_i18n( $price );
-            case 'PLN' : return number_format_i18n( $price, 2 ) . ' zł';
-            case 'QAR' : return number_format_i18n( $price, 2 ) . ' QAR';
-            case 'RMB' : return number_format_i18n( $price, 2 ) . ' ¥';
-            case 'RON' : return number_format_i18n( $price, 2 ) . ' lei';
-            case 'RUB' : return number_format_i18n( $price, 2 ) . ' руб.';
-            case 'SAR' : return number_format_i18n( $price, 2 ) . ' SAR';
-            case 'SEK' : return number_format_i18n( $price, 2 ) . ' kr';
-            case 'SGD' : return '$' . number_format_i18n( $price, 2 );
-            case 'THB' : return number_format_i18n( $price, 2 ) . ' ฿';
-            case 'TRY' : return number_format_i18n( $price, 2 ) . ' TL';
-            case 'TWD' : return number_format_i18n( $price, 2 ) . ' NT$';
-            case 'UAH' : return number_format_i18n( $price, 2 ) . ' ₴';
-            case 'UGX' : return 'UGX ' . number_format_i18n( $price );
-            case 'USD' : return '$' . number_format_i18n( $price, 2 );
-            case 'VND' : return number_format_i18n( $price ) . ' VNĐ';
-            case 'XAF' : return number_format_i18n( $price ) . ' FCFA';
-            case 'XOF' : return 'CFA ' . number_format_i18n( $price, 2 );
-            case 'ZAR' : return 'R ' . number_format_i18n( $price, 2 );
-            case 'ZMW' : return 'K' . number_format_i18n( $price, 2 );
-        }
+    /** @var string CSRF token */
+    private static $csrf = null;
 
-        return number_format_i18n( $price, 2 );
-    }
 
     /**
      * Get e-mails of wp-admins
@@ -136,43 +64,6 @@ abstract class Common
     }
 
     /**
-     * @return string
-     */
-    public static function getTimezoneString()
-    {
-        // if site timezone string exists, return it
-        if ( $timezone = get_option( 'timezone_string' ) ) {
-            return $timezone;
-        }
-
-        // get UTC offset, if it isn't set then return UTC
-        if ( 0 === ( $utc_offset = get_option( 'gmt_offset', 0 ) ) ) {
-            return 'UTC';
-        }
-
-        // adjust UTC offset from hours to seconds
-        $utc_offset *= 3600;
-
-        // attempt to guess the timezone string from the UTC offset
-        if ( $timezone = timezone_name_from_abbr( '', $utc_offset, 0 ) ) {
-            return $timezone;
-        }
-
-        // last try, guess timezone string manually
-        $is_dst = date( 'I' );
-
-        foreach ( timezone_abbreviations_list() as $abbr ) {
-            foreach ( $abbr as $city ) {
-                if ( $city['dst'] == $is_dst && $city['offset'] == $utc_offset )
-                    return $city['timezone_id'];
-            }
-        }
-
-        // fallback to UTC
-        return 'UTC';
-    }
-
-    /**
      * Escape params for admin.php?page
      *
      * @param $page_slug
@@ -193,11 +84,11 @@ abstract class Common
      * Build control for boolean option
      *
      * @param string $option_name
-     * @param null   $label
+     * @param string $label caption
      * @param array  $options
-     * @param null   $help
+     * @param string $help detailed text
      */
-    public static function optionToggle( $option_name, $label = null, $help = null, array $options = array() )
+    public static function optionToggle( $option_name, $label = '', $help = '', array $options = array() )
     {
         if ( empty( $options ) ) {
             $options = array(
@@ -209,8 +100,9 @@ abstract class Common
         foreach ( $options as $attr ) {
             $control .= sprintf( '<option value="%s" %s>%s</option>', esc_attr( $attr[0] ), selected( get_option( $option_name ), $attr[0], false ), $attr[1] );
         }
+        $control .= '</select>';
 
-        echo self::getOptionTemplate( $label, $option_name, $help, $control . '</select>' );
+        echo self::getOptionTemplate( $label, $option_name, $help, $control );
     }
 
     /**
@@ -252,7 +144,7 @@ abstract class Common
             $control .= sprintf( '<div class="checkbox"><label><input type="checkbox" name="%s[]" value="%s" %s>%s</label></div>', $option_name, esc_attr( $attr[0] ), checked( in_array( $attr[0], $values ), true, false ), $attr[1] );
         }
 
-        echo self::getOptionTemplate( $label, $option_name, $help, '<div class="ab-flags" id="' . $option_name . '">' . $control . '</div>' );
+        echo self::getOptionTemplate( $label, $option_name, $help, '<div class="bookly-flags" id="' . $option_name . '">' . $control . '</div>' );
     }
 
     /**
@@ -289,47 +181,6 @@ abstract class Common
     public static function getTranslatedString( $name, $original_value = '', $language_code = null )
     {
         return apply_filters( 'wpml_translate_single_string', $original_value, 'bookly', $name, $language_code );
-    }
-
-    /**
-     * Get translated custom fields
-     *
-     * @param integer $service_id
-     * @param string $language_code       Return the translation in this language
-     * @return \stdClass[]
-     */
-    public static function getTranslatedCustomFields( $service_id = null, $language_code = null )
-    {
-        $custom_fields  = json_decode( get_option( 'bookly_custom_fields' ) );
-        foreach ( $custom_fields as $key => $custom_field ) {
-            if ( $service_id === null || in_array( $service_id, $custom_field->services ) ) {
-                switch ( $custom_field->type ) {
-                    case 'textarea':
-                    case 'text-content':
-                    case 'text-field':
-                    case 'captcha':
-                        $custom_field->label = self::getTranslatedString( 'custom_field_' . $custom_field->id . '_' . sanitize_title( $custom_field->label ), $custom_field->label, $language_code );
-                        break;
-                    case 'checkboxes':
-                    case 'radio-buttons':
-                    case 'drop-down':
-                        $items = $custom_field->items;
-                        foreach ( $items as $pos => $label ) {
-                            $items[ $pos ] = array(
-                                'value' => $label,
-                                'label' => self::getTranslatedString( 'custom_field_' . $custom_field->id . '_' . sanitize_title( $custom_field->label ) . '=' . sanitize_title( $label ), $label, $language_code )
-                            );
-                        }
-                        $custom_field->label = self::getTranslatedString( 'custom_field_' . $custom_field->id . '_' . sanitize_title( $custom_field->label ), $custom_field->label, $language_code );
-                        $custom_field->items = $items;
-                        break;
-                }
-            } else {
-                unset( $custom_fields[ $key ] );
-            }
-        }
-
-        return $custom_fields;
     }
 
     /**
@@ -415,6 +266,17 @@ abstract class Common
     }
 
     /**
+     * Add hidden input with CSRF token.
+     */
+    public static function csrf()
+    {
+        printf(
+            '<input type="hidden" name="csrf_token" value="%s">',
+            esc_attr( Lib\Utils\Common::getCsrfToken() )
+        );
+    }
+
+    /**
      * Build attributes for html entity.
      *
      * @param array $attributes
@@ -428,19 +290,6 @@ abstract class Common
         }
 
         return $joined;
-    }
-
-    /**
-     * @param string $plugin Like 'bookly-addon-service-extras/main.php'
-     * @return bool
-     */
-    public static function isPluginActive( $plugin )
-    {
-        // In MultiSite exist 2 methods activation plugin for site.
-        return (
-            in_array( $plugin, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ||
-            is_plugin_active_for_network( $plugin )
-        );
     }
 
     /**
@@ -490,34 +339,51 @@ abstract class Common
      * Codes table helper
      *
      * @param array $codes
-     * @param int   $step
-     * @param bool  $login
+     * @param array $flags
      */
-    public static function Codes( array $codes, $step = 1, $login = false )
+    public static function codes( array $codes, $flags = array() )
     {
-        $tbody = '';
-        uasort( $codes, function ( $code_a, $code_b ) {
-            return ( $code_a['code'] < $code_b['code'] ) ? - 1 : 1;
+        // Sort codes alphabetically.
+        usort( $codes, function ( $code_a, $code_b ) {
+            return strcmp( $code_a['code'], $code_b['code'] );
         } );
+
+        $tbody = '';
         foreach ( $codes as $code ) {
-            if ( empty( $code['step'] ) || $step == $code['step'] ) {
-                if ( empty( $code['min_step'] ) || $step > $code['min_step'] ) {
-                    if ( empty( $code['login'] ) || $login ) {
-                        $tbody .= '<tr><td><input value="{' . $code['code'] . '}" readonly="readonly" onclick="this.select()" /> - ' . $code['description'] . '</td></tr>';
+            $valid = true;
+            if ( isset ( $code['flags'] ) ) {
+                foreach ( $code['flags'] as $flag => $value ) {
+                    $valid = false;
+                    if ( isset ( $flags[ $flag ] ) ) {
+                        if ( is_string( $value ) && preg_match( '/([!>=<]+)(\d+)/', $value, $match ) ) {
+                            switch ( $match[1] ) {
+                                case '<':  $valid = $flags[ $flag ] < $match[2];  break;
+                                case '<=': $valid = $flags[ $flag ] <= $match[2]; break;
+                                case '=':  $valid = $flags[ $flag ] == $match[2]; break;
+                                case '!=': $valid = $flags[ $flag ] != $match[2]; break;
+                                case '>=': $valid = $flags[ $flag ] >= $match[2]; break;
+                                case '>':  $valid = $flags[ $flag ] > $match[2];  break;
+                            }
+                        } else {
+                            $valid = $flags[ $flag ] == $value;
+                        }
+                    }
+                    if ( ! $valid ) {
+                        break;
                     }
                 }
             }
+            if ( $valid ) {
+                $tbody .= sprintf(
+                    '<tr><td><input value="{%s}" readonly="readonly" onclick="this.select()" /> - %s</td></tr>',
+                    $code['code'],
+                    $code['description']
+                );
+            }
         }
-        echo '<table class="bookly-codes"><tbody>' . $tbody . '</tbody></table>';
-    }
+        $class = isset( $flags['type'] ) ? 'bookly-js-codes-' . $flags['type'] : '';
 
-    /**
-     * Check if running on HHVM
-     *
-     * @return bool
-     */
-    public static function isHHVM() {
-        return defined( 'HHVM_VERSION' );
+        echo '<table class="bookly-codes ' . $class . '"><tbody>' . $tbody . '</tbody></table>';
     }
 
     /**
@@ -559,4 +425,34 @@ abstract class Common
         return $token;
     }
 
+
+    /**
+     * Get CSRF token.
+     *
+     * @return string
+     */
+    public static function getCsrfToken()
+    {
+        if ( self::$csrf === null ) {
+            self::$csrf = wp_create_nonce( 'bookly' );
+        }
+
+        return self::$csrf;
+    }
+
+    /**
+     * Set nocache constants.
+     */
+    public static function noCache()
+    {
+        if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+            define( 'DONOTCACHEPAGE', true );
+        }
+        if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
+            define( 'DONOTCACHEOBJECT', true );
+        }
+        if ( ! defined( 'DONOTCACHEDB' ) ) {
+            define( 'DONOTCACHEDB', true );
+        }
+    }
 }

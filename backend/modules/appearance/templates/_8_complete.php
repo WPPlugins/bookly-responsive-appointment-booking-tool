@@ -1,7 +1,16 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use BooklyLite\Backend\Modules\Appearance\Components;
+/** @var BooklyLite\Backend\Modules\Appearance\Lib\Helper $editable */
+?>
 <div class="bookly-form">
     <?php include '_progress_tracker.php' ?>
-    <div class="bookly-box">
-      <span class="bookly-editable" data-notes="<?php echo esc_attr( $this->render( '_codes', array( 'step' => 8 ), false ) ) ?>" data-placement="bottom" data-option-default="<?php form_option( 'bookly_l10n_info_complete_step' ) ?>" id="bookly_l10n_info_complete_step" data-type="textarea"><?php echo nl2br( esc_html( get_option( 'bookly_l10n_info_complete_step' ) ) ) ?></span>
+    <div class="bookly-box bookly-js-done-success">
+        <?php $editable::renderText( 'bookly_l10n_info_complete_step', Components::getInstance()->renderCodes( array( 'step' => 8, 'extra_codes' => 1 ), false ) ) ?>
+    </div>
+    <div class="bookly-box bookly-js-done-limit-error collapse">
+        <?php $editable::renderText( 'bookly_l10n_info_complete_step_limit_error', Components::getInstance()->renderCodes( array( 'step' => 8 ), false ) ) ?>
+    </div>
+    <div class="bookly-box bookly-js-done-processing collapse">
+        <?php $editable::renderText( 'bookly_l10n_info_complete_step_processing', Components::getInstance()->renderCodes( array( 'step' => 8, 'extra_codes' => 1 ), false ) ) ?>
     </div>
 </div>

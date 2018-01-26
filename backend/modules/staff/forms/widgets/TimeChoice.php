@@ -34,16 +34,15 @@ class TimeChoice
         }
 
         $ts_length  = Lib\Config::getTimeSlotLength();
-        if ( isset( $options['bound'] ) ) {
-            $time_start = Lib\Utils\DateTime::timeToSeconds( $options['bound'][0] );
-            $time_end   = Lib\Utils\DateTime::timeToSeconds( $options['bound'][1] );
-        } else {
-            $time_start = Lib\Entities\StaffScheduleItem::WORKING_START_TIME;
-            $time_end   = Lib\Entities\StaffScheduleItem::WORKING_END_TIME;
-        }
+        $time_start = 0;
+        $time_end   = DAY_IN_SECONDS;
+
         if ( $options['type'] == 'from' ) {
             $time_end -= $ts_length;    // Exclude last slot.
-        } elseif ( $options['type'] == 'to' ) {
+        } else if ( $options['type'] == 'break_from' ) {
+            $time_end *= 2;             // Create slots for 2 days.
+            $time_end -= $ts_length;    // Exclude last slot.
+        } else if ( $options['type'] == 'to' ) {
             $time_end *= 2;             // Create slots for 2 days.
         }
 

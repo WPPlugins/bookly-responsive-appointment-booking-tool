@@ -14,7 +14,6 @@
                 </div>
             <?php endif ?>
         </div>
-
         <div class="row">
             <div id="bookly-sidebar" class="col-sm-4"
                 <?php if ( ! \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>

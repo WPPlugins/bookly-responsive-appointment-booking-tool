@@ -87,10 +87,10 @@ class Google
     /**
      * Returns a collection of Google calendar events
      *
-     * @param \DateTime $startDate
+     * @param \DateTime $start_date
      * @return array|false
      */
-    public function getCalendarEvents( \DateTime $startDate )
+    public function getCalendarEvents( \DateTime $start_date )
     {
         return array();
     }
@@ -113,9 +113,9 @@ class Google
     }
 
     /**
-     * Log out from Google Calendar.
+     * Revoke Google Calendar token.
      */
-    public function logout()
+    public function revokeToken()
     {
     }
 
@@ -125,13 +125,7 @@ class Google
      */
     public function createAuthUrl( $staff_id )
     {
-        $this->client->setRedirectUri( self::generateRedirectURI() );
-        $this->client->addScope( 'https://www.googleapis.com/auth/calendar' );
-        $this->client->setState( strtr( base64_encode( $staff_id ), '+/=', '-_,' ) );
-        $this->client->setApprovalPrompt( 'force' );
-        $this->client->setAccessType( 'offline' );
-
-        return $this->client->createAuthUrl();
+        return '';
     }
 
     /**
@@ -142,16 +136,6 @@ class Google
      */
     public function delete( $event_id )
     {
-        try {
-            if ( in_array( $this->getCalendarAccess(), array( 'writer', 'owner' ) ) ) {
-                $this->service->events->delete( $this->getCalendarID(), $event_id );
-
-                return true;
-            }
-        } catch ( \Exception $e ) {
-            $this->errors[] = $e->getMessage();
-        }
-
         return false;
     }
 
@@ -168,7 +152,7 @@ class Google
      */
     private function getCalendarID()
     {
-        return $this->staff->get( 'google_calendar_id' ) ?: 'primary';
+        return $this->staff->getGoogleCalendarId() ?: 'primary';
     }
 
     /**

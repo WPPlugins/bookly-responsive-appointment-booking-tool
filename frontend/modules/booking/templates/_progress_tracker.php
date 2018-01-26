@@ -1,14 +1,14 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     $i = 1;
 ?>
-<div class="ab-progress-tracker bookly-table">
+<div class="bookly-progress-tracker bookly-table">
     <?php if ( $skip_service_step == false ) : ?>
     <div <?php if ( $step >= 1 ) : ?>class="active"<?php endif ?>>
         <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_step_service' ) ?>
         <div class=step></div>
     </div>
     <?php endif ?>
-    <?php if ( \BooklyLite\Lib\Config::isServiceExtrasEnabled() ) : ?>
+    <?php if ( \BooklyLite\Lib\Config::serviceExtrasEnabled() ) : ?>
         <div <?php if ( $step >= 2 ) : ?>class="active"<?php endif ?>>
             <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_step_extras' ) ?>
             <div class=step></div>
@@ -18,7 +18,7 @@
         <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_step_time' ) ?>
         <div class=step></div>
     </div>
-    <?php if ( \BooklyLite\Lib\Config::isRecurringAppointmentsEnabled() ) : ?>
+    <?php if ( \BooklyLite\Lib\Config::recurringAppointmentsEnabled() ) : ?>
         <div <?php if ( $step >= 4 ) : ?>class="active"<?php endif ?>>
             <?php echo $i ++ . '. ' . \BooklyLite\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_step_repeat' ) ?>
             <div class=step></div>

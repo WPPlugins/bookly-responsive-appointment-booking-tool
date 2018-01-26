@@ -1,7 +1,6 @@
 <?php
 namespace BooklyLite\Backend;
 
-use BooklyLite\Backend\Modules;
 use BooklyLite\Frontend;
 use BooklyLite\Lib;
 
@@ -11,15 +10,16 @@ use BooklyLite\Lib;
  */
 class Backend
 {
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         // Backend controllers.
         $this->apearanceController     = Modules\Appearance\Controller::getInstance();
         $this->appointmentsController  = Modules\Appointments\Controller::getInstance();
         $this->calendarController      = Modules\Calendar\Controller::getInstance();
-        $this->couponsController       = Modules\Coupons\Controller::getInstance();
         $this->customerController      = Modules\Customers\Controller::getInstance();
-        $this->customFieldsController  = Modules\CustomFields\Controller::getInstance();
         $this->debugController         = Modules\Debug\Controller::getInstance();
         $this->notificationsController = Modules\Notifications\Controller::getInstance();
         $this->paymentController       = Modules\Payments\Controller::getInstance();
@@ -28,6 +28,7 @@ class Backend
         $this->supportController       = Modules\Support\Controller::getInstance();
         $this->smsController           = Modules\Sms\Controller::getInstance();
         $this->staffController         = Modules\Staff\Controller::getInstance();
+        $this->messageController       = Modules\Message\Controller::getInstance();
 
         // Frontend controllers that work via admin-ajax.php.
         $this->bookingController = Frontend\Modules\Booking\Controller::getInstance();
@@ -38,6 +39,9 @@ class Backend
         add_action( 'admin_init', array( $this, 'addTinyMCEPlugin' ) );
     }
 
+    /**
+     * Init.
+     */
     public function init()
     {
         if ( ! session_id() ) {
@@ -50,14 +54,17 @@ class Backend
         new Modules\TinyMce\Plugin();
     }
 
+    /**
+     * Admin menu.
+     */
     public function addAdminMenu()
     {
         /** @var \WP_User $current_user */
-        global $current_user;
+        global $current_user, $submenu;
 
         if ( $current_user->has_cap( 'administrator' ) || Lib\Entities\Staff::query()->where( 'wp_user_id', $current_user->ID )->count() ) {
             $dynamic_position = '80.0000001' . mt_rand( 1, 1000 ); // position always is under `Settings`
-            add_menu_page( 'Bookly', 'Bookly', 'read', 'bookly-menu', '',
+            add_menu_page( 'Bookly Lite', 'Bookly Lite', 'read', 'bookly-menu', '',
                 plugins_url( 'resources/images/menu.png', __FILE__ ), $dynamic_position );
 
             // Translated submenu pages.
@@ -71,14 +78,14 @@ class Backend
             $payments       = __( 'Payments',      'bookly' );
             $appearance     = __( 'Appearance',    'bookly' );
             $settings       = __( 'Settings',      'bookly' );
-            $coupons        = __( 'Coupons',       'bookly' );
-            $custom_fields  = __( 'Custom Fields', 'bookly' );
+            $messages       = __( 'Messages',      'bookly' );
 
             add_submenu_page( 'bookly-menu', $calendar, $calendar, 'read',
                 Modules\Calendar\Controller::page_slug, array( $this->calendarController, 'index' ) );
             add_submenu_page( 'bookly-menu', $appointments, $appointments, 'manage_options',
                 Modules\Appointments\Controller::page_slug, array( $this->appointmentsController, 'index' ) );
-            do_action( 'bookly_render_menu_after_appointments' );
+            Lib\Proxy\Locations::addBooklyMenuItem();
+            Lib\Proxy\Packages::addBooklyMenuItem();
             if ( $current_user->has_cap( 'administrator' ) ) {
                 add_submenu_page( 'bookly-menu', $staff_members, $staff_members, 'manage_options',
                     Modules\Staff\Controller::page_slug, array( $this->staffController, 'index' ) );
@@ -100,20 +107,18 @@ class Backend
                 Modules\Payments\Controller::page_slug, array( $this->paymentController, 'index' ) );
             add_submenu_page( 'bookly-menu', $appearance, $appearance, 'manage_options',
                 Modules\Appearance\Controller::page_slug, array( $this->apearanceController, 'index' ) );
-            add_submenu_page( 'bookly-menu', $custom_fields, $custom_fields, 'manage_options',
-                Modules\CustomFields\Controller::page_slug, array( $this->customFieldsController, 'index' ) );
-            add_submenu_page( 'bookly-menu', $coupons, $coupons, 'manage_options',
-                Modules\Coupons\Controller::page_slug, array( $this->couponsController, 'index' ) );
+            Lib\Proxy\Coupons::addBooklyMenuItem();
+            Lib\Proxy\CustomFields::addBooklyMenuItem();
             add_submenu_page( 'bookly-menu', $settings, $settings, 'manage_options',
                 Modules\Settings\Controller::page_slug, array( $this->settingsController, 'index' ) );
+            add_submenu_page( 'bookly-menu', $messages, $messages, 'manage_options',
+                Modules\Message\Controller::page_slug, array( $this->messageController, 'index' ) );
 
             if ( isset ( $_GET['page'] ) && $_GET['page'] == 'bookly-debug' ) {
                 add_submenu_page( 'bookly-menu', 'Debug', 'Debug', 'manage_options',
                     Modules\Debug\Controller::page_slug, array( $this->debugController, 'index' ) );
             }
 
-            global $submenu;
-            do_action( 'bookly_admin_menu', 'bookly-menu' );
             unset ( $submenu['bookly-menu'][0] );
         }
     }

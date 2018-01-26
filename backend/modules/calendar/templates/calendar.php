@@ -1,4 +1,6 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+/** @var \BooklyLite\Lib\Entities\Staff[] $staff_members */
+?>
 <style>
     .fc-slats tr { height: <?php echo max( 21, (int) ( 0.43 * get_option( 'bookly_gen_time_slot_length' ) ) ) ?>px; }
     .fc-time-grid-event.fc-short .fc-time::after { content: '' !important; }
@@ -23,15 +25,15 @@
                         </li>
                     <?php endif ?>
                     <?php foreach ( $staff_members as $staff ) : ?>
-                        <li class="bookly-nav-item bookly-js-calendar-tab" data-staff_id="<?php echo $staff->id ?>" style="display: none">
-                            <?php echo $staff->full_name ?>
+                        <li class="bookly-nav-item bookly-js-calendar-tab" data-staff_id="<?php echo $staff->getId() ?>" style="display: none">
+                            <?php echo $staff->getFullName() ?>
                         </li>
                     <?php endforeach ?>
                     <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
                         <div class="btn-group pull-right" style="margin-top: 5px;">
                             <button class="btn btn-default dropdown-toggle bookly-flexbox" data-toggle="dropdown">
                                 <div class="bookly-flex-cell"><i class="dashicons dashicons-admin-users bookly-margin-right-md"></i></div>
-                                <div class="bookly-flex-cell text-left"><span id="ab-staff-button"></span></div>
+                                <div class="bookly-flex-cell text-left"><span id="bookly-staff-button"></span></div>
                                 <div class="bookly-flex-cell"><div class="bookly-margin-left-md"><span class="caret"></span></div></div>
                             </button>
                             <ul class="dropdown-menu bookly-entity-selector">
@@ -44,8 +46,8 @@
                                     <li>
                                         <a class="checkbox" href="javascript:void(0)">
                                             <label>
-                                                <input type="checkbox" id="ab-filter-staff-<?php echo $staff->id ?>" value="<?php echo $staff->id ?>" data-staff_name="<?php echo esc_attr( $staff->full_name ) ?>" class="bookly-js-check-entity">
-                                                <?php echo $staff->full_name ?>
+                                                <input type="checkbox" id="bookly-filter-staff-<?php echo $staff->getId() ?>" value="<?php echo $staff->getId() ?>" data-staff_name="<?php echo esc_attr( $staff->getFullName() ) ?>" class="bookly-js-check-entity">
+                                                <?php echo $staff->getFullName() ?>
                                             </label>
                                         </a>
                                     </li>
@@ -56,7 +58,6 @@
                 </ul>
                 <?php endif ?>
                 <div class="bookly-margin-top-xlg">
-                    <div style="display: none;" class="bookly-loading bookly-js-loading"></div>
                     <?php if ( $staff_members ) : ?>
                         <div class="fc-loading-inner" style="display: none">
                             <div class="fc-loading"></div>
@@ -65,7 +66,7 @@
                             <div class="bookly-js-calendar-element"></div>
                         </div>
                         <?php \BooklyLite\Backend\Modules\Calendar\Components::getInstance()->renderAppointmentDialog() ?>
-                        <?php do_action( 'bookly_render_component_calendar' ) ?>
+                        <?php \BooklyLite\Lib\Proxy\Shared::renderComponentCalendar() ?>
                     <?php else : ?>
                         <div class="well">
                             <div class="h1"><?php _e( 'Welcome to Bookly!', 'bookly' ) ?></div>

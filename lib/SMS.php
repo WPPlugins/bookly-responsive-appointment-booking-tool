@@ -183,10 +183,9 @@ class SMS
     {
         if ( $this->token ) {
             $data = array(
-                'message'  => $message,
-                'phone'    => $this->normalizePhoneNumber( $phone_number ),
-                'type'     => $type_id,
-                'site_url' => site_url(),
+                'message' => $message,
+                'phone'   => $this->normalizePhoneNumber( $phone_number ),
+                'type'    => $type_id,
             );
             if ( $data['phone'] != '' ) {
                 $response = $this->sendPostRequest( self::SEND_SMS, $data );
@@ -197,10 +196,14 @@ class SMS
                         }
                     }
                     if ( property_exists( $response, 'gateway_status' ) ) {
-                        /** array description on @see SMS::getSmsList */
-                        if ( in_array( $response->gateway_status, array( 1, 10, 11, 12, 13 ) ) ) {
+                        if ( in_array( $response->gateway_status, array( 1, 10, 11, 12, 13 ) ) ) {  // @see SMS::getSmsList
 
                             return true;
+
+                        } else if ( $response->gateway_status == 3 ) {
+                            $this->errors[] = __( 'Your don\'t have enough Bookly SMS credits to send this message. Please add funds to your balance and try again.', 'bookly' );
+                        } else {
+                            $this->errors[] = __( 'Failed to send SMS.', 'bookly' );
                         }
                     }
                 }
@@ -597,25 +600,39 @@ class SMS
     /**
      * Send HTTP request.
      *
-     * @param $method
-     * @param $url
-     * @param $data
-     * @return mixed
+     * @param string $method
+     * @param string $url
+     * @param array  $data
+     * @return string|null
      */
     private function _sendRequest( $method, $url, $data )
     {
-        $curl = new Curl\Curl();
-        $curl->options['CURLOPT_CONNECTTIMEOUT'] = 8;
-        $curl->options['CURLOPT_TIMEOUT']        = 30;
+        $args = array(
+            'method'  => $method,
+            'timeout' => 30,
+        );
 
-        $method   = strtolower( $method );
-        $response = $curl->$method( $url, $data );
-        $error = $curl->error();
-        if ( $error ) {
-            $this->errors[] = $error;
+        if ( ! isset( $data['site_url'] ) ) {
+            $data['site_url'] = site_url();
         }
 
-        return $response;
+        if ( $method == 'GET' ) {
+            // WP 4.4.11 doesn't take into account the $data for the GET request
+            // Manually move data in query string
+            $url = add_query_arg( $data, $url );
+        } else {
+            $args['body'] = $data;
+        }
+
+        $response = wp_remote_request( $url, $args );
+        if ( $response instanceof \WP_Error ) {
+            /** @var \WP_Error $response */
+            $this->errors[] = $response->get_error_messages();
+
+            return null;
+        }
+
+        return $response['body'];
     }
 
     /**

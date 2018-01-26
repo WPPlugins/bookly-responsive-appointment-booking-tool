@@ -19,6 +19,11 @@ jQuery(function($) {
         template: '<div class="popover bookly-font-xs" style="width: 220px" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
     });
 
+    $("#bookly-js-new-notification").on('click', function () {
+        booklyAlert({error: [BooklyL10n.limitations]});
+        $(this).prop('disabled', true);
+    });
+
     booklyAlert(BooklyL10n.alert);
 
     $(':checkbox').on('change', function () {
@@ -28,7 +33,8 @@ jQuery(function($) {
         }
     });
 
-    $('.ab-test-email-notifications').on('click',function () {
+    $('.bookly-test-email-notifications').on('click',function () {
         booklyAlert({error: [BooklyL10n.limitations]});
+        $(this).prop('disabled', true);
     });
 });

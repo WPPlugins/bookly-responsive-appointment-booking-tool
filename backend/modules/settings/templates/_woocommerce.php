@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly ?>
-<form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'woocommerce' ) ) ?>"
+<form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'woo_commerce' ) ) ?>"
       id="woocommerce">
     <div class="form-group">
         <h4><?php _e( 'Instructions', 'bookly' ) ?></h4>
@@ -38,6 +38,7 @@
     </div>
 
     <div class="panel-footer">
+        <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
         <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn btn-lg btn-success bookly-limitation' ) ?>
         <?php \BooklyLite\Lib\Utils\Common::resetButton() ?>
     </div>

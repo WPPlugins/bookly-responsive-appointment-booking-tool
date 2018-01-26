@@ -33,7 +33,6 @@ class Controller extends Lib\Base\Controller
             'backend' => array(
                 'bootstrap/js/bootstrap.min.js' => array( 'jquery' ),
                 'js/datatables.min.js' => array( 'jquery' ),
-                'js/alert.js' => array( 'jquery' ),
             ),
             'frontend' => array(
                 'js/spin.min.js' => array( 'jquery' ),
@@ -45,6 +44,8 @@ class Controller extends Lib\Base\Controller
         ) );
 
         wp_localize_script( 'bookly-customers.js', 'BooklyL10n', array(
+            'csrf_token'      => Lib\Utils\Common::getCsrfToken(),
+            'first_last_name' => (int) Lib\Config::showFirstLastName(),
             'edit'            => __( 'Edit', 'bookly' ),
             'are_you_sure'    => __( 'Are you sure?', 'bookly' ),
             'wp_users'        => get_users( array( 'fields' => array( 'ID', 'display_name' ), 'orderby' => 'display_name' ) ),
@@ -55,7 +56,7 @@ class Controller extends Lib\Base\Controller
             'create_customer' => __( 'Create customer', 'bookly' ),
             'save'            => __( 'Save', 'bookly' ),
             'search'          => __( 'Quick search customer', 'bookly' ),
-            'limitations'     => __( '<b class="h4">This function is disabled in the Lite version of Bookly.</b><br><br>To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Standard version of Bookly.<br>For more information visit', 'bookly' ) . ' <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
+            'limitations'     => __( '<b class="h4">This function is not available in the Lite version of Bookly.</b><br><br>To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Standard version of Bookly.<br>For more information visit', 'bookly' ) . ' <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://booking-wp-plugin.com</a>',
         ) );
 
         $this->render( 'index' );
@@ -101,7 +102,7 @@ class Controller extends Lib\Base\Controller
         if ( $filter != '' ) {
             $search_value = Lib\Query::escape( $filter );
             $query
-                ->whereLike( 'c.name', "%{$search_value}%" )
+                ->whereLike( 'c.full_name', "%{$search_value}%" )
                 ->whereLike( 'c.phone', "%{$search_value}%", 'OR' )
                 ->whereLike( 'c.email', "%{$search_value}%", 'OR' );
         }
@@ -117,15 +118,18 @@ class Controller extends Lib\Base\Controller
         foreach ( $query->fetchArray() as $row ) {
             $data[] = array(
                 'id'                 => $row['id'],
-                'name'               => $row['name'],
+                'full_name'          => $row['full_name'],
+                'first_name'         => $row['first_name'],
+                'last_name'          => $row['last_name'],
                 'wp_user'            => $row['wp_user'],
                 'wp_user_id'         => $row['wp_user_id'],
                 'phone'              => $row['phone'],
                 'email'              => $row['email'],
                 'notes'              => $row['notes'],
+                'birthday'           => $row['birthday'],
                 'last_appointment'   => $row['last_appointment'] ? Lib\Utils\DateTime::formatDateTime( $row['last_appointment'] ) : '',
                 'total_appointments' => $row['total_appointments'],
-                'payments'           => Lib\Utils\Common::formatPrice( $row['payments'] ),
+                'payments'           => Lib\Utils\Price::format( $row['payments'] ),
             );
         }
 
@@ -146,10 +150,13 @@ class Controller extends Lib\Base\Controller
         $form = new Forms\Customer();
 
         do {
-            if ( $this->getParameter( 'name' ) !== '' ) {
+            if ( ( get_option( 'bookly_cst_first_last_name' ) && $this->getParameter( 'first_name' ) !== '' && $this->getParameter( 'last_name' ) !== '' ) || ( ! get_option( 'bookly_cst_first_last_name' ) && $this->getParameter( 'full_name' ) !== '' ) ) {
                 $params = $this->getPostParameters();
                 if ( ! $params['wp_user_id'] ) {
                     $params['wp_user_id'] = null;
+                }
+                if ( ! $params['birthday'] ) {
+                    $params['birthday'] = null;
                 }
                 $form->bind( $params );
                 /** @var Lib\Entities\Customer $customer */
@@ -157,24 +164,31 @@ class Controller extends Lib\Base\Controller
                 if ( $customer ) {
                     $response['success']  = true;
                     $response['customer'] = array(
-                        'id'      => $customer->get( 'id' ),
-                        'name'    => $customer->get( 'name' ),
-                        'phone'   => $customer->get( 'phone' ),
-                        'email'   => $customer->get( 'email' ),
-                        'notes'   => $customer->get( 'notes' ),
-                        'wp_user_id' => $customer->get( 'wp_user_id' ),
-                        'jsonString' => json_encode( array(
-                            'name'  => $customer->get( 'name' ),
-                            'phone' => $customer->get( 'phone' ),
-                            'email' => $customer->get( 'email' ),
-                            'notes' => $customer->get( 'notes' )
-                        ) )
+                        'id'         => $customer->getId(),
+                        'wp_user_id' => $customer->getWpUserId(),
+                        'full_name'  => $customer->getFullName(),
+                        'first_name' => $customer->getFirstName(),
+                        'last_name'  => $customer->getLastName(),
+                        'phone'      => $customer->getPhone(),
+                        'email'      => $customer->getEmail(),
+                        'notes'      => $customer->getNotes(),
+                        'birthday'   => $customer->getBirthday(),
                     );
                     break;
                 }
             }
             $response['success'] = false;
-            $response['errors']  = array( 'name' => array( 'required' ) );
+            $response['errors'] = array();
+            if (get_option( 'bookly_cst_first_last_name' )) {
+                if ( $this->getParameter( 'first_name' ) == '' ) {
+                    $response['errors']['first_name']  = array( 'required' );
+                }
+                if ( $this->getParameter( 'last_name' ) == '' ) {
+                    $response['errors']['last_name']  = array( 'required' );
+                }
+            } else {
+                $response['errors'] = array( 'full_name' => array( 'required' ) );
+            }
         } while ( 0 );
 
         wp_send_json( $response );
@@ -186,17 +200,28 @@ class Controller extends Lib\Base\Controller
     private function importCustomers()
     {
         @ini_set( 'auto_detect_line_endings', true );
-
+        $fields = array();
+        foreach ( array( 'full_name', 'first_name', 'last_name', 'phone', 'email', 'birthday' ) as $field ) {
+            if ( $this->getParameter( $field ) ) {
+                $fields[] = $field;
+            }
+        }
         $file = fopen( $_FILES['import_customers_file']['tmp_name'], 'r' );
         while ( $line = fgetcsv( $file, null, $this->getParameter( 'import_customers_delimiter' ) ) ) {
             if ( $line[0] != '' ) {
                 $customer = new Lib\Entities\Customer();
-                $customer->set( 'name', $line[0] );
-                if ( isset( $line[1] ) ) {
-                    $customer->set( 'phone', $line[1] );
-                }
-                if ( isset( $line[2] ) ) {
-                    $customer->set( 'email', $line[2] );
+                foreach ( $line as $number => $value ) {
+                    if ( $number < count( $fields ) ) {
+                        if ( $fields[ $number ] == 'birthday' ) {
+                            $dob = date_create( $value );
+                            if ( $dob !== false ) {
+                                $customer->setBirthday( $dob->format( 'Y-m-d' ) );
+                            }
+                        } else {
+                            $method = 'set' . implode( '', array_map( 'ucfirst', explode( '_', $fields[ $number ] ) ) );
+                            $customer->$method( $value );
+                        }
+                    }
                 }
                 $customer->save();
             }
@@ -220,16 +245,5 @@ class Controller extends Lib\Base\Controller
      * Export Customers to CSV
      */
     public function executeExportCustomers() { exit; }
-
-    /**
-     * Override parent method to add 'wp_ajax_bookly_' prefix
-     * so current 'execute*' methods look nicer.
-     *
-     * @param string $prefix
-     */
-    protected function registerWpActions( $prefix = '' )
-    {
-        parent::registerWpActions( 'wp_ajax_bookly_' );
-    }
 
 }

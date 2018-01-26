@@ -29,7 +29,7 @@ function booklyAlert(alert) {
                 var $alert = jQuery('<div class="alert"><i class="alert-icon"></i><button type="button" class="close" data-dismiss="alert"></button></div>');
                 $alert
                     .addClass(class_name)
-                    .append('<div class="alert-title">' + message + '</div>')
+                    .append('<b class="bookly-margin-left-sm bookly-vertical-middle">' + message + '</b>')
                     .appendTo($container);
 
                 if (type == 'success') {

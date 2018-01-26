@@ -1,7 +1,9 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     $color = get_option( 'bookly_app_color', '#f4662f' );
     $compound_tokens = array();
-    $custom_fields = isset( $attributes['custom_fields'] ) ? explode( ',', $attributes['custom_fields'] ) : array();
+    $custom_fields = BooklyLite\Lib\Config::customFieldsEnabled() && isset ( $attributes['custom_fields'] )
+        ? explode( ',', $attributes['custom_fields'] )
+        : array();
     $columns = isset( $attributes['columns'] ) ? explode( ',', $attributes['columns'] ) : array();
     $with_cancel = in_array( 'cancel', $columns );
 ?>
@@ -9,7 +11,7 @@
     <div class="bookly-customer-appointment-list">
         <h2><?php _e( 'Appointments', 'bookly' ) ?></h2>
         <?php if ( ! empty( $columns ) || ! empty( $custom_fields ) ) : ?>
-            <table class="ab-appointments-table" data-columns="<?php echo esc_attr( json_encode( $columns ) ) ?>" data-custom_fields="<?php echo esc_attr( implode(',', $custom_fields ) ) ?>" data-page="0">
+            <table class="bookly-appointments-table" data-columns="<?php echo esc_attr( json_encode( $columns ) ) ?>" data-custom_fields="<?php echo esc_attr( implode(',', $custom_fields ) ) ?>" data-page="0">
                 <?php if ( isset( $attributes['show_column_titles'] ) && $attributes['show_column_titles'] ) : ?>
                     <thead>
                         <tr>
@@ -34,7 +36,7 @@
                 <?php endif ?>
             </table>
             <?php if ( $more ) : ?>
-                <button class="ab-btn ab--show-past ab-inline-block ab-right" style="background: <?php echo $color ?>!important; width: auto" data-spinner-size="40" data-style="zoom-in">
+                <button class="bookly-btn bookly-show-past bookly-inline-block bookly-right" style="background: <?php echo $color ?>!important; width: auto" data-spinner-size="40" data-style="zoom-in">
                     <span><?php _e( 'Show past appointments', 'bookly' ) ?></span>
                 </button>
             <?php endif ?>

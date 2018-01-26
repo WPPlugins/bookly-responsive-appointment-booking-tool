@@ -1,17 +1,17 @@
 /* Global */
-.ab-list-none { list-style: none; }
-.ab-left { float: left!important; }
-.ab-right { float: right!important; }
-.ab-clear { clear: both!important; }
-.ab-rtext { text-align: right; }
-.ab-bold { font-weight: bold!important; }
-.ab-list { margin-left: 10px!important; }
-.ab-clearBottom { margin-bottom: 0!important; }
-.ab-none { display: none!important; }
-.ab-nowrap { white-space: nowrap; }
-.ab-inline-block { display: inline-block!important; }
-.ab-btn { text-decoration: none; }
-.ab-btn[disabled] {
+.bookly-list-none { list-style: none; }
+.bookly-left { float: left!important; }
+.bookly-right { float: right!important; }
+.bookly-clear { clear: both!important; }
+.bookly-rtext { text-align: right; }
+.bookly-bold { font-weight: bold!important; }
+.bookly-list { margin-left: 10px!important; }
+.bookly-clear-bottom { margin-bottom: 0!important; }
+.bookly-none { display: none!important; }
+.bookly-nowrap { white-space: nowrap; }
+.bookly-inline-block { display: inline-block!important; }
+.bookly-btn { text-decoration: none; }
+.bookly-btn[disabled] {
     opacity: 0.5;
 }
 
@@ -87,24 +87,24 @@
     width: auto;
     font-size: 14px;
 }
-.bookly-form .ab-label-error {
+.bookly-form .bookly-label-error {
     font-size: 12px;
     font-weight: bold;
     margin-top: 5px;
 }
-.bookly-form-inline .ab-formGroup {
+.bookly-form-inline .bookly-form-group {
     display: inline-block;
     width: auto;
     vertical-align: middle;
 }
 
-.ab-formGroup > label {
+.bookly-form-group > label {
     display: inline-block;
     font-weight: bold;
     padding: 0 !important;
     margin: 0 !important;
 }
-.ab-formGroup > div {
+.bookly-form-group > div {
     margin-right: 14px;
     margin-top: 5px;
 }
@@ -115,7 +115,7 @@
     border-top: 1px solid silver !important;
     overflow: hidden;
 }
-.ab-btn {
+.bookly-btn {
     padding: 9px 18px!important;
     border: 0!important;
     min-width: 118px;
@@ -128,33 +128,34 @@
     height: auto!important;
     outline: none!important;
 }
-.ab-btn > span {
+.bookly-btn,
+.bookly-btn > span {
     color: #fff!important;
     font-size: 18px!important;
     line-height: 17px!important;
     font-weight: bold!important;
     text-transform: uppercase!important;
 }
-button.ab-btn:hover,
-button.ab-btn:active,
+button.bookly-btn:hover,
+button.bookly-btn:active,
 button.bookly-round:hover,
 button.bookly-round:active,
 button.bookly-square:hover,
 button.bookly-square:active {
     background-image: none !important;
 }
-.ab-time-next,
-.ab-time-prev {
+.bookly-time-next,
+.bookly-time-prev {
     width: 60px;
     min-width: inherit;
     height: 35px!important;
     padding: 0 5px!important;
 }
-.ab-time-next {
+.bookly-time-next {
     background-position: 50% -56px;
     margin-left: 10px !important;
 }
-.ab-time-prev {
+.bookly-time-prev {
     background-position: 50% 8px;
 }
 
@@ -162,14 +163,15 @@ button.bookly-square:active {
 .bookly-round {
     width: 28px;
     height: 28px;
-    border-radius: 50%;
     padding: 0!important;
     line-height: 0!important;
     border: 0!important;
     outline: none!important;
     background-repeat: no-repeat;
 }
-
+.bookly-round {
+    border-radius: 50%!important;
+}
 span.bookly-round {
     display: block;
 }
@@ -177,7 +179,7 @@ span.bookly-round {
     border-radius: 15%;
 }
 .bookly-checkbox-group > input[type='checkbox'] {
-    display: none;
+    display: none!important;
 }
 .bookly-checkbox-group > input[type='checkbox']:not(:checked) + label > i {
     background-image: url(../../../frontend/resources/images/square-24.png);
@@ -206,7 +208,7 @@ span.bookly-round {
 .bookly-round-button:first-child {
     margin-right: 5px !important;
 }
-.bookly-round-button. img {
+.bookly-round-button img {
     border: 0 !important;
     box-shadow: none;
 }
@@ -226,53 +228,53 @@ span.bookly-round {
 .bookly-next-step {
     float: right!important;
 }
-.ab-mobile-prev-step {
+.bookly-mobile-prev-step {
     margin-right: 10px;
 }
 
 /* Progress Tracker */
-.ab-progress-tracker {
+.bookly-progress-tracker {
     margin: 0 0 20px !important;
     padding: 0 !important;
 }
-.ab-progress-tracker > div {
+.bookly-progress-tracker > div {
     padding-left: 4px;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-weight: bold;
     overflow: hidden;
 }
-.ab-progress-tracker .step {
+.bookly-progress-tracker .step {
     height: 15px;
     background: #bec3c7;
     margin-top: 5px;
 }
-.ab-progress-tracker > div:first-child .step {
+.bookly-progress-tracker > div:first-child .step {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
-.ab-progress-tracker > div:last-child .step {
+.bookly-progress-tracker > div:last-child .step {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-.ab-progress-tracker > div:first-child {
+.bookly-progress-tracker > div:first-child {
     padding-left: 0;
 }
 
 /* Service */
-.bookly-service-step .ab-date-from {
+.bookly-service-step .bookly-date-from {
     cursor: text !important;
 }
-.bookly-service-step .ab-available-date,
+.bookly-service-step .bookly-available-date,
 .bookly-service-step .bookly-week-days,
 .bookly-repeat-step .bookly-week-days,
-.bookly-service-step .ab-time-range {
+.bookly-service-step .bookly-time-range {
     margin-bottom: 20px !important;
 }
-.bookly-service-step .ab-available-date .ab-formGroup > div {
+.bookly-service-step .bookly-available-date .bookly-form-group > div {
     margin-right: 0;
 }
-.bookly-service-step .ab-available-date,
+.bookly-service-step .bookly-available-date,
 .bookly-service-step .bookly-week-days {
     margin-right: 14px !important;
 }
@@ -303,14 +305,14 @@ span.bookly-round {
 .bookly-repeat-step .bookly-week-days label input {
     visibility: hidden;
 }
-.bookly-service-step .ab-time-range select {
+.bookly-service-step .bookly-time-range select {
     width: auto !important;
 }
-.ab-mobile-step_1,
-.ab-details-step {
+.bookly-mobile-step-1,
+.bookly-details-step {
     margin-right: -14px;
 }
-.ab-mobile-step_1 .bookly-nav-steps {
+.bookly-mobile-step-1 .bookly-nav-steps {
     display: none;
 }
 
@@ -365,31 +367,31 @@ span.bookly-round {
 }
 
 /* Time */
-.ab-time-step {
+.bookly-time-step {
     overflow: hidden;
     position: relative;
     margin-bottom: 20px!important;
     margin-left: auto;
     margin-right: auto;
 }
-.ab-columnizer-wrap {
+.bookly-columnizer-wrap {
     position: relative;
 }
-.ab-columnizer {
+.bookly-columnizer {
     min-height: .01%;
     white-space: nowrap;
     position: relative;
 }
-.ab-columnizer .ab-time-screen {
+.bookly-columnizer .bookly-time-screen {
     display: inline-block;
     *display: inline;
     min-height: .01%;
 }
-#bookly-tbs .ab-columnizer .ab-time-screen {
+#bookly-tbs .bookly-columnizer .bookly-time-screen {
     overflow: hidden;
     overflow-x: auto;
 }
-.ab-columnizer .ab-column {
+.bookly-columnizer .bookly-column {
     min-width: 127px;
     padding: 0 5px;
     display: inline-block;
@@ -397,8 +399,8 @@ span.bookly-round {
     vertical-align: top;
     float: none!important;
 }
-.ab-columnizer .ab-day,
-.ab-columnizer .ab-hour {
+.bookly-columnizer .bookly-day,
+.bookly-columnizer .bookly-hour {
     display: block !important;
     min-width: 0;
     width: 100%;
@@ -415,26 +417,26 @@ span.bookly-round {
     border: 1px solid #cccccc !important;
     border-radius: 4px;
 }
-.ab-columnizer .ab-hour {
+.bookly-columnizer .bookly-hour {
     background: white!important;
     cursor: pointer;
 }
-.ab-columnizer .ab-hour span {
+.bookly-columnizer .bookly-hour span {
     font-weight: normal;
     color: #333!important;
 }
-.ab-columnizer .ab-hour .ladda-label { margin: 0 -12px; display: inline-block; }
+.bookly-columnizer .bookly-hour .ladda-label { margin: 0 -12px; display: inline-block; }
 .bookly-schedule-date,
-.ab-columnizer .ab-day {
+.bookly-columnizer .bookly-day {
     background: #f4662f;
     color: white!important;
     font-weight: bold!important;
     border: 1px solid #f4662f;
 }
-.ab-columnizer .booked,
-.ab-columnizer .booked:hover { opacity: .5; cursor: default!important; }
-.ab-columnizer .booked span { text-decoration: line-through; }
-.ab-columnizer .ab-hour .ab-hour-icon {
+.bookly-columnizer .booked,
+.bookly-columnizer .booked:hover { opacity: .5; cursor: default!important; }
+.bookly-columnizer .booked span { text-decoration: line-through; }
+.bookly-columnizer .bookly-hour .bookly-hour-icon {
     display: block;
     float: left;
     width: 18px;
@@ -443,10 +445,10 @@ span.bookly-round {
     margin-right: 5px;
     background: url("../images/success.png") 0 0 no-repeat;
 }
-.ab-columnizer .ab-hour:hover { border: 2px solid #f4662f; color: #f4662f; }
-.ab-columnizer .ab-hour.booked:hover { border: 1px solid #cccccc!important; color: #333333!important; }
-.ab-columnizer .ab-hour.booked:hover .ab-hour-icon span { visibility: hidden; }
-.ab-columnizer .ab-hour:hover .ab-hour-icon {
+.bookly-columnizer .bookly-hour:hover { border: 2px solid #f4662f; color: #f4662f; }
+.bookly-columnizer .bookly-hour.booked:hover { border: 1px solid #cccccc!important; color: #333333!important; }
+.bookly-columnizer .bookly-hour.booked:hover .bookly-hour-icon span { visibility: hidden; }
+.bookly-columnizer .bookly-hour:hover .bookly-hour-icon {
     background: none;
     border: 2px solid #f4662f;
     color: #f4662f;
@@ -456,45 +458,45 @@ span.bookly-round {
     border-radius: 25px;
     margin-right: 5px;
 }
-.ab-columnizer .ab-hour.booked:hover .ab-hour-icon { border: 2px solid #cccccc!important; }
-.ab-columnizer .ab-hour:hover .ab-hour-icon span {
+.bookly-columnizer .bookly-hour.booked:hover .bookly-hour-icon { border: 2px solid #cccccc!important; }
+.bookly-columnizer .bookly-hour:hover .bookly-hour-icon span {
     background: #f4662f;
     width: 8px;
     height: 8px;
     border-radius: 10px;
     display: block;
 }
-.ab-time-step .ab-columnizer > button { display: none !important; }
-.ab-time-step .ab-columnizer > .ab-column { display: none !important; }
+.bookly-time-step .bookly-columnizer > button { display: none !important; }
+.bookly-time-step .bookly-columnizer > .bookly-column { display: none !important; }
 
-.ab-slot-calendar {
+.bookly-slot-calendar {
     margin: 0 20px 20px 0;
     float: left;
 }
-.ab-slot-calendar .picker,
-.ab-slot-calendar .picker__holder {
+.bookly-slot-calendar .picker,
+.bookly-slot-calendar .picker__holder {
     position: static;
 }
 
-.ab-not-time-screen {
+.bookly-not-time-screen {
     font-size: 16px;
     height: 296px;
     margin-left: 320px;
     font-weight: bold;
 }
 
-.ab-not-time-screen.ab-not-calendar {
+.bookly-not-time-screen.bookly-not-calendar {
     height: auto;
     margin-left: 0;
     padding-bottom: 15px;
 }
 
-.ab-spin-overlay {
+.bookly-spin-overlay {
     position: relative;
     opacity: .5;
 }
 
-.ab-spin-overlay .ab-spin {
+.bookly-spin-overlay .bookly-spin {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -557,7 +559,7 @@ span.bookly-round {
 .bookly-schedule-row .bookly-rounds-group {
     float: right !important;
     margin-top: 2px;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     height: 28px;
 }
 
@@ -576,7 +578,7 @@ span.bookly-round {
 }
 .bookly-repeat-step .bookly-schedule-row .bookly-schedule-intersect
 {
-    margin: 2px 2px 0 0;
+    margin: 2px 2px 4px 0;
 }
 
 .bookly-repeat-step .bookly-schedule-row > div:first-child {
@@ -590,7 +592,7 @@ span.bookly-round {
 .bookly-repeat-step .bookly-schedule-row > div:last-child {
     width: calc( 100% - 36px );
     border-left: 1px solid #cccccc !important;
-    padding: 2px 4px 0 4px;
+    padding: 2px 2px 0 4px;
 }
 
 .bookly-repeat-step .bookly-schedule-row .bookly-schedule-time {
@@ -775,6 +777,14 @@ label.bookly-square {
 .bookly-icon-sm.bookly-icon-check {
     background-image: url(../../../frontend/resources/images/check-16.png);
 }
+.bookly-icon-user {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    margin: 4px 2px 0 2px;
+    vertical-align: top;
+    background-image: url(../../../frontend/resources/images/user-16.png);
+}
 
 /* Cart */
 .bookly-go-to-cart {
@@ -783,10 +793,10 @@ label.bookly-square {
     height: 35px;
     float: left!important;
 }
-.ab-cart .ab-mobile-version {
+.bookly-cart .bookly-mobile-version {
     display: none;
 }
-.ab-cart table {
+.bookly-cart table {
     border-collapse: collapse;
     border-spacing: 0;
     border: none!important;
@@ -794,82 +804,94 @@ label.bookly-square {
     width: 100%;
     margin: 0 !important;
 }
-.ab-cart th,
-.ab-cart td {
-    border: 1px solid rgba(51, 51, 51, 0.1);
-    border-width: 0 0 1px 0;
+
+.bookly-cart table .bookly-round {
+    vertical-align: bottom;
+}
+.bookly-cart table th,
+.bookly-cart table td {
+    border: 0;
+}
+.bookly-cart tbody.bookly-mobile-version td,
+.bookly-cart tbody.bookly-mobile-version th {
+    border-top: 1px solid rgba(51, 51, 51, 0.1);
+}
+
+.bookly-cart th,
+.bookly-cart tr.bookly-cart-primary,
+.bookly-cart tr.bookly-cart-primary td,
+.bookly-cart tfoot tr,
+.bookly-cart tfoot tr th {
+    border-top: 1px solid rgba(51, 51, 51, 0.1);
     font-size: 14px !important;
     padding: 0.4em!important;
 }
-.ab-cart th {
+.bookly-cart tr.bookly-cart-total td {
+    padding: 0.4em!important;
+}
+
+.bookly-cart th {
     border-width: 0 0 1px 0;
     font-weight: 700;
     padding-top: 0!important;
 }
-.ab-cart table tfoot th,
-.ab-cart table tfoot td {
-    border-bottom: 0;
+.bookly-cart table tfoot th,
+.bookly-cart table tfoot td {
+    border-top: 2px solid rgba(51, 51, 51, 0.1);
 }
 
 /* Details */
-.ab-details-step .ab-formGroup input[type="text"].ab-captcha {
+.bookly-details-step .bookly-form-group input[type="text"].bookly-captcha {
     display: block;
     width: 160px !important;
     margin: 10px 0 0 !important;
 }
-.ab-details-step .ab-formGroup .intl-tel-input {
+.bookly-details-step .bookly-form-group .intl-tel-input {
     display: block;
 }
-.ab-details-step .ab-formGroup .intl-tel-input input {
+.bookly-details-step .bookly-form-group .intl-tel-input input {
     padding-left: 45px !important;
 }
-.ab-details-step .bookly-table,
-.ab-details-step .bookly-table > * {
+.bookly-details-step .bookly-table,
+.bookly-details-step .bookly-table > * {
     overflow: visible !important;
 }
-.ab-details-step .ab-formGroup textarea {
+.bookly-details-step .bookly-form-group textarea {
     resize: vertical;
 }
-.ab-details-step .ab-custom-field-row > div > div > label,
-.ab-details-step .ab-custom-field-row > div > div > label > input[type="radio"],
-.ab-details-step .ab-custom-field-row > div > div > label > input[type="checkbox"] {
+.bookly-details-step .bookly-custom-field-row > div > div > label,
+.bookly-details-step .bookly-custom-field-row > div > div > label > input[type="radio"],
+.bookly-details-step .bookly-custom-field-row > div > div > label > input[type="checkbox"] {
     cursor: pointer;
 }
-.ab-details-step .ab-custom-field-row > div > div > label > * {
+.bookly-details-step .bookly-custom-field-row > div > div > label > * {
     vertical-align: middle;
 }
 
 /* Payment */
-.bookly-form input.ab-user-coupon {
+.bookly-form input.bookly-user-coupon {
     width: 100px !important;
     margin: 0 10px !important;
 }
-.bookly-form select.ab-card-exp {
+.bookly-form select.bookly-card-exp {
     width: auto !important;
     margin-right: 10px !important;
 }
-.bookly-form input.ab-card-cvc {
+.bookly-form input.bookly-card-cvc {
     width: 50px !important;
 }
-.bookly-form .btn-apply-coupon {
-    display: inline-block;
-}
-.bookly-form .btn-apply-coupon span {
-    text-transform: capitalize !important;
-    font-weight: normal !important;
-}
-.bookly-form .ab-payment-nav > div > label,
-.bookly-form .ab-payment-nav > div > label > input[type="radio"] {
+.bookly-form .bookly-payment-nav > div > label,
+.bookly-form .bookly-payment-nav > div > label > input[type="radio"] {
     cursor: pointer;
 }
-.bookly-form .ab-payment-nav > div > label > * {
+.bookly-form .bookly-payment-nav > div > label > * {
     vertical-align: middle;
 }
-.bookly-form .ab-payment-nav > div > label > img {
+.bookly-form .bookly-payment-nav > div > label > img {
     margin-left: 10px;
 }
 
-/* Login Form */
+/* Modal Dialog */
 .bookly-fade {
     display: none;
 }
@@ -976,9 +998,20 @@ label.bookly-square {
 .bookly-modal .bookly-modal-content .bookly-modal-body {
     position: relative;
     padding: 15px;
-}
-.bookly-modal .bookly-modal-content .bookly-modal-body .ab-formGroup label {
     font-size: 14px;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-body .bookly-form-group {
+    margin-bottom: 10px;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-body .bookly-form-group label {
+    font-size: 14px;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-body div > div > label {
+    cursor: pointer;
+}
+.bookly-modal .bookly-modal-content .bookly-modal-body div > div > label > * {
+    vertical-align: middle;
+    cursor: pointer;
 }
 @media (max-width: 768px) {
     .bookly-modal .bookly-modal-dialog {
@@ -1156,7 +1189,7 @@ label.bookly-square {
 }
 .bookly-row .bookly-text,
 .bookly-row .bookly-text-center,
-.bookly-row .bookly-label {
+.bookly-row .bookly-col-label {
     padding-top: 6px;
     margin-bottom: 0;
     text-overflow: ellipsis;
@@ -1167,7 +1200,7 @@ label.bookly-square {
     text-align: center;
 }
 
-.bookly-row .bookly-label {
+.bookly-row .bookly-col-label {
     text-align: right;
 }
 
@@ -1231,7 +1264,7 @@ label.bookly-square {
 
 
 /* Other */
-.ab--holder {
+.bookly-holder {
     padding-top: 20px!important;
     font-size: 100%!important;
 }
@@ -1242,10 +1275,10 @@ label.bookly-square {
 
 /* Mobile */
 @media screen and (max-width: 650px) {
-    .ab-formGroup label:empty {
+    .bookly-form-group label:empty {
         display: none!important;
     }
-    .ab-formGroup > div {
+    .bookly-form-group > div {
         margin-right: 0 !important;
     }
 
@@ -1255,40 +1288,40 @@ label.bookly-square {
     .bookly-repeat-step .bookly-table > * {
         display: table-cell;
     }
-    .bookly-table .ab-formGroup {
+    .bookly-table .bookly-form-group {
         margin: 0 0 20px;
         width: 100% !important;
     }
-    .bookly-table .ab-formGroup:last-child {
+    .bookly-table .bookly-form-group:last-child {
         margin: 0;
     }
 
-    .ab-progress-tracker {
+    .bookly-progress-tracker {
         display: none;
     }
 
-    .ab-mobile-step_1 .bookly-nav-steps {
+    .bookly-mobile-step-1 .bookly-nav-steps {
         display: block;
     }
-    .ab-mobile-step_2 {
+    .bookly-mobile-step-2 {
         display: none;
     }
 
-    .ab-select-mobile {
+    .bookly-select-mobile {
         width: 95%;
         margin-top: 5px;
     }
 
-    .ab-mobile-next-step, .ab-mobile-prev-step {
+    .bookly-mobile-next-step, .bookly-mobile-prev-step {
         display: block!important;
     }
 
-    .ab-mob-float-none {
+    .bookly-mobile-float-none {
         float: none !important;
     }
 
     /* Service */
-    .bookly-service-step .ab-available-date,
+    .bookly-service-step .bookly-available-date,
     .bookly-service-step .bookly-week-days {
         margin-right: 0 !important;
     }
@@ -1299,32 +1332,32 @@ label.bookly-square {
     .bookly-service-step .bookly-week-days > div {
         display: table-cell;
     }
-    .bookly-service-step .ab-time-to,
-    .bookly-service-step .ab-time-from {
+    .bookly-service-step .bookly-time-to,
+    .bookly-service-step .bookly-time-from {
         display: inline-block;
         width: 48% !important;
     }
-    .bookly-service-step .ab-time-to {
+    .bookly-service-step .bookly-time-to {
         float: right !important;
     }
-    .bookly-service-step .ab-time-range select {
+    .bookly-service-step .bookly-time-range select {
         width: 100%!important;
     }
-    .ab-mobile-step_1 {
+    .bookly-mobile-step-1 {
         margin-right: 0;
     }
 
-    .ab-not-time-screen {
+    .bookly-not-time-screen {
         height: auto!important;
         margin-left: 0!important;
         margin-bottom: 15px;
         clear: both;
     }
-    .ab-time-step {
+    .bookly-time-step {
         clear: both;
     }
 
-    .ab-btn {
+    .bookly-btn {
         width: auto!important;
         min-width: 0;
         padding: 9px 18px!important;
@@ -1345,11 +1378,11 @@ label.bookly-square {
         width: 50%;
     }
 
-    .ab-cart .ab-mobile-version {
+    .bookly-cart .bookly-mobile-version {
         display: table-row-group;
     }
 
-    .ab-cart .ab-desktop-version {
+    .bookly-cart .bookly-desktop-version {
         display: none;
     }
 
@@ -1381,11 +1414,28 @@ label.bookly-square {
         margin-top: 12px;
     }
 
-    .bookly-row .bookly-label,
+    .bookly-row .bookly-col-label,
     .bookly-row .bookly-text-center {
         text-align: left;
         text-transform: capitalize;
         padding-top: 0;
+    }
+
+    .bookly-repeat-step .bookly-schedule-row > div:first-child {
+        width: 31px;
+    }
+
+    .bookly-repeat-step .bookly-schedule-row > div:last-child {
+        width: calc( 100% - 31px );
+        padding: 2px 2px 0 2px;
+    }
+
+    .bookly-repeat-step .bookly-schedule-date, .bookly-repeat-step .bookly-schedule-time {
+        margin-right: 2px;
+    }
+
+    .bookly-repeat-step .bookly-schedule-time {
+        width: 90px !important;
     }
 }
 

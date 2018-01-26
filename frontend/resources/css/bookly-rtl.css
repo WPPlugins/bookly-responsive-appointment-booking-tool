@@ -1,19 +1,19 @@
 /* global class */
-.ab-right {
+.bookly-right {
     float: left!important;
 }
-.ab-left {
+.bookly-left {
     float: right!important;
 }
-.ab-rtext {
+.bookly-rtext {
     text-align: left;
 }
 
 /* Form Elements */
-.ab-formGroup > div {
+.bookly-form-group > div {
     margin: 5px 0 0 14px;
 }
-.ab-formGroup:last-child > div {
+.bookly-form-group:last-child > div {
     margin-left: 0;
 }
 
@@ -43,21 +43,21 @@
 
 }
 /* Progress Tracker */
-.ab-progress-tracker > div {
+.bookly-progress-tracker > div {
     padding: 0 4px 0 0;
 }
-.ab-progress-tracker > div:last-child .step {
+.bookly-progress-tracker > div:last-child .step {
     border-radius: 5px 0 0 5px;
 }
-.ab-progress-tracker > div:first-child .step {
+.bookly-progress-tracker > div:first-child .step {
     border-radius: 0 5px 5px 0;
 }
-.ab-progress-tracker > div:first-child {
+.bookly-progress-tracker > div:first-child {
     padding-right: 0;
 }
 
 /* Service */
-.bookly-service-step .ab-available-date,
+.bookly-service-step .bookly-available-date,
 .bookly-service-step .bookly-week-days {
     margin-right: 0 !important;
     margin-left: 14px !important;
@@ -65,13 +65,13 @@
 .bookly-form .picker__holder {
     left: auto!important;
 }
-.ab-mobile-step_1 {
+.bookly-mobile-step-1 {
     margin-left: -14px;
     margin-right: auto;
 }
 
 /* Time */
-.ab-slot-calendar {
+.bookly-slot-calendar {
     float: right;
 }
 
@@ -81,7 +81,7 @@
     margin-right: auto;
     float: right!important;
 }
-.ab-time-next {
+.bookly-time-next {
     margin-right: 10px;
     margin-left: 0;
 }
@@ -89,11 +89,11 @@
     float: right!important;
 }
 /* Details */
-.ab-formGroup .intl-tel-input input {
+.bookly-form-group .intl-tel-input input {
     padding-right: 45px !important;
     padding-left: 0 !important;
 }
-.ab-list {
+.bookly-list {
     margin-right: 10px!important;
     margin-left: auto;
 }
@@ -134,24 +134,24 @@
 
 /* Mobile */
 @media screen and (max-width: 650px) {
-    .ab-mob-float-none {
+    .bookly-mobile-float-none {
         float: none !important;
     }
-    .ab-formGroup > div {
+    .bookly-form-group > div {
         margin-left: 0 !important;
     }
-    .bookly-service-step .ab-available-date,
+    .bookly-service-step .bookly-available-date,
     .bookly-service-step .bookly-week-days {
         margin-left: 0 !important;
     }
-    .bookly-service-step .ab-time-to {
+    .bookly-service-step .bookly-time-to {
         float: left !important;
     }
-    .ab-mobile-step_1 {
+    .bookly-mobile-step-1 {
         margin-left: 0;
     }
 
-    .ab-not-time-screen {
+    .bookly-not-time-screen {
         margin-right: 0!important;
         margin-left: auto !important;
     }

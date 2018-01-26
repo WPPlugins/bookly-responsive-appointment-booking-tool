@@ -1,4 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use BooklyLite\Lib\Utils\Common;
+use BooklyLite\Lib\Config;
+?>
 <div id="bookly-export-dialog" class="modal fade" tabindex=-1 role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -25,7 +28,10 @@
                     <div class="checkbox"><label><input checked value="7" type="checkbox" /><?php _e( 'Duration', 'bookly' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="8" type="checkbox" /><?php _e( 'Status', 'bookly' ) ?></label></div>
                     <div class="checkbox"><label><input checked value="9" type="checkbox" /><?php _e( 'Payment', 'bookly' ) ?></label></div>
-                    <?php $i = 10; foreach ( $custom_fields as $custom_field ) : ?>
+                    <?php $i = 10; if ( Config::showNotes() ): $i = 11; ?>
+                        <div class="checkbox"><label><input checked value="10" type="checkbox" /><?php echo esc_html( Common::getTranslatedOption( 'bookly_l10n_label_notes' ) ) ?></label></div>
+                    <?php endif ?>
+                    <?php foreach ( $custom_fields as $custom_field ) : ?>
                         <div class="checkbox"><label><input checked value="<?php echo $i ++ ?>" type="checkbox"/><?php echo $custom_field->label ?></label></div>
                     <?php endforeach ?>
                 </div>

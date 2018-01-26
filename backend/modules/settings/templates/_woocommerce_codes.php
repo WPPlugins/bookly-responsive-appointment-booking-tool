@@ -10,4 +10,4 @@ $codes = array(
     array( 'code' => 'staff_info',        'description' => __( 'info of staff', 'bookly' ), ),
     array( 'code' => 'staff_name',        'description' => __( 'name of staff', 'bookly' ), ),
 );
-\BooklyLite\Lib\Utils\Common::Codes( apply_filters( 'bookly_woocommerce_short_codes', $codes ) );
+BooklyLite\Lib\Utils\Common::codes( BooklyLite\Lib\Proxy\Shared::prepareWooCommerceShortCodes( $codes ) );

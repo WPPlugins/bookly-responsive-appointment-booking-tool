@@ -23,9 +23,16 @@ jQuery(function($) {
 
     }
 
+    $('.bookly-js-select').val(null);
     $.each(BooklyL10n.filter, function (field, value) {
-        if (value != -1) {
+        if (value != '') {
             $('#bookly-filter-' + field).val(value);
+        }
+        // check if select has correct values
+        if ($('#bookly-filter-' + field).prop('type') == 'select-one') {
+            if ($('#bookly-filter-' + field +' option[value="' + value + '"]').length == 0) {
+                $('#bookly-filter-' + field).val(null);
+            }
         }
     });
 
@@ -36,7 +43,7 @@ jQuery(function($) {
         { data: 'id', responsivePriority: 2 },
         { data: 'start_date', responsivePriority: 2 },
         { data: 'staff.name', responsivePriority: 2 },
-        { data: 'customer.name', render: $.fn.dataTable.render.text(), responsivePriority: 2 },
+        { data: 'customer.full_name', render: $.fn.dataTable.render.text(), responsivePriority: 2 },
         {
             data: 'customer.phone',
             responsivePriority: 3,
@@ -76,6 +83,13 @@ jQuery(function($) {
             }
         }
     ];
+    if (BooklyL10n.show_notes) {
+        columns.push({
+            data: 'notes',
+            render: $.fn.dataTable.render.text(),
+            responsivePriority: 4
+        });
+    }
     $.each(BooklyL10n.cf_columns, function (i, cf_id) {
         columns.push({
             data: 'custom_fields.' + cf_id,
@@ -96,7 +110,7 @@ jQuery(function($) {
             url : ajaxurl,
             type: 'POST',
             data: function (d) {
-                return $.extend({action: 'bookly_get_appointments'}, {
+                return $.extend({action: 'bookly_get_appointments', csrf_token : BooklyL10n.csrf_token}, {
                     filter: {
                         id      : $id_filter.val(),
                         date    : $date_filter.data('date'),
@@ -214,10 +228,11 @@ jQuery(function($) {
             url  : ajaxurl,
             type : 'POST',
             data : {
-                action : 'bookly_delete_customer_appointments',
-                data   : data,
-                notify : $('#bookly-delete-notify').prop('checked') ? 1 : 0,
-                reason : $('#bookly-delete-reason').val()
+                action     : 'bookly_delete_customer_appointments',
+                csrf_token : BooklyL10n.csrf_token,
+                data       : data,
+                notify     : $('#bookly-delete-notify').prop('checked') ? 1 : 0,
+                reason     : $('#bookly-delete-reason').val()
             },
             dataType : 'json',
             success  : function(response) {
@@ -282,10 +297,20 @@ jQuery(function($) {
     /**
      * On filters change.
      */
-    $('.bookly-js-chosen-select').chosen({
-        allow_single_deselect: true,
-        disable_search_threshold: 10
-    });
+    $('.bookly-js-select')
+        .on('select2:unselecting', function(e) {
+            e.preventDefault();
+            $(this).val(null).trigger('change');
+        })
+        .select2({
+            width: '100%',
+            theme: 'bootstrap',
+            allowClear: true,
+            language  : {
+                noResults: function() { return BooklyL10n.no_result_found; }
+            }
+        });
+
     $id_filter.on('keyup', function () { dt.ajax.reload(); });
     $date_filter.on('apply.daterangepicker', function () { dt.ajax.reload(); });
     $staff_filter.on('change', function () { dt.ajax.reload(); });

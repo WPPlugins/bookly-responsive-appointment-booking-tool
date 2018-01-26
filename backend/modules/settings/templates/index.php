@@ -10,9 +10,14 @@
         <div class="row">
             <div id="bookly-sidebar" class="col-sm-4">
                 <ul class="bookly-nav" role="tablist">
-                    <?php $tab = isset ( $_GET['tab'] ) ? $_GET['tab'] : 'general' ?>
                     <li class="bookly-nav-item" data-target="#bookly_settings_general" data-toggle="tab">
                         <?php _e( 'General', 'bookly' ) ?>
+                    </li>
+                    <li class="bookly-nav-item" data-target="#bookly_settings_url" data-toggle="tab">
+                        <?php _e( 'URL Settings', 'bookly' ) ?>
+                    </li>
+                    <li class="bookly-nav-item" data-target="#bookly_settings_calendar" data-toggle="tab">
+                        <?php _e( 'Calendar', 'bookly' ) ?>
                     </li>
                     <li class="bookly-nav-item" data-target="#bookly_settings_company" data-toggle="tab">
                         <?php _e( 'Company', 'bookly' ) ?>
@@ -23,13 +28,13 @@
                     <li class="bookly-nav-item" data-target="#bookly_settings_google_calendar" data-toggle="tab">
                         <?php _e( 'Google Calendar', 'bookly' ) ?>
                     </li>
-                    <li class="bookly-nav-item" data-target="#bookly_settings_woocommerce" data-toggle="tab">
+                    <li class="bookly-nav-item" data-target="#bookly_settings_woo_commerce" data-toggle="tab">
                         WooCommerce
                     </li>
                     <li class="bookly-nav-item" data-target="#bookly_settings_cart" data-toggle="tab">
                         <?php _e( 'Cart', 'bookly' ) ?>
                     </li>
-                    <?php do_action( 'bookly_render_settings_menu', $tab ) ?>
+                    <?php \BooklyLite\Lib\Proxy\Shared::renderSettingsMenu() ?>
                     <li class="bookly-nav-item" data-target="#bookly_settings_payments" data-toggle="tab">
                         <?php _e( 'Payments', 'bookly' ) ?>
                     </li>
@@ -49,6 +54,12 @@
                             <div class="tab-pane active" id="bookly_settings_general">
                                 <?php include '_generalForm.php' ?>
                             </div>
+                            <div class="tab-pane" id="bookly_settings_url">
+                                <?php include '_urlForm.php' ?>
+                            </div>
+                            <div class="tab-pane active" id="bookly_settings_calendar">
+                                <?php include '_calendarForm.php' ?>
+                            </div>
                             <div class="tab-pane" id="bookly_settings_company">
                                 <?php include '_companyForm.php' ?>
                             </div>
@@ -58,13 +69,13 @@
                             <div class="tab-pane" id="bookly_settings_google_calendar">
                                 <?php include '_googleCalendarForm.php' ?>
                             </div>
-                            <div class="tab-pane" id="bookly_settings_woocommerce">
+                            <div class="tab-pane" id="bookly_settings_woo_commerce">
                                 <?php include '_woocommerce.php' ?>
                             </div>
                             <div class="tab-pane" id="bookly_settings_cart">
                                 <?php include '_cartForm.php' ?>
                             </div>
-                            <?php do_action( 'bookly_render_settings_form' ) ?>
+                            <?php \BooklyLite\Lib\Proxy\Shared::renderSettingsForm() ?>
                             <div class="tab-pane" id="bookly_settings_payments">
                                 <?php include '_paymentsForm.php' ?>
                             </div>

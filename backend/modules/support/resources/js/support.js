@@ -15,7 +15,7 @@ jQuery(function ($) {
                     $.ajax({
                         url  : ajaxurl,
                         type : 'POST',
-                        data : { action : 'bookly_dismiss_contact_us_notice' },
+                        data : { action : 'bookly_dismiss_contact_us_notice', csrf_token : SupportL10n.csrf_token },
                         success : function(response) {
                             $btnContactUs.attr("data-processed", true);
                         }
@@ -27,7 +27,7 @@ jQuery(function ($) {
                 $.ajax({
                     url  : ajaxurl,
                     type : 'POST',
-                    data : { action : 'bookly_contact_us_btn_clicked' }
+                    data : { action : 'bookly_contact_us_btn_clicked', csrf_token : SupportL10n.csrf_token }
                 });
             });
     }
@@ -44,7 +44,7 @@ jQuery(function ($) {
                         $.ajax({
                             url  : ajaxurl,
                             type : 'POST',
-                            data : { action : 'bookly_dismiss_feedback_notice' }
+                            data : { action : 'bookly_dismiss_feedback_notice', csrf_token : SupportL10n.csrf_token }
                         });
                     }).end()
                 .end()
@@ -54,7 +54,7 @@ jQuery(function ($) {
                 $.ajax({
                     url  : ajaxurl,
                     type : 'POST',
-                    data : { action : 'bookly_dismiss_feedback_notice' }
+                    data : { action : 'bookly_dismiss_feedback_notice', csrf_token : SupportL10n.csrf_token }
                 });
             });
     }
@@ -77,10 +77,11 @@ jQuery(function ($) {
                 url  : ajaxurl,
                 type : 'POST',
                 data : {
-                    action : 'bookly_send_support_request',
-                    name   : $name.val(),
-                    email  : $email.val(),
-                    msg    : $msg.val()
+                    action     : 'bookly_send_support_request',
+                    csrf_token : SupportL10n.csrf_token,
+                    name       : $name.val(),
+                    email      : $email.val(),
+                    msg        : $msg.val()
                 },
                 dataType : 'json',
                 success  : function (response) {
@@ -100,5 +101,36 @@ jQuery(function ($) {
                 }
             });
         }
+    });
+
+    $('#bookly-js-mark-read-all-messages').on('click', function (e) {
+        e.preventDefault();
+        var $link = $(this),
+            ladda = Ladda.create($('#bookly-bell').get(0)),
+            $dropdown = $link.closest(".dropdown-menu");
+
+        $dropdown.prev().dropdown("toggle");
+        ladda.start();
+        $.ajax({
+            url  : ajaxurl,
+            type : 'POST',
+            data : {
+                action: 'bookly_mark_read_all_messages',
+                csrf_token: SupportL10n.csrf_token
+            },
+            dataType : 'json',
+            success  : function (response) {
+                if (response.success) {
+                    $('.bookly-js-new-messages-count').remove();
+                    $link.closest('li').remove();
+                    $('a', $dropdown).each(function () {
+                        $(this).html($(this).text());
+                    });
+                }
+            },
+            complete : function () {
+                ladda.stop();
+            }
+        });
     });
 });

@@ -7,6 +7,7 @@ namespace BooklyLite\Lib;
  */
 class Chain
 {
+    /** @var ChainItem[] */
     private $items = array();
 
     /**
@@ -47,7 +48,6 @@ class Chain
         $data = array();
         foreach ( $this->items as $key => $item ) {
             $data[ $key ] = $item->getData();
-            break;
         }
 
         return $data;
@@ -64,7 +64,6 @@ class Chain
             $item = new ChainItem();
             $item->setData( $item_data );
             $this->items[ $key ] = $item;
-            break;
         }
     }
 

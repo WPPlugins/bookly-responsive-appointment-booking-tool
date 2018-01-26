@@ -41,11 +41,11 @@ class BusinessHours extends Lib\Base\Form
      * @param bool $is_start
      * @return string
      */
-    public function renderField( $field_name = 'ab_settings_monday', $is_start = true )
+    public function renderField( $field_name = 'bookly_bh_monday', $is_start = true )
     {
         $ts_length      = Lib\Config::getTimeSlotLength();
-        $time_output    = Lib\Entities\StaffScheduleItem::WORKING_START_TIME;
-        $time_end       = Lib\Entities\StaffScheduleItem::WORKING_END_TIME;
+        $time_output    = 0;
+        $time_end       = DAY_IN_SECONDS;
         $option_name    = $field_name . ( $is_start ? '_start' : '_end' );
         $class_name     = $is_start ? 'select_start' : 'select_end bookly-hide-on-off';
         $selected_value = get_option( $option_name );
@@ -62,7 +62,7 @@ class BusinessHours extends Lib\Base\Form
                 if ( $selected_seconds == $time_output ) {
                     $value_added = true;
                 } elseif ( $selected_seconds < $time_output ) {
-                    $output  .= "<option value='{$selected_value}' selected='selected'>{$selected_value}</option>";
+                    $output .= sprintf( '<option value="%s" selected="selected">%s</option>', $selected_value, Lib\Utils\DateTime::formatTime( $selected_value ) );
                     $value_added = true;
                 }
             }

@@ -1,11 +1,12 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'cart' ) ) ?>">
     <?php \BooklyLite\Lib\Utils\Common::optionToggle( 'bookly_cart_enabled', __( 'Cart', 'bookly' ), __( 'If cart is enabled then your clients will be able to book several appointments at once. Please note that WooCommerce integration must be disabled.', 'bookly' ) ) ?>
+    <?php \BooklyLite\Lib\Proxy\Shared::renderCartSettings() ?>
     <div class="form-group">
         <label for="bookly_cart_show_columns"><?php _e( 'Columns', 'bookly' ) ?></label><br/>
-        <div class="ab-flags" id="bookly_cart_show_columns">
+        <div class="bookly-flags" id="bookly_cart_show_columns">
             <?php foreach ( (array) get_option( 'bookly_cart_show_columns' ) as $column => $attr ) : ?>
-                <div class="bookly-flexbox"<?php if ( $column == 'deposit' && ! \BooklyLite\Lib\Config::isDepositPaymentsEnabled() ) : ?> style="display:none"<?php endif ?>>
+                <div class="bookly-flexbox"<?php if ( $column == 'deposit' && ! \BooklyLite\Lib\Config::depositPaymentsEnabled() ) : ?> style="display:none"<?php endif ?>>
                     <div class="bookly-flex-cell">
                         <i class="bookly-js-handle bookly-margin-right-sm bookly-icon bookly-icon-draghandle bookly-cursor-move" title="<?php esc_attr_e( 'Reorder', 'bookly' ) ?>"></i>
                     </div>
@@ -25,7 +26,8 @@
         </div>
     </div>
     <div class="panel-footer">
-        <?php \BooklyLite\Lib\Utils\Common::submitButton() ?>
+        <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
+        <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn btn-lg btn-success bookly-limitation' ) ?>
         <?php \BooklyLite\Lib\Utils\Common::resetButton() ?>
     </div>
 </form>

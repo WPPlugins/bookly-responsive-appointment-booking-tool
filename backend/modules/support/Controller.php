@@ -29,7 +29,8 @@ class Controller extends Lib\Base\Controller
             ) );
         }
 
-        $message = $this->render( '_email_to_support', compact( 'name', 'email', 'msg' ), false );
+        $plugins = array();
+        $message = $this->render( '_email_to_support', compact( 'name', 'email', 'msg', 'plugins' ), false );
         $headers = array(
             'Content-Type: text/html; charset=utf-8',
             'From: ' . get_option( 'bookly_email_sender_name' ) . ' <' . get_option( 'bookly_email_sender' ) . '>',
@@ -90,6 +91,22 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
+     * Send Net Promoter Score.
+     */
+    public function executeNpsSend()
+    {
+        $rate  = $this->getParameter( 'rate' );
+        $msg   = $this->getParameter( 'msg', '' );
+        $email = $this->getParameter( 'email', '' );
+
+        Lib\API::sendNps( $rate, $msg, $email );
+
+        update_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'dismiss_nps_notice', 1 );
+
+        wp_send_json_success( array( 'message' => __( 'Sent successfully.', 'bookly' ) ) );
+    }
+
+    /**
      * Dismiss subscribe notice.
      */
     public function executeDismissSubscribeNotice()
@@ -100,13 +117,14 @@ class Controller extends Lib\Base\Controller
     }
 
     /**
-     * Override parent method to add 'wp_ajax_bookly_' prefix.
-     *
-     * @param string $prefix
+     * Dismiss NPS notice.
      */
-    protected function registerWpActions( $prefix = '' )
+    public function executeDismissNpsNotice()
     {
-        parent::registerWpActions( 'wp_ajax_bookly_' );
-    }
+        if ( get_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'dismiss_nps_notice', true ) != 1 ) {
+            update_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'dismiss_nps_notice', time() );
+        }
 
+        wp_send_json_success();
+    }
 }

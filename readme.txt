@@ -3,9 +3,9 @@ Contributors: Ladela
 Tags: 2checkout, appointment plugin, authorize.net, booking plugin, calendar, cart, google calendar, paypal, payson, reservation, responsive, stripe, woocommerce, wordpress, wpm
 Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
-Tested up to: 4.8.3
+Tested up to: 4.9.2
 Requires PHP: 5.3.7
-Stable tag: 13.2
+Stable tag: 14.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -205,8 +205,75 @@ Upon the completion of these steps, customers can book appointments. In the Cale
 
 == Changelog ==
 
-= 13.1 =
+= 14.5 =
+* Fixed issue with Custom Fields after previous update
+
+= 14.4 =
+* Added new custom notifications
+* Added ability to attach files in .ICS format to notifications
+* Added ability to create appointments with custom service
+* Added new shortcode for cancellation confirmation page
+
+= 14.3 =
+* Added support for <a href="https://codecanyon.net/item/bookly-waiting-list-addon/20917406?ref=ladela">Waiting List (Add-on)</a>
+* Added support for <a href="https://codecanyon.net/item/bookly-packages-addon/20952783?ref=ladela">Packages (Add-on)</a>
+* Added ability to create custom notifications
+* Added ability to limit number of bookings per customer
+* Added new notification code {reject_appointment_url}
+
+= 14.2 =
+* Fixed issues with entering purchase code
+* Fixed issues with cron reminders
+
+= 14.1 =
+* Added ability to enter first name and last name of customers separately
+* Added ability to specify a rule about how staff members should be automatically selected when customers choose "Any"
+* Added word "Any" to staff name in the appointments for which the staff member was booked as "Any"
+
+= 14.0 =
 * Added support for WordPress 4.8.2
+
+= 13.9 =
+* Added ability to set price format
+* Added ability to automatically fill in personal information for returning customers at Details step
+* Changed the way how Bookly identifies returning customers – now it uses phone if phone field is required, otherwise email is used
+
+= 13.8 =
+* Fixed issue with extras and GC
+
+= 13.7 =
+* Fixed issues with login form at Details step
+
+= 13.6 =
+* Fixed regression bugs with WooCommerce and WPML
+
+= 13.5 =
+* Fixed issues with PHP < 5.5
+
+= 13.4 =
+* Added ability to configure displayed appointment info in Bookly calendar
+* Added ability to set minimum service capacity
+* Added 3 new cron reminders
+* Added ability to show service duration next to service name in Bookly forms
+* Added support for WP Super Cache (do not cache pages with Bookly forms)
+* Improved support for daylight saving time
+
+= 13.3 =
+* Added support for <a href="https://codecanyon.net/item/bookly-staff-cabinet-addon/20005540?ref=ladela">Staff Cabinet (Add-on)</a>
+* Added ability to setup custom CSS
+* Added ability to set phone field as optional
+* Added new texts for Payment step in Appearance
+* Fixed displaying morning slots of night shift
+
+= 13.2 =
+* Added support for <a href="https://codecanyon.net/item/bookly-paypal-payments-standard-addon/19617518?ref=ladela">PayPal Payments Standard (Add-on)</a>
+* Added ability to set service duration in days
+* Added ability to set different text for Next button at each booking step
+	
+= 13.1 =
+* Added customer birthday greetings
+* Added ability to change appointment status directly from the edit appointment dialog
+* Fixed status Rejected for those who got version 13.0 via update
 
 = 13.0 =
 * Added support for <a href="https://codecanyon.net/item/bookly-recurring-appointments-addon/19497634?ref=ladela">Recurring Appointments (Add-on)</a>

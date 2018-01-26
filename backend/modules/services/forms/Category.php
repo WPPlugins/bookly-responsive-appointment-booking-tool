@@ -5,6 +5,8 @@ use BooklyLite\Lib;
 
 /**
  * Class Category
+ * @method Lib\Entities\Category save()
+ *
  * @package BooklyLite\Backend\Modules\Services\Forms
  */
 class Category extends Lib\Base\Form

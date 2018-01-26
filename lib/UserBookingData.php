@@ -7,58 +7,98 @@ namespace BooklyLite\Lib;
  */
 class UserBookingData
 {
-    private $form_id = null;
+    // Protected properties
 
-    /**
-     * Data provided by user at booking steps
-     * and stored in PHP session.
-     * @var array
-     */
-    private $data = array(
+    // Step 0
+    /** @var  string */
+    protected $time_zone;
+    /** @var  int */
+    protected $time_zone_offset;
+
+    // Step service
+    /** @var  string Y-m-d */
+    protected $date_from;
+    /** @var  array */
+    protected $days;
+    /** @var  string H:i*/
+    protected $time_from;
+    /** @var  string H:i*/
+    protected $time_to;
+
+    // Step time
+    protected $slots = array();
+
+    // Step details
+    /** @var  string */
+    protected $full_name;
+    /** @var  string */
+    protected $first_name;
+    /** @var  string */
+    protected $last_name;
+    /** @var  string */
+    protected $email;
+    /** @var  string */
+    protected $phone;
+    /** @var  string */
+    protected $notes;
+
+    // Step payment
+    /** @var  string */
+    protected $coupon_code;
+
+    // Cart item keys being edited
+    /** @var  array */
+    protected $edit_cart_keys = array();
+    /** @var  bool */
+    protected $repeated = 0;
+    /** @var  array */
+    protected $repeat_data = array();
+
+    // Private
+
+    /** @var  string */
+    private $form_id;
+
+    // Frontend expect variables
+    private $properties = array(
         // Step 0
-        'time_zone_offset' => null,
+        'time_zone',
+        'time_zone_offset',
         // Step service
-        'date_from'        => null,
-        'days'             => null,
-        'time_from'        => null,
-        'time_to'          => null,
+        'date_from',
+        'days',
+        'time_from',
+        'time_to',
         // Step time
-        'slots'            => array(),
+        'slots',
         // Step details
-        'name'             => null,
-        'email'            => null,
-        'phone'            => null,
+        'full_name',
+        'first_name',
+        'last_name',
+        'email',
+        'phone',
+        'notes',
         // Step payment
-        'coupon'           => null,
+        'coupon_code',
         // Cart item keys being edited
-        'edit_cart_keys'   => array(),
-        'repeated'         => 0,
+        'edit_cart_keys',
+        'repeated',
+        'repeat_data',
     );
 
-    /**
-     * @var Cart
-     */
-    public $cart = null;
-
-    /**
-     * @var Chain
-     */
-    public $chain = null;
-
-    /**
-     * @var Entities\Coupon|null
-     */
-    private $coupon = null;
-
-    /**
-     * @var array
-     */
+    /** @var \BooklyCoupons\Lib\Entities\Coupon|null */
+    private $coupon;
+    /** @var array */
     private $booking_numbers = array();
+    /** @var integer|null */
+    private $payment_id;
 
-    /**
-     * @var integer|null
-     */
-    private $payment_id = null;
+    // Public
+
+    /** @var Cart */
+    public $cart;
+    /** @var Chain */
+    public $chain;
 
     /**
      * Constructor.
@@ -76,14 +116,30 @@ class UserBookingData
         if ( $current_user && $current_user->ID ) {
             $customer = new Entities\Customer();
             if ( $customer->loadBy( array( 'wp_user_id' => $current_user->ID ) ) ) {
-                $this->set( 'name',  $customer->get( 'name' ) );
-                $this->set( 'email', $customer->get( 'email' ) );
-                $this->set( 'phone', $customer->get( 'phone' ) );
+                $this
+                    ->setFullName( $customer->getFullName() )
+                    ->setFirstName( $customer->getFirstName() )
+                    ->setLastName( $customer->getLastName() )
+                    ->setEmail( $customer->getEmail() )
+                    ->setPhone( $customer->getPhone() );
             } else {
-                $this->set( 'name',  $current_user->display_name );
-                $this->set( 'email', $current_user->user_email );
+                $this
+                    ->setFullName( $current_user->display_name )
+                    ->setFirstName( $current_user->user_firstname )
+                    ->setLastName( $current_user->user_lastname )
+                    ->setEmail( $current_user->user_email );
             }
+        } elseif ( get_option( 'bookly_cst_remember_in_cookie' ) && isset( $_COOKIE['bookly-cst-full-name'] ) ) {
+            $this
+                ->setFullName( $_COOKIE['bookly-cst-full-name'] )
+                ->setFirstName( $_COOKIE['bookly-cst-first-name'] )
+                ->setLastName( $_COOKIE['bookly-cst-last-name'] )
+                ->setEmail( $_COOKIE['bookly-cst-email'] )
+                ->setPhone( $_COOKIE['bookly-cst-phone'] );
         }
+
+        // Register destructor (should work in cases when regular __destruct() does not work).
+        register_shutdown_function( array( $this, 'destruct' ) );
     }
 
     public function resetChain()
@@ -93,26 +149,31 @@ class UserBookingData
 
         // Set up default parameters.
         $prior_time = Config::getMinimumTimePriorBooking();
-        $this->set( 'date_from', date( 'Y-m-d', current_time( 'timestamp' ) + $prior_time ) );
-        $times = Entities\StaffScheduleItem::query()
-            ->select( 'SUBSTRING_INDEX(MIN(start_time), ":", 2) AS min_end_time,' .
-                'SUBSTRING_INDEX(MAX(end_time), ":", 2) AS max_end_time' )
+        $this->setDateFrom( date( 'Y-m-d', current_time( 'timestamp' ) + $prior_time ) );
+        $times = Entities\StaffScheduleItem::query( 'ss' )
+            ->select( 'SUBSTRING_INDEX(MIN(ss.start_time), ":", 2) AS min_end_time,
+                SUBSTRING_INDEX(MAX(ss.end_time), ":", 2) AS max_end_time' )
+            ->leftJoin( 'Staff', 's', 's.id = ss.staff_id' )
             ->whereNot( 'start_time', null )
+            // Only for visible staff get working hours.
+            ->whereNot( 's.visibility', 'private' )
             ->fetchRow();
-        $times = apply_filters( 'bookly_special_days_adjust_min_and_max_times', $times );
-        $this->set( 'time_from',      $times['min_end_time'] );
-        $this->set( 'time_to',        $times['max_end_time'] );
-        $this->set( 'slots',          array() );
-        $this->set( 'edit_cart_keys', array() );
-        $this->set( 'repeated',       0 );
+        $times = Proxy\Shared::adjustMinAndMaxTimes( $times );
+        $this
+            ->setTimeFrom( $times['min_end_time'] )
+            ->setTimeTo( $times['max_end_time'] )
+            ->setSlots( array() )
+            ->setEditCartKeys( array() )
+            ->setRepeated( 0 )
+            ->setRepeatData( array() );
     }
 
     /**
-     * Destructor.
+     * Destructor used in register_shutdown_function.
      */
-    public function __destruct()
+    public function destruct()
     {
-        Session::setFormVar( $this->form_id, 'data',            $this->data );
+        Session::setFormVar( $this->form_id, 'data',            $this->getFrontendData() );
         Session::setFormVar( $this->form_id, 'cart',            $this->cart->getItemsData() );
         Session::setFormVar( $this->form_id, 'chain',           $this->chain->getItemsData() );
         Session::setFormVar( $this->form_id, 'booking_numbers', $this->booking_numbers );
@@ -121,29 +182,16 @@ class UserBookingData
     }
 
     /**
-     * Set data parameter.
-     *
-     * @param string $name
-     * @param mixed  $value
+     * @return array
      */
-    public function set( $name, $value )
+    private function getFrontendData()
     {
-        $this->data[ $name ] = $value;
-    }
-
-    /**
-     * Get data parameter.
-     *
-     * @param string $name
-     * @return mixed
-     */
-    public function get( $name )
-    {
-        if ( array_key_exists( $name, $this->data ) ) {
-            return $this->data[ $name ];
+        $data = array();
+        foreach ( $this->properties as $variable_name ) {
+            $data[ $variable_name ] = $this->{$variable_name};
         }
 
-        return false;
+        return $data;
     }
 
     /**
@@ -156,11 +204,15 @@ class UserBookingData
         $data = Session::getFormVar( $this->form_id, 'data' );
         if ( $data !== null ) {
             // Restore data.
-            $this->data = $data;
+            $this->fillData( $data );
             $this->chain->setItemsData( Session::getFormVar( $this->form_id, 'chain' ) );
             $this->cart->setItemsData( Session::getFormVar( $this->form_id, 'cart' ) );
             $this->booking_numbers = Session::getFormVar( $this->form_id, 'booking_numbers' );
             $this->payment_id = Session::getFormVar( $this->form_id, 'payment_id' );
+            // Client time zone.
+            if ( Config::useClientTimeZone() ) {
+                $this->applyTimeZone();
+            }
 
             return true;
         }
@@ -176,30 +228,26 @@ class UserBookingData
     public function fillData( array $data )
     {
         foreach ( $data as $name => $value ) {
-            if ( array_key_exists( $name, $this->data ) ) {
-                /** Fill array @see UserBookingData::$data */
-                $this->set( $name, $value );
+            if ( in_array( $name, $this->properties ) ) {
+                $this->{$name} = $value;
             } elseif ( $name == 'chain' ) {
                 $chain_items = $this->chain->getItems();
                 $this->chain->clear();
                 foreach ( $value as $key => $_data ) {
                     $item = isset ( $chain_items[ $key ] ) ? $chain_items[ $key ] : new ChainItem();
+                    $item->setData( $_data );
                     $this->chain->add( $item );
-                    foreach ( $_data as $_name => $_value ) {
-                        $item->set( $_name, $_value );
-                    }
                 }
             } elseif ( $name == 'cart' ) {
                 foreach ( $value as $key => $_data ) {
-                    $item = $this->cart->get( $key );
-                    foreach ( $_data as $_name => $_value ) {
-                        $item->set( $_name, $_value );
-                    }
+                    $this->cart->get( $key )->setData( $_data );
                 }
-            } elseif ($name === 'repeat') {
-                $this->set( 'repeated', $value );
-            } elseif ($name === 'unrepeat') {
-                $this->set( 'repeated', 0 );
+            } elseif ( $name === 'repeat' ) {
+                $this->setRepeated( $value );
+            } elseif ( $name === 'unrepeat' ) {
+                $this
+                    ->setRepeated( 0 )
+                    ->setRepeatData( array() );
             }
         }
     }
@@ -212,20 +260,23 @@ class UserBookingData
     public function setChainFromCartItem( $cart_key )
     {
         $cart_item = $this->cart->get( $cart_key );
-        $this->set( 'date_from', $cart_item->get( 'date_from' ) );
-        $this->set( 'days',      $cart_item->get( 'days' ) );
-        $this->set( 'time_from', $cart_item->get( 'time_from' ) );
-        $this->set( 'time_to',   $cart_item->get( 'time_to' ) );
-        $this->set( 'slots',     $cart_item->get( 'slots' ) );
-        $this->set( 'repeated',  0 );
+        $this
+            ->setDateFrom( $cart_item->getDateFrom() )
+            ->setDays( $cart_item->getDays() )
+            ->setTimeFrom( $cart_item->getTimeFrom() )
+            ->setTimeTo( $cart_item->getTimeTo() )
+            ->setSlots( $cart_item->getSlots() )
+            ->setRepeated( 0 )
+            ->setRepeatData( array() );
 
         $chain_item = new ChainItem();
-        $chain_item->set( 'service_id',        $cart_item->get( 'service_id' ) );
-        $chain_item->set( 'staff_ids',         $cart_item->get( 'staff_ids' ) );
-        $chain_item->set( 'number_of_persons', $cart_item->get( 'number_of_persons' ) );
-        $chain_item->set( 'extras',            $cart_item->get( 'extras' ) );
-        $chain_item->set( 'series_uniq_id',    $cart_item->get( 'series_uniq_id' ) );
-        $chain_item->set( 'quantity',          1 );
+        $chain_item
+            ->setServiceId( $cart_item->getServiceId() )
+            ->setStaffIds( $cart_item->getStaffIds() )
+            ->setNumberOfPersons( $cart_item->getNumberOfPersons() )
+            ->setExtras( $cart_item->getExtras() )
+            ->setSeriesUniqueId( $cart_item->getSeriesUniqueId() )
+            ->setQuantity( 1 );
 
         $this->chain->clear();
         $this->chain->add( $chain_item );
@@ -233,29 +284,31 @@ class UserBookingData
 
     /**
      * Add chain items to cart.
+     *
+     * @return $this
      */
     public function addChainToCart()
     {
         $cart_items     = array();
-        $edit_cart_keys = $this->get( 'edit_cart_keys' );
+        $edit_cart_keys = $this->getEditCartKeys();
         $eck_idx        = 0;
-        $slots          = $this->get( 'slots' );
+        $slots          = $this->getSlots();
         $slots_idx      = 0;
-        $repeated       = $this->get( 'repeated' ) ? $this->get( 'repeated' ) : 1;
-        if ( $this->get( 'repeated' ) ) {
-            $series_uniq_id = microtime() . rand(0, PHP_INT_MAX);
+        $repeated       = $this->getRepeated() ?: 1;
+        if ( $this->getRepeated() ) {
+            $series_unique_id = mt_rand( 1, PHP_INT_MAX );
         } else {
-            $series_uniq_id = 0;
+            $series_unique_id = 0;
         }
 
         $cart_items_repeats = array();
         for ( $i = 0; $i < $repeated; $i++ ) {
             $items_in_repeat = array();
             foreach ( $this->chain->getItems() as $chain_item ) {
-                for ( $q = 0; $q < $chain_item->get( 'quantity' ); ++ $q ) {
+                for ( $q = 0; $q < $chain_item->getQuantity(); ++ $q ) {
                     $cart_item_slots = array();
 
-                    if ( $chain_item->getService()->get( 'type' ) == Entities\Service::TYPE_COMPOUND ) {
+                    if ( $chain_item->getService()->getType() == Entities\Service::TYPE_COMPOUND ) {
                         foreach ( $chain_item->getSubServices() as $sub_service ) {
                             $cart_item_slots[] = $slots[ $slots_idx ++ ];
                         }
@@ -264,24 +317,23 @@ class UserBookingData
                     }
                     $cart_item = new CartItem();
 
-                    $cart_item->set( 'date_from', $this->get( 'date_from' ) );
-                    $cart_item->set( 'days',      $this->get( 'days' ) );
-                    $cart_item->set( 'time_from', $this->get( 'time_from' ) );
-                    $cart_item->set( 'time_to',   $this->get( 'time_to' ) );
+                    $cart_item
+                        ->setDateFrom( $this->getDateFrom() )
+                        ->setDays( $this->getDays() )
+                        ->setTimeFrom( $this->getTimeFrom() )
+                        ->setTimeTo( $this->getTimeTo() );
 
-                    $cart_item->set( 'series_uniq_id', $chain_item->get( 'series_uniq_id' ) ?
-                                                          $chain_item->get( 'series_uniq_id' ) :
-                                                          $series_uniq_id
-                    );
-                    $cart_item->set( 'extras',            $chain_item->get( 'extras' ) );
-                    $cart_item->set( 'location_id',       $chain_item->get( 'location_id' ) );
-                    $cart_item->set( 'number_of_persons', $chain_item->get( 'number_of_persons' ) );
-                    $cart_item->set( 'service_id',        $chain_item->get( 'service_id' ) );
-                    $cart_item->set( 'slots',             $cart_item_slots );
-                    $cart_item->set( 'staff_ids',         $chain_item->get( 'staff_ids' ) );
-                    $cart_item->set( 'first_in_series',   false );
+                    $cart_item
+                        ->setSeriesUniqueId( $chain_item->getSeriesUniqueId()?: $series_unique_id )
+                        ->setExtras( $chain_item->getExtras() )
+                        ->setLocationId( $chain_item->getLocationId() )
+                        ->setNumberOfPersons( $chain_item->getNumberOfPersons() )
+                        ->setServiceId( $chain_item->getServiceId() )
+                        ->setSlots( $cart_item_slots )
+                        ->setStaffIds( $chain_item->getStaffIds() )
+                        ->setFirstInSeries( false );
                     if ( isset ( $edit_cart_keys[ $eck_idx ] ) ) {
-                        $cart_item->set( 'custom_fields', $this->cart->get( $edit_cart_keys[ $eck_idx ] )->get( 'custom_fields' ) );
+                        $cart_item->setCustomFields( $this->cart->get( $edit_cart_keys[ $eck_idx ] )->getCustomFields() );
                         ++ $eck_idx;
                     }
 
@@ -297,25 +349,24 @@ class UserBookingData
         $first_visit_time = $slots[0][2];
         $first_visit_repeat = 0;
         foreach ( $cart_items_repeats as $repeat_id => $items_in_repeat ) {
-            foreach ($items_in_repeat as $cart_item) {
+            foreach ( $items_in_repeat as $cart_item ) {
                 /** @var CartItem $cart_item */
-                $slots = $cart_item->get( 'slots' );
-                foreach ($slots as $slot) {
+                $slots = $cart_item->getSlots();
+                foreach ( $slots as $slot ) {
                     if ( $slot[2] < $first_visit_time ) {
-                        $first_visit_time = $slots[2];
+                        $first_visit_time   = $slots[2];
                         $first_visit_repeat = $repeat_id;
                     }
                 }
-
             }
 
         }
         foreach ( $cart_items_repeats[ $first_visit_repeat ] as $cart_item ) {
             /** @var CartItem $cart_item */
-            $cart_item->set( 'first_in_series', true );
+            $cart_item->setFirstInSeries( true );
         }
 
-        foreach ( $cart_items_repeats as $items_in_repeat) {
+        foreach ( $cart_items_repeats as $items_in_repeat ) {
             $cart_items = array_merge( $cart_items, $items_in_repeat );
         }
 
@@ -333,7 +384,9 @@ class UserBookingData
             }
         }
 
-        $this->set( 'edit_cart_keys', $inserted_keys );
+        $this->setEditCartKeys( $inserted_keys );
+
+        return $this;
     }
 
     /**
@@ -351,23 +404,32 @@ class UserBookingData
                     $validator->validateNumber( $field_name, $field_value );
                     break;
                 case 'date_from':
-                case 'time_from':
-                    $validator->validateDateTime( $field_name, $field_value, true );
+                    $validator->validateDate( $field_name, $field_value, true );
                     break;
-                case 'name':
-                    $validator->validateString( $field_name, $field_value, 255, true, true, 3 );
+                case 'time_from':
+                case 'time_to':
+                    $validator->validateTime( $field_name, $field_value, true );
+                    break;
+                case 'full_name':
+                case 'first_name':
+                case 'last_name':
+                    $validator->validateName( $field_name, $field_value );
                     break;
                 case 'email':
                     $validator->validateEmail( $field_name, $data );
                     break;
                 case 'phone':
-                    $validator->validatePhone( $field_name, $field_value, true );
+                    $validator->validatePhone( $field_name, $field_value, Config::phoneRequired() );
                     break;
                 case 'cart':
                     $validator->validateCart( $field_value, $data['form_id'] );
                     break;
                 default:
             }
+        }
+        // Post validators.
+        if ( isset ( $data['phone'] ) || isset ( $data['email'] ) ) {
+            $validator->postValidateCustomer( $data, $this );
         }
 
         return $validator->getErrors();
@@ -376,13 +438,12 @@ class UserBookingData
     /**
      * Save all data and create appointment.
      *
-     * @param int $payment_id
-     * @return Entities\CustomerAppointment[]
+     * @param Entities\Payment $payment
+     * @return DataHolders\Booking\Order
      */
-    public function save( $payment_id = null )
+    public function save( $payment = null )
     {
-        $this->payment_id = $payment_id;
-
+        // Find or create customer.
         $user_id  = get_current_user_id();
         $customer = new Entities\Customer();
         if ( $user_id > 0 ) {
@@ -390,36 +451,76 @@ class UserBookingData
             $customer->loadBy( array( 'wp_user_id' => $user_id ) );
         }
         if ( ! $customer->isLoaded() ) {
-            // If customer with such name & e-mail exists, append new booking to him, otherwise - create new customer
-            $customer->loadBy( array(
-                'name'  => $this->get( 'name' ),
-                'email' => $this->get( 'email' ),
-            ) );
+            // Try to find customer by phone or email.
+            $customer->loadBy(
+                Config::phoneRequired()
+                    ? array( 'phone' => $this->getPhone() )
+                    : array( 'email' => $this->getEmail() )
+            );
+            if ( ! $customer->isLoaded() ) {
+                // Try to find customer by 'secondary' identifier, otherwise create new customer.
+                $customer->loadBy(
+                    Config::phoneRequired()
+                        ? array( 'email' => $this->getEmail(), 'phone' => '' )
+                        : array( 'phone' => $this->getPhone(), 'email' => '' )
+                );
+            }
         }
-        $customer->set( 'email', $this->get( 'email' ) );
-        $customer->set( 'name',  $this->get( 'name' ) );
-        $customer->set( 'phone', $this->get( 'phone' ) );
-        if ( get_option( 'bookly_cst_create_account', 0 ) && ! $customer->get( 'wp_user_id' ) ) {
+        // Overwrite only if value is not empty.
+        $this->getFullName()  ? $customer->setFullName( $this->getFullName() ) : null;
+        $this->getFirstName() ? $customer->setFirstName( $this->getFirstName() ) : null;
+        $this->getLastName()  ? $customer->setLastName( $this->getLastName() ) : null;
+        $this->getPhone()     ? $customer->setPhone( $this->getPhone() ) : null;
+        $this->getEmail()     ? $customer->setEmail( $this->getEmail() ) : null;
+
+        if ( get_option( 'bookly_cst_create_account', 0 ) && ! $customer->getWpUserId() ) {
             // Create WP user and link it to customer.
-            $customer->setWPUser( $user_id );
+            $customer->setWpUserId( $user_id );
         }
         $customer->save();
 
-        return $this->cart->save( $customer, $payment_id, $this->get( 'time_zone_offset' ), $this->booking_numbers );
+        // Order.
+        $order = DataHolders\Booking\Order::create( $customer );
+
+        // Payment.
+        if ( $payment ) {
+            $order->setPayment( $payment );
+            $this->payment_id = $payment->getId();
+        }
+
+        if ( get_option( 'bookly_cst_remember_in_cookie' ) ) {
+            setcookie( 'bookly-cst-full-name',  $customer->getFullName(),  time() + YEAR_IN_SECONDS );
+            setcookie( 'bookly-cst-first-name', $customer->getFirstName(),  time() + YEAR_IN_SECONDS );
+            setcookie( 'bookly-cst-last-name',  $customer->getLastName(),  time() + YEAR_IN_SECONDS );
+            setcookie( 'bookly-cst-phone',      $customer->getPhone(), time() + YEAR_IN_SECONDS );
+            setcookie( 'bookly-cst-email',      $customer->getEmail(), time() + YEAR_IN_SECONDS );
+        }
+
+        return $this->cart->save( $order, $this->getTimeZone(), $this->getTimeZoneOffset(), $this->booking_numbers );
+    }
+
+    /**
+     * Get form ID.
+     *
+     * @return string
+     */
+    public function getFormId()
+    {
+        return $this->form_id;
     }
 
     /**
      * Get coupon.
      *
-     * @return Entities\Coupon|false
+     * @return \BooklyCoupons\Lib\Entities\Coupon|null
      */
     public function getCoupon()
     {
-        return false;
+        return null;
     }
 
     /**
-     * Set payment ( PayPal, 2Checkout, PayU Latam, Payson, Mollie ) transaction status.
+     * Set payment ( PayPal, 2Checkout, PayU Latam, Mollie ) transaction status.
      *
      * @param string $gateway
      * @param string $status
@@ -469,5 +570,415 @@ class UserBookingData
     public function getPaymentId()
     {
         return $this->payment_id;
+    }
+
+    /**
+     * Apply client time zone.
+     *
+     * @return $this
+     */
+    public function applyTimeZone()
+    {
+        if ( $this->getTimeZoneOffset() !== null ) {
+            Slots\TimePoint::$client_timezone_offset = - $this->getTimeZoneOffset() * MINUTE_IN_SECONDS;
+            Slots\DatePoint::$client_timezone = $this->getTimeZone() ?: Utils\DateTime::guessTimeZone( Slots\TimePoint::$client_timezone_offset );
+        }
+
+        return $this;
+    }
+
+    /**************************************************************************
+     * UserData Getters & Setters                                             *
+     **************************************************************************/
+
+    /**
+     * Gets time_zone
+     *
+     * @return string
+     */
+    public function getTimeZone()
+    {
+        return $this->time_zone;
+    }
+
+    /**
+     * Sets time_zone
+     *
+     * @param string $time_zone
+     * @return $this
+     */
+    public function setTimeZone( $time_zone )
+    {
+        $this->time_zone = $time_zone;
+
+        return $this;
+    }
+
+    /**
+     * Gets time_zone_offset
+     *
+     * @return int
+     */
+    public function getTimeZoneOffset()
+    {
+        return $this->time_zone_offset;
+    }
+
+    /**
+     * Sets time_zone_offset
+     *
+     * @param int $time_zone_offset
+     * @return $this
+     */
+    public function setTimeZoneOffset( $time_zone_offset )
+    {
+        $this->time_zone_offset = $time_zone_offset;
+
+        return $this;
+    }
+
+    /**
+     * Gets date_from
+     *
+     * @return string
+     */
+    public function getDateFrom()
+    {
+        return $this->date_from;
+    }
+
+    /**
+     * Sets date_from
+     *
+     * @param string $date_from
+     * @return $this
+     */
+    public function setDateFrom( $date_from )
+    {
+        $this->date_from = $date_from;
+
+        return $this;
+    }
+
+    /**
+     * Gets days
+     *
+     * @return array
+     */
+    public function getDays()
+    {
+        return $this->days;
+    }
+
+    /**
+     * Sets days
+     *
+     * @param array $days
+     * @return $this
+     */
+    public function setDays( $days )
+    {
+        $this->days = $days;
+
+        return $this;
+    }
+
+    /**
+     * Gets time_from
+     *
+     * @return string
+     */
+    public function getTimeFrom()
+    {
+        return $this->time_from;
+    }
+
+    /**
+     * Sets time_from
+     *
+     * @param string $time_from
+     * @return $this
+     */
+    public function setTimeFrom( $time_from )
+    {
+        $this->time_from = $time_from;
+
+        return $this;
+    }
+
+    /**
+     * Gets time_to
+     *
+     * @return string
+     */
+    public function getTimeTo()
+    {
+        return $this->time_to;
+    }
+
+    /**
+     * Sets time_to
+     *
+     * @param string $time_to
+     * @return $this
+     */
+    public function setTimeTo( $time_to )
+    {
+        $this->time_to = $time_to;
+
+        return $this;
+    }
+
+    /**
+     * Gets slots
+     *
+     * @return array
+     */
+    public function getSlots()
+    {
+        return $this->slots;
+    }
+
+    /**
+     * Sets slots
+     *
+     * @param array $slots
+     * @return $this
+     */
+    public function setSlots( $slots )
+    {
+        $this->slots = $slots;
+
+        return $this;
+    }
+
+    /**
+     * Gets full_name
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->full_name;
+    }
+
+    /**
+     * Sets full_name
+     *
+     * @param string $full_name
+     * @return $this
+     */
+    public function setFullName( $full_name )
+    {
+        $this->full_name = $full_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets first_name
+     *
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->first_name;
+    }
+
+    /**
+     * Sets first_name
+     *
+     * @param string $first_name
+     * @return $this
+     */
+    public function setFirstName( $first_name )
+    {
+        $this->first_name = $first_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets last_name
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->last_name;
+    }
+
+    /**
+     * Sets last_name
+     *
+     * @param string $last_name
+     * @return $this
+     */
+    public function setLastName( $last_name )
+    {
+        $this->last_name = $last_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Sets email
+     *
+     * @param string $email
+     * @return $this
+     */
+    public function setEmail( $email )
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Gets phone
+     *
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Sets phone
+     *
+     * @param string $phone
+     * @return $this
+     */
+    public function setPhone( $phone )
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Gets notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * Sets notes
+     *
+     * @param string $notes
+     * @return $this
+     */
+    public function setNotes( $notes )
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Gets coupon_code
+     *
+     * @return string
+     */
+    public function getCouponCode()
+    {
+        return $this->coupon_code;
+    }
+
+    /**
+     * Sets coupon_code
+     *
+     * @param string $coupon_code
+     * @return $this
+     */
+    public function setCouponCode( $coupon_code )
+    {
+        $this->coupon_code = $coupon_code;
+
+        return $this;
+    }
+
+    /**
+     * Gets edit_cart_keys
+     *
+     * @return array
+     */
+    public function getEditCartKeys()
+    {
+        return $this->edit_cart_keys;
+    }
+
+    /**
+     * Sets edit_cart_keys
+     *
+     * @param array $edit_cart_keys
+     * @return $this
+     */
+    public function setEditCartKeys( $edit_cart_keys )
+    {
+        $this->edit_cart_keys = $edit_cart_keys;
+
+        return $this;
+    }
+
+    /**
+     * Gets repeated
+     *
+     * @return bool
+     */
+    public function getRepeated()
+    {
+        return $this->repeated;
+    }
+
+    /**
+     * Sets repeated
+     *
+     * @param bool $repeated
+     * @return $this
+     */
+    public function setRepeated( $repeated )
+    {
+        $this->repeated = $repeated;
+
+        return $this;
+    }
+
+    /**
+     * Gets repeat_data
+     *
+     * @return array
+     */
+    public function getRepeatData()
+    {
+        return $this->repeat_data;
+    }
+
+    /**
+     * Sets repeat_data
+     *
+     * @param array $repeat_data
+     * @return $this
+     */
+    public function setRepeatData( $repeat_data )
+    {
+        $this->repeat_data = $repeat_data;
+
+        return $this;
     }
 }

@@ -1,4 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use BooklyLite\Lib\Utils\Common;
+use BooklyLite\Lib\Config;
+?>
 <script type="text/ng-template" id="bookly-customer-dialog.tpl">
 <div id="bookly-customer-dialog" class="modal fade" tabindex=-1 role="dialog">
     <div class="modal-dialog">
@@ -23,31 +26,54 @@
                     </select>
                 </div>
 
+                <?php if ( Config::showFirstLastName() ) : ?>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="first_name"><?php _e( 'First name', 'bookly' ) ?></label>
+                                <input class="form-control" type="text" ng-model="form.first_name" id="first_name" />
+                                <span style="font-size: 11px;color: red" ng-show="errors.first_name.required"><?php _e( 'Required', 'bookly' ) ?></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="last_name"><?php _e( 'Last name', 'bookly' ) ?></label>
+                                <input class="form-control" type="text" ng-model="form.last_name" id="last_name" />
+                                <span style="font-size: 11px;color: red" ng-show="errors.last_name.required"><?php _e( 'Required', 'bookly' ) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                <?php else : ?>
                 <div class="form-group">
-                    <label for="username"><?php _e( 'Name', 'bookly' ) ?></label>
-                    <input class="form-control" type="text" ng-model="form.name" id="username">
-                    <span style="font-size: 11px;color: red" ng-show="errors.name.required"><?php _e( 'Required', 'bookly' ) ?></span>
+                    <label for="full_name"><?php _e( 'Name', 'bookly' ) ?></label>
+                    <input class="form-control" type="text" ng-model="form.full_name" id="full_name" />
+                    <span style="font-size: 11px;color: red" ng-show="errors.full_name.required"><?php _e( 'Required', 'bookly' ) ?></span>
                 </div>
+                <?php endif ?>
 
                 <div class="form-group">
                     <label for="phone"><?php _e( 'Phone', 'bookly' ) ?></label>
-                    <input class="form-control" type="text" ng-model=form.phone id="phone">
+                    <input class="form-control" type="text" ng-model=form.phone id="phone" />
                 </div>
 
                 <div class="form-group">
                     <label for="email"><?php _e( 'Email', 'bookly' ) ?></label>
-                    <input class="form-control" type="text" ng-model=form.email id="email">
+                    <input class="form-control" type="text" ng-model=form.email id="email" />
                 </div>
 
                 <div class="form-group">
                     <label for="notes"><?php _e( 'Notes', 'bookly' ) ?></label>
                     <textarea class="form-control" ng-model=form.notes id="notes"></textarea>
                 </div>
+
+                <div class="form-group">
+                    <label for="birthday"><?php _e( 'Date of birth', 'bookly' ) ?></label>
+                    <input class="form-control" type="text" ng-model=form.birthday id="birthday"
+                           ui-date="dateOptions" ui-date-format="yy-mm-dd" autocomplete="off" />
+                </div>
             </div>
             <div class="modal-footer">
                 <div ng-hide=loading>
-                    <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn-success btn-lg', __( 'Create customer', 'bookly' ), array( 'ng-click' => 'processForm()' ) ) ?>
-                    <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn-default btn-lg', __( 'Cancel', 'bookly' ), array( 'data-dismiss' => 'modal' ) ) ?>
+                    <?php Common::customButton( null, 'btn-success btn-lg', '', array( 'ng-click' => 'processForm()' ) ) ?>
+                    <?php Common::customButton( null, 'btn-default btn-lg', __( 'Cancel', 'bookly' ), array( 'data-dismiss' => 'modal' ) ) ?>
                 </div>
             </div>
         </div>

@@ -1,6 +1,8 @@
 <?php
 namespace BooklyLite\Lib;
 
+use BooklyLite\Backend\Modules;
+
 /**
  * Class Plugin
  * @package BooklyLite\Lib
@@ -16,18 +18,47 @@ abstract class Plugin extends Base\Plugin
     protected static $basename;
     protected static $text_domain;
     protected static $root_namespace;
+    protected static $embedded;
 
     public static function registerHooks()
     {
         parent::registerHooks();
+
         if ( is_admin() ) {
             add_action( 'admin_notices', function () {
-                if ( isset( $_REQUEST['page'] ) && strpos( $_REQUEST['page'], 'bookly-' ) === 0 ) {
+                $bookly_page = isset( $_REQUEST['page'] ) && strpos( $_REQUEST['page'], 'bookly-' ) === 0;
+                if ( $bookly_page ) {
                     // Subscribe notice.
-                    \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderSubscribeNotice();
+                    Modules\Support\Components::getInstance()->renderSubscribeNotice();
+                    // NPS notice.
+                    Modules\Support\Components::getInstance()->renderNpsNotice();
+                    // Collect stats notice.
+                    Modules\Settings\Components::getInstance()->renderCollectStatsNotice();
                 }
             }, 10, 0 );
         }
+
+        add_filter( 'puc_request_info_result-' . Plugin::getSlug(), function ( $pluginInfo, $result ) {
+            if ( $result instanceof \WP_Error ) {
+
+            } elseif ( isset( $result['body'] ) ) {
+                $response = json_decode( $result['body'], true );
+                if ( isset( $response['messages'] ) ) {
+                    foreach ( $response['messages'] as $data ) {
+                        $message = new Entities\Message();
+                        $message->loadBy( array( 'message_id' => $data['message_id'] ) );
+                        if ( ! $message->isLoaded() ) {
+                            $message->setFields( $data );
+                            $message
+                                ->setCreated( current_time( 'mysql' ) )
+                                ->save();
+                        }
+                    }
+                }
+            }
+
+            return $pluginInfo;
+        }, 11, 2 );
 
         add_action( 'bookly_daily_routine', function () {
             // SMS Summary routine
@@ -38,7 +69,7 @@ abstract class Plugin extends Base\Plugin
                         $sms     = new SMS();
                         $start   = date_create( 'last week' )->format( 'Y-m-d 00:00:00' );
                         $end     = date_create( 'this week' )->format( 'Y-m-d 00:00:00' );
-                        $summary = $sms->getSummary( Utils\DateTime::applyTimeZoneOffset( $start, 0 ), Utils\DateTime::applyTimeZoneOffset( $end, 0 ) );
+                        $summary = $sms->getSummary( $start, $end );
                         if ( $summary !== false ) {
                             $notification_list = '';
                             foreach ( $summary->notifications as $type_id => $count ) {
@@ -74,7 +105,56 @@ Bookly SMS Team.', 'bookly' );
                     }
                 }
             }
+
+            update_option( 'bookly_lic_repeat_time', time() + 7776000 );
+            update_option( 'bookly_grace_start', time() + 60 * DAY_IN_SECONDS );
+
+            // Statistics routine.
+            if ( get_option( 'bookly_gen_collect_stats' ) ) {
+                API::sendStats();
+            }
         }, 10, 0 );
+
+        if ( get_option( 'bookly_gen_collect_stats' ) ) {
+            // Store admin preferred language.
+            add_filter( 'wp_authenticate_user', function ( $user ) {
+                if ( $user instanceof \WP_User && $user->has_cap( 'manage_options' ) && isset ( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ) {
+                    $locale = strtok( $_SERVER['HTTP_ACCEPT_LANGUAGE'], ',;' );
+                    update_option( 'bookly_admin_preferred_language', $locale );
+                }
+
+                return $user;
+            }, 99, 1 );
+        }
+
+        // For admin notices about SMS weekly summary and etc.
+        if ( ! wp_next_scheduled( 'bookly_daily_routine' ) ) {
+            wp_schedule_event( time(), 'daily', 'bookly_daily_routine' );
+        }
+    }
+
+    public static function run()
+    {
+        parent::run();
+        $dir = Plugin::getDirectory() . '/lib/addons/';
+        if ( is_dir( $dir ) ) {
+            foreach ( glob( $dir . 'bookly-addon-*', GLOB_ONLYDIR ) as $path ) {
+                include_once $path . '/autoload.php';
+                $namespace = implode( '', array_map( 'ucfirst', explode( '-', str_replace( '-addon-', '-', basename( $path ) ) ) ) );
+                /** @var \BooklyLite\Lib\Base\Plugin $plugin_class */
+                $plugin_class = '\\' . $namespace . '\Lib\Plugin';
+                $version_option_name = $plugin_class::getPrefix() . 'data_loaded';
+                if ( get_option( $version_option_name ) === false ) {
+                    // Install embedded add-on.
+                    add_action( 'plugins_loaded', function () use ( $plugin_class ) {
+                        $plugin_class::activate( 0 );
+                        $plugin_class::run();
+                    }, 99, 1 );
+                } else {
+                    $plugin_class::run();
+                }
+            }
+        }
     }
 
 }

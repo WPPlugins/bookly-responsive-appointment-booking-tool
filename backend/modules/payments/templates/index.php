@@ -22,8 +22,7 @@
                     </div>
                     <div class="col-md-2 col-lg-2">
                         <div class="form-group">
-                            <select id="bookly-filter-type" class="form-control bookly-js-chosen-select" data-placeholder="<?php esc_attr_e( 'Type', 'bookly' ) ?>">
-                                <option value="-1"></option>
+                            <select id="bookly-filter-type" class="form-control bookly-js-select" data-placeholder="<?php esc_attr_e( 'Type', 'bookly' ) ?>">
                                 <?php foreach ( $types as $type ) : ?>
                                     <option value="<?php echo esc_attr( $type ) ?>">
                                         <?php echo \BooklyLite\Lib\Entities\Payment::typeToString( $type ) ?>
@@ -34,8 +33,7 @@
                     </div>
                     <div class="col-md-3 col-lg-2">
                         <div class="form-group">
-                            <select id="bookly-filter-staff" class="form-control bookly-js-chosen-select" data-placeholder="<?php esc_attr_e( 'Provider', 'bookly' ) ?>">
-                                <option value="-1"></option>
+                            <select id="bookly-filter-staff" class="form-control bookly-js-select" data-placeholder="<?php esc_attr_e( 'Provider', 'bookly' ) ?>">
                                 <?php foreach ( $providers as $provider ) : ?>
                                     <option value="<?php echo $provider['id'] ?>"><?php echo esc_html( $provider['full_name'] ) ?></option>
                                 <?php endforeach ?>
@@ -44,8 +42,7 @@
                     </div>
                     <div class="col-md-3 col-lg-2">
                         <div class="form-group">
-                            <select id="bookly-filter-service" class="form-control bookly-js-chosen-select" data-placeholder="<?php esc_attr_e( 'Service', 'bookly' ) ?>">
-                                <option value="-1"></option>
+                            <select id="bookly-filter-service" class="form-control bookly-js-select" data-placeholder="<?php esc_attr_e( 'Service', 'bookly' ) ?>">
                                 <?php foreach ( $services as $service ) : ?>
                                     <option value="<?php echo $service['id'] ?>"><?php echo esc_html( $service['title'] ) ?></option>
                                 <?php endforeach ?>

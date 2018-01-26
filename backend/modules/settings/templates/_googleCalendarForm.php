@@ -18,9 +18,9 @@
         <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_gc_client_id', __( 'Client ID', 'bookly' ), __( 'The client ID obtained from the Developers Console', 'bookly' ) ) ?>
         <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_gc_client_secret', __( 'Client secret', 'bookly' ), __( 'The client secret obtained from the Developers Console', 'bookly' ) ) ?>
     <div class="form-group">
-        <label for="ab_redirect_uri"><?php _e( 'Redirect URI', 'bookly' ) ?></label>
+        <label for="bookly-redirect-uri"><?php _e( 'Redirect URI', 'bookly' ) ?></label>
         <p class="help-block"><?php _e( 'Enter this URL as a redirect URI in the Developers Console', 'bookly' ) ?></p>
-        <input id="ab_redirect_uri" class="form-control" type="text" readonly
+        <input id="bookly-redirect-uri" class="form-control" type="text" readonly
                value="<?php echo \BooklyLite\Lib\Google::generateRedirectURI() ?>" onclick="this.select();"
                style="cursor: pointer;"/>
     </div>
@@ -29,6 +29,7 @@
         $values['bookly_gc_limit_events'] ) ?>
     <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_gc_event_title', __( 'Template for event title', 'bookly' ), __( 'Configure what information should be placed in the title of Google Calendar event. Available codes are {service_name}, {staff_name} and {client_names}.', 'bookly' ) ) ?>
     <div class="panel-footer">
+        <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
         <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'btn btn-lg btn-success bookly-limitation' ) ?>
         <?php \BooklyLite\Lib\Utils\Common::resetButton() ?>
     </div>

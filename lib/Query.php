@@ -12,6 +12,8 @@ class Query
 
     const TYPE_DELETE = 2;
 
+    const TYPE_UPDATE = 3;
+
     // Hydration methods.
     const HYDRATE_NONE = 0;
 
@@ -35,6 +37,9 @@ class Query
 
     /** @var array WHERE expressions */
     protected $where = array();
+
+    /** @var array SET for UPDATE */
+    protected $set = array();
 
     /** @var array GROUP BY */
     protected $group_by = array();
@@ -63,6 +68,9 @@ class Query
     /** @var string */
     protected $namespace;
 
+    /** @var string  */
+    protected $alias;
+
     /** @var array */
     protected $schema;
 
@@ -74,6 +82,7 @@ class Query
      */
     public function __construct( $entity, $default_alias = 'r' )
     {
+        /** @var Base\Entity $entity */
         $this->entity    = $entity;
         $this->namespace = substr( $entity, 0, strrpos( $entity, '\\' ) );
         $this->schema    = call_user_func( array ( $this->entity, 'getSchema' ) );
@@ -101,6 +110,20 @@ class Query
     public function select( $target = null )
     {
         $this->type   = self::TYPE_SELECT;
+        $this->target = $target !== null ? $target : "`{$this->alias}`.*";
+
+        return $this;
+    }
+
+    /**
+     * Set query type to UPDATE.
+     *
+     * @param null $target
+     * @return $this
+     */
+    public function update( $target = null )
+    {
+        $this->type   = self::TYPE_UPDATE;
         $this->target = $target !== null ? $target : "`{$this->alias}`.*";
 
         return $this;
@@ -491,6 +514,20 @@ class Query
     }
 
     /**
+     * Set column and value for UPDATE.
+     *
+     * @param string $column
+     * @param string $value
+     * @return $this
+     */
+    public function set( $column, $value )
+    {
+        $this->set[] = array( 'column' => $column, 'value' => $value );
+
+        return $this;
+    }
+
+    /**
      * Runs the same query as find, but with no limit and don't retrieve the
      * results, just the total items found.
      *
@@ -572,7 +609,7 @@ class Query
     /**
      * Execute query and hydrate result as entity.
      *
-     * @return Base\Entity[]
+     * @return array  Array of entities
      */
     public function find()
     {
@@ -582,7 +619,7 @@ class Query
     /**
      * Execute query and fetch one result.
      *
-     * @return Base\Entity
+     * @return object  Entity
      */
     public function findOne()
     {
@@ -590,6 +627,7 @@ class Query
 
         if ( $result ) {
             $entity = $this->entity;
+            /** @var Base\Entity $object */
             $object = new $entity();
             $object->setFields( $result, true );
             $result = $object;
@@ -610,6 +648,7 @@ class Query
         $entity = $this->entity;
         $table  = $entity::getTableName();
         $join   = '';
+        $set    = '';
         $where  = '';
         $group  = '';
         $having = '';
@@ -623,13 +662,22 @@ class Query
             $join .= " {$t['type']} JOIN `{$t['table']}` AS `{$alias}` ON {$t['on']}";
         }
 
+        // SET for UPDATE
+        if ( ! empty( $this->set ) ) {
+            foreach ( $this->set as $s ){
+                list ( $field, $format ) = $this->_normalize( $s['column'] );
+                $set .= "$field = {$format},";
+                $values[] = $s['value'];
+            }
+            $set = substr( $set, 0, - 1 );
+        }
         // Where
         foreach ( $this->where as $q ) {
             // where
             if ( $q['type'] == 'where' ) {
                 list ( $field, $format ) = $this->_normalize( $q['column'] );
                 $where .= " {$q['glue']} {$field} ";
-                if ( $q['value'] == null ) {
+                if ( $q['value'] === null ) {
                     $where .= 'IS NULL';
                 } else {
                     $where .= "= {$format}";
@@ -639,7 +687,7 @@ class Query
             elseif ( $q['type'] == 'not' ) {
                 list ( $field, $format ) = $this->_normalize( $q['column'] );
                 $where .= " {$q['glue']} {$field} ";
-                if ( $q['value'] == null ) {
+                if ( $q['value'] === null ) {
                     $where .= 'IS NOT NULL';
                 } else {
                     $where .= "!= {$format}";
@@ -788,6 +836,8 @@ class Query
         switch ( $this->type ) {
             case self::TYPE_DELETE:
                 return $this->_prepare( "DELETE {$this->target} FROM `{$table}` AS `{$this->alias}`{$join}{$where}", $values );
+            case self::TYPE_UPDATE:
+                return $this->_prepare( "UPDATE `{$table}` AS `{$this->alias}`{$join} SET {$set}{$where}", $values );
             case self::TYPE_SELECT:
             default:
                 return $this->_prepare( "SELECT {$this->target} FROM `{$table}` AS `{$this->alias}`{$join}{$where}{$group}{$having}{$order}{$limit}{$offset}", $values );

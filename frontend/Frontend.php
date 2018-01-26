@@ -9,6 +9,9 @@ use BooklyLite\Lib;
  */
 class Frontend
 {
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         add_action( 'wp_loaded', array( $this, 'init' ) );
@@ -17,27 +20,18 @@ class Frontend
         // Init controllers.
         $this->bookingController         = Modules\Booking\Controller::getInstance();
         $this->customerProfileController = Modules\CustomerProfile\Controller::getInstance();
+        $this->cancelConfirmController   = Modules\CancellationConfirmation\Controller::getInstance();
         $this->wooCommerceController     = Modules\WooCommerce\Controller::getInstance();
-        if ( Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_MOLLIE ) ) {
-            $this->mollieController = Modules\Mollie\Controller::getInstance();
-        }
-        if ( Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_PAYPAL ) ) {
+
+        if ( Lib\Config::paypalEnabled() ) {
             $this->paypalController = Modules\Paypal\Controller::getInstance();
-        }
-        if ( Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_PAYSON ) ) {
-            $this->paysonController = Modules\Payson\Controller::getInstance();
-        }
-        if ( Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_PAYULATAM ) ) {
-            $this->payulatamController = Modules\PayuLatam\Controller::getInstance();
-        }
-        if ( Lib\Config::isPaymentTypeEnabled( Lib\Entities\Payment::TYPE_2CHECKOUT ) ) {
-            $this->twocheckoutController = Modules\TwoCheckout\Controller::getInstance();
         }
         // Register shortcodes.
         add_shortcode( 'bookly-form', array( $this->bookingController, 'renderShortCode' ) );
         /** @deprecated [ap-booking] */
         add_shortcode( 'ap-booking', array( $this->bookingController, 'renderShortCode' ) );
         add_shortcode( 'bookly-appointments-list', array( $this->customerProfileController, 'renderShortCode' ) );
+        add_shortcode( 'bookly-cancellation-confirmation', array( $this->cancelConfirmController, 'renderShortCode' ) );
     }
 
     /**
@@ -79,14 +73,17 @@ class Frontend
         call_user_func( $link_style,  'bookly-customer-profile', plugins_url( 'modules/customer_profile/resources/css/customer_profile.css', __FILE__ ), array(), $version );
         call_user_func( $link_script, 'bookly-customer-profile', plugins_url( 'modules/customer_profile/resources/js/customer_profile.js', __FILE__ ), array( 'jquery' ), $version );
 
+        Lib\Proxy\Shared::enqueueBookingAssets();
+
         wp_localize_script( 'bookly', 'BooklyL10n', array(
-            'today'     => __( 'Today', 'bookly' ),
-            'months'    => array_values( $wp_locale->month ),
-            'days'      => array_values( $wp_locale->weekday ),
-            'daysShort' => array_values( $wp_locale->weekday_abbrev ),
-            'nextMonth' => __( 'Next month', 'bookly' ),
-            'prevMonth' => __( 'Previous month', 'bookly' ),
-            'show_more' => __( 'Show more', 'bookly' ),
+            'csrf_token' => Lib\Utils\Common::getCsrfToken(),
+            'today'      => __( 'Today', 'bookly' ),
+            'months'     => array_values( $wp_locale->month ),
+            'days'       => array_values( $wp_locale->weekday ),
+            'daysShort'  => array_values( $wp_locale->weekday_abbrev ),
+            'nextMonth'  => __( 'Next month', 'bookly' ),
+            'prevMonth'  => __( 'Previous month', 'bookly' ),
+            'show_more'  => __( 'Show more', 'bookly' ),
         ) );
 
         // Android animation.
@@ -95,6 +92,9 @@ class Frontend
         }
     }
 
+    /**
+     * Init.
+     */
     public function init()
     {
         if ( ! session_id() ) {

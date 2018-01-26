@@ -1,68 +1,65 @@
 ;(function() {
 
-    angular.module('customerDialog', []).directive('customerDialog', function() {
+    angular.module('customerDialog', ['ui.date']).directive('customerDialog', function() {
         return {
             restrict : 'A',
             replace  : true,
             scope    : {
-                callback  : '&customerDialog',
-                form      : '=customer'
+                callback : '&customerDialog',
+                form     : '=customer'
             },
             templateUrl : 'bookly-customer-dialog.tpl',
             // The linking function will add behavior to the template.
             link: function(scope, element, attrs) {
                 // Init properties.
-                var init = function() {
-                    // Form fields.
-                    if (!scope.form) {
-                        scope.form = {
-                            id         : '',
-                            wp_user_id : '',
-                            name       : '',
-                            phone      : '',
-                            email      : '',
-                            notes      : ''
-                        };
-                    }
-                    if (BooklyL10nCustDialog.intlTelInput.enabled) {
-                        element.find('#phone').intlTelInput({
-                            preferredCountries: [BooklyL10nCustDialog.intlTelInput.country],
-                            defaultCountry: BooklyL10nCustDialog.intlTelInput.country,
-                            geoIpLookup: function (callback) {
-                                jQuery.get(ajaxurl, {action: 'bookly_ip_info'}, function () {
-                                }, 'json').always(function (resp) {
-                                    var countryCode = (resp && resp.country) ? resp.country : '';
-                                    callback(countryCode);
-                                });
-                            },
-                            utilsScript: BooklyL10nCustDialog.intlTelInput.utils
-                        });
-                    }
-                    // Form errors.
-                    scope.errors = {
-                        name: {required: false}
+                // Form fields.
+                if (!scope.form) {
+                    scope.form = {
+                        id         : '',
+                        wp_user_id : '',
+                        full_name  : '',
+                        first_name : '',
+                        last_name  : '',
+                        phone      : '',
+                        email      : '',
+                        notes      : '',
+                        birthday   : ''
                     };
-                    // Loading indicator.
-                    scope.loading = false;
-
-                    jQuery('#bookly-customer-dialog').modal('hide')
-                        .on('hidden.bs.modal', function () {
-                            if (jQuery('#bookly-appointment-dialog').length) {
-                                jQuery('body').addClass('modal-open');
-                            }
-                        });
+                }
+                // Form errors.
+                scope.errors = {
+                    name: {required: false}
                 };
+                scope.$watch('form', function(newValue, oldValue) {
+                    if (newValue.name) {
+                        scope.errors.name.required = false;
+                    }
+                });
+                // Loading indicator.
+                scope.loading = false;
 
-                // Run init.
-                init();
+                // Init intlTelInput.
+                if (BooklyL10nCustDialog.intlTelInput.enabled) {
+                    element.find('#phone').intlTelInput({
+                        preferredCountries: [BooklyL10nCustDialog.intlTelInput.country],
+                        initialCountry: BooklyL10nCustDialog.intlTelInput.country,
+                        geoIpLookup: function (callback) {
+                            jQuery.get('https://ipinfo.io', function() {}, 'jsonp').always(function(resp) {
+                                var countryCode = (resp && resp.country) ? resp.country : '';
+                                callback(countryCode);
+                            });
+                        },
+                        utilsScript: BooklyL10nCustDialog.intlTelInput.utils
+                    });
+                }
 
-                // On 'Cancel' button click.
-                scope.closeDialog = function () {
-                    // Close the dialog.
-                    jQuery('#bookly-customer-dialog').modal('hide');
-                    // Re-init all properties.
-                    init();
-                };
+                // Do stuff on modal hide.
+                element.on('hidden.bs.modal', function () {
+                    // Fix scroll issues when another modal is shown.
+                    if (jQuery('.modal-backdrop').length) {
+                        jQuery('body').addClass('modal-open');
+                    }
+                });
 
                 /**
                  * Send form to server.
@@ -76,7 +73,7 @@
                     jQuery.ajax({
                         url  : ajaxurl,
                         type : 'POST',
-                        data : jQuery.extend({ action : 'bookly_save_customer' }, scope.form),
+                        data : jQuery.extend({ action : 'bookly_save_customer', csrf_token : BooklyL10nCustDialog.csrf_token }, scope.form),
                         dataType : 'json',
                         success : function ( response ) {
                             scope.$apply(function(scope) {
@@ -89,13 +86,16 @@
                                     scope.form = {
                                         id         : '',
                                         wp_user_id : '',
-                                        name       : '',
+                                        full_name  : '',
+                                        first_name : '',
+                                        last_name  : '',
                                         phone      : '',
                                         email      : '',
-                                        notes      : ''
+                                        notes      : '',
+                                        birthday   : ''
                                     };
                                     // Close the dialog.
-                                    scope.closeDialog();
+                                    element.modal('hide');
                                 } else {
                                     // Set errors.
                                     jQuery.each(response.errors, function(field, errors) {
@@ -115,6 +115,11 @@
                         }
                     });
                 };
+
+                /**
+                 * Datepicker options.
+                 */
+                scope.dateOptions = BooklyL10nCustDialog.dateOptions;
             }
         };
     });

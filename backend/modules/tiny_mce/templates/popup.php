@@ -1,89 +1,81 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<div id="ab-tinymce-popup" style="display: none">
-    <form id="ab-shortcode-form">
+<div id="bookly-tinymce-popup" style="display: none">
+    <form id="bookly-shortcode-form">
         <table>
-            <?php do_action( 'bookly_render_popup_head' ) ?>
+            <?php \BooklyLite\Lib\Proxy\Shared::renderPopUpShortCodeBooklyFormHead() ?>
             <tr>
                 <td>
-                    <label for="ab-select-category"><?php _e( 'Default value for category select', 'bookly' ) ?></label>
+                    <label for="bookly-select-category"><?php _e( 'Default value for category select', 'bookly' ) ?></label>
                 </td>
                 <td>
-                    <select id="ab-select-category">
+                    <select id="bookly-select-category">
                         <option value=""><?php _e( 'Select category', 'bookly' ) ?></option>
                     </select>
-                    <div><label><input type="checkbox" id="ab-hide-categories" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
+                    <div><label><input type="checkbox" id="bookly-hide-categories" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="ab-select-service"><?php _e( 'Default value for service select', 'bookly' ) ?></label>
+                    <label for="bookly-select-service"><?php _e( 'Default value for service select', 'bookly' ) ?></label>
                 </td>
                 <td>
-                    <select id="ab-select-service">
+                    <select id="bookly-select-service">
                         <option value=""><?php _e( 'Select service', 'bookly' ) ?></option>
                     </select>
-                    <div><label><input type="checkbox" id="ab-hide-services" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
+                    <div><label><input type="checkbox" id="bookly-hide-services" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
                     <i><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'bookly' ) ?></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="ab-select-employee"><?php _e( 'Default value for employee select', 'bookly' ) ?></label>
+                    <label for="bookly-select-employee"><?php _e( 'Default value for employee select', 'bookly' ) ?></label>
                 </td>
                 <td>
-                    <select class="ab-select-mobile" id="ab-select-employee">
+                    <select class="bookly-select-mobile" id="bookly-select-employee">
                         <option value=""><?php _e( 'Any', 'bookly' ) ?></option>
                     </select>
-                    <div><label><input type="checkbox" id="ab-hide-employee" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
+                    <div><label><input type="checkbox" id="bookly-hide-employee" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
+                </td>
+            </tr>
+            <?php \BooklyLite\Lib\Proxy\Shared::renderPopUpShortCodeBooklyForm() ?>
+            <tr>
+                <td>
+                    <label for="bookly-hide-date"><?php _e( 'Date', 'bookly' ) ?></label>
+                </td>
+                <td>
+                    <label><input type="checkbox" id="bookly-hide-date" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="ab-hide-number-of-persons"><?php echo esc_html( get_option( 'bookly_l10n_label_number_of_persons' ) ) ?></label>
+                    <label for="bookly-hide-week-days"><?php _e( 'Week days', 'bookly' ) ?></label>
                 </td>
                 <td>
-                    <label><input type="checkbox" id="ab-hide-number-of-persons" checked /><?php _e( 'Hide this field', 'bookly' ) ?></label>
-                </td>
-            </tr>
-            <?php do_action( 'bookly_render_popup_controls' ) ?>
-            <tr>
-                <td>
-                    <label for="ab-hide-date"><?php _e( 'Date', 'bookly' ) ?></label>
-                </td>
-                <td>
-                    <label><input type="checkbox" id="ab-hide-date" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
+                    <label><input type="checkbox" id="bookly-hide-week-days" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="ab-hide-week_days"><?php _e( 'Week days', 'bookly' ) ?></label>
+                    <label for="bookly-hide-time-range"><?php _e( 'Time range', 'bookly' ) ?></label>
                 </td>
                 <td>
-                    <label><input type="checkbox" id="ab-hide-week_days" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="ab-hide-time_range"><?php _e( 'Time range', 'bookly' ) ?></label>
-                </td>
-                <td>
-                    <label><input type="checkbox" id="ab-hide-time_range" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
+                    <label><input type="checkbox" id="bookly-hide-time-range" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <input class="button button-primary" id="ab-insert-shortcode" type="submit" value="<?php _e( 'Insert', 'bookly' ) ?>" />
+                    <input class="button button-primary" id="bookly-insert-shortcode" type="submit" value="<?php _e( 'Insert', 'bookly' ) ?>" />
                 </td>
             </tr>
         </table>
     </form>
 </div>
 <style type="text/css">
-    #ab-shortcode-form { margin-top: 15px; }
-    #ab-shortcode-form table { width: 100%; }
-    #ab-shortcode-form table td select { width: 100%; margin-bottom: 5px; }
-    .ab-media-icon {
+    #bookly-shortcode-form { margin-top: 15px; }
+    #bookly-shortcode-form table { width: 100%; }
+    #bookly-shortcode-form table td select { width: 100%; margin-bottom: 5px; }
+    .bookly-media-icon {
         display: inline-block;
         width: 16px;
         height: 16px;
@@ -96,21 +88,21 @@
 </style>
 <script type="text/javascript">
     jQuery(function ($) {
-        var $select_location        = $('#ab-select-location'),
-            $select_category        = $('#ab-select-category'),
-            $select_service         = $('#ab-select-service'),
-            $select_employee        = $('#ab-select-employee'),
-            $hide_locations         = $('#ab-hide-locations'),
-            $hide_categories        = $('#ab-hide-categories'),
-            $hide_services          = $('#ab-hide-services'),
-            $hide_staff             = $('#ab-hide-employee'),
-            $hide_number_of_persons = $('#ab-hide-number-of-persons'),
-            $hide_quantity          = $('#ab-hide-quantity'),
-            $hide_date              = $('#ab-hide-date'),
-            $hide_week_days         = $('#ab-hide-week_days'),
-            $hide_time_range        = $('#ab-hide-time_range'),
+        var $select_location        = $('#bookly-select-location'),
+            $select_category        = $('#bookly-select-category'),
+            $select_service         = $('#bookly-select-service'),
+            $select_employee        = $('#bookly-select-employee'),
+            $hide_locations         = $('#bookly-hide-locations'),
+            $hide_categories        = $('#bookly-hide-categories'),
+            $hide_services          = $('#bookly-hide-services'),
+            $hide_staff             = $('#bookly-hide-employee'),
+            $hide_number_of_persons = $('#bookly-hide-number-of-persons'),
+            $hide_quantity          = $('#bookly-hide-quantity'),
+            $hide_date              = $('#bookly-hide-date'),
+            $hide_week_days         = $('#bookly-hide-week-days'),
+            $hide_time_range        = $('#bookly-hide-time-range'),
             $add_button             = $('#add-bookly-form'),
-            $insert                 = $('#ab-insert-shortcode'),
+            $insert                 = $('#bookly-insert-shortcode'),
             locations               = <?php echo json_encode( $casest['locations'] ) ?>,
             categories              = <?php echo json_encode( $casest['categories'] ) ?>,
             services                = <?php echo json_encode( $casest['services'] ) ?>,
@@ -360,9 +352,6 @@
             }
             if ($select_employee.val()) {
                 insert += ' staff_member_id="' + $select_employee.val() + '"';
-            }
-            if ($hide_number_of_persons.is(':not(:checked)')) {
-                insert += ' show_number_of_persons="1"';
             }
             if ($hide_quantity.is(':checked')) {
                 hide.push('quantity');

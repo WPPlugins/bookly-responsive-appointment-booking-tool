@@ -86,19 +86,16 @@ class Controller extends Lib\Base\Controller
         global $wpdb;
 
         $result = array();
+        $installer = new Lib\Installer();
 
-        $installer_class =  Lib\Plugin::getRootNamespace() . '\Lib\Installer';
-        /** @var Lib\Base\Installer $installer */
-        $installer = new $installer_class();
-
-        foreach (  Lib\Plugin::getEntityClasses() as $entity_class ) {
+        foreach ( Lib\Plugin::getEntityClasses() as $entity_class ) {
             $table_name = $entity_class::getTableName();
             $result['entities'][ $entity_class ] = array(
                 'fields' => $this->_getTableStructure( $table_name ),
                 'values' => $wpdb->get_results( 'SELECT * FROM ' . $table_name, ARRAY_N )
             );
         }
-        $plugin_prefix   =  Lib\Plugin::getPrefix();
+        $plugin_prefix   = Lib\Plugin::getPrefix();
         $options_postfix = array( 'data_loaded', 'grace_start', 'db_version', 'installation_time' );
         if ( $plugin_prefix != 'bookly_' ) {
             $options_postfix[] = 'enabled';
@@ -108,7 +105,7 @@ class Controller extends Lib\Base\Controller
             $result['options'][ $option_name ] = get_option( $option_name );
         }
 
-        $result['options'][  Lib\Plugin::getPurchaseCodeOption() ] =  Lib\Plugin::getPurchaseCode();
+        $result['options'][ Lib\Plugin::getPurchaseCodeOption() ] = Lib\Plugin::getPurchaseCode();
         foreach ( $installer->getOptions() as $option_name => $option_value ) {
             $result['options'][ $option_name ] = get_option( $option_name );
         }
@@ -130,14 +127,12 @@ class Controller extends Lib\Base\Controller
 
         if ( $file = $_FILES['import']['name'] ) {
             $json = file_get_contents( $_FILES['import']['tmp_name'] );
-            if ( $json !== false ) {
+            if ( $json !== false) {
                 $wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' );
 
                 $data = json_decode( $json, true );
 
-                $installer_class = Lib\Plugin::getRootNamespace() . '\Lib\Installer';
-                /** @var Lib\Base\Installer $installer */
-                $installer = new $installer_class();
+                $installer = new Lib\Installer();
 
                 // Drop all data and options.
                 $installer->removeData();
@@ -147,8 +142,8 @@ class Controller extends Lib\Base\Controller
                 // Insert tables data.
                 foreach ( Lib\Plugin::getEntityClasses() as $entity_class ) {
                     if ( isset ( $data['entities'][ $entity_class ]['values'][0] ) ) {
-                        $table_name   = $entity_class::getTableName();
-                        $query        = sprintf(
+                        $table_name = $entity_class::getTableName();
+                        $query = sprintf(
                             'INSERT INTO `%s` (`%s`) VALUES (%%s)',
                             $table_name,
                             implode( '`,`', $data['entities'][ $entity_class ]['fields'] )
@@ -195,9 +190,9 @@ class Controller extends Lib\Base\Controller
                     $option_name = $plugin_prefix . $option;
                     add_option( $option_name, $data['options'][ $option_name ] );
                 }
-            }
 
-            header( 'Location: ' . admin_url( 'admin.php?page=bookly-debug&status=imported' ) );
+                header( 'Location: ' . admin_url( 'admin.php?page=bookly-debug&status=imported' ) );
+            }
         }
 
         header( 'Location: ' . admin_url( 'admin.php?page=bookly-debug' ) );
@@ -276,18 +271,4 @@ class Controller extends Lib\Base\Controller
 
         return $wpdb->query( 'SHOW TABLES LIKE "' . $tableName . '"' );
     }
-
-    // Protected methods.
-
-    /**
-     * Override parent method to add 'wp_ajax_bookly_' prefix
-     * so current 'execute*' methods look nicer.
-     *
-     * @param string $prefix
-     */
-    protected function registerWpActions( $prefix = '' )
-    {
-        parent::registerWpActions( 'wp_ajax_bookly_' );
-    }
-
 }

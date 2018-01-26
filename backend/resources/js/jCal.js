@@ -29,8 +29,6 @@
       dayOffset:	0,											// 0=week start with sunday, 1=week starts with monday
       scrollSpeed:	150,										// default .animate() speed used
       forceWeek:	false,										// true=force selection at start of week, false=select days out from selected day
-      dow:          BooklyL10n.days,                            // days of week
-      ml:           BooklyL10n.months,
       ms:			['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       _target:		target										// target DOM element - no need to set extend this variable
     }, opt);
@@ -241,12 +239,12 @@
             '<div class="checkbox bookly-margin-bottom-md"><label>' +
             '<img src="' + opt.loadingImg + '" style="display: none; margin: 0 10px 0 -26px">' +
             '<input type="checkbox" class="bookly-js-day-off" ' + ch + '>' +
-            '<span class="bookly-toggle-label">' + BooklyL10n.we_are_not_working + '</span>' +
+            '<span class="bookly-toggle-label">' + opt.we_are_not_working + '</span>' +
             '</label></div><div class="checkbox"><label>' +
             '<img src="' + opt.loadingImg + '" style="display: none; margin: 0 10px 0 -26px">' +
             '<input ' + di + ' type="checkbox" class="bookly-js-repeat" ' + ch2 + '>' +
-            '<span class="bookly-toggle-label">' + BooklyL10n.repeat  + '</span>' +
-            '</label></div></div><hr><div class="text-right"><button type="button" class="btn btn-default">' + BooklyL10n.close +
+            '<span class="bookly-toggle-label">' + opt.repeat  + '</span>' +
+            '</label></div></div><hr><div class="text-right"><button type="button" class="btn btn-default">' + opt.close +
             '</button></div>');
 
         var $day_off = $popup.find('.bookly-js-day-off');
@@ -283,6 +281,7 @@
             // update data on server side
             var options = {
                 action  : opt.action,
+                csrf_token: opt.csrf_token,
                 id      : $div.data('id'),
                 holiday : day_off,
                 repeat  : repeat,

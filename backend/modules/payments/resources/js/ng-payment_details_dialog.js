@@ -20,7 +20,7 @@
                         }
                         jQuery.ajax({
                             url:      ajaxurl,
-                            data:     {action: 'bookly_get_payment_details', payment_id: payment_id},
+                            data:     {action: 'bookly_get_payment_details', payment_id: payment_id, csrf_token : BooklyL10n.csrf_token},
                             dataType: 'json',
                             success:  function (response) {
                                 if (response.success) {
@@ -30,7 +30,7 @@
                                         ladda.start();
                                         jQuery.ajax({
                                             url:      ajaxurl,
-                                            data:     {action: 'bookly_complete_payment', payment_id: payment_id},
+                                            data:     {action: 'bookly_complete_payment', payment_id: payment_id, csrf_token : BooklyL10n.csrf_token},
                                             dataType: 'json',
                                             type:     'POST',
                                             success:  function (response) {

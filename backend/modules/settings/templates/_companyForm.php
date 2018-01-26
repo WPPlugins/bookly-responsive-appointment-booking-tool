@@ -47,6 +47,7 @@
     <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_co_website', __( 'Website', 'bookly' ) ) ?>
 
     <div class="panel-footer">
+        <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
         <?php \BooklyLite\Lib\Utils\Common::submitButton() ?>
         <?php \BooklyLite\Lib\Utils\Common::resetButton( 'bookly-company-reset' ) ?>
     </div>

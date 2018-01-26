@@ -2,6 +2,7 @@
 namespace BooklyLite\Frontend\Modules\CustomerProfile;
 
 use BooklyLite\Lib;
+use BooklyLite\Lib\Entities\Stat;
 
 /**
  * Class Controller
@@ -17,6 +18,9 @@ class Controller extends Lib\Base\Controller
     public function renderShortCode( $attributes )
     {
         global $sitepress;
+
+        // Disable caching.
+        Lib\Utils\Common::noCache();
 
         $assets = '';
 
@@ -37,23 +41,23 @@ class Controller extends Lib\Base\Controller
         if ( $customer->isLoaded() ) {
             $appointments = $this->_translateAppointments( $customer->getUpcomingAppointments() );
             $expired      = $customer->getPastAppointments( 1, 1 );
-            $this->more   = ! empty ( $expired['appointments'] );
+            $more   = ! empty ( $expired['appointments'] );
         } else {
             $appointments = array();
-            $this->more   = false;
+            $more   = false;
         }
-        $this->allow_cancel        = current_time( 'timestamp' );
+        $allow_cancel = current_time( 'timestamp' );
         $minimum_time_prior_cancel = (int) get_option( 'bookly_gen_min_time_prior_cancel', 0 );
         if ( $minimum_time_prior_cancel > 0 ) {
-            $this->allow_cancel += $minimum_time_prior_cancel * HOUR_IN_SECONDS;
+            $allow_cancel += $minimum_time_prior_cancel * HOUR_IN_SECONDS;
         }
 
         // Prepare URL for AJAX requests.
-        $this->ajax_url = admin_url( 'admin-ajax.php' );
+        $ajax_url = admin_url( 'admin-ajax.php' );
 
         // Support WPML.
         if ( $sitepress instanceof \SitePress ) {
-            $this->ajax_url .= ( strpos( $this->ajax_url, '?' ) ? '&' : '?' ) . 'lang=' . $sitepress->get_current_language();
+            $ajax_url = add_query_arg( array( 'lang' => $sitepress->get_current_language() ) , $ajax_url );
         }
 
         $titles = array();
@@ -68,15 +72,21 @@ class Controller extends Lib\Base\Controller
                 'cancel'   => __( 'Cancel', 'bookly' ),
                 'status'   => __( 'Status', 'bookly' ),
             );
-            foreach ( Lib\Utils\Common::getTranslatedCustomFields() as $field ) {
-                if ( ! in_array( $field->type, array( 'captcha', 'text-content' ) ) ) {
-                    $titles[ $field->id ] = $field->label;
+            if ( Lib\Config::customFieldsEnabled() ) {
+                foreach ( (array) Lib\Proxy\CustomFields::getTranslated() as $field ) {
+                    if ( ! in_array( $field->type, array( 'captcha', 'text-content' ) ) ) {
+                        $titles[ $field->id ] = $field->label;
+                    }
                 }
             }
         }
-        $url_cancel = $this->ajax_url . ( strpos( $this->ajax_url, '?' ) ? '&' : '?' ) . 'action=bookly_cancel_appointment';
 
-        return $assets . $this->render( 'short_code', array( 'appointments' => $appointments, 'attributes' => $attributes, 'url_cancel' => $url_cancel, 'titles' => $titles ), false );
+        $url_cancel = add_query_arg( array( 'action' => 'bookly_cancel_appointment', 'csrf_token' => Lib\Utils\Common::getCsrfToken() ) , $ajax_url );
+        if ( is_user_logged_in() ) {
+            Stat::record( 'view_customer_profile', 1 );
+        }
+
+        return $assets . $this->render( 'short_code', compact( 'ajax_url', 'appointments', 'attributes', 'url_cancel', 'titles', 'more', 'allow_cancel' ), false );
     }
 
     /**
@@ -87,22 +97,16 @@ class Controller extends Lib\Base\Controller
      */
     private function _translateAppointments( array $appointments )
     {
+        $postfix_any = sprintf( ' (%s)', Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_option_employee' ) );
         foreach ( $appointments as &$appointment ) {
             $category = new Lib\Entities\Category( array( 'id' => $appointment['category_id'], 'name' => $appointment['category'] ) );
             $service  = new Lib\Entities\Service( array( 'id' => $appointment['service_id'],  'title' => $appointment['service'] ) );
             $staff    = new Lib\Entities\Staff( array( 'id' => $appointment['staff_id'],  'full_name' => $appointment['staff'] ) );
-            $appointment['category'] = $category->getName();
-            $appointment['service']  = $service->getTitle();
-            $appointment['staff']    = $staff->getName();
-            // Prepare custom fields.
-            $custom_fields = array();
-            $ca = new Lib\Entities\CustomerAppointment( $appointment );
-            foreach ( $ca->getCustomFields() as $field ) {
-                $custom_fields[ $field['id'] ] = $field['value'];
-            }
-            $appointment['custom_fields'] = $custom_fields;
+            $appointment['category'] = $category->getTranslatedName();
+            $appointment['service']  = $service->getTranslatedTitle();
+            $appointment['staff']    = $staff->getTranslatedName() . ( $appointment['staff_any'] ? $postfix_any : '' );
             // Prepare extras.
-            $appointment['extras'] = apply_filters( 'bookly_service_extras_get_data_for_appointment', array(), $appointment['extras'], true );
+            $appointment['extras'] = (array) Lib\Proxy\ServiceExtras::getInfo( json_decode( $appointment['extras'], true ), true );
         }
 
         return $appointments;
@@ -124,16 +128,4 @@ class Controller extends Lib\Base\Controller
         $html = $this->render( '_rows', compact( 'appointments', 'columns', 'allow_cancel', 'custom_fields', 'with_cancel' ), false );
         wp_send_json_success( array( 'html' => $html, 'more' => $past['more'] ) );
     }
-
-    /**
-     * Override parent method to add 'wp_ajax_bookly_' prefix
-     * so current 'execute*' methods look nicer.
-     *
-     * @param string $prefix
-     */
-    protected function registerWpActions( $prefix = '' )
-    {
-        parent::registerWpActions( 'wp_ajax_bookly_' );
-    }
-
 }

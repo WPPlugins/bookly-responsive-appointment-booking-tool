@@ -1,6 +1,8 @@
 <?php
 namespace BooklyLite\Lib\Utils;
 
+use BooklyLite\Lib;
+
 /**
  * Class DateTime
  * @package BooklyLite\Lib\Utils
@@ -72,7 +74,7 @@ class DateTime
      * @param $iso_date_time
      * @param integer $offset Offset in minutes
      * @param string $format  Output format
-     * @return bool|string
+     * @return false|string
      */
     public static function applyTimeZoneOffset( $iso_date_time, $offset, $format = 'Y-m-d H:i:s' )
     {
@@ -269,7 +271,7 @@ class DateTime
     }
 
     /**
-     * Return formated time interval
+     * Return formatted time interval
      *
      * @param string $start_time    like 08:00:00
      * @param string $end_time      like 18:45:00
@@ -280,4 +282,20 @@ class DateTime
         return self::formatTime( self::timeToSeconds( $start_time ) ) . ' - ' . self::formatTime( self::timeToSeconds( $end_time ) );
     }
 
+    /**
+     * Guess timezone by offset in seconds.
+     *
+     * @param int $offset
+     * @return string
+     */
+    public static function guessTimeZone( $offset )
+    {
+        // Fallback to offset.
+        return sprintf(
+            '%s%02d:%02d',
+            $offset >= 0 ? '+' : '-',
+            abs( $offset / HOUR_IN_SECONDS ),
+            abs( $offset / MINUTE_IN_SECONDS ) % 60
+        );
+    }
 }

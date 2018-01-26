@@ -34,17 +34,14 @@ abstract class Installer extends Schema
             \BooklyLite\Lib\Entities\StaffScheduleItem::query( 'ss' )
                 ->delete()->where( 'ss.staff_id', 1 )
                 ->execute();
-            $fields = array(
-                'staff_id'   => 1,
-                'day_index'  => 1,
-                'start_time' => '08:00:00',
-                'end_time'   => '18:00:00',
-            );
             for ( $i = 1; $i <= 7; $i ++ ) {
-                $fields['day_index'] = $i;
-                $schedule            = new \BooklyLite\Lib\Entities\StaffScheduleItem();
-                $schedule->setFields( $fields );
-                $schedule->save();
+                $schedule = new \BooklyLite\Lib\Entities\StaffScheduleItem();
+                $schedule
+                    ->setStaffId( 1 )
+                    ->setDayIndex( $i )
+                    ->setStartTime( '08:00:00' )
+                    ->setEndTime( '18:00:00' )
+                    ->save();
             }
         }
 
@@ -56,10 +53,8 @@ abstract class Installer extends Schema
      */
     public function uninstall()
     {
-        if ( get_option( 'bookly_lite_uninstall_remove_bookly_data' ) ) {
-            $this->removeData();
-            $this->dropPluginTables();
-        }
+        $this->removeData();
+        $this->dropPluginTables();
     }
 
     /**
@@ -99,9 +94,11 @@ abstract class Installer extends Schema
         add_option( $plugin_prefix . 'data_loaded', '0' );
         add_option( $plugin_prefix . 'db_version',  $plugin_class::getVersion() );
         add_option( $plugin_prefix . 'installation_time', time() );
-        add_option( $plugin_prefix . 'grace_start', time() + 2 * WEEK_IN_SECONDS );
+        add_option( $plugin_prefix . 'grace_start', time() + 60 * DAY_IN_SECONDS );
         add_option( $plugin_class::getPurchaseCodeOption(), '' );
-        if ( Plugin::getPrefix() != 'bookly_' ) {
+        if ( Plugin::getPrefix() != 'bookly_'
+            && array_key_exists( $plugin_prefix . 'enabled', $this->options ) == false
+        ) {
             add_option( $plugin_prefix . 'enabled', '1' );
         }
 
