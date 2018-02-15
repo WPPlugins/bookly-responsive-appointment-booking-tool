@@ -18,7 +18,7 @@ $subtotal_deposit = 0;
             </thead>
             <tbody>
                 <tr>
-                    <td><?php echo $payment['customer'] ?></td>
+                    <td><?php echo esc_html( $payment['customer'] ) ?></td>
                     <td>
                         <div><?php _e( 'Date', 'bookly' ) ?>: <?php echo DateTime::formatDateTime( $payment['created'] ) ?></div>
                         <div><?php _e( 'Type', 'bookly' ) ?>: <?php echo Entities\Payment::typeToString( $payment['type'] ) ?></div>
@@ -47,18 +47,18 @@ $subtotal_deposit = 0;
                     $extras_price = 0; ?>
                     <tr>
                         <td>
-                            <?php if ( $item['number_of_persons'] > 1 ) echo $item['number_of_persons'] . '&nbsp;&times;&nbsp;'  ?><?php echo $item['service_name'] ?>
+                            <?php if ( $item['number_of_persons'] > 1 ) echo $item['number_of_persons'] . '&nbsp;&times;&nbsp;'  ?><?php echo esc_html( $item['service_name'] ) ?>
                             <?php if ( ! empty ( $item['extras'] ) ) : ?>
                                 <ul class="bookly-list list-dots">
                                     <?php foreach ( $item['extras'] as $extra ) : ?>
-                                        <li><?php if ( $extra['quantity'] > 1 ) echo $extra['quantity'] . '&nbsp;&times;&nbsp;' ?><?php echo $extra['title'] ?></li>
+                                        <li><?php if ( $extra['quantity'] > 1 ) echo $extra['quantity'] . '&nbsp;&times;&nbsp;' ?><?php echo esc_html( $extra['title'] ) ?></li>
                                         <?php $extras_price += $extra['price'] * $extra['quantity'] ?>
                                     <?php endforeach ?>
                                 </ul>
                             <?php endif ?>
                         </td>
                         <td><?php echo DateTime::formatDateTime( $item['appointment_date'] ) ?></td>
-                        <td><?php echo $item['staff_name'] ?></td>
+                        <td><?php echo esc_html( $item['staff_name'] ) ?></td>
                         <?php $deposit = Proxy\DepositPayments::prepareAmount( $item['number_of_persons'] * ( $item['service_price'] + $extras_price ), $item['deposit'], $item['number_of_persons'] ) ?>
                         <?php if ( $deposit_enabled ) : ?>
                             <td class="text-right"><?php echo Proxy\DepositPayments::formatDeposit( $deposit, $item['deposit'] ) ?></td>
