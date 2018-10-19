@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Notification
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Notification extends Lib\Base\Entity
 {
@@ -34,10 +34,12 @@ class Notification extends Lib\Base\Entity
     protected $to_admin = 0;
     /** @var  bool */
     protected $attach_ics = 0;
+    /** @var  bool */
+    protected $attach_invoice = 0;
     /** @var  string json */
     protected $settings = '[]';
 
-    protected static $table = 'ab_notifications';
+    protected static $table = 'bookly_notifications';
 
     protected static $schema = array(
         'id'          => array( 'format' => '%d' ),
@@ -50,6 +52,7 @@ class Notification extends Lib\Base\Entity
         'to_customer' => array( 'format' => '%d' ),
         'to_admin'    => array( 'format' => '%d' ),
         'attach_ics'  => array( 'format' => '%d' ),
+        'attach_invoice' => array( 'format' => '%d' ),
         'settings'    => array( 'format' => '%s' ),
     );
 
@@ -58,6 +61,36 @@ class Notification extends Lib\Base\Entity
 
     /** @var array */
     public static $type_ids;
+
+    /** @var array */
+    public static $bookly_notifications = array(
+        'email' => array(
+            'client_pending_appointment',
+            'client_approved_appointment',
+            'client_cancelled_appointment',
+            'client_rejected_appointment',
+            'staff_pending_appointment',
+            'staff_approved_appointment',
+            'staff_cancelled_appointment',
+            'staff_rejected_appointment',
+        ),
+        'sms'   => array(
+            'client_pending_appointment',
+            'client_approved_appointment',
+            'client_cancelled_appointment',
+            'client_rejected_appointment',
+            'staff_pending_appointment',
+            'staff_approved_appointment',
+            'staff_cancelled_appointment',
+            'staff_rejected_appointment',
+            'client_reminder',
+            'client_reminder_1st',
+            'client_reminder_2nd',
+            'client_reminder_3rd',
+            'client_follow_up',
+            'staff_agenda',
+        ),
+    );
 
     /**
      * Get type ID.
@@ -71,6 +104,24 @@ class Notification extends Lib\Base\Entity
         return isset ( self::$type_ids[ $this->getType() ] )
             ? self::$type_ids[ $this->getType() ]
             : null;
+    }
+
+    /**
+     * @param string $locale
+     * @return string
+     */
+    public function getTranslatedMessage( $locale = null )
+    {
+        return Lib\Utils\Common::getTranslatedString( $this->getWpmlName(), $this->getMessage(), $locale );
+    }
+
+    /**
+     * @param string $locale
+     * @return string
+     */
+    public function getTranslatedSubject( $locale = null )
+    {
+        return Lib\Utils\Common::getTranslatedString( $this->getWpmlName() . '_subject', $this->getSubject(), $locale );
     }
 
     /**
@@ -104,6 +155,40 @@ class Notification extends Lib\Base\Entity
     }
 
     /**
+     * Notification name.
+     *
+     * @param $type
+     * @return string
+     */
+    public static function getNameIfExists( $type = null )
+    {
+        self::initNames();
+
+        if ( array_key_exists( $type, self::$names ) ) {
+            return self::$names[ $type ];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Return custom notification codes.
+     *
+     * @return array
+     */
+    public static function getCustomNotificationTypes()
+    {
+        return array(
+            Lib\Entities\Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED,
+            Lib\Entities\Notification::TYPE_APPOINTMENT_START_TIME,
+            Lib\Entities\Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            Lib\Entities\Notification::TYPE_LAST_CUSTOMER_APPOINTMENT,
+            Lib\Entities\Notification::TYPE_CUSTOMER_BIRTHDAY,
+            Lib\Entities\Notification::TYPE_STAFF_DAY_AGENDA,
+        );
+    }
+
+    /**
      * Fill array with notification names.
      */
     private static function initNames()
@@ -129,14 +214,14 @@ class Notification extends Lib\Base\Entity
                 'staff_rejected_appointment'       => __( 'Notification to staff member about rejected appointment', 'bookly' ),
                 'staff_pending_appointment'        => __( 'Notification to staff member about pending appointment', 'bookly' ),
 
-                Notification::TYPE_APPOINTMENT_START_TIME              => __( 'Notification about appointment date and time (requires cron setup)', 'bookly' ),
-                Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED        => __( 'Notification about appointment created (requires cron setup)', 'bookly' ),
-                Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => __( 'Notification about appointment status changed (requires cron setup)', 'bookly' ),
-                Notification::TYPE_CUSTOMER_BIRTHDAY                   => __( 'Customer birthday greeting (requires cron setup)', 'bookly' ),
-                Notification::TYPE_LAST_CUSTOMER_APPOINTMENT           => __( 'Notification about last appointment (requires cron setup)', 'bookly' ),
-                Notification::TYPE_STAFF_DAY_AGENDA                    => __( 'Notification about staff agenda (requires cron setup)', 'bookly' ),
+                Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => __( 'Custom notification', 'bookly' ) .': ' .__( 'Event notification', 'bookly' ) . ' / ' . __( 'Status changed', 'bookly' ),
+                Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED        => __( 'Custom notification', 'bookly' ) .': ' .__( 'Event notification', 'bookly' ) . ' / ' . __( 'New booking', 'bookly' ),
+                Notification::TYPE_APPOINTMENT_START_TIME              => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Appointment date and time', 'bookly' ),
+                Notification::TYPE_CUSTOMER_BIRTHDAY                   => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Customer\'s birthday', 'bookly' ),
+                Notification::TYPE_LAST_CUSTOMER_APPOINTMENT           => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Last client\'s appointment', 'bookly' ),
+                Notification::TYPE_STAFF_DAY_AGENDA                    => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Full day agenda', 'bookly' ),
 
-                /** @see \BooklyLite\Backend\Modules\Sms\Controller::executeSendTestSms */
+                /** @see \Bookly\Backend\Modules\Sms\Ajax::executeSendTestSms */
                 'test_message'                     => __( 'Test message', 'bookly' ),
             );
 
@@ -151,7 +236,7 @@ class Notification extends Lib\Base\Entity
     {
         if ( self::$type_ids === null ) {
             self::$type_ids = array(
-                /** @see \BooklyLite\Backend\Modules\Sms\Controller::executeSendTestSms */
+                /** @see \Bookly\Backend\Modules\Sms\Ajax::executeSendTestSms */
                 'test_message'                     => 0,
 
                 'client_approved_appointment'      => 1,
@@ -190,20 +275,13 @@ class Notification extends Lib\Base\Entity
     }
 
     /**
-     * Return custom notification codes.
+     * Return unique name for WPML
      *
-     * @return array
+     * @return string
      */
-    public static function getCustomNotificationTypes()
+    private function getWpmlName()
     {
-        return array(
-            Lib\Entities\Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED,
-            Lib\Entities\Notification::TYPE_APPOINTMENT_START_TIME,
-            Lib\Entities\Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
-            Lib\Entities\Notification::TYPE_LAST_CUSTOMER_APPOINTMENT,
-            Lib\Entities\Notification::TYPE_CUSTOMER_BIRTHDAY,
-            Lib\Entities\Notification::TYPE_STAFF_DAY_AGENDA,
-        );
+        return sprintf( '%s_%s_%d', $this->getGateway(), $this->getType(), $this->getId() );
     }
 
     /**************************************************************************
@@ -418,6 +496,29 @@ class Notification extends Lib\Base\Entity
     }
 
     /**
+     * Gets attach_invoice
+     *
+     * @return bool
+     */
+    public function getAttachInvoice()
+    {
+        return $this->attach_invoice;
+    }
+
+    /**
+     * Sets attach_invoice
+     *
+     * @param bool $attach_invoice
+     * @return $this
+     */
+    public function setAttachInvoice( $attach_invoice )
+    {
+        $this->attach_invoice = $attach_invoice;
+
+        return $this;
+    }
+
+    /**
      * Gets settings
      *
      * @return string
@@ -458,9 +559,10 @@ class Notification extends Lib\Base\Entity
         $return = parent::save();
         if ( $this->isLoaded() ) {
             // Register string for translate in WPML.
-            do_action( 'wpml_register_single_string', 'bookly', $this->getGateway() . '_' . $this->getType(), $this->getMessage() );
+            $name = $this->getWpmlName();
+            do_action( 'wpml_register_single_string', 'bookly', $name, $this->getMessage() );
             if ( $this->getGateway() == 'email' ) {
-                do_action( 'wpml_register_single_string', 'bookly', $this->getGateway() . '_' . $this->getType() . '_subject', $this->getSubject() );
+                do_action( 'wpml_register_single_string', 'bookly', $name . '_subject', $this->getSubject() );
             }
         }
 

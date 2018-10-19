@@ -33,7 +33,7 @@ jQuery(function ($) {
                 url: ajaxurl,
                 data: {
                     action: 'bookly_get_staff_appointments',
-                    csrf_token : obj.options.l10n.csrf_token,
+                    csrf_token: obj.options.l10n.csrf_token,
                     staff_ids: function () {
                         var ids = [];
                         if (obj.options.is_backend && obj.options.getCurrentStaffId() == 0) {
@@ -45,6 +45,20 @@ jQuery(function ($) {
                             ids.push(obj.options.getCurrentStaffId());
                         }
                         return ids;
+                    },
+                    location_ids: function() {
+                        if (obj.options.is_backend) {
+                            var ids = [];
+                            $('.bookly-js-locations-filter input').each(function () {
+                                var input = $(this);
+                                if (input.prop('checked')) {
+                                    ids.push(input.val());
+                                }
+                            });
+                            return ids;
+                        } else {
+                            return ['all'];
+                        }
                     }
                 }
             }],
@@ -88,16 +102,23 @@ jQuery(function ($) {
                             $container.fullCalendar('refetchEvents');
                         } else {
                             if (visible_staff_id == event.staffId || visible_staff_id == 0) {
-                                if (event.id) {
-                                    // Create event in calendar.
-                                    $container.fullCalendar('renderEvent', event);
-                                } else {
-                                    $container.fullCalendar('refetchEvents');
+                                if (event.start !== null) {
+                                    if (event.id) {
+                                        // Create event in calendar.
+                                        $container.fullCalendar('renderEvent', event);
+                                    } else {
+                                        $container.fullCalendar('refetchEvents');
+                                    }
                                 }
                             } else {
                                 // Switch to the event owner tab.
                                 jQuery('li[data-staff_id=' + event.staffId + ']').click();
                             }
+                        }
+
+                        if (locationChanged) {
+                            $container.fullCalendar('refetchEvents');
+                            locationChanged = false;
                         }
                     }
                 );
@@ -111,6 +132,9 @@ jQuery(function ($) {
                     }
 
                     var $time = $event.find('.fc-time');
+                    if (calEvent.header_text !== undefined) {
+                        $time.html(calEvent.header_text);
+                    }
                     if (obj.options.l10n.recurring_appointments.active == '1' && calEvent.series_id) {
                         $time.prepend(
                             $('<a class="bookly-fc-icon dashicons dashicons-admin-links"></a>')
@@ -175,14 +199,21 @@ jQuery(function ($) {
                         if (event == 'refresh') {
                             $container.fullCalendar('refetchEvents');
                         } else {
-                            if (visible_staff_id == event.staffId || visible_staff_id == 0) {
-                                // Update event in calendar.
-                                jQuery.extend(calEvent, event);
-                                $container.fullCalendar('updateEvent', calEvent);
-                            } else {
-                                // Switch to the event owner tab.
-                                jQuery('li[data-staff_id=' + event.staffId + ']').click();
+                            if (event.start !== null) {
+                                if (visible_staff_id == event.staffId || visible_staff_id == 0) {
+                                    // Update event in calendar.
+                                    jQuery.extend(calEvent, event);
+                                    $container.fullCalendar('updateEvent', calEvent);
+                                } else {
+                                    // Switch to the event owner tab.
+                                    jQuery('li[data-staff_id=' + event.staffId + ']').click();
+                                }
                             }
+                        }
+
+                        if (locationChanged) {
+                            $container.fullCalendar('refetchEvents');
+                            locationChanged = false;
                         }
                     }
                 );
@@ -238,7 +269,9 @@ jQuery(function ($) {
         /**
          * On delete appointment click.
          */
-        if (obj.$deleteDialog.data('events') == undefined) {
+        if (obj.$deleteDialog.data('events') == undefined
+            || obj.$deleteDialog.data('events').click == undefined)
+        {
             obj.$deleteDialog.on('click', '#bookly-delete', function (e) {
                 var calEvent = obj.$deleteDialog.data('calEvent'),
                     ladda = Ladda.create(this);
@@ -265,6 +298,11 @@ jQuery(function ($) {
             });
         }
     };
+
+    var locationChanged = false;
+    $('body').on('change', '#bookly-appointment-location', function() {
+        locationChanged = true;
+    });
 
     Calendar.prototype.$deleteDialog = $('#bookly-delete-dialog');
     Calendar.prototype.options = {

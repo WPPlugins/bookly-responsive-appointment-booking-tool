@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Backend\Modules\Staff\Forms;
+namespace Bookly\Backend\Modules\Staff\Forms;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class StaffMember
- * @package BooklyLite\Backend\Modules\Staff\Forms
+ * @package Bookly\Backend\Modules\Staff\Forms
  */
 class StaffMember extends Lib\Base\Form
 {

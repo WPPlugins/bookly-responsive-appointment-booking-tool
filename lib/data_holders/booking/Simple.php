@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\DataHolders\Booking;
+namespace Bookly\Lib\DataHolders\Booking;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Simple
- * @package BooklyLite\Lib\DataHolders\Booking
+ * @package Bookly\Lib\DataHolders\Booking
  */
 class Simple extends Item
 {
@@ -144,14 +144,21 @@ class Simple extends Item
         if ( $this->getService()->getId() ) {
             if ( ! $this->staff_service ) {
                 $this->staff_service = new Lib\Entities\StaffService();
-                $this->staff_service->loadBy( array( 'staff_id' => $this->getStaff()->getId(), 'service_id' => $this->getService()->getId() ) );
+                $this->staff_service->loadBy(
+                    array(
+                        'staff_id'    => $this->getStaff()->getId(),
+                        'service_id'  => $this->getService()->getId(),
+                        'location_id' => Lib\Proxy\Locations::prepareStaffLocationId( $this->appointment->getLocationId(), $this->getStaff()->getId() ) ?: null,
+                    ) );
             }
 
-            return (float) Lib\Proxy\SpecialHours::preparePrice(
-                $this->staff_service->getPrice(),
+            return (float) Lib\Proxy\SpecialHours::adjustPrice(
+                $this->staff_service->getPrice() * $this->getCA()->getUnits(),
                 $this->getStaff()->getId(),
                 $this->getService()->getId(),
-                $this->getAppointment()->getStartDate()
+                Lib\Proxy\Locations::prepareStaffLocationId( $this->appointment->getLocationId(), $this->getStaff()->getId() ) ?: null,
+                $this->getAppointment()->getStartDate(),
+                $this->getCA()->getUnits()
             );
         } else {
             return (float) $this->getAppointment()->getCustomServicePrice();
@@ -166,16 +173,10 @@ class Simple extends Item
     public function getTotalPrice()
     {
         // Service price.
-        $service_price = $this->getServicePrice();
+        $price = $this->getServicePrice();
+        $nop   = $this->getCA()->getNumberOfPersons();
 
-        // Extras.
-        $extras = (array) Lib\Proxy\ServiceExtras::getInfo( json_decode( $this->getCA()->getExtras(), true ), true );
-        $extras_total_price = 0.0;
-        foreach ( $extras as $extra ) {
-            $extras_total_price += $extra['price'];
-        }
-
-        return ( $service_price + $extras_total_price ) * $this->getCA()->getNumberOfPersons();
+        return Lib\Proxy\ServiceExtras::prepareServicePrice( $price * $nop, $price, $nop, json_decode( $this->getCA()->getExtras(), true ) );
     }
 
     /**
@@ -187,10 +188,45 @@ class Simple extends Item
     {
         if ( ! $this->staff_service ) {
             $this->staff_service = new Lib\Entities\StaffService();
-            $this->staff_service->loadBy( array( 'staff_id' => $this->getStaff()->getId(), 'service_id' => $this->getService()->getId() ) );
+            $this->staff_service->loadBy(
+                array(
+                    'staff_id'    => $this->getStaff()->getId(),
+                    'service_id'  => $this->getService()->getId(),
+                    'location_id' => Lib\Proxy\Locations::prepareStaffLocationId( $this->appointment->getLocationId(), $this->getStaff()->getId() ) ?: null,
+                ) );
         }
 
         return $this->staff_service->getDeposit();
+    }
+
+    /**
+     * Gets tax
+     *
+     * @return float
+     */
+    public function getTax()
+    {
+        if ( ! $this->tax ) {
+            $rates = Lib\Proxy\Taxes::getServiceTaxRates();
+            if ( $rates ) {
+                $this->tax = Lib\Proxy\Taxes::calculateTax( $this->getTotalPrice(), $rates[ $this->getService()->getId() ] );
+            }
+        }
+
+        return $this->tax;
+    }
+
+    /**
+     * Sets tax
+     *
+     * @param float $tax
+     * @return $this
+     */
+    public function setTax( $tax )
+    {
+        $this->tax = $tax;
+
+        return $this;
     }
 
     /**

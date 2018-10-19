@@ -1,7 +1,6 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-} // Exit if accessed directly
-/** @var \BooklyLite\Lib\Entities\Staff $staff */
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Modules\Staff\Proxy;
+/** @var Bookly\Lib\Entities\Staff $staff */
 ?>
 <div class="panel panel-default bookly-main">
     <div class="panel-body">
@@ -32,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bookly-flex-cell bookly-vertical-top"><h1 class="bookly-js-staff-name-<?php echo $staff->getId() ?>"><?php echo $staff->getFullName() ?></h1></div>
+            <div class="bookly-flex-cell bookly-vertical-top"><h1 class="bookly-js-staff-name-<?php echo $staff->getId() ?>"><?php echo esc_html( $staff->getFullName() ) ?><?php Proxy\Ratings::renderStaffServiceRating( $staff->getId(), null, 'left' ) ?></h1></div>
         </div>
 
         <ul class="nav nav-tabs nav-justified bookly-nav-justified">
@@ -54,7 +53,7 @@
                     <span class="bookly-nav-tabs-title"><?php _e( 'Schedule', 'bookly' ) ?></span>
                 </a>
             </li>
-            <?php \BooklyLite\Lib\Proxy\Shared::renderStaffTab( $staff ) ?>
+            <?php Proxy\Shared::renderStaffTab( $staff ) ?>
             <li>
                 <a id="bookly-holidays-tab" href="#daysoff" data-toggle="tab">
                     <i class="bookly-icon bookly-icon-daysoff"></i>

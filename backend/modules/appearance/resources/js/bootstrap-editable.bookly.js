@@ -32,44 +32,57 @@ jQuery(function($) {
                 var $row = $('<div/>')
                     .css({position: 'relative', 'margin-top': '6px'})
                     .appendTo(_this.$tpl);
-                if (_this.options.fieldType == 'input') {
-                    // Create input with "x" button.
-                    var $clear = $('<span class="editable-clear-x"></span>');
-                    var $input = $('<input/>', {
-                        type : 'text',
-                        class: 'form-control',
-                        name : option_name,
-                        value: option_value
-                    });
-                    $input.keyup(function(e) {
-                        // arrows, enter, tab, etc
-                        if (~$.inArray(e.keyCode, [40,38,9,13,27])) {
-                            return;
-                        }
-                        clearTimeout(this.t);
-                        this.t = setTimeout(function() {
-                            var len = $input.val().length,
-                                visible = $clear.is(':visible');
-                            if (len && !visible) {
-                                $clear.show();
+                switch (_this.options.fieldType) {
+                    case 'input':
+                        // Create input with "x" button.
+                        var $clear = $('<span class="editable-clear-x"></span>');
+                        var $input = $('<input/>', {
+                            type : 'text',
+                            class: 'form-control',
+                            name : option_name,
+                            value: option_value
+                        });
+                        $input.keyup(function(e) {
+                            // arrows, enter, tab, etc
+                            if (~$.inArray(e.keyCode, [40,38,9,13,27])) {
+                                return;
                             }
-                            if (!len && visible) {
-                                $clear.hide();
-                            }
-                        }, 100);
-                    });
-                    $clear.click(function () {
-                        $clear.hide();
-                        $input.val('').focus();
-                    });
-                    $row.append($input).append($clear);
-                } else {
-                    // Create textarea.
-                    $('<textarea/>', {
-                        class: 'form-control',
-                        name : option_name,
-                        rows : 7
-                    }).val(option_value).appendTo($row);
+                            clearTimeout(this.t);
+                            this.t = setTimeout(function() {
+                                var len = $input.val().length,
+                                    visible = $clear.is(':visible');
+                                if (len && !visible) {
+                                    $clear.show();
+                                }
+                                if (!len && visible) {
+                                    $clear.hide();
+                                }
+                            }, 100);
+                        });
+                        $clear.click(function () {
+                            $clear.hide();
+                            $input.val('').focus();
+                        });
+                        $row.append($input).append($clear);
+                        break;
+                    case 'number':
+                        // Create input[type="number"]
+                        $('<input/>', {
+                            type : 'number',
+                            class: 'form-control',
+                            name : option_name,
+                            min  : $(_this.options.scope).data('min'),
+                            step : $(_this.options.scope).data('step')
+                        }).val(option_value).appendTo($row);
+                        break;
+                    default :
+                        // Create textarea.
+                        $('<textarea/>', {
+                            class: 'form-control',
+                            name : option_name,
+                            rows : 7
+                        }).val(option_value).appendTo($row);
+                        break;
                 }
             });
             // Set codes.

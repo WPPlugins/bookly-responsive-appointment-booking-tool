@@ -1,5 +1,5 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    /** @var \BooklyLite\Lib\Entities\StaffScheduleItem $item */
+    /** @var \Bookly\Lib\Entities\StaffScheduleItem $item */
     $breaks_list = $item->getBreaksList();
 ?>
 <div class="breaks-list">
@@ -30,10 +30,10 @@
                 array( 'class' => 'break-end form-control' )
             );
 
-            $this->render( '_break', array(
+            $self::renderTemplate( '_break', array(
                 'break_start_choices'          => $break_start_choices,
                 'break_end_choices'            => $break_end_choices,
-                'formatted_interval'           => \BooklyLite\Lib\Utils\DateTime::formatInterval( $break_interval['start_time'], $break_interval['end_time'] ),
+                'formatted_interval'           => \Bookly\Lib\Utils\DateTime::formatInterval( $break_interval['start_time'], $break_interval['end_time'] ),
                 'staff_schedule_item_break_id' => $break_interval['id'],
             ) );
         endforeach ?>

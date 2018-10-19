@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Holiday
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Holiday extends Lib\Base\Entity
 {
@@ -18,7 +18,7 @@ class Holiday extends Lib\Base\Entity
     /** @var  int */
     protected $repeat_event;
 
-    protected static $table = 'ab_holidays';
+    protected static $table = 'bookly_holidays';
 
     protected static $schema = array(
         'id'           => array( 'format' => '%d' ),

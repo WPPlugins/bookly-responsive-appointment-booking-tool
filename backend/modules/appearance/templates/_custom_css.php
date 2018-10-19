@@ -1,12 +1,7 @@
-<?php
-/**
- * Template to work with custom css.
- * Template includes button to show custom css form + form to edit it
- *
- * @var string $custom_css custom css text
- */
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Components\Controls\Buttons;
+/** @var string $custom_css custom css text */
 ?>
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 
 <div class="form-group">
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#bookly-custom-css-dialog">
@@ -28,8 +23,8 @@
             </div>
             <div class="modal-footer">
                 <div id="bookly-custom-css-error"></div>
-                <?php \BooklyLite\Lib\Utils\Common::customButton( 'bookly-custom-css-save', 'btn-success btn-lg', __( 'Save', 'bookly' ) ) ?>
-                <?php \BooklyLite\Lib\Utils\Common::customButton( 'bookly-custom-css-cancel', 'btn-default btn-lg', __( 'Cancel', 'bookly' ) ) ?>
+                <?php Buttons::renderCustom( 'bookly-custom-css-save', 'btn-success btn-lg', __( 'Save', 'bookly' ) ) ?>
+                <?php Buttons::renderCustom( 'bookly-custom-css-cancel', 'btn-default btn-lg', __( 'Cancel', 'bookly' ) ) ?>
             </div>
         </div>
     </div>

@@ -1,11 +1,13 @@
 <?php
-namespace BooklyLite\Backend\Modules\Notifications\Forms;
+namespace Bookly\Backend\Modules\Notifications\Forms;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
+use Bookly\Backend\Modules\Notifications\Proxy;
+use Bookly\Backend\Modules\Notifications\Lib\Codes;
 
 /**
  * Class Notifications
- * @package BooklyLite\Backend\Modules\Notifications\Forms
+ * @package Bookly\Backend\Modules\Notifications\Forms
  */
 class Notifications extends Lib\Base\Form
 {
@@ -37,36 +39,35 @@ class Notifications extends Lib\Base\Form
 
     public $gateway;
 
-    /** @var \BooklyLite\Backend\Modules\Notifications\Components|\BooklyLite\Backend\Modules\Sms\Components|Lib\Base\Components */
+    /** @var Codes */
     protected $codes;
 
     /**
      * Notifications constructor.
      *
-     * @param string              $gateway
-     * @param \BooklyLite\Backend\Modules\Notifications\Components|\BooklyLite\Backend\Modules\Sms\Components $components
+     * @param string $gateway
      */
-    public function __construct( $gateway = 'email', Lib\Base\Components $components )
+    public function __construct( $gateway = 'email' )
     {
         /*
          * make Visual Mode as default (instead of Text Mode)
          * allowed: tinymce - Visual Mode, html - Text Mode, test - no one Mode selected
          */
-        add_filter( 'wp_default_editor', create_function( '', 'return \'tinymce\';' ) );
-        $this->types   = Lib\Proxy\Shared::prepareNotificationTypes( $this->types );
+        add_filter( 'wp_default_editor', function() { return 'tinymce'; } );
+        $this->types   = Proxy\Shared::prepareNotificationTypes( $this->types );
         $this->gateway = $gateway;
         if ( ! Lib\Config::combinedNotificationsEnabled() ) {
             $this->types['combined'] = array();
         }
         $this->types['custom'] = Lib\Entities\Notification::getCustomNotificationTypes();
-        $this->codes = $components;
-        $this->setFields( array( 'id', 'active', 'type', 'subject', 'message', 'to_customer', 'to_staff', 'to_admin', 'attach_ics', 'settings' ) );
+        $this->codes = new Codes( $gateway );
+        $this->setFields( array( 'id', 'active', 'type', 'subject', 'message', 'to_customer', 'to_staff', 'to_admin', 'attach_ics', 'attach_invoice', 'settings' ) );
         $this->load();
     }
 
-    public function bind( array $_post = array(), array $files = array() )
+    public function bind( array $params = array(), array $files = array() )
     {
-        $this->data = $_post['notification'];
+        $this->data = $params['notification'];
     }
 
     /**
@@ -105,7 +106,7 @@ class Notifications extends Lib\Base\Form
         $notifications = array();
         foreach ( $this->types[ $group ] as $type ) {
             foreach ( $this->data as $notification ) {
-                if ( $notification['type'] == $type ) {
+                if ( $notification['type'] == $type && ( Lib\Config::proActive() || in_array( $notification['type'], Lib\Entities\Notification::$bookly_notifications[ $notification['gateway'] ] ) ) ) {
                     $notifications[] = $notification;
                 }
             }
@@ -156,21 +157,14 @@ class Notifications extends Lib\Base\Form
                 esc_textarea( $value )
             );
         } else {
-            $settings = array(
-                'textarea_name' => $name,
-                'media_buttons' => false,
-                'editor_height' => 384,
-                'tinymce'       => array(
-                    'theme_advanced_buttons1' => 'formatselect,|,bold,italic,underline,|,'.
-                                                 'bullist,blockquote,|,justifyleft,justifycenter'.
-                                                 ',justifyright,justifyfull,|,link,unlink,|'.
-                                                 ',spellchecker,wp_fullscreen,wp_adv'
-                )
+            printf(
+                '<div class="form-group">
+                    <input type="hidden" name="%1$s" value="%2$s" class="bookly-js-message-input"/>
+                    <div class="bookly-js-tinymce-message"></div>
+                </div>',
+                $name,
+                esc_attr( $value )
             );
-
-            echo '<div class="form-group"><label>' . __( 'Message', 'bookly' ) . '</label>';
-            wp_editor( $value, $attr_id, $settings );
-            echo '</div>';
         }
     }
 
@@ -222,6 +216,17 @@ class Notifications extends Lib\Base\Form
             'client_reminder_2nd',
             'client_reminder_3rd',
             'client_follow_up',
+            // Recurring.
+            'client_pending_recurring_appointment',
+            'staff_pending_recurring_appointment',
+            'client_approved_recurring_appointment',
+            'staff_approved_recurring_appointment',
+            'client_cancelled_recurring_appointment',
+            'staff_cancelled_recurring_appointment',
+            'client_rejected_recurring_appointment',
+            'staff_rejected_recurring_appointment',
+            'client_waitlisted_recurring_appointment',
+            'staff_waitlisted_recurring_appointment',
         ) ) ) {
             $id   = $notification['id'];
             $name = sprintf( 'notification[%d][attach_ics]', $id );
@@ -235,6 +240,18 @@ class Notifications extends Lib\Base\Form
                 checked( $notification['attach_ics'], true, false ),
                 __( 'Attach ICS file', 'bookly' )
             );
+        }
+    }
+
+    /**
+     * Render attach invoice file.
+     *
+     * @param array $notification
+     */
+    public function renderAttachInvoice( array $notification )
+    {
+        if (  in_array( $notification['type'], array( 'client_pending_appointment', 'client_approved_appointment', 'client_follow_up', ) ) ) {
+            Proxy\Invoices::renderAttach( $notification );
         }
     }
 
@@ -260,7 +277,7 @@ class Notifications extends Lib\Base\Form
                         '<option value="%s" %s>%s</option>',
                         $hour,
                         selected( $cron_reminder[ $type ], $hour, false ),
-                        sprintf( __( '%s before', 'bookly' ), \BooklyLite\Lib\Utils\DateTime::secondsToInterval( $hour * HOUR_IN_SECONDS ) )
+                        sprintf( __( '%s before', 'bookly' ), Lib\Utils\DateTime::secondsToInterval( $hour * HOUR_IN_SECONDS ) )
                     );
                 }, array_merge( range( 1, 24 ), range( 48, 336, 24 ) ) ) );
             } else {
@@ -292,7 +309,7 @@ class Notifications extends Lib\Base\Form
      */
     public function renderCodes( $notification_type )
     {
-        $this->codes->renderCodes( $notification_type );
+        $this->codes->render( $notification_type );
     }
 
 }

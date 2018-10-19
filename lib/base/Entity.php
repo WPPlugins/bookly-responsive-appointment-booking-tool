@@ -1,13 +1,13 @@
 <?php
-namespace BooklyLite\Lib\Base;
+namespace Bookly\Lib\Base;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Entity
- * @package BooklyLite\Lib\Base
+ * @package Bookly\Lib\Base
  */
-abstract class Entity
+abstract class Entity extends Cache
 {
 
     // Entity properties
@@ -47,12 +47,6 @@ abstract class Entity
      * @var array
      */
     protected static $schema;
-
-    /**
-     * Array of cached entities indexed by class_name & id.
-     * @var array
-     */
-    protected static $cache = array();
 
     // Private properties.
 
@@ -169,7 +163,7 @@ abstract class Entity
             }
         }
 
-        // This parameter is used by \BooklyLite\Lib\Query.
+        // This parameter is used by \Bookly\Lib\Query.
         if ( $overwrite_loaded_values ) {
             $this->loaded_values = $this->getFields();
         }
@@ -264,8 +258,8 @@ abstract class Entity
     public function delete()
     {
         if ( $this->getId() ) {
-            // Delete from cache.
-            unset( Entity::$cache[ get_called_class() ][ $this->getId() ] );
+            static::deleteFromCache( $this->getId() );
+
             return self::$wpdb->delete( $this->table_name, array( 'id' => $this->getId() ), array( '%d' ) );
         }
 
@@ -347,15 +341,15 @@ abstract class Entity
     {
         $called_class = get_called_class();
 
-        if ( $use_cache && isset ( Entity::$cache[ $called_class ][ $id ] ) ) {
-            return Entity::$cache[ $called_class ][ $id ];
+        if ( $use_cache && $entity = static::getFromCache( $id ) ) {
+            return $entity;
         }
 
         /** @var static $entity */
         $entity = new $called_class();
         if ( $entity->loadBy( array( 'id' => $id ) ) ) {
             if ( $use_cache ) {
-                Entity::$cache[ $called_class ][ $id ] = $entity;
+                static::putInCache( $id, $entity );
             }
 
             return $entity;
@@ -364,7 +358,11 @@ abstract class Entity
         return false;
     }
 
-    /** @return int */
+    /**
+     * Gets id
+     *
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
@@ -382,5 +380,4 @@ abstract class Entity
 
         return $this;
     }
-
 }

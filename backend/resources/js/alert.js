@@ -26,7 +26,7 @@ function booklyAlert(alert) {
                 continue;
             }
             alert[type].forEach(function (message) {
-                var $alert = jQuery('<div class="alert"><i class="alert-icon"></i><button type="button" class="close" data-dismiss="alert"></button></div>');
+                var $alert = jQuery('<div class="alert"><i class="alert-icon"></i><button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 $alert
                     .addClass(class_name)
                     .append('<b class="bookly-margin-left-sm bookly-vertical-middle">' + message + '</b>')
@@ -35,7 +35,7 @@ function booklyAlert(alert) {
                 if (type == 'success') {
                     setTimeout(function() {
                         $alert.remove();
-                    }, 5000);
+                    }, 10000);
                 }
             });
         }

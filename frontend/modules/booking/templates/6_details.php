@@ -1,9 +1,11 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-use BooklyLite\Lib\Utils\Common;
-use BooklyLite\Lib\Config;
-use BooklyLite\Lib\Proxy;
+use Bookly\Lib;
+use Bookly\Lib\Utils\Common;
+use Bookly\Frontend\Modules\Booking\Proxy;
+use Bookly\Frontend\Components;
 
-/** @var \BooklyLite\Lib\UserBookingData $userData */
+
+/** @var \Bookly\Lib\UserBookingData $userData */
 echo $progress_tracker;
 ?>
 
@@ -11,14 +13,17 @@ echo $progress_tracker;
 <?php if ( $info_text_guest ) : ?>
     <div class="bookly-box bookly-js-guest"><?php echo $info_text_guest ?></div>
 <?php endif ?>
-<?php if ( get_option( 'bookly_app_show_login_button' ) && get_current_user_id() == 0 ) : ?>
-<div class="bookly-box bookly-js-guest">
-    <button class="bookly-btn bookly-inline-block bookly-js-login-show ladda-button"><?php echo Common::getTranslatedOption( 'bookly_l10n_step_details_button_login' ) ?></button>
+<?php if ( ! get_current_user_id() && ! $userData->getFacebookId() && ( Lib\Config::showLoginButton() || Lib\Proxy\Pro::showFacebookLoginButton() ) ) : ?>
+<div class="bookly-box bookly-guest bookly-js-guest">
+    <?php if ( Lib\Config::showLoginButton() ) : ?>
+        <button class="bookly-btn bookly-js-login-show ladda-button"><?php echo Common::getTranslatedOption( 'bookly_l10n_step_details_button_login' ) ?></button>
+    <?php endif ?>
+    <?php Proxy\Pro::renderFacebookButton() ?>
 </div>
 <?php endif ?>
 
 <div class="bookly-details-step">
-    <?php if ( Config::showFirstLastName() ) : ?>
+    <?php if ( Lib\Config::showFirstLastName() ) : ?>
     <div class="bookly-box bookly-table">
         <div class="bookly-form-group">
             <label><?php echo Common::getTranslatedOption( 'bookly_l10n_label_first_name' ) ?></label>
@@ -35,6 +40,7 @@ echo $progress_tracker;
             <div class="bookly-js-last-name-error bookly-label-error"></div>
         </div>
     </div>
+
     <?php endif ?>
     <div class="bookly-box bookly-table">
         <?php if ( ! get_option( 'bookly_cst_first_last_name' ) ) : ?>
@@ -61,7 +67,12 @@ echo $progress_tracker;
             <div class="bookly-js-user-email-error bookly-label-error"></div>
         </div>
     </div>
-    <?php if ( Config::showNotes() ): ?>
+
+    <?php Proxy\Pro::renderDetailsAddress( $userData ) ?>
+    <?php Proxy\Pro::renderDetailsBirthday( $userData ) ?>
+
+    <?php Proxy\CustomerInformation::renderDetailsStep( $userData ) ?>
+    <?php if ( Lib\Config::showNotes() ): ?>
         <div class="bookly-box">
             <div class="bookly-form-group">
                 <label><?php echo Common::getTranslatedOption( 'bookly_l10n_label_notes' ) ?></label>
@@ -71,10 +82,10 @@ echo $progress_tracker;
             </div>
         </div>
     <?php endif ?>
-    <?php if ( Config::customFieldsEnabled() ) { Proxy\CustomFields::renderDetailsStep( $userData ); } ?>
+    <?php Proxy\Shared::renderCustomFieldsOnDetailsStep( $userData ) ?>
 </div>
 
-<?php $this->render( '_info_block', compact( 'info_message' ) ) ?>
+<?php Proxy\RecurringAppointments::renderInfoMessage( $userData ) ?>
 
 <div class="bookly-box bookly-nav-steps">
     <button class="bookly-back-step bookly-js-back-step bookly-btn ladda-button" data-style="zoom-in" data-spinner-size="40">

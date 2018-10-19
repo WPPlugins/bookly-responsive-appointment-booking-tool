@@ -1,8 +1,8 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
-use BooklyLite\Lib;
-use BooklyLite\Lib\Slots\DatePoint;
+use Bookly\Lib;
+use Bookly\Lib\Slots\DatePoint;
 
 /**
  * Class Scheduler
@@ -59,6 +59,13 @@ class Scheduler
         $this->userData->resetChain();
         $this->userData->chain = $chain;
         $this->userData->setDays( array( 1, 2, 3, 4, 5, 6, 7 ) );
+
+        if ( isset( $params['time_zone_offset'] ) ) {
+            $this->userData
+                ->setTimeZone( $params['time_zone'] )
+                ->setTimeZoneOffset( $params['time_zone_offset'] )
+                ->applyTimeZone();
+        }
 
         foreach ( $exclude as $slots ) {
             $this->userData
@@ -311,11 +318,12 @@ class Scheduler
                 $title = $client_start_dp->formatI18n( get_option( 'time_format' ) );
                 if ( $this->with_options ) {
                     $options[] = array(
-                        'value' => json_encode( $data ),
-                        'title' => $title,
+                        'value'    => json_encode( $data ),
+                        'title'    => $title,
+                        'disabled' => $slot->fullyBooked(),
                     );
                 }
-                if ( $client_res_dp === null && $client_start_dp->gte( $client_req_dp ) ) {
+                if ( $client_res_dp === null && $slot->notFullyBooked() && $client_start_dp->gte( $client_req_dp ) ) {
                     $client_res_dp = $client_start_dp;
                     $slots         = $data;
 
@@ -338,6 +346,9 @@ class Scheduler
                 'options'      => $options,
                 'another_time' => $client_res_dp->neq( $client_req_dp ),
             );
+            if ( $this->finder->isServiceDurationInDays() ) {
+                $result['all_day_service_time'] = Lib\Entities\Service::find( $slot->serviceId() )->getStartTimeInfo() ?: '';
+            }
             if ( $this->for_backend ) {
                 $result['date'] = $client_res_dp->format( 'Y-m-d' );
             } else {

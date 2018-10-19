@@ -5,7 +5,7 @@
             <i class="dashicons dashicons-calendar-alt"></i>
             <input type="hidden" name="form-purchases">
             <span>
-                <?php echo \BooklyLite\Lib\Utils\DateTime::formatDate( '-30 days' ) ?> - <?php echo \BooklyLite\Lib\Utils\DateTime::formatDate( 'today' ) ?>
+                <?php echo \Bookly\Lib\Utils\DateTime::formatDate( '-30 days' ) ?> - <?php echo \Bookly\Lib\Utils\DateTime::formatDate( 'today' ) ?>
             </span>
         </button>
     </div>

@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Series
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Series extends Lib\Base\Entity
 {
@@ -14,7 +14,7 @@ class Series extends Lib\Base\Entity
     /** @var  string */
     protected $token;
 
-    protected static $table = 'ab_series';
+    protected static $table = 'bookly_series';
 
     protected static $schema = array(
         'id'     => array( 'format' => '%d' ),

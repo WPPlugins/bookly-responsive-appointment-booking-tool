@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class Chain
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 class Chain
 {
@@ -17,7 +17,7 @@ class Chain
      */
     public function add( ChainItem $item )
     {
-        $this->items = array( $item );
+        $this->items[] = $item;
     }
 
     /**

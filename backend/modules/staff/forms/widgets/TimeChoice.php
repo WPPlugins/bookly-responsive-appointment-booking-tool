@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Backend\Modules\Staff\Forms\Widgets;
+namespace Bookly\Backend\Modules\Staff\Forms\Widgets;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class TimeChoice
- * @package BooklyLite\Backend\Modules\Staff\Forms\Widgets
+ * @package Bookly\Backend\Modules\Staff\Forms\Widgets
  */
 class TimeChoice
 {

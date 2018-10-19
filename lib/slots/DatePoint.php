@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Slots;
+namespace Bookly\Lib\Slots;
 
-use BooklyLite\Lib\Config;
+use Bookly\Lib\Config;
 
 /**
  * Class DatePoint
- * @package BooklyLite\Lib\Slots
+ * @package Bookly\Lib\Slots
  */
 class DatePoint implements IPoint
 {
@@ -29,7 +29,7 @@ class DatePoint implements IPoint
     /**
      * Create DatePoint with the current time WP time zone.
      *
-     * @return static
+     * @return self
      */
     public static function now()
     {
@@ -40,7 +40,7 @@ class DatePoint implements IPoint
      * Create DatePoint from string in WP time zone.
      *
      * @param string $date_str  Format Y-m-d H:i[:s]
-     * @return static
+     * @return self
      */
     public static function fromStr( $date_str )
     {
@@ -51,7 +51,7 @@ class DatePoint implements IPoint
      * Create DatePoint from string in client time zone.
      *
      * @param string $date_str  Format Y-m-d H:i[:s]
-     * @return static
+     * @return self
      */
     public static function fromStrInClientTz( $date_str )
     {
@@ -149,7 +149,7 @@ class DatePoint implements IPoint
      * Modify point.
      *
      * @param mixed $value
-     * @return static
+     * @return self
      */
     public function modify( $value )
     {
@@ -209,7 +209,7 @@ class DatePoint implements IPoint
     /**
      * Convert point to WP time zone.
      *
-     * @return static
+     * @return self
      */
     public function toWpTz()
     {
@@ -219,7 +219,7 @@ class DatePoint implements IPoint
     /**
      * Convert point to client time zone.
      *
-     * @return static
+     * @return self
      */
     public function toClientTz()
     {

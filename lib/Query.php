@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class Query
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 class Query
 {
@@ -116,15 +116,30 @@ class Query
     }
 
     /**
-     * Set query type to UPDATE.
+     * Specify fields to be selected.
      *
-     * @param null $target
+     * @param $target
      * @return $this
      */
-    public function update( $target = null )
+    public function addSelect( $target )
     {
-        $this->type   = self::TYPE_UPDATE;
-        $this->target = $target !== null ? $target : "`{$this->alias}`.*";
+        if ( $this->target == '' ) {
+            $this->select( $target );
+        } else {
+            $this->target .= ', ' . $target;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set query type to UPDATE.
+     *
+     * @return $this
+     */
+    public function update()
+    {
+        $this->type = self::TYPE_UPDATE;
 
         return $this;
     }
@@ -541,6 +556,20 @@ class Query
     }
 
     /**
+     * Returns the specified column
+     *
+     * @param string $column
+     * @return array
+     */
+    public function fetchCol( $column )
+    {
+        global $wpdb;
+        $this->select( $column );
+
+        return $wpdb->get_col( $this->composeQuery() );
+    }
+
+    /**
      * Compose & execute our query.
      *
      * @param int $hydrate
@@ -790,7 +819,7 @@ class Query
         }
 
         // Finish where clause
-        if ( ! empty( $where ) ) {
+        if ( $where != '' ) {
             $where = ' WHERE ' . substr( $where, strpos( $where, ' ', 1 ) + 1 );
         }
 

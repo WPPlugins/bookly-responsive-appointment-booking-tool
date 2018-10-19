@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class CartItem
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 class CartItem
 {
@@ -24,6 +24,8 @@ class CartItem
     protected $time_from;
     /** @var  string H:i */
     protected $time_to;
+    /** @var  int */
+    protected $units;
 
     // Step extras
     /** @var  array */
@@ -83,36 +85,53 @@ class CartItem
     /**
      * Get service price.
      *
+     * @param int $nop
+     * @return float
+     */
+    public function getServicePrice( $nop = 1 )
+    {
+        $price = $this->getServicePriceWithoutExtras();
+
+        return Proxy\ServiceExtras::prepareServicePrice( $price * $nop, $price, $nop, $this->extras );
+    }
+
+    /**
+     * Get service price.
+     *
      * @return double
      */
-    public function getServicePrice()
+    public function getServicePriceWithoutExtras()
     {
         static $service_prices_cache = array();
 
         $service = $this->getService();
-        list ( $service_id ) = $this->slots[0];
-        $staff_id = 1;
-        if ( Config::specialHoursEnabled() ) {
+        list ( $service_id, $staff_id, , $location_id ) = $this->slots[0];
+
+        if ( Config::specialHoursActive() ) {
             $service_start = date( 'H:i:s', strtotime( $this->slots[0][2] ) );
         } else {
             $service_start = 'unused'; //the price is the same for all services in day
         }
 
-        if ( isset ( $service_prices_cache[ $staff_id ][ $service_id ][ $service_start ] ) ) {
-            $service_price = $service_prices_cache[ $staff_id ][ $service_id ][ $service_start ];
+        if ( isset ( $service_prices_cache[ $staff_id ][ $service_id ][ $location_id ][ $service_start ] ) ) {
+            $service_price = $service_prices_cache[ $staff_id ][ $service_id ][ $location_id ][ $service_start ];
         } else {
             if ( $service->getType() == Entities\Service::TYPE_COMPOUND ) {
                 $service_price = $service->getPrice();
             } else {
                 $staff_service = new Entities\StaffService();
-                $staff_service->loadBy( compact( 'staff_id', 'service_id' ) );
-                $service_price = $staff_service->getPrice();
+                $location_id = Proxy\Locations::prepareStaffLocationId( $location_id, $staff_id ) ?: null;
+                $staff_service->loadBy( compact( 'staff_id', 'service_id', 'location_id' ) );
+                if ( ! $staff_service->isLoaded() ) {
+                    $staff_service->loadBy( array( 'staff_id' => $staff_id, 'service_id' => $service_id, 'location_id' => null ) );
+                }
+                $service_price = $staff_service->getPrice() * $this->getUnits();
+                $service_price = Proxy\SpecialHours::adjustPrice( $service_price, $staff_id, $service_id, $location_id, $service_start, $this->getUnits() );
             }
-            $service_price = Proxy\SpecialHours::preparePrice( $service_price, $staff_id, $service_id, $service_start );
-            $service_prices_cache[ $staff_id ][ $service_id ][ $service_start ] = $service_price;
+            $service_prices_cache[ $staff_id ][ $service_id ][ $location_id ][ $service_start ] = $service_price;
         }
 
-        return $service_price + $this->getExtrasAmount();
+        return $service_price;
     }
 
     /**
@@ -122,12 +141,13 @@ class CartItem
      */
     public function getDeposit()
     {
-        list ( $service_id ) = $this->slots[0];
+        list ( $service_id, $staff_id, , $location_id ) = $this->slots[0];
         $staff_service = new Entities\StaffService();
-        $staff_service->loadBy( array(
-            'staff_id'   => 1,
-            'service_id' => $service_id,
-        ) );
+        $location_id = Proxy\Locations::prepareStaffLocationId( $location_id, $staff_id  ) ?: null;
+        $staff_service->loadBy( compact( 'staff_id', 'service_id', 'location_id' ) );
+        if ( ! $staff_service->isLoaded() ) {
+            $staff_service->loadBy( array( 'staff_id' => $staff_id, 'service_id' => $service_id, 'location_id' => null ) );
+        }
 
         return $staff_service->getDeposit();
     }
@@ -141,20 +161,17 @@ class CartItem
     {
         $nop = $this->number_of_persons;
 
-        return Proxy\DepositPayments::prepareAmount( $nop * $this->getServicePrice(), $this->getDeposit(), $nop );
+        return Proxy\DepositPayments::prepareAmount( $this->getServicePrice( $nop ), $this->getDeposit(), $nop );
     }
 
     /**
-     * Get service deposit price formatted.
+     * Get staff ID.
      *
-     * @return double
+     * @return int
      */
-    public function getAmountDue()
+    public function getStaffId()
     {
-        $price   = $this->getServicePrice();
-        $deposit = $this->getDepositPrice();
-
-        return $price - $deposit;
+        return (int) $this->slots[0][1];
     }
 
     /**
@@ -164,23 +181,7 @@ class CartItem
      */
     public function getStaff()
     {
-        return Entities\Staff::find( 1 );
-    }
-
-    /**
-     * Get summary price of service's extras.
-     *
-     * @return double
-     */
-    public function getExtrasAmount()
-    {
-        $amount  = 0.0;
-        $extras  = (array) Proxy\ServiceExtras::findByIds( array_keys( $this->extras ) );
-        foreach ( $extras as $extra ) {
-            $amount += $extra->getPrice() * $this->extras[ $extra->getId() ];
-        }
-
-        return $amount;
+        return Entities\Staff::find( $this->getStaffId() );
     }
 
     /**
@@ -200,6 +201,23 @@ class CartItem
     public function isFirstSubService( $service_id )
     {
         return $this->slots[0][0] == $service_id;
+    }
+
+    /**
+     * Tells whether this cart item is going to be put on waiting list.
+     *
+     * @return bool
+     */
+    public function toBePutOnWaitingList()
+    {
+        foreach ( $this->slots as $slot ) {
+            if ( isset ( $slot[4] ) && $slot[4] == 'w' ) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**************************************************************************
@@ -294,6 +312,29 @@ class CartItem
     public function setNumberOfPersons( $number_of_persons )
     {
         $this->number_of_persons = $number_of_persons;
+
+        return $this;
+    }
+
+    /**
+     * Gets units
+     *
+     * @return int
+     */
+    public function getUnits()
+    {
+        return $this->units;
+    }
+
+    /**
+     * Sets units
+     *
+     * @param int $units
+     * @return $this
+     */
+    public function setUnits( $units )
+    {
+        $this->units = $units;
 
         return $this;
     }

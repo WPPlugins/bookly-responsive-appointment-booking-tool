@@ -1,7 +1,11 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-use BooklyLite\Lib\Entities\CustomerAppointment;
-use BooklyLite\Lib\Utils\Common;
-use BooklyLite\Lib\Config;
+use Bookly\Backend\Components\Controls;
+use Bookly\Backend\Components\Dialogs;
+use Bookly\Backend\Components\Support;
+use Bookly\Backend\Modules\Appointments\Proxy;
+use Bookly\Lib\Config;
+use Bookly\Lib\Entities\CustomerAppointment;
+use Bookly\Lib\Utils\Common;
 ?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
@@ -9,18 +13,14 @@ use BooklyLite\Lib\Config;
             <div class="bookly-page-title">
                 <?php _e( 'Appointments', 'bookly' ) ?>
             </div>
-            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
+            <?php Support\Buttons::render( $self::pageSlug() ) ?>
         </div>
         <div class="panel panel-default bookly-main">
             <div class="panel-body">
                 <div class="row">
                     <div class="form-inline bookly-margin-bottom-lg text-right">
-                        <div class="form-group">
-                            <button type="button" class="btn btn-default bookly-btn-block-xs" data-toggle="modal" data-target="#bookly-export-dialog"><i class="glyphicon glyphicon-export"></i> <?php _e( 'Export to CSV', 'bookly' ) ?></button>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-default bookly-btn-block-xs bookly-limitation"><i class="glyphicon glyphicon-print"></i> <?php _e( 'Print', 'bookly' ) ?></button>
-                        </div>
+                        <?php Proxy\Pro::renderExportButton() ?>
+                        <?php Proxy\Pro::renderPrintButton() ?>
                         <div class="form-group">
                             <button type="button" class="btn btn-success bookly-btn-block-xs" id="bookly-add"><i class="glyphicon glyphicon-plus"></i> <?php _e( 'New appointment', 'bookly' ) ?></button>
                         </div>
@@ -37,7 +37,7 @@ use BooklyLite\Lib\Config;
                             <button type="button" class="btn btn-block btn-default" id="bookly-filter-date" data-date="<?php echo date( 'Y-m-d', strtotime( 'first day of' ) ) ?> - <?php echo date( 'Y-m-d', strtotime( 'last day of' ) ) ?>">
                                 <i class="dashicons dashicons-calendar-alt"></i>
                                 <span>
-                                    <?php echo \BooklyLite\Lib\Utils\DateTime::formatDate( 'first day of this month' ) ?> - <?php echo \BooklyLite\Lib\Utils\DateTime::formatDate( 'last day of this month' ) ?>
+                                    <?php echo \Bookly\Lib\Utils\DateTime::formatDate( 'first day of this month' ) ?> - <?php echo \Bookly\Lib\Utils\DateTime::formatDate( 'last day of this month' ) ?>
                                 </span>
                             </button>
                         </div>
@@ -81,6 +81,9 @@ use BooklyLite\Lib\Config;
                                 <?php if ( Config::waitingListActive() ): ?>
                                     <option value="<?php echo CustomerAppointment::STATUS_WAITLISTED ?>"><?php echo CustomerAppointment::statusToString( CustomerAppointment::STATUS_WAITLISTED ) ?></option>
                                 <?php endif ?>
+                                <?php if ( Config::tasksActive() ): ?>
+                                    <option value="<?php echo CustomerAppointment::STATUS_DONE ?>"><?php echo CustomerAppointment::statusToString( CustomerAppointment::STATUS_DONE ) ?></option>
+                                <?php endif ?>
                             </select>
                         </div>
                     </div>
@@ -95,16 +98,23 @@ use BooklyLite\Lib\Config;
                             <th><?php _e( 'Customer Name', 'bookly' ) ?></th>
                             <th><?php _e( 'Customer Phone', 'bookly' ) ?></th>
                             <th><?php _e( 'Customer Email', 'bookly' ) ?></th>
+                            <?php if ( Config::groupBookingActive() ) : ?>
+                                <th><?php _e( 'Number of persons', 'bookly' ) ?></th>
+                            <?php endif ?>
                             <th><?php echo esc_html( Common::getTranslatedOption( 'bookly_l10n_label_service' ) ) ?></th>
                             <th><?php _e( 'Duration', 'bookly' ) ?></th>
                             <th><?php _e( 'Status', 'bookly' ) ?></th>
                             <th><?php _e( 'Payment', 'bookly' ) ?></th>
+                            <?php Proxy\Ratings::renderTableHeader() ?>
                             <?php if ( Config::showNotes() ): ?>
                                 <th><?php echo esc_html( Common::getTranslatedOption( 'bookly_l10n_label_notes' ) ) ?></th>
                             <?php endif ?>
                             <?php foreach ( $custom_fields as $custom_field ) : ?>
                                 <th><?php echo $custom_field->label ?></th>
                             <?php endforeach ?>
+                            <?php if ( $show_attachments ) : ?>
+                                <th><?php _e( 'Attachments', 'bookly' ) ?></th>
+                            <?php endif ?>
                             <th></th>
                             <th width="16"><input type="checkbox" id="bookly-check-all" /></th>
                         </tr>
@@ -112,15 +122,16 @@ use BooklyLite\Lib\Config;
                 </table>
 
                 <div class="text-right bookly-margin-top-lg">
-                    <?php Common::deleteButton( '', '', '#bookly-delete-dialog' ) ?>
+                    <?php Controls\Buttons::renderDelete( null, null, null, array( 'data-toggle' => 'modal', 'data-target'=> '#bookly-delete-dialog' ) ) ?>
                 </div>
             </div>
         </div>
 
-        <?php \BooklyLite\Backend\Modules\Calendar\Components::getInstance()->renderDeleteDialog(); ?>
-        <?php include '_export_dialog.php' ?>
+        <?php Proxy\Pro::renderExportDialog( $custom_fields ) ?>
+        <?php Proxy\Pro::renderPrintDialog( $custom_fields ) ?>
 
-        <?php \BooklyLite\Backend\Modules\Calendar\Components::getInstance()->renderAppointmentDialog() ?>
-        <?php \BooklyLite\Lib\Proxy\Shared::renderComponentAppointments() ?>
+        <?php Dialogs\Appointment\Delete\Dialog::render() ?>
+        <?php Dialogs\Appointment\Edit\Dialog::render() ?>
+        <?php Proxy\Shared::renderAddOnsComponents() ?>
     </div>
 </div>

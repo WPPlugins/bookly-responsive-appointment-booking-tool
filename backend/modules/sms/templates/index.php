@@ -1,5 +1,8 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    /** @var \BooklyLite\Lib\SMS $sms */
+use Bookly\Backend\Components\Controls\Inputs;
+use Bookly\Backend\Components\Controls\Buttons;
+use Bookly\Backend\Components\Support;
+/** @var \Bookly\Lib\SMS $sms */
 ?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
@@ -7,7 +10,7 @@
             <div class="bookly-page-title">
                 <?php _e( 'SMS Notifications', 'bookly' ) ?>
             </div>
-            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
+            <?php Support\Buttons::render( $self::pageSlug() ) ?>
         </div>
         <div class="panel panel-default bookly-main">
             <div class="panel-body">
@@ -34,7 +37,7 @@
                             <div class="col-sm-5">
                                 <div class="bookly-page-title h4"><?php echo __( 'Sender ID', 'bookly' ) . ': ' ?> <b class="bookly-js-sender-id"><?php echo $sms->getSenderId() ?></b> <small><a id="bookly-open-tab-sender-id" href="#"><?php _e( 'Change', 'bookly' ) ?></a></small>
                                     <?php if ( $sms->getSenderIdApprovalDate() ) : ?>
-                                    <span class="help-block bookly-js-sender-id-approval-date"><?php echo __( 'Approved at', 'bookly' ) . ': <strong>' . \BooklyLite\Lib\Utils\DateTime::formatDate( $sms->getSenderIdApprovalDate() ) . '</strong>' ?></span>
+                                    <span class="help-block bookly-js-sender-id-approval-date"><?php echo __( 'Approved at', 'bookly' ) . ': <strong>' . \Bookly\Lib\Utils\DateTime::formatDate( $sms->getSenderIdApprovalDate() ) . '</strong>' ?></span>
                                     <?php endif ?>
                                 </div>
                             </div>
@@ -54,7 +57,7 @@
                         <li class="bookly-nav-item" data-toggle="tab" data-target="#add_money"><?php _e( 'Add money', 'bookly' ) ?></li>
                         <li class="bookly-nav-item" data-toggle="tab" data-target="#auto_recharge"><?php _e( 'Auto-Recharge', 'bookly' ) ?></li>
                         <li class="bookly-nav-item" data-toggle="tab" data-target="#purchases"><?php _e( 'Purchases', 'bookly' ) ?></li>
-                        <li class="bookly-nav-item" data-toggle="tab" data-target="#sms_details"><?php _e( 'SMS Details', 'bookly' ) ?></li>
+                        <li class="bookly-nav-item" data-toggle="tab" data-target="#sms_details"><?php _e( 'SMS Details', 'bookly' ); if ( $undelivered_count ): ?> <span class="badge bookly-bg-brand-danger"><?php echo $undelivered_count ?></span><?php endif ?></li>
                         <li class="bookly-nav-item" data-toggle="tab" data-target="#price_list"><?php _e( 'Price list', 'bookly' ) ?></li>
                         <li class="bookly-nav-item" data-toggle="tab" data-target="#sender_id"><?php _e( 'Sender ID', 'bookly' ) ?></li>
                     </ul>
@@ -117,7 +120,7 @@
                                             <div class="checkbox">
                                                 <label for="bookly-r-tos">
                                                     <input id="bookly-r-tos" name="accept_tos" required="required" value="1" type="checkbox">
-                                                    <?php _e( 'Accept <a href="#" data-toggle="modal" data-target="#bookly-tos">Terms & Conditions</a>', 'bookly' ) ?>
+                                                    <?php printf( __( 'I accept <a href="%1$s" target="_blank">Service Terms</a> and <a href="%2$s" target="_blank">Privacy Policy</a>', 'bookly' ), 'https://www.booking-wp-plugin.com/terms/', 'https://www.booking-wp-plugin.com/privacy/' ) ?>
                                                 </label>
                                             </div>
                                         </div>
@@ -184,28 +187,13 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
-                                <?php \BooklyLite\Lib\Utils\Common::submitButton( 'ajax-send-change-password', 'btn-sm' ) ?>
+                                <?php Inputs::renderCsrf() ?>
+                                <?php Buttons::renderSubmit( 'ajax-send-change-password', 'btn-sm' ) ?>
                             </div>
                             <input type="hidden" name="action" value="bookly_change_password">
                         </div>
                     </div>
                 </form>
-            </div>
-
-        <?php else : ?>
-            <div class="modal fade" id="bookly-tos" tabindex=-1 role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <div class="modal-title h2"><?php _e( 'Terms & Conditions', 'bookly' ) ?></div>
-                        </div>
-                        <div class="modal-body">
-                            <iframe src="https://booking-wp-plugin.com/sms-terms.html" width="100%" height="600px"></iframe>
-                        </div>
-                    </div>
-                </div>
             </div>
         <?php endif ?>
     </div>

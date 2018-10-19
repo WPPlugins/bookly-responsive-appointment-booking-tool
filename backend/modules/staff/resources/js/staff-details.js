@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
-    var Details = function($container, options) {
-        var obj  = this;
+    var Details = function ($container, options) {
+        var obj = this;
         jQuery.extend(obj.options, options);
 
         if (Object.keys(obj.options.get_details).length === 0) {
@@ -11,12 +11,12 @@ jQuery(function ($) {
             // get details content.
             $container.html('<div class="bookly-loading"></div>');
             $.ajax({
-                url         : ajaxurl,
-                data        : obj.options.get_details,
-                dataType    : 'json',
-                xhrFields   : { withCredentials: true },
-                crossDomain : 'withCredentials' in new XMLHttpRequest(),
-                success     : function (response) {
+                url        : ajaxurl,
+                data       : obj.options.get_details,
+                dataType   : 'json',
+                xhrFields  : {withCredentials: true},
+                crossDomain: 'withCredentials' in new XMLHttpRequest(),
+                success    : function (response) {
                     $container.html(response.data.html);
                     initDetails($container);
                 }
@@ -24,24 +24,30 @@ jQuery(function ($) {
         }
 
         function initDetails($container) {
-            var $staff_full_name = $('#bookly-full-name', $container),
-                $staff_wp_user = $('#bookly-wp-user', $container),
-                $staff_email   = $('#bookly-email', $container),
-                $staff_phone   = $('#bookly-phone', $container),
-                $location_row  = $('.locations-row', $container)
+            var $form                   = $('.bookly-js-staff-details', $container),
+                $staff_full_name        = $('#bookly-full-name', $container),
+                $staff_wp_user          = $('#bookly-wp-user', $container),
+                $staff_email            = $('#bookly-email', $container),
+                $staff_phone            = $('#bookly-phone', $container),
+                $location_row           = $('.locations-row', $container),
+                $unsaved_changes        = $('.bookly-js-unsaved-changes'),
+                $unsaved_changes_save   = $('.bookly-js-unsaved-changes .bookly-js-save-changes'),
+                $unsaved_changes_ignore = $('.bookly-js-unsaved-changes .bookly-js-ignore-changes'),
+                has_changes             = false
             ;
 
             if (obj.options.intlTelInput.enabled) {
                 $staff_phone.intlTelInput({
                     preferredCountries: [obj.options.intlTelInput.country],
-                    initialCountry: obj.options.intlTelInput.country,
-                    geoIpLookup: function (callback) {
-                        $.get('https://ipinfo.io', function() {}, 'jsonp').always(function(resp) {
+                    initialCountry    : obj.options.intlTelInput.country,
+                    geoIpLookup       : function (callback) {
+                        $.get('https://ipinfo.io', function () {
+                        }, 'jsonp').always(function (resp) {
                             var countryCode = (resp && resp.country) ? resp.country : '';
                             callback(countryCode);
                         });
                     },
-                    utilsScript: obj.options.intlTelInput.utils
+                    utilsScript       : obj.options.intlTelInput.utils
                 });
             }
 
@@ -80,15 +86,56 @@ jQuery(function ($) {
                 }
             }
 
+            $container.on('change', 'select,input,textarea', function () {
+                has_changes = true;
+            });
+            $container.on('click', '.bookly-js-google-calendar-row a', function (e) {
+                var url = $(this).attr('href');
+                if (has_changes) {
+                    e.preventDefault();
+                    $unsaved_changes.modal('show');
+                    $unsaved_changes.data('url', url);
+                }
+            });
+            $unsaved_changes_save.on('click', function () {
+                var ladda = Ladda.create(this);
+                ladda.start();
+                save(function (response) {
+                    if (response.success) {
+                        window.location.href = $unsaved_changes.data('url');
+                    } else {
+                        obj.options.booklyAlert({error: [response.data.error]});
+                    }
+                    ladda.stop();
+                });
+            });
+            $unsaved_changes_ignore.on('click', function () {
+                window.location.href = $unsaved_changes.data('url');
+            });
             updateLocationsButton();
 
             // Save staff member details.
-            $('#bookly-details-save', $container).on('click',function(e){
+            $('#bookly-details-save', $container).on('click', function (e) {
                 e.preventDefault();
-                var $form = $(this).closest('form'),
-                    data  = $form.serializeArray(),
-                    ladda = Ladda.create(this),
-                    $staff_phone = $('#bookly-phone',$form),
+                var ladda = Ladda.create(this);
+                ladda.start();
+                save(function (response) {
+                    if (response.success) {
+                        obj.options.booklyAlert({success: [obj.options.l10n.saved]});
+                        $('[bookly-js-staff-name-' + obj.options.get_details.id + ']').text($('#bookly-full-name', $form).val());
+                        if (typeof obj.options.renderWpUsers === 'function') {
+                            obj.options.renderWpUsers(response.data.wp_users);
+                        }
+                    } else {
+                        obj.options.booklyAlert({error: [response.data.error]});
+                    }
+                    ladda.stop();
+                });
+            });
+
+            function save(callback) {
+                var data         = $form.serializeArray(),
+                    $staff_phone = $('#bookly-phone', $form),
                     phone;
                 try {
                     phone = BooklyL10n.intlTelInput.enabled ? $staff_phone.intlTelInput('getNumber') : $staff_phone.val();
@@ -99,30 +146,21 @@ jQuery(function ($) {
                     phone = $staff_phone.val();
                 }
                 data.push({name: 'action', value: 'bookly_update_staff'});
-                data.push({name: 'phone',  value: phone});
-                ladda.start();
+                data.push({name: 'phone', value: phone});
 
                 $.ajax({
-                    type: 'POST',
-                    url: ajaxurl,
-                    data: data,
-                    dataType: 'json',
-                    xhrFields: {withCredentials: true},
+                    type       : 'POST',
+                    url        : ajaxurl,
+                    data       : data,
+                    dataType   : 'json',
+                    xhrFields  : {withCredentials: true},
                     crossDomain: 'withCredentials' in new XMLHttpRequest(),
-                    success: function (response) {
-                        if (response.success) {
-                            obj.options.booklyAlert({success: [obj.options.l10n.saved]});
-                            $('[bookly-js-staff-name-' + obj.options.get_details.id + ']').text($('#bookly-full-name', $form).val());
-                            if (typeof obj.options.renderWpUsers === 'function') {
-                                obj.options.renderWpUsers(response.data.wp_users);
-                            }
-                        } else {
-                            obj.options.booklyAlert({error: [response.data.error]});
-                        }
-                        ladda.stop();
+                    success    : function (response) {
+                        has_changes = false;
+                        callback(response);
                     }
                 });
-            });
+            }
         }
 
     };
@@ -130,8 +168,8 @@ jQuery(function ($) {
     Details.prototype.options = {
         intlTelInput: {},
         get_details : {
-            action: 'bookly_get_staff_details',
-            id    : -1,
+            action    : 'bookly_get_staff_details',
+            id        : -1,
             csrf_token: ''
         },
         l10n        : {},

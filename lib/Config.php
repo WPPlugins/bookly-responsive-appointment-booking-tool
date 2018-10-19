@@ -1,22 +1,32 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class Config
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  *
+ * @method static bool advancedGoogleCalendarActive()  Check whether Advanced Google Calendar add-on is active or not.
  * @method static bool authorizeNetActive()            Check whether Authorize.Net add-on is active or not.
+ * @method static bool cartActive()                    Check whether Cart add-on is active or not.
  * @method static bool chainAppointmentsActive()       Check whether Chain Appointment add-on is active or not.
  * @method static bool compoundServicesActive()        Check whether Compound Services add-on is active or not.
  * @method static bool couponsActive()                 Check whether Coupons add-on is active or not.
+ * @method static bool customerGroupsActive()          Check whether Customer Groups add-on is active or not.
+ * @method static bool customerInformationActive()     Check whether Customer Information add-on is active or not.
  * @method static bool customFieldsActive()            Check whether Custom Fields add-on is active or not.
  * @method static bool depositPaymentsActive()         Check whether Deposit Payments add-on is active or not.
+ * @method static bool filesActive()                   Check whether Files add-on is active or not.
+ * @method static bool groupBookingActive()            Check whether Group Booking add-on is active or not.
+ * @method static bool invoicesActive()                Check whether Invoices add-on is active or not.
  * @method static bool locationsActive()               Check whether Locations add-on is active or not.
  * @method static bool mollieActive()                  Check whether Mollie add-on is active or not.
  * @method static bool multiplyAppointmentsActive()    Check whether Multiply Appointments add-on is active or not.
  * @method static bool packagesActive()                Check whether Packages add-on is active or not.
  * @method static bool paysonActive()                  Check whether Payson add-on is active or not.
+ * @method static bool payuBizActive()                 Check whether PayUbiz add-on is active or not.
  * @method static bool payuLatamActive()               Check whether PayU Latam add-on is active or not.
+ * @method static bool proActive()                     Check whether Pro add-on is active or not.
+ * @method static bool ratingsActive()                 Check whether Ratings add-on is active or not.
  * @method static bool recurringAppointmentsActive()   Check whether Recurring Appointments add-on is active or not.
  * @method static bool serviceExtrasActive()           Check whether Extras add-on is active or not.
  * @method static bool serviceScheduleActive()         Check whether Service Schedule add-on is active or not.
@@ -24,29 +34,11 @@ namespace BooklyLite\Lib;
  * @method static bool specialHoursActive()            Check whether Special Hours add-on is active or not.
  * @method static bool staffCabinetActive()            Check whether Staff Cabinet add-on is active or not.
  * @method static bool stripeActive()                  Check whether Stripe add-on is active or not.
+ * @method static bool tasksActive()                   Check whether Tasks add-on is active or not.
+ * @method static bool taxesActive()                   Check whether Taxes add-on is active or not.
  * @method static bool waitingListActive()             Check whether Waiting List add-on is active or not.
- *
- *
- * @method static bool authorizeNetEnabled()           Check whether Authorize.Net add-on is enabled or not.
- * @method static bool chainAppointmentsEnabled()      Check whether Chain Appointment add-on is enabled or not.
- * @method static bool compoundServicesEnabled()       Check whether Compound Services add-on is enabled or not.
- * @method static bool couponsEnabled()                Check whether Coupons add-on is enabled or not.
- * @method static bool customFieldsEnabled()           Check whether Custom Fields add-on is enabled or not.
- * @method static bool depositPaymentsEnabled()        Check whether Deposit Payments add-on is enabled or not.
- * @method static bool locationsEnabled()              Check whether Locations add-on is enabled or not.
- * @method static bool mollieEnabled()                 Check whether Mollie add-on is enabled or not.
- * @method static bool multiplyAppointmentsEnabled()   Check whether Multiply Appointments add-on is enabled or not.
- * @method static bool packagesEnabled()               Check whether Packages add-on is enabled or not.
- * @method static bool paysonEnabled()                 Check whether Payson add-on is enabled or not.
- * @method static bool payuLatamEnabled()              Check whether PayU Latam add-on is enabled or not.
- * @method static bool recurringAppointmentsEnabled()  Check whether Recurring Appointments add-on is enabled or not.
- * @method static bool serviceExtrasEnabled()          Check whether Extras add-on is enabled or not.
- * @method static bool serviceScheduleEnabled()        Check whether Service Schedule add-on is enabled or not.
- * @method static bool specialDaysEnabled()            Check whether Special Days add-on is enabled or not.
- * @method static bool specialHoursEnabled()           Check whether Special Hours add-on is enabled or not.
- * @method static bool staffCabinetEnabled()           Check whether Staff Cabinet add-on is enabled or not.
- * @method static bool stripeEnabled()                 Check whether Stripe add-on is enabled or not.
- * @method static bool waitingListEnabled()            Check whether Waiting List add-on is enabled or not.
+ * @method static bool customDurationActive()          Check whether Custom Duration add-on is active or not.
+ * @method static bool googleMapsAddressActive()       Check whether Google Maps Address add-on is active or not.
  */
 abstract class Config
 {
@@ -79,28 +71,36 @@ abstract class Config
         }
 
         // Services.
-        $rows = Entities\Service::query( 's' )
-            ->select( 's.id, s.category_id, s.title, s.position, s.duration,
-                MIN(ss.capacity_min) AS min_capacity, MAX(ss.capacity_max) AS max_capacity' )
+        $query = Entities\Service::query( 's' )
+            ->select( 's.id, s.category_id, s.title, s.position, s.duration, s.price' )
             ->innerJoin( 'StaffService', 'ss', 'ss.service_id = s.id' )
             ->where( 's.type',  Entities\Service::TYPE_SIMPLE )
-            ->whereNot( 's.visibility', 'private' )
-            ->groupBy( 's.id' )
-            ->fetchArray();
-        foreach ( $rows as $row ) {
+            ->where( 's.visibility', Entities\Service::VISIBILITY_PUBLIC )
+            ->groupBy( 's.id' );
+        if ( self::groupBookingActive() && get_option( 'bookly_group_booking_enabled' ) ) {
+            $query->addSelect( 'MIN(ss.capacity_min) AS min_capacity, MAX(ss.capacity_max) AS max_capacity' );
+        } else {
+            $query->addSelect( '1 AS min_capacity, 1 AS max_capacity' );
+        }
+
+        $query = Proxy\Shared::prepareCaSeStQuery( $query );
+        if ( ! Proxy\Locations::servicesPerLocationAllowed() ) {
+            $query->where( 'ss.location_id', null );
+        }
+        foreach ( $query->fetchArray() as $row ) {
             $result['services'][ $row['id'] ] = array(
                 'id'          => (int) $row['id'],
                 'category_id' => (int) $row['category_id'],
                 'name'        => $row['title'] == ''
                     ? __( 'Untitled', 'bookly' )
                     : Utils\Common::getTranslatedString( 'service_' . $row['id'], $row['title'] ),
-                'duration'     => \BooklyLite\Lib\Utils\DateTime::secondsToInterval( $row['duration'] ),
+                'duration'     => Utils\DateTime::secondsToInterval( $row['duration'] ),
+                'price'        => (float) $row['price'],
                 'min_capacity' => (int) $row['min_capacity'],
                 'max_capacity' => (int) $row['max_capacity'],
-                'has_extras'   => (int) ( \BooklyLite\Lib\Proxy\ServiceExtras::findByServiceId( $row['id'] ) ),
+                'has_extras'   => (int) Proxy\ServiceExtras::findByServiceId( $row['id'] ),
                 'pos'          => (int) $row['position'],
             );
-
             if ( ! $row['category_id'] && ! isset ( $result['categories'][0] ) ) {
                 $result['categories'][0] = array(
                     'id'   => 0,
@@ -108,17 +108,33 @@ abstract class Config
                     'pos'  => 99999,
                 );
             }
+            $result = Proxy\Shared::prepareCategoryService( $result, $row );
+        }
+
+        if ( self::groupBookingActive() && get_option( 'bookly_group_booking_enabled' ) ) {
+            $fields = 'st.id, st.full_name, st.position, ss.service_id, ss.capacity_min, ss.capacity_max, ss.price';
+        } else {
+            $fields = 'st.id, st.full_name, st.position, ss.service_id, 1 AS capacity_min, 1 AS capacity_max, ss.price';
         }
 
         // Staff.
-        $rows = Entities\Staff::query( 'st' )
-            ->select( 'st.id, st.full_name, st.position, ss.service_id, ss.capacity_min, ss.capacity_max, ss.price' )
+        $query = Entities\Staff::query( 'st' )
+            ->select( $fields )
             ->innerJoin( 'StaffService', 'ss', 'ss.staff_id = st.id' )
             ->leftJoin( 'Service', 's', 's.id = ss.service_id' )
             ->whereNot( 'st.visibility', 'private' )
-            ->whereNot( 's.visibility', 'private' )
-            ->fetchArray();
-        foreach ( $rows as $row ) {
+            ->whereNot( 's.type', Entities\Service::TYPE_PACKAGE )
+            ->where( 's.visibility', Entities\Service::VISIBILITY_PUBLIC );
+
+        $query = Proxy\Shared::prepareCaSeStQuery( $query );
+        if ( ! Proxy\Locations::servicesPerLocationAllowed() ) {
+            $query
+                ->addSelect( 'ss.location_id' )
+                ->where( 'ss.location_id', null );
+        }
+
+        $staff_name_with_price = get_option( 'bookly_app_staff_name_with_price' );
+        foreach ( $query->fetchArray() as $row ) {
             if ( ! isset ( $result['staff'][ $row['id'] ] ) ) {
                 $result['staff'][ $row['id'] ] = array(
                     'id'       => (int) $row['id'],
@@ -127,16 +143,23 @@ abstract class Config
                     'pos'      => (int) $row['position'],
                 );
             }
-            $result['staff'][ $row['id'] ]['services'][ $row['service_id'] ] = array(
+
+            $location_data = array(
                 'min_capacity' => (int) $row['capacity_min'],
                 'max_capacity' => (int) $row['capacity_max'],
-                'price'        => get_option( 'bookly_app_staff_name_with_price' )
+                'raw_price'    => $staff_name_with_price ? $row['price'] : null,
+                'price'        => $staff_name_with_price
                     ? html_entity_decode( Utils\Price::format( $row['price'] ) )
                     : null,
             );
+            $location_data = Proxy\Shared::prepareCategoryServiceStaffLocation( $location_data, $row );
+
+            $result['staff'][ $row['id'] ]['services'][ $row['service_id'] ]['locations'][ (int) $row['location_id'] ] = $location_data;
         }
 
-        return Proxy\Shared::prepareCaSeSt( $result );
+        $result = Proxy\Shared::prepareCaSeSt( $result );
+
+        return Proxy\Ratings::prepareCaSeSt( $result );
     }
 
     /**
@@ -229,9 +252,14 @@ abstract class Config
             $result['days'][ $day_id ] = $week_days[ $day_id - 1 ];
         }
 
-        if ( $min_start_time && $max_end_time ) {
-            $start        = $min_start_time;
-            $end          = $max_end_time;
+        if ( $min_start_time ) {
+            $bounding = Proxy\Shared::adjustMinAndMaxTimes( array(
+                'min_start_time' => Utils\DateTime::buildTimeString( $min_start_time->value(), false ),
+                'max_end_time'   => Utils\DateTime::buildTimeString( $max_end_time->value(), false ),
+            ) );
+
+            $start        = Slots\TimePoint::fromStr( $bounding['min_start_time'] );
+            $end          = Slots\TimePoint::fromStr( $bounding['max_end_time'] );
             $client_start = $start->toClientTz();
             $client_end   = $end->toClientTz();
 
@@ -257,7 +285,7 @@ abstract class Config
     {
         $result = array();
 
-        $dp = Slots\DatePoint::now()->modify( self::getMinimumTimePriorBooking() )->toClientTz();
+        $dp = Slots\DatePoint::now()->modify( Proxy\Pro::getMinimumTimePriorBooking() )->toClientTz();
         $result['date_min'] = array(
             (int) $dp->format( 'Y'),
             (int) $dp->format( 'n' ) - 1,
@@ -281,22 +309,15 @@ abstract class Config
     public static function paymentStepDisabled()
     {
         return ! ( Config::payLocallyEnabled()
-            || Config::twoCheckoutEnabled()
-            || Config::authorizeNetEnabled()
-            || Config::mollieEnabled()
-            || Config::paysonEnabled()
-            || Config::payuLatamEnabled()
-            || Config::stripeEnabled()
+            || ( Config::twoCheckoutActive() && get_option( 'bookly_2checkout_enabled' ) )
+            || ( Config::authorizeNetActive() && get_option( 'bookly_authorize_net_enabled' ) )
+            || ( Config::mollieActive() && get_option( 'bookly_mollie_enabled' ) )
+            || ( Config::paysonActive() && get_option( 'bookly_payson_enabled' ) )
+            || ( Config::payuBizActive() && get_option( 'bookly_payu_biz_enabled' ) )
+            || ( Config::payuLatamActive() && get_option( 'bookly_payu_latam_enabled' ) )
+            || ( Config::stripeActive() && get_option( 'bookly_stripe_enabled' ) )
             || Config::paypalEnabled()
         );
-    }
-
-    /**
-     * @return bool
-     */
-    public static function twoCheckoutEnabled()
-    {
-        return self::__callStatic( '2checkoutEnabled', array() );
     }
 
     /**
@@ -312,7 +333,7 @@ abstract class Config
      */
     public static function paypalEnabled()
     {
-        return get_option( 'bookly_paypal_enabled' ) != '0';
+        return self::proActive() && get_option( 'bookly_paypal_enabled' ) != '0';
     }
 
     /**
@@ -352,16 +373,6 @@ abstract class Config
     public static function useClientTimeZone()
     {
         return (bool) get_option( 'bookly_gen_use_client_time_zone' );
-    }
-
-    /**
-     * Get minimum time (in seconds) prior to booking.
-     *
-     * @return integer
-     */
-    public static function getMinimumTimePriorBooking()
-    {
-        return (int) ( get_option( 'bookly_gen_min_time_prior_booking' ) * 3600 );
     }
 
     /**
@@ -413,6 +424,16 @@ abstract class Config
     }
 
     /**
+     * Whether to show wide time slots in the time step of booking form.
+     *
+     * @return bool
+     */
+    public static function showWideTimeSlots()
+    {
+        return self::groupBookingActive() && get_option( 'bookly_group_booking_enabled' ) && get_option( 'bookly_group_booking_app_show_nop' );
+    }
+
+    /**
      * Whether to show days in the second step of booking form in separate columns or not.
      *
      * @return bool
@@ -423,13 +444,51 @@ abstract class Config
     }
 
     /**
+     * Whether to show login button at the time step of booking form.
+     *
+     * @return bool
+     */
+    public static function showLoginButton()
+    {
+        return (bool) get_option( 'bookly_app_show_login_button', false );
+    }
+
+    /**
      * Whether phone field is required at the Details step or not.
      *
      * @return bool
      */
     public static function phoneRequired()
     {
-        return get_option( 'bookly_cst_required_phone' ) == 1;
+        return in_array( 'phone', get_option( 'bookly_cst_required_details', array() ) );
+    }
+
+    /**
+     * Whether email field is required at the Details step or not.
+     *
+     * @return bool
+     */
+    public static function emailRequired()
+    {
+        return in_array( 'email', get_option( 'bookly_cst_required_details', array() ) );
+    }
+
+    /**
+     * @return bool
+     */
+    public static function addressRequired()
+    {
+        return get_option( 'bookly_cst_required_address' ) == 1;
+    }
+
+    /**
+     * Whether customer duplicates are allowed or not
+     *
+     * @return bool
+     */
+    public static function allowDuplicates()
+    {
+        return get_option( 'bookly_cst_allow_duplicates' ) == 1;
     }
 
     /**
@@ -469,7 +528,7 @@ abstract class Config
      */
     public static function showStepCart()
     {
-        return false;
+        return self::cartActive() && get_option( 'bookly_cart_enabled' ) && ! Config::wooCommerceEnabled();
     }
 
     /**
@@ -514,7 +573,7 @@ abstract class Config
      */
     public static function wooCommerceEnabled()
     {
-        return false;
+        return ( self::proActive() &&  get_option( 'bookly_wc_enabled' ) && get_option( 'bookly_wc_product' ) && class_exists( 'WooCommerce', false ) && ( wc_get_cart_url() !== false ) );
     }
 
     /**
@@ -528,13 +587,34 @@ abstract class Config
     {
         // <add-on>Active
         // <add-on>Enabled
-        if ( preg_match( '/^(\w+)(Active|Enabled)/', $name, $match ) ) {
-            /** @var Base\Plugin $plugin_class */
-            $plugin_class = sprintf( '\Bookly%s\Lib\Plugin', ucfirst( $match[1] ) );
+        if ( preg_match( '/^(\w+)Active/', $name, $match ) ) {
+            // Check if Pro Active
+            /** @var \BooklyPro\Lib\Plugin $pro_class */
+            $pro_class = '\BooklyPro\Lib\Plugin';
+            if ( class_exists( $pro_class, false ) ) {
+                /** @var Base\Plugin $plugin_class */
+                $plugin_class = sprintf( '\Bookly%s\Lib\Plugin', ucfirst( $match[1] ) );
 
-            return class_exists( $plugin_class, false ) && ( $match[2] == 'Active' || $plugin_class::enabled() );
+                return class_exists( $plugin_class, false );
+            }
+
+            return false;
         }
 
         return null;
     }
+
+    /**
+     * @return string
+     */
+    public static function getLocale()
+    {
+        $locale = get_locale();
+        if ( function_exists( 'get_user_locale' ) ) {
+            $locale = get_user_locale();
+        }
+
+        return $locale;
+    }
+
 }

@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Components\Controls\Buttons;
+use Bookly\Backend\Components\Controls\Inputs as ControlInputs;
+use Bookly\Backend\Components\Settings\Inputs;
+?>
 <form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'company' ) ) ?>">
     <div class="row">
         <div class="col-xs-3 col-lg-2">
@@ -33,7 +37,7 @@
         </div>
         <div class="col-xs-9 col-lg-10">
             <div class="bookly-flex-cell bookly-vertical-middle">
-                <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_co_name', __( 'Company name', 'bookly' ) ) ?>
+                <?php Inputs::renderText( 'bookly_co_name', __( 'Company name', 'bookly' ) ) ?>
             </div>
         </div>
     </div>
@@ -43,12 +47,12 @@
         <textarea id="bookly_co_address" class="form-control" rows="5"
                   name="bookly_co_address"><?php form_option( 'bookly_co_address' ) ?></textarea>
     </div>
-    <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_co_phone', __( 'Phone', 'bookly' ) ) ?>
-    <?php \BooklyLite\Lib\Utils\Common::optionText( 'bookly_co_website', __( 'Website', 'bookly' ) ) ?>
+    <?php Inputs::renderText( 'bookly_co_phone', __( 'Phone', 'bookly' ) ) ?>
+    <?php Inputs::renderText( 'bookly_co_website', __( 'Website', 'bookly' ) ) ?>
 
     <div class="panel-footer">
-        <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
-        <?php \BooklyLite\Lib\Utils\Common::submitButton() ?>
-        <?php \BooklyLite\Lib\Utils\Common::resetButton( 'bookly-company-reset' ) ?>
+        <?php ControlInputs::renderCsrf() ?>
+        <?php Buttons::renderSubmit() ?>
+        <?php Buttons::renderReset( 'bookly-company-reset' ) ?>
     </div>
 </form>

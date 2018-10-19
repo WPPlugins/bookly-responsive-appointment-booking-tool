@@ -1,12 +1,12 @@
 <?php
-namespace BooklyLite\Lib\DataHolders\Notification;
+namespace Bookly\Lib\DataHolders\Notification;
 
-use BooklyLite\Lib\Entities\CustomerAppointment;
-use BooklyLite\Lib\Entities\Notification;
+use Bookly\Lib\Entities\CustomerAppointment;
+use Bookly\Lib\Entities\Notification;
 
 /**
  * Class Settings
- * @package BooklyLite\Lib\DataHolders\Notification
+ * @package Bookly\Lib\DataHolders\Notification
  */
 class Settings
 {

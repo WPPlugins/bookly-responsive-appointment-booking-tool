@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Slots;
+namespace Bookly\Lib\Slots;
 
 /**
  * Interface IPoint
- * @package BooklyLite\Lib\Slots
+ * @package Bookly\Lib\Slots
  */
 interface IPoint
 {
@@ -74,21 +74,21 @@ interface IPoint
      * Modify point.
      *
      * @param mixed $value
-     * @return static
+     * @return self
      */
     public function modify( $value );
 
     /**
      * Convert point to WP time zone.
      *
-     * @return static
+     * @return self
      */
     public function toWpTz();
 
     /**
      * Convert point to client time zone.
      *
-     * @return static
+     * @return self
      */
     public function toClientTz();
 }

@@ -1,22 +1,10 @@
-<?php
-/**
- * Main template to render booking form on frontend
- * @var array  $attrs
- * @var array  $options
- * @var array  $required
- * @var bool   $print_assets
- * @var string $form_id current form id
- * @var string $ajax_url url that should receive ajax calls
- * @var array  $status
- * @var array  $skip_steps all steps that could be skipped (should be skipped if value is truthy)
- * @var string $custom_css css styles created by admin
- */
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Lib;
 ?>
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <!--
 Plugin Name: Bookly – Responsive WordPress Appointment Booking and Scheduling Plugin
 Plugin URI: http://booking-wp-plugin.com
-Version: <?php echo \BooklyLite\Lib\Plugin::getVersion() ?>
+Version: <?php echo Lib\Plugin::getVersion() ?>
 -->
 <?php if ( $print_assets ) include '_css.php' ?>
 <div id="bookly-form-<?php echo $form_id ?>" class="bookly-form" data-form_id="<?php echo $form_id ?>">
@@ -51,23 +39,7 @@ Version: <?php echo \BooklyLite\Lib\Plugin::getVersion() ?>
             win[add](pre + 'load', init, false);
         }
     })(window, function() {
-        window.bookly({
-            ajaxurl                 : <?php echo json_encode( $ajax_url ) ?>,
-            form_id                 : <?php echo json_encode( $form_id ) ?>,
-            attributes              : <?php echo json_encode( $attrs ) ?>,
-            status                  : <?php echo json_encode( $status ) ?>,
-            start_of_week           : <?php echo (int) get_option( 'start_of_week' ) ?>,
-            show_calendar           : <?php echo (int) get_option( 'bookly_app_show_calendar' ) ?>,
-            required                : <?php echo json_encode( $required ) ?>,
-            skip_steps              : <?php echo json_encode( $skip_steps ) ?>,
-            date_format             : <?php echo json_encode( \BooklyLite\Lib\Utils\DateTime::convertFormat( 'date', \BooklyLite\Lib\Utils\DateTime::FORMAT_PICKADATE ) ) ?>,
-            final_step_url          : <?php echo json_encode( get_option( 'bookly_url_final_step_url' ) ) ?>,
-            intlTelInput            : <?php echo json_encode( $options['intlTelInput'] ) ?>,
-            woocommerce             : <?php echo json_encode( $options['woocommerce'] ) ?>,
-            update_details_dialog   : <?php echo (int) get_option( 'bookly_cst_show_update_details_dialog' ) ?>,
-            cart                    : <?php echo json_encode( $options['cart'] ) ?>,
-            is_rtl                  : <?php echo (int) is_rtl() ?>
-        });
+        window.bookly( <?php echo json_encode( $bookly_options ) ?> );
     });
 </script>
 

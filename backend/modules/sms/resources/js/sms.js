@@ -170,7 +170,9 @@ jQuery(function($) {
         .on('click', '.bookly-js-delete', function () {
             if (confirm(BooklyL10n.are_you_sure)) {
                 var $button = $(this),
-                    id = $button.data('notification_id');
+                    id = $button.data('notification_id'),
+                    ladda = Ladda.create(this);
+                    ladda.start();
                 $.ajax({
                     url: ajaxurl,
                     type: 'POST',
@@ -183,6 +185,7 @@ jQuery(function($) {
                     success: function (response) {
                         if (response.success) {
                             $button.closest('.panel').remove();
+                            ladda.stop();
                         }
                     }
                 });
@@ -402,7 +405,8 @@ jQuery(function($) {
                 { data: "phone" },
                 { data: "sender_id" },
                 { data: "charge" },
-                { data: "status" }
+                { data: "status" },
+                { data: "info" }
             ],
             language: {
                 zeroRecords: BooklyL10n.zeroRecords,
@@ -602,7 +606,7 @@ jQuery(function($) {
             success: function (response) {
                 if (response.success) {
                     $custom_notifications.append(response.data.html);
-                    var $subject = $custom_notifications.find('#notification_' + response.data.id + '_subject'),
+                    var $subject = $custom_notifications.find('[name="notification[' + response.data.id + '][subject]"]'),
                         $panel   = $subject.closest('.panel-collapse');
                     $panel.collapse('show');
                     $panel.find("select[name$='[type]']").trigger('change');

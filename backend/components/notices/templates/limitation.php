@@ -1,0 +1,3 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<b class="h4"><?php _e( 'This function is not available in the Bookly.', 'bookly' ) ?></b>
+<br><br><?php _e( 'To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Pro version of Bookly.<br>For more information visit', 'bookly' ) ?> <a href="http://booking-wp-plugin.com" target="_blank" class="alert-link">http://www.booking-wp-plugin.com</a>

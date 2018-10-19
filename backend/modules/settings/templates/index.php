@@ -1,11 +1,14 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Modules\Settings\Proxy;
+use Bookly\Backend\Components;
+?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
         <div class="page-header text-right clearfix">
             <div class="bookly-page-title">
                 <?php _e( 'Settings', 'bookly' ) ?>
             </div>
-            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( '' ) ?>
+            <?php Components\Support\Buttons::render( '' ) ?>
         </div>
         <div class="row">
             <div id="bookly-sidebar" class="col-sm-4">
@@ -25,16 +28,9 @@
                     <li class="bookly-nav-item" data-target="#bookly_settings_customers" data-toggle="tab">
                         <?php _e( 'Customers', 'bookly' ) ?>
                     </li>
-                    <li class="bookly-nav-item" data-target="#bookly_settings_google_calendar" data-toggle="tab">
-                        <?php _e( 'Google Calendar', 'bookly' ) ?>
-                    </li>
-                    <li class="bookly-nav-item" data-target="#bookly_settings_woo_commerce" data-toggle="tab">
-                        WooCommerce
-                    </li>
-                    <li class="bookly-nav-item" data-target="#bookly_settings_cart" data-toggle="tab">
-                        <?php _e( 'Cart', 'bookly' ) ?>
-                    </li>
-                    <?php \BooklyLite\Lib\Proxy\Shared::renderSettingsMenu() ?>
+                    <?php Proxy\Pro::renderGoogleCalendarMenuItem() ?>
+                    <?php Proxy\ProSettings::renderProMenuItem() ?>
+                    <?php Proxy\Shared::renderMenuItem() ?>
                     <li class="bookly-nav-item" data-target="#bookly_settings_payments" data-toggle="tab">
                         <?php _e( 'Payments', 'bookly' ) ?>
                     </li>
@@ -44,6 +40,7 @@
                     <li class="bookly-nav-item" data-target="#bookly_settings_holidays" data-toggle="tab">
                         <?php _e( 'Holidays', 'bookly' ) ?>
                     </li>
+                    <?php Proxy\Pro::renderPurchaseCodeMenuItem() ?>
                 </ul>
             </div>
 
@@ -66,16 +63,9 @@
                             <div class="tab-pane" id="bookly_settings_customers">
                                 <?php include '_customers.php' ?>
                             </div>
-                            <div class="tab-pane" id="bookly_settings_google_calendar">
-                                <?php include '_googleCalendarForm.php' ?>
-                            </div>
-                            <div class="tab-pane" id="bookly_settings_woo_commerce">
-                                <?php include '_woocommerce.php' ?>
-                            </div>
-                            <div class="tab-pane" id="bookly_settings_cart">
-                                <?php include '_cartForm.php' ?>
-                            </div>
-                            <?php \BooklyLite\Lib\Proxy\Shared::renderSettingsForm() ?>
+                            <?php Proxy\Pro::renderGoogleCalendarTab() ?>
+                            <?php Proxy\ProSettings::renderProTab() ?>
+                            <?php Proxy\Shared::renderTab() ?>
                             <div class="tab-pane" id="bookly_settings_payments">
                                 <?php include '_paymentsForm.php' ?>
                             </div>
@@ -85,6 +75,7 @@
                             <div class="tab-pane" id="bookly_settings_holidays">
                                 <?php include '_holidaysForm.php' ?>
                             </div>
+                            <?php Proxy\Pro::renderPurchaseCodeTab() ?>
                         </div>
                     </div>
                 </div>

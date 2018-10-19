@@ -1,18 +1,15 @@
 <?php
-namespace BooklyLite\Lib\Proxy;
+namespace Bookly\Lib\Proxy;
 
-use BooklyLite\Lib\Base;
+use Bookly\Lib;
 
 /**
  * Class ServiceSchedule
- * Invoke local methods from Service Schedule add-on.
+ * @package Bookly\Lib\Proxy
  *
- * @package BooklyLite\Lib\Proxy
- *
- * @method static array getSchedule( int $service_id ) Get schedule for service
- * @see \BooklyServiceSchedule\Lib\ProxyProviders\Local::getSchedule()
+ * @method static array getSchedule( int $service_id ) Get schedule for service.
  */
-abstract class ServiceSchedule extends Base\ProxyInvoker
+abstract class ServiceSchedule extends Lib\Base\Proxy
 {
 
 }

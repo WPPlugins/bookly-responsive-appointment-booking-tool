@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\DataHolders\Booking;
+namespace Bookly\Lib\DataHolders\Booking;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Order
- * @package BooklyLite\Lib\DataHolders\Booking
+ * @package Bookly\Lib\DataHolders\Booking
  */
 class Order
 {

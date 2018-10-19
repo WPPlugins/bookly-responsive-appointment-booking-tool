@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Slots;
+namespace Bookly\Lib\Slots;
 
 /**
  * Class Booking
- * @package BooklyLite\Lib\Slots
+ * @package Bookly\Lib\Slots
  */
 class Booking
 {
@@ -13,6 +13,8 @@ class Booking
     protected $service_id;
     /** @var int */
     protected $nop;
+    /** @var int */
+    protected $on_waiting_list;
     /** @var Range */
     protected $range;
     /** @var Range */
@@ -28,6 +30,7 @@ class Booking
      * @param int $service_id
      * @param int $location_id
      * @param int $nop
+     * @param int $on_waiting_list
      * @param string $start  Format Y-m-d H:i[:s]
      * @param string $end    Format Y-m-d H:i[:s]
      * @param int $padding_left
@@ -35,11 +38,12 @@ class Booking
      * @param int $extras_duration
      * @param bool $from_google
      */
-    public function __construct( $location_id, $service_id, $nop, $start, $end, $padding_left, $padding_right, $extras_duration, $from_google )
+    public function __construct( $location_id, $service_id, $nop, $on_waiting_list, $start, $end, $padding_left, $padding_right, $extras_duration, $from_google )
     {
         $this->location_id        = (int) $location_id;
         $this->service_id         = (int) $service_id;
         $this->nop                = (int) $nop;
+        $this->on_waiting_list    = (int) $on_waiting_list;
         $this->range              = Range::fromDates( $start, $end );
         $this->range_with_padding = $this->range->transform( - (int) $padding_left, (int) $padding_right );
         $this->extras_duration    = (int) $extras_duration;
@@ -51,7 +55,7 @@ class Booking
      *
      * @return int
      */
-    public function getLocationId()
+    public function locationId()
     {
         return $this->location_id;
     }
@@ -61,7 +65,7 @@ class Booking
      *
      * @return int
      */
-    public function getServiceId()
+    public function serviceId()
     {
         return $this->service_id;
     }
@@ -71,7 +75,7 @@ class Booking
      *
      * @return int
      */
-    public function getNop()
+    public function nop()
     {
         return $this->nop;
     }
@@ -90,11 +94,21 @@ class Booking
     }
 
     /**
+     * Get number of persons on waiting list.
+     *
+     * @return int
+     */
+    public function onWaitingList()
+    {
+        return $this->on_waiting_list;
+    }
+
+    /**
      * Get range.
      *
      * @return Range
      */
-    public function getRange()
+    public function range()
     {
         return $this->range;
     }
@@ -104,7 +118,7 @@ class Booking
      *
      * @return Range
      */
-    public function getRangeWithPadding()
+    public function rangeWithPadding()
     {
         return $this->range_with_padding;
     }
@@ -114,7 +128,7 @@ class Booking
      *
      * @return int
      */
-    public function getExtrasDuration()
+    public function extrasDuration()
     {
         return $this->extras_duration;
     }
@@ -124,7 +138,7 @@ class Booking
      *
      * @return bool
      */
-    public function isFromGoogle()
+    public function fromGoogle()
     {
         return $this->from_google;
     }

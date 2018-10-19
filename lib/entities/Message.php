@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Message
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Message extends Lib\Base\Entity
 {
@@ -22,7 +22,7 @@ class Message extends Lib\Base\Entity
     /** @var  string */
     protected $created;
 
-    protected static $table = 'ab_messages';
+    protected static $table = 'bookly_messages';
 
     protected static $schema = array(
         'id'         => array( 'format' => '%d' ),

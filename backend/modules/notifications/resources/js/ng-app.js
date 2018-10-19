@@ -17,7 +17,7 @@
                     dataType : 'json',
                     success  : function(response) {
                         if (response.success) {
-                            ds.sender_name = response.data.sender_name;
+                            ds.sender_name   = response.data.sender_name;
                             ds.sender_email  = response.data.sender_email;
                             ds.reply_to_customers = response.data.reply_to_customers;
                             ds.send_as = response.data.send_as;
@@ -97,7 +97,7 @@
             };
             angular.forEach($scope.dataSource.notifications, function(notification) {
                 if (notification.active == '1') {
-                    data.notifications.push(notification.type);
+                    data.notifications.push(notification.id);
                 }
             });
             jQuery.ajax({

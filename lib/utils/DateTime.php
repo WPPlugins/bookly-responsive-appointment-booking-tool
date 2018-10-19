@@ -1,11 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Utils;
-
-use BooklyLite\Lib;
+namespace Bookly\Lib\Utils;
 
 /**
  * Class DateTime
- * @package BooklyLite\Lib\Utils
+ * @package Bookly\Lib\Utils
  */
 class DateTime
 {
@@ -22,6 +20,10 @@ class DateTime
         5 => 'Friday',
         6 => 'Saturday',
     );
+
+    private static $format_characters_day   = array( 'd', 'D', 'j', 'l', 'N', 'S', 'w', 'z' );
+    private static $format_characters_month = array( 'F', 'm', 'M', 'n' );
+    private static $format_characters_year  = array( 'o', 'Y', 'y' );
 
     /**
      * Get week day by day number (0 = Sunday, 1 = Monday...)
@@ -238,7 +240,7 @@ class DateTime
     }
 
     /**
-     * Convert number of seconds into string "[XX week] [XX day] [XX h] XX min".
+     * Convert number of seconds into string "[XX year] [XX month] [XX week] [XX day] [XX h] XX min".
      *
      * @param int $duration
      * @return string
@@ -246,14 +248,22 @@ class DateTime
     public static function secondsToInterval( $duration )
     {
         $duration = (int) $duration;
-
-        $weeks   = (int) ( $duration / WEEK_IN_SECONDS );
-        $days    = (int) ( ( $duration % WEEK_IN_SECONDS ) / DAY_IN_SECONDS );
-        $hours   = (int) ( ( $duration % DAY_IN_SECONDS ) / HOUR_IN_SECONDS );
-        $minutes = (int) ( ( $duration % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS );
+        $month_in_seconds = 30 * DAY_IN_SECONDS;
+        $years   = (int) ( $duration / YEAR_IN_SECONDS );
+        $months  = (int) ( ( $duration % YEAR_IN_SECONDS ) / $month_in_seconds );
+        $weeks   = (int) ( ( ( $duration % YEAR_IN_SECONDS ) % $month_in_seconds ) / WEEK_IN_SECONDS );
+        $days    = (int) ( ( ( ( $duration % YEAR_IN_SECONDS ) % $month_in_seconds ) % WEEK_IN_SECONDS ) / DAY_IN_SECONDS );
+        $hours   = (int) ( ( ( ( $duration % YEAR_IN_SECONDS ) % $month_in_seconds ) % DAY_IN_SECONDS ) / HOUR_IN_SECONDS );
+        $minutes = (int) ( ( ( ( $duration % YEAR_IN_SECONDS ) % $month_in_seconds ) % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS );
 
         $parts = array();
 
+        if ( $years > 0 ) {
+            $parts[] = sprintf( _n( '%d year', '%d years', $years, 'bookly' ), $years );
+        }
+        if ( $months > 0 ) {
+            $parts[] = sprintf( _n( '%d month', '%d months', $months, 'bookly' ), $months );
+        }
         if ( $weeks > 0 ) {
             $parts[] = sprintf( _n( '%d week', '%d weeks', $weeks, 'bookly' ), $weeks );
         }
@@ -297,5 +307,46 @@ class DateTime
             abs( $offset / HOUR_IN_SECONDS ),
             abs( $offset / MINUTE_IN_SECONDS ) % 60
         );
+    }
+
+    /**
+     * Get date parts order according to current date format.
+     *
+     * @return array
+     */
+    public static function getDatePartsOrder()
+    {
+        $order       = array();
+        $date_format = preg_replace( '/[^A-Za-z]/', '', get_option( 'date_format' ) );
+
+        foreach ( str_split( $date_format ) as $character ) {
+            switch ( true ) {
+                case in_array( $character, self::$format_characters_day ):
+                    $order[] = 'day';
+                    break;
+                case in_array( $character, self::$format_characters_month ):
+                    $order[] = 'month';
+                    break;
+                case in_array( $character, self::$format_characters_year ):
+                    $order[] = 'year';
+                    break;
+            }
+        }
+
+        $order = array_unique( $order );
+
+        return count( $order ) == 3 ? $order : array( 'month', 'day', 'year' );
+    }
+
+    /**
+     * @param string $date
+     * @param string $format
+     * @return bool
+     */
+    public static function validateDate( $date, $format = 'Y-m-d' )
+    {
+        $d = \DateTime::createFromFormat( $format, $date );
+
+        return $d && $d->format( $format ) === $date;
     }
 }

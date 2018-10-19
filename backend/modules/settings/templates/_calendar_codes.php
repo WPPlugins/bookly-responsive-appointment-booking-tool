@@ -1,4 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Modules\Settings\Proxy;
+
 $codes = array(
     array( 'code' => 'appointment_date', 'description' => __( 'date of appointment', 'bookly' ) ),
     array( 'code' => 'appointment_time', 'description' => __( 'time of appointment', 'bookly' ) ),
@@ -30,6 +32,6 @@ if ( $participants == 'one' ) {
     $codes[] = array( 'code' => 'total_price',       'description' => __( 'total price of booking (sum of all cart items after applying coupon)', 'bookly' ) );
 }
 
-$codes = BooklyLite\Lib\Proxy\Shared::prepareCalendarAppointmentCodes( $codes, $participants );
+$codes = Proxy\Shared::prepareCalendarAppointmentCodes( $codes, $participants );
 
-BooklyLite\Lib\Utils\Common::codes( $codes );
+echo Bookly\Lib\Utils\Common::codes( $codes );

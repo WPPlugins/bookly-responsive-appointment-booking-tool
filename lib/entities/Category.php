@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Category
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Category extends Lib\Base\Entity
 {
@@ -14,7 +14,7 @@ class Category extends Lib\Base\Entity
     /** @var  int */
     protected $position = 9999;
 
-    protected static $table = 'ab_categories';
+    protected static $table = 'bookly_categories';
 
     protected static $schema = array(
         'id'        => array( 'format' => '%d' ),

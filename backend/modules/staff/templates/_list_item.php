@@ -1,5 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    $img = wp_get_attachment_image_src( $staff['attachment_id'], 'thumbnail' );
+use Bookly\Backend\Modules\Staff\Proxy;
+$img = wp_get_attachment_image_src( $staff['attachment_id'], 'thumbnail' );
 ?>
 <li class="bookly-nav-item<?php if ( $active_staff_id == $staff['id'] ) : ?> active<?php endif ?>" id="bookly-staff-<?php echo $staff['id'] ?>" data-staff-id="<?php echo $staff['id'] ?>">
     <div class="bookly-flexbox">
@@ -14,6 +15,7 @@
         </div>
         <div class="bookly-flex-cell bookly-vertical-middle">
             <?php echo esc_html( $staff['full_name'] ) ?>
+            <?php Proxy\Ratings::renderStaffServiceRating( $staff['id'], null, 'right' ) ?>
         </div>
     </div>
 </li>

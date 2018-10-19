@@ -1,4 +1,6 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Components\Controls\Buttons;
+?>
 <div class="bookly-intervals-wrapper bookly-hide-on-off" data-break_id="<?php echo $staff_schedule_item_break_id ?>">
     <div class="btn-group btn-group-sm bookly-margin-top-sm">
         <button type="button" class="btn btn-info bookly-js-toggle-popover break-interval"
@@ -27,8 +29,8 @@
             <hr>
 
             <div class="clearfix text-right">
-                <?php \BooklyLite\Lib\Utils\Common::submitButton( null, 'bookly-js-save-break' ) ?>
-                <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'bookly-popover-close btn-lg btn-default', __( 'Close', 'bookly' ) ) ?>
+                <?php Buttons::renderSubmit( null, 'bookly-js-save-break' ) ?>
+                <?php Buttons::renderCustom( null, 'bookly-popover-close btn-lg btn-default', __( 'Close', 'bookly' ) ) ?>
             </div>
         </div>
     </div>

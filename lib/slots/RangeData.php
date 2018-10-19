@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Slots;
+namespace Bookly\Lib\Slots;
 
 /**
  * Class RangeData
- * @package BooklyLite\Lib\Slots
+ * @package Bookly\Lib\Slots
  */
 class RangeData
 {
@@ -12,7 +12,15 @@ class RangeData
     /** @var int */
     protected $staff_id;
     /** @var int */
+    protected $location_id;
+    /** @var int */
     protected $state;
+    /** @var int */
+    protected $on_waiting_list;
+    /** @var int */
+    protected $capacity;
+    /** @var int */
+    protected $nop;
     /** @var Range */
     protected $next_slot;
 
@@ -21,15 +29,23 @@ class RangeData
      *
      * @param int $service_id
      * @param int $staff_id
+     * @param int $location_id
      * @param int $state
+     * @param int $on_waiting_list
+     * @param int $capacity
+     * @param int $nop
      * @param Range|null $next_slot
      */
-    public function __construct( $service_id, $staff_id, $state = Range::AVAILABLE, $next_slot = null )
+    public function __construct( $service_id, $staff_id, $location_id = 0, $state = Range::AVAILABLE, $on_waiting_list = 0, $next_slot = null, $capacity = 1, $nop = 0 )
     {
-        $this->service_id = $service_id;
-        $this->staff_id   = $staff_id;
-        $this->state      = $state;
-        $this->next_slot  = $next_slot;
+        $this->service_id      = $service_id;
+        $this->staff_id        = $staff_id;
+        $this->location_id     = $location_id;
+        $this->state           = $state;
+        $this->on_waiting_list = $on_waiting_list;
+        $this->next_slot       = $next_slot;
+        $this->capacity        = $capacity;
+        $this->nop             = $nop;
     }
 
     /**
@@ -53,6 +69,16 @@ class RangeData
     }
 
     /**
+     * Get location ID.
+     *
+     * @return int
+     */
+    public function locationId()
+    {
+        return $this->location_id;
+    }
+
+    /**
      * Get state.
      *
      * @return int
@@ -60,6 +86,36 @@ class RangeData
     public function state()
     {
         return $this->state;
+    }
+
+    /**
+     * Get capacity.
+     *
+     * @return int
+     */
+    public function capacity()
+    {
+        return $this->capacity;
+    }
+
+    /**
+     * Get nop.
+     *
+     * @return int
+     */
+    public function nop()
+    {
+        return $this->nop;
+    }
+
+    /**
+     * Get number of persons on waiting list.
+     *
+     * @return int
+     */
+    public function onWaitingList()
+    {
+        return $this->on_waiting_list;
     }
 
     /**
@@ -90,7 +146,7 @@ class RangeData
      */
     public function replaceStaffId( $new_staff_id )
     {
-        return new static( $this->service_id, $new_staff_id, $this->state, $this->next_slot );
+        return new static( $this->service_id, $new_staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->next_slot, $this->capacity, $this->nop );
     }
 
     /**
@@ -101,7 +157,18 @@ class RangeData
      */
     public function replaceState( $new_state )
     {
-        return new static( $this->service_id, $this->staff_id, $new_state, $this->next_slot );
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $new_state, $this->on_waiting_list, $this->next_slot, $this->capacity, $this->nop );
+    }
+
+    /**
+     * Create a copy of the data with new on waiting list number.
+     *
+     * @param int $new_on_waiting_list
+     * @return static
+     */
+    public function replaceOnWaitingList( $new_on_waiting_list )
+    {
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $new_on_waiting_list, $this->next_slot, $this->capacity, $this->nop );
     }
 
     /**
@@ -112,6 +179,16 @@ class RangeData
      */
     public function replaceNextSlot( $new_next_slot )
     {
-        return new static( $this->service_id, $this->staff_id, $this->state, $new_next_slot );
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $new_next_slot, $this->capacity, $this->nop );
+    }
+
+    public function replaceNop( $new_nop )
+    {
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->next_slot, $this->capacity, $new_nop );
+    }
+
+    public function replaceCapacity( $new_capacity )
+    {
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->next_slot, $new_capacity, $this->nop );
     }
 }

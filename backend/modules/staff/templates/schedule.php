@@ -1,12 +1,13 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    use BooklyLite\Backend\Modules\Staff\Forms\Widgets\TimeChoice;
-    use BooklyLite\Lib\Utils\Common;
-    /** @var \BooklyLite\Lib\Entities\StaffScheduleItem[] $schedule_items */
-    $working_start  = new TimeChoice( array( 'empty_value' => __( 'OFF', 'bookly' ), 'type' => 'from' ) );
-    $working_end    = new TimeChoice( array( 'use_empty' => false, 'type' => 'to' ) );
-    $default_breaks = array( 'staff_id' => 1 );
-    $break_start   = new TimeChoice( array( 'use_empty' => false, 'type' => 'break_from' ) );
-    $break_end     = clone $working_end;
+use Bookly\Backend\Components\Controls\Buttons;
+use Bookly\Backend\Components\Controls\Inputs;
+use Bookly\Backend\Modules\Staff\Forms\Widgets\TimeChoice;
+/** @var \Bookly\Lib\Entities\StaffScheduleItem[] $schedule_items */
+$working_start  = new TimeChoice( array( 'empty_value' => __( 'OFF', 'bookly' ), 'type' => 'from' ) );
+$working_end    = new TimeChoice( array( 'use_empty' => false, 'type' => 'to' ) );
+$default_breaks = array( 'staff_id' => $staff_id );
+$break_start   = new TimeChoice( array( 'use_empty' => false, 'type' => 'break_from' ) );
+$break_end     = clone $working_end;
 ?>
 <div>
     <form>
@@ -18,7 +19,7 @@
                 <div class="panel-heading bookly-padding-vertical-md">
                     <div class="row">
                         <div class="col-sm-7 col-lg-5">
-                            <span class="panel-title"><?php _e( \BooklyLite\Lib\Utils\DateTime::getWeekDayByNumber( $item->getDayIndex() - 1 ) /* take translation from WP catalog */ ) ?></span>
+                            <span class="panel-title"><?php _e( \Bookly\Lib\Utils\DateTime::getWeekDayByNumber( $item->getDayIndex() - 1 ) /* take translation from WP catalog */ ) ?></span>
                         </div>
                         <div class="col-sm-5 col-lg-7 hidden-xs hidden-sm">
                             <div class="bookly-font-smaller bookly-color-gray">
@@ -91,8 +92,8 @@
                                         </div>
                                         <hr>
                                         <div class="text-right">
-                                            <?php Common::customButton( null, 'bookly-js-save-break btn-lg btn-success', __( 'Save', 'bookly' ) ) ?>
-                                            <?php Common::customButton( null, 'bookly-popover-close btn-lg btn-default', __( 'Close', 'bookly' ) ) ?>
+                                            <?php Buttons::renderCustom( null, 'bookly-js-save-break btn-lg btn-success', __( 'Save', 'bookly' ) ) ?>
+                                            <?php Buttons::renderCustom( null, 'bookly-popover-close btn-lg btn-default', __( 'Close', 'bookly' ) ) ?>
                                         </div>
                                     </div>
                                 </div>
@@ -108,11 +109,11 @@
         <?php endforeach ?>
 
         <input type="hidden" name="action" value="bookly_staff_schedule_update">
-        <?php Common::csrf() ?>
+        <?php Inputs::renderCsrf() ?>
 
         <div class="panel-footer">
-            <?php Common::submitButton( 'bookly-schedule-save' ) ?>
-            <?php Common::customButton( 'bookly-schedule-reset', 'btn-lg btn-default', __( 'Reset', 'bookly' ), array( 'data-default-breaks' => esc_attr( json_encode( $default_breaks ) ), 'data-spinner-color' => 'rgb(62, 66, 74)' ) ) ?>
+            <?php Buttons::renderSubmit( 'bookly-schedule-save' ) ?>
+            <?php Buttons::renderReset( 'bookly-schedule-reset', null, null, array( 'data-default-breaks' => json_encode( $default_breaks ), 'data-spinner-color' => 'rgb(62, 66, 74)' ) ) ?>
         </div>
     </form>
 </div>

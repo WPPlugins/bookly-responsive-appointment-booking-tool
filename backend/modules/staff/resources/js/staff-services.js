@@ -5,7 +5,7 @@ jQuery(function ($) {
         jQuery.extend(obj.options, options);
 
         // Load services form
-        if (!$container.children().length) {
+        if (!$container.children().length || obj.options.refresh) {
             $container.html('<div class="bookly-loading"></div>');
             $.ajax({
                 type        : 'POST',
@@ -17,7 +17,7 @@ jQuery(function ($) {
                 success     : function (response) {
                     $container.html(response.data.html);
                     var $services_form = $('form', $container);
-                    $(document.body).trigger('special_hours.tab_init', [$container, obj.options.get_staff_services.staff_id, obj.options.booklyAlert]);
+                    $(document.body).trigger('special_hours.tab_init', [$container, obj.options]);
                     var autoTickCheckboxes = function () {
                         // Handle 'select category' checkbox.
                         $('.bookly-services-category .bookly-category-checkbox').each(function () {
@@ -33,13 +33,23 @@ jQuery(function ($) {
                         );
                     };
                     var checkCapacityError = function ($form_group) {
-                        if (parseInt($form_group.find('.bookly-js-capacity-min').val()) > 1) {
-                            $form_group.find('.bookly-js-capacity-min').val(1).prop('readonly', true);
-                            booklyAlert({error: [BooklyL10n.limitations]});
+                        if (parseInt($form_group.find('.bookly-js-capacity-min').val()) > parseInt($form_group.find('.bookly-js-capacity-max').val())) {
+                            $form_group.addClass('has-error');
+                        } else {
+                            $form_group.removeClass('has-error');
                         }
-                        if (parseInt($form_group.find('.bookly-js-capacity-max').val()) > 1) {
-                            $form_group.find('.bookly-js-capacity-max').val(1).prop('readonly', true);
-                            booklyAlert({error: [BooklyL10n.limitations]});
+                        var has_errors = false;
+                        $services_form.find('.bookly-js-capacity').closest('.form-group').each(function () {
+                            if ($(this).hasClass('has-error')) {
+                                has_errors = true;
+                            }
+                        });
+                        if (has_errors) {
+                            $services_form.find('.bookly-js-services-error').html(obj.options.l10n.capacity_error);
+                            $services_form.find('#bookly-services-save').prop('disabled', true);
+                        } else {
+                            $services_form.find('.bookly-js-services-error').html('');
+                            $services_form.find('#bookly-services-save').prop('disabled', false);
                         }
                     };
 
@@ -87,7 +97,36 @@ jQuery(function ($) {
                                 });
                                 $('.bookly-service-checkbox', $services_form).trigger('change');
                             }, 0);
+                        })
+                        // Change location
+                        .on('change', '#staff_service_location_id', function () {
+                            $('.tab-pane > div').hide();
+                            var get_staff_services = {
+                                action    : options.get_staff_services.action,
+                                staff_id  : options.get_staff_services.staff_id,
+                                csrf_token: options.get_staff_services.csrf_token,
+                            };
+                            if ($('#staff_service_location_id').val() != '') {
+                                get_staff_services['location_id'] = $('#staff_service_location_id').val();
+                            }
+                            new BooklyStaffServices($container, {
+                                get_staff_services: get_staff_services,
+                                l10n              : options.l10n,
+                                refresh           : true
+                            });
+
+                            $container.show();
+                        })
+                        // Change default/custom settings for location
+                        .on('change', '#custom_services', function () {
+                            if ($(this).val() == 1) {
+                                $('.panel', $services_form).show();
+                            } else {
+                                $('.panel', $services_form).hide();
+                            }
                         });
+
+                    $('#custom_services', $services_form).trigger('change');
 
                     $('.bookly-service-checkbox').on('change', function () {
                         var $this    = $(this),
@@ -132,7 +171,8 @@ jQuery(function ($) {
             csrf_token: ''
         },
         booklyAlert: window.booklyAlert,
-        l10n: {}
+        l10n: {},
+        refresh: false
     };
 
     window.BooklyStaffServices = Services;

@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\DataHolders\Booking;
+namespace Bookly\Lib\DataHolders\Booking;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Compound
- * @package BooklyLite\Lib\DataHolders\Booking
+ * @package Bookly\Lib\DataHolders\Booking
  */
 class Compound extends Item
 {
@@ -140,7 +140,7 @@ class Compound extends Item
             $extras_total_price += $extra['price'];
         }
 
-        return ( $service_price + $extras_total_price ) * $this->getCA()->getNumberOfPersons();
+        return ( $service_price + $extras_total_price ) * $this->getCA()->getNumberOfPersons() * $this->getCA()->getUnits();
     }
 
     /**
@@ -151,6 +151,36 @@ class Compound extends Item
     public function getDeposit()
     {
         return $this->items[0]->getDeposit();
+    }
+
+    /**
+     * Gets tax
+     *
+     * @return float
+     */
+    public function getTax()
+    {
+        if ( ! $this->tax ) {
+            $rates = Lib\Proxy\Taxes::getServiceTaxRates();
+            if ( $rates ) {
+                $this->tax = Lib\Proxy\Taxes::calculateTax( $this->getTotalPrice(), $rates[ $this->getService()->getId() ] );
+            }
+        }
+
+        return $this->tax;
+    }
+
+    /**
+     * Sets tax
+     *
+     * @param float $tax
+     * @return $this
+     */
+    public function setTax( $tax )
+    {
+        $this->tax = $tax;
+
+        return $this;
     }
 
     /**

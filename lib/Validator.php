@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class Validator
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 class Validator
 {
@@ -17,8 +17,10 @@ class Validator
      */
     public function validateEmail( $field, $data )
     {
-        if ( $data['email'] != '' ) {
-            if ( ! is_email( $data['email'] ) ) {
+        if ( $data['email'] == '' && ( Config::emailRequired() || get_option( 'bookly_cst_create_account', 0 ) ) ) {
+            $this->errors[ $field ] = Utils\Common::getTranslatedOption( 'bookly_l10n_required_email' );
+        } else {
+            if ( $data['email'] != '' && ! is_email( $data['email'] ) ) {
                 $this->errors[ $field ] = __( 'Invalid email', 'bookly' );
             }
             // Check email for uniqueness when a new WP account is going to be created.
@@ -34,8 +36,52 @@ class Validator
                     $this->errors[ $field ] = __( 'This email is already in use', 'bookly' );
                 }
             }
-        } else {
-            $this->errors[ $field ] = Utils\Common::getTranslatedOption( 'bookly_l10n_required_email' );
+        }
+    }
+
+    public function validateBirthday( $field_name, array $data )
+    {
+        $required = get_option( 'bookly_cst_required_birthday' );
+
+        // Day
+        $day    = (int) $data['day'];
+        $month  = (int) $data['month'];
+        $year   = (int) $data['year'];
+
+        $last_day = (int) date( 't', strtotime( $year . '-' . $month . '-01' ) );
+
+        if ( $day < 1 ) {
+            if ( $required ) {
+                $this->errors[ $field_name . '_day' ] = Utils\Common::getTranslatedOption( 'bookly_l10n_required_day' );
+            }
+        } elseif ( $day > $last_day ) {
+            $this->errors[ $field_name . '_day' ] = Utils\Common::getTranslatedOption( 'bookly_l10n_invalid_day' );
+        }
+
+        // Month
+        if ( $required && ( $month < 1 || $month > 12 ) ) {
+            $this->errors[ $field_name . '_month' ] = Utils\Common::getTranslatedOption( 'bookly_l10n_required_month' );
+        }
+
+        // Year
+        $max_year  = (int) Slots\DatePoint::now()->format( 'Y' );
+        $min_year  = $max_year - 100;
+
+        if ( $required && ( $year < $min_year || $year > $max_year ) ) {
+            $this->errors[ $field_name . '_year' ] = Utils\Common::getTranslatedOption( 'bookly_l10n_required_year' );
+        }
+    }
+
+    /**
+     * @param string $field_name
+     * @param string $value
+     * @param bool $required
+     */
+    public function validateAddress( $field_name, $value, $required = false )
+    {
+        $value = trim( $value );
+        if ( empty( $value ) && $required ) {
+            $this->errors[ $field_name ] = Utils\Common::getTranslatedOption( 'bookly_l10n_required_' . $field_name );
         }
     }
 
@@ -63,7 +109,7 @@ class Validator
     {
         if ( $name != '' ) {
             $max_length = 255;
-            if ( preg_match_all( '/./su', $name ) > $max_length ) {
+            if ( preg_match_all( '/./su', $name, $matches ) > $max_length ) {
                 $this->errors[ $field ] = sprintf(
                     __( '"%s" is too long (%d characters max).', 'bookly' ),
                     $name,
@@ -143,9 +189,9 @@ class Validator
      * Post-validate customer.
      *
      * @param array $data
-     * @param UserBookingData $bookingData
+     * @param UserBookingData $userData
      */
-    public function postValidateCustomer( $data, UserBookingData $bookingData )
+    public function postValidateCustomer( $data, UserBookingData $userData )
     {
         if ( empty ( $this->errors ) ) {
             $user_id  = get_current_user_id();
@@ -155,59 +201,98 @@ class Validator
                 $customer->loadBy( array( 'wp_user_id' => $user_id ) );
             }
             if ( ! $customer->isLoaded() ) {
-                // Try to find customer by 'primary' identifier.
-                $identifier = Config::phoneRequired() ? 'phone' : 'email';
-                $customer->loadBy( array( $identifier => $data[ $identifier ] ) );
-                if ( ! $customer->isLoaded() ) {
-                    // Try to find customer by 'secondary' identifier.
-                    $identifier = Config::phoneRequired() ? 'email' : 'phone';
-                    $customer->loadBy( array( 'phone' => '', 'email' => '', $identifier => $data[ $identifier ] ) );
+                $entity = Proxy\Pro::getCustomerByFacebookId( $userData->getFacebookId() );
+                if ( $entity ) {
+                    $customer = $entity;
                 }
-                if ( ! isset ( $data['force_update_customer'] ) && $customer->isLoaded() ) {
-                    // Find difference between new and existing data.
-                    $diff   = array();
-                    $fields = array(
-                        'phone'     => Utils\Common::getTranslatedOption( 'bookly_l10n_label_phone' ),
-                        'email'     => Utils\Common::getTranslatedOption( 'bookly_l10n_label_email' )
-                    );
-                    $current = $customer->getFields();
-                    if ( Config::showFirstLastName() ) {
-                        $fields['first_name'] = Utils\Common::getTranslatedOption( 'bookly_l10n_label_first_name' );
-                        $fields['last_name']  = Utils\Common::getTranslatedOption( 'bookly_l10n_label_last_name' );
-                    } else {
-                        $fields['full_name'] = Utils\Common::getTranslatedOption( 'bookly_l10n_label_name' );
+                if ( ! $customer->isLoaded() ) {
+                    // Try to find customer by 'primary' identifier.
+                    $identifier = Config::phoneRequired() ? 'phone' : 'email';
+                    $customer->loadBy( array( $identifier => $data[ $identifier ] ) );
+                    if ( ! $customer->isLoaded() ) {
+                        // Try to find customer by 'secondary' identifier.
+                        $identifier = Config::phoneRequired() ? 'email' : 'phone';
+                        $customer->loadBy( array( 'phone' => '', 'email' => '', $identifier => $data[ $identifier ] ) );
                     }
-                    foreach ( $fields as $field => $name ) {
-                        if (
-                            $data[ $field ] != '' &&
-                            $current[ $field ] != '' &&
-                            $data[ $field ] != $current[ $field ]
-                        ) {
-                            $diff[] = $name;
-                        }
-                    }
-                    if ( ! empty ( $diff ) ) {
-                        $this->errors['customer'] = sprintf(
-                            __( 'Your %s: %s is already associated with another %s.<br/>Press Update if we should update your user data, or press Cancel to edit entered data.', 'bookly' ),
-                            $fields[ $identifier ],
-                            $data[ $identifier ],
-                            implode( ', ', $diff )
+                    if ( Config::allowDuplicates() ) {
+                        $customer_data = array(
+                            'email' => $data['email'],
+                            'phone' => $data['phone'],
                         );
+                        if ( Config::showFirstLastName() ) {
+                            $customer_data['first_name'] = $data['first_name'];
+                            $customer_data['last_name']  = $data['last_name'];
+                        } else {
+                            $customer_data['full_name'] = $data['full_name'];
+                        }
+                        $customer->loadBy( $customer_data );
+                    } elseif ( ! isset ( $data['force_update_customer'] ) && $customer->isLoaded() ) {
+                        // Find difference between new and existing data.
+                        $diff   = array();
+                        $fields = array(
+                            'phone' => Utils\Common::getTranslatedOption( 'bookly_l10n_label_phone' ),
+                            'email' => Utils\Common::getTranslatedOption( 'bookly_l10n_label_email' )
+                        );
+                        $current = $customer->getFields();
+                        if ( Config::showFirstLastName() ) {
+                            $fields['first_name'] = Utils\Common::getTranslatedOption( 'bookly_l10n_label_first_name' );
+                            $fields['last_name']  = Utils\Common::getTranslatedOption( 'bookly_l10n_label_last_name' );
+                        } else {
+                            $fields['full_name'] = Utils\Common::getTranslatedOption( 'bookly_l10n_label_name' );
+                        }
+                        foreach ( $fields as $field => $name ) {
+                            if (
+                                $data[ $field ] != '' &&
+                                $current[ $field ] != '' &&
+                                $data[ $field ] != $current[ $field ]
+                            ) {
+                                $diff[] = $name;
+                            }
+                        }
+                        if ( ! empty ( $diff ) ) {
+                            $this->errors['customer'] = sprintf(
+                                __( 'Your %s: %s is already associated with another %s.<br/>Press Update if we should update your user data, or press Cancel to edit entered data.', 'bookly' ),
+                                $fields[ $identifier ],
+                                $data[ $identifier ],
+                                implode( ', ', $diff )
+                            );
+                        }
                     }
                 }
             }
             if ( $customer->isLoaded() ) {
                 // Check appointments limit
-                foreach ( $bookingData->cart->getItems() as $cart_item ) {
+                $data = array();
+                foreach ( $userData->cart->getItems() as $cart_item ) {
+                    if ( $cart_item->toBePutOnWaitingList() ) {
+                        // Skip waiting list items.
+                        continue;
+                    }
+
                     $service = $cart_item->getService();
-                    $slots   = $bookingData->getSlots();
-                    if ( $service->appointmentsLimitReached( $customer->getId(), $slots[0][2] ) ) {
+                    $slots   = $cart_item->getSlots();
+
+                    $data[ $service->getId() ]['service'] = $service;
+                    $data[ $service->getId() ]['dates'][] = $slots[0][2];
+                }
+                foreach ( $data as $service_data ) {
+                    if ( $service_data['service']->appointmentsLimitReached( $customer->getId(), $service_data['dates'] ) ) {
                         $this->errors['appointments_limit_reached'] = true;
                         break;
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Validate info fields.
+     *
+     * @param array $info_fields
+     */
+    public function validateInfoFields( array $info_fields )
+    {
+        $this->errors = Proxy\CustomerInformation::validate( $this->errors, $info_fields );
     }
 
     /**

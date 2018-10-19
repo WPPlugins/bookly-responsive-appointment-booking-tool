@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Slots;
+namespace Bookly\Lib\Slots;
 
 /**
  * Class Service
- * @package BooklyLite\Lib\Slots
+ * @package Bookly\Lib\Slots
  */
 class Service
 {

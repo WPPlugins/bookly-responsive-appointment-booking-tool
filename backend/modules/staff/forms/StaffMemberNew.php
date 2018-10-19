@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Backend\Modules\Staff\Forms;
+namespace Bookly\Backend\Modules\Staff\Forms;
 
 /**
  * Class StaffMemberNew
- * @package BooklyLite\Backend\Modules\Staff\Forms
+ * @package Bookly\Backend\Modules\Staff\Forms
  */
 class StaffMemberNew extends StaffMember
 {

@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Utils;
+namespace Bookly\Lib\Utils;
 
 /**
  * Class Price
- * @package BooklyLite\Lib\Utils
+ * @package Bookly\Lib\Utils
  */
 abstract class Price
 {
@@ -12,6 +12,7 @@ abstract class Price
         'AED' => array( 'symbol' => 'AED',  'format' => '{price|2} {symbol}' ),
         'ARS' => array( 'symbol' => '$',    'format' => '{symbol}{price|2}' ),
         'AUD' => array( 'symbol' => 'A$',   'format' => '{symbol}{price|2}' ),
+        'BAM' => array( 'symbol' => 'KM',   'format' => '{price|2} {symbol}' ),
         'BDT' => array( 'symbol' => '৳',    'format' => '{symbol}{price|2}' ),
         'BGN' => array( 'symbol' => 'лв.',  'format' => '{price|2} {symbol}' ),
         'BHD' => array( 'symbol' => 'BHD',  'format' => '{symbol} {price|2}' ),
@@ -21,13 +22,16 @@ abstract class Price
         'CLP' => array( 'symbol' => '$',    'format' => '{symbol}{price|2}' ),
         'COP' => array( 'symbol' => '$',    'format' => '{symbol}{price|0}' ),
         'CRC' => array( 'symbol' => '₡',    'format' => '{symbol}{price|2}' ),
+        'CUC' => array( 'symbol' => 'CUC$', 'format' => '{price|2} {symbol}' ),
         'CZK' => array( 'symbol' => 'Kč',   'format' => '{price|2} {symbol}' ),
         'DKK' => array( 'symbol' => 'kr',   'format' => '{price|2} {symbol}' ),
         'DOP' => array( 'symbol' => 'RD$',  'format' => '{symbol}{price|2}' ),
+        'DZD' => array( 'symbol' => 'DA',   'format' => '{price|2} {symbol}' ),
         'EGP' => array( 'symbol' => 'EGP',  'format' => '{symbol} {price|2}' ),
         'EUR' => array( 'symbol' => '€',    'format' => '{symbol}{price|2}' ),
         'GBP' => array( 'symbol' => '£',    'format' => '{symbol}{price|2}' ),
         'GEL' => array( 'symbol' => 'lari', 'format' => '{price|2} {symbol}' ),
+        'GHS' => array( 'symbol' => 'GH¢',  'format' => '{symbol} {price|2}' ),
         'GTQ' => array( 'symbol' => 'Q',    'format' => '{symbol}{price|2}' ),
         'HKD' => array( 'symbol' => 'HK$',  'format' => '{symbol}{price|2}' ),
         'HRK' => array( 'symbol' => 'kn',   'format' => '{price|2} {symbol}' ),
@@ -77,19 +81,25 @@ abstract class Price
 
     /** @var array */
     private static $formats = array(
-        '{symbol}{price|2}',
-        '{symbol}{price|1}',
-        '{symbol}{price|0}',
-        '{symbol} {price|2}',
-        '{symbol} {price|1}',
-        '{symbol} {price|0}',
-        '{price|2}{symbol}',
-        '{price|1}{symbol}',
-        '{price|0}{symbol}',
-        '{price|3} {symbol}',
-        '{price|2} {symbol}',
-        '{price|1} {symbol}',
-        '{price|0} {symbol}',
+        '{sign}{symbol}{price|2}',
+        '{symbol}{sign}{price|2}',
+        '{sign}{symbol}{price|1}',
+        '{symbol}{sign}{price|1}',
+        '{sign}{symbol}{price|0}',
+        '{symbol}{sign}{price|0}',
+        '{sign}{symbol} {price|2}',
+        '{symbol} {sign}{price|2}',
+        '{sign}{symbol} {price|1}',
+        '{symbol} {sign}{price|1}',
+        '{sign}{symbol} {price|0}',
+        '{symbol} {sign}{price|0}',
+        '{sign}{price|2}{symbol}',
+        '{sign}{price|1}{symbol}',
+        '{sign}{price|0}{symbol}',
+        '{sign}{price|3} {symbol}',
+        '{sign}{price|2} {symbol}',
+        '{sign}{price|1} {symbol}',
+        '{sign}{price|0} {symbol}',
     );
 
     /**
@@ -107,8 +117,9 @@ abstract class Price
 
         if ( preg_match( '/{price\|(\d)}/', $format, $match ) ) {
             return strtr( $format, array(
+                '{sign}' => $price < 0 ? '-' : '',
                 '{symbol}' => $symbol,
-                "{price|{$match[1]}}" => number_format_i18n( $price, $match[1] )
+                "{price|{$match[1]}}" => number_format_i18n( abs( $price ), $match[1] )
             ) );
         }
 
@@ -133,5 +144,21 @@ abstract class Price
     public static function getFormats()
     {
         return self::$formats;
+    }
+
+    /**
+     * @param double $price
+     * @param double $discount
+     * @param double $deduction
+     * @return float|int
+     */
+    public static function correction( $price, $discount, $deduction )
+    {
+        $price     = (float) $price;
+        $discount  = (float) $discount;
+        $deduction = (float) $deduction;
+        $amount = round( $price * ( 100 - $discount ) / 100 - $deduction, 2 );
+
+        return $amount > 0 ? $amount : 0;
     }
 }

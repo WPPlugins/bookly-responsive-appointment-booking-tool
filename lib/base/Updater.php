@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Base;
+namespace Bookly\Lib\Base;
 
 /**
  * Class Updater
- * @package BooklyLite\Lib\Base
+ * @package Bookly\Lib\Base
  */
 abstract class Updater extends Schema
 {
@@ -12,38 +12,40 @@ abstract class Updater extends Schema
      */
     public function run()
     {
-        $updater = $this;
-        add_action( 'plugins_loaded', function () use ( $updater ) {
-            $plugin_class        = Plugin::getPluginFor( $updater );
+        $plugin_class   = Plugin::getPluginFor( $this );
+        $transient_name = $plugin_class::getPrefix() . 'updating_db';
+        $lock           = (int) get_transient( $transient_name );
+        if ( $lock + 30 < time() ) {
+            // Lock concurrent updates for 30 seconds.
+            set_transient( $transient_name, time() );
             $version_option_name = $plugin_class::getPrefix() . 'db_version';
             $db_version          = get_option( $version_option_name );
             $plugin_version      = $plugin_class::getVersion();
-            if ( $plugin_class == 'BooklyLite\Lib\Plugin' ) {
-                /** @deprecate option ab_db_version Bookly < 11.7 */
-                $ab_db_version = get_option( 'ab_db_version' );
-                if ( $ab_db_version !== false && strnatcmp( $ab_db_version, $db_version ) > 0) {
-                    // Get max db_version.
-                    $db_version = $ab_db_version;
-                }
-            }
             if ( $db_version !== false && version_compare( $plugin_version, $db_version, '>' ) ) {
                 set_time_limit( 0 );
 
                 $updates = array_filter(
-                    get_class_methods( $updater ),
+                    get_class_methods( $this ),
                     function ( $method ) { return strstr( $method, 'update_' ); }
                 );
                 usort( $updates, 'strnatcmp' );
 
                 foreach ( $updates as $method ) {
-                    $version = str_replace( '_', '.', substr( $method, 7) );
+                    $version = str_replace( '_', '.', substr( $method, 7 ) );
                     if ( strnatcmp( $version, $db_version ) > 0 && strnatcmp( $version, $plugin_version ) <= 0 ) {
-                        call_user_func( array( $updater, $method ) );
+                        // Update the lock.
+                        set_transient( $transient_name, time() );
+                        // Do update.
+                        call_user_func( array( $this, $method ) );
                         update_option( $version_option_name, $version );
                     }
                 }
+                // Make sure db_version is set to plugin version (even though there were no updates).
+                update_option( $version_option_name, $plugin_version );
             }
-        } );
+            // Remove the lock.
+            delete_transient( $transient_name );
+        }
     }
 
     /**
@@ -58,6 +60,23 @@ abstract class Updater extends Schema
         global $wpdb;
 
         return $wpdb->prefix . $table;
+    }
+
+    /**
+     * Check table exists
+     *
+     * @param $table
+     *
+     * @return bool
+     */
+    protected function tableExists( $table )
+    {
+        global $wpdb;
+
+        return (bool) $wpdb->query( $wpdb->prepare(
+            'SELECT 1 FROM `information_schema`.`tables` WHERE `table_name` = %s AND `table_schema` = SCHEMA() LIMIT 1',
+            $this->getTableName( $table )
+        ) );
     }
 
     /**
@@ -121,17 +140,8 @@ abstract class Updater extends Schema
         /** @global \wpdb $wpdb */
         global $wpdb;
 
-        $wpml_strings_table = $this->getTableName( 'icl_strings' );
-
-        // Check that WPML table with strings exist.
-        $exists = $wpdb->query( $wpdb->prepare(
-            'SELECT 1 FROM `information_schema`.`tables`
-                WHERE `table_name`   = %s
-                  AND `table_schema` = SCHEMA()
-                LIMIT 1',
-            $wpml_strings_table
-        ) );
-        if ( $exists ) {
+        if ( $this->tableExists( 'icl_strings' ) ) {
+            $wpml_strings_table = $this->getTableName( 'icl_strings' );
             // Check that `domain_name_context_md5` column exists.
             $exists = $wpdb->query( $wpdb->prepare(
                 'SELECT 1 FROM `information_schema`.`columns`

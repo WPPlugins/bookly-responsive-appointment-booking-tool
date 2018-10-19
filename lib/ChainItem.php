@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class ChainItem
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 class ChainItem
 {
@@ -25,6 +25,8 @@ class ChainItem
     protected $first_in_series = false;
     /** @var  int */
     protected $quantity;
+    /** @var  int */
+    protected $units = 1;
 
     // Add here the properties that don't need to be returned in getData
 
@@ -55,6 +57,7 @@ class ChainItem
             'location_id'       => $this->location_id,
             'series_unique_id'  => $this->series_unique_id,
             'first_in_series'   => $this->first_in_series,
+            'units'             => $this->units,
         );
     }
 
@@ -102,7 +105,7 @@ class ChainItem
     /**
      * Get sub services with spare time.
      *
-     * @return array
+     * @return Entities\Service[]
      */
     public function getSubServicesWithSpareTime()
     {
@@ -137,7 +140,24 @@ class ChainItem
      */
     public function getStaffIdsForSubService( Entities\Service $sub_service )
     {
-        return array( 1 );
+        $service_id = $sub_service->getId();
+        if ( ! isset ( $this->sub_services_staff_ids[ $service_id ] ) ) {
+            $this->sub_services_staff_ids[ $service_id ] = array();
+            $sub_services = $this->getSubServices();
+            if ( $service_id == $sub_services[0]->getId() ) {
+                $this->sub_services_staff_ids[ $service_id ] = $this->staff_ids;
+            } else {
+                $res = Entities\StaffService::query()
+                    ->select( 'staff_id' )
+                    ->where( 'service_id', $service_id )
+                    ->fetchArray();
+                foreach ( $res as $item ) {
+                    $this->sub_services_staff_ids[ $service_id ][] = $item['staff_id'];
+                }
+            }
+        }
+
+        return $this->sub_services_staff_ids[ $service_id ];
     }
 
     /**
@@ -318,6 +338,25 @@ class ChainItem
     public function setLocationId( $location_id )
     {
         $this->location_id = $location_id;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUnits()
+    {
+        return $this->units;
+    }
+
+    /**
+     * @param int $units
+     * @return $this
+     */
+    public function setUnits( $units )
+    {
+        $this->units = $units;
 
         return $this;
     }

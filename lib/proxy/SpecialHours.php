@@ -1,18 +1,15 @@
 <?php
-namespace BooklyLite\Lib\Proxy;
+namespace Bookly\Lib\Proxy;
 
-use BooklyLite\Lib\Base;
+use Bookly\Lib;
 
 /**
  * Class SpecialHours
- * Invoke local methods from Special Hours add-on.
+ * @package Bookly\Lib\Proxy
  *
- * @package BooklyLite\Lib\Proxy
- *
- * @method static string preparePrice( string $price, int $staff_id, int $service_id, $start_time )
- * @see \BooklySpecialHours\Lib\ProxyProviders\Local::preparePrice()
+ * @method static float adjustPrice( float $price, int $staff_id, int $service_id, int $location_id, $start_time, int $units ) Adjust price for given staff, service and time.
+ * @method static bool  isNotInSpecialHour( $start_time, $end_time, int $service_id, int $staff_id, int $location_id ) Shows if period between start_date and end_date intersected with any special hour period
  */
-abstract class SpecialHours extends Base\ProxyInvoker
+abstract class SpecialHours extends Lib\Base\Proxy
 {
-
 }

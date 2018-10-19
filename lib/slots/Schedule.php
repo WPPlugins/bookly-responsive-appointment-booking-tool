@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Slots;
+namespace Bookly\Lib\Slots;
 
 /**
  * Class Schedule
- * @package BooklyLite\Lib\Slots
+ * @package Bookly\Lib\Slots
  */
 class Schedule
 {
@@ -82,7 +82,12 @@ class Schedule
     {
         $collection = new RangeCollection();
 
-        $this->special_days[ $date ] = $collection->push( Range::fromTimes( $start, $end ) );
+        if ( $start !== null ) {
+            // Add special day if it is not OFF.
+            $collection->push( Range::fromTimes( $start, $end ) );
+        }
+
+        $this->special_days[ $date ] = $collection;
 
         return $this;
     }
@@ -119,10 +124,11 @@ class Schedule
      * @param DatePoint $dp
      * @param int $service_id
      * @param int $staff_id
+     * @param int $location_id
      * @param Range $range_limit
      * @return RangeCollection
      */
-    public function getRanges( DatePoint $dp, $service_id, $staff_id, Range $range_limit )
+    public function getRanges( DatePoint $dp, $service_id, $staff_id, $location_id, Range $range_limit )
     {
         $date_Ymd = $dp->format( 'Y-m-d' );
 
@@ -135,7 +141,7 @@ class Schedule
             $collection = $this->days[ $dp->format( 'w' ) ];
         }
 
-        $range_data = new RangeData( $service_id, $staff_id );
+        $range_data = new RangeData( $service_id, $staff_id, $location_id );
 
         return $collection
             // Limit to requested time range.
@@ -156,13 +162,14 @@ class Schedule
      * @param DatePoint $dp
      * @param int $service_id
      * @param int $staff_id
+     * @param int $location_id
      * @return RangeCollection
      */
-    public function getAllDayRange( DatePoint $dp, $service_id, $staff_id )
+    public function getAllDayRange( DatePoint $dp, $service_id, $staff_id, $location_id )
     {
         $collection = new RangeCollection();
 
-        return $collection->push( new Range( $dp, $dp->modify( '+1 day' ), new RangeData( $service_id, $staff_id ) ) );
+        return $collection->push( new Range( $dp, $dp->modify( '+1 day' ), new RangeData( $service_id, $staff_id, $location_id ) ) );
     }
 
     /**

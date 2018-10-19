@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class SentNotification
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class SentNotification extends Lib\Base\Entity
 {
@@ -16,7 +16,7 @@ class SentNotification extends Lib\Base\Entity
     /** @var  string */
     protected $created;
 
-    protected static $table = 'ab_sent_notifications';
+    protected static $table = 'bookly_sent_notifications';
 
     protected static $schema = array(
         'id'              => array( 'format' => '%d' ),

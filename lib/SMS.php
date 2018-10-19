@@ -1,31 +1,31 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class SMS
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 class SMS
 {
-    const API_URL = 'http://sms.booking-wp-plugin.com/1.0';
+    const API_URL = 'http://sms.booking-wp-plugin.com';
 
-    const REGISTER            = '/users';                            //POST
-    const AUTHENTICATE        = '/users';                            //GET
-    const LOG_OUT             = '/users/%token%/logout';             //GET
-    const GET_PROFILE_INFO    = '/users/%token%';                    //GET
-    const GET_SMS_LIST        = '/users/%token%/sms';                //GET
-    const GET_SMS_SUMMARY     = '/users/%token%/sms/summary';        //GET
-    const GET_PURCHASES_LIST  = '/users/%token%/purchases';          //GET
-    const SEND_SMS            = '/users/%token%/sms';                //POST
-    const GET_PRICES          = '/prices';                           //GET
-    const PASSWORD_FORGOT     = '/recoveries';                       //POST
-    const PASSWORD_CHANGE     = '/users/%token%';                    //PATCH
-    const PREAPPROVAL_CREATE  = '/users/%token%/paypal/preapproval'; //POST
-    const PREAPPROVAL_DELETE  = '/users/%token%/paypal/preapproval'; //DELETE
-    const GET_SENDER_IDS_LIST = '/users/%token%/sender-ids';         //GET
-    const REQUEST_SENDER_ID   = '/users/%token%/sender-ids';         //POST
-    const RESET_SENDER_ID     = '/users/%token%/sender-ids/reset';   //GET
-    const CANCEL_SENDER_ID    = '/users/%token%/sender-ids/cancel';  //GET
+    const REGISTER            = '/1.0/users';                            //POST
+    const AUTHENTICATE        = '/1.0/users';                            //GET
+    const LOG_OUT             = '/1.0/users/%token%/logout';             //GET
+    const GET_PROFILE_INFO    = '/1.0/users/%token%';                    //GET
+    const GET_SMS_LIST        = '/1.0/users/%token%/sms';                //GET
+    const GET_SMS_SUMMARY     = '/1.0/users/%token%/sms/summary';        //GET
+    const GET_PURCHASES_LIST  = '/1.0/users/%token%/purchases';          //GET
+    const SEND_SMS            = '/1.1/users/%token%/sms';                //POST
+    const GET_PRICES          = '/1.0/prices';                           //GET
+    const PASSWORD_FORGOT     = '/1.0/recoveries';                       //POST
+    const PASSWORD_CHANGE     = '/1.0/users/%token%';                    //PATCH
+    const PREAPPROVAL_CREATE  = '/1.0/users/%token%/paypal/preapproval'; //POST
+    const PREAPPROVAL_DELETE  = '/1.0/users/%token%/paypal/preapproval'; //DELETE
+    const GET_SENDER_IDS_LIST = '/1.0/users/%token%/sender-ids';         //GET
+    const REQUEST_SENDER_ID   = '/1.0/users/%token%/sender-ids';         //POST
+    const RESET_SENDER_ID     = '/1.0/users/%token%/sender-ids/reset';   //GET
+    const CANCEL_SENDER_ID    = '/1.0/users/%token%/sender-ids/cancel';  //GET
 
     private $username;
 
@@ -38,7 +38,12 @@ class SMS
     private $sender_id;
     /** @var \stdClass */
     private $auto_recharge;
+    /** @var \stdClass */
+    private $sms;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->token = get_option( 'bookly_sms_token' );
@@ -121,6 +126,7 @@ class SMS
     public function logout()
     {
         update_option( 'bookly_sms_token', '' );
+        self::setUndeliveredSmsCount( 0 );
 
         if ( $this->token ) {
             $this->sendGetRequest( self::LOG_OUT );
@@ -141,8 +147,8 @@ class SMS
                 self::PREAPPROVAL_CREATE,
                 array(
                     'amount'   => $amount,
-                    'approved' => admin_url( 'admin.php?page=' . \BooklyLite\Backend\Modules\Sms\Controller::page_slug . '&tab=auto_recharge&auto-recharge=approved' ),
-                    'declined' => admin_url( 'admin.php?page=' . \BooklyLite\Backend\Modules\Sms\Controller::page_slug . '&tab=auto_recharge&auto-recharge=declined' ),
+                    'approved' => admin_url( 'admin.php?page=' . \Bookly\Backend\Modules\Sms\Ajax::pageSlug() . '&tab=auto_recharge&auto-recharge=approved' ),
+                    'declined' => admin_url( 'admin.php?page=' . \Bookly\Backend\Modules\Sms\Ajax::pageSlug() . '&tab=auto_recharge&auto-recharge=declined' ),
                 )
             );
             if ( $response ) {
@@ -176,16 +182,18 @@ class SMS
      *
      * @param string $phone_number
      * @param string $message
+     * @param string $impersonal_message
      * @param int    $type_id
      * @return bool
      */
-    public function sendSms( $phone_number, $message, $type_id = null )
+    public function sendSms( $phone_number, $message, $impersonal_message, $type_id = null )
     {
         if ( $this->token ) {
             $data = array(
-                'message' => $message,
-                'phone'   => $this->normalizePhoneNumber( $phone_number ),
-                'type'    => $type_id,
+                'message'            => $message,
+                'impersonal_message' => $impersonal_message,
+                'phone'              => $this->normalizePhoneNumber( $phone_number ),
+                'type'               => $type_id,
             );
             if ( $data['phone'] != '' ) {
                 $response = $this->sendPostRequest( self::SEND_SMS, $data );
@@ -253,10 +261,15 @@ class SMS
                 $this->balance       = $response->balance;
                 $this->sender_id     = $response->sender_id;
                 $this->auto_recharge = $response->auto_recharge;
+                $this->sms           = $response->sms;
+
+                self::setUndeliveredSmsCount( $this->sms->undelivered_count );
 
                 return true;
             }
         }
+
+        self::setUndeliveredSmsCount( 0 );
 
         return false;
     }
@@ -361,12 +374,13 @@ class SMS
             );
             if ( $response ) {
                 array_walk( $response->list, function( &$item ) {
-                    $date_time  = Utils\DateTime::UTCToWPTimeZone( $item->datetime );
-                    $item->date = Utils\DateTime::formatDate( $date_time );
-                    $item->time = Utils\DateTime::formatTime( $date_time );
+                    $date_time     = Utils\DateTime::UTCToWPTimeZone( $item->datetime );
+                    $item->date    = Utils\DateTime::formatDate( $date_time );
+                    $item->time    = Utils\DateTime::formatTime( $date_time );
                     $item->message = nl2br( htmlspecialchars( $item->message ) );
                     $item->phone   = '+' . $item->phone;
                     $item->charge  = rtrim( $item->charge, '0' );
+                    $item->info    = nl2br( htmlspecialchars( $item->info ) );
                     switch ( $item->status ) {
                         case 1:
                         case 10:
@@ -400,7 +414,9 @@ class SMS
                             break;
                         case 14:
                             $item->status = __( 'Failed', 'bookly' );
-                            $item->charge = '$' . $item->charge;
+                            if ($item->charge != '') {
+                                $item->charge = '$' . $item->charge;
+                            }
                             break;
                         case 15:
                             $item->status = __( 'Undelivered', 'bookly' );
@@ -411,6 +427,8 @@ class SMS
                             $item->charge = '';
                     }
                 } );
+
+                self::setUndeliveredSmsCount( 0 );
 
                 return $response;
             }
@@ -584,13 +602,118 @@ class SMS
         return $this->_handleResponse( $this->_sendRequest( 'DELETE', $url, $data ) );
     }
 
+    /**
+     * Get username.
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Get balance.
+     *
+     * @return float
+     */
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+
+    /**
+     * Get sender ID.
+     *
+     * @return string
+     */
+    public function getSenderId()
+    {
+        return $this->sender_id->value;
+    }
+
+    /**
+     * Get sender ID approval date.
+     *
+     * @return string
+     */
+    public function getSenderIdApprovalDate()
+    {
+        return $this->sender_id->approved_at;
+    }
+
+    /**
+     * Whether auto-recharge enabled or not.
+     *
+     * @return bool
+     */
+    public function autoRechargeEnabled()
+    {
+        return $this->auto_recharge->enabled;
+    }
+
+    /**
+     * Get auto-recharge amount.
+     *
+     * @return float
+     */
+    public function getAutoRechargeAmount()
+    {
+        return $this->auto_recharge->amount;
+    }
+
+    /**
+     * Get errors.
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Clear errors.
+     */
+    public function clearErrors()
+    {
+        $this->errors = array();
+    }
+
+    /**
+     * Set number undelivered sms.
+     *
+     * @param int $count
+     */
+    public static function setUndeliveredSmsCount( $count )
+    {
+        update_option( 'bookly_sms_undelivered_count', (int) $count );
+    }
+
+    /**
+     * Get number undelivered sms.
+     *
+     * @return int
+     */
+    public static function getUndeliveredSmsCount()
+    {
+        return (int) get_option( 'bookly_sms_undelivered_count', 0 );
+    }
+
+    /**
+     * Prepare URL.
+     *
+     * @param string $path
+     * @param array $data
+     * @return string
+     */
     private function _prepareUrl( $path, array &$data )
     {
         $url = self::API_URL . str_replace( '%token%', $this->token, $path );
         foreach ( $data as $key => $value ) {
             if ( $key{0} == '%' && substr( $key,-1 ) == '%' ) {
                 $url = str_replace( $key, $value, $url );
-                unset( $data[ $key ] );
+                unset ( $data[ $key ] );
             }
         }
 
@@ -650,7 +773,7 @@ class SMS
 
                 return $response;
             }
-            $this->errors[] = $this->translateError( $response->message );
+            $this->errors[] = $this->_translateError( $response->message );
         } else {
             $this->errors[] = __( 'Error connecting to server.', 'bookly' );
         }
@@ -663,7 +786,7 @@ class SMS
      */
     private function _sendLowBalanceNotification()
     {
-        $add_money_url = admin_url( 'admin.php?' . build_query( array( 'page' => \BooklyLite\Backend\Modules\Sms\Controller::page_slug, 'tab' => 'add_money' ) ) );
+        $add_money_url = admin_url( 'admin.php?' . build_query( array( 'page' => \Bookly\Backend\Modules\Sms\Ajax::pageSlug(), 'tab' => 'add_money' ) ) );
         $message = sprintf( __( "Dear Bookly SMS customer.\nWe would like to notify you that your Bookly SMS balance fell lower than 5 USD. To use our service without interruptions please recharge your balance by visiting Bookly SMS page <a href='%s'>here</a>.\n\nIf you want to stop receiving these notifications, please update your settings <a href='%s'>here</a>.", 'bookly' ), $add_money_url, $add_money_url );
 
         wp_mail(
@@ -674,56 +797,13 @@ class SMS
         );
     }
 
-    public function getUserName()
-    {
-        return $this->username;
-    }
-
-    public function getBalance()
-    {
-        return $this->balance;
-    }
-
-    public function getSenderId()
-    {
-        return $this->sender_id->value;
-    }
-
-    public function getSenderIdApprovalDate()
-    {
-        return $this->sender_id->approved_at;
-    }
-
-    public function isAutoRechargeEnabled()
-    {
-        return $this->auto_recharge->enabled;
-    }
-
-    public function getAutoRechargeAmount()
-    {
-        return $this->auto_recharge->amount;
-    }
-
-    /**
-     * @return array
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    public function clearErrors()
-    {
-        $this->errors = array();
-    }
-
     /**
      * Translate error message.
      *
      * @param string $error_code
      * @return string
      */
-    private function translateError( $error_code )
+    private function _translateError( $error_code )
     {
         $error_codes = array(
             'ERROR_EMPTY_PASSWORD'                   => __( 'Empty password.', 'bookly' ),

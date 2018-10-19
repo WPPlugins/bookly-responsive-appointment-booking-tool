@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Base;
+namespace Bookly\Lib\Base;
 
 /**
  * Class Form
- * @package BooklyLite\Lib\Base
+ * @package Bookly\Lib\Base
  */
 abstract class Form
 {
@@ -19,11 +19,11 @@ abstract class Form
     /**
      * @staticvar string
      */
-    protected static $namespace = '\BooklyLite\Lib\Entities';
+    protected static $namespace = '\Bookly\Lib\Entities';
 
     /**
      * Entity object.
-     * @var Entity
+     * @var Entity|null
      */
     protected $object = null;
 
@@ -47,10 +47,6 @@ abstract class Form
      */
     public function __construct()
     {
-        // Create object of entity class.
-        $entity_class = static::$namespace . '\\' . static::$entity_class;
-        $this->object = new $entity_class();
-
         // Run configuration of child form.
         $this->configure();
     }
@@ -76,20 +72,29 @@ abstract class Form
     /**
      * Bind values to form.
      *
-     * @param array $_post
+     * @param array $params
      * @param array $files
      */
-    public function bind( array $_post, array $files = array() )
+    public function bind( array $params, array $files = array() )
     {
         foreach ( $this->fields as $field ) {
-            if ( array_key_exists( $field, $_post ) ) {
-                $this->data[ $field ] = $_post[ $field ];
+            if ( array_key_exists( $field, $params ) ) {
+                $this->data[ $field ] = $params[ $field ];
             }
         }
-        // If we are going to update the object
-        // load it from the database first.
-        if ( ! $this->isNew() ) {
-            $this->object->load( $this->data['id'] );
+
+        // Check if current form for entity.
+        if ( static::$entity_class ) {
+            /** @var Entity $entity_class */
+            $entity_class = static::$namespace . '\\' . static::$entity_class;
+            if ( $this->isNew() ) {
+                // Create object of entity class.
+                $this->object = new $entity_class();
+            } else {
+                // If we are going to update the object
+                // load it from the database.
+                $this->object = $entity_class::find( $this->data['id'] );
+            }
         }
     }
 
@@ -128,7 +133,7 @@ abstract class Form
     /**
      * Get entity object.
      *
-     * @return Entity
+     * @return Entity|null
      */
     public function getObject()
     {

@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "rollup -c && uglifyjs ../bookly.js --compress --mangle --source-map \"base='..',url='bookly.min.js.map'\" -o ../bookly.min.js"
+  },
+  "devDependencies": {
+    "rollup": "^0.59.3",
+    "uglify-js": "^3.3.27"
+  }
+}

@@ -1,12 +1,12 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class SubService
  *
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class SubService extends Lib\Base\Entity
 {
@@ -27,7 +27,7 @@ class SubService extends Lib\Base\Entity
     /** @var Service */
     public $service;
 
-    protected static $table = 'ab_sub_services';
+    protected static $table = 'bookly_sub_services';
 
     protected static $schema = array(
         'id'             => array( 'format' => '%d' ),

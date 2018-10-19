@@ -1,12 +1,12 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
-use BooklyLite\Lib\DataHolders\Booking as DataHolders;
+use Bookly\Lib;
+use Bookly\Lib\DataHolders\Booking as DataHolders;
 
 /**
  * Class CustomerAppointment
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class CustomerAppointment extends Lib\Base\Entity
 {
@@ -15,6 +15,7 @@ class CustomerAppointment extends Lib\Base\Entity
     const STATUS_CANCELLED  = 'cancelled';
     const STATUS_REJECTED   = 'rejected';
     const STATUS_WAITLISTED = 'waitlisted';
+    const STATUS_DONE       = 'done';
 
     /** @var  int */
     protected $package_id;
@@ -26,6 +27,8 @@ class CustomerAppointment extends Lib\Base\Entity
     protected $payment_id;
     /** @var  int */
     protected $number_of_persons = 1;
+    /** @var  int */
+    protected $units = 1;
     /** @var  string */
     protected $notes;
     /** @var  string */
@@ -42,6 +45,10 @@ class CustomerAppointment extends Lib\Base\Entity
     protected $time_zone;
     /** @var  int */
     protected $time_zone_offset;
+    /** @var  int */
+    protected $rating;
+    /** @var  string */
+    protected $rating_comment;
     /** @var  string */
     protected $locale;
     /** @var  int */
@@ -49,11 +56,11 @@ class CustomerAppointment extends Lib\Base\Entity
     /** @var  string */
     protected $compound_token;
     /** @var  string */
-    protected $created_from;
+    protected $created_from = 'frontend';
     /** @var  string */
     protected $created;
 
-    protected static $table = 'ab_customer_appointments';
+    protected static $table = 'bookly_customer_appointments';
 
     protected static $schema = array(
         'id'                  => array( 'format' => '%d' ),
@@ -62,6 +69,7 @@ class CustomerAppointment extends Lib\Base\Entity
         'appointment_id'      => array( 'format' => '%d', 'reference' => array( 'entity' => 'Appointment' ) ),
         'payment_id'          => array( 'format' => '%d', 'reference' => array( 'entity' => 'Payment' ) ),
         'number_of_persons'   => array( 'format' => '%d' ),
+        'units'               => array( 'format' => '%d' ),
         'notes'               => array( 'format' => '%s' ),
         'extras'              => array( 'format' => '%s' ),
         'custom_fields'       => array( 'format' => '%s' ),
@@ -70,6 +78,8 @@ class CustomerAppointment extends Lib\Base\Entity
         'token'               => array( 'format' => '%s' ),
         'time_zone'           => array( 'format' => '%s' ),
         'time_zone_offset'    => array( 'format' => '%d' ),
+        'rating'              => array( 'format' => '%d' ),
+        'rating_comment'      => array( 'format' => '%s' ),
         'locale'              => array( 'format' => '%s' ),
         'compound_service_id' => array( 'format' => '%d' ),
         'compound_token'      => array( 'format' => '%s' ),
@@ -82,6 +92,8 @@ class CustomerAppointment extends Lib\Base\Entity
 
     /** @var  string */
     private $last_status;
+    /** @var bool  */
+    private $just_created = false;
 
     /**
      * Delete entity and appointment if there are no more customers.
@@ -90,6 +102,7 @@ class CustomerAppointment extends Lib\Base\Entity
      */
     public function deleteCascade( $compound = false )
     {
+        Lib\Proxy\Shared::deleteCustomerAppointment( $this );
         $this->delete();
         $appointment = new Appointment();
         if ( $appointment->load( $this->getAppointmentId() ) ) {
@@ -107,7 +120,7 @@ class CustomerAppointment extends Lib\Base\Entity
                     }
                 }
                 // Update GC event.
-                $appointment->handleGoogleCalendar();
+                Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
                 // Waiting list.
                 Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
             }
@@ -138,7 +151,7 @@ class CustomerAppointment extends Lib\Base\Entity
                 && $this->getStatus()!= CustomerAppointment::STATUS_REJECTED
             ) {
                 $this->setStatus( CustomerAppointment::STATUS_CANCELLED );
-                Lib\NotificationSender::sendSingle( DataHolders\Simple::create( $this ) );
+                Lib\Notifications\Sender::sendSingle( DataHolders\Simple::create( $this ) );
             }
 
             if ( get_option( 'bookly_cst_cancel_action' ) == 'delete' ) {
@@ -156,12 +169,28 @@ class CustomerAppointment extends Lib\Base\Entity
                         }
                     }
                     // Google Calendar.
-                    $appointment->handleGoogleCalendar();
+                    Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
                     // Waiting list.
                     Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
                 }
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isJustCreated()
+    {
+        return $this->just_created;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusChanged()
+    {
+        return $this->status != $this->last_status;
     }
 
     public static function statusToString( $status )
@@ -172,6 +201,7 @@ class CustomerAppointment extends Lib\Base\Entity
             case self::STATUS_CANCELLED:  return __( 'Cancelled', 'bookly' );
             case self::STATUS_REJECTED:   return __( 'Rejected',  'bookly' );
             case self::STATUS_WAITLISTED: return __( 'On waiting list',  'bookly' );
+            case self::STATUS_DONE:       return __( 'Done', 'bookly' );
             default: return '';
         }
     }
@@ -189,6 +219,9 @@ class CustomerAppointment extends Lib\Base\Entity
         );
         if ( Lib\Config::waitingListActive() ) {
             $statuses[] = CustomerAppointment::STATUS_WAITLISTED;
+        }
+        if ( Lib\Config::tasksActive() ) {
+            $statuses[] = CustomerAppointment::STATUS_DONE;
         }
 
         return $statuses;
@@ -365,6 +398,29 @@ class CustomerAppointment extends Lib\Base\Entity
     }
 
     /**
+     * Gets units
+     *
+     * @return int
+     */
+    public function getUnits()
+    {
+        return $this->units;
+    }
+
+    /**
+     * Sets units
+     *
+     * @param int $units
+     * @return $this
+     */
+    public function setUnits( $units )
+    {
+        $this->units = $units;
+
+        return $this;
+    }
+
+    /**
      * Gets extras
      *
      * @return string
@@ -530,6 +586,52 @@ class CustomerAppointment extends Lib\Base\Entity
     }
 
     /**
+     * Gets rating
+     *
+     * @return int
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * Sets rating
+     *
+     * @param int $rating
+     * @return $this
+     */
+    public function setRating( $rating )
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Gets rating comment
+     *
+     * @return string
+     */
+    public function getRatingComment()
+    {
+        return $this->rating_comment;
+    }
+
+    /**
+     * Sets rating comment
+     *
+     * @param string $rating_comment
+     * @return $this
+     */
+    public function setRatingComment( $rating_comment )
+    {
+        $this->rating_comment = $rating_comment;
+
+        return $this;
+    }
+
+    /**
      * Gets locale
      *
      * @return string
@@ -658,6 +760,11 @@ class CustomerAppointment extends Lib\Base\Entity
      * Overridden Methods                                                     *
      **************************************************************************/
 
+    /**
+     * @param array|\stdClass $data
+     * @param bool            $overwrite_loaded_values
+     * @return $this
+     */
     public function setFields( $data, $overwrite_loaded_values = false )
     {
         if ( $data = (array) $data ) {
@@ -665,6 +772,7 @@ class CustomerAppointment extends Lib\Base\Entity
                 $this->last_status = $data['status'];
             }
         }
+
         return parent::setFields( $data, $overwrite_loaded_values );
     }
 
@@ -688,17 +796,9 @@ class CustomerAppointment extends Lib\Base\Entity
             $this->setStatusChangedAt( current_time( 'mysql' ) );
         }
 
-        $is_new = $this->getId() === null;
+        $this->just_created = $this->getId() === null;
 
-        $return = parent::save();
-
-        if ( $is_new ) {
-            Lib\NotificationSender::sendOnCACreated( $this );
-        } elseif ( $this->status != $this->last_status ) {
-            Lib\NotificationSender::sendOnCAStatusChanged( $this );
-        }
-
-        return $return;
+        return parent::save();
     }
 
 }

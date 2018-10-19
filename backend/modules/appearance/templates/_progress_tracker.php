@@ -1,42 +1,46 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    /** @var BooklyLite\Backend\Modules\Appearance\Lib\Helper $editable */
-    $i = 1;
+use Bookly\Lib\Config;
+use Bookly\Backend\Components\Appearance\Editable;
+
+$i = 1;
 ?>
 <div class="bookly-progress-tracker bookly-table">
     <div class="active">
-        <?php echo $i ++ ?>. <?php $editable::renderString( array( 'bookly_l10n_step_service' ) ) ?>
+        <span class="bookly-js-step-number"><?php echo $i ++ ?></span>. <?php Editable::renderString( array( 'bookly_l10n_step_service' ) ) ?>
         <div class="step"></div>
     </div>
-    <?php if ( \BooklyLite\Lib\Config::serviceExtrasEnabled() ) : ?>
-    <div <?php if ( $step >= 2 ) : ?>class="active"<?php endif ?>>
-        <?php echo $i ++ ?>. <?php $editable::renderString( array( 'bookly_l10n_step_extras' ) ) ?>
+    <?php if ( Config::serviceExtrasActive() ) : ?>
+    <div <?php if ( $step >= 2 ) : ?>class="active"<?php endif ?> data-step="bookly-step-2" <?php if ( ! get_option( 'bookly_service_extras_enabled' ) ) : ?>style="display: none;"<?php endif ?>>
+        <span class="bookly-js-step-number"><?php echo get_option( 'bookly_service_extras_enabled' ) ? $i ++ : $i ?></span>. <?php Editable::renderString( array( 'bookly_l10n_step_extras' ) ) ?>
         <div class="step"></div>
     </div>
     <?php endif ?>
     <div <?php if ( $step >= 3 ) : ?>class="active"<?php endif ?>>
-        <?php echo $i ++ ?>. <?php $editable::renderString( array( 'bookly_l10n_step_time' ) ) ?>
+        <span class="bookly-js-step-number"><?php echo $i ++ ?></span>. <?php Editable::renderString( array( 'bookly_l10n_step_time' ) ) ?>
         <div class="step"></div>
     </div>
-    <?php if ( \BooklyLite\Lib\Config::recurringAppointmentsEnabled() ) : ?>
-        <div <?php if ( $step >= 4 ) : ?>class="active"<?php endif ?>>
-            <?php echo $i ++ ?>. <?php $editable::renderString( array( 'bookly_l10n_step_repeat' ) ) ?>
+    <?php if ( Config::recurringAppointmentsActive() ) : ?>
+        <div <?php if ( $step >= 4 ) : ?>class="active"<?php endif ?> data-step="bookly-step-4" <?php if ( ! get_option( 'bookly_recurring_appointments_enabled' ) ) : ?>style="display: none;"<?php endif ?>>
+            <span class="bookly-js-step-number"><?php echo get_option( 'bookly_recurring_appointments_enabled' ) ? $i ++ : $i ?></span>. <?php Editable::renderString( array( 'bookly_l10n_step_repeat' ) ) ?>
             <div class=step></div>
         </div>
     <?php endif ?>
-    <div <?php if ( $step >= 5 ) : ?>class="active"<?php endif ?>>
-        <?php echo $i ++ ?>. <?php $editable::renderString( array( 'bookly_l10n_step_cart' ) ) ?>
-        <div class="step"></div>
-    </div>
+    <?php if ( Config::cartActive() ) : ?>
+        <div <?php if ( $step >= 5 ) : ?>class="active"<?php endif ?> data-step="bookly-step-5" <?php if ( ! get_option( 'bookly_cart_enabled' ) ) : ?>style="display: none;"<?php endif ?>>
+            <span class="bookly-js-step-number"><?php echo get_option( 'bookly_cart_enabled' ) ? $i ++ : $i ?></span>. <?php Editable::renderString( array( 'bookly_l10n_step_cart' ) ) ?>
+            <div class="step"></div>
+        </div>
+    <?php endif ?>
     <div <?php if ( $step >= 6 ) : ?>class="active"<?php endif ?>>
-        <?php echo $i ++ ?>. <?php $editable::renderString( array( 'bookly_l10n_step_details' ) ) ?>
+        <span class="bookly-js-step-number"><?php echo $i ++ ?></span>. <?php Editable::renderString( array( 'bookly_l10n_step_details' ) ) ?>
         <div class="step"></div>
     </div>
     <div <?php if ( $step >= 7 ) : ?>class="active"<?php endif ?>>
-        <?php echo $i ++ ?>. <?php $editable::renderString( array( 'bookly_l10n_step_payment' ) ) ?>
+        <span class="bookly-js-step-number"><?php echo $i ++ ?></span>. <?php Editable::renderString( array( 'bookly_l10n_step_payment' ) ) ?>
         <div class="step"></div>
     </div>
     <div <?php if ( $step >= 8 ) : ?>class="active"<?php endif ?>>
-        <?php echo $i ++ ?>. <?php $editable::renderString( array( 'bookly_l10n_step_done' ) ) ?>
+        <span class="bookly-js-step-number"><?php echo $i ++ ?></span>. <?php Editable::renderString( array( 'bookly_l10n_step_done' ) ) ?>
         <div class="step"></div>
     </div>
 </div>

@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Base;
+namespace Bookly\Lib\Base;
 
 /**
  * Class Schema
- * @package BooklyLite\Lib\Base
+ * @package Bookly\Lib\Base
  */
 abstract class Schema
 {

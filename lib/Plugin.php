@@ -1,11 +1,12 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
-use BooklyLite\Backend\Modules;
+use Bookly\Backend;
+use Bookly\Frontend;
 
 /**
  * Class Plugin
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 abstract class Plugin extends Base\Plugin
 {
@@ -20,100 +21,66 @@ abstract class Plugin extends Base\Plugin
     protected static $root_namespace;
     protected static $embedded;
 
+    /**
+     * @inheritdoc
+     */
+    public static function init()
+    {
+        // Init ajax.
+        Backend\Components\Dialogs\Appointment\Delete\Ajax::init();
+        Backend\Components\Dialogs\Appointment\Edit\Ajax::init();
+        Backend\Components\Dialogs\Customer\EditAjax::init();
+        Backend\Components\Dialogs\Payment\Ajax::init();
+        Backend\Components\Notices\CollectStatsAjax::init();
+        Backend\Components\Notices\LiteRebrandingAjax::init();
+        Backend\Components\Notices\NpsAjax::init();
+        Backend\Components\Notices\SubscribeAjax::init();
+        Backend\Components\Support\ButtonsAjax::init();
+        Backend\Components\TinyMce\Tools::init();
+        Backend\Modules\Appearance\Ajax::init();
+        Backend\Modules\Appointments\Ajax::init();
+        Backend\Modules\Calendar\Ajax::init();
+        Backend\Modules\Customers\Ajax::init();
+        Backend\Modules\Debug\Ajax::init();
+        Backend\Modules\Messages\Ajax::init();
+        Backend\Modules\Notifications\Ajax::init();
+        Backend\Modules\Payments\Ajax::init();
+        Backend\Modules\Services\Ajax::init();
+        Backend\Modules\Settings\Ajax::init();
+        Backend\Modules\Shop\Ajax::init();
+        Backend\Modules\Sms\Ajax::init();
+        Backend\Modules\Staff\Ajax::init();
+        Frontend\Modules\Booking\Ajax::init();
+
+        if ( ! is_admin() ) {
+            // Init short code.
+            Frontend\Modules\Booking\ShortCode::init();
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function run()
+    {
+        // l10n.
+        load_plugin_textdomain( 'bookly', false, self::getSlug() . '/languages' );
+
+        parent::run();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function registerHooks()
     {
         parent::registerHooks();
 
         if ( is_admin() ) {
-            add_action( 'admin_notices', function () {
-                $bookly_page = isset( $_REQUEST['page'] ) && strpos( $_REQUEST['page'], 'bookly-' ) === 0;
-                if ( $bookly_page ) {
-                    // Subscribe notice.
-                    Modules\Support\Components::getInstance()->renderSubscribeNotice();
-                    // NPS notice.
-                    Modules\Support\Components::getInstance()->renderNpsNotice();
-                    // Collect stats notice.
-                    Modules\Settings\Components::getInstance()->renderCollectStatsNotice();
-                }
-            }, 10, 0 );
+            Backend\Backend::registerHooks();
+        } else {
+            Frontend\Frontend::registerHooks();
         }
-
-        add_filter( 'puc_request_info_result-' . Plugin::getSlug(), function ( $pluginInfo, $result ) {
-            if ( $result instanceof \WP_Error ) {
-
-            } elseif ( isset( $result['body'] ) ) {
-                $response = json_decode( $result['body'], true );
-                if ( isset( $response['messages'] ) ) {
-                    foreach ( $response['messages'] as $data ) {
-                        $message = new Entities\Message();
-                        $message->loadBy( array( 'message_id' => $data['message_id'] ) );
-                        if ( ! $message->isLoaded() ) {
-                            $message->setFields( $data );
-                            $message
-                                ->setCreated( current_time( 'mysql' ) )
-                                ->save();
-                        }
-                    }
-                }
-            }
-
-            return $pluginInfo;
-        }, 11, 2 );
-
-        add_action( 'bookly_daily_routine', function () {
-            // SMS Summary routine
-            if ( get_option( 'bookly_sms_notify_weekly_summary' ) && get_option( 'bookly_sms_token' ) ) {
-                if ( get_option( 'bookly_sms_notify_weekly_summary_sent' ) != date( 'W' ) ) {
-                    $admin_emails = Utils\Common::getAdminEmails();
-                    if ( ! empty ( $admin_emails ) ) {
-                        $sms     = new SMS();
-                        $start   = date_create( 'last week' )->format( 'Y-m-d 00:00:00' );
-                        $end     = date_create( 'this week' )->format( 'Y-m-d 00:00:00' );
-                        $summary = $sms->getSummary( $start, $end );
-                        if ( $summary !== false ) {
-                            $notification_list = '';
-                            foreach ( $summary->notifications as $type_id => $count ) {
-                                $notification_list .= PHP_EOL . Entities\Notification::getName( Entities\Notification::getTypeString( $type_id ) ) . ': ' . $count->delivered;
-                                if ( $count->delivered < $count->sent ) {
-                                    $notification_list .= ' (' . $count->sent . ' ' . __( 'sent to our system', 'bookly' ) . ')';
-                                }
-                            }
-                            // For balance.
-                            $sms->loadProfile();
-                            $message =
-                                __( 'Hope you had a good weekend! Here\'s a summary of messages we\'ve delivered last week:
-{notification_list}
-
-Your system sent a total of {total} messages last week (that\'s {delta} {sign} than the week before).
-Cost of sending {total} messages was {amount}. You current Bookly SMS balance is {balance}.
-
-Thank you for using Bookly SMS. We wish you a lucky week!
-Bookly SMS Team.', 'bookly' );
-                            $message = strtr( $message,
-                                array(
-                                    '{notification_list}' => $notification_list,
-                                    '{total}'             => $summary->total,
-                                    '{delta}'             => abs( $summary->delta ),
-                                    '{sign}'              => $summary->delta >= 0 ? __( 'more', 'bookly' ) : __( 'less', 'bookly' ),
-                                    '{amount}'            => '$' . $summary->amount,
-                                    '{balance}'           => '$' . $sms->getBalance(),
-                                )
-                            );
-                            wp_mail( $admin_emails, __( 'Bookly SMS weekly summary', 'bookly' ), $message );
-                            update_option( 'bookly_sms_notify_weekly_summary_sent', date( 'W' ) );
-                        }
-                    }
-                }
-            }
-
-            update_option( 'bookly_lic_repeat_time', time() + 7776000 );
-            update_option( 'bookly_grace_start', time() + 60 * DAY_IN_SECONDS );
-
-            // Statistics routine.
-            if ( get_option( 'bookly_gen_collect_stats' ) ) {
-                API::sendStats();
-            }
-        }, 10, 0 );
 
         if ( get_option( 'bookly_gen_collect_stats' ) ) {
             // Store admin preferred language.
@@ -127,34 +94,7 @@ Bookly SMS Team.', 'bookly' );
             }, 99, 1 );
         }
 
-        // For admin notices about SMS weekly summary and etc.
-        if ( ! wp_next_scheduled( 'bookly_daily_routine' ) ) {
-            wp_schedule_event( time(), 'daily', 'bookly_daily_routine' );
-        }
+        // Register and schedule routines.
+        Routines::init();
     }
-
-    public static function run()
-    {
-        parent::run();
-        $dir = Plugin::getDirectory() . '/lib/addons/';
-        if ( is_dir( $dir ) ) {
-            foreach ( glob( $dir . 'bookly-addon-*', GLOB_ONLYDIR ) as $path ) {
-                include_once $path . '/autoload.php';
-                $namespace = implode( '', array_map( 'ucfirst', explode( '-', str_replace( '-addon-', '-', basename( $path ) ) ) ) );
-                /** @var \BooklyLite\Lib\Base\Plugin $plugin_class */
-                $plugin_class = '\\' . $namespace . '\Lib\Plugin';
-                $version_option_name = $plugin_class::getPrefix() . 'data_loaded';
-                if ( get_option( $version_option_name ) === false ) {
-                    // Install embedded add-on.
-                    add_action( 'plugins_loaded', function () use ( $plugin_class ) {
-                        $plugin_class::activate( 0 );
-                        $plugin_class::run();
-                    }, 99, 1 );
-                } else {
-                    $plugin_class::run();
-                }
-            }
-        }
-    }
-
 }

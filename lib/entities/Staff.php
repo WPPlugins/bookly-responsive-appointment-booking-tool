@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Staff
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Staff extends Lib\Base\Entity
 {
@@ -20,30 +20,27 @@ class Staff extends Lib\Base\Entity
     /** @var  string */
     protected $phone;
     /** @var  string */
-    protected $google_data;
-    /** @var  string */
-    protected $google_calendar_id;
-    /** @var  string */
     protected $info;
     /** @var  string */
     protected $visibility = 'public';
     /** @var  int */
     protected $position = 9999;
+    /** @var  string */
+    protected $google_data;
 
-    protected static $table = 'ab_staff';
+    protected static $table = 'bookly_staff';
 
     protected static $schema = array(
-        'id'                 => array( 'format' => '%d' ),
-        'wp_user_id'         => array( 'format' => '%d' ),
-        'attachment_id'      => array( 'format' => '%d' ),
-        'full_name'          => array( 'format' => '%s' ),
-        'email'              => array( 'format' => '%s' ),
-        'phone'              => array( 'format' => '%s' ),
-        'google_data'        => array( 'format' => '%s' ),
-        'google_calendar_id' => array( 'format' => '%s' ),
-        'info'               => array( 'format' => '%s' ),
-        'visibility'         => array( 'format' => '%s' ),
-        'position'           => array( 'format' => '%d' ),
+        'id'            => array( 'format' => '%d' ),
+        'wp_user_id'    => array( 'format' => '%d' ),
+        'attachment_id' => array( 'format' => '%d' ),
+        'full_name'     => array( 'format' => '%s' ),
+        'email'         => array( 'format' => '%s' ),
+        'phone'         => array( 'format' => '%s' ),
+        'info'          => array( 'format' => '%s' ),
+        'visibility'    => array( 'format' => '%s' ),
+        'position'      => array( 'format' => '%d' ),
+        'google_data'   => array( 'format' => '%s' ),
     );
 
     /**
@@ -59,7 +56,7 @@ class Staff extends Lib\Base\Entity
         // If it is 1(Mon) then the result should be 2,3,4,5,6,7,1.
         // If it is 2(Tue) then the result should be 3,4,5,6,7,1,2. Etc.
         return StaffScheduleItem::query()
-            ->where( 'staff_id',  1 )
+            ->where( 'staff_id',  $this->getId() )
             ->sortBy( "IF(r.day_index + 10 - {$start_of_week} > 10, r.day_index + 10 - {$start_of_week}, 16 + r.day_index)" )
             ->indexBy( 'day_index' )
             ->find();
@@ -76,12 +73,15 @@ class Staff extends Lib\Base\Entity
         $result = array();
 
         if ( $this->getId() ) {
-            $staff_services = StaffService::query( 'ss' )
-                ->select( 'ss.*, s.title, s.duration, s.price AS service_price, s.color, s.capacity_min AS service_capacity_min, s.capacity_max AS service_capacity_max' )
+            $query = StaffService::query( 'ss' )
+                ->select( 'ss.*, s.title, s.duration, s.units_min, s.units_max, s.price AS service_price, s.color, s.capacity_min AS service_capacity_min, s.capacity_max AS service_capacity_max, ss.location_id' )
                 ->leftJoin( 'Service', 's', 's.id = ss.service_id' )
-                ->where( 'ss.staff_id', 1 )
-                ->where( 's.type', $type )
-                ->fetchArray();
+                ->where( 'ss.staff_id', $this->getId() )
+                ->where( 's.type', $type );
+            if ( ! Lib\Proxy\Locations::servicesPerLocationAllowed() ) {
+                $query->where( 'ss.location_id', null );
+            }
+            $staff_services = $query->fetchArray();
 
             foreach ( $staff_services as $data ) {
                 $ss = new StaffService( $data );
@@ -94,6 +94,8 @@ class Staff extends Lib\Base\Entity
                     ->setColor( $data['color'] )
                     ->setDuration( $data['duration'] )
                     ->setPrice( $data['service_price'] )
+                    ->setUnitsMin( $data['units_min'] )
+                    ->setUnitsMax( $data['units_max'] )
                     ->setCapacityMin( $data['service_capacity_min'] )
                     ->setCapacityMax( $data['service_capacity_max'] );
 
@@ -114,7 +116,7 @@ class Staff extends Lib\Base\Entity
     {
         $query = Holiday::query()
             ->whereRaw( '( DATE_FORMAT( date, %s ) = %s AND repeat_event = 1 ) OR date = %s', array( '%m-%d', $day->format( 'm-d' ), $day->format( 'Y-m-d' ) ) )
-            ->whereRaw( 'staff_id = %d OR staff_id IS NULL', array( 1 ) )
+            ->whereRaw( 'staff_id = %d OR staff_id IS NULL', array( $this->getId() ) )
             ->limit( 1 );
         $rows = $query->execute( Lib\Query::HYDRATE_NONE );
 
@@ -127,7 +129,7 @@ class Staff extends Lib\Base\Entity
      */
     public function getTranslatedName( $locale = null )
     {
-        return Lib\Utils\Common::getTranslatedString( 'staff_1', $this->getFullName(), $locale );
+        return Lib\Utils\Common::getTranslatedString( 'staff_' . $this->getId(), $this->getFullName(), $locale );
     }
 
     /**
@@ -136,7 +138,7 @@ class Staff extends Lib\Base\Entity
      */
     public function getTranslatedInfo( $locale = null )
     {
-        return Lib\Utils\Common::getTranslatedString( 'staff_1_info', $this->getInfo(), $locale );
+        return Lib\Utils\Common::getTranslatedString( 'staff_' . $this->getId() . '_info', $this->getInfo(), $locale );
     }
 
     /**************************************************************************
@@ -259,52 +261,6 @@ class Staff extends Lib\Base\Entity
     }
 
     /**
-     * Gets google data
-     *
-     * @return string
-     */
-    public function getGoogleData()
-    {
-        return $this->google_data;
-    }
-
-    /**
-     * Sets google data
-     *
-     * @param string $google_data
-     * @return $this
-     */
-    public function setGoogleData( $google_data )
-    {
-        $this->google_data = $google_data;
-
-        return $this;
-    }
-
-    /**
-     * Gets google calendar_id
-     *
-     * @return string
-     */
-    public function getGoogleCalendarId()
-    {
-        return $this->google_calendar_id;
-    }
-
-    /**
-     * Sets google calendar_id
-     *
-     * @param string $google_calendar_id
-     * @return $this
-     */
-    public function setGoogleCalendarId( $google_calendar_id )
-    {
-        $this->google_calendar_id = $google_calendar_id;
-
-        return $this;
-    }
-
-    /**
      * Gets info
      *
      * @return string
@@ -373,6 +329,29 @@ class Staff extends Lib\Base\Entity
         return $this;
     }
 
+    /**
+     * Gets google data
+     *
+     * @return string
+     */
+    public function getGoogleData()
+    {
+        return $this->google_data;
+    }
+
+    /**
+     * Sets google data
+     *
+     * @param string $google_data
+     * @return $this
+     */
+    public function setGoogleData( $google_data )
+    {
+        $this->google_data = $google_data;
+
+        return $this;
+    }
+
     /**************************************************************************
      * Overridden Methods                                                     *
      **************************************************************************/
@@ -380,7 +359,12 @@ class Staff extends Lib\Base\Entity
     /**
      * Delete staff member.
      */
-    public function delete(){}
+    public function delete()
+    {
+        Lib\Proxy\Pro::revokeGoogleCalendarToken( $this );
+
+        parent::delete();
+    }
 
     /**
      * @return false|int
@@ -396,33 +380,36 @@ class Staff extends Lib\Base\Entity
             }
         }
 
-        $return = parent::save();
-        if ( $this->isLoaded() ) {
+        $saved = parent::save();
+
+        if ( $saved ) {
             // Register string for translate in WPML.
             do_action( 'wpml_register_single_string', 'bookly', 'staff_' . $this->getId(), $this->getFullName() );
             do_action( 'wpml_register_single_string', 'bookly', 'staff_' . $this->getId() . '_info', $this->getInfo() );
-        }
-        if ( $is_new ) {
-            // Schedule items.
-            $staff_id = $this->getId();
-            foreach ( array( 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ) as $day_index => $week_day ) {
-                $item = new StaffScheduleItem();
-                $item->setStaffId( $staff_id )
-                     ->setDayIndex( $day_index + 1  )
-                     ->setStartTime( get_option( 'bookly_bh_' . $week_day . '_start' ) ?: null )
-                     ->setEndTime( get_option( 'bookly_bh_' . $week_day . '_end' ) ?: null )
-                     ->save();
-            }
 
-            // Create holidays for staff
-            self::$wpdb->query( sprintf(
-                'INSERT INTO `' . Holiday::getTableName(). '` (`parent_id`, `staff_id`, `date`, `repeat_event`)
+            if ( $is_new ) {
+                // Schedule items.
+                $staff_id = $this->getId();
+                foreach ( array( 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ) as $day_index => $week_day ) {
+                    $item = new StaffScheduleItem();
+                    $item
+                        ->setStaffId( $staff_id )
+                        ->setDayIndex( $day_index + 1  )
+                        ->setStartTime( get_option( 'bookly_bh_' . $week_day . '_start' ) ?: null )
+                        ->setEndTime( get_option( 'bookly_bh_' . $week_day . '_end' ) ?: null )
+                        ->save();
+                }
+
+                // Create holidays for staff
+                self::$wpdb->query( sprintf(
+                    'INSERT INTO `' . Holiday::getTableName(). '` (`parent_id`, `staff_id`, `date`, `repeat_event`)
                 SELECT `id`, %d, `date`, `repeat_event` FROM `' . Holiday::getTableName() . '` WHERE `staff_id` IS NULL',
-                $staff_id
-            ) );
+                    $staff_id
+                ) );
+            }
         }
 
-        return $return;
+        return $saved;
     }
 
 }

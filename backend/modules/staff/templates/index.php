@@ -1,13 +1,15 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Components;
+?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
         <div class="page-header text-right clearfix">
-            <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
+            <?php if ( \Bookly\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
                 <div class="bookly-page-title">
                     <?php _e( 'Staff Members', 'bookly' ) ?>
                     <span class="bookly-color-gray">(<span id="bookly-staff-count"><?php echo count( $staff_members ) ?></span>)</span>
                 </div>
-                <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
+                <?php Components\Support\Buttons::render( $self::pageSlug() ) ?>
             <?php else : ?>
                 <div class="bookly-page-title">
                     <?php _e( 'Profile', 'bookly' ) ?>
@@ -16,7 +18,7 @@
         </div>
         <div class="row">
             <div id="bookly-sidebar" class="col-sm-4"
-                <?php if ( ! \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
+                <?php if ( ! \Bookly\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
                     style="display: none"
                 <?php endif ?>
             >
@@ -31,4 +33,6 @@
             <div id="bookly-container-edit-staff" class="col-sm-8"></div>
         </div>
     </div>
+    <?php Components\Dialogs\Common\CascadeDelete::render() ?>
+    <?php Components\Dialogs\Common\UnsavedChanges::render() ?>
 </div>

@@ -1,43 +1,76 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Customer
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Customer extends Lib\Base\Entity
 {
-    /** @var  int */
+    /** @var int */
     protected $wp_user_id;
-    /** @var  string */
+    /** @var int */
+    protected $facebook_id;
+    /** @var int */
+    protected $group_id;
+    /** @var string */
     protected $full_name = '';
-    /** @var  string */
+    /** @var string */
     protected $first_name = '';
-    /** @var  string */
+    /** @var string */
     protected $last_name = '';
-    /** @var  string */
+    /** @var string */
     protected $phone = '';
-    /** @var  string */
+    /** @var string */
     protected $email = '';
-    /** @var  string */
+    /** @var string */
+    protected $country = '';
+    /** @var string */
+    protected $state = '';
+    /** @var string */
+    protected $postcode = '';
+    /** @var string */
+    protected $city = '';
+    /** @var string */
+    protected $street = '';
+    /** @var string */
+    protected $street_number = '';
+    /** @var string */
+    protected $additional_address = '';
+    /** @var string */
     protected $notes = '';
-    /** @var  string */
+    /** @var string */
     protected $birthday;
+    /** @var  string */
+    protected $info_fields = '[]';
+    /** @var string */
+    protected $created;
 
-    protected static $table = 'ab_customers';
+    protected static $table = 'bookly_customers';
 
     protected static $schema = array(
-        'id'         => array( 'format' => '%d' ),
-        'wp_user_id' => array( 'format' => '%d' ),
-        'full_name'  => array( 'format' => '%s' ),
-        'first_name' => array( 'format' => '%s' ),
-        'last_name'  => array( 'format' => '%s' ),
-        'phone'      => array( 'format' => '%s' ),
-        'email'      => array( 'format' => '%s' ),
-        'notes'      => array( 'format' => '%s' ),
-        'birthday'   => array( 'format' => '%s' ),
+        'id'                 => array( 'format' => '%d' ),
+        'wp_user_id'         => array( 'format' => '%d' ),
+        'facebook_id'        => array( 'format' => '%d' ),
+        'group_id'           => array( 'format' => '%d' ),
+        'full_name'          => array( 'format' => '%s' ),
+        'first_name'         => array( 'format' => '%s' ),
+        'last_name'          => array( 'format' => '%s' ),
+        'phone'              => array( 'format' => '%s' ),
+        'email'              => array( 'format' => '%s' ),
+        'birthday'           => array( 'format' => '%s' ),
+        'country'            => array( 'format' => '%s' ),
+        'state'              => array( 'format' => '%s' ),
+        'postcode'           => array( 'format' => '%s' ),
+        'city'               => array( 'format' => '%s' ),
+        'street'             => array( 'format' => '%s' ),
+        'street_number'      => array( 'format' => '%s' ),
+        'additional_address' => array( 'format' => '%s' ),
+        'notes'              => array( 'format' => '%s' ),
+        'info_fields'        => array( 'format' => '%s' ),
+        'created'            => array( 'format' => '%s' ),
     );
 
     /**
@@ -65,7 +98,7 @@ class Customer extends Lib\Base\Entity
 
         foreach ( $appointments as $appointment ) {
             // Google Calendar.
-            $appointment->handleGoogleCalendar();
+            Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
             // Waiting list.
             Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
         }
@@ -145,44 +178,10 @@ class Customer extends Lib\Base\Entity
             ->innerJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id AND ca.customer_id = customer.id' )
             ->leftJoin( 'Service', 's', 's.id = COALESCE(ca.compound_service_id, a.service_id)' )
             ->leftJoin( 'Category', 'c', 'c.id = s.category_id' )
-            ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id' )
+            ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id AND ss.location_id <=> a.location_id' )
             ->leftJoin( 'Payment', 'p', 'p.id = ca.payment_id' )
             ->sortBy( 'start_date' )
             ->order( 'DESC' );
-    }
-
-    /**
-     * Create new WP user and send email notification.
-     *
-     * @return int|false
-     */
-    private function _createWPUser()
-    {
-        // Generate unique username.
-        $base     = Lib\Config::showFirstLastName() ? sanitize_user( sprintf( '%s %s', $this->getFirstName(), $this->getLastName() ), true ) : sanitize_user( $this->getFullName(), true );
-        $base     = $base != '' ? $base : 'client';
-        $username = $base;
-        $i        = 1;
-        while ( username_exists( $username ) ) {
-            $username = $base . $i;
-            ++ $i;
-        }
-        // Generate password.
-        $password = wp_generate_password( 6, true );
-        // Create user.
-        $user_id = wp_create_user( $username, $password, $this->getEmail() );
-        if ( ! $user_id instanceof \WP_Error ) {
-            // Set the role
-            $user = new \WP_User( $user_id );
-            $user->set_role( get_option( 'bookly_cst_new_account_role', 'subscriber' ) );
-
-            // Send email/sms notification.
-            Lib\NotificationSender::sendNewUserCredentials( $this, $username, $password );
-
-            return $user_id;
-        }
-
-        return false;
     }
 
     /**************************************************************************
@@ -205,15 +204,55 @@ class Customer extends Lib\Base\Entity
      * @param int $wp_user_id
      * @return $this
      */
-    public function setWpUserId( $wp_user_id = 0 )
+    public function setWpUserId( $wp_user_id )
     {
-        if ( $wp_user_id == 0 ) {
-            $wp_user_id = $this->_createWPUser();
-        }
+        $this->wp_user_id = $wp_user_id;
 
-        if ( $wp_user_id ) {
-            $this->wp_user_id = $wp_user_id;
-        }
+        return $this;
+    }
+
+    /**
+     * Gets facebook_id
+     *
+     * @return int
+     */
+    public function getFacebookId()
+    {
+        return $this->facebook_id;
+    }
+
+    /**
+     * Sets facebook_id
+     *
+     * @param int $facebook_id
+     * @return $this
+     */
+    public function setFacebookId( $facebook_id )
+    {
+        $this->facebook_id = $facebook_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets group_id
+     *
+     * @return int
+     */
+    public function getGroupId()
+    {
+        return $this->group_id;
+    }
+
+    /**
+     * Sets group_id
+     *
+     * @param int $group_id
+     * @return $this
+     */
+    public function setGroupId( $group_id )
+    {
+        $this->group_id = $group_id;
 
         return $this;
     }
@@ -334,6 +373,162 @@ class Customer extends Lib\Base\Entity
     }
 
     /**
+     * Gets birthday
+     *
+     * @return string
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * Sets birthday
+     *
+     * @param string $birthday
+     * @return $this
+     */
+    public function setBirthday( $birthday )
+    {
+        $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param string $country
+     * @return $this
+     */
+    public function setCountry( $country )
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $state
+     * @return $this
+     */
+    public function setState( $state )
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * @param string $postcode
+     * @return $this
+     */
+    public function setPostcode( $postcode )
+    {
+        $this->postcode = $postcode;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $city
+     * @return $this
+     */
+    public function setCity( $city )
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    /**
+     * @param string $street
+     * @return $this
+     */
+    public function setStreet( $street )
+    {
+        $this->street = $street;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreetNumber()
+    {
+        return $this->street_number;
+    }
+
+    /**
+     * @param string $street_number
+     * @return $this
+     */
+    public function setStreetNumber( $street_number )
+    {
+        $this->street_number = $street_number;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdditionalAddress()
+    {
+        return $this->additional_address;
+    }
+
+    /**
+     * @param string $additional_address
+     * @return $this
+     */
+    public function setAdditionalAddress( $additional_address )
+    {
+        $this->additional_address = $additional_address;
+
+        return $this;
+    }
+
+    /**
      * Gets notes
      *
      * @return string
@@ -357,26 +552,65 @@ class Customer extends Lib\Base\Entity
     }
 
     /**
-     * Gets birthday
+     * Sets info_fields
      *
-     * @return string
+     * @param string $info_fields
+     * @return $this
      */
-    public function getBirthday()
+    public function setInfoFields( $info_fields )
     {
-        return $this->birthday;
+        $this->info_fields = $info_fields;
+
+        return $this;
     }
 
     /**
-     * Sets birthday
+     * Gets info_fields
      *
-     * @param string $birthday
+     * @return string
+     */
+    public function getInfoFields()
+    {
+        return $this->info_fields;
+    }
+
+    /**
+     * Gets created
+     *
+     * @return string
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Sets created
+     *
+     * @param string $created
      * @return $this
      */
-    public function setBirthday( $birthday )
+    public function setCreated( $created )
     {
-        $this->birthday = $birthday;
+        $this->created = $created;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return Lib\Proxy\Pro::getFullAddressByCustomerData( array(
+            'country'            => $this->getCountry(),
+            'state'              => $this->getState(),
+            'postcode'           => $this->getPostcode(),
+            'city'               => $this->getCity(),
+            'street'             => $this->getStreet(),
+            'street_number'      => $this->getStreetNumber(),
+            'additional_address' => $this->getAdditionalAddress(),
+        ) );
     }
 
     /**************************************************************************
@@ -397,6 +631,14 @@ class Customer extends Lib\Base\Entity
             $this->setLastName( isset ( $full_name[1] ) ? trim( $full_name[1] ) : '' );
         } else {
             $this->setFullName( trim( rtrim( $this->getFirstName() ) . ' ' . ltrim( $this->getLastName() ) ) );
+        }
+
+        if ( $this->getCreated() === null ) {
+            $this->setCreated( current_time( 'mysql' ) );
+        }
+
+        if ( ! Lib\Utils\DateTime::validateDate( $this->getBirthday() ) ) {
+            $this->birthday = null;
         }
 
         return parent::save();

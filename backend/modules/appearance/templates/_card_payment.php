@@ -1,10 +1,10 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-/** @var BooklyLite\Backend\Modules\Appearance\Lib\Helper $editable */
+use Bookly\Backend\Components\Appearance\Editable;
 ?>
 <div class="bookly-box bookly-table">
     <div class="bookly-form-group" style="width:200px!important">
         <label>
-            <?php $editable::renderString( array( 'bookly_l10n_label_ccard_number', ) ) ?>
+            <?php Editable::renderString( array( 'bookly_l10n_label_ccard_number', ) ) ?>
         </label>
         <div>
             <input type="text" />
@@ -12,7 +12,7 @@
     </div>
     <div class="bookly-form-group">
         <label>
-            <?php $editable::renderString( array( 'bookly_l10n_label_ccard_expire', ) ) ?>
+            <?php Editable::renderString( array( 'bookly_l10n_label_ccard_expire', ) ) ?>
         </label>
         <div>
             <select class="bookly-card-exp">
@@ -31,7 +31,7 @@
 <div class="bookly-box bookly-clear-bottom">
     <div class="bookly-form-group">
         <label>
-            <?php $editable::renderString( array( 'bookly_l10n_label_ccard_code', ) ) ?>
+            <?php Editable::renderString( array( 'bookly_l10n_label_ccard_code', ) ) ?>
         </label>
         <div>
             <input class="bookly-card-cvc" type="text" />

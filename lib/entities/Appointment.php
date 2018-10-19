@@ -1,40 +1,44 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Appointment
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Appointment extends Lib\Base\Entity
 {
-    /** @var  int */
+    /** @var int */
     protected $series_id;
-    /** @var  int */
+    /** @var int */
     protected $location_id;
-    /** @var  int */
+    /** @var int */
     protected $staff_id;
-    /** @var  int */
+    /** @var int */
     protected $staff_any = 0;
-    /** @var  int */
+    /** @var int */
     protected $service_id;
-    /** @var  string */
+    /** @var string */
     protected $custom_service_name;
-    /** @var  float */
+    /** @var float */
     protected $custom_service_price;
-    /** @var  string */
+    /** @var string */
     protected $start_date;
-    /** @var  string */
+    /** @var string */
     protected $end_date;
-    /** @var  string */
-    protected $google_event_id;
-    /** @var  int */
+    /** @var int */
     protected $extras_duration = 0;
-    /** @var  string */
+    /** @var string */
     protected $internal_note;
+    /** @var string */
+    protected $google_event_id;
+    /** @var string */
+    protected $google_event_etag;
+    /** @var string */
+    protected $created_from = 'bookly';
 
-    protected static $table = 'ab_appointments';
+    protected static $table = 'bookly_appointments';
 
     protected static $schema = array(
         'id'                   => array( 'format' => '%d' ),
@@ -47,9 +51,11 @@ class Appointment extends Lib\Base\Entity
         'custom_service_price' => array( 'format' => '%f' ),
         'start_date'           => array( 'format' => '%s' ),
         'end_date'             => array( 'format' => '%s' ),
-        'google_event_id'      => array( 'format' => '%s' ),
         'extras_duration'      => array( 'format' => '%d' ),
         'internal_note'        => array( 'format' => '%s' ),
+        'google_event_id'      => array( 'format' => '%s' ),
+        'google_event_etag'    => array( 'format' => '%s' ),
+        'created_from'         => array( 'format' => '%s' ),
     );
 
     /**
@@ -100,7 +106,7 @@ class Appointment extends Lib\Base\Entity
                 $data['id']   = $data['customer_id'];
                 $ca->customer->setFields( $data, true );
 
-                $result[] = $ca;
+                $result[ $ca->getId() ] = $ca;
             }
         }
 
@@ -118,7 +124,7 @@ class Appointment extends Lib\Base\Entity
         $ca_status_changed = array();
         $ca_data = array();
         foreach ( $cst_data as $item ) {
-            if ( array_key_exists( 'ca_id', $item ) ) {
+            if ( isset( $item['ca_id'] ) ) {
                 $ca_id = $item['ca_id'];
             } else do {
                 // New CustomerAppointment.
@@ -134,8 +140,14 @@ class Appointment extends Lib\Base\Entity
             // Remove redundant customer appointments.
             CustomerAppointment::query()->delete()->whereIn( 'id', $ids_to_delete )->execute();
         }
+        // Calculate units for custom duration services
+        $service = Lib\Entities\Service::find( $this->getServiceId() );
+        $units   = ( $service && $service->getUnitsMax() > 1 ) ? ceil( Lib\Slots\DatePoint::fromStr( $this->getEndDate() )->diff( Lib\Slots\DatePoint::fromStr( $this->getStartDate() ) ) / $service->getDuration() ) : 1;
+
         // Add new customer appointments.
         foreach ( array_diff( array_keys( $ca_data ), $current_ids ) as $id ) {
+            $time_zone = isset( $ca_data[ $id ]['timezone'] ) ? Lib\Proxy\Pro::getTimeZoneOffset( $ca_data[ $id ]['timezone'] ) : null;
+
             $customer_appointment = new CustomerAppointment();
             $customer_appointment
                 ->setAppointmentId( $this->getId() )
@@ -146,13 +158,21 @@ class Appointment extends Lib\Base\Entity
                 ->setNumberOfPersons( $ca_data[ $id ]['number_of_persons'] )
                 ->setNotes( $ca_data[ $id ]['notes'] )
                 ->setCreatedFrom( $ca_data[ $id ]['created_from'] )
+                ->setPaymentId( $ca_data[ $id ]['payment_id'] )
+                ->setUnits( $units )
                 ->setCreated( current_time( 'mysql' ) )
+                ->setTimeZone( $time_zone['time_zone'] )
+                ->setTimeZoneOffset( $time_zone['time_zone_offset'] )
                 ->save();
             $ca_status_changed[] = $customer_appointment;
+            Lib\Proxy\Files::attachFiles( $ca_data[ $id ]['custom_fields'], $customer_appointment );
+            Lib\Proxy\Pro::createBackendPayment( $ca_data[ $id ], $customer_appointment );
         }
 
         // Update existing customer appointments.
         foreach ( array_intersect( $current_ids, array_keys( $ca_data ) ) as $id ) {
+            $time_zone = Lib\Proxy\Pro::getTimeZoneOffset( $ca_data[ $id ]['timezone'] );
+
             $customer_appointment = new CustomerAppointment();
             $customer_appointment->load( $id );
 
@@ -160,35 +180,23 @@ class Appointment extends Lib\Base\Entity
                 $ca_status_changed[] = $customer_appointment;
                 $customer_appointment->setStatus( $ca_data[ $id ]['status'] );
             }
+            if ( $customer_appointment->getPaymentId() != $ca_data[ $id ]['payment_id'] ) {
+                $customer_appointment->setPaymentId( $ca_data[ $id ]['payment_id'] );
+            }
+            Lib\Proxy\Files::attachFiles( $ca_data[ $id ]['custom_fields'], $customer_appointment );
             $customer_appointment
                 ->setNumberOfPersons( $ca_data[ $id ]['number_of_persons'] )
                 ->setNotes( $ca_data[ $id ]['notes'] )
+                ->setUnits( $units )
                 ->setCustomFields( json_encode( $ca_data[ $id ]['custom_fields'] ) )
                 ->setExtras( json_encode( $ca_data[ $id ]['extras'] ) )
+                ->setTimeZone( $time_zone['time_zone'] )
+                ->setTimeZoneOffset( $time_zone['time_zone_offset'] )
                 ->save();
+            Lib\Proxy\Pro::createBackendPayment( $ca_data[ $id ], $customer_appointment );
         }
 
         return $ca_status_changed;
-    }
-
-    /**
-     * Create or update event in Google Calendar.
-     *
-     * @return bool
-     */
-    public function handleGoogleCalendar()
-    {
-        if ( $this->hasGoogleCalendarEvent() ) {
-            return $this->updateGoogleCalendarEvent();
-        } else {
-            $google_event_id = $this->createGoogleCalendarEvent();
-            if ( $google_event_id ) {
-                $this->setGoogleEventId( $google_event_id );
-                return (bool)$this->save();
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -198,50 +206,7 @@ class Appointment extends Lib\Base\Entity
      */
     public function hasGoogleCalendarEvent()
     {
-        return ! empty( $this->google_event_id );
-    }
-
-    /**
-     * Create a new event in Google Calendar and associate it to this appointment.
-     *
-     * @return string|false
-     */
-    public function createGoogleCalendarEvent()
-    {
-        $google = new Lib\Google();
-        if ( $google->loadByStaffId( $this->getStaffId() ) ) {
-            // Create new event in Google Calendar.
-            return $google->createEvent( $this );
-        }
-
-        return false;
-    }
-
-    public function updateGoogleCalendarEvent()
-    {
-        $google = new Lib\Google();
-        if ( $google->loadByStaffId( $this->getStaffId() ) ) {
-            // Update existing event in Google Calendar.
-            return $google->updateEvent( $this );
-        }
-
-        return false;
-    }
-
-    /**
-     * Delete event from Google Calendar associated to this appointment.
-     *
-     * @return bool
-     */
-    public function deleteGoogleCalendarEvent()
-    {
-        $google = new Lib\Google();
-        if ( $google->loadByStaffId( $this->getStaffId() ) ) {
-            // Delete existing event in Google Calendar.
-            return $google->delete( $this->getGoogleEventId() );
-        }
-
-        return false;
+        return $this->google_event_id != '';
     }
 
     /**
@@ -549,29 +514,6 @@ class Appointment extends Lib\Base\Entity
     }
 
     /**
-     * Gets google_event_id
-     *
-     * @return string
-     */
-    public function getGoogleEventId()
-    {
-        return $this->google_event_id;
-    }
-
-    /**
-     * Sets google_event_id
-     *
-     * @param string $google_event_id
-     * @return $this
-     */
-    public function setGoogleEventId( $google_event_id )
-    {
-        $this->google_event_id = $google_event_id;
-
-        return $this;
-    }
-
-    /**
      * Gets extras_duration
      *
      * @return int
@@ -617,6 +559,75 @@ class Appointment extends Lib\Base\Entity
         return $this;
     }
 
+    /**
+     * Gets google_event_id
+     *
+     * @return string
+     */
+    public function getGoogleEventId()
+    {
+        return $this->google_event_id;
+    }
+
+    /**
+     * Sets google_event_id
+     *
+     * @param string $google_event_id
+     * @return $this
+     */
+    public function setGoogleEventId( $google_event_id )
+    {
+        $this->google_event_id = $google_event_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets google_event_etag
+     *
+     * @return string
+     */
+    public function getGoogleEventETag()
+    {
+        return $this->google_event_etag;
+    }
+
+    /**
+     * Sets google_event_etag
+     *
+     * @param string $google_event_etag
+     * @return $this
+     */
+    public function setGoogleEventETag( $google_event_etag )
+    {
+        $this->google_event_etag = $google_event_etag;
+
+        return $this;
+    }
+
+    /**
+     * Gets created_from
+     *
+     * @return string
+     */
+    public function getCreatedFrom()
+    {
+        return $this->created_from;
+    }
+
+    /**
+     * Sets created_from
+     *
+     * @param string $created_from
+     * @return $this
+     */
+    public function setCreatedFrom( $created_from )
+    {
+        $this->created_from = $created_from;
+
+        return $this;
+    }
+
     /**************************************************************************
      * Overridden Methods                                                     *
      **************************************************************************/
@@ -636,9 +647,11 @@ class Appointment extends Lib\Base\Entity
                 // Delete event from the Google Calendar of the old staff if the staff was changed.
                 $staff_id = $this->getStaffId();
                 $this->setStaffId( $modified['staff_id'] );
-                $this->deleteGoogleCalendarEvent();
-                $this->setStaffId( $staff_id )
-                     ->setGoogleEventId( null );
+                Lib\Proxy\Pro::deleteGoogleCalendarEvent( $this );
+                $this
+                    ->setStaffId( $staff_id )
+                    ->setGoogleEventId( null )
+                ;
             }
         }
 
@@ -665,7 +678,7 @@ class Appointment extends Lib\Base\Entity
         $result = parent::delete();
         if ( $result ) {
             if ( $this->hasGoogleCalendarEvent() ) {
-                $this->deleteGoogleCalendarEvent();
+                Lib\Proxy\Pro::deleteGoogleCalendarEvent( $this );
             }
             if ( $this->getSeriesId() !== null ) {
                 if ( Appointment::query()->where( 'series_id', $this->getSeriesId() )->count() === 0 ) {

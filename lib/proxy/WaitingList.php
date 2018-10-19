@@ -1,21 +1,15 @@
 <?php
-namespace BooklyLite\Lib\Proxy;
+namespace Bookly\Lib\Proxy;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class WaitingList
- * Invoke local methods from Waiting List add-on.
+ * @package Bookly\Lib\Proxy
  *
- * @package BooklyLite\Lib\Proxy
- *
- * @method static void handleParticipantsChange( Lib\Entities\Appointment $appointment ) Handle the change of participants of given appointment
- * @see \BooklyWaitingList\Lib\ProxyProviders\Local::handleParticipantsChange()
- *
- * @method static array prepareNotificationCodesList( array $codes, string $set = '' ) Alter array of codes to be displayed in Bookly Notifications.
- * @see \BooklyWaitingList\Lib\ProxyProviders\Local::prepareNotificationCodesList()
+ * @method static void handleParticipantsChange( Lib\Entities\Appointment $appointment ) Handle the change of participants of given appointment.
  */
-abstract class WaitingList extends Lib\Base\ProxyInvoker
+abstract class WaitingList extends Lib\Base\Proxy
 {
 
 }

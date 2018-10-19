@@ -3,12 +3,16 @@ jQuery(function($) {
     var
         $payments_list    = $('#bookly-payments-list'),
         $check_all_button = $('#bookly-check-all'),
+        $id_filter        = $('#bookly-filter-id'),
         $date_filter      = $('#bookly-filter-date'),
         $type_filter      = $('#bookly-filter-type'),
+        $customer_filter  = $('#bookly-filter-customer'),
         $staff_filter     = $('#bookly-filter-staff'),
         $service_filter   = $('#bookly-filter-service'),
+        $status_filter    = $('#bookly-filter-status'),
         $payment_total    = $('#bookly-payment-total'),
-        $delete_button    = $('#bookly-delete')
+        $delete_button    = $('#bookly-delete'),
+        $download_invoice = $('#bookly-download-invoices')
         ;
     $('.bookly-js-select')
         .val(null)
@@ -23,6 +27,42 @@ jQuery(function($) {
                 noResults: function() { return BooklyL10n.no_result_found; }
             }
         });
+
+    /**
+     * Init Columns.
+     */
+    var columns = [
+        { data: 'id' },
+        { data: 'created' },
+        { data: 'type' },
+        { data: 'customer', render: $.fn.dataTable.render.text() },
+        { data: 'provider' },
+        { data: 'service' },
+        { data: 'start_date' },
+        { data: 'paid' },
+        { data: 'status' },
+        {
+            responsivePriority: 1,
+            orderable: false,
+            searchable: false,
+            render: function ( data, type, row, meta ) {
+                var buttons = '';
+                if (BooklyL10n.invoice.enabled) {
+                    buttons += '<button type="button" class="btn btn-default bookly-margin-right-md" data-action="view-invoice" data-payment_id="' + row.id + '"><i class="dashicons dashicons-media-text"></i> ' + BooklyL10n.invoice.button + '</a>';
+                }
+                return buttons + '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#bookly-payment-details-modal" data-payment_id="' + row.id + '"><i class="glyphicon glyphicon-list-alt"></i> ' + BooklyL10n.details + '</a>';
+            }
+        },
+        {
+            responsivePriority: 1,
+            orderable: false,
+            searchable: false,
+            render: function ( data, type, row, meta ) {
+                return '<input type="checkbox" value="' + row.id + '">';
+            }
+        }
+    ];
+
     /**
      * Init DataTables.
      */
@@ -42,10 +82,13 @@ jQuery(function($) {
                     action: 'bookly_get_payments',
                     csrf_token: BooklyL10n.csrf_token,
                     filter: {
-                        created: $date_filter.data('date'),
-                        type:    $type_filter.val(),
-                        staff:   $staff_filter.val(),
-                        service: $service_filter.val()
+                        id      : $id_filter.val(),
+                        created : $date_filter.data('date'),
+                        type    : $type_filter.val(),
+                        customer: $customer_filter.val(),
+                        staff   : $staff_filter.val(),
+                        service : $service_filter.val(),
+                        status  : $status_filter.val()
                     }
                 } );
             },
@@ -55,35 +98,10 @@ jQuery(function($) {
                 return json.data;
             }
         },
-        columns: [
-            { data: 'created' },
-            { data: 'type' },
-            { data: 'customer', render: $.fn.dataTable.render.text() },
-            { data: 'provider' },
-            { data: 'service' },
-            { data: 'start_date' },
-            { data: 'paid' },
-            { data: 'status' },
-            {
-                responsivePriority: 1,
-                orderable: false,
-                searchable: false,
-                render: function ( data, type, row, meta ) {
-                    return '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#bookly-payment-details-modal" data-payment_id="' + row.id + '"><i class="glyphicon glyphicon-list-alt"></i> ' + BooklyL10n.details + '</a>';
-                }
-            },
-            {
-                responsivePriority: 1,
-                orderable: false,
-                searchable: false,
-                render: function ( data, type, row, meta ) {
-                    return '<input type="checkbox" value="' + row.id + '">';
-                }
-            }
-        ],
+        columns: columns,
         language: {
             zeroRecords: BooklyL10n.zeroRecords,
-            processing:  BooklyL10n.processing
+            processing: BooklyL10n.processing
         }
     });
 
@@ -100,6 +118,7 @@ jQuery(function($) {
     $payments_list.on('change', 'tbody input:checkbox', function () {
         $check_all_button.prop('checked', $payments_list.find('tbody input:not(:checked)').length == 0);
     });
+
     /**
      * Init date range picker.
      */
@@ -145,11 +164,13 @@ jQuery(function($) {
         }
     );
 
-
+    $id_filter.on('keyup', function () { dt.ajax.reload(); });
     $date_filter.on('apply.daterangepicker', function () { dt.ajax.reload(); });
     $type_filter.on('change', function () { dt.ajax.reload(); });
+    $customer_filter.on('change', function () { dt.ajax.reload(); });
     $staff_filter.on('change', function () { dt.ajax.reload(); });
     $service_filter.on('change', function () { dt.ajax.reload(); });
+    $status_filter.on('change', function () { dt.ajax.reload(); });
 
     /**
      * Delete payments.
@@ -183,6 +204,20 @@ jQuery(function($) {
                     ladda.stop();
                 }
             });
+        }
+    });
+
+    $payments_list.on('click', '[data-action=view-invoice]', function () {
+        window.location = $download_invoice.data('action') + '&invoices=' + $(this).data('payment_id');
+    });
+
+    $download_invoice.on('click', function () {
+        var invoices = [];
+        $payments_list.find('tbody input:checked').each(function () {
+            invoices.push(this.value);
+        });
+        if (invoices.length) {
+            window.location = $(this).data('action') + '&invoices=' + invoices.join(',');
         }
     });
 });

@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib\Base;
+namespace Bookly\Lib\Base;
 
 /**
  * Class Installer
- * @package BooklyLite\Lib\Base
+ * @package Bookly\Lib\Base
  */
 abstract class Installer extends Schema
 {
@@ -18,8 +18,6 @@ abstract class Installer extends Schema
      */
     public function install()
     {
-        global $wpdb;
-
         $plugin_class = Plugin::getPluginFor( $this );
         $data_loaded_option_name = $plugin_class::getPrefix() . 'data_loaded';
 
@@ -27,22 +25,6 @@ abstract class Installer extends Schema
         if ( ! get_option( $data_loaded_option_name ) ) {
             $this->createTables();
             $this->loadData();
-        }
-
-        if ( false === \BooklyLite\Lib\Entities\Staff::find( 1 ) ) {
-            $wpdb->insert( \BooklyLite\Lib\Entities\Staff::getTableName(), array( 'full_name' => 'Employee', 'id' => 1, 'visibility' => 'public' ) );
-            \BooklyLite\Lib\Entities\StaffScheduleItem::query( 'ss' )
-                ->delete()->where( 'ss.staff_id', 1 )
-                ->execute();
-            for ( $i = 1; $i <= 7; $i ++ ) {
-                $schedule = new \BooklyLite\Lib\Entities\StaffScheduleItem();
-                $schedule
-                    ->setStaffId( 1 )
-                    ->setDayIndex( $i )
-                    ->setStartTime( '08:00:00' )
-                    ->setEndTime( '18:00:00' )
-                    ->save();
-            }
         }
 
         update_option( $data_loaded_option_name, '1' );
@@ -76,7 +58,7 @@ abstract class Installer extends Schema
     }
 
     /**
-     * Drop tables (@see \BooklyLite\Backend\Modules\Debug\Controller ).
+     * Drop tables (@see \Bookly\Backend\Modules\Debug\Ajax ).
      */
     public function dropTables()
     {
@@ -94,12 +76,9 @@ abstract class Installer extends Schema
         add_option( $plugin_prefix . 'data_loaded', '0' );
         add_option( $plugin_prefix . 'db_version',  $plugin_class::getVersion() );
         add_option( $plugin_prefix . 'installation_time', time() );
-        add_option( $plugin_prefix . 'grace_start', time() + 60 * DAY_IN_SECONDS );
-        add_option( $plugin_class::getPurchaseCodeOption(), '' );
-        if ( Plugin::getPrefix() != 'bookly_'
-            && array_key_exists( $plugin_prefix . 'enabled', $this->options ) == false
-        ) {
-            add_option( $plugin_prefix . 'enabled', '1' );
+        if ( $plugin_prefix != 'bookly_' ) {
+            add_option( $plugin_class::getPurchaseCodeOption(), '' );
+            add_option( $plugin_prefix . 'grace_start', time() + 60 * DAY_IN_SECONDS );
         }
 
         // Add plugin options.
@@ -129,5 +108,4 @@ abstract class Installer extends Schema
         delete_option( $plugin_prefix . 'enabled' );
         delete_option( $plugin_class::getPurchaseCodeOption() );
     }
-
 }

@@ -1,13 +1,13 @@
 <?php
-namespace BooklyLite\Backend\Modules\Services\Forms;
+namespace Bookly\Backend\Modules\Services\Forms;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Category
  * @method Lib\Entities\Category save()
  *
- * @package BooklyLite\Backend\Modules\Services\Forms
+ * @package Bookly\Backend\Modules\Services\Forms
  */
 class Category extends Lib\Base\Form
 {

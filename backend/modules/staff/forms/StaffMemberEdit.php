@@ -1,16 +1,15 @@
 <?php
-namespace BooklyLite\Backend\Modules\Staff\Forms;
-
-use BooklyLite\Lib;
+namespace Bookly\Backend\Modules\Staff\Forms;
 
 /**
  * Class StaffMemberEdit
- * @package BooklyLite\Backend\Modules\Staff\Forms
+ * @package Bookly\Backend\Modules\Staff\Forms
  */
 class StaffMemberEdit extends StaffMember
 {
-    private $errors = array();
-
+    /**
+     * @inheritdoc
+     */
     public function configure()
     {
         $this->setFields( array(
@@ -19,37 +18,9 @@ class StaffMemberEdit extends StaffMember
             'email',
             'phone',
             'attachment_id',
-            'google_calendar_id',
-            'position',
             'info',
             'visibility',
+            'position',
         ) );
     }
-
-    /**
-     * @return Lib\Entities\Staff|false
-     */
-    public function save()
-    {
-        // Verify google calendar.
-        if ( array_key_exists( 'google_calendar_id', $this->data ) && $this->data['google_calendar_id'] != '' ) {
-            $google = new Lib\Google();
-            if ( ! $google->loadByStaffId( $this->data['id'] ) || ! $google->validateCalendar( $this->data['google_calendar_id'] ) ) {
-                $this->errors['google_calendar_error'] = implode( '<br>', $google->getErrors() );
-
-                return false;
-            }
-        }
-
-        return parent::save();
-    }
-
-    /**
-     * @return array
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
 }

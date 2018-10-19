@@ -1,9 +1,29 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 abstract class API
 {
     const API_URL = 'https://api.booking-wp-plugin.com';
+
+    /**
+     * Get info.
+     *
+     * @return array|false
+     */
+    public static function getInfo()
+    {
+        $url = add_query_arg( array( 'site_url' => site_url() ), self::API_URL . '/1.0/info' );
+        $response = wp_remote_get( $url, array(
+            'timeout' => 25,
+        ) );
+
+        if ( ! is_wp_error( $response ) && isset ( $response['body'] ) ) {
+
+            return json_decode( $response['body'], true );
+        }
+
+        return false;
+    }
 
     /**
      * Register subscriber.
@@ -20,9 +40,8 @@ abstract class API
                 'site_url' => site_url(),
             ),
         ) );
-        if ( $response instanceof \WP_Error ) {
 
-        } elseif ( isset( $response['body'] ) ) {
+        if ( ! is_wp_error( $response ) && isset ( $response['body'] ) ) {
             $json = json_decode( $response['body'], true );
             if ( isset ( $json['success'] ) && $json['success'] ) {
                 return true;
@@ -51,9 +70,8 @@ abstract class API
                 'site_url' => site_url(),
             ),
         ) );
-        if ( $response instanceof \WP_Error ) {
 
-        } elseif ( isset( $response['body'] ) ) {
+        if ( ! is_wp_error( $response ) && isset ( $response['body'] ) ) {
             $json = json_decode( $response['body'], true );
             if ( isset ( $json['success'] ) && $json['success'] ) {
                 return true;
@@ -95,7 +113,7 @@ abstract class API
 
         // Staff members.
         $staff = array( 'total' => 0, 'admins' => 0, 'non_admins' => 0 );
-        /** @var \BooklyLite\Lib\Entities\Staff $staff_member */
+        /** @var \Bookly\Lib\Entities\Staff $staff_member */
         foreach ( Entities\Staff::query()->find() as $staff_member ) {
             ++ $staff['total'];
             $wp_user_id = $staff_member->getWpUserId();
@@ -129,9 +147,8 @@ abstract class API
             ->fetchRow();
         $services['max_capacity'] = $row['max_capacity'];
 
-        // Services list.
-        $rows = Entities\Service::query()->select( 'id, title' )->fetchArray();
-        $services['services'] = $rows;
+        // Services quantity.
+        $services['quantity'] = Entities\Service::query()->count();
 
         // StaffServices.
         $staff_services = array(
@@ -155,7 +172,10 @@ abstract class API
               ->count();
 
         // Extras quantity.
-        $extras_quantity = Config::serviceExtrasEnabled() ? count( Proxy\ServiceExtras::findAll() ) : null;
+        $extras_quantity = Config::serviceExtrasActive() && get_option( 'bookly_service_extras_enabled' ) ? count( Proxy\ServiceExtras::findAll() ) : null;
+
+        // Cart Enabled.
+        $cart_enabled = Config::cartActive() && get_option( 'bookly_cart_enabled' ) == 1 && ! Config::wooCommerceEnabled();
 
         // History Data.
         $history = array();
@@ -168,41 +188,44 @@ abstract class API
         if ( Config::paypalEnabled() ) {
             $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_PAYPAL ] = 0;
         }
-        if ( Config::stripeEnabled() ) {
+        if ( Config::stripeActive() && get_option( 'bookly_stripe_enabled' ) ) {
             $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_STRIPE ] = 0;
         }
-        if ( Config::twoCheckoutEnabled() ) {
+        if ( Config::twoCheckoutActive() && get_option( 'bookly_2checkout_enabled' ) ) {
             $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_2CHECKOUT ] = 0;
         }
-        if ( Config::authorizeNetEnabled() ) {
+        if ( Config::authorizeNetActive() && get_option( 'bookly_authorize_net_enabled' ) ) {
             $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_AUTHORIZENET ] = 0;
         }
-        if ( Config::paysonEnabled() ) {
+        if ( Config::paysonActive() && get_option( 'bookly_payson_enabled' ) ) {
             $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_PAYSON ] = 0;
         }
-        if ( Config::payuLatamEnabled() ) {
+        if ( Config::mollieActive() && get_option( 'bookly_mollie_enabled' ) ) {
+            $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_MOLLIE ] = 0;
+        }
+        if ( Config::payuLatamActive() && get_option( 'bookly_payu_latam_enabled' ) ) {
             $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_PAYULATAM ] = 0;
         }
 
         $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_COUPON ] = Config::couponsActive() ? 0 : null;
         $history_schema[ 'bookings_payment_' . Entities\Payment::TYPE_WOOCOMMERCE ] = get_option( 'bookly_wc_enabled' ) ? 0 : null;
 
-        if ( Config::serviceExtrasEnabled() ) {
+        if ( Config::serviceExtrasActive() && get_option( 'bookly_service_extras_enabled' ) ) {
             $history_schema['bookings_with_extras']    = 0;
             $history_schema['bookings_without_extras'] = 0;
         }
 
-        if ( Config::couponsEnabled() ) {
+        if ( Config::couponsActive() && get_option( 'bookly_coupons_enabled' ) ) {
             $history_schema['bookings_with_coupon']    = 0;
             $history_schema['bookings_without_coupon'] = 0;
         }
 
-        if ( Config::recurringAppointmentsEnabled() ) {
+        if ( Config::recurringAppointmentsActive() && get_option( 'bookly_recurring_appointments_enabled' ) ) {
             $history_schema['bookings_in_series']     = 0;
             $history_schema['bookings_not_in_series'] = 0;
         }
 
-        if ( Config::depositPaymentsEnabled() ) {
+        if ( Config::depositPaymentsActive() ) {
             $history_schema['paid_deposit'] = 0;
             $history_schema['paid_in_full'] = 0;
             if ( $staff_services['total'] != 0 ) {
@@ -210,7 +233,7 @@ abstract class API
             }
         }
 
-        if ( Config::specialDaysEnabled() ) {
+        if ( Config::specialDaysActive() ) {
             $history_schema['special_days_changed'] = 0;
         }
 
@@ -221,7 +244,7 @@ abstract class API
         }
 
         // Bookings With Coupons.
-        if ( Config::couponsEnabled() ) {
+        if ( Config::couponsActive() && get_option( 'bookly_coupons_enabled' ) ) {
             $rows = Entities\CustomerAppointment::query( 'ca' )
                 ->select( 'p.details, DATE_FORMAT(ca.created, \'%%Y-%%m-%%d\') AS cur_date' )
                 ->innerJoin( 'Payment', 'p', 'ca.payment_id = p.id' )
@@ -253,7 +276,7 @@ abstract class API
         }
 
         // Bookings in Series.
-        if ( Config::recurringAppointmentsEnabled() ) {
+        if ( Config::recurringAppointmentsActive() && get_option( 'bookly_recurring_appointments_enabled' ) ) {
             $rows = Entities\CustomerAppointment::query( 'ca' )
                 ->select( 'ap.series_id, IF(ap.series_id IS NULL, COUNT(*), 1) AS in_series, DATE_FORMAT(created, \'%%Y-%%m-%%d\') AS cur_date' )
                 ->innerJoin( 'Appointment', 'ap', 'ca.appointment_id = ap.id' )
@@ -275,7 +298,7 @@ abstract class API
         $rows = Entities\CustomerAppointment::query()
             ->select( 'COUNT(*) AS quantity, created_from, DATE_FORMAT(created, \'%%Y-%%m-%%d\') AS cur_date' )
             ->whereGte( 'created', $ago_10days )
-            ->whereLt( 'created',  $today )
+            ->whereLt( 'created', $today )
             ->groupBy( 'created_from, cur_date' )
             ->fetchArray();
 
@@ -287,7 +310,7 @@ abstract class API
         $rows = Entities\Stat::query( 's' )
             ->select( 'DATE_FORMAT(created, \'%%Y-%%m-%%d\') AS created, `name`, `value`' )
             ->whereGte( 'created', $ago_10days )
-            ->whereLt( 'created',  $today )
+            ->whereLt( 'created', $today )
             ->fetchArray();
         foreach ( $rows as $record ) {
             $history[ $record['created'] ][ $record['name'] ] = $record['value'];
@@ -308,11 +331,11 @@ abstract class API
         }
 
         // Bookings with Extras.
-        if ( Config::serviceExtrasEnabled() ) {
+        if ( Config::serviceExtrasActive() && get_option( 'bookly_service_extras_enabled' ) ) {
             $rows = Entities\CustomerAppointment::query()
                 ->select( 'COUNT(*) AS quantity, IF(extras=\'[]\', 0, 1) AS with_extras, DATE_FORMAT(created, \'%%Y-%%m-%%d\') AS cur_date' )
                 ->whereGte( 'created', $ago_10days )
-                ->whereLt( 'created',  $today )
+                ->whereLt( 'created', $today )
                 ->groupBy( 'with_extras, cur_date' )
                 ->fetchArray();
 
@@ -326,25 +349,26 @@ abstract class API
         }
 
         // Send request.
-        wp_remote_post( self::API_URL . '/1.3/stats', array(
+        wp_remote_post( self::API_URL . '/1.5/stats', array(
             'timeout' => 25,
             'body'    => array(
-                'plugin'             => 'bookly_lite',
-                'site_url'           => site_url(),
-                'active_clients'     => $active_clients,
-                'admin_language'     => get_option( 'bookly_admin_preferred_language' ),
-                'wp_locale'          => get_locale(),
-                'company'            => get_option( 'bookly_co_name' ),
-                'completed_payments' => $completed_payments,
+                'site_url'            => site_url(),
+                'active_clients'      => $active_clients,
+                'admin_language'      => get_option( 'bookly_admin_preferred_language' ),
+                'wp_locale'           => get_locale(),
+                'company'             => get_option( 'bookly_co_name' ),
+                'completed_payments'  => $completed_payments,
                 'custom_fields_count' => count( (array) Proxy\CustomFields::getAll() ),
-                'description'        => get_bloginfo( 'description' ),
-                'extras_quantity'    => $extras_quantity,
-                'history'            => $history,
-                'php'                => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION,
-                'services'           => $services,
-                'staff'              => $staff,
-                'staff_services'     => $staff_services,
-                'title'              => get_bloginfo( 'name' ),
+                'description'         => get_bloginfo( 'description' ),
+                'extras_quantity'     => $extras_quantity,
+                'cart_enabled'        => $cart_enabled,
+                'history'             => $history,
+                'php'                 => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION,
+                'services'            => $services,
+                'staff'               => $staff,
+                'staff_services'      => $staff_services,
+                'title'               => get_bloginfo( 'name' ),
+                'source'              => Config::proActive() ? 'bookly-pro' : 'bookly',
             ),
         ) );
     }

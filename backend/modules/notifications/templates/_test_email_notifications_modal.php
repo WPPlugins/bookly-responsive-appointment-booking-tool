@@ -1,4 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Components\Controls\Buttons;
+use Bookly\Backend\Components\Controls\Inputs;
+?>
 <div ng-controller=testEmailNotificationsDialogCtrl>
     <div id=bookly-test-email-notifications-dialog class="modal fade" tabindex=-1 role="dialog">
         <div class="modal-dialog">
@@ -83,14 +86,14 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
-                            <?php \BooklyLite\Lib\Utils\Common::submitButton( '', '', __( 'Send', 'bookly' ) ) ?>
+                            <?php Inputs::renderCsrf() ?>
+                            <?php Buttons::renderSubmit( null, null, __( 'Send', 'bookly' ) ) ?>
                         </div>
                     </form>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="bookly-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">

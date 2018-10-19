@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class ScheduleItemBreak
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class ScheduleItemBreak extends Lib\Base\Entity
 {
@@ -16,7 +16,7 @@ class ScheduleItemBreak extends Lib\Base\Entity
     /** @var  int */
     protected $end_time;
 
-    protected static $table = 'ab_schedule_item_breaks';
+    protected static $table = 'bookly_schedule_item_breaks';
 
     protected static $schema = array(
         'id'                     => array( 'format' => '%d' ),

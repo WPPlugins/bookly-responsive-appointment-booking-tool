@@ -1,12 +1,16 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-    /** @var \BooklyLite\Lib\Entities\Staff $staff */
+use Bookly\Backend\Components\Controls\Buttons;
+use Bookly\Backend\Components\Controls\Inputs;
+use Bookly\Backend\Modules\Staff\Proxy;
+use Bookly\Lib\Utils\Common;
+/** @var Bookly\Lib\Entities\Staff $staff */
 ?>
-<form>
+<form class="bookly-js-staff-details">
     <div class="form-group">
         <label for="bookly-full-name"><?php _e( 'Full name', 'bookly' ) ?></label>
         <input type="text" class="form-control" id="bookly-full-name" name="full_name" value="<?php echo esc_attr( $staff->getFullName() ) ?>"/>
     </div>
-    <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
+    <?php if ( Common::isCurrentUserAdmin() ) : ?>
         <div class="form-group">
             <label for="bookly-wp-user"><?php _e( 'User', 'bookly' ) ?></label>
 
@@ -62,49 +66,19 @@
             <option value="private" <?php selected( $staff->getVisibility(), 'private' ) ?>><?php _e( 'Private', 'bookly' ) ?></option>
         </select>
     </div>
-    <?php BooklyLite\Lib\Proxy\Shared::renderStaffForm( $staff ) ?>
 
-    <div class="form-group">
-        <h3><?php _e( 'Google Calendar integration', 'bookly' ) ?></h3>
-        <p class="help-block">
-            <?php _e( 'Synchronize staff member appointments with Google Calendar.', 'bookly' ) ?>
-        </p>
-        <p>
-            <?php if ( isset( $authUrl ) ) : ?>
-                <?php if ( $authUrl ) : ?>
-                    <a href="<?php echo $authUrl ?>"><?php _e( 'Connect', 'bookly' ) ?></a>
-                <?php else : ?>
-                    <?php printf( __( 'Please configure Google Calendar <a href="%s">settings</a> first', 'bookly' ), \BooklyLite\Lib\Utils\Common::escAdminUrl( \BooklyLite\Backend\Modules\Settings\Controller::page_slug, array( 'tab' => 'google_calendar' ) ) ) ?>
-                <?php endif ?>
-            <?php else : ?>
-                <?php _e( 'Connected', 'bookly' ) ?> (<a href="<?php echo \BooklyLite\Lib\Utils\Common::escAdminUrl( \BooklyLite\Backend\Modules\Staff\Controller::page_slug, array( 'google_logout' => $staff->getId() ) ) ?>"><?php _e( 'disconnect', 'bookly' ) ?></a>)
-            <?php endif ?>
-        </p>
-    </div>
-    <?php if ( ! isset( $authUrl ) ) : ?>
-        <div class="form-group">
-            <label for="bookly-calendar-id"><?php _e( 'Calendar', 'bookly' ) ?></label>
-            <select class="form-control" name="google_calendar_id" id="bookly-calendar-id">
-                <?php foreach ( $google_calendars as $id => $calendar ) : ?>
-                    <option
-                        <?php selected( $staff->getGoogleCalendarId() == $id || $staff->getGoogleCalendarId() == '' && $calendar['primary'] ) ?>
-                            value="<?php echo esc_attr( $id ) ?>">
-                        <?php echo esc_html( $calendar['summary'] ) ?>
-                    </option>
-                <?php endforeach ?>
-            </select>
-        </div>
-    <?php endif ?>
+    <?php Proxy\Shared::renderStaffForm( $staff ) ?>
+    <?php Proxy\Pro::renderGoogleCalendarSettings( $tpl_data ) ?>
 
     <input type="hidden" name="id" value="<?php echo $staff->getId() ?>">
     <input type="hidden" name="attachment_id" value="<?php echo $staff->getAttachmentId() ?>">
-    <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
+    <?php Inputs::renderCsrf() ?>
 
     <div class="panel-footer">
-        <?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
-            <?php \BooklyLite\Lib\Utils\Common::deleteButton( 'bookly-staff-delete', 'btn-lg pull-left' ) ?>
+        <?php if ( Common::isCurrentUserAdmin() ) : ?>
+            <?php Buttons::renderDelete( 'bookly-staff-delete', 'btn-lg pull-left' ) ?>
         <?php endif ?>
-        <?php \BooklyLite\Lib\Utils\Common::customButton( 'bookly-details-save', 'btn-lg btn-success', __( 'Save', 'bookly' ) ) ?>
-        <?php \BooklyLite\Lib\Utils\Common::resetButton() ?>
+        <?php Buttons::renderSubmit( 'bookly-details-save' ) ?>
+        <?php Buttons::renderReset() ?>
     </div>
 </form>

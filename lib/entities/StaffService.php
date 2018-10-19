@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class StaffService
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class StaffService extends Lib\Base\Entity
 {
@@ -13,6 +13,8 @@ class StaffService extends Lib\Base\Entity
     protected $staff_id;
     /** @var  int */
     protected $service_id;
+    /** @var  int */
+    protected $location_id;
     /** @var  float */
     protected $price = 0;
     /** @var  int */
@@ -25,12 +27,13 @@ class StaffService extends Lib\Base\Entity
     /** @var Service */
     public $service;
 
-    protected static $table = 'ab_staff_services';
+    protected static $table = 'bookly_staff_services';
 
     protected static $schema = array(
         'id'            => array( 'format' => '%d' ),
         'staff_id'      => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
         'service_id'    => array( 'format' => '%d', 'reference' => array( 'entity' => 'Service' ) ),
+        'location_id'   => array( 'format' => '%d' ),
         'price'         => array( 'format' => '%f' ),
         'capacity_min'  => array( 'format' => '%d' ),
         'capacity_max'  => array( 'format' => '%d' ),
@@ -107,6 +110,29 @@ class StaffService extends Lib\Base\Entity
         $this->service_id = $service_id;
 
         return $this;
+    }
+
+    /**
+     * Sets location_id
+     *
+     * @param int $location_id
+     * @return $this
+     */
+    public function setLocationId( $location_id )
+    {
+        $this->location_id = $location_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets location_id
+     *
+     * @return int
+     */
+    public function getLocationId()
+    {
+        return $this->location_id;
     }
 
     /**

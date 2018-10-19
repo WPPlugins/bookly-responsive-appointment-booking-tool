@@ -1,4 +1,6 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Components\Controls\Inputs;
+?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
         <div class="page-header text-right clearfix">
@@ -15,7 +17,7 @@
         <div class="panel-group" id="data-management">
             <div class="bookly-data-button">
             <form action="<?php echo admin_url( 'admin-ajax.php?action=bookly_export_data' ) ?>" method="POST">
-                <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
+                <?php Inputs::renderCsrf() ?>
                 <button id="bookly-export" type="submit" class="btn btn-lg btn-success">
                     <span class="ladda-label">Export data</span>
                 </button>
@@ -23,7 +25,7 @@
             </div>
             <div class="bookly-data-button">
             <form id="bookly_import" action="<?php echo admin_url( 'admin-ajax.php?action=bookly_import_data' ) ?>" method="POST" enctype="multipart/form-data">
-                <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
+                <?php Inputs::renderCsrf() ?>
                 <div id="bookly-import" class="btn btn-lg btn-primary btn-file">
                     <span class="ladda-label">Import data</span>
                     <input type="file" id="bookly_import_file" name="import">

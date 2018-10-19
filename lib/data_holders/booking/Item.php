@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\DataHolders\Booking;
+namespace Bookly\Lib\DataHolders\Booking;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Item
- * @package BooklyLite\Lib\DataHolders\Booking
+ * @package Bookly\Lib\DataHolders\Booking
  */
 abstract class Item
 {
@@ -15,6 +15,8 @@ abstract class Item
 
     /** @var int */
     protected $type;
+    /** @var float */
+    protected $tax = 0;
 
     /**
      * Get type.
@@ -104,4 +106,13 @@ abstract class Item
      * @return string
      */
     abstract public function getDeposit();
+
+    /**
+     * Get tax.
+     *
+     * @return string
+     */
+    abstract public function getTax();
+
+
 }

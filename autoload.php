@@ -1,12 +1,12 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
- * Bookly Lite autoload.
+ * Bookly autoload.
  * @param $class
  */
-function bookly_lite_loader( $class )
+function bookly_loader( $class )
 {
-    if ( preg_match( '/^BooklyLite\\\\(.+)?([^\\\\]+)$/U', ltrim( $class, '\\' ), $match ) ) {
+    if ( preg_match( '/^Bookly\\\\(.+)?([^\\\\]+)$/U', ltrim( $class, '\\' ), $match ) ) {
         $file = __DIR__ . DIRECTORY_SEPARATOR
                 . strtolower( str_replace( '\\', DIRECTORY_SEPARATOR, preg_replace( '/([a-z])([A-Z])/', '$1_$2', $match[1] ) ) )
                 . $match[2]
@@ -16,4 +16,4 @@ function bookly_lite_loader( $class )
         }
     }
 }
-spl_autoload_register( 'bookly_lite_loader', true, true );
+spl_autoload_register( 'bookly_loader', true, true );

@@ -5,6 +5,7 @@ jQuery(function ($) {
         $staff        = $('input.bookly-js-check-entity'),
         $showAll      = $('input#bookly-check-all-entities'),
         firstHour     = new Date().getHours(),
+        $syncButton   = $('#bookly-google-calendar-sync'),
         $staffButton  = $('#bookly-staff-button'),
         staffMembers  = [],
         staffIds      = getCookie('bookly_cal_st_ids'),
@@ -27,7 +28,7 @@ jQuery(function ($) {
             $tabs.filter('[data-staff_id=' + value + ']').show();
         });
     } else {
-        $('.dropdown-toggle').dropdown('toggle');
+        $('.bookly-js-staff-filter.dropdown-toggle').dropdown('toggle');
     }
 
     $tabs.filter('[data-staff_id=' + tabId + ']').addClass('active');
@@ -43,23 +44,9 @@ jQuery(function ($) {
      * @return {number}
      */
     function heightFC() {
-        var window_height = $(window).height(),
-            wp_admin_bar_height = $('#wpadminbar').height(),
-            bookly_calendar_tabs_height = $('#bookly-fc-wrapper .tabbable').outerHeight(true),
-            height_to_reduce = wp_admin_bar_height + bookly_calendar_tabs_height,
-            $wrap = $('#wpbody-content .wrap');
+        var height = $(window).height() - $('#bookly-fc-wrapper').offset().top - 20;
 
-        if ($wrap.css('margin-top')) {
-            height_to_reduce += parseInt($wrap.css('margin-top').replace('px', ''), 10);
-        }
-
-        if ($wrap.css('margin-bottom')) {
-            height_to_reduce += parseInt($wrap.css('margin-bottom').replace('px', ''), 10);
-        }
-
-        var res = window_height - height_to_reduce - 130;
-
-        return res > 620 ? res : 620;
+        return height > 620 ? height : 620;
     }
 
     var options = {
@@ -94,6 +81,117 @@ jQuery(function ($) {
         },
         l10n: BooklyL10n
     };
+
+    /**
+     * @param {jQuery} $container
+     * @param {Object} callbacks
+     */
+    function initLocationFilter($container, callbacks)
+    {
+        var elements = {};
+
+        var initElements = function() {
+            elements.toggleButton = $container.find('.bookly-js-toggle-button');
+            elements.title = $container.find('.bookly-js-locations-title');
+
+            elements.items = $container.find('input[type=checkbox]');
+            elements.itemAllLocations = elements.items.filter('.bookly-js-all-locations');
+            elements.itemNoLocations = elements.items.filter('.bookly-js-no-locations');
+            elements.locationItems = elements.items.filter('.bookly-js-locations-item');
+        };
+
+        var restoreItemsFromCookie = function () {
+            var selectedValues = getCookie('bookly_cal_location_ids');
+
+            if (!selectedValues) {
+                return;
+            }
+
+            selectedValues = selectedValues.split(',');
+
+            if (selectedValues.indexOf('all') !== -1) {
+                elements.locationItems.prop('checked', true);
+            } else {
+                selectedValues.forEach(function (value) {
+                    elements.locationItems.filter('[value=' + value + ']').prop('checked', true);
+                });
+            }
+        };
+
+        var getSelectedItems = function () {
+            return elements.locationItems.filter(':checked');
+        };
+
+        var updateTitle = function() {
+            var selectedItems = getSelectedItems(),
+                selectedCount = selectedItems.length,
+                locationCount = elements.locationItems.length;
+
+            if (selectedCount === 0) {
+                elements.title.text($container.data('nothing_selected'));
+            } else if (selectedCount === locationCount) {
+                elements.title.text($container.data('all_selected'));
+            } else if (selectedCount === 1) {
+                elements.title.text(selectedItems.data('name'));
+            } else {
+                elements.title.text(selectedCount + '/' + locationCount);
+            }
+
+            elements.itemAllLocations.prop('checked', selectedCount === locationCount);
+        };
+
+        var saveCookie = function () {
+            var selectedItems = getSelectedItems(),
+                selectedValues = [];
+
+            selectedItems.each(function () {
+                selectedValues.push(this.value);
+            });
+
+            setCookie('bookly_cal_location_ids', selectedValues);
+        };
+
+        var initEvents = function () {
+            elements.itemAllLocations.on('change', function () {
+                elements.locationItems.prop('checked', elements.itemAllLocations.prop('checked'));
+            });
+
+            elements.items.on('change', function() {
+                updateTitle();
+                saveCookie();
+
+                if (callbacks.change instanceof Function) {
+                    callbacks.change();
+                }
+            });
+        };
+
+        function setDefaultLocations()
+        {
+            var locationIds = getCookie('bookly_cal_location_ids');
+
+            if (!locationIds) {
+                $container.find('input[type="checkbox"]').prop('checked', true);
+                setCookie('bookly_cal_location_ids', ['all']);
+            }
+        }
+
+        initElements();
+        setDefaultLocations();
+        restoreItemsFromCookie();
+        initEvents();
+        updateTitle();
+    }
+
+    initLocationFilter($('.bookly-js-locations-filter'), {
+        change: function() {
+            var view = $fullCalendar.fullCalendar('getView');
+            if (view.type === 'multiStaffDay') {
+                view.displayView($fullCalendar.fullCalendar('getDate'));
+            }
+            $fullCalendar.fullCalendar('refetchEvents');
+        }
+    });
 
     var calendar = new BooklyCalendar($fullCalendar, options);
 
@@ -209,5 +307,25 @@ jQuery(function ($) {
         var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
         return keyValue ? keyValue[2] : null;
     }
+
+    /**
+     * Sync with Google Calendar.
+     */
+    $syncButton.on('click', function () {
+        var ladda = Ladda.create(this);
+        ladda.start();
+        $.post(
+            ajaxurl,
+            {action: 'bookly_advanced_google_calendar_sync', csrf_token: BooklyL10n.csrf_token},
+            function (response) {
+                if (response.success) {
+                    $fullCalendar.fullCalendar('refetchEvents');
+                }
+                booklyAlert(response.data.alert);
+                ladda.stop();
+            },
+            'json'
+        );
+    });
 
 });

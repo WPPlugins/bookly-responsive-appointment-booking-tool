@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Backend\Modules\Settings\Forms;
+namespace Bookly\Backend\Modules\Settings\Forms;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class BusinessHours
- * @package BooklyLite\Backend\Modules\Settings\Forms
+ * @package Bookly\Backend\Modules\Settings\Forms
  */
 class BusinessHours extends Lib\Base\Form
 {

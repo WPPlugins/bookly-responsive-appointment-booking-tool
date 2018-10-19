@@ -1,11 +1,16 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Components\Controls\Buttons;
+use Bookly\Backend\Components\Controls\Inputs;
+use Bookly\Backend\Components\Dialogs;
+use Bookly\Backend\Components\Support;
+?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
         <div class="page-header text-right clearfix">
             <div class="bookly-page-title">
                 <?php _e( 'Services', 'bookly' ) ?>
             </div>
-            <?php \BooklyLite\Backend\Modules\Support\Components::getInstance()->renderButtons( $this::page_slug ) ?>
+            <?php Support\Buttons::render( $self::pageSlug() ) ?>
         </div>
         <div class="row">
             <div id="bookly-sidebar" class="col-sm-4">
@@ -14,7 +19,7 @@
                         <div class="bookly-padding-vertical-xs"><?php _e( 'All Services', 'bookly' ) ?></div>
                     </div>
                      <ul id="bookly-category-item-list">
-                        <?php foreach ( $category_collection as $category ) $this->render( '_category_item', compact( 'category' ) ) ?>
+                        <?php foreach ( $category_collection as $category ) $self::renderTemplate( '_category_item', compact( 'category' ) ) ?>
                     </ul>
                 </div>
 
@@ -32,7 +37,7 @@
                             <label for="bookly-category-name"><?php _e( 'Name', 'bookly' ) ?></label>
                             <input class="form-control" id="bookly-category-name" type="text" name="name" />
                             <input type="hidden" name="action" value="bookly_add_category" />
-                            <?php \BooklyLite\Lib\Utils\Common::csrf() ?>
+                            <?php Inputs::renderCsrf() ?>
                         </div>
                     </div>
 
@@ -66,7 +71,7 @@
                             <?php include '_list.php' ?>
                         </div>
                         <div class="text-right">
-                            <?php \BooklyLite\Lib\Utils\Common::deleteButton() ?>
+                            <?php Buttons::renderDelete() ?>
                         </div>
                     </div>
                 </div>
@@ -99,4 +104,5 @@
             </div>
         </div>
     </div>
+    <?php Dialogs\Common\CascadeDelete::render() ?>
 </div>

@@ -1,9 +1,9 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class Session
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 abstract class Session
 {

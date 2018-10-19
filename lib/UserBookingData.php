@@ -1,62 +1,86 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
 /**
  * Class UserBookingData
- * @package BooklyLite\Frontend\Modules\Booking\Lib
+ * @package Bookly\Frontend\Modules\Booking\Lib
  */
 class UserBookingData
 {
     // Protected properties
 
     // Step 0
-    /** @var  string */
+    /** @var string */
     protected $time_zone;
-    /** @var  int */
+    /** @var int */
     protected $time_zone_offset;
 
     // Step service
-    /** @var  string Y-m-d */
+    /** @var string Y-m-d */
     protected $date_from;
-    /** @var  array */
+    /** @var array */
     protected $days;
-    /** @var  string H:i*/
+    /** @var string H:i*/
     protected $time_from;
-    /** @var  string H:i*/
+    /** @var string H:i*/
     protected $time_to;
 
     // Step time
     protected $slots = array();
 
     // Step details
-    /** @var  string */
+    /** @var int */
+    protected $facebook_id;
+    /** @var string */
     protected $full_name;
-    /** @var  string */
+    /** @var string */
     protected $first_name;
-    /** @var  string */
+    /** @var string */
     protected $last_name;
-    /** @var  string */
+    /** @var string */
     protected $email;
-    /** @var  string */
+    /** @var string */
+    protected $country;
+    /** @var string */
+    protected $state;
+    /** @var string */
+    protected $postcode;
+    /** @var string */
+    protected $city;
+    /** @var string */
+    protected $street;
+    /** @var string */
+    protected $street_number;
+    /** @var string */
+    protected $additional_address;
+    /** @var string */
     protected $phone;
+    /** @var array */
+    protected $birthday;
     /** @var  string */
     protected $notes;
+    /** @var array */
+    protected $info_fields = array();
+    /** @var array for WC checkout */
+    protected $address_iso = array();
 
     // Step payment
-    /** @var  string */
+    /** @var string */
     protected $coupon_code;
+    /** @var bool */
+    protected $deposit_full = 0;
 
     // Cart item keys being edited
-    /** @var  array */
+    /** @var array */
     protected $edit_cart_keys = array();
-    /** @var  bool */
+    /** @var bool */
     protected $repeated = 0;
-    /** @var  array */
+    /** @var array */
     protected $repeat_data = array();
 
     // Private
 
-    /** @var  string */
+    /** @var string */
     private $form_id;
 
     // Frontend expect variables
@@ -72,26 +96,42 @@ class UserBookingData
         // Step time
         'slots',
         // Step details
+        'facebook_id',
         'full_name',
         'first_name',
         'last_name',
         'email',
         'phone',
+        'birthday',
+        'additional_address',
+        'country',
+        'state',
+        'postcode',
+        'city',
+        'street',
+        'street_number',
+        'address_iso',
         'notes',
+        'info_fields',
         // Step payment
         'coupon_code',
+        'deposit_full',
         // Cart item keys being edited
         'edit_cart_keys',
         'repeated',
         'repeat_data',
     );
 
+    /** @var Entities\Customer */
+    private $customer;
     /** @var \BooklyCoupons\Lib\Entities\Coupon|null */
     private $coupon;
     /** @var array */
     private $booking_numbers = array();
     /** @var integer|null */
     private $payment_id;
+    /** @var string */
+    private $payment_type = Entities\Payment::TYPE_LOCAL;
 
     // Public
 
@@ -116,12 +156,28 @@ class UserBookingData
         if ( $current_user && $current_user->ID ) {
             $customer = new Entities\Customer();
             if ( $customer->loadBy( array( 'wp_user_id' => $current_user->ID ) ) ) {
+                $date = explode( '-', $customer->getBirthday() );
+                $birthday = array(
+                    'year'  => $date[0],
+                    'month' => isset( $date[1] ) ? (int) $date[1] : 0,
+                    'day'   => isset( $date[2] ) ? (int) $date[2] : 0,
+                );
                 $this
                     ->setFullName( $customer->getFullName() )
                     ->setFirstName( $customer->getFirstName() )
                     ->setLastName( $customer->getLastName() )
                     ->setEmail( $customer->getEmail() )
-                    ->setPhone( $customer->getPhone() );
+                    ->setPhone( $customer->getPhone() )
+                    ->setBirthday( $birthday )
+                    ->setCountry( $customer->getCountry() )
+                    ->setState( $customer->getState() )
+                    ->setPostcode( $customer->getPostcode() )
+                    ->setCity( $customer->getCity() )
+                    ->setStreet( $customer->getStreet() )
+                    ->setStreetNumber( $customer->getStreetNumber() )
+                    ->setAdditionalAddress( $customer->getAdditionalAddress() )
+                    ->setInfoFields( json_decode( $customer->getInfoFields(), true ) )
+                ;
             } else {
                 $this
                     ->setFullName( $current_user->display_name )
@@ -130,12 +186,29 @@ class UserBookingData
                     ->setEmail( $current_user->user_email );
             }
         } elseif ( get_option( 'bookly_cst_remember_in_cookie' ) && isset( $_COOKIE['bookly-cst-full-name'] ) ) {
+            $date = explode( '-', $_COOKIE['bookly-cst-birthday'] );
+            $birthday = array(
+                'year'  => $date[0],
+                'month' => isset( $date[1] ) ? (int) $date[1] : 0,
+                'day'   => isset( $date[2] ) ? (int) $date[2] : 0,
+            );
+
             $this
                 ->setFullName( $_COOKIE['bookly-cst-full-name'] )
                 ->setFirstName( $_COOKIE['bookly-cst-first-name'] )
                 ->setLastName( $_COOKIE['bookly-cst-last-name'] )
                 ->setEmail( $_COOKIE['bookly-cst-email'] )
-                ->setPhone( $_COOKIE['bookly-cst-phone'] );
+                ->setPhone( $_COOKIE['bookly-cst-phone'] )
+                ->setBirthday( $birthday )
+                ->setCountry( $_COOKIE['bookly-cst-country'] )
+                ->setState( $_COOKIE['bookly-cst-state'] )
+                ->setPostcode( $_COOKIE['bookly-cst-postcode'] )
+                ->setCity( $_COOKIE['bookly-cst-city'] )
+                ->setStreet( $_COOKIE['bookly-cst-street'] )
+                ->setStreetNumber( $_COOKIE['bookly-cst-street-number'] )
+                ->setAdditionalAddress( $_COOKIE['bookly-cst-additional-address'] )
+                ->setInfoFields( (array) json_decode( stripslashes( $_COOKIE['bookly-cst-info-fields'] ), true ) )
+            ;
         }
 
         // Register destructor (should work in cases when regular __destruct() does not work).
@@ -148,10 +221,13 @@ class UserBookingData
         $this->chain->add( new ChainItem() );
 
         // Set up default parameters.
-        $prior_time = Config::getMinimumTimePriorBooking();
-        $this->setDateFrom( date( 'Y-m-d', current_time( 'timestamp' ) + $prior_time ) );
+        $this->setDateFrom( Slots\DatePoint::now()
+            ->modify( Proxy\Pro::getMinimumTimePriorBooking() )
+            ->toClientTz()
+            ->format( 'Y-m-d' )
+        );
         $times = Entities\StaffScheduleItem::query( 'ss' )
-            ->select( 'SUBSTRING_INDEX(MIN(ss.start_time), ":", 2) AS min_end_time,
+            ->select( 'SUBSTRING_INDEX(MIN(ss.start_time), ":", 2) AS min_start_time,
                 SUBSTRING_INDEX(MAX(ss.end_time), ":", 2) AS max_end_time' )
             ->leftJoin( 'Staff', 's', 's.id = ss.staff_id' )
             ->whereNot( 'start_time', null )
@@ -160,7 +236,7 @@ class UserBookingData
             ->fetchRow();
         $times = Proxy\Shared::adjustMinAndMaxTimes( $times );
         $this
-            ->setTimeFrom( $times['min_end_time'] )
+            ->setTimeFrom( $times['min_start_time'] )
             ->setTimeTo( $times['max_end_time'] )
             ->setSlots( array() )
             ->setEditCartKeys( array() )
@@ -173,18 +249,19 @@ class UserBookingData
      */
     public function destruct()
     {
-        Session::setFormVar( $this->form_id, 'data',            $this->getFrontendData() );
+        Session::setFormVar( $this->form_id, 'data',            $this->getData() );
         Session::setFormVar( $this->form_id, 'cart',            $this->cart->getItemsData() );
         Session::setFormVar( $this->form_id, 'chain',           $this->chain->getItemsData() );
         Session::setFormVar( $this->form_id, 'booking_numbers', $this->booking_numbers );
         Session::setFormVar( $this->form_id, 'payment_id',      $this->payment_id );
+        Session::setFormVar( $this->form_id, 'payment_type',    $this->payment_type );
         Session::setFormVar( $this->form_id, 'last_touched',    time() );
     }
 
     /**
      * @return array
      */
-    private function getFrontendData()
+    public function getData()
     {
         $data = array();
         foreach ( $this->properties as $variable_name ) {
@@ -209,10 +286,8 @@ class UserBookingData
             $this->cart->setItemsData( Session::getFormVar( $this->form_id, 'cart' ) );
             $this->booking_numbers = Session::getFormVar( $this->form_id, 'booking_numbers' );
             $this->payment_id = Session::getFormVar( $this->form_id, 'payment_id' );
-            // Client time zone.
-            if ( Config::useClientTimeZone() ) {
-                $this->applyTimeZone();
-            }
+            $this->payment_type = Session::getFormVar( $this->form_id, 'payment_type' );
+            $this->applyTimeZone();
 
             return true;
         }
@@ -328,6 +403,7 @@ class UserBookingData
                         ->setExtras( $chain_item->getExtras() )
                         ->setLocationId( $chain_item->getLocationId() )
                         ->setNumberOfPersons( $chain_item->getNumberOfPersons() )
+                        ->setUnits( $chain_item->getUnits() )
                         ->setServiceId( $chain_item->getServiceId() )
                         ->setSlots( $cart_item_slots )
                         ->setStaffIds( $chain_item->getStaffIds() )
@@ -418,8 +494,23 @@ class UserBookingData
                 case 'email':
                     $validator->validateEmail( $field_name, $data );
                     break;
+                case 'birthday':
+                    $validator->validateBirthday( $field_name, $field_value );
+                    break;
+                case 'country':
+                case 'state':
+                case 'postcode':
+                case 'city':
+                case 'street':
+                case 'street_number':
+                case 'additional_address':
+                    $validator->validateAddress( $field_name, $field_value, Config::addressRequired() );
+                    break;
                 case 'phone':
                     $validator->validatePhone( $field_name, $field_value, Config::phoneRequired() );
+                    break;
+                case 'info_fields':
+                    $validator->validateInfoFields( $field_value );
                     break;
                 case 'cart':
                     $validator->validateCart( $field_value, $data['form_id'] );
@@ -443,40 +534,58 @@ class UserBookingData
      */
     public function save( $payment = null )
     {
-        // Find or create customer.
-        $user_id  = get_current_user_id();
-        $customer = new Entities\Customer();
-        if ( $user_id > 0 ) {
-            // Try to find customer by WP user ID.
-            $customer->loadBy( array( 'wp_user_id' => $user_id ) );
-        }
-        if ( ! $customer->isLoaded() ) {
-            // Try to find customer by phone or email.
-            $customer->loadBy(
-                Config::phoneRequired()
-                    ? array( 'phone' => $this->getPhone() )
-                    : array( 'email' => $this->getEmail() )
-            );
-            if ( ! $customer->isLoaded() ) {
-                // Try to find customer by 'secondary' identifier, otherwise create new customer.
-                $customer->loadBy(
-                    Config::phoneRequired()
-                        ? array( 'email' => $this->getEmail(), 'phone' => '' )
-                        : array( 'phone' => $this->getPhone(), 'email' => '' )
-                );
-            }
-        }
-        // Overwrite only if value is not empty.
-        $this->getFullName()  ? $customer->setFullName( $this->getFullName() ) : null;
-        $this->getFirstName() ? $customer->setFirstName( $this->getFirstName() ) : null;
-        $this->getLastName()  ? $customer->setLastName( $this->getLastName() ) : null;
-        $this->getPhone()     ? $customer->setPhone( $this->getPhone() ) : null;
-        $this->getEmail()     ? $customer->setEmail( $this->getEmail() ) : null;
+        // Customer.
+        $customer = $this->getCustomer();
 
-        if ( get_option( 'bookly_cst_create_account', 0 ) && ! $customer->getWpUserId() ) {
-            // Create WP user and link it to customer.
-            $customer->setWpUserId( $user_id );
+        // Overwrite only if value is not empty.
+        if ( $this->getFacebookId() ) {
+            $customer->setFacebookId( $this->getFacebookId() );
         }
+        if ( $this->getFullName() != '' ) {
+            $customer->setFullName( $this->getFullName() );
+        }
+        if ( $this->getFirstName() != '' ) {
+            $customer->setFirstName( $this->getFirstName() );
+        }
+        if ( $this->getLastName() != '' ) {
+            $customer->setLastName( $this->getLastName() );
+        }
+        if ( $this->getPhone() != '' ) {
+            $customer->setPhone( $this->getPhone() );
+        }
+        if ( $this->getEmail() != '' ) {
+            $customer->setEmail( $this->getEmail() );
+        }
+        if ( $this->getBirthdayYmd() != '' ) {
+            $customer->setBirthday( $this->getBirthdayYmd() );
+        }
+        if ( $this->getCountry() != '' ) {
+            $customer->setCountry( $this->getCountry() );
+        }
+        if ( $this->getState() != '' ) {
+            $customer->setState( $this->getState() );
+        }
+        if ( $this->getPostcode() != '' ) {
+            $customer->setPostcode( $this->getPostcode() );
+        }
+        if ( $this->getCity() != '' ) {
+            $customer->setCity( $this->getCity() );
+        }
+        if ( $this->getStreet() != '' ) {
+            $customer->setStreet( $this->getStreet() );
+        }
+        if ( $this->getStreetNumber() != '' ) {
+            $customer->setStreetNumber( $this->getStreetNumber() );
+        }
+        if ( $this->getAdditionalAddress() != '' ) {
+            $customer->setAdditionalAddress( $this->getAdditionalAddress() );
+        }
+
+        // Customer information fields.
+        $customer->setInfoFields( json_encode( $this->getInfoFields() ) );
+
+        Proxy\Pro::createWPUser( $customer );
+
         $customer->save();
 
         // Order.
@@ -486,14 +595,27 @@ class UserBookingData
         if ( $payment ) {
             $order->setPayment( $payment );
             $this->payment_id = $payment->getId();
+            $this->setPaymentType( $payment->getType() );
         }
 
         if ( get_option( 'bookly_cst_remember_in_cookie' ) ) {
-            setcookie( 'bookly-cst-full-name',  $customer->getFullName(),  time() + YEAR_IN_SECONDS );
-            setcookie( 'bookly-cst-first-name', $customer->getFirstName(),  time() + YEAR_IN_SECONDS );
-            setcookie( 'bookly-cst-last-name',  $customer->getLastName(),  time() + YEAR_IN_SECONDS );
-            setcookie( 'bookly-cst-phone',      $customer->getPhone(), time() + YEAR_IN_SECONDS );
-            setcookie( 'bookly-cst-email',      $customer->getEmail(), time() + YEAR_IN_SECONDS );
+
+            $expire = time() + YEAR_IN_SECONDS;
+
+            setcookie( 'bookly-cst-full-name',          $customer->getFullName(), $expire );
+            setcookie( 'bookly-cst-first-name',         $customer->getFirstName(), $expire );
+            setcookie( 'bookly-cst-last-name',          $customer->getLastName(), $expire );
+            setcookie( 'bookly-cst-phone',              $customer->getPhone(), $expire );
+            setcookie( 'bookly-cst-email',              $customer->getEmail(), $expire );
+            setcookie( 'bookly-cst-birthday',           $customer->getBirthday(), $expire );
+            setcookie( 'bookly-cst-country',            $customer->getCountry(), $expire );
+            setcookie( 'bookly-cst-state',              $customer->getState(), $expire );
+            setcookie( 'bookly-cst-postcode',           $customer->getPostcode(), $expire );
+            setcookie( 'bookly-cst-city',               $customer->getCity(), $expire );
+            setcookie( 'bookly-cst-street',             $customer->getStreet(), $expire );
+            setcookie( 'bookly-cst-street-number',      $customer->getStreetNumber(), $expire );
+            setcookie( 'bookly-cst-additional-address', $customer->getAdditionalAddress(), $expire );
+            setcookie( 'bookly-cst-info-fields',        $customer->getInfoFields(), $expire );
         }
 
         return $this->cart->save( $order, $this->getTimeZone(), $this->getTimeZoneOffset(), $this->booking_numbers );
@@ -510,13 +632,89 @@ class UserBookingData
     }
 
     /**
+     * Get array with address iso codes.
+     *
+     * @return array
+     */
+    public function getAddressIso()
+    {
+        return $this->address_iso;
+    }
+
+    /**
+     * Get customer.
+     *
+     * @return Entities\Customer
+     */
+    public function getCustomer()
+    {
+        if ( $this->customer === null ) {
+            // Find or create customer.
+            $this->customer = new Entities\Customer();
+            $user_id = get_current_user_id();
+            if ( $user_id > 0 ) {
+                // Try to find customer by WP user ID.
+                $this->customer->loadBy( array( 'wp_user_id' => $user_id ) );
+            }
+            if ( ! $this->customer->isLoaded() ) {
+                $customer = Proxy\Pro::getCustomerByFacebookId( $this->getFacebookId() );
+                if ( $customer ) {
+                    $this->customer = $customer;
+                }
+                if ( ! $this->customer->isLoaded() ) {
+                    // Check allow duplicates option
+                    if ( Config::allowDuplicates() ) {
+                        $customer_data = array(
+                            'email' => $this->getEmail(),
+                            'phone' => $this->getPhone(),
+                        );
+                        if ( Config::showFirstLastName() ) {
+                            $customer_data['first_name'] = $this->getFirstName();
+                            $customer_data['last_name']  = $this->getLastName();
+                        } else {
+                            $customer_data['full_name'] = $this->getFullName();
+                        }
+                        $this->customer->loadBy( $customer_data );
+                    } else {
+                        // Try to find customer by phone or email.
+                        $this->customer->loadBy(
+                            Config::phoneRequired()
+                                ? array( 'phone' => $this->getPhone() )
+                                : array( 'email' => $this->getEmail() )
+                        );
+                        if ( ! $this->customer->isLoaded() ) {
+                            // Try to find customer by 'secondary' identifier, otherwise return new customer.
+                            $this->customer->loadBy(
+                                Config::phoneRequired()
+                                    ? array( 'email' => $this->getEmail(), 'phone' => '' )
+                                    : array( 'phone' => $this->getPhone(), 'email' => '' )
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->customer;
+    }
+
+    /**
      * Get coupon.
      *
-     * @return \BooklyCoupons\Lib\Entities\Coupon|null
+     * @return \BooklyCoupons\Lib\Entities\Coupon|false
      */
     public function getCoupon()
     {
-        return null;
+        if ( $this->coupon === null ) {
+            $coupon = Proxy\Coupons::findOneByCode( $this->getCouponCode() );
+            if ( $coupon ) {
+                $this->coupon = $coupon;
+            } else {
+                $this->coupon = false;
+            }
+        }
+
+        return $this->coupon;
     }
 
     /**
@@ -753,6 +951,29 @@ class UserBookingData
     }
 
     /**
+     * Gets facebook_id
+     *
+     * @return int
+     */
+    public function getFacebookId()
+    {
+        return $this->facebook_id;
+    }
+
+    /**
+     * Sets facebook_id
+     *
+     * @param int $facebook_id
+     * @return $this
+     */
+    public function setFacebookId( $facebook_id )
+    {
+        $this->facebook_id = $facebook_id;
+
+        return $this;
+    }
+
+    /**
      * Gets full_name
      *
      * @return string
@@ -845,6 +1066,139 @@ class UserBookingData
     }
 
     /**
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param string $country
+     * @return $this
+     */
+    public function setCountry( $country )
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $state
+     * @return $this
+     */
+    public function setState( $state )
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * @param string $postcode
+     * @return $this
+     */
+    public function setPostcode( $postcode )
+    {
+        $this->postcode = $postcode;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $city
+     * @return $this
+     */
+    public function setCity( $city )
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    /**
+     * @param string $street
+     * @return $this
+     */
+    public function setStreet( $street )
+    {
+        $this->street = $street;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreetNumber()
+    {
+        return $this->street_number;
+    }
+
+    /**
+     * @param string $street_number
+     * @return $this
+     */
+    public function setStreetNumber( $street_number )
+    {
+        $this->street_number = $street_number;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdditionalAddress()
+    {
+        return $this->additional_address;
+    }
+
+    /**
+     * @param string $additional_address
+     * @return $this
+     */
+    public function setAdditionalAddress( $additional_address )
+    {
+        $this->additional_address = $additional_address;
+
+        return $this;
+    }
+
+    /**
      * Gets phone
      *
      * @return string
@@ -863,6 +1217,55 @@ class UserBookingData
     public function setPhone( $phone )
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @param string $field_name
+     * @return string
+     */
+    public function getAddressField( $field_name )
+    {
+        switch ( $field_name ) {
+            case 'additional_address':
+                return $this->additional_address;
+            case 'country':
+                return $this->country;
+            case 'state':
+                return $this->state;
+            case 'postcode':
+                return $this->postcode;
+            case 'city':
+                return $this->city;
+            case 'street':
+                return $this->street;
+            case 'street_number':
+                return $this->street_number;
+        }
+
+        return '';
+    }
+
+    /**
+     * Gets info_fields
+     *
+     * @return array
+     */
+    public function getInfoFields()
+    {
+        return $this->info_fields;
+    }
+
+    /**
+     * Sets info_fields
+     *
+     * @param array $info_fields
+     * @return $this
+     */
+    public function setInfoFields( $info_fields )
+    {
+        $this->info_fields = $info_fields;
 
         return $this;
     }
@@ -891,6 +1294,42 @@ class UserBookingData
     }
 
     /**
+     * Gets birthday.
+     *
+     * @return array
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * Gets birthday.
+     *
+     * @return string
+     */
+    public function getBirthdayYmd()
+    {
+        $date = '';
+        if ( is_array( $this->birthday ) ) {
+            $date = sprintf( '%04d-%02d-%02d', $this->birthday['year'], $this->birthday['month'], $this->birthday['day'] );
+        }
+
+        return Utils\DateTime::validateDate( $date ) ? $date : '';
+    }
+
+    /**
+     * @param array $birthday
+     * @return $this
+     */
+    public function setBirthday( $birthday )
+    {
+        $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    /**
      * Gets coupon_code
      *
      * @return string
@@ -909,6 +1348,29 @@ class UserBookingData
     public function setCouponCode( $coupon_code )
     {
         $this->coupon_code = $coupon_code;
+
+        return $this;
+    }
+
+    /**
+     * Gets deposit_full
+     *
+     * @return string
+     */
+    public function getDepositFull()
+    {
+        return $this->deposit_full;
+    }
+
+    /**
+     * Sets deposit_full
+     *
+     * @param string $deposit_full
+     * @return $this
+     */
+    public function setDepositFull( $deposit_full )
+    {
+        $this->deposit_full = $deposit_full;
 
         return $this;
     }
@@ -981,4 +1443,28 @@ class UserBookingData
 
         return $this;
     }
+
+    /**
+     * Gets payment_type
+     *
+     * @return string
+     */
+    public function getPaymentType()
+    {
+        return $this->payment_type;
+    }
+
+    /**
+     * Sets payment_type
+     *
+     * @param string $payment_type
+     * @return $this
+     */
+    public function setPaymentType( $payment_type )
+    {
+        $this->payment_type = $payment_type;
+
+        return $this;
+    }
+
 }

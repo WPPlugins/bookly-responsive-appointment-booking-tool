@@ -1,8 +1,11 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-use BooklyLite\Lib\Entities\Notification;
-use BooklyLite\Lib\Proxy;
-use BooklyLite\Lib\Utils\Common;
-/** @var BooklyLite\Backend\Modules\Notifications\Forms\Notifications $form */
+use Bookly\Backend\Components\Controls\Buttons;
+use Bookly\Backend\Components\Settings\Selects;
+use Bookly\Backend\Modules\Sms\Proxy;
+use Bookly\Lib\Entities\Notification;
+use Bookly\Lib\Utils\Common;
+use Bookly\Lib;
+/** @var Bookly\Backend\Modules\Notifications\Forms\Notifications $form */
 ?>
 <form action="<?php echo esc_url( remove_query_arg( array( 'paypal_result', 'auto-recharge', 'tab' ) ) ) ?>" method="post">
     <input type="hidden" name="form-notifications">
@@ -54,7 +57,7 @@ use BooklyLite\Lib\Utils\Common;
         <?php endforeach ?>
     </div>
 
-    <?php if ( $form->types['combined'] ) : ?>
+    <?php if ( $form->types['combined'] && Lib\Config::proActive() ) : ?>
         <h4 class="bookly-block-head bookly-color-gray"><?php _e( 'Combined', 'bookly' ) ?></h4>
         <div class="panel-group bookly-margin-vertical-xlg" id="bookly-js-combined-notifications" role="tablist" aria-multiselectable="true">
             <?php foreach ( $form->getNotifications( 'combined' ) as $notification ) :
@@ -94,7 +97,7 @@ use BooklyLite\Lib\Utils\Common;
     <h4 class="bookly-block-head bookly-color-gray"><?php _e( 'Custom', 'bookly' ) ?></h4>
     <div class="panel-group bookly-margin-vertical-xlg" id="bookly-js-custom-notifications">
         <?php foreach ( $form->getNotifications( 'custom' ) as $notification ) :
-            $this->render( '_custom_notification', compact( 'form', 'notification', 'statuses' ) );
+            $self::renderTemplate( '_custom_notification', compact( 'form', 'notification', 'statuses' ) );
         endforeach ?>
     </div>
 
@@ -114,20 +117,20 @@ use BooklyLite\Lib\Utils\Common;
         <div class="row">
             <div class="col-md-10">
                 <?php if ( is_multisite() ) : ?>
-                    <p><?php printf( __( 'To send scheduled notifications please refer to <a href="%1$s">Bookly Multisite</a> add-on <a href="%2$s">message</a>.', 'bookly' ), 'http://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela', network_admin_url( 'admin.php?page=bookly-multisite-network' ) ) ?></p>
+                    <p><?php printf( __( 'To send scheduled notifications please refer to <a href="%1$s">Bookly Multisite</a> add-on <a href="%2$s">message</a>.', 'bookly' ), Common::prepareUrlReferrers( 'http://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela', 'cron_setup' ), network_admin_url( 'admin.php?page=bookly-multisite-network' ) ) ?></p>
                 <?php else : ?>
                     <p><?php _e( 'To send scheduled notifications please execute the following command hourly with your cron:', 'bookly' ) ?></p><br/>
-                    <code class="bookly-text-wrap">wget -q -O - <?php echo $cron_uri ?></code>
+                    <code class="bookly-text-wrap">wget -q -O - <?php echo site_url( 'wp-cron.php' ) ?></code>
                 <?php endif ?>
             </div>
             <div class="col-md-2">
-                <?php Common::optionToggle( 'bookly_ntf_processing_interval', __( 'Notification period', 'bookly' ), __( 'Set period of time when system will attempt to deliver notification to user. Notification will be discarded after period expiration.', 'bookly' ), $bookly_ntf_processing_interval_values ) ?>
+                <?php Selects::renderSingle( 'bookly_ntf_processing_interval', __( 'Notification period', 'bookly' ), __( 'Set period of time when system will attempt to deliver notification to user. Notification will be discarded after period expiration.', 'bookly' ), $bookly_ntf_processing_interval_values ) ?>
             </div>
         </div>
     </div>
 
     <div class="panel-footer">
-        <?php Common::submitButton( 'bookly-js-submit-notifications' ) ?>
-        <?php Common::resetButton() ?>
+        <?php Buttons::renderSubmit( 'bookly-js-submit-notifications' ) ?>
+        <?php Buttons::renderReset() ?>
     </div>
 </form>

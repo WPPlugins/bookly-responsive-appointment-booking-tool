@@ -1,12 +1,13 @@
 <?php
-namespace BooklyLite\Lib;
+namespace Bookly\Lib;
 
-use BooklyLite\Lib\DataHolders\Booking as DataHolders;
-use BooklyLite\Lib\Utils\Common;
+use Bookly\Lib\DataHolders\Booking as DataHolders;
+use Bookly\Lib\Entities\CustomerAppointment;
+use Bookly\Lib\Utils\Common;
 
 /**
  * Class Cart
- * @package BooklyLite\Lib
+ * @package Bookly\Lib
  */
 class Cart
 {
@@ -53,7 +54,7 @@ class Cart
      */
     public function add( CartItem $item )
     {
-        $this->items = array( $item );
+        $this->items[] = $item;
         end( $this->items );
 
         return key( $this->items );
@@ -94,7 +95,7 @@ class Cart
      */
     public function drop( $key )
     {
-        $this->items = array();
+        unset ( $this->items[ $key ] );
     }
 
     /**
@@ -114,13 +115,12 @@ class Cart
      */
     public function getItemsData()
     {
+        $data = array();
         foreach ( $this->items as $key => $item ) {
-            $data = array();
             $data[ $key ] = $item->getData();
-            return $data;
         }
 
-        return array();
+        return $data;
     }
 
     /**
@@ -134,7 +134,6 @@ class Cart
             $item = new CartItem();
             $item->setData( $item_data );
             $this->items[ $key ] = $item;
-            break;
         }
     }
 
@@ -151,16 +150,20 @@ class Cart
     {
         foreach ( $this->getItems() as $i => $cart_item ) {
             // Init.
-            $payment_id = $order->hasPayment() ? $order->getPayment()->getId() : null;
-            $service    = $cart_item->getService();
-            $series     = null;
-            $compound   = null;
+            $payment_id  = $order->hasPayment() ? $order->getPayment()->getId() : null;
+            $service     = $cart_item->getService();
+            $series      = null;
+            $compound    = null;
+            $is_compound = $service->getType() == Entities\Service::TYPE_COMPOUND;
+
+            // Whether to put this item on waiting list.
+            $put_on_waiting_list = Config::waitingListActive() && get_option( 'bookly_waiting_list_enabled' ) && $cart_item->toBePutOnWaitingList();
 
             // Compound.
-            if ( $service->getType() == Entities\Service::TYPE_COMPOUND ) {
+            if ( $is_compound ) {
                 $compound = DataHolders\Compound::create( $service )
                     ->setToken( Utils\Common::generateToken(
-                        '\BooklyLite\Lib\Entities\CustomerAppointment',
+                        '\Bookly\Lib\Entities\CustomerAppointment',
                         'compound_token'
                     ) )
                 ;
@@ -187,8 +190,8 @@ class Cart
                 }
             }
 
-            $extras = json_encode( $cart_item->getExtras() );
-            $custom_fields = json_encode( $cart_item->getCustomFields() );
+            $extras = $cart_item->getExtras();
+            $custom_fields = $cart_item->getCustomFields();
 
             foreach ( $cart_item->getSlots() as $slot ) {
                 list ( $service_id, $staff_id, $datetime ) = $slot;
@@ -202,7 +205,7 @@ class Cart
                 $appointment = new Entities\Appointment();
                 $appointment->loadBy( array(
                     'service_id' => $service_id,
-                    'staff_id'   => 1,
+                    'staff_id'   => $staff_id,
                     'start_date' => $datetime,
                 ) );
                 if ( $appointment->isLoaded() == false ) {
@@ -211,10 +214,10 @@ class Cart
                         ->setSeriesId( $series ? $series->getSeries()->getId() : null )
                         ->setLocationId( $cart_item->getLocationId() ?: null )
                         ->setServiceId( $service_id )
-                        ->setStaffId( 1 )
+                        ->setStaffId( $staff_id )
                         ->setStaffAny( count( $cart_item->getStaffIds() ) > 1 )
                         ->setStartDate( $datetime )
-                        ->setEndDate( date( 'Y-m-d H:i:s', strtotime( $datetime ) + $service->getDuration() ) )
+                        ->setEndDate( date( 'Y-m-d H:i:s', strtotime( $datetime ) + $cart_item->getUnits() * $service->getDuration() ) )
                         ->save();
                 } else {
                     $update = false;
@@ -233,6 +236,22 @@ class Cart
                     }
                 }
 
+                if ( $is_compound ) {
+                    $service_extras = array();
+                    foreach ( Proxy\ServiceExtras::findByServiceId( $service_id ) as $item ) {
+                        if ( array_key_exists( $item->getId(), $extras ) ) {
+                            $service_extras[ $item->getId() ] = $extras[ $item->getId() ];
+                            // Extras will be assigned only to one/unique service,
+                            // and won't be multiplied across.
+                            unset( $extras[ $item->getId() ] );
+                        }
+                    }
+                    $service_custom_fields = Proxy\CustomFields::filterForService( $custom_fields, $service_id );
+                } else {
+                    $service_extras = $extras;
+                    $service_custom_fields = $custom_fields;
+                }
+
                 // Create CustomerAppointment record.
                 $customer_appointment = new Entities\CustomerAppointment();
                 $customer_appointment
@@ -240,10 +259,13 @@ class Cart
                     ->setAppointment( $appointment )
                     ->setPaymentId( $payment_id )
                     ->setNumberOfPersons( $cart_item->getNumberOfPersons() )
+                    ->setUnits( $cart_item->getUnits() )
                     ->setNotes( $this->userData->getNotes() )
-                    ->setExtras( $extras )
-                    ->setCustomFields( $custom_fields )
-                    ->setStatus( get_option( 'bookly_gen_default_appointment_status' ) )
+                    ->setExtras( json_encode( $service_extras ) )
+                    ->setCustomFields( json_encode( $service_custom_fields ) )
+                    ->setStatus( $put_on_waiting_list
+                        ? CustomerAppointment::STATUS_WAITLISTED
+                        : Proxy\CustomerGroups::prepareDefaultAppointmentStatus( get_option( 'bookly_gen_default_appointment_status' ), $order->getCustomer()->getGroupId() ) )
                     ->setTimeZone( $time_zone )
                     ->setTimeZoneOffset( $time_zone_offset )
                     ->setCompoundServiceId( $compound ? $compound->getService()->getId() : null )
@@ -252,21 +274,20 @@ class Cart
                     ->setCreated( current_time( 'mysql' ) )
                     ->save();
 
+                Proxy\Files::attachFiles( $cart_item->getCustomFields(), $customer_appointment );
+
                 // Handle extras duration.
-                if ( Config::serviceExtrasEnabled() ) {
+                if ( Config::serviceExtrasActive() && get_option( 'bookly_service_extras_enabled' ) ) {
                     $appointment
                         ->setExtrasDuration( $appointment->getMaxExtrasDuration() )
                         ->save();
                 }
 
                 // Google Calendar.
-                $appointment->handleGoogleCalendar();
+                Proxy\Pro::syncGoogleCalendarEvent( $appointment );
 
                 // Add booking number.
                 $booking_numbers[] = $appointment->getId();
-
-                // Only first appointment should have custom fields, extras (compound).
-                $custom_fields = $extras = '[]';
 
                 // Add entities to result.
                 $item = DataHolders\Simple::create( $customer_appointment )
@@ -290,64 +311,20 @@ class Cart
     }
 
     /**
-     * Get total and deposit for cart.
-     *
-     * @param bool $apply_coupon
-     * @return array
+     * @param string $gateway
+     * @param bool   $apply_coupon
+     * @return CartInfo
      */
-    public function getInfo( $apply_coupon = true )
+    public function getInfo( $gateway = null, $apply_coupon = true )
     {
-        $total  = $deposit = $item_price = 0;
-        $coupon = false;
-        $before_coupon   = 0;
-        $coupon_services = array();
-        if ( $apply_coupon && $coupon = $this->userData->getCoupon() ) {
-            $coupon_services = (array) Proxy\Coupons::getServiceIds( $coupon );
+        $cart_info = new CartInfo( $this->userData, $apply_coupon );
+
+        if ( $gateway !== null ) {
+            // Set gateway when add-on enabled
+            $cart_info = Proxy\Shared::applyGateway( $cart_info, $gateway );
         }
 
-        foreach ( $this->items as $key => $item ) {
-            if (
-                $item->getSeriesUniqueId()
-                && get_option( 'bookly_recurring_appointments_payment' ) === 'first'
-                && ( ! $item->getFirstInSeries() )
-            ) {
-                continue;
-            }
-
-            // Cart contains a service that was already removed/deleted from Bookly (WooCommerce BP-224)
-            if ( $item->getService() ) {
-                $discount   = in_array( $item->getService()->getId(), $coupon_services );
-                $item_price = $item->getServicePrice() * $item->getNumberOfPersons();
-                if ( $discount ) {
-                    $before_coupon += $item_price;
-                }
-            }
-
-            $total   += $item_price;
-            $deposit += Proxy\DepositPayments::prepareAmount( $item_price, $item->getDeposit(), $item->getNumberOfPersons() );
-        }
-
-        if ( $coupon ) {
-            $total -= ( $before_coupon - $coupon->apply( $before_coupon ) );
-            if ( $deposit > $total ) {
-                $deposit = $total;
-            }
-        }
-
-        if ( ! Config::depositPaymentsEnabled() ) {
-            $due = 0;
-        } else {
-            $due = max( $total - $deposit, 0 );
-        }
-
-        // coupon discount=10%, deduction=10
-        // cart_item price=70, staff_deposit=50, coupon=on
-        // cart_item price=30, staff_deposit=20, coupon=off
-        //
-        //            total deposit due
-        // Array like [ 83,   70,   13 ]
-
-        return array( $total, $deposit, $due );
+        return $cart_info;
     }
 
     /**
@@ -391,29 +368,37 @@ class Cart
      */
     public function getFailedKey()
     {
-        $max_date  = date_create( '@' . ( current_time( 'timestamp' ) + Config::getMaximumAvailableDaysForBooking() * DAY_IN_SECONDS ) )->setTime( 0, 0 );
+        $waiting_list_enabled = Config::waitingListActive() && get_option( 'bookly_waiting_list_enabled' );
+
+        $max_date = Slots\DatePoint::now()
+            ->modify( Config::getMaximumAvailableDaysForBooking() * DAY_IN_SECONDS )
+            ->modify( '00:00:00' );
 
         foreach ( $this->items as $cart_key => $cart_item ) {
-            if( $cart_item->getService() ) {
+            if ( $cart_item->getService() ) {
                 $service     = $cart_item->getService();
                 $is_compound = $service->getType() == Entities\Service::TYPE_COMPOUND;
                 foreach ( $cart_item->getSlots() as $slot ) {
-                    list ( $service_id, $null, $datetime ) = $slot;
+                    if ( $waiting_list_enabled && isset ( $slot[4] ) && $slot[4] == 'w' ) {
+                        // Booking is always available for slots being placed on waiting list.
+                        continue;
+                    }
+                    list ( $service_id, $staff_id, $datetime ) = $slot;
                     if ( $is_compound ) {
                         $service = Entities\Service::find( $service_id );
                     }
-                    $bound_start = date_create( $datetime )->modify( '-' . (int) $service->getPaddingLeft() . ' sec' );
-                    $bound_end   = date_create( $datetime )->modify( ( (int) $service->getDuration() + (int) $service->getPaddingRight() + $cart_item->getExtrasDuration() ) . ' sec' );
+                    $bound_start = Slots\DatePoint::fromStr( $datetime )->modify( '-' . (int) $service->getPaddingLeft() . ' sec' );
+                    $bound_end   = Slots\DatePoint::fromStr( $datetime )->modify( ( (int) $service->getDuration() + (int) $service->getPaddingRight() + $cart_item->getExtrasDuration() ) . ' sec' );
 
-                    if ( $bound_end < $max_date ) {
+                    if ( $bound_end->lte( $max_date ) ) {
                         $query = Entities\CustomerAppointment::query( 'ca' )
                             ->select( 'ss.capacity_max, SUM(ca.number_of_persons) AS total_number_of_persons,
-                                a.start_date,
-                                a.end_date' )
+                                DATE_SUB(a.start_date, INTERVAL (COALESCE(s.padding_left,0) ) SECOND) AS bound_left,
+                                DATE_ADD(a.end_date,   INTERVAL (COALESCE(s.padding_right,0) + a.extras_duration ) SECOND) AS bound_right' )
                             ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
                             ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id' )
                             ->leftJoin( 'Service', 's', 's.id = a.service_id' )
-                            ->where( 'a.staff_id', 1 )
+                            ->where( 'a.staff_id', $staff_id )
                             ->whereIn( 'ca.status', array( Entities\CustomerAppointment::STATUS_PENDING, Entities\CustomerAppointment::STATUS_APPROVED ) )
                             ->groupBy( 'a.service_id, a.start_date' )
                             ->havingRaw( '%s > bound_left AND bound_right > %s AND ( total_number_of_persons + %d ) > ss.capacity_max',
@@ -422,9 +407,11 @@ class Cart
                         $rows  = $query->execute( Query::HYDRATE_NONE );
 
                         if ( $rows != 0 ) {
-                            // Exist intersect appointment, time not available.
+                            // Intersection of appointments exists, time is not available.
                             return $cart_key;
                         }
+                    } else {
+                        return $cart_key;
                     }
                 }
             }

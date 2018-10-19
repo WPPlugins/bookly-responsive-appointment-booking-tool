@@ -1,27 +1,20 @@
 <?php
-namespace BooklyLite\Lib\Proxy;
+namespace Bookly\Lib\Proxy;
 
-use BooklyLite\Lib\Base;
+use Bookly\Lib;
+use BooklyLocations\Lib\Entities\Location;
 
 /**
  * Class Locations
- * Invoke local methods from Locations add-on.
+ * @package Bookly\Lib\Proxy
  *
- * @package BooklyLite\Lib\Proxy
- *
- * @method static void addBooklyMenuItem() Add 'Locations' to Bookly menu
- * @see \BooklyLocations\Lib\ProxyProviders\Local::addBooklyMenuItem()
- *
- * @method static \Booklylocations\Lib\Entities\Location|false findById( int $location_id ) Return Location entity.
- * @see \BooklyLocations\Lib\ProxyProviders\Local::findById()
- *
- * @method static \Booklylocations\Lib\Entities\Location[] findByStaffId( int $staff_id ) Return locations associated with given staff.
- * @see \BooklyLocations\Lib\ProxyProviders\Local::findByStaffId()
- *
- * @method static void renderAppearance() Render Locations in Appearance
- * @see \BooklyLocations\Lib\ProxyProviders\Local::renderAppearance()
+ * @method static void           addBooklyMenuItem() Add 'Locations' to Bookly menu.
+ * @method static Location|false findById( int $location_id ) Find location by id
+ * @method static Location[]     findByStaffId( int $staff_id ) Find locations by staff id.
+ * @method static int            prepareStaffLocationId( int $location_id, int $staff_id ) Prepare StaffService Location Id.
+ * @method static bool           servicesPerLocationAllowed() Get allow-services-per-location option.
  */
-abstract class Locations extends Base\ProxyInvoker
+abstract class Locations extends Lib\Base\Proxy
 {
 
 }

@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\DataHolders\Booking;
+namespace Bookly\Lib\DataHolders\Booking;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Series
- * @package BooklyLite\Lib\DataHolders\Booking
+ * @package Bookly\Lib\DataHolders\Booking
  */
 class Series extends Item
 {
@@ -135,6 +135,38 @@ class Series extends Item
     public function getDeposit()
     {
         return $this->items[0]->getDeposit();
+    }
+
+    /**
+     * Gets tax
+     *
+     * @return float
+     */
+    public function getTax()
+    {
+        if ( ! $this->tax ) {
+            $rates = Lib\Proxy\Taxes::getServiceTaxRates();
+            if ( $rates ) {
+                foreach ( $this->getItems() as $item ) {
+                    $this->tax += Lib\Proxy\Taxes::calculateTax( $item->getServicePrice(), $rates[ $item->getService()->getId() ] );
+                }
+            }
+        }
+
+        return $this->tax;
+    }
+
+    /**
+     * Sets tax
+     *
+     * @param float $tax
+     * @return $this
+     */
+    public function setTax( $tax )
+    {
+        $this->tax = $tax;
+
+        return $this;
     }
 
     /**

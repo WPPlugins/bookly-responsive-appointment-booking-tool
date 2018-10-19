@@ -92,12 +92,12 @@
     font-weight: bold;
     margin-top: 5px;
 }
-.bookly-form-inline .bookly-form-group {
-    display: inline-block;
-    width: auto;
-    vertical-align: middle;
+.bookly-form .bookly-btn + input[type=file] {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    display: block;
 }
-
 .bookly-form-group > label {
     display: inline-block;
     font-weight: bold;
@@ -399,6 +399,17 @@ span.bookly-round {
     vertical-align: top;
     float: none!important;
 }
+.bookly-columnizer .bookly-column.bookly-column-wide {
+    min-width: 205px;
+}
+.bookly-columnizer .bookly-column.bookly-column-wide span.bookly-time-main {
+    float: left;
+    margin-left: 10px;
+}
+.bookly-columnizer .bookly-column.bookly-column-wide span.bookly-time-additional {
+    float: right;
+    margin-right: 10px;
+}
 .bookly-columnizer .bookly-day,
 .bookly-columnizer .bookly-hour {
     display: block !important;
@@ -425,7 +436,10 @@ span.bookly-round {
     font-weight: normal;
     color: #333!important;
 }
-.bookly-columnizer .bookly-hour .ladda-label { margin: 0 -12px; display: inline-block; }
+.bookly-columnizer .bookly-hour.bookly-slot-in-waiting-list {
+    background-color: #d6d6d6 !important;
+}
+.bookly-columnizer .bookly-hour .ladda-label { display: inline-block; }
 .bookly-schedule-date,
 .bookly-columnizer .bookly-day {
     background: #f4662f;
@@ -456,7 +470,7 @@ span.bookly-round {
     height: auto;
     padding: 3px;
     border-radius: 25px;
-    margin-right: 5px;
+    margin-right: 3px;
 }
 .bookly-columnizer .bookly-hour.booked:hover .bookly-hour-icon { border: 2px solid #cccccc!important; }
 .bookly-columnizer .bookly-hour:hover .bookly-hour-icon span {
@@ -502,6 +516,10 @@ span.bookly-round {
     left: 50%;
     margin-left: -20px;
     margin-top: -20px;
+}
+
+select.bookly-time-zone-switcher {
+    width: 220px !important;
 }
 
 /* Repeat */
@@ -841,6 +859,16 @@ label.bookly-square {
 }
 
 /* Details */
+.bookly-guest > .bookly-btn {
+    display: inline-block;
+    margin: 0 14px 12px 0;
+}
+.bookly-guest > .fb_iframe_widget_fluid {
+    display: inline-block;
+}
+.bookly-guest > * {
+    vertical-align: top;
+}
 .bookly-details-step .bookly-form-group input[type="text"].bookly-captcha {
     display: block;
     width: 160px !important;
@@ -1264,10 +1292,6 @@ label.bookly-square {
 
 
 /* Other */
-.bookly-holder {
-    padding-top: 20px!important;
-    font-size: 100%!important;
-}
 ::-webkit-input-placeholder {color:#bbb!important;}
 ::-moz-placeholder          {color:#bbb!important;}/* Firefox 19+ */
 :-moz-placeholder           {color:#bbb!important;}/* Firefox 18- */

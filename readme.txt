@@ -1,169 +1,238 @@
-=== Bookly #1 WordPress Booking Plugin (Lite Version) ===
+=== WordPress Online Booking and Scheduling Plugin – Bookly ===
 Contributors: Ladela
-Tags: 2checkout, appointment plugin, authorize.net, booking plugin, calendar, cart, google calendar, paypal, payson, reservation, responsive, stripe, woocommerce, wordpress, wpm
+Tags: Booking, booking system, appointment booking, Booking calendar, reservation calendar, appointment scheduler, appointment calendar
 Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
-Tested up to: 4.9.2
+Tested up to: 4.9.8
 Requires PHP: 5.3.7
-Stable tag: 14.5.1
+Stable tag: 16.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Bookly Lite is a WordPress plugin that lets you automate booking and online scheduling of your services, save time and money, manage your appointments and client base - all in one place.
+Bookly is a booking plugin for WordPress for building an advanced automated online scheduling system.
 
 == Description ==
 
-Bookly Lite is a **WordPress plugin** that lets you automate **booking and online scheduling** of your services, save time and money, *manage your appointments* and client base - all in one place. 
-Join almost 16000 businesses all around the world that have already *automated their booking* process!
+**Bookly** is a free **scheduling plugin for WordPress** that allows accepting **online bookings** on your website and automating your **reservation system**. Manage your **booking calendar**, services, client base, save time and money – all in one place. Join almost 20000 businesses all around the world that have already automated their **online booking system**!
 
-[Bookly Homepage](https://www.booking-wp-plugin.com) | [Features](https://www.booking-wp-plugin.com/features/) (full version) | [Bookly Help Center](https://support.booking-wp-plugin.com/hc/en-us)  | [Demo](https://www.booking-wp-plugin.com/demo-list/)  
+https://youtu.be/XkCrADjLt2s
 
-Disclaimer: *Please note that email notifications, payments, custom fields and unlimited number of staff members* are NOT AVAILABLE in the **lite version**. All Bookly functions are available for review in our demo <https://www.booking-wp-plugin.com/demo-list/>.  
+**Bookly** is designed to grow your online sales and **make easy appointments**. This is a **one-stop shop** for **any businesses** from hair salons or photography to wealth management and transportation. You can **start** easily with the **free version of Bookly** and once your business scales you can operate **ultimate scheduling software** with the paid version available with the **Bookly Pro add-on**, and various add-ons.
+
+_**PLEASE NOTE** that online payments, unlimited number of staff members and services, and ability to install add-ons are_ **NOT AVAILABLE** in the **free version**. If you would like to find out more about features available with the **Bookly PRO** add-on, please check our [demo](http://demo.booking-wp-plugin.com/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG/).
+
+[Bookly Homepage](https://www.booking-wp-plugin.com/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) | [Pro Features](http://booking-wp-plugin.com/features/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) (Bookly Pro add-on required) |
+[Add-ons](https://www.booking-wp-plugin.com/demo-list/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) (Bookly Pro add-on required) | [Bookly Help Center](https://support.booking-wp-plugin.com/hc/en-us?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG)  | [Demo](https://www.booking-wp-plugin.com/demo/free/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG)
+
 
 ## 1. Benefits for the customers
-
-*Online Scheduling with Bookly* couldn't be any easier for your customers. The **booking form** is perfectly responsive on any device, and all customers need to do is pick their desired service and time, provide you with a few personal details, and voilà – it's done! Your customers will receive **SMS notification** before the appointment and it will be automatically added to your *Bookly Calendar in WordPress*.  
+**Online Scheduling** with Bookly couldn't be any **easier for your customers**. The **booking form** is perfectly **responsive** on any device, and all that customers need to do is pick their desired service and time, provide you with a few personal details, and voilà – it's done! Your customers will receive an email or **SMS notification** before the appointment, and it will be automatically added to your **Appointment Booking Calendar**.
 
 ### 1.1 When you install Bookly on your website, your customers will be able to:
+– quickly **schedule** and **book appointment** without having to directly contact you or your employee;
+– make a booking  on **any device**, since Bookly design is fully responsive;
+– **select** the **category**, the **service**, and **employee** to perform the service;
+– **define the dates** and time that work best for them and the booking system will offer only available time slots;
+– fill in the **minimum** amount of **contact details**;
+– get an **email and SMS notification** confirming their online reservations;
+– **get SMS reminder** about an upcoming appointment.
 
-– quickly schedule and **book appointments** without having to directly contact you or your employees;  
-– *book an appointment* **on any device**, since Bookly design is fully responsive;  
-– select the category, the service, and employee to perform the service;  
-– define the dates and time that work best for them and the *booking system* will offer only available time slots;  
-– fill in the minimum amount of contact details;  
-– get **SMS notification** confirming their reservation;  
-– get *SMS reminder* about an upcoming appointment.  
-
-### 1.2 Bookly Key Benefits 
-
-  * Saves time – no action necessary after booking is confirmed
-  * **User friendly** interface – easy navigation
-  * Minimal data input required
+### 1.2 Bookly Key Benefits
+  * **Saves time** – no action necessary after booking is confirmed
+  * **Friendly booking interface** – easy navigation
+  * **Minimal data** input **required**
   * **Responsive booking form** – works on any device
-  * Never forget a booked appointment with **SMS reminders**  
+  * Never forget a booked appointment with **SMS and email notifications**
 
 ## 2. Benefits for the business owner
+**No coding experience** required to set up Bookly. We did our best to make it as **easy and quick** as possible to install and **start using Bookly free** scheduling software on your WordPress website. And with our **Bookly Pro add-on** and other add-ons, you will bring **online scheduling** experience for you and your customers to the **next level**.
 
-You *don’t need any coding* experience to set up Bookly. We did our best to make it as easy and quick as possible to install and start using Bookly on your WordPress website. If you do run into any issues – tutorials, detailed documentation, and dedicated support are at your service.  
+You will be able to navigate the **Booking Admin Panel** like a pro, **approve** and **adjust** your appointments, and **automate your online scheduling** to concentrate on the most important part of your business – serving your customers and **grow sales**. 
 
-You will be able to navigate the Admin panel like a pro, approve and adjust your appointments and *automate your online scheduling* to concentrate on the most important part of your business – serving your customers.  
+You can change the **layout** and **modify the appearance** of the booking form to match your business, website, and branding, manage your services and the customers' list and send **email** and **SMS notifications** – all in one place.
 
-You can change the layout and modify the appearance of the booking form to match your business, website and branding, manage your services and the customers list, and send SMS notifications – all in one place.
+### You can use a wide range of Bookly features to configure your Appointment Scheduler and manage your bookings effectively:
+– easily and effectively manage your **Customer list** and **Appointment Calendar** online from the Admin panel;
+– add an **unlimited number of clients** to your searchable and sortable Customer list;
+– add **new customer** directly from the **calendar**;
+– setup and customize **SMS settings** right from Bookly backend;
+– **notify customers** and a service provider about approved, pending and canceled appointments via **SMS** and **Email** notifications;
+– view **calendar** in monthly/weekly/daily **format**;
+– filter, search and sort **booking list**;
+– automatically approve or cancel **appointments**.
 
-### You can use a wide range of different options in Bookly settings to configure your online scheduling system.
-**Easily and effectively manage your Customer list and Appointment Calendar online from the Admin panel:**  
+### Configure the booking form to suit your needs:
 
-– add an *unlimited number of clients* to your searchable and sortable Customer list;  
-– view *bookings and payments stats* for each customer;  
-– *add new customer directly* from the calendar;  
-– setup and *customize SMS settings* right from Bookly backend;  
-– notify customers and service provider about pending and approved appointments via SMS;  
-– thank customers with follow-up messages;  
-– send next day agenda to a staff member;  
-– *view calendar* in monthly/weekly/daily format;  
-– filter, search, sort and export your booking list to CSV;  
-– automatically *approve or cancel appointments*.  
-
-**Configure the booking form to suit your needs:**  
-
-– *customize* every step of your *booking form*, including editable headings, texts and buttons;  
-– *translate all user interface* and notifications into 40+ languages via WPML plugin;  
-– add as many booking forms on your website as you want;  
-– show or hide specific fields if you don’t want them to be visible to your customers;  
-– use pre-defined default values for Category, Service and Employee fields in your booking form;  
-– choose the way your customers will see your booking form on the front-end (e.g. show or hide calendar, show each day in one column, display blocked time slots);  
-– display available *time slots in client’s time zone*;  
-– *set duration for each service* separately;  
-– choose an individual color for each service in order to color code appointments internally in Bookly Calendar;  
-– organize services into categories.  
+– **customize every step** of your booking form, including editable headings, texts, and buttons;
+– translate all user interface and notifications into **40+ languages via WPML plugin**;
+– **add** as many **booking forms** on your website as you want;
+– show or hide specific fields if you don’t want them to be visible to your customers;
+– use pre-defined default values for **Category**, **Service** and **Employee** fields in your **booking form**;
+– **choose** the way your customers will see your **booking form** on the front-end (e.g., show or hide the calendar, show each day in one column, display blocked time slots);
+– display available **time slots** in the client’s **time zone**;
+– **set duration** for each **service** separately;
+– choose an individual color for each service in order to color code appointments internally in your **Appointment Booking Calendar**;
+– **organize services** into **categories** (you can add up to five services with the free version of Bookly);
 
 ## 2.1 Key Features
-
-  * Fast **online booking** with intuitively manageable forms
-  * Fully **customizable appearance** of the booking form with no coding involved
-  * *Unlimited* number of booking forms on your site
-  * Comprehensive admin area with intuitive interface
-  * Unlimited number of services
-  * Monthly/weekly/daily calendar view for service provider
-  * Importable and **manageable list of your customers**
-  * Filterable, sortable and searchable booking list of your customers
-  * Variable duration for each service (5 min – 7 days)
-  * Services grouped into categories
-  * **Customizable SMS settings** right from the Bookly backend
-  * **WPML integration** for multi-language support  
+  * **Fast online booking** with intuitively manageable forms
+  * The fully **customizable appearance** of the booking form with no coding involved
+  * **Unlimited number of booking forms** on your site
+  * **Comprehensive admin area** with an intuitive interface
+  * Monthly/weekly/daily **calendar view** for the service provider
+  * Manageable **list of your customers**
+  * Filterable, sortable and searchable **booking list** of your customers
+  * **Variable duration** for each **service** (5 min – 7 days)
+  * Services grouped into **categories**
+  * Customizable **SMS** and **email notifications settings** right from the Bookly backend
+  * **WPML integration** for multi-language support
 
 ### 3. Who can benefit from using Bookly:
-Bookly Lite for WordPress is designed to be used by local businesses or individual providers that offer different services to customers. Since the booking *form can be fully customized and personalized*, it is successfully used in many business segments such as Health, Beauty, Education, Medicine, etc., as well as by individual professionals.  
+
+Bookly for WordPress is designed to be used by **local businesses** or **individual providers** who offer different services to customers. Since the **booking form** can be **fully customized** and **personalized**, it is **successfully used** in many business segments such as **Healthcare**, **Beauty**, **Education**, **Medicine**, **Consulting** etc., as well as by individual professionals.
+
+Also, Bookly is an excellent solution for **web studios** and **developers**, who are looking for ways to improve the **appointment process** for their **customers**.
 
 ### Online scheduling for:
-  * Salon & Beauty (hair salons, nail salons, cosmetology centers, tanning studios, barbershops);  
-  * Health and wellness (wellness, spa & massage, aromatherapy, baths);  
-  * Medicine (clinics, doctors, dentists, medical centres);  
-  * Education (education centres, tutoring, language schools);  
-  * Fitness & Gyms (yoga classes, personal trainers, health clubs, fitness centres, dance instructors);  
-  * Professional services (coaches, consultants, lawyers, photographers, consulting psychologist);  
-  * or any other services which can be scheduled and reserved online using the booking system.  
+
+  * **Salon & Beauty** (hair salons, nail salons, cosmetology centers, tanning studios, barbershops)
+  * **Health and wellness** (wellness, spa & massage, aromatherapy, baths)
+  * **Medicine** (clinics, doctors, dentists, medical centers)
+  * **Education** (education centers, tutors, language schools, private lessons)
+  * **Fitness & Gyms** (yoga classes, personal trainers, health clubs, fitness centers, dance instructors)
+  * **Professional services** (coaches, consultants, lawyers, photographers, consulting psychologist, cleaning services)
+  * or any **other services** which can be scheduled and reserved **online** using the booking system.
+
+### 4. Bookly Pro add-on features:
+
+**Bookly Pro** add-on allows you to use more features and settings, install other add-ons for Bookly, includes six months of customer support, and provides you with advanced capabilities for automating your **online scheduling system**. Some of them include:
+  * **Unlimited** number of **staff members** with an individual working schedule and ability to manage their profiles and online booking calendar
+  * **Unlimited** number of **services** with additional settings (padding time, visibility, limitations, etc.)
+  * Ability to receive secure and flexible **online payments** on your website
+  * Additional **templates** for **Email notifications** (e.g., reminders about upcoming appointments, follow-up messages, birthday greetings, next day agenda, etc.)
+  * **Advanced** features for customizing your **online booking form** (show address fields, birthday fields, Facebook login, timezone switcher)
+  * **Google Calendar** integration
+  * **WooCommerce** compatibility
+  * **Importable and exportable customer list** which includes info about appointments and payments
+  * **Built-in analytics** so you will be able to see a comprehensive report about the number of bookings, customers and payments received
+  * **Ability to purchase and use** dozens of **paid add-ons for deeper customization** of your booking system (various **payment gateways**, group bookings, custom fields, service **extra items**, recurring appointments, deposits, **coupons**, personal staff cabinet and user account for your clients, **automatic invoicing**, waiting list, and much **more!**)
+
+### FURTHER READING
+
+  * [Bookly Online Scheduling plugin](https://www.booking-wp-plugin.com/?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading) official page
+  * [Help center](https://support.booking-wp-plugin.com/hc/en-us?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading)
+  * [Bookly demo](https://www.booking-wp-plugin.com/demo/free/?utm_campaign=wp_furtherreading&utm_medium=cpc&utm_source=WP_ORG)
+  * [Bookly Pro add-on demo](http://demo.booking-wp-plugin.com/?utm_campaign=wp_furtherreading&utm_medium=cpc&utm_source=WP_ORG)
+  * [Add-ons for Bookly Pro](https://codecanyon.net/user/ladela/portfolio?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading&ref=ladela)
+  * [Youtube channel](http://youtube.com/c/Bookly?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading)
+
+### AFTER ACTIVATION
+
+  * **Add** at least one **service** (Bookly menu > Services).
+  * **Add a staff member** linked to your service (Bookly menu > Staff members).
+  * **Customize** the appearance of your online booking form (Bookly menu > Appearance).
+  * **Publish the booking form** on your website (WordPress sidebar menu > Pages/Posts).
 
 == Frequently Asked Questions ==
 
-= Where can I try the standard version of Bookly? =
+= How can I test Bookly before installation? =
 
-To check out the standard version with all of its features, please visit <https://www.booking-wp-plugin.com/demo-list/>.  
+You can check the functionality of Bookly by visiting our [demo page](https://www.booking-wp-plugin.com/demo/free/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG).
 
-= How to upgrade to standard version of Bookly? =
+= Where can I try the Bookly Pro add-on? =
 
-The standard version of Bookly is available for purchase and download [here](https://1.envato.market/c/291148/275988/4415?subId1=wordpress.org&subId2=description+&u=https%3A%2F%2Fcodecanyon.net%2Fitem%2Fbookly-booking-plugin-responsive-appointment-booking-and-scheduling%2F7226091). After you’ve installed Bookly, remove Bookly Lite through FTP. We strongly recommend FTP-removal of Bookly instead of using WordPress, otherwise you may lose all your data and get your database corrupted.  
+To check out all features available with the Bookly Pro add-on, please visit [Bookly Pro demo](http://demo.booking-wp-plugin.com/?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ).
 
-= How much does it cost? =
+= How to upgrade to Bookly Pro? =
 
-Bookly Lite is a free version of Bookly which can be used for the unlimited period and contains most of the basic features. The standard version of Bookly costs $89 and includes six months of customer support and lifetime free updates of the plugin.  
+Bookly Pro is a paid version which requires the Bookly Pro add-on. Purchase and download the Bookly Pro add-on [here](https://codecanyon.net/item/bookly/7226091?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela). Install it as a new plugin.
 
-= I’ve installed Bookly Lite. How do I get it running? = 
+= What’s the price of the Bookly Pro add-on? =
 
-To start using Bookly, you’ll need to add a staff member and at least one service. To publish a booking form on your website, go to the Pages/Posts and click on the “Add booking form” button.  
+Bookly has a free version which can be used for the unlimited period and contains most of the basic features. Bookly Pro add-on costs $89 and includes six months of customer support and lifetime free updates of the plugin. For Pro version you can also install add-ons. You can check the add-ons prices [here](https://codecanyon.net/user/ladela/portfolio?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela).
 
-= Where do I go to change the appearance of the booking form? = 
+= Can I install add-ons with the free version of Bookly? =
 
-Appearance section in Bookly menu is the place to start with. Change the colors, rewrite interface texts, show/hide particular fields, and much more.
-If you want to remove fields make sure you only check the right boxes to the booking form. 
+You can use Bookly add-ons with the Bookly Pro add-on only. To install the add-ons you need to upgrade to [Bookly Pro](https://codecanyon.net/item/bookly/7226091?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela) first.
+
+= What add-ons do you provide for Bookly Pro? =
+
+We have dozens of add-ons available for Bookly Pro only and continue adding more add-ons regularly. We have add-ons such as:
+  * ‘Deposit Payments’ allows your clients to reserve the service by paying online just the part of the price and the rest after they receive the service.
+  * ‘Special Days’ allows overriding working hours for the services you provide during holidays or any other special occasions without changing regular schedule.
+  * ‘Service Schedule’ allows setting the specific time for the service during the regular working hours of your employees or staff members to create more flexibility.
+  * ‘Bookly Locations’ allows your customers to pick the most suitable place to get the service you provide and you can associate your employees with different locations.
+  * ‘Service Extras’ allows purchasing extra items for the service you provide.
+You can check the full list of add-ons and how they work [here](https://www.booking-wp-plugin.com/demo-list/?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ).
+If you have Bookly Pro you can purchase add-ons [here](https://codecanyon.net/user/ladela/portfolio?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela).
+
+= Can I use Bookly for the hotel or rental business? =
+
+The current version of Bookly won’t fit hotel or rental business. But other than that it can fit any business, where you or your employees provide time-based services from legal, finance industries to spa and entertainment. Our solution is designed to improve online sales and enhance the process of setting appointments.
+
+= Do you offer support? =
+
+The Bookly team strives to provide support for both free and paid Bookly versions, but we cannot always guarantee active support on the WordPress.org forums, as we prioritize users who [bought Bookly Pro](https://codecanyon.net/item/bookly/7226091?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela) add-on and have a valid support pack.
+
+We recommend visiting our [Help Center](https://support.booking-wp-plugin.com/hc/en-us?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG), [Youtube Video Tutorials](https://www.youtube.com/channel/UCO4v4UcvU43enNcHU8BN5XA/videos?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG), and trying [our demos](https://www.booking-wp-plugin.com/demo-list/?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) to find the answers to the most common questions.
+
+Regular License of Bookly Pro add-on includes six months of support which is available online 24/7. After the support pack expires, it can be [renewed at any time](https://help.market.envato.com/hc/en-us/articles/207886473-Extending-and-Renewing-Item-Support).
+
+= I’ve installed Bookly. How do I get it running? = 
+
+To start using Bookly, you’ll need to add a staff member and at least one service. To publish a booking form on your website, go to the Pages/Posts and click on the "Add Bookly booking form" button in the page editor.
+
+= Where do I go to change the appearance of the booking form? =
+
+Appearance section in Bookly menu is the place to start with. Change the colors, update interface texts, show/hide particular fields, and much more.
+If you want to remove fields, make sure you only check the right boxes to the booking form.
 
 = Do I need to know how to code in order to install or use Bookly? = 
 
 No, if your website runs on WordPress.
-You can access all Bookly capabilities from the admin area, which will be an integral part of your WordPress dashboard.  
+You can access all Bookly capabilities from the admin area, which will be an integral part of your WordPress dashboard.
 
 = How do I set up SMS notifications? =
 
 1. In *Bookly menu –> SMS Notifications*, click on "Register" in the login form on the left side of the page;
 2. Top up your balance by one of the standard $10, $25, $50, or $100 amounts (transaction processed by PayPal);
-3. Set up the scheduled execution of the shell script. Location of the script:
-..wp-content/plugins/appointment-booking/lib/utils/send_notifications_cron.php;
-4. Choose notification types and build your messages using tags: tick a checkbox, and an editor field will open. Write the copy, format it as you like, and add personalized data using shortcodes that you’ll see just below the text edit window.  
+3. If you use cron for scheduled notifications, make sure to update your cron settings by replacing the current command with the following:
+wget -q -O - http://[your-domain]/wp-cron.php
+4. Choose notification types and build your messages using shortcodes: tick a checkbox, and an editor field will open. Write the copy, format it as you like, and add personalized data using shortcodes that you’ll see just below the text edit window.
 
-To learn more, please visit our [Help Center](https://support.booking-wp-plugin.com/hc/en-us/articles/212411289).  
+To learn more, please visit our [Help Center](https://support.booking-wp-plugin.com/hc/en-us/articles/212411289?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG).
 
 = I want to learn more about all Bookly features. = 
 
-Everything you need to know about Bookly in our [detailed documentation](https://support.booking-wp-plugin.com/hc/en-us/categories/200390551-Documentation).  
-Check out our [video tutorials](https://www.youtube.com/channel/UCO4v4UcvU43enNcHU8BN5XA) about main Bookly features.  
+You can find more details about Bookly Pro features [here](https://www.booking-wp-plugin.com/features/?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) (paid version requires the Bookly Pro add-on). 
+Check out our [video tutorials](https://www.youtube.com/channel/UCO4v4UcvU43enNcHU8BN5XA?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) about main Bookly features.
 
 = How do I suggest a feature for future versions of Bookly? =
 
-We've created a [discussion board](https://support.booking-wp-plugin.com/hc/en-us/community/topics/200189331-Feature-Requests) specifically for that. Go ahead and vote for the features you'd like to be added or create new feature requests with a bit of context in the description.
+We've created a [discussion board](https://support.booking-wp-plugin.com/hc/en-us/community/topics/200189331-Feature-Requests?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) specifically for that. Go ahead and vote for the features you'd like to be added or create new feature requests with a bit of context in the description.
 
 == Screenshots ==
 
-1. Booking process for a customer 
-2. Booking process for a customer
-3. Mobile-friendly booking form
-4. Mobile-friendly booking form
-5. Backend Calendar
-6. Service management 
-7. Color code services in the Calendar
-8. Unlimited number of services
-9. Frontend form customization
-10. Editable texts for all elements of the form
-11. Backend features
+1. Mobile-friendly booking form
+2. Booking process for customer
+3. Booking process for customer
+4. Booking process for customer
+5. Color-coding services in Bookly Calendar
+6. Appointment List
+7. Edit appointment window
+8. Unlimited Customer List
+9. Services grouped into categories
+10. Individual settings for each service
+11. Staff member settings
+12. Staff member settings
+13. Staff member schedule
+14. Staff member days off and vacation
+15. Frontend form customization: editable texts for all elements of the form
+16. Frontend form customization: appearance of the time step
+17. Templates for Email Notifications to customers
+18. Email Notification to customer about pending appointment
+19. Bookly General settings
+20. Bookly General settings: edit the record template displayed in the Calendar
 
 == Installation ==
 
@@ -171,647 +240,40 @@ We've created a [discussion board](https://support.booking-wp-plugin.com/hc/en-u
   * WordPress 3.7 or greater
   * PHP version 5.3.7 or greater
   * MySQL version 5.0 or greater  
-
+ 
 = AUTOMATIC INSTALLATION = 
 Automatic installation is the easiest option as WordPress handles the file transfers itself and you don’t even need to leave your web browser. To do an automatic install of Bookly, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
 
-In the search field type “Bookly” and click Search Plugins. Once you have found our plugin, you can install it by simply clicking Install Now. After clicking that link, you will be asked if you are sure you want to install the plugin. Click yes and WordPress will automatically complete the installation.
+In the search field type “Bookly” and click Search Plugins. Once you have found our plugin, you can install it simply by clicking Install Now. WordPress will automatically complete the installation.
 
 = MANUAL INSTALLATION = 
 The manual installation method involves downloading our plugin and uploading it to your web server via your favorite FTP application.
 
 1. Download the plugin file to your computer and unzip it.
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installations wp-content/plugins/ directory.
-3. Activate the plugin in the *WordPress sidebar menu –> Plugins*.  
+3. Activate the plugin in the *WordPress sidebar menu –> Plugins*.
 
 = GETTING STARTED = 
-When the title of the plugin has appeared on your dashboard, you may start the setup. The following steps are required to make it possible for customers use your newly installed plugin:  
+When the title of the plugin has appeared on your dashboard, you may start the setup. The following steps are required to make it possible for customers to use your newly installed plugin:  
 
   * Create a staff member of your company;  
-  * Define category of services and list of services in each category;  
-  * Determine price and duration of services;  
+  * Define a category of services and list of services in each category (you can add up to five services with free version of Bookly);  
+  * Determine the price and the duration of services;  
   * Associate services with a staff member;  
-  * Set working schedule for staff member;  
-  * Add booking form to a website page.  
+  * Set a working schedule for a staff member;  
+  * Add booking form to a website page.
 
-Upon the completion of these steps, customers can book appointments. In the Calendar section of the administrator’s view, administrators can add the information about appointments manually. The website owner can also look through and set:  
+Upon the completion of these steps, customers can book appointments. In the Calendar section of the administrator’s view, administrators can add the information about appointments manually. The website administrator can also look through and set:  
 
   * Appearance mode of booking forms;  
   * Staff member’s individual schedule;  
   * Staff member’s individual service prices;  
-  * Set holidays for the whole company and for the staff member separately;  
+  * Set holidays and days off; 
   * List of customers with contact information;  
-  * SMS Notifications and reminders.
+  * Email Notifications and SMS reminders.
 
 == Changelog ==
-
-= 14.5 =
-* Fixed issue with Custom Fields after previous update
-
-= 14.4 =
-* Added new custom notifications
-* Added ability to attach files in .ICS format to notifications
-* Added ability to create appointments with custom service
-* Added new shortcode for cancellation confirmation page
-
-= 14.3 =
-* Added support for <a href="https://codecanyon.net/item/bookly-waiting-list-addon/20917406?ref=ladela">Waiting List (Add-on)</a>
-* Added support for <a href="https://codecanyon.net/item/bookly-packages-addon/20952783?ref=ladela">Packages (Add-on)</a>
-* Added ability to create custom notifications
-* Added ability to limit number of bookings per customer
-* Added new notification code {reject_appointment_url}
-
-= 14.2 =
-* Fixed issues with entering purchase code
-* Fixed issues with cron reminders
-
-= 14.1 =
-* Added ability to enter first name and last name of customers separately
-* Added ability to specify a rule about how staff members should be automatically selected when customers choose "Any"
-* Added word "Any" to staff name in the appointments for which the staff member was booked as "Any"
-
-= 14.0 =
-* Added support for WordPress 4.8.2
-
-= 13.9 =
-* Added ability to set price format
-* Added ability to automatically fill in personal information for returning customers at Details step
-* Changed the way how Bookly identifies returning customers – now it uses phone if phone field is required, otherwise email is used
-
-= 13.8 =
-* Fixed issue with extras and GC
-
-= 13.7 =
-* Fixed issues with login form at Details step
-
-= 13.6 =
-* Fixed regression bugs with WooCommerce and WPML
-
-= 13.5 =
-* Fixed issues with PHP < 5.5
-
-= 13.4 =
-* Added ability to configure displayed appointment info in Bookly calendar
-* Added ability to set minimum service capacity
-* Added 3 new cron reminders
-* Added ability to show service duration next to service name in Bookly forms
-* Added support for WP Super Cache (do not cache pages with Bookly forms)
-* Improved support for daylight saving time
-
-= 13.3 =
-* Added support for <a href="https://codecanyon.net/item/bookly-staff-cabinet-addon/20005540?ref=ladela">Staff Cabinet (Add-on)</a>
-* Added ability to setup custom CSS
-* Added ability to set phone field as optional
-* Added new texts for Payment step in Appearance
-* Fixed displaying morning slots of night shift
-
-= 13.2 =
-* Added support for <a href="https://codecanyon.net/item/bookly-paypal-payments-standard-addon/19617518?ref=ladela">PayPal Payments Standard (Add-on)</a>
-* Added ability to set service duration in days
-* Added ability to set different text for Next button at each booking step
-	
-= 13.1 =
-* Added customer birthday greetings
-* Added ability to change appointment status directly from the edit appointment dialog
-* Fixed status Rejected for those who got version 13.0 via update
-
-= 13.0 =
-* Added support for <a href="https://codecanyon.net/item/bookly-recurring-appointments-addon/19497634?ref=ladela">Recurring Appointments (Add-on)</a>
-* Added new status Rejected for appointments
-* Added ability to send notifications for deleted appointments
-* Added buttons for quick access to Bookly documentation and support team
-
-= 12.1 =
-* Added support for version 1.1 of <a href="https://codecanyon.net/item/bookly-service-schedule-addon/18874038?ref=ladela">Service Schedule (Add-on)</a>
-* Fixed an issue with duplicate items in WooCommerce cart
-
-= 12.0 =
-* Fixed Google Calendar error: “Could not json decode the token”
-
-= 11.9 =
-* Updated Stripe library to version 4.2.0
-* Fixed payments amount in the list of customers
-* Fixed an issue with adding customers to appointments with cancelled participants
-
-= 11.8 =
-* Fixed time zone issue in cron notifications
-
-= 11.7 =
-* Added support for <a href="https://codecanyon.net/item/bookly-service-schedule-addon/18874038?ref=ladela">Service Schedule (Add-on)</a>
-* Added new option to make slot length equal to service duration
-* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.11
-* For users of <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>: Please also update the add-on to version 1.5
-* For users of <a href="https://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela">Multiply Appointments (Add-on)</a>: Please also update the add-on to version 1.2
-* For users of <a href="https://codecanyon.net/item/bookly-special-days-addon/18611122?ref=ladela">Special Days (Add-on)</a>: Please also update the add-on to version 1.1
-* For users of <a href="https://codecanyon.net/item/bookly-special-hours-addon/18704535?ref=ladela">Special Hours (Add-on)</a>: Please also update the add-on to version 1.1
-
-= 11.6 =
-* Added support for <a href="https://codecanyon.net/item/bookly-special-hours-addon/18704535?ref=ladela">Special Hours (Add-on)</a>
-* Fixed issue with Next button at Payments step
-* Fixed lags on staff members’ schedule page
-
-= 11.5 =
-* Added support for <a href="https://codecanyon.net/item/bookly-special-days-addon/18611122?ref=ladela">Special Days (Add-on)</a>
-* Added ability to specify default user role for newly created WordPress accounts for customers
-* Added Bookly SMS weekly summary
-* For users of <a href="https://codecanyon.net/item/bookly-chain-appointments-addon/17367838?ref=ladela">Chain Appointments (Add-on)</a>: Please also update the add-on to version 1.1
-* For users of <a href="https://codecanyon.net/item/bookly-deposit-payments-addon/17956131?ref=ladela">Deposit Payments (Add-on)</a>: Please also update the add-on to version 1.2
-* For users of <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>: Please also update the add-on to version 1.4
-* For users of <a href="https://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela">Multiply Appointments (Add-on)</a>: Please also update the add-on to version 1.1
-* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.9
-
-= 11.4 =
-* Added records in Bookly for payments made with WooCommerce
-* Added compatibility of <a href="https://codecanyon.net/item/bookly-deposit-payments-addon/17956131?ref=ladela">Deposit Payments (Add-on)</a> with WooCommerce
-* Added new currency KES
-* Fixed unnecessary requests to SMS server
-
-= 11.3.1 =
-* Fixed issue with displaying appointments in back-end calendar in Bookly Lite
-
-= 11.3 =
-* Fixed issue with daylight saving time and Google Calendar
-* Fixed formatting for {next_day_agenda}
-
-= 11.2 =
-* Fixed updating list of services when category is selected
-* Fixed an issue with linking coupons and services
-* For users of <a href="https://codecanyon.net/item/bookly-deposit-payments-addon/17956131?ref=ladela">Deposit Payments (Add-on)</a>: Please also update the add-on to version 1.1
-
-= 11.1 =
-* Added support for custom SMS sender IDs
-* Added locations and extras in staff agenda notifications
-* Added creating appointments for WooCommerce orders with status "On Hold"
-* Added cancellation of appointments for refunded/cancelled WooCommerce orders
-* For users of <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>: Please also update the add-on to version 1.3
-
-= 11.0 =
-* Added support for <a href="https://codecanyon.net/item/bookly-deposit-payments-addon/17956131?ref=ladela">Deposit Payments (Add-on)</a>
-* Added "Complete payment" for local payments
-* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.8
-* For users of <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>: Please also update the add-on to version 1.2
-
-= 10.12 =
-* Added creating appointments when WooCommerce order with status "Processing" is created
-* Fixed an issue with private services provided by public staff members
-
-= 10.11 =
-* Added new currency PKR
-* Fixed linking new coupons with services
-* Fixed updating list of services when location is selected
-* Fixed an issue with including Bookly assets in HTTPS pages
-
-= 10.10 =
-* Fixed saving appointments for some server configurations
-* Minor CSS adjustments
-
-= 10.9 =
-* Added ability to link coupons with services
-* Added new setting to show/hide service price next to employee name
-* Added more codes to WooCommerce cart item data
-* Added new currency BHD
-* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.7
-* For users of <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>: Please also update the add-on to version 1.1
-
-= 10.8 =
-* Added support for version 1.6 of Service Extras add-on
-
-= 10.7 =
-* Added support for version 1.5 of Service Extras add-on
-
-= 10.6 =
-* Added code [[PAYMENT_TYPE]] in notifications
-* Added ability to delete payments
-* Added ability to display custom fields in appointments list on the front-end
-* Fixed an issue with Google Calendar integration when days were marked as fully booked
-
-= 10.5 =
-* Fixed time zone issue in WooCommerce orders
-* CSS adjustments
-* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.4
-
-= 10.4 =
-* Minor CSS adjustments
-
-= 10.3 =
-* Added "Test Email Notifications" tool
-* Fixed JS error at Extras step
-
-= 10.2 =
-* Fixed time zone issue when the first step of booking is skipped
-* Fixed navigation with Back button from cart
-* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.3
-
-= 10.1 =
-* Fixed appointment time in notifications to clients
-
-= 10.0 =
-* New back-end design
-* Added support for <a href="https://codecanyon.net/item/bookly-locations-addon/17328208?ref=ladela">Locations (Add-on)</a>
-* Added support for <a href="https://codecanyon.net/item/bookly-chain-appointments-addon/17367838?ref=ladela">Chain Appointments (Add-on)</a>
-* Added support for <a href="https://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela">Multiply Appointments (Add-on)</a>
-* Added translation into Traditional Chinese
-* Added new currencies ZMW and MUR
-* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.2
-* For users of <a href="https://codecanyon.net/item/bookly-multisite-addon/13903524?ref=ladela">Multisite (Add-on)</a>: Please also update the add-on to version 1.4
-
-= 9.4 =
-* Added ability to print appointments list
-* Fixed minor issues with appointments list filter
-
-= 9.3 =
-* Added booking numbers
-* Added new filters in Appointments
-* Added combined notifications for built-in cart
-* Added payment details
-* Added ability for staff members to approve appointments from email or SMS notifications
-* Added ability to hide particular staff members and services in booking form
-* Added internal note for appointments
-* Updated Authorize.Net to support Akamai network
-* For users of <a href="https://codecanyon.net/item/bookly-service-extras-addon/15552320?ref=ladela">Service Extras (Add-on)</a>: Please also update the add-on to version 1.1
-
-= 9.2 =
-* Added ability to make staff selection required in the first step of booking
-* Added new currency LAK
-* Fixed padding for Google Calendar events
-* Fixed translation into German
-
-= 9.2 =
-* Added ability to make staff selection required in the first step of booking
-* Added new currency LAK
-* Fixed padding for Google Calendar events
-* Fixed translation into German
-
-= 9.1.1 =
-* Fixed selecting staff member in shortcode
-
-= 9.1 =
-* Added new setting "Cancel appointment action"
-* Fixed regression bug in cron notifications
-* Fixed auto-scroll when going back to the first step of booking
-* Fixed custom fields order in appointments export
-
-= 9.0 =
-* Added appointment statuses (pending, approved, cancelled)
-* Added new notification types for each appointment status
-* Added ability to reorder cart columns
-* Fixed displaying available days in calendar at the Time step
-
-= 8.5.2 =
-* Added new currency ARS
-* Fixed minor issues with scrolling of time slots on mobile
-* Fixed displaying Google Calendar errors
-
-= 8.5.1 =
-* Added new currency XOF
-* Fixed time zone issue in WooCommerce when "Display available time slots in client's time zone" is enabled
-
-= 8.5 =
-* Important! If you are using Bookly Mulisite add-on you need to update it to version 1.1 or higher
-* Added support for Bookly Service Extras add-on
-* Added support for Mollie (iDEAL payments available)
-* Added ability to set reminders sending time
-* Added ability to show/hide columns in built-in cart
-* Added ability to insert textual content in custom fields
-
-= 8.4 =
-* Added ability to bind custom fields to services
-* Added export of clients
-* Added new field Info in staff member profile
-* Added new codes [[STAFF_INFO]] and [[GOOGLE_CALENDAR_URL]] in Notifications
-
-= 8.3 =
-* Added pagination for [bookly-appointments-list] shortcode
-* Added ability to edit button labels in Appearance
-* Added new currency ISK
-* Fixed PHP warnings when paying with PayPal
-
-= 8.2 =
-* Added filling WooCommerce checkout form with data from Bookly details step
-* Fixed sending notifications when all payment methods are disabled
-
-= 8.1 =
-* Added built-in cart
-* Added 45 min slots
-* Added support for Payson invoice
-* Added new currencies AED, HRK, VND, NGN and UAH
-
-= 8.0 =
-* Added new setting "Minimum time requirement prior to cancellation"
-* Added support for WPML in custom fields
-* Added support for WPML in scheduled notifications
-* Added Auto-Recharge in Bookly SMS
-* Added notification about low balance in Bookly SMS
-* Improved back navigation when "Any" is selected for staff member
-
-= 7.9.1 =
-* Fixed an issue with validating emails
-* Fixed a problem with booking when reaching the limit of capacity
-
-= 7.9 =
-* Added support for Bookly Multisite add-on (sold separately)
-
-= 7.8.3 =
-* Fixed an issue with cancelling appointments in Google Calendar
-
-= 7.8.2 =
-* Fixed an issue with Google_Service_Exception
-
-= 7.8.1 =
-* Fixed regression bugs in custom fields and time zones
-
-= 7.8 =
-* Added Payson payment gateway
-* Added PayU Latam payment gateway
-* Added support for RTL
-* Added payment information in Calendar and Appointments
-* Fixed conflict with Ultimate Member plugin
-
-= 7.7.4 =
-* Fixed issue with service name in PayPal
-
-= 7.7.3 =
-* Removed shipping address in PayPal
-* Added OMR currency
-* Fixed issues with "padding" of services
-* Fixed issue with switching months in calendar at the second step
-
-= 7.7.2 =
-* Updated Dutch and Swedish translations
-* Fixed conflict with some themes due to hex2rgb function
-
-= 7.7.1 =
-* Fixed inserting shortcode
-
-= 7.7 =
-* Added 2Checkout payment gateway
-* Added captcha to custom fields
-* Added ability to disable country selection in phone field
-* Added ability to hide week days and/or time range in the first step of booking
-* Added support for Stripe.js
-* Now Bookly takes into account only Google Calendar events with status "busy"
-* Fixed some issues with WPML and double bookings in WooCommerce cart
-
-= 7.6.1 =
-* Fixed disabling SMS and email notifications
-
-= 7.6 =
-* Added padding time
-* Fixed regression bugs with credit card payments
-* Fixed issue with HTTPS and detecting client’s country by IP
-
-= 7.5 =
-* Added support for night shifts
-* Fixed “<br/>” in company address in emails sent as plain text
-* Fixed issue with the second step not loading when “Show calendar” is enabled
-
-= 7.4 =
-* Added time slot lengths up to 6 hours
-* Added new setting to send emails as plain text
-* Added new setting to set clients’ email as “reply to” address in email notifications
-* Improved the second step of booking when “Show calendar” is enabled
-
-= 7.3.1 =
-* Fixed wrong dates in the popup back-end calendar for time zones behind UTC
-* Fixed time-text in vertical axis of the back-end calendar
-
-= 7.3 =
-* Added ‘All day’ services
-* Added new code [[LOGIN_FORM]] to the Details step of booking so users can log in at that step
-* Added ability to choose staff members in the back-end calendar
-* Back-end calendar now remembers active view and staff members
-* Added ability to translate category, service and staff member names with WPML
-
-= 7.2 =
-* Added ability to view appointments of all staff members in the back-end calendar
-* Added ability to navigate to specific dates in the back-end calendar
-* Added ability to edit appointments in the list
-* Fixed issue with displaying dates in calendar at the second step of booking
-
-= 7.1 =
-* Added support for WPML
-* Added month view in the back-end calendar
-* Added ability to select country in the phone field
-* Added [[STAFF_NAME]] in staff agenda templates
-* Fixed “<br/>” in company address in SMS
-
-= 7.0.1 =
-* Fixed issue with popups in the back-end on mobile devices
-* Fixed issue with “No time is available for booking”
-
-= 7.0 =
-* Added SMS notifications
-* Added reusable coupons
-* Added deduction parameter in coupons
-* Added support for database backup/transfer plugins
-* Added ability to specify what information should be placed in Google Calendar event title
-* Added new setting for choosing how Bookly assets should be included in the page (may be helpful in some themes)
-* Improved the look and feel of the admin panel elements
-* Fixed email notifications when WooCommerce is enabled
-
-= 6.3 =
-* Added ability to use WooCommerce cart with free services
-* Fixed conflict with other plugins that change default time zone in WordPress
-* Fixed issues with Google Calendar events when “Show blocked timeslots” is enabled
-
-= 6.2 =
-* Updated Authorize.Net library
-* Added support for working hours up to midnight
-* Added translation into Italian
-* Fixed issue with displaying days off in calendar at the second step
-* Fixed problem with creating `ab_email_notification` table in database
-* Fixed E_STRICT error message
-
-= 6.1 =
-* Added ability to delete associated WordPress user when deleting customer
-* Added restoring selected week days when going back to the first step of booking
-* Fixed creating new staff members
-* Fixed minor cosmetic issues
-
-= 6.0 =
-* Added integration with WooCommerce
-* Added new option to allow staff members to edit their profile settings
-* Added auto scroll when the next step’s content is outside of screen
-
-= 5.2.3 =
-* Security update to prevent XSS vulnerability
-* Fixed issue with extra slot being excluded when fetching events from Google Calendar
-
-= 5.2.2 =
-* Fixed problem with initialization of Bookly in some themes
-
-= 5.2.1 =
-* Fixed displaying booking forms in IE9
-* Fixed displaying PayPal errors
-* Fixed bug with repeating days when “Show each day in one column” is enabled
-
-= 5.2 =
-* Added new code [[CUSTOM_FIELDS_2C]] in Notifications for 2 column formatting ([[CUSTOM_FIELDS]] reverted to old formatting)
-* Fixed issues when creating WP user for logged in customer or not logged in customer uses existing name and email
-
-= 5.1 =
-* Added ability to assign WP users to customers when editing or creating a new customer
-* Added translation into Dutch
-
-= 5.0 =
-* Added ability to create WP accounts for customers
-* Added new shortcode for viewing and cancelling customers’ appointments in the front-end
-* Added cancelled appointment notifications
-* Added ability to view appointments as a list in the admin panel
-* Added ability to use HTML tags in Appearance and Custom Fields
-* Improved time zones support
-
-= 4.6 =
-* Added new selection “Number of persons” in the first step of booking
-* Added new appearance setting “Show calendar”
-* Added new codes [[NUMBER_OF_PERSONS]] and [[TOTAL_PRICE]]
-* Added new currency COP
-* Fixed time in scheduled email notifications when “Display available time slots in client’s time zone” is enabled
-
-= 4.5.1 =
-* Added translation into German
-* Added new currency SAR
-* Fixed time in email notifications to clients (regression bug)
-* Fixed an issue when Bookly output is affected by “wpautop”
-
-= 4.5 =
-* Added new setting to limit the number of fetched events from Google Calendar for 2 way sync
-* Fixed displaying time slots with big time zone offset
-* Fixed a problem with Google Calendar integration (regression bug)
-
-= 4.4 =
-* Added new setting to restrict the number of days available for booking
-* Added new code [[CANCEL_APPOINTMENT_URL]]
-* Added new currency CLP
-* Fixed the number of displayed time slots at step 2
-
-= 4.3 =
-* Added ability to reorder items in the lists of services, categories and staff members
-* Added new appearance settings – “Show blocked timeslots” and “Show each day in one column”
-* Fixed regression bugs in the drop down lists in the first step of booking form
-
-= 4.2 =
-* Added custom fields in export
-* Added new codes [[STAFF_PHOTO]], [[STAFF_EMAIL]], [[STAFF_PHONE]] in email notifications
-* Added option to enable just 1 way sync with Google Calendar
-* Added ability to change “I will pay locally”
-
-= 4.1 =
-* Added [[CUSTOM_FIELDS]] code in email notifications
-* Added copying custom fields to Google Calendar event
-* Added displaying custom fields’ values in Bookly calendar when capacity is 1
-* Fixed issue when loading lots of events from Google Calendar for step 2
-
-= 4.0 =
-* Added custom fields (Note that [[CLIENT_NOTES]] has been removed from email notifications)
-* Added support for 100% discount coupons
-* Added payment description in PayPal invoice
-* Fixed export to CSV
-
-= 3.4.2 =
-* Fixed popup box issue in calendar in WordPress 4.1
-* Fixed [[CATEGORY_NAME]] in email notifications
-
-= 3.4.1 =
-* Fixed redirect after PayPal payment
-
-= 3.4 =
-* Added minimum time requirement prior to booking from 1 to 48 hours
-* Fixed caching problems on WP Engine hosting
-* Fixed auto selection of newly created customer in the calendar
-
-= 3.3 =
-* Added option to hide date and time selection at the first step
-* Fixed import of customers
-
-= 3.2.2 =
-* Fixed setting GC calendar ID
-* Fixed regression bugs
-
-= 3.2.1 =
-* Added 2 way sync with Google Calendar via new API
-* Added coupons
-* Restored notes in the backend calendar when capacity is 1
-
-= 3.1 =
-* Added new replacement [[SERVICE_PRICE]] for email notifications
-* Added delimiter setting for import from CSV
-* Fixed regression bug in export to Google Calendar
-
-= 3.0.1 =
-* Fixed regression bug in cron notifications
-* Fixed regression bug in displaying price next to employee name
-
-= 3.0 =
-* Added support for multiple bookings
-* Added 5, 10 and 12 minutes time slots
-* Added - Take in account Google Calendar events when displaying available time slots
-* Added - Pre populate name and email for logged in customers
-* Added - Sort categories, services and employees alphabetically
-
-= 2.2.3 =
-* Fixed displaying step 5 after PayPal payment (regression bug)
-
-= 2.2.2 =
-* Fixed bug when deleting appointment after cancellation
-* Fixed bug in displaying customers list
-
-= 2.2.1 =
-* Fixed [[CATEGORY_NAME]] in cron notifications
-* Fixed service selection when go backwards
-* Fixed regression bugs
-
-= 2.2.0 =
-* Since this version Bookly requires at least PHP 5.3
-* Added new payment method - Stripe
-* Skip payment step for free services
-* Fixed issues with HTTPS
-* Fixed cancellation link for appointments created in the backend
-
-= 2.1.0 =
-* Added Authorize.net support
-* Added new replacement [[CATEGORY_NAME]] both in appearance and email notifications settings
-* Bug fixes
-
-= 2.0.1 =
-* WordPress 4.0 support
-* Fixed translation into French
-* Fixed cron notifications
-* Fixed Google Calendar formatting
-* Clear plugin data upon uninstalling
-
-= 2.0 =
-* Added automatic export to Google Calendar
-* Added time zones support
-* Added time slot length setting
-* Added customer search field when editing appointment
-* Added cancel appointment link
-* Added 22 new currencies
-* Added possibility to edit form labels
-* Added possibility to enter CSS code for main color
-* Added setting to disable last minute appointments
-* Added export appointments feature
-* Added import customers feature
-* Fixed first day of week
-
-= 1.2.0 =
-* Added new field Notes at Details step
-* Added RUB, SEK, DKK
-* Fixed date and time in email notifications on non-English web sites
-
-= 1.1.9 =
-* New replacement [[STAFF_NAME]] in Appearance (old replacements [[BY_SERVICE_PROVIDER_NAME]] and [[BY_STAFF_NAME]] are deprecated)
-* Translation into French
-* Fixed bug with datepicker on non-English web sites
-
-= 1.1.8 =
-* Fixed sending emails to staff
-* Updated translations
-
-= 1.1.7 =
-* Added decimal prices
-* Don’t display non-working days
-* Bug fixes
+Visit our [changelog page](https://www.booking-wp-plugin.com/change-log/?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) to stay up-to-date.
 
 == Upgrade Notice ==
 Upgrade now to the most recent version of Bookly.

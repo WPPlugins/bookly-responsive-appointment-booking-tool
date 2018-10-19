@@ -1,11 +1,11 @@
 <?php
-namespace BooklyLite\Lib\Entities;
+namespace Bookly\Lib\Entities;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
 
 /**
  * Class Stat
- * @package BooklyLite\Lib\Entities
+ * @package Bookly\Lib\Entities
  */
 class Stat extends Lib\Base\Entity
 {
@@ -16,7 +16,7 @@ class Stat extends Lib\Base\Entity
     /** @var  string */
     protected $created;
 
-    protected static $table = 'ab_stats';
+    protected static $table = 'bookly_stats';
 
     protected static $schema = array(
         'id'       => array( 'format' => '%d' ),

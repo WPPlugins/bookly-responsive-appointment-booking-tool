@@ -1,15 +1,16 @@
 <?php
-namespace BooklyLite\Lib\Slots;
+namespace Bookly\Lib\Slots;
 
 /**
  * Class Range
- * @package BooklyLite\Lib\Slots
+ * @package Bookly\Lib\Slots
  */
 class Range
 {
-    const AVAILABLE        = 1;
-    const PARTIALLY_BOOKED = 2;
-    const FULLY_BOOKED     = 3;
+    const AVAILABLE            = 1;
+    const PARTIALLY_BOOKED     = 2;
+    const FULLY_BOOKED         = 3;
+    const WAITING_LIST_STARTED = 4;
 
     /** @var IPoint */
     protected $start;
@@ -40,7 +41,7 @@ class Range
      * @param string $start  Format Y-m-d H:i[:s]
      * @param string $end    Format Y-m-d H:i[:s]
      * @param RangeData $data
-     * @return static
+     * @return self
      */
     public static function fromDates( $start, $end, RangeData $data = null )
     {
@@ -53,7 +54,7 @@ class Range
      * @param string $start  Format H:i[:s]
      * @param string $end    Format H:i[:s]
      * @param RangeData $data
-     * @return static
+     * @return self
      */
     public static function fromTimes( $start, $end, RangeData $data = null )
     {
@@ -158,7 +159,7 @@ class Range
      * Computes the intersection between two ranges.
      *
      * @param self $range
-     * @return static|null
+     * @return self|null
      */
     public function intersect( self $range )
     {
@@ -206,7 +207,7 @@ class Range
         while ( $range = $this->intersect( $frame ) ) {
             $collection->push( $range );
             $frame = $frame->transform( $length, $length );
-        };
+        }
 
         return $collection;
     }
@@ -216,7 +217,7 @@ class Range
      *
      * @param mixed $modify_start
      * @param mixed $modify_end
-     * @return static
+     * @return self
      */
     public function transform( $modify_start, $modify_end )
     {
@@ -227,7 +228,7 @@ class Range
      * Computes the result of moving the end point to given length from the start point.
      *
      * @param mixed $length
-     * @return static
+     * @return self
      */
     public function resize( $length )
     {
@@ -238,7 +239,7 @@ class Range
      * Create a copy of the range with new data.
      *
      * @param RangeData $new_data
-     * @return static
+     * @return self
      */
     public function replaceData( RangeData $new_data )
     {
@@ -294,6 +295,16 @@ class Range
     }
 
     /**
+     * Get location ID.
+     *
+     * @return int
+     */
+    public function locationId()
+    {
+        return $this->data->locationId();
+    }
+
+    /**
      * Get state.
      *
      * @return int
@@ -306,7 +317,7 @@ class Range
     /**
      * Get next slot.
      *
-     * @return static
+     * @return self
      */
     public function nextSlot()
     {
@@ -317,7 +328,7 @@ class Range
      * Create a copy of the data with new staff ID.
      *
      * @param int $new_staff_id
-     * @return static
+     * @return self
      */
     public function replaceStaffId( $new_staff_id )
     {
@@ -328,7 +339,7 @@ class Range
      * Create a copy of the data with new state.
      *
      * @param int $new_state
-     * @return static
+     * @return self
      */
     public function replaceState( $new_state )
     {
@@ -336,10 +347,32 @@ class Range
     }
 
     /**
+     * Create a copy of the data with new capacity.
+     *
+     * @param int $new_capacity
+     * @return self
+     */
+    public function replaceCapacity( $new_capacity )
+    {
+        return $this->replaceData( $this->data->replaceCapacity( $new_capacity ) );
+    }
+
+    /**
+     * Create a copy of the data with new nop.
+     *
+     * @param int $new_nop
+     * @return self
+     */
+    public function replaceNop( $new_nop )
+    {
+        return $this->replaceData( $this->data->replaceNop( $new_nop ) );
+    }
+
+    /**
      * Create a copy of the data with new next slot.
      *
-     * @param Range|null $new_next_slot
-     * @return static
+     * @param self|null $new_next_slot
+     * @return self
      */
     public function replaceNextSlot( $new_next_slot )
     {
@@ -347,7 +380,7 @@ class Range
     }
 
     /**
-     * Tells whether range's state is fully booked
+     * Tells whether range's state is fully booked.
      *
      * @return bool
      */
@@ -367,16 +400,95 @@ class Range
     }
 
     /**
+     * Tells whether range's state is waiting list started.
+     *
+     * @return bool
+     */
+    public function waitingListStarted()
+    {
+        return $this->data->state() == self::WAITING_LIST_STARTED;
+    }
+
+    /**
+     * Tells whether range's state is not waiting list started.
+     *
+     * @return bool
+     */
+    public function noWaitingListStarted()
+    {
+        return $this->data->state() != self::WAITING_LIST_STARTED;
+    }
+
+    /**
      * Build slot data.
      *
      * @return array
      */
     public function buildSlotData()
     {
-        $result = array( array( $this->serviceId(), $this->staffId(), $this->start->value()->format( 'Y-m-d H:i:s' ) ) );
+        $result = array( array( $this->serviceId(), $this->staffId(), $this->start->value()->format( 'Y-m-d H:i:s' ), $this->locationId() ) );
+
+        if ( $this->data->state() == self::WAITING_LIST_STARTED ) {
+            // Mark slot as being put to waiting list.
+            $result[0][] = 'w';
+        }
 
         if ( $this->data()->hasNextSlot() ) {
             $result = array_merge( $result, $this->nextSlot()->buildSlotData() );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Tells whether waiting list has been started in any of the slots of the chain.
+     *
+     * @return bool
+     */
+    public function waitingListEverStarted()
+    {
+        $started = $this->data->state() == self::WAITING_LIST_STARTED;
+
+        if ( ! $started && $this->data()->hasNextSlot() ) {
+            $started = $this->nextSlot()->waitingListEverStarted();
+        }
+
+        return $started;
+    }
+
+    /**
+     * @return int
+     */
+    public function capacity()
+    {
+        return $this->data->capacity();
+    }
+
+    /**
+     * @return int
+     */
+    public function nop()
+    {
+        $result = $this->data->nop();
+
+        if ( $this->data()->hasNextSlot() ) {
+            $result = max( $result, $this->nextSlot()->nop() );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get maximal number of persons on waiting list.
+     *
+     * @return int
+     */
+    public function maxOnWaitingList()
+    {
+        $result = $this->data->onWaitingList();
+
+        if ( $this->data()->hasNextSlot() ) {
+            $result = max( $result, $this->nextSlot()->maxOnWaitingList() );
         }
 
         return $result;

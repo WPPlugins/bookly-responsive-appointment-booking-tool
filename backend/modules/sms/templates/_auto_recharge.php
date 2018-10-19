@@ -5,7 +5,7 @@
 
 <div class="form-group">
     <label for="bookly-recharge-amount"><?php _e( 'Amount', 'bookly' ) ?></label>
-    <select id="bookly-recharge-amount" class="form-control"<?php disabled( $sms->isAutoRechargeEnabled() ) ?>>
+    <select id="bookly-recharge-amount" class="form-control"<?php disabled( $sms->autoRechargeEnabled() ) ?>>
         <?php foreach ( array( 10, 25, 50, 100 ) as $amount ) : ?>
             <?php printf( '<option value="%1$s" %2$s>$%1$s</option>', $amount, selected( $sms->getAutoRechargeAmount() == $amount, true, false ) ) ?>
         <?php endforeach ?>
@@ -13,6 +13,6 @@
 </div>
 
 <div class="panel-footer">
-    <button id="bookly-auto-recharge-init" class="btn btn-lg btn-success ladda-button" data-style="zoom-in" data-spinner-size="40"<?php disabled( $sms->isAutoRechargeEnabled() ) ?>><span class="ladda-label"><?php _e( 'Enable Auto-Recharge', 'bookly') ?></span></button>
-    <button id="bookly-auto-recharge-decline" class="btn btn-lg btn-default ladda-button" data-style="zoom-in" data-spinner-size="40"<?php disabled( $sms->isAutoRechargeEnabled(), false ) ?>><span class="ladda-label"><?php _e( 'Disable Auto-Recharge', 'bookly' ) ?></span></button>
+    <button id="bookly-auto-recharge-init" class="btn btn-lg btn-success ladda-button" data-style="zoom-in" data-spinner-size="40"<?php disabled( $sms->autoRechargeEnabled() ) ?>><span class="ladda-label"><?php _e( 'Enable Auto-Recharge', 'bookly') ?></span></button>
+    <button id="bookly-auto-recharge-decline" class="btn btn-lg btn-default ladda-button" data-style="zoom-in" data-spinner-size="40"<?php disabled( $sms->autoRechargeEnabled(), false ) ?>><span class="ladda-label"><?php _e( 'Disable Auto-Recharge', 'bookly' ) ?></span></button>
 </div>

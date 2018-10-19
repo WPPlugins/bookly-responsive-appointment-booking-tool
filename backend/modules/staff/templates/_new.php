@@ -1,5 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<?php if ( \BooklyLite\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use Bookly\Backend\Components\Controls\Buttons;
+?>
+<?php if ( Bookly\Lib\Utils\Common::isCurrentUserAdmin() ) : ?>
     <div class="form-group">
         <button id="bookly-newstaff-member" type="button" class="btn btn-xlg btn-block btn-success-outline">
             <i class="dashicons dashicons-plus-alt"></i>
@@ -32,8 +34,8 @@
 
     <hr>
     <div class="text-right">
-        <?php \BooklyLite\Lib\Utils\Common::submitButton( null, 'bookly-js-save-form' ) ?>
-        <?php \BooklyLite\Lib\Utils\Common::customButton( null, 'bookly-popover-close btn-lg btn-default', __( 'Close', 'bookly' ) ) ?>
+        <?php Buttons::renderSubmit( null, 'bookly-js-save-form' ) ?>
+        <?php Buttons::renderCustom( null, 'bookly-popover-close btn-lg btn-default', __( 'Close', 'bookly' ) ) ?>
     </div>
 </div>
 

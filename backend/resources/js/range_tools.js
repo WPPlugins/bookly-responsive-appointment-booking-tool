@@ -42,9 +42,9 @@ jQuery(function ($) {
                 // when the working day is disabled (working start time is set to 'OFF')
                 // hide all the elements inside the row
                 if (!$start.val()) {
-                    $start.closest('.row').find('.bookly-hide-on-off').hide();
+                    $start.closest('.bookly-range-row').find('.bookly-hide-on-off').hide();
                 } else {
-                    $start.closest('.row').find('.bookly-hide-on-off').show();
+                    $start.closest('.bookly-range-row').find('.bookly-hide-on-off').show();
                 }
             }).trigger('change');
         },

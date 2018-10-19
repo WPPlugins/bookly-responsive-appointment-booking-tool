@@ -1,11 +1,12 @@
 <?php
-namespace BooklyLite\Lib\Base;
+namespace Bookly\Lib\Base;
 
-use BooklyLite\Lib;
+use Bookly\Lib;
+use BooklyPro\Lib\Base\Plugin as PluginPro;
 
 /**
  * Class Plugin
- * @package BooklyLite\Lib\Base
+ * @package Bookly\Lib\Base
  */
 abstract class Plugin
 {
@@ -77,6 +78,7 @@ abstract class Plugin
     protected static $root_namespace;
 
     /**
+     * Whether the plugin is embedded or not.
      *
      * @staticvar bool
      */
@@ -98,18 +100,31 @@ abstract class Plugin
      ******************************************************************************************************************/
 
     /**
-     * Start Bookly plugin.
+     * Run plugin.
      */
     public static function run()
     {
-        static::registerHooks();
-        if ( ! static::embedded() ) {
-            static::initUpdateChecker();
+        // Start session.
+        if ( ! session_id() ) {
+            @session_start();
         }
-        // Run updates.
-        $updater_class = static::getRootNamespace() . '\Lib\Updater';
-        $updater = new $updater_class();
-        $updater->run();
+
+        /** @var static $plugin_class */
+        $plugin_class = get_called_class();
+
+        // WP hooks.
+        $plugin_class::registerHooks();
+        // Update checker.
+        if ( ! $plugin_class::embedded() ) {
+            $plugin_class::initUpdateChecker();
+        }
+        // Init.
+        $plugin_class::init();
+
+        add_action( 'init', function () use ( $plugin_class ) {
+            // Updater.
+            $plugin_class::update();
+        } );
     }
 
     /**
@@ -137,8 +152,6 @@ abstract class Plugin
     {
         if ( $network_wide && has_action( 'bookly_plugin_deactivate' ) ) {
             do_action( 'bookly_plugin_deactivate', static::getSlug() );
-        } else {
-            unload_textdomain( 'bookly' );
         }
     }
 
@@ -150,38 +163,22 @@ abstract class Plugin
     public static function uninstall( $network_wide )
     {
         if ( $network_wide !== false && has_action( 'bookly_plugin_uninstall' ) ) {
+
+            /** @var static $plugin_class */
+            $plugin_class = get_called_class();
+            // Register bookly and add-ons in bookly_plugins list.
+            add_filter( 'bookly_plugins', function ( array $plugins ) use ( $plugin_class ) {
+                $plugins[ $plugin_class::getSlug() ] = $plugin_class;
+
+                return $plugins;
+            } );
+
             do_action( 'bookly_plugin_uninstall', static::getSlug() );
         } else {
             $installer_class = static::getRootNamespace() . '\Lib\Installer';
             $installer = new $installer_class();
             $installer->uninstall();
         }
-    }
-
-    /**
-     * Check if plugin is enabled (applicable to add-ons).
-     *
-     * @return bool
-     */
-    public static function enabled()
-    {
-        return get_option( static::getPrefix() . 'enabled' ) == 1;
-    }
-
-    /**
-     * Enable plugin (applicable to add-ons).
-     */
-    public static function enable()
-    {
-        update_option( static::getPrefix() . 'enabled', 1 );
-    }
-
-    /**
-     * Disable plugin (applicable to add-ons).
-     */
-    public static function disable()
-    {
-        update_option( static::getPrefix() . 'enabled', 0 );
     }
 
     /**
@@ -296,26 +293,6 @@ abstract class Plugin
     }
 
     /**
-     * Get plugin text domain.
-     *
-     * @return string
-     */
-    public static function getTextDomain()
-    {
-        if ( static::$text_domain === null ) {
-            if ( ! function_exists( 'get_plugin_data' ) ) {
-                require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-            }
-            $plugin_data = get_plugin_data( static::getMainFile() );
-            static::$version     = $plugin_data['Version'];
-            static::$title       = $plugin_data['Name'];
-            static::$text_domain = $plugin_data['TextDomain'];
-        }
-
-        return static::$text_domain;
-    }
-
-    /**
      * Get root namespace of called class.
      *
      * @return string
@@ -415,12 +392,12 @@ abstract class Plugin
     /**
      * Get plugin class for given object.
      *
-     * @param $object
+     * @param object|string $object
      * @return static
      */
     public static function getPluginFor( $object )
     {
-        $class = get_class( $object );
+        $class = is_object( $object ) ? get_class( $object ) : $object;
 
         if ( ! isset ( self::$plugin_classes[ $class ] ) ) {
             self::$plugin_classes[ $class ] = substr( $class, 0, strpos( $class, '\\' ) ) . '\Lib\Plugin';
@@ -437,7 +414,7 @@ abstract class Plugin
     public static function embedded()
     {
         if ( static::$embedded === null ) {
-            static::$embedded = strpos( static::getDirectory(), '/lib/addons/' ) > 0;
+            static::$embedded = strpos( static::getDirectory(), DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR ) > 0;
         }
 
         return static::$embedded;
@@ -449,30 +426,50 @@ abstract class Plugin
 
     /**
      * Register hooks.
-     * @todo Change to protected.
      */
-    public static function registerHooks()
+    protected static function registerHooks()
     {
-        /** @var Plugin $plugin_class */
+        /** @var static $plugin_class */
         $plugin_class = get_called_class();
+        // Register bookly and add-ons in bookly_plugins list.
+        add_filter( 'bookly_plugins', function ( array $plugins ) use ( $plugin_class ) {
+            $plugins[ $plugin_class::getSlug() ] = $plugin_class;
 
-        if ( $plugin_class::embedded() ) {
-            add_action( 'deactivate_' . Lib\Plugin::getBasename(), array( $plugin_class, 'deactivate' ), 99, 1 );
-        } else {
-            register_activation_hook( static::getMainFile(),   array( $plugin_class, 'activate' ) );
-            register_deactivation_hook( static::getMainFile(), array( $plugin_class, 'deactivate' ) );
-            register_uninstall_hook( static::getMainFile(),    array( $plugin_class, 'uninstall' ) );
-        }
-
-        add_action( 'plugins_loaded', function () use ( $plugin_class ) {
-            // l10n.
-            load_plugin_textdomain( $plugin_class::getTextDomain(), false, $plugin_class::getSlug() . '/languages' );
+            return $plugins;
         } );
+
+        if ( Lib\Config::proActive() ) {
+            PluginPro::registerHooks( $plugin_class );
+        }
     }
 
     /**
      * Init update checker.
      */
-    protected static function initUpdateChecker() { }
+    protected static function initUpdateChecker()
+    {
+        /** @var static $plugin_class */
+        $plugin_class = get_called_class();
+        if ( $plugin_class != 'Bookly\Lib\Plugin' && Lib\Config::proActive() ) {
+            PluginPro::initPluginUpdateChecker( $plugin_class );
+        }
+    }
 
+    /**
+     * Init plugin.
+     */
+    protected static function init()
+    {
+
+    }
+
+    /**
+     * Run updates.
+     */
+    protected static function update()
+    {
+        $updater_class = static::getRootNamespace() . '\Lib\Updater';
+        $updater = new $updater_class();
+        $updater->run();
+    }
 }
