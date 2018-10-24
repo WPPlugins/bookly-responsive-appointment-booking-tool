@@ -122,10 +122,9 @@
             },
             findTime : function(source, value) {
                 var result = null,
-                    time = source == 'start' ? ds.getDataForStartTime() : ds.form.end_time_data,
-                    search_value = parseInt(value);
+                    time   = source == 'start' ? ds.getDataForStartTime() : ds.form.end_time_data;
                 jQuery.each(time, function(key, item) {
-                    if (parseInt(item.value) >= search_value) {
+                    if (item.value >= value) {
                         result = item;
                         return false;
                     }

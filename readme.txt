@@ -5,7 +5,7 @@ Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
 Tested up to: 4.9.8
 Requires PHP: 5.3.7
-Stable tag: 16.0
+Stable tag: 16.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
