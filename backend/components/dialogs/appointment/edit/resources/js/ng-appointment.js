@@ -18,7 +18,9 @@
                 time_interval  : 900,
                 status         : {
                     items: []
-                }
+                },
+                extras_consider_duration: true,
+                extras_multiply_nop     : true
             },
             form : {
                 screen              : null,
@@ -143,19 +145,25 @@
             },
             resetCustomers : function() {
                 ds.data.customers.forEach(function(customer) {
-                    customer.custom_fields     = [];
-                    customer.extras            = [];
-                    customer.number_of_persons = 1;
-                    customer.notes             = null;
-                    customer.compound_token    = null;
-                    customer.payment_id        = null;
-                    customer.payment_type      = null;
-                    customer.payment_title     = null;
-                    customer.payment_create    = false;
-                    customer.payment_price     = null;
-                    customer.payment_tax       = null;
-                    customer.package_id        = null;
-                    customer.ca_id             = null;
+                    customer.custom_fields            = [];
+                    customer.extras                   = [];
+                    customer.extras_consider_duration = ds.data.extras_consider_duration;
+                    customer.extras_multiply_nop      = ds.data.extras_multiply_nop;
+                    customer.number_of_persons        = 1;
+                    customer.notes                    = null;
+                    customer.collaborative_token      = null;
+                    customer.collaborative_service    = null;
+                    customer.compound_token           = null;
+                    customer.compound_service         = null;
+                    customer.payment_id               = null;
+                    customer.payment_type             = null;
+                    customer.payment_title            = null;
+                    customer.payment_create           = false;
+                    customer.payment_price            = null;
+                    customer.payment_tax              = null;
+                    customer.package_id               = null;
+                    customer.series_id                = null;
+                    customer.ca_id                    = null;
                 });
             },
             getDataForStartTime : function() {
@@ -314,6 +322,11 @@
         // Callback to be called after editing appointment.
         var callback = null;
 
+        // Hide archived staff
+        $scope.filterStaff = function(staff) {
+            return (staff.archived == false || $scope.form.staff == staff);
+        };
+
         /**
          * Prepare the form for new event.
          *
@@ -455,23 +468,29 @@
                                     // For Error: ngRepeat:dupes & chosen directive
                                     angular.copy(customer, clone);
                                 }
-                                clone.ca_id             = item.ca_id;
-                                clone.package_id        = item.package_id;
-                                clone.extras            = item.extras;
-                                clone.status            = item.status;
-                                clone.custom_fields     = item.custom_fields;
-                                clone.files             = item.files;
-                                clone.number_of_persons = item.number_of_persons;
-                                clone.timezone          = item.timezone;
-                                clone.notes             = item.notes;
-                                clone.payment_id        = item.payment_id;
-                                clone.payment_type      = item.payment_type;
-                                clone.payment_title     = item.payment_title;
-                                clone.payment_create    = item.payment_create;
-                                clone.payment_price     = item.payment_price;
-                                clone.payment_tax       = item.payment_tax;
-                                clone.compound_token    = item.compound_token;
-                                clone.compound_service  = item.compound_service;
+                                clone.ca_id                    = item.ca_id;
+                                clone.series_id                = item.series_id;
+                                clone.package_id               = item.package_id;
+                                clone.extras                   = item.extras;
+                                clone.extras_multiply_nop      = item.extras_multiply_nop;
+                                clone.extras_consider_duration = item.extras_consider_duration;
+                                clone.status                   = item.status;
+                                clone.custom_fields            = item.custom_fields;
+                                clone.files                    = item.files;
+                                clone.number_of_persons        = item.number_of_persons;
+                                clone.timezone                 = item.timezone;
+                                clone.notes                    = item.notes;
+                                clone.payment_id               = item.payment_id;
+                                clone.payment_type             = item.payment_type;
+                                clone.payment_title            = item.payment_title;
+                                clone.payment_create           = item.payment_create;
+                                clone.payment_price            = item.payment_price;
+                                clone.payment_tax              = item.payment_tax;
+                                clone.collaborative_token      = item.collaborative_token;
+                                clone.collaborative_service    = item.collaborative_service;
+                                clone.collaborative_service    = item.collaborative_service;
+                                clone.compound_token           = item.compound_token;
+                                clone.compound_service         = item.compound_service;
                                 $scope.form.customers.push(clone);
                             });
                         }
@@ -500,13 +519,15 @@
                         });
                     }
                     customers.push({
-                        id                : item.id,
-                        ca_id             : item.ca_id,
-                        custom_fields     : item.custom_fields,
-                        extras            : customer_extras,
-                        number_of_persons : item.number_of_persons,
-                        timezone          : item.timezone,
-                        status            : item.status
+                        id                      : item.id,
+                        ca_id                   : item.ca_id,
+                        custom_fields           : item.custom_fields,
+                        extras                  : customer_extras,
+                        extras_multiply_nop     : item.extras_multiply_nop,
+                        extras_consider_duration: item.extras_consider_duration,
+                        number_of_persons       : item.number_of_persons,
+                        timezone                : item.timezone,
+                        status                  : item.status
                     });
                 });
 
@@ -520,7 +541,8 @@
                         appointment_id : $scope.form.id,
                         customers      : JSON.stringify(customers),
                         staff_id       : $scope.form.staff.id,
-                        service_id     : $scope.form.service ? $scope.form.service.id : null
+                        service_id     : $scope.form.service ? $scope.form.service.id : null,
+                        location_id    : $scope.form.location ? $scope.form.location.id : null
                     },
                     function (response) {
                         $scope.$apply(function ($scope) {
@@ -633,18 +655,21 @@
                     });
                 }
                 customers.push({
-                    id                : item.id,
-                    ca_id             : item.ca_id,
-                    custom_fields     : item.custom_fields,
-                    extras            : customer_extras,
-                    number_of_persons : item.number_of_persons,
-                    timezone          : item.timezone,
-                    notes             : item.notes,
-                    status            : item.status,
-                    payment_id        : item.payment_id,
-                    payment_create    : item.payment_create,
-                    payment_price     : item.payment_price,
-                    payment_tax       : item.payment_tax
+                    id                       : item.id,
+                    ca_id                    : item.ca_id,
+                    series_id                : item.series_id,
+                    custom_fields            : item.custom_fields,
+                    extras                   : customer_extras,
+                    extras_multiply_nop      : item.extras_multiply_nop,
+                    extras_consider_duration : item.extras_consider_duration,
+                    number_of_persons        : item.number_of_persons,
+                    timezone                 : item.timezone,
+                    notes                    : item.notes,
+                    status                   : item.status,
+                    payment_id               : item.payment_id,
+                    payment_create           : item.payment_create,
+                    payment_price            : item.payment_price,
+                    payment_tax              : item.payment_tax
                 });
             });
             jQuery.post(
@@ -715,21 +740,26 @@
                 }
             }
             var new_customer = {
-                id                : customer.id.toString(),
-                name              : customer.full_name,
-                custom_fields     : customer.custom_fields,
-                extras            : customer.extras,
-                status            : customer.status,
-                timezone          : customer.timezone,
-                number_of_persons : nop,
-                notes             : null,
-                compound_token    : null,
-                payment_id        : null,
-                payment_type      : null,
-                payment_title     : null,
-                payment_create    : false,
-                payment_price     : null,
-                payment_tax       : null
+                id                       : customer.id.toString(),
+                name                     : customer.full_name,
+                custom_fields            : customer.custom_fields,
+                extras                   : customer.extras,
+                extras_consider_duration : dataSource.data.extras_consider_duration,
+                extras_multiply_nop      : dataSource.data.extras_multiply_nop,
+                status                   : customer.status,
+                timezone                 : customer.timezone,
+                number_of_persons        : nop,
+                notes                    : null,
+                collaborative_token      : null,
+                collaborative_service    : null,
+                compound_token           : null,
+                compound_service         : null,
+                payment_id               : null,
+                payment_type             : null,
+                payment_title            : null,
+                payment_create           : false,
+                payment_price            : null,
+                payment_tax              : null
             };
 
             if (customer.email || customer.phone){
@@ -1092,6 +1122,7 @@
                         repeat      : $scope.form.repeat.repeat,
                         params      : $scope.form.repeat[$scope.form.repeat.repeat],
                         extras      : extras,
+                        nop         : $scope.dataSource.getTotalNumberOfPersons(),
                         duration    : $scope.form.service.id ? undefined : $scope.dataSource.getServiceDuration()
                     },
                     function (response) {
@@ -1226,8 +1257,8 @@
             });
         };
         $scope.schDateOptions = jQuery.extend({}, BooklyL10nAppDialog.dateOptions, {dateFormat: 'D, M dd, yy'});
-        $scope.schViewSeries = function () {
-            jQuery(document.body).trigger( 'recurring_appointments.series_dialog', [ $scope.form.series_id, function (event) {
+        $scope.schViewSeries = function ( customer ) {
+            jQuery(document.body).trigger( 'recurring_appointments.series_dialog', [ customer.series_id, function (event) {
                 // Switch to the event owner tab.
                 jQuery('li[data-staff_id=' + event.staffId + ']').click();
             } ] );

@@ -43,12 +43,13 @@ class Editable
     {
         $option_value = get_option( $option_name );
 
-        printf( '<span class="bookly-js-editable bookly-js-option %s editable-pre-wrapped" data-type="bookly" data-fieldType="textarea" data-values="%s" data-codes="%s" data-title="%s" data-placement="%s">%s</span>',
+        printf( '<span class="bookly-js-editable bookly-js-option %s editable-pre-wrapped" data-type="bookly" data-fieldType="textarea" data-values="%s" data-codes="%s" data-title="%s" data-placement="%s" data-option="%s">%s</span>',
             $option_name,
             esc_attr( json_encode( array( $option_name => $option_value ) ) ),
             esc_attr( $codes ),
             esc_attr( $title ),
             $placement,
+            $option_name,
             esc_html( $option_value )
         );
     }
@@ -64,11 +65,12 @@ class Editable
     {
         $option_value = get_option( $option_name );
 
-        printf( '<span class="bookly-js-editable bookly-js-option %s editable-pre-wrapped" data-type="bookly" data-fieldType="number" data-values="%s" data-min="%s" data-step="%s">%s</span>',
+        printf( '<span class="bookly-js-editable bookly-js-option %s editable-pre-wrapped" data-type="bookly" data-fieldType="number" data-values="%s" data-min="%s" data-step="%s" data-option="%s">%s</span>',
             $option_name,
             esc_attr( json_encode( array( $option_name => $option_value ) ) ),
             esc_attr( $min ),
             esc_attr( $step ),
+            $option_name,
             esc_html( $option_value )
         );
     }
@@ -88,15 +90,17 @@ class Editable
             $data[ $option_name ] = get_option( $option_name );
         }
 
-        $class = $options[0];
+        $main_option = $options[0];
+        $class       = implode( ' ', $options );
         $data_values = esc_attr( json_encode( $data ) );
-        $content = esc_html( $data[ $options[0] ] );
+        $content     = esc_html( $data[ $options[0] ] );
 
-        $template = '<{tag} class="bookly-js-editable bookly-js-option {class}" data-type="bookly" data-values="{data-values}">{content}</{tag}>';
+        $template = '<{tag} class="bookly-js-editable bookly-js-option {class}" data-type="bookly" data-values="{data-values}" data-option="{data-option}">{content}</{tag}>';
         $html = strtr( $template, array(
             '{tag}'         => $tag,
             '{class}'       => $class,
             '{data-values}' => $data_values,
+            '{data-option}' => $main_option,
             '{content}'     => $content,
         ) );
 

@@ -15,8 +15,10 @@ class Service
     protected $capacity_max;
     /** @var string */
     protected $staff_preference_rule;
-    /** @var  int */
+    /** @var int */
     protected $staff_preference_order;
+    /** @var array */
+    protected $staff_preference_settings;
 
     /**
      * Constructor.
@@ -25,15 +27,25 @@ class Service
      * @param int    $capacity_min
      * @param int    $capacity_max
      * @param string $staff_preference_rule
+     * @param array  $staff_preference_settings
      * @param int    $staff_preference_order
      */
-    public function __construct( $price, $capacity_min, $capacity_max, $staff_preference_rule, $staff_preference_order )
+    public function __construct(
+        $price,
+        $capacity_min,
+        $capacity_max,
+        $staff_preference_rule,
+        $staff_preference_settings,
+        $staff_preference_order
+    )
     {
         $this->price        = (double) $price;
         $this->capacity_min = (int) $capacity_min;
         $this->capacity_max = (int) $capacity_max;
-        $this->staff_preference_rule  = $staff_preference_rule;
-        $this->staff_preference_order = $staff_preference_order;
+
+        $this->staff_preference_rule     = $staff_preference_rule;
+        $this->staff_preference_settings = $staff_preference_settings;
+        $this->staff_preference_order    = $staff_preference_order;
     }
 
     /**
@@ -44,6 +56,16 @@ class Service
     public function getStaffPreferenceRule()
     {
         return $this->staff_preference_rule;
+    }
+
+    /**
+     * Gets staff preference settings
+     *
+     * @return array
+     */
+    public function getStaffPreferenceSettings()
+    {
+        return $this->staff_preference_settings;
     }
 
     /**

@@ -22,7 +22,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
     </div>
     <div class="bookly-details-step">
 
-        <div class="bookly-box bookly-table bookly-details-first-last-name" style="display: <?php echo get_option( 'bookly_cst_first_last_name' ) == 0 ? ' none' : 'table' ?>">
+        <div class="bookly-box bookly-table bookly-js-details-first-last-name<?php echo ! get_option( 'bookly_cst_first_last_name' ) ? ' collapse' : '' ?>">
             <div class="bookly-form-group">
                 <?php Editable::renderLabel( array( 'bookly_l10n_label_first_name', 'bookly_l10n_required_first_name', ) ) ?>
                 <div>
@@ -38,7 +38,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
         </div>
 
         <div class="bookly-box bookly-table">
-            <div class="bookly-form-group bookly-details-full-name" style="display: <?php echo get_option( 'bookly_cst_first_last_name' ) == 1 ? ' none' : 'block' ?>">
+            <div class="bookly-form-group bookly-js-details-full-name<?php echo get_option( 'bookly_cst_first_last_name' ) ? ' collapse' : '' ?>">
                 <?php Editable::renderLabel( array( 'bookly_l10n_label_name', 'bookly_l10n_required_name', ) ) ?>
                 <div>
                     <input type="text" value="" maxlength="60" />
@@ -50,8 +50,29 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                     <input type="text" class="<?php if ( get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ) : ?>bookly-user-phone<?php endif ?>" value="" />
                 </div>
             </div>
+            <div class="bookly-form-group bookly-js-details-email<?php echo ! get_option( 'bookly_cst_first_last_name' ) && get_option( 'bookly_app_show_email_confirm' ) ? ' collapse' : '' ?>">
+                <?php Editable::renderLabel( array( 'bookly_l10n_label_email', 'bookly_l10n_required_email' ) ) ?>
+                <div>
+                    <input maxlength="40" type="text" value="" />
+                </div>
+            </div>
+            <div class="bookly-form-group bookly-js-details-confirm<?php echo ! get_option( 'bookly_cst_first_last_name' ) || ! get_option( 'bookly_app_show_email_confirm' ) ? ' collapse' : '' ?>">
+                <?php Editable::renderLabel( array( 'bookly_l10n_label_email_confirm', 'bookly_l10n_email_confirm_not_match' ) ) ?>
+                <div>
+                    <input maxlength="40" type="text" value="" />
+                </div>
+            </div>
+        </div>
+
+        <div class="bookly-box bookly-table bookly-js-details-email-confirm<?php echo get_option( 'bookly_cst_first_last_name' ) || ! get_option( 'bookly_app_show_email_confirm' ) ? ' collapse' : '' ?>">
             <div class="bookly-form-group">
                 <?php Editable::renderLabel( array( 'bookly_l10n_label_email', 'bookly_l10n_required_email' ) ) ?>
+                <div>
+                    <input maxlength="40" type="text" value="" />
+                </div>
+            </div>
+            <div class="bookly-form-group">
+                <?php Editable::renderLabel( array( 'bookly_l10n_label_email_confirm', 'bookly_l10n_email_confirm_not_match' ) ) ?>
                 <div>
                     <input maxlength="40" type="text" value="" />
                 </div>
@@ -81,8 +102,10 @@ use Bookly\Backend\Modules\Appearance\Proxy;
         <div class="bookly-back-step bookly-js-back-step bookly-btn">
             <?php Editable::renderString( array( 'bookly_l10n_button_back' ) ) ?>
         </div>
-        <div class="bookly-next-step bookly-js-next-step bookly-btn">
-            <?php Editable::renderString( array( 'bookly_l10n_step_details_button_next' ) ) ?>
+        <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
+            <div class="bookly-next-step bookly-js-next-step bookly-btn">
+                <?php Editable::renderString( array( 'bookly_l10n_step_details_button_next' ) ) ?>
+            </div>
         </div>
     </div>
 </div>

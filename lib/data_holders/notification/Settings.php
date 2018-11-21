@@ -25,6 +25,8 @@ class Settings
     protected $status = 'any';
     /** @var  bool */
     protected $instant = 0;
+    /** @var  mixed value "any" or an array of service_ids */
+    protected $services = 'any';
 
     /**
      * Condition constructor.
@@ -45,7 +47,7 @@ class Settings
         switch ( $type ) {
             case Notification::TYPE_APPOINTMENT_START_TIME:
             case Notification::TYPE_LAST_CUSTOMER_APPOINTMENT:
-                $set  = Settings::SET_EXISTING_EVENT_WITH_DATE_AND_TIME;
+                $set  = self::SET_EXISTING_EVENT_WITH_DATE_AND_TIME;
                 if ( isset( $this->settings[ $set ] ) ) {
                     $this->status = $this->settings[ $set ]['status'];
                     // selected radio
@@ -61,10 +63,19 @@ class Settings
                         $this->at_hour      = $this->settings[ $set ]['at_hour'];
                         $this->offset_hours = $this->settings[ $set ]['offset_bidirectional_hours'];
                     }
+
+                    // value "any" or an array of service_ids
+                    if ( $this->settings[ $set ]['services']['any'] ) {
+                        $this->services = 'any';
+                    } elseif ( array_key_exists( 'ids', $this->settings[ $set ]['services'] ) ) {
+                        $this->services = array_map( 'intval', (array) $this->settings[ $set ]['services']['ids'] );
+                    } else {
+                        $this->services = array();
+                    }
                 }
                 break;
             case Notification::TYPE_STAFF_DAY_AGENDA:
-                $set = Settings::SET_EXISTING_EVENT_WITH_DATE_BEFORE;
+                $set = self::SET_EXISTING_EVENT_WITH_DATE_BEFORE;
                 if ( isset( $this->settings[ $set ] ) ) {
                     // AGENDA    at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ -30d .. 0 ]
                     $this->at_hour      = $this->settings[ $set ]['at_hour'];
@@ -72,7 +83,7 @@ class Settings
                 }
                 break;
             case Notification::TYPE_CUSTOMER_BIRTHDAY:
-                $set = Settings::SET_EXISTING_EVENT_WITH_DATE;
+                $set = self::SET_EXISTING_EVENT_WITH_DATE;
                 if ( isset( $this->settings[ $set ] ) ) {
                     // AGENDA    at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ -30d .. 30d ]
                     $this->at_hour      = $this->settings[ $set ]['at_hour'];
@@ -81,7 +92,7 @@ class Settings
                 break;
             case Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED:
             case Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED:
-                $set  = Settings::SET_AFTER_EVENT;
+                $set  = self::SET_AFTER_EVENT;
                 if ( isset( $this->settings[ $set ] ) ) {
                     $this->status = $this->settings[ $set ]['status'];
                     // selected radio
@@ -96,6 +107,15 @@ class Settings
                         // at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ 0 .. 30d ]
                         $this->at_hour      = $this->settings[ $set ]['at_hour'];
                         $this->offset_hours = $this->settings[ $set ]['offset_bidirectional_hours'];
+                    }
+
+                    // value "any" or an array of service_ids
+                    if ( $this->settings[ $set ]['services']['any'] ) {
+                        $this->services = 'any';
+                    } elseif ( array_key_exists( 'ids', $this->settings[ $set ]['services'] ) ) {
+                        $this->services = array_map( 'intval', (array) $this->settings[ $set ]['services']['ids'] );
+                    } else {
+                        $this->services = array();
                     }
                 }
                 break;
@@ -149,6 +169,14 @@ class Settings
     }
 
     /**
+     * @return string|array
+     */
+    public function forServices()
+    {
+        return $this->services;
+    }
+
+    /**
      * Default Custom notification settings
      * @return array
      */
@@ -157,28 +185,31 @@ class Settings
         return array(
             // Notification::TYPE_APPOINTMENT_START_TIME
             // Notification::TYPE_LAST_CUSTOMER_APPOINTMENT
-            Settings::SET_EXISTING_EVENT_WITH_DATE_AND_TIME => array(
+            self::SET_EXISTING_EVENT_WITH_DATE_AND_TIME => array(
                 'status'       => 'any',
                 'option'       => 1,
                 'offset_hours' => 24,   'prepend' => 'before',
-                'at_hour'      => 9,    'offset_bidirectional_hours' => '0'
+                'at_hour'      => 9,    'offset_bidirectional_hours' => '0',
+                'services'     => array( 'any' => 1, 'ids' => array() ),
             ),
             // Notification::TYPE_CUSTOMER_BIRTHDAY
-            Settings::SET_EXISTING_EVENT_WITH_DATE          => array(
+            self::SET_EXISTING_EVENT_WITH_DATE          => array(
                 'at_hour'      => 9,
                 'offset_bidirectional_hours' => '0',
             ),
             // Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED
-            Settings::SET_AFTER_EVENT                       => array(
+            self::SET_AFTER_EVENT                       => array(
                 'status'       => CustomerAppointment::STATUS_APPROVED,
                 'option'       => 1,
                 'offset_hours' => 1,
-                'at_hour'      => 9,    'offset_bidirectional_hours' => '0'
+                'at_hour'      => 9,    'offset_bidirectional_hours' => '0',
+                'services'     => array( 'any' => 1, 'ids' => array() ),
             ),
             // Notification::TYPE_STAFF_DAY_AGENDA
-            Settings::SET_EXISTING_EVENT_WITH_DATE_BEFORE   => array(
+            self::SET_EXISTING_EVENT_WITH_DATE_BEFORE   => array(
                 'at_hour'      => 9,
                 'offset_bidirectional_hours' => -24,
+                'services'     => array( 'any' => 1, 'ids' => array() ),
             )
         );
     }

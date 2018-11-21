@@ -54,6 +54,29 @@ class Inputs
     }
 
     /**
+     * Render text area input.
+     *
+     * @param string      $option_name
+     * @param string      $label
+     * @param string|null $help
+     * @param int         $rows
+     */
+    public static function renderTextArea( $option_name, $label, $help = null, $rows = 9 )
+    {
+        $control = strtr(
+            '<textarea id="{name}" name="{name}" class="form-control" rows="{rows}" placeholder="{placeholder}">{value}</textarea>',
+            array(
+                '{name}'  => esc_attr( $option_name ),
+                '{value}' => esc_textarea( get_option( $option_name ) ),
+                '{rows}'  => $rows,
+                '{placeholder}' => esc_attr__( 'Enter a value', 'bookly' ),
+            )
+        );
+
+        echo self::buildControl( $option_name, $label, $help, $control );
+    }
+
+    /**
      * Build setting control.
      *
      * @param string $option_name

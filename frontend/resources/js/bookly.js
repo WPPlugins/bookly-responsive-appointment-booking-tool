@@ -356,6 +356,7 @@
                         $guest_info                 = $('.bookly-js-guest',                 $container),
                         $phone_field                = $('.bookly-js-user-phone-input',      $container),
                         $email_field                = $('.bookly-js-user-email',            $container),
+                        $email_confirm_field        = $('.bookly-js-user-email-confirm',    $container),
                         $birthday_day_field         = $('.bookly-js-select-birthday-day',   $container),
                         $birthday_month_field       = $('.bookly-js-select-birthday-month', $container),
                         $birthday_year_field        = $('.bookly-js-select-birthday-year',  $container),
@@ -376,27 +377,28 @@
                         $address_street_number_error= $('.bookly-js-address-street_number-error',       $container),
                         $address_additional_error   = $('.bookly-js-address-additional_address-error',  $container),
 
-                        $birthday_day_error         = $('.bookly-js-select-birthday-day-error',     $container),
-                        $birthday_month_error       = $('.bookly-js-select-birthday-month-error',   $container),
-                        $birthday_year_error        = $('.bookly-js-select-birthday-year-error',    $container),
-                        $full_name_field            = $('.bookly-js-full-name',             $container),
-                        $first_name_field           = $('.bookly-js-first-name',            $container),
-                        $last_name_field            = $('.bookly-js-last-name',             $container),
-                        $notes_field                = $('.bookly-js-user-notes',            $container),
-                        $custom_field               = $('.bookly-custom-field',             $container),
-                        $info_field                 = $('.bookly-js-info-field',            $container),
-                        $phone_error                = $('.bookly-js-user-phone-error',      $container),
-                        $email_error                = $('.bookly-js-user-email-error',      $container),
-                        $name_error                 = $('.bookly-js-full-name-error',       $container),
-                        $first_name_error           = $('.bookly-js-first-name-error',      $container),
-                        $last_name_error            = $('.bookly-js-last-name-error',       $container),
-                        $captcha                    = $('.bookly-js-captcha-img',           $container),
-                        $custom_error               = $('.bookly-custom-field-error',       $container),
-                        $info_error                 = $('.bookly-js-info-field-error',      $container),
-                        $modals                     = $('.bookly-js-modal',                 $container),
-                        $login_modal                = $('.bookly-js-login',                 $container),
-                        $cst_modal                  = $('.bookly-js-cst-duplicate',         $container),
-                        $next_btn                   = $('.bookly-js-next-step',             $container),
+                        $birthday_day_error         = $('.bookly-js-select-birthday-day-error',   $container),
+                        $birthday_month_error       = $('.bookly-js-select-birthday-month-error', $container),
+                        $birthday_year_error        = $('.bookly-js-select-birthday-year-error',  $container),
+                        $full_name_field            = $('.bookly-js-full-name',                   $container),
+                        $first_name_field           = $('.bookly-js-first-name',                  $container),
+                        $last_name_field            = $('.bookly-js-last-name',                   $container),
+                        $notes_field                = $('.bookly-js-user-notes',                  $container),
+                        $custom_field               = $('.bookly-custom-field',                   $container),
+                        $info_field                 = $('.bookly-js-info-field',                  $container),
+                        $phone_error                = $('.bookly-js-user-phone-error',            $container),
+                        $email_error                = $('.bookly-js-user-email-error',            $container),
+                        $email_confirm_error        = $('.bookly-js-user-email-confirm-error',   $container),
+                        $name_error                 = $('.bookly-js-full-name-error',             $container),
+                        $first_name_error           = $('.bookly-js-first-name-error',            $container),
+                        $last_name_error            = $('.bookly-js-last-name-error',             $container),
+                        $captcha                    = $('.bookly-js-captcha-img',                 $container),
+                        $custom_error               = $('.bookly-custom-field-error',             $container),
+                        $info_error                 = $('.bookly-js-info-field-error',            $container),
+                        $modals                     = $('.bookly-js-modal',                       $container),
+                        $login_modal                = $('.bookly-js-login',                       $container),
+                        $cst_modal                  = $('.bookly-js-cst-duplicate',               $container),
+                        $next_btn                   = $('.bookly-js-next-step',                   $container),
 
                         $errors                     = $([
                             $birthday_day_error,
@@ -414,6 +416,7 @@
                             $last_name_error,
                             $phone_error,
                             $email_error,
+                            $email_confirm_error,
                             $custom_error,
                             $info_error
                         ]).map($.fn.toArray),
@@ -434,6 +437,7 @@
                             $last_name_field,
                             $phone_field,
                             $email_field,
+                            $email_confirm_field,
                             $custom_field,
                             $info_field
                         ]).map($.fn.toArray)
@@ -737,6 +741,7 @@
                             last_name             : $last_name_field.val(),
                             phone                 : phone_number,
                             email                 : $email_field.val(),
+                            email_confirm         : $email_confirm_field.val(),
                             birthday              : {
                                 day          : $birthday_day_field.val(),
                                 month        : $birthday_month_field.val(),
@@ -830,6 +835,11 @@
                                                     name: 'email',
                                                     errorElement: $email_error,
                                                     formElement: $email_field
+                                                },
+                                                {
+                                                    name: 'email_confirm',
+                                                    errorElement: $email_confirm_error,
+                                                    formElement: $email_confirm_field
                                                 },
                                                 {
                                                     name: 'birthday_day',
@@ -939,8 +949,16 @@
                         laddaStart(this);
                         if (!opt[params.form_id].skip_steps.cart) {
                             stepCart({form_id: params.form_id});
+                        } else if (opt[params.form_id].no_time) {
+                            if (opt[params.form_id].no_extras) {
+                                stepService({form_id: params.form_id});
+                            } else {
+                                stepExtras({form_id: params.form_id});
+                            }
                         } else if (!opt[params.form_id].skip_steps.repeat) {
                             stepRepeat({form_id: params.form_id});
+                        } else if (!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_extras) {
+                            stepExtras({form_id: params.form_id});
                         } else {
                             stepTime({form_id: params.form_id});
                         }
@@ -1737,7 +1755,11 @@
                                 xhrFields: {withCredentials: true},
                                 crossDomain: 'withCredentials' in new XMLHttpRequest(),
                                 success: function (response) {
-                                    stepTime({form_id: params.form_id});
+                                    if (!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_extras) {
+                                        stepExtras({form_id: params.form_id});
+                                    } else {
+                                        stepTime({form_id: params.form_id});
+                                    }
                                 }
                             });
                         });
@@ -1807,6 +1829,16 @@
      */
     var xhr_render_time = null;
     function stepTime(params, error_message) {
+        if (opt[params.form_id].no_time || opt[params.form_id].skip_steps.time) {
+            if (!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_extras) {
+                stepExtras({form_id: params.form_id});
+            } else if (!opt[params.form_id].skip_steps.cart) {
+                stepCart({form_id: params.form_id,add_to_cart: true, from_step: (params && params.prev_step) ? params.prev_step : 'service'});
+            } else {
+                stepDetails({form_id: params.form_id, add_to_cart : true});
+            }
+            return;
+        }
         if (xhr_render_time != null) {
             xhr_render_time.abort();
             xhr_render_time = null;
@@ -1882,7 +1914,11 @@
                     e.preventDefault();
                     laddaStart(this);
                     if (!opt[params.form_id].skip_steps.extras && !opt[params.form_id].no_extras) {
-                        stepExtras({form_id: params.form_id});
+                        if (opt[params.form_id].step_extras == 'before_step_time') {
+                            stepExtras({form_id: params.form_id});
+                        } else {
+                            stepService({form_id: params.form_id});
+                        }
                     } else {
                         stepService({form_id: params.form_id});
                     }
@@ -2225,6 +2261,15 @@
                         $current_screen = $screens.eq(0);
                     }
 
+                    $('button.bookly-time-skip', $container).off('click').on('click', function (e) {
+                        laddaStart(this);
+                        if (!opt[params.form_id].skip_steps.cart) {
+                            stepCart({form_id: params.form_id, add_to_cart: true, from_step: 'time'});
+                        } else {
+                            stepDetails({form_id: params.form_id, add_to_cart : true});
+                        }
+                    });
+
                     // On click on a slot.
                     $('button.bookly-hour', $container).off('click').on('click', function (e) {
                         e.preventDefault();
@@ -2245,7 +2290,9 @@
                             xhrFields : { withCredentials: true },
                             crossDomain : 'withCredentials' in new XMLHttpRequest(),
                             success : function (response) {
-                                if (!opt[params.form_id].skip_steps.repeat) {
+                                if(!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_extras) {
+                                    stepExtras({form_id: params.form_id});
+                                } else if (!opt[params.form_id].skip_steps.repeat) {
                                     stepRepeat({form_id: params.form_id});
                                 } else if (!opt[params.form_id].skip_steps.cart) {
                                     stepCart({form_id: params.form_id, add_to_cart : true, from_step : 'time'});
@@ -2305,9 +2352,9 @@
                         $input;
 
                     var extrasChanged = function($extras_item, quantity) {
-                        var $input = $extras_item.find('input');
-                        var $total = $extras_item.find('.bookly-js-extras-total-price');
-                        var total_price = quantity * parseFloat($extras_item.data('price'));
+                        var $input = $extras_item.find('input'),
+                            $total = $extras_item.find('.bookly-js-extras-total-price'),
+                            total_price = quantity * parseFloat($extras_item.data('price'));
 
                         $total.text(currency.format.replace('1', total_price.toFixed(currency.precision)));
                         $input.val(quantity);
@@ -2316,8 +2363,9 @@
                         // Updating summary
                         var amount = 0;
                         $extras_items.each(function (index, elem) {
-                            var $this = $(this);
-                            amount += parseFloat($this.data('price')) * $this.find('input').val();
+                            var $this = $(this),
+                                multiplier = $this.closest('.bookly-js-extras-container').data('multiplier');
+                            amount += parseFloat($this.data('price')) * $this.find('input').val() * multiplier;
                         });
                         if (amount) {
                             $extras_summary.html(' + ' + currency.format.replace('1', amount.toFixed(currency.precision)));
@@ -2378,15 +2426,27 @@
                             xhrFields: {withCredentials: true},
                             crossDomain: 'withCredentials' in new XMLHttpRequest(),
                             success: function (response) {
-                                stepTime({form_id: params.form_id});
+                                if(opt[params.form_id].step_extras == 'before_step_time') {
+                                    stepTime({form_id: params.form_id, prev_step: 'extras'});
+                                } else if (!opt[params.form_id].skip_steps.repeat) {
+                                    stepRepeat({form_id: params.form_id});
+                                } else if (!opt[params.form_id].skip_steps.cart) {
+                                    stepCart({form_id: params.form_id, add_to_cart : true, from_step : 'time'});
+                                } else {
+                                    stepDetails({form_id: params.form_id, add_to_cart : true});
+                                }
                             }
                         });
                     });
                     $back_step.on('click', function (e) {
                         e.preventDefault();
                         laddaStart(this);
-                        stepService({form_id: params.form_id});
-                    }).toggle(!opt[params.form_id].skip_steps.service);
+                        if (opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_time) {
+                            stepTime({form_id: params.form_id, prev_step: 'extras'});
+                        } else {
+                            stepService({form_id: params.form_id});
+                        }
+                    });
                 }
             }
         });
@@ -2397,7 +2457,7 @@
      */
     function stepService(params) {
         if (opt[params.form_id].skip_steps.service) {
-            if (!opt[params.form_id].skip_steps.extras) {
+            if (!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'before_step_time') {
                 stepExtras(params);
             } else {
                 stepTime(params);
@@ -2538,23 +2598,22 @@
                                         });
                                     }
                                 } else if (staff_member.services.hasOwnProperty(service_id)) {
-                                    if (staff_member.services[service_id].locations.hasOwnProperty(_location_id)) {
-                                        _min_capacity = _min_capacity ? Math.min(_min_capacity, staff_member.services[service_id].locations[_location_id].min_capacity) : staff_member.services[service_id].locations[_location_id].min_capacity;
-                                        _max_capacity = _max_capacity ? Math.max(_max_capacity, staff_member.services[service_id].locations[_location_id].max_capacity) : staff_member.services[service_id].locations[_location_id].max_capacity;
-                                        if ( staff_member.services[service_id].locations[_location_id].price != null) {
-                                            _staff[id] = {
-                                                id   : id,
-                                                name : staff_member.name + ' (' + staff_member.services[service_id].locations[_location_id].price + ')',
-                                                pos  : staff_member.pos
-                                            };
-                                        } else {
-                                            _staff[id] = {
-                                                id   : id,
-                                                name : staff_member.name,
-                                                pos  : staff_member.pos
-                                            };
+                                    $.each(staff_member.services[service_id].locations, function(loc_id, loc_srv) {
+                                        if (_location_id && _location_id != loc_id) {
+                                            return true;
                                         }
-                                    }
+                                        _min_capacity = _min_capacity ? Math.min(_min_capacity, loc_srv.min_capacity) : loc_srv.min_capacity;
+                                        _max_capacity = _max_capacity ? Math.max(_max_capacity, loc_srv.max_capacity) : loc_srv.max_capacity;
+                                        _staff[id] = {
+                                            id   : id,
+                                            name : staff_member.name + (
+                                                loc_srv.price != null && (_location_id || !services_per_location)
+                                                    ? ' (' + loc_srv.price + ')'
+                                                    : ''
+                                            ),
+                                            pos  : staff_member.pos
+                                        };
+                                    });
                                 }
                             }
                         });
@@ -2663,7 +2722,7 @@
                             if (service_id) {
                                 var valid = false;
                                 $.each(locations[location_id].staff, function(id) {
-                                    if (staff[id].services.hasOwnProperty(service_id)) {
+                                    if (staff[id].services.hasOwnProperty(service_id) && staff[id].services[service_id].locations.hasOwnProperty(_location_id)) {
                                         valid = true;
                                         return false;
                                     }
@@ -2691,6 +2750,7 @@
                             }
                         }
                         setSelects($chain_item, location_id, category_id, service_id, staff_id);
+                        updateServiceDurationSelect($chain_item, service_id, staff_id, location_id);
                     });
 
                     // Category select change
@@ -2729,23 +2789,24 @@
                     });
 
                     var updateServiceDurationSelect = function($chain_item, service_id, staff_id, location_id) {
-                        var $units_duration = $chain_item.find('.bookly-js-select-units-duration');
+                        var $units_duration = $chain_item.find('.bookly-js-select-units-duration'),
+                            current_duration = $units_duration.val();
                         $units_duration.find('option').remove();
                         if (service_id) {
                             var getUnitsByStaffId = function (staff_id) {
-                                if (!staff_id) {
-                                    return services[service_id]['units'];
+                                if (!staff_id || services_per_location && !location_id) {
+                                    return services[service_id].hasOwnProperty('units')
+                                        ? services[service_id]['units']
+                                        : [{'value': '', 'title': '-'}];
                                 }
 
                                 var locationId = location_id ? location_id : 0,
                                     staffLocations = staff[staff_id].services[service_id].locations;
-
-                                if (!(staffLocations instanceof Array) || !staffLocations.length) {
-                                    return [];
+                                if (staffLocations === undefined) {
+                                    return [{'value': '', 'title': '-'}];
                                 }
-
-                                var staffLocation = staffLocations.indexOf(locationId) !== -1 ? staffLocations[locationId] : staffLocations[0];
-                                return staffLocation.units || [];
+                                var staffLocation = staffLocations.hasOwnProperty(locationId) ? staffLocations[locationId] : staffLocations[0];
+                                return staffLocation.units || [{'value': '', 'title': '-'}];
                             };
 
                             // add slots for picked service
@@ -2755,6 +2816,9 @@
                                     text: item.title
                                 }));
                             });
+                            if ($units_duration.find('option[value="' + current_duration + '"]').length != 0) {
+                                $units_duration.val(current_duration);
+                            }
                         } else {
                             $units_duration.append($('<option>', {
                                 value: '',
@@ -2873,8 +2937,13 @@
                         if (chain_item.service_id) {
                             $('.bookly-js-select-service', $chain_item).val(chain_item.service_id).trigger('change');
                             if (opt[params.form_id].form_attributes.hide_categories) {
-                                // Deselect category to keep full list of services.
-                                $('.bookly-js-select-category', $chain_item).val('');
+                                if (opt[params.form_id].form_attributes.hasOwnProperty('const_category_id')) {
+                                    // Keep category selected by 'admin'.
+                                    $('.bookly-js-select-category', $chain_item).val(opt[params.form_id].form_attributes.const_category_id);
+                                } else {
+                                    // Deselect category to keep full list of services.
+                                    $('.bookly-js-select-category', $chain_item).val('');
+                                }
                             }
                         }
                         if (!opt[params.form_id].form_attributes.hide_staff_members && chain_item.staff_ids.length == 1 && chain_item.staff_ids[0]) {
@@ -3023,11 +3092,14 @@
                             laddaStart(this);
 
                             // Prepare chain data.
-                            var chain = {};
-                            var has_extras = 0;
+                            var chain = {},
+                                has_extras = 0,
+                                time_requirements = 0,
+                                _time_requirements = {'required': 2, 'optional': 1, 'off': 0};
                             $('.bookly-js-chain-item:not(.bookly-js-draft)', $container).each(function () {
-                                var $chain_item = $(this);
-                                var staff_ids = [];
+                                var $chain_item = $(this),
+                                    staff_ids = [],
+                                    _service = services[$('.bookly-js-select-service', $chain_item).val()];
                                 if ($('.bookly-js-select-employee', $chain_item).val()) {
                                     staff_ids.push($('.bookly-js-select-employee', $chain_item).val());
                                 } else {
@@ -3046,7 +3118,8 @@
                                     number_of_persons : $('.bookly-js-select-number-of-persons', $chain_item).val() || 1,
                                     quantity          : $('.bookly-js-select-quantity', $chain_item).val() ? $('.bookly-js-select-quantity', $chain_item).val() : 1
                                 };
-                                has_extras += services[$('.bookly-js-select-service', $chain_item).val()].has_extras;
+                                time_requirements = Math.max(time_requirements, _time_requirements[_service.hasOwnProperty('time_requirements') ? _service.time_requirements : 'required']);
+                                has_extras += _service.has_extras;
                             });
 
                             // Prepare days.
@@ -3072,16 +3145,16 @@
                                 xhrFields   : { withCredentials: true },
                                 crossDomain : 'withCredentials' in new XMLHttpRequest(),
                                 success     : function (response) {
-                                    if (!opt[params.form_id].skip_steps.extras) {
-                                        if (has_extras == 0) {
-                                            opt[params.form_id].no_extras = true;
+                                    opt[params.form_id].no_time = time_requirements == 0;
+                                    opt[params.form_id].no_extras = has_extras == 0;
+                                    if (opt[params.form_id].skip_steps.extras) {
+                                        stepTime({form_id: params.form_id});
+                                    } else {
+                                        if (has_extras == 0 || opt[params.form_id].step_extras == 'after_step_time') {
                                             stepTime({form_id: params.form_id});
                                         } else {
-                                            opt[params.form_id].no_extras = false;
                                             stepExtras({form_id: params.form_id});
                                         }
-                                    } else {
-                                        stepTime({form_id: params.form_id});
                                     }
                                 }
                             });

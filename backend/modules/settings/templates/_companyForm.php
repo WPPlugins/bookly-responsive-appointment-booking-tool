@@ -42,11 +42,7 @@ use Bookly\Backend\Components\Settings\Inputs;
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="bookly_co_address"><?php _e( 'Address', 'bookly' ) ?></label>
-        <textarea id="bookly_co_address" class="form-control" rows="5"
-                  name="bookly_co_address"><?php form_option( 'bookly_co_address' ) ?></textarea>
-    </div>
+    <?php Inputs::renderTextArea( 'bookly_co_address', __( 'Address', 'bookly' ), '', 5 ) ?>
     <?php Inputs::renderText( 'bookly_co_phone', __( 'Phone', 'bookly' ) ) ?>
     <?php Inputs::renderText( 'bookly_co_website', __( 'Website', 'bookly' ) ) ?>
 

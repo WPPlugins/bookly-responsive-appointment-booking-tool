@@ -17,6 +17,7 @@ jQuery(function ($) {
                 success     : function (response) {
                     $container.html(response.data.html);
                     var $services_form = $('form', $container);
+                    $services_form.booklyHelp();
                     $(document.body).trigger('special_hours.tab_init', [$container, obj.options]);
                     var autoTickCheckboxes = function () {
                         // Handle 'select category' checkbox.
@@ -99,15 +100,15 @@ jQuery(function ($) {
                             }, 0);
                         })
                         // Change location
-                        .on('change', '#staff_service_location_id', function () {
+                        .on('change', '#staff_location_id', function () {
                             $('.tab-pane > div').hide();
                             var get_staff_services = {
                                 action    : options.get_staff_services.action,
                                 staff_id  : options.get_staff_services.staff_id,
                                 csrf_token: options.get_staff_services.csrf_token,
                             };
-                            if ($('#staff_service_location_id').val() != '') {
-                                get_staff_services['location_id'] = $('#staff_service_location_id').val();
+                            if (this.value != '') {
+                                get_staff_services['location_id'] = this.value;
                             }
                             new BooklyStaffServices($container, {
                                 get_staff_services: get_staff_services,
@@ -118,7 +119,7 @@ jQuery(function ($) {
                             $container.show();
                         })
                         // Change default/custom settings for location
-                        .on('change', '#custom_services', function () {
+                        .on('change', '#custom_location_settings', function () {
                             if ($(this).val() == 1) {
                                 $('.panel', $services_form).show();
                             } else {
@@ -126,7 +127,7 @@ jQuery(function ($) {
                             }
                         });
 
-                    $('#custom_services', $services_form).trigger('change');
+                    $('#custom_location_settings', $services_form).trigger('change');
 
                     $('.bookly-service-checkbox').on('change', function () {
                         var $this    = $(this),

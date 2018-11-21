@@ -133,4 +133,42 @@ jQuery(function ($) {
             }
         });
     });
+
+    $('[data-action=feature-request]')
+        .on('click', function () {
+            if ($(this).data('target')) {
+                window.open($(this).data('target'), '_blank');
+            } else {
+                $('#bookly-feature-requests-modal').modal('show');
+            }
+        });
+
+    $('.bookly-js-proceed-requests').on('click', function () {
+        var $modal = $('#bookly-feature-requests-modal'),
+            hide   = $('#bookly-js-dont-show-again', $modal).prop('checked')||0,
+            ladda  = Ladda.create(this);
+        ladda.start();
+        $.ajax({
+            url : ajaxurl,
+            type: 'POST',
+            data: {
+                action    : 'bookly_proceed_to_feature_requests',
+                csrf_token: SupportL10n.csrf_token,
+                hide      : hide
+            },
+            dataType: 'json',
+            success : function (response) {
+                if (response.success) {
+                    $modal.modal('hide');
+                    if (hide) {
+                        $('[data-action=feature-request]').data('target', response.data.target);
+                    }
+                    window.open(response.data.target, '_blank');
+                }
+            },
+            complete: function () {
+                ladda.stop();
+            }
+        });
+    });
 });

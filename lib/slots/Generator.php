@@ -1,12 +1,18 @@
 <?php
 namespace Bookly\Lib\Slots;
 
+use Bookly\Lib\Proxy\Locations as LocationsProxy;
+use Bookly\Lib\Proxy\Pro as ProProxy;
+
 /**
  * Class Generator
  * @package Bookly\Lib\Slots
  */
 class Generator implements \Iterator
 {
+    const CONNECTION_CONSECUTIVE = 1;
+    const CONNECTION_PARALLEL    = 2;
+
     /** @var Staff[] */
     protected $staff_members;
     /** @var Schedule[] */
@@ -39,6 +45,8 @@ class Generator implements \Iterator
     protected $waiting_list_enabled;
     /** @var static */
     protected $next_generator;
+    /** @var int */
+    protected $next_connection;
     /** @var RangeCollection */
     protected $next_slots;
     /** @var RangeCollection */
@@ -63,6 +71,7 @@ class Generator implements \Iterator
      * @param int $spare_time  Spare time next to service
      * @param bool $waiting_list_enabled
      * @param self|null $next_generator
+     * @param int $next_connection
      */
     public function __construct(
         array $staff_members,
@@ -80,7 +89,8 @@ class Generator implements \Iterator
         $time_to,
         $spare_time,
         $waiting_list_enabled,
-        $next_generator
+        $next_generator,
+        $next_connection
     )
     {
         $this->staff_members        = array();
@@ -99,18 +109,20 @@ class Generator implements \Iterator
         $this->spare_time           = (int) $spare_time;
         $this->waiting_list_enabled = (bool) $waiting_list_enabled;
         $this->next_generator       = $next_generator;
+        $this->next_connection      = $next_connection;
 
         // Pick only those staff members who provides the service
         // and who can serve the requested number of persons.
         foreach ( $staff_members as $staff_id => $staff ) {
             // Check that staff provides the service.
-            if ( $staff->providesService( $this->srv_id, \Bookly\Lib\Proxy\Locations::servicesPerLocationAllowed() ? $this->location_id : 0 ) ) {
+            $location_id = LocationsProxy::servicesPerLocationAllowed() ? $this->location_id : 0;
+            if ( $staff->providesService( $this->srv_id, $location_id ) ) {
                 // Check that requested number of persons meets service capacity.
                 $service = $staff->getService( $this->srv_id, $this->location_id );
                 if ( $service->capacityMax() >= $this->nop && $service->capacityMin() <= $this->nop ) {
                     $this->staff_members[ $staff_id ] = $staff;
                     // Prepare staff schedule.
-                    $schedule = $staff->getSchedule();
+                    $schedule = $staff->getSchedule( $location_id );
                     if ( $service_schedule ) {
                         $schedule = $schedule->intersect( $service_schedule );
                     }
@@ -152,6 +164,9 @@ class Generator implements \Iterator
                 // Create booked ranges from staff bookings.
                 $ranges = $this->_mapStaffBookings( $ranges, $staff );
 
+                // Remove ranges with hours limit
+                $ranges = ProProxy::prepareGeneratorRanges( $ranges, $staff, $this->srv_duration + $this->extras_duration );
+
                 // Find slots.
                 $max_capacity = $staff->getService( $this->srv_id, $this->location_id )->capacityMax();
                 foreach ( $ranges->all() as $range ) {
@@ -174,6 +189,7 @@ class Generator implements \Iterator
                             continue;
                         }
                         $timestamp = $slot->start()->value()->getTimestamp();
+                        $ex_slot   = null;
                         // Decide whether to add slot or skip it.
                         if ( $result->has( $timestamp ) ) {
                             // If result already has this timestamp...
@@ -182,20 +198,9 @@ class Generator implements \Iterator
                                 continue;
                             } else {
                                 $ex_slot = $result->get( $timestamp );
-                                if ( $ex_slot->notFullyBooked() ) {
-                                    // If existing slot is not fully booked...
-                                    if ( $slot->waitingListStarted() && $ex_slot->noWaitingListStarted() ) {
-                                        // Skip the slot if it has waiting list started but the existing one does not.
-                                        continue;
-                                    }
-                                    if ( $slot->waitingListStarted() || $ex_slot->noWaitingListStarted() ) {
-                                        // Find which staff is more preferable.
-                                        $ex_staff = $this->staff_members[ $ex_slot->staffId() ];
-                                        if ( $ex_staff->morePreferableThan( $staff, $ex_slot ) ) {
-                                            // Skip the slot if existing staff is more preferable.
-                                            continue;
-                                        }
-                                    }
+                                if ( $ex_slot->notFullyBooked() && $slot->waitingListStarted() && $ex_slot->noWaitingListStarted() ) {
+                                    // Skip the slot if it has waiting list started but the existing one does not.
+                                    continue;
                                 }
                             }
                         }
@@ -212,6 +217,10 @@ class Generator implements \Iterator
                                 // Skip it if no past slot was found.
                                 continue;
                             }
+                        }
+                        // Decide which slot to add.
+                        if ( $ex_slot && $ex_slot->notFullyBooked() && ( $slot->waitingListStarted() || $ex_slot->noWaitingListStarted() ) ) {
+                            $slot = $this->_findPreferableSlot( $slot, $ex_slot );
                         }
                         // Add slot to result.
                         $result->put( $timestamp, $slot );
@@ -283,6 +292,7 @@ class Generator implements \Iterator
                 }
                 // Handle partially booked appointments (when number of persons is less than max capacity).
                 if (
+                    ! $booking->oneBookingPerSlot() &&
                     ( ! $booking->locationId() || ! $this->location_id || $booking->locationId() == $this->location_id ) &&
                     $booking->serviceId() == $this->srv_id &&
                     $booking->nop() <= $max_capacity - $this->nop &&
@@ -314,26 +324,43 @@ class Generator implements \Iterator
      */
     private function _tryFindNextSlot( Range $slot )
     {
-        $next_start = $slot->start()->modify( $this->srv_duration + $this->extras_duration + $this->spare_time );
-        $padding = $this->srv_padding_right + $this->next_generator->srv_padding_left;
-        // There are 2 possible options:
-        // 1. next service is done by another staff, then do not take into account padding
-        // 2. next service is done by the same staff, then count padding
-        $next_slot = $this->_findNextSlot( $next_start );
-        if (
-            $next_slot == false ||
-            $next_slot->fullyBooked() ||
-            $padding != 0 && $next_slot->staffId() == $slot->staffId()
-        ) {
-            $next_slot = $this->_findNextSlot( $next_start->modify( $padding ) );
+        if ( $this->next_connection == self::CONNECTION_CONSECUTIVE ) {
+            $next_start = $slot->start()->modify( $this->srv_duration + $this->extras_duration + $this->spare_time );
+            $padding = $this->srv_padding_right + $this->next_generator->srv_padding_left;
+            // There are 2 possible options:
+            // 1. next service is done by another staff, then do not take into account padding
+            // 2. next service is done by the same staff, then count padding
+            $next_slot = $this->_findNextSlot( $next_start );
             if (
                 $next_slot == false ||
                 $next_slot->fullyBooked() ||
-                $next_slot->staffId() != $slot->staffId()
+                $padding != 0 && $next_slot->staffId() == $slot->staffId()
             ) {
-                $next_slot = null;
+                $next_slot = $this->_findNextSlot( $next_start->modify( $padding ) );
+                if ( $next_slot && (
+                    $next_slot->fullyBooked() ||
+                    $next_slot->staffId() != $slot->staffId()
+                ) ) {
+                    $next_slot = false;
+                }
+            }
+        } else {
+            $next_slot = $this->_findNextSlot( $slot->start() );
+            if ( $next_slot ) {
+                if ( $next_slot->fullyBooked() ) {
+                    $next_slot = false;
+                } else {
+                    // Try alternative slot.
+                    while ( $next_slot->staffId() == $slot->staffId() && $next_slot->hasAltSlot() ) {
+                        $next_slot = $next_slot->altSlot();
+                    }
+                    if ( $next_slot->staffId() == $slot->staffId() ) {
+                        $next_slot = false;
+                    }
+                }
             }
         }
+
         if ( $next_slot ) {
             // Connect slots with each other.
             $slot = $slot->replaceNextSlot( $next_slot );
@@ -391,6 +418,30 @@ class Generator implements \Iterator
         }
 
         return $this->next_slots->get( $start->value()->getTimestamp() );
+    }
+
+    /**
+     * Find more preferable slot and store the other one as alternative.
+     *
+     * @param Range $slot
+     * @param Range $ex_slot
+     * @return Range
+     */
+    private function _findPreferableSlot( $slot, $ex_slot )
+    {
+        // Find which staff is more preferable.
+        $staff    = $this->staff_members[ $slot->staffId() ];
+        $ex_staff = $this->staff_members[ $ex_slot->staffId() ];
+        if ( $staff->morePreferableThan( $ex_staff, $slot ) ) {
+            $slot = $slot->replaceAltSlot( $ex_slot );
+        } else {
+            if ( $ex_slot->hasAltSlot() ) {
+                $slot = $this->_findPreferableSlot( $slot, $ex_slot->altSlot() );
+            }
+            $slot = $ex_slot->replaceAltSlot( $slot );
+        }
+
+        return $slot;
     }
 
     /**

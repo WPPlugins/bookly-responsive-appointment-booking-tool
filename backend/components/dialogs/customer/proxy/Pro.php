@@ -4,11 +4,9 @@ namespace Bookly\Backend\Components\Dialogs\Customer\Proxy;
 use Bookly\Lib;
 
 /**
- * Class Pro
- * @package Bookly\Backend\Components\Dialogs\Customer\Proxy
- *
- * @method static void renderCustomerDialogAddress() Render address fields in edit customer dialog.
- * @method static void renderCustomerDialogBirthday() Render birthday fields in edit customer dialog.
+ * @since Bookly 16.2
+ * @deprecated
+ * Proxy file was moved
  */
 abstract class Pro extends Lib\Base\Proxy
 {

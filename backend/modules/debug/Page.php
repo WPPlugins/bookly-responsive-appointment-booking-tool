@@ -73,7 +73,7 @@ class Page extends Lib\Base\Ajax
                 }
             }
         }
-
+        ksort( $debug );
         $import_status = self::parameter( 'status' );
         self::renderTemplate( 'index', compact( 'debug', 'import_status' ) );
     }

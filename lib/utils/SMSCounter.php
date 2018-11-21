@@ -212,7 +212,7 @@ class SMSCounter{
 
     /**
      * unicode equivalent chr() function
-     * @return character
+     * @return string
      */
     public static function utf8_chr($unicode){
         $unicode=intval($unicode);

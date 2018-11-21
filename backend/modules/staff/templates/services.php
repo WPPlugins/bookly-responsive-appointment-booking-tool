@@ -18,7 +18,7 @@ use Bookly\Lib\Utils\Common;
                                 <div class="checkbox bookly-margin-remove">
                                     <label>
                                         <input id="bookly-check-all-entities" type="checkbox">
-                                        <b><?php _e( 'All services', 'bookly' ) ?></b>
+                                        <b><?php esc_html_e( 'All services', 'bookly' ) ?></b>
                                     </label>
                                 </div>
                             </div>
@@ -27,7 +27,7 @@ use Bookly\Lib\Utils\Common;
                                     <div class="bookly-flex-row">
                                         <div class="bookly-flex-cell hidden-xs hidden-sm hidden-md text-right">
                                             <div class="bookly-font-smaller bookly-color-gray">
-                                                <?php _e( 'Price', 'bookly' ) ?>
+                                                <?php esc_html_e( 'Price', 'bookly' ) ?>
                                             </div>
                                         </div>
                                         <?php Proxy\Shared::renderStaffServiceLabels() ?>
@@ -60,7 +60,7 @@ use Bookly\Lib\Utils\Common;
                                                 <div class="bookly-flex-row">
                                                 <div class="bookly-flex-cell">
                                                     <div class="bookly-font-smaller bookly-margin-bottom-xs bookly-color-gray visible-xs visible-sm visible-md">
-                                                        <?php _e( 'Price', 'bookly' ) ?>
+                                                        <?php esc_html_e( 'Price', 'bookly' ) ?>
                                                     </div>
                                                     <input class="form-control text-right" type="text" <?php disabled( ! array_key_exists( $service->getId(), $services_data ) ) ?>
                                                            name="price[<?php echo $service->getId() ?>]"
@@ -68,8 +68,6 @@ use Bookly\Lib\Utils\Common;
                                                     />
                                                 </div>
 
-                                                <input type="hidden" name="capacity_min[<?php echo $service->getId() ?>]" value="1">
-                                                <input type="hidden" name="capacity_max[<?php echo $service->getId() ?>]" value="1">
                                                 <?php Proxy\Shared::renderStaffService( $staff_id, $service, $services_data, array() ) ?>
                                                 </div>
                                             </div>
@@ -100,7 +98,7 @@ use Bookly\Lib\Utils\Common;
                                 <div class="bookly-flexbox">
                                     <div class="bookly-flex-row">
                                         <div class="bookly-flex-cell hidden-xs hidden-sm hidden-md text-right">
-                                            <div class="bookly-font-smaller bookly-color-gray"><?php _e( 'Price', 'bookly' ) ?></div>
+                                            <div class="bookly-font-smaller bookly-color-gray"><?php esc_html_e( 'Price', 'bookly' ) ?></div>
                                         </div>
                                         <?php Proxy\Shared::renderStaffServiceLabels() ?>
                                     </div>
@@ -132,7 +130,7 @@ use Bookly\Lib\Utils\Common;
                                             <div class="bookly-flex-row">
                                             <div class="bookly-flex-cell">
                                                 <div class="bookly-font-smaller bookly-margin-bottom-xs bookly-color-gray visible-xs visible-sm visible-md">
-                                                    <?php _e( 'Price', 'bookly' ) ?>
+                                                    <?php esc_html_e( 'Price', 'bookly' ) ?>
                                                 </div>
                                                 <input class="form-control text-right" type="text" <?php disabled( ! array_key_exists( $service->getId(), $services_data ) ) ?>
                                                        name="price[<?php echo $service->getId() ?>]"
@@ -140,8 +138,6 @@ use Bookly\Lib\Utils\Common;
                                                 />
                                             </div>
 
-                                            <input type="hidden" name="capacity_min[<?php echo $service->getId() ?>]" value="1">
-                                            <input type="hidden" name="capacity_max[<?php echo $service->getId() ?>]" value="1">
                                             <?php Proxy\Shared::renderStaffService( $staff_id, $service, $services_data, array() ) ?>
                                             </div>
                                         </div>
@@ -165,11 +161,11 @@ use Bookly\Lib\Utils\Common;
             </div>
         </form>
     <?php else : ?>
-        <h5 class="text-center"><?php _e( 'No services found. Please add services.', 'bookly' ) ?></h5>
+        <h5 class="text-center"><?php esc_html_e( 'No services found. Please add services.', 'bookly' ) ?></h5>
         <p class="bookly-margin-top-xlg text-center">
             <a class="btn btn-xlg btn-success-outline"
                href="<?php echo Common::escAdminUrl( Bookly\Backend\Modules\Services\Page::pageSlug() ) ?>" >
-                <?php _e( 'Add Service', 'bookly' ) ?>
+                <?php esc_html_e( 'Add Service', 'bookly' ) ?>
             </a>
         </p>
     <?php endif ?>

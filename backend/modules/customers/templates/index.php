@@ -66,7 +66,7 @@ use Bookly\Backend\Modules\Customers\Proxy;
                         <button type="button" id="bookly-select-for-merge" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> <?php esc_html_e( 'Select for merge', 'bookly' ) ?></button>
                     </div>
                     <div class="form-group">
-                        <?php Buttons::renderDelete() ?>
+                        <?php Dialogs\Customer\Delete\Dialog::renderDeleteButton() ?>
                     </div>
                 </div>
 
@@ -79,34 +79,8 @@ use Bookly\Backend\Modules\Customers\Proxy;
         <?php
             Proxy\Pro::renderImportDialog();
             Proxy\Pro::renderExportDialog( $info_fields );
+            Dialogs\Customer\Delete\Dialog::render();
         ?>
-
-        <div id="bookly-delete-dialog" class="modal fade" tabindex=-1 role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                        <div class="modal-title h2"><?php _e( 'Delete customers', 'bookly' ) ?></div>
-                    </div>
-                    <div class="modal-body">
-                        <?php esc_html_e( 'You are about to delete customers which may have WordPress accounts associated to them. Do you want to delete those accounts too (if there are any)?', 'bookly' ) ?>
-                        <div class="checkbox">
-                            <label>
-                                <input id="bookly-delete-remember-choice" type="checkbox" /><?php esc_html_e( 'Remember my choice', 'bookly' ) ?>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger ladda-button" id="bookly-delete-no" data-spinner-size="40" data-style="zoom-in">
-                            <span class="ladda-label"><i class="glyphicon glyphicon-trash"></i> <?php esc_html_e( 'No, delete just customers', 'bookly' ) ?></span>
-                        </button>
-                        <button type="button" class="btn btn-danger ladda-button" id="bookly-delete-yes" data-spinner-size="40" data-style="zoom-in">
-                            <span class="ladda-label"><i class="glyphicon glyphicon-trash"></i> <?php esc_html_e( 'Yes', 'bookly' ) ?></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div id="bookly-merge-dialog" class="modal fade" tabindex=-1 role="dialog">
             <div class="modal-dialog">
@@ -119,9 +93,7 @@ use Bookly\Backend\Modules\Customers\Proxy;
                         <?php esc_html_e( 'You are about to merge customers from the merge list with the selected one. This will result in losing the merged customers and moving all their appointments to the selected customer. Are you sure you want to continue?', 'bookly' ) ?>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger ladda-button" id="bookly-merge" data-spinner-size="40" data-style="zoom-in">
-                            <span class="ladda-label"><i class="glyphicon glyphicon-road"></i> <?php esc_html_e( 'Merge', 'bookly' ) ?></span>
-                        </button>
+                        <?php Buttons::renderCustom( 'bookly-merge', 'btn-danger btn-lg', esc_html__( 'Merge', 'bookly' ), array(), '<span class="ladda-label"><i class="glyphicon glyphicon-road"></i> {caption}</span>' ) ?>
                         <?php Buttons::renderCustom( null, 'btn-default btn-lg', __( 'Cancel', 'bookly' ), array( 'data-dismiss' => 'modal' ) ) ?>
                     </div>
                 </div>
@@ -130,7 +102,7 @@ use Bookly\Backend\Modules\Customers\Proxy;
 
         <div ng-app="customer" ng-controller="customerCtrl">
             <div customer-dialog=saveCustomer(customer) customer="customer"></div>
-            <?php Dialogs\Customer\Edit::render() ?>
+            <?php Dialogs\Customer\Edit\Dialog::render() ?>
         </div>
     </div>
 </div>

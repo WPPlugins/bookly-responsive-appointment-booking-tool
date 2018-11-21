@@ -43,6 +43,6 @@ class Boot
      */
     public static function pluginClass()
     {
-        return substr( __CLASS__, 0, strpos( __CLASS__, '\\' ) ) . '\Lib\Plugin';
+        return strtok( __NAMESPACE__, '\\' ) . '\Lib\Plugin';
     }
 }

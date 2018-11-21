@@ -19,7 +19,7 @@ class Cart
     /**
      * @var UserBookingData
      */
-    private $userData = null;
+    private $userData;
 
     /**
      * Constructor.
@@ -150,21 +150,29 @@ class Cart
     {
         foreach ( $this->getItems() as $i => $cart_item ) {
             // Init.
-            $payment_id  = $order->hasPayment() ? $order->getPayment()->getId() : null;
-            $service     = $cart_item->getService();
-            $series      = null;
-            $compound    = null;
-            $is_compound = $service->getType() == Entities\Service::TYPE_COMPOUND;
+            $payment_id    = $order->hasPayment() ? $order->getPayment()->getId() : null;
+            $service       = $cart_item->getService();
+            $series        = null;
+            $collaborative = null;
+            $compound      = null;
 
             // Whether to put this item on waiting list.
             $put_on_waiting_list = Config::waitingListActive() && get_option( 'bookly_waiting_list_enabled' ) && $cart_item->toBePutOnWaitingList();
 
-            // Compound.
-            if ( $is_compound ) {
+            if ( $service->isCompound() ) {
+                // Compound.
                 $compound = DataHolders\Compound::create( $service )
                     ->setToken( Utils\Common::generateToken(
                         '\Bookly\Lib\Entities\CustomerAppointment',
                         'compound_token'
+                    ) )
+                ;
+            } else if ( $service->isCollaborative() ) {
+                // Collaborative.
+                $collaborative = DataHolders\Collaborative::create( $service )
+                    ->setToken( Utils\Common::generateToken(
+                        '\Bookly\Lib\Entities\CustomerAppointment',
+                        'collaborative_token'
                     ) )
                 ;
             }
@@ -190,10 +198,28 @@ class Cart
                 }
             }
 
-            $extras = $cart_item->getExtras();
+            $extras = $cart_item->distributeExtrasAcrossSlots();
             $custom_fields = $cart_item->getCustomFields();
 
-            foreach ( $cart_item->getSlots() as $slot ) {
+            // For collaborative services we may need to find max duration to make all appointments of the same size.
+            $collaborative_max_duration = null;
+            $collaborative_extras_durations = array();
+            if ( $collaborative && $service->getCollaborativeEqualDuration() ) {
+                $consider_extras_duration = (bool) Proxy\ServiceExtras::considerDuration();
+                foreach ( $cart_item->getSlots() as $key => $slot ) {
+                    list ( $service_id ) = $slot;
+                    $service = Entities\Service::find( $service_id );
+                    $collaborative_extras_durations[ $key ] = $consider_extras_duration
+                        ? (int) Proxy\ServiceExtras::getTotalDuration( $extras[ $key ] )
+                        : 0;
+                    $duration = $cart_item->getUnits() * $service->getDuration() + $collaborative_extras_durations[ $key ];
+                    if ( $duration > $collaborative_max_duration ) {
+                        $collaborative_max_duration = $duration;
+                    }
+                }
+            }
+
+            foreach ( $cart_item->getSlots() as $key => $slot ) {
                 list ( $service_id, $staff_id, $datetime ) = $slot;
                 $service = Entities\Service::find( $service_id );
 
@@ -203,21 +229,31 @@ class Cart
                  * otherwise create appointment and connect customer to new appointment
                  */
                 $appointment = new Entities\Appointment();
-                $appointment->loadBy( array(
-                    'service_id' => $service_id,
-                    'staff_id'   => $staff_id,
-                    'start_date' => $datetime,
-                ) );
+                // Do not try to find appointment for tasks
+                if ( $datetime !== null ) {
+                    $appointment->loadBy( array(
+                        'service_id' => $service_id,
+                        'staff_id'   => $staff_id,
+                        'start_date' => $datetime,
+                    ) );
+                }
                 if ( $appointment->isLoaded() == false ) {
                     // Create new appointment.
                     $appointment
-                        ->setSeriesId( $series ? $series->getSeries()->getId() : null )
                         ->setLocationId( $cart_item->getLocationId() ?: null )
                         ->setServiceId( $service_id )
                         ->setStaffId( $staff_id )
                         ->setStaffAny( count( $cart_item->getStaffIds() ) > 1 )
                         ->setStartDate( $datetime )
-                        ->setEndDate( date( 'Y-m-d H:i:s', strtotime( $datetime ) + $cart_item->getUnits() * $service->getDuration() ) )
+                        ->setEndDate(
+                            $datetime !== null
+                                ? date( 'Y-m-d H:i:s', strtotime( $datetime ) + (
+                                    $collaborative_max_duration !== null
+                                        ? $collaborative_max_duration - $collaborative_extras_durations[ $key ]
+                                        : $cart_item->getUnits() * $service->getDuration()
+                                ) )
+                                : null
+                        )
                         ->save();
                 } else {
                     $update = false;
@@ -236,38 +272,32 @@ class Cart
                     }
                 }
 
-                if ( $is_compound ) {
-                    $service_extras = array();
-                    foreach ( Proxy\ServiceExtras::findByServiceId( $service_id ) as $item ) {
-                        if ( array_key_exists( $item->getId(), $extras ) ) {
-                            $service_extras[ $item->getId() ] = $extras[ $item->getId() ];
-                            // Extras will be assigned only to one/unique service,
-                            // and won't be multiplied across.
-                            unset( $extras[ $item->getId() ] );
-                        }
-                    }
+                if ( $compound || $collaborative ) {
                     $service_custom_fields = Proxy\CustomFields::filterForService( $custom_fields, $service_id );
                 } else {
-                    $service_extras = $extras;
                     $service_custom_fields = $custom_fields;
                 }
 
                 // Create CustomerAppointment record.
                 $customer_appointment = new Entities\CustomerAppointment();
                 $customer_appointment
+                    ->setSeriesId( $series ? $series->getSeries()->getId() : null )
                     ->setCustomer( $order->getCustomer() )
                     ->setAppointment( $appointment )
                     ->setPaymentId( $payment_id )
                     ->setNumberOfPersons( $cart_item->getNumberOfPersons() )
                     ->setUnits( $cart_item->getUnits() )
                     ->setNotes( $this->userData->getNotes() )
-                    ->setExtras( json_encode( $service_extras ) )
+                    ->setExtras( json_encode( $extras[ $key ] ) )
+                    ->setExtrasConsiderDuration( Proxy\ServiceExtras::considerDuration( true ) )
                     ->setCustomFields( json_encode( $service_custom_fields ) )
                     ->setStatus( $put_on_waiting_list
                         ? CustomerAppointment::STATUS_WAITLISTED
                         : Proxy\CustomerGroups::prepareDefaultAppointmentStatus( get_option( 'bookly_gen_default_appointment_status' ), $order->getCustomer()->getGroupId() ) )
                     ->setTimeZone( $time_zone )
                     ->setTimeZoneOffset( $time_zone_offset )
+                    ->setCollaborativeServiceId( $collaborative ? $collaborative->getService()->getId() : null )
+                    ->setCollaborativeToken( $collaborative ? $collaborative->getToken() : null )
                     ->setCompoundServiceId( $compound ? $compound->getService()->getId() : null )
                     ->setCompoundToken( $compound ? $compound->getToken() : null )
                     ->setCreatedFrom( 'frontend' )
@@ -277,7 +307,7 @@ class Cart
                 Proxy\Files::attachFiles( $cart_item->getCustomFields(), $customer_appointment );
 
                 // Handle extras duration.
-                if ( Config::serviceExtrasActive() && get_option( 'bookly_service_extras_enabled' ) ) {
+                if ( Proxy\ServiceExtras::considerDuration() ) {
                     $appointment
                         ->setExtrasDuration( $appointment->getMaxExtrasDuration() )
                         ->save();
@@ -296,6 +326,9 @@ class Cart
                 ;
                 if ( $compound ) {
                     $item = $compound->addItem( $item );
+                }
+                if ( $collaborative ) {
+                    $item = $collaborative->addItem( $item );
                 }
                 if ( $series ) {
                     $series->addItem( $item );
@@ -376,25 +409,32 @@ class Cart
 
         foreach ( $this->items as $cart_key => $cart_item ) {
             if ( $cart_item->getService() ) {
-                $service     = $cart_item->getService();
-                $is_compound = $service->getType() == Entities\Service::TYPE_COMPOUND;
+                $service = $cart_item->getService();
+                $with_sub_services = $service->withSubServices();
                 foreach ( $cart_item->getSlots() as $slot ) {
                     if ( $waiting_list_enabled && isset ( $slot[4] ) && $slot[4] == 'w' ) {
                         // Booking is always available for slots being placed on waiting list.
                         continue;
                     }
                     list ( $service_id, $staff_id, $datetime ) = $slot;
-                    if ( $is_compound ) {
+                    if ( $with_sub_services ) {
                         $service = Entities\Service::find( $service_id );
                     }
-                    $bound_start = Slots\DatePoint::fromStr( $datetime )->modify( '-' . (int) $service->getPaddingLeft() . ' sec' );
-                    $bound_end   = Slots\DatePoint::fromStr( $datetime )->modify( ( (int) $service->getDuration() + (int) $service->getPaddingRight() + $cart_item->getExtrasDuration() ) . ' sec' );
+
+                    $bound_start = Slots\DatePoint::fromStr( $datetime );
+                    $bound_end = Slots\DatePoint::fromStr( $datetime )->modify( ( (int) $service->getDuration() ) . ' sec' );
+                    if ( Config::proActive() ) {
+                        $bound_start->modify( '-' . (int) $service->getPaddingLeft() . ' sec' );
+                        $bound_end->modify( ( (int) $service->getPaddingRight() + $cart_item->getExtrasDuration() ) . ' sec' );
+                    }
 
                     if ( $bound_end->lte( $max_date ) ) {
                         $query = Entities\CustomerAppointment::query( 'ca' )
-                            ->select( 'ss.capacity_max, SUM(ca.number_of_persons) AS total_number_of_persons,
-                                DATE_SUB(a.start_date, INTERVAL (COALESCE(s.padding_left,0) ) SECOND) AS bound_left,
-                                DATE_ADD(a.end_date,   INTERVAL (COALESCE(s.padding_right,0) + a.extras_duration ) SECOND) AS bound_right' )
+                            ->select( sprintf( 'ss.capacity_max, SUM(ca.number_of_persons) AS total_number_of_persons,
+                                DATE_SUB(a.start_date, INTERVAL %s SECOND) AS bound_left,
+                                DATE_ADD(a.end_date,   INTERVAL (%s + IF(ca.extras_consider_duration, a.extras_duration, 0)) SECOND) AS bound_right',
+                                Proxy\Shared::prepareStatement( 0, 'COALESCE(s.padding_left,0)', 'Service' ),
+                                Proxy\Shared::prepareStatement( 0, 'COALESCE(s.padding_right,0)', 'Service' ) ) )
                             ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
                             ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id' )
                             ->leftJoin( 'Service', 's', 's.id = a.service_id' )

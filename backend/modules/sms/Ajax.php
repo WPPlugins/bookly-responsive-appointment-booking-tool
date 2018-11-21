@@ -2,6 +2,7 @@
 namespace Bookly\Backend\Modules\Sms;
 
 use Bookly\Lib;
+use Bookly\Backend\Components\Sms\Custom;
 
 /**
  * Class Ajax
@@ -211,9 +212,22 @@ class Ajax extends Lib\Base\Ajax
         $id           = $notification['id'];
 
         $form = new \Bookly\Backend\Modules\Notifications\Forms\Notifications( 'sms' );
-        $statuses = Lib\Entities\CustomerAppointment::getStatuses();
+        $html = Custom\Notification::render( $form, $notification, false );
 
-        $html = self::renderTemplate( '_custom_notification', compact( 'form', 'notification', 'statuses' ), false );
         wp_send_json_success( compact( 'html', 'id' ) );
+    }
+
+    /**
+     * Send client info for invoice.
+     */
+    public static function saveInvoiceData()
+    {
+        $sms    = new Lib\SMS();
+        $result = $sms->sendInvoiceData( (array) self::parameter( 'invoice' ) );
+        if ( $result === false ) {
+            wp_send_json_error( array( 'message' => current( $sms->getErrors() ) ) );
+        } else {
+            wp_send_json_success( array( 'message' => __( 'Settings saved.', 'bookly' ) ) );
+        }
     }
 }

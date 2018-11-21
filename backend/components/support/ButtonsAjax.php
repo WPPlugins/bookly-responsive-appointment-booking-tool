@@ -3,6 +3,7 @@ namespace Bookly\Backend\Components\Support;
 
 use Bookly\Lib;
 use Bookly\Backend\Modules;
+use Bookly\Backend\Components\Support\Lib\Urls;
 
 /**
  * Class ButtonsAjax
@@ -38,7 +39,7 @@ class ButtonsAjax extends Lib\Base\Ajax
             'Reply-To: ' . $name . ' <' . $email . '>'
         );
 
-        if ( wp_mail( 'support@ladela.com', 'Support Request ' . site_url(), $message, $headers ) ) {
+        if ( wp_mail( 'support@bookly.info', 'Support Request ' . site_url(), $message, $headers ) ) {
             wp_send_json_success( array( 'message' => __( 'Sent successfully.', 'bookly' ) ) );
         } else {
             wp_send_json_error( array( 'message' => __( 'Error sending support request.', 'bookly' ) ) );
@@ -50,7 +51,7 @@ class ButtonsAjax extends Lib\Base\Ajax
      */
     public static function dismissContactUsNotice()
     {
-        update_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'dismiss_contact_us_notice', 1 );
+        update_user_meta( get_current_user_id(), 'bookly_dismiss_contact_us_notice', 1 );
 
         wp_send_json_success();
     }
@@ -60,8 +61,8 @@ class ButtonsAjax extends Lib\Base\Ajax
      */
     public static function contactUsBtnClicked()
     {
-        update_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'dismiss_contact_us_notice', 1 );
-        update_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'contact_us_btn_clicked', 1 );
+        update_user_meta( get_current_user_id(), 'bookly_dismiss_contact_us_notice', 1 );
+        update_user_meta( get_current_user_id(), 'bookly_contact_us_btn_clicked', 1 );
 
         wp_send_json_success();
     }
@@ -71,8 +72,17 @@ class ButtonsAjax extends Lib\Base\Ajax
      */
     public static function dismissFeedbackNotice()
     {
-        update_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'dismiss_feedback_notice', 1 );
+        update_user_meta( get_current_user_id(), 'bookly_dismiss_feedback_notice', 1 );
 
         wp_send_json_success();
+    }
+
+    /**
+     * Proceed to feature requests.
+     */
+    public static function proceedToFeatureRequests()
+    {
+        update_user_meta( get_current_user_id(), 'bookly_feature_requests_rules_hide', self::parameter( 'hide', 0 ) );
+        wp_send_json_success( array( 'target' => Lib\Utils\Common::prepareUrlReferrers( Urls::FEATURES_REQUEST_PAGE, 'notification_bar' ) ) );
     }
 }

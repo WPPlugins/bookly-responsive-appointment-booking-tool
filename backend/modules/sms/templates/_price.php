@@ -12,4 +12,4 @@
         </thead>
     </table>
 </div>
-<p><?php _e( 'If you do not see your country in the list please contact us at <a href="mailto:support@ladela.com">support@ladela.com</a>.', 'bookly' ) ?></p>
+<p><?php _e( 'If you do not see your country in the list please contact us at <a href="mailto:support@bookly.info">support@bookly.info</a>.', 'bookly' ) ?></p>

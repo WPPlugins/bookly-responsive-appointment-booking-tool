@@ -25,7 +25,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
     <div class="bookly-tbs-body">
         <div class="page-header text-right clearfix">
             <div class="bookly-page-title">
-                <?php _e( 'Appearance', 'bookly' ) ?>
+                <?php esc_html_e( 'Appearance', 'bookly' ) ?>
             </div>
             <?php Support\Buttons::render( $self::pageSlug() ) ?>
         </div>
@@ -42,7 +42,15 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" id=bookly-show-progress-tracker <?php checked( get_option( 'bookly_app_show_progress_tracker' ) ) ?>>
-                                    <?php _e( 'Show form progress tracker', 'bookly' ) ?>
+                                    <?php esc_html_e( 'Show form progress tracker', 'bookly' ) ?>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-lg-2">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="bookly-align-buttons-left" <?php checked( get_option( 'bookly_app_align_buttons_left' ) ) ?>>
+                                    <?php esc_html_e( 'Align buttons to the left', 'bookly' ) ?>
                                 </label>
                             </div>
                         </div>
@@ -53,9 +61,9 @@ use Bookly\Backend\Modules\Appearance\Proxy;
 
                     <ul class="bookly-nav bookly-nav-tabs bookly-margin-top-lg bookly-js-appearance-steps" role="tablist">
                         <?php $i = 1 ?>
-                        <?php foreach ( $steps as $step => $step_data ) : ?>
-                            <li class="bookly-nav-item <?php if ( $step == 1 ) : ?>active<?php endif ?>" data-target="#bookly-step-<?php echo $step ?>" data-toggle="tab" <?php if ( ! $step_data['show'] ) : ?>style="display: none;"<?php endif ?>>
-                                <span class="bookly-js-step-number"><?php echo $step_data['show'] ? $i++ : $i ?></span>. <?php echo esc_html( $step_data['title'] ) ?>
+                        <?php foreach ( $steps as $data ) : ?>
+                            <li class="bookly-nav-item <?php if ( $data['step'] == 1 ) : ?>active<?php endif ?>" data-target="#bookly-step-<?php echo $data['step'] ?>" data-toggle="tab" <?php if ( ! $data['show'] ) : ?>style="display: none;"<?php endif ?>>
+                                <span class="bookly-js-step-number"><?php echo $data['show'] ? $i++ : $i ?></span>. <?php echo esc_html( $data['title'] ) ?>
                             </li>
                         <?php endforeach ?>
                     </ul>
@@ -63,7 +71,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                     <?php if ( ! get_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'dismiss_appearance_notice', true ) ): ?>
                         <div class="alert alert-info alert-dismissible fade in bookly-margin-top-lg bookly-margin-bottom-remove" id="bookly-js-hint-alert" role="alert">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <?php _e( 'Click on the underlined text to edit.', 'bookly' ) ?>
+                            <?php esc_html_e( 'Click on the underlined text to edit.', 'bookly' ) ?>
                         </div>
                     <?php endif ?>
 
@@ -77,7 +85,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id=bookly-required-employee <?php checked( get_option( 'bookly_app_required_employee' ) ) ?>>
-                                        <?php _e( 'Make selecting employee required', 'bookly' ) ?>
+                                        <?php esc_html_e( 'Make selecting employee required', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -85,7 +93,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id=bookly-staff-name-with-price <?php checked( get_option( 'bookly_app_staff_name_with_price' ) ) ?>>
-                                        <?php _e( 'Show service price next to employee name', 'bookly' ) ?>
+                                        <?php esc_html_e( 'Show service price next to employee name', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -93,7 +101,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id=bookly-service-name-with-duration <?php checked( get_option( 'bookly_app_service_name_with_duration' ) ) ?>>
-                                        <?php _e( 'Show service duration next to service name', 'bookly' ) ?>
+                                        <?php esc_html_e( 'Show service duration next to service name', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -104,7 +112,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id="bookly-show-calendar" <?php checked( get_option( 'bookly_app_show_calendar' ) ) ?>>
-                                        <?php _e( 'Show calendar', 'bookly' ) ?>
+                                        <?php esc_html_e( 'Show calendar', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -112,7 +120,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id="bookly-show-blocked-timeslots" <?php checked( get_option( 'bookly_app_show_blocked_timeslots' ) ) ?>>
-                                        <?php _e( 'Show blocked timeslots', 'bookly' ) ?>
+                                        <?php esc_html_e( 'Show blocked timeslots', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -120,7 +128,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id="bookly-show-day-one-column" <?php checked( get_option( 'bookly_app_show_day_one_column' ) ) ?>>
-                                        <?php _e( 'Show each day in one column', 'bookly' ) ?>
+                                        <?php esc_html_e( 'Show each day in one column', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -134,24 +142,32 @@ use Bookly\Backend\Modules\Appearance\Proxy;
 
                             <div class="col-md-3">
                                 <select id="bookly-cst-required-details" class="form-control" data-default="<?php echo ! array_diff( array( 'phone', 'email' ), get_option( 'bookly_cst_required_details', array() ) ) ? 'both' : current( get_option( 'bookly_cst_required_details', array() ) ) ?>">
-                                    <option value="phone"<?php selected( in_array( 'phone', get_option( 'bookly_cst_required_details', array() ) ) && ! in_array( 'email', get_option( 'bookly_cst_required_details', array() ) ) ) ?><?php disabled( get_option( 'bookly_cst_create_account' ) ) ?>><?php _e( 'Phone field required', 'bookly' ) ?></option>
-                                    <option value="email"<?php selected( in_array( 'email', get_option( 'bookly_cst_required_details', array() ) ) && ! in_array( 'phone', get_option( 'bookly_cst_required_details', array() ) ) ) ?>><?php _e( 'Email field required', 'bookly' ) ?></option>
-                                    <option value="both"<?php selected( ! array_diff( array( 'phone', 'email' ), get_option( 'bookly_cst_required_details', array() ) ) ) ?>><?php _e( 'Both email and phone fields required', 'bookly' ) ?></option>
+                                    <option value="phone"<?php selected( in_array( 'phone', get_option( 'bookly_cst_required_details', array() ) ) && ! in_array( 'email', get_option( 'bookly_cst_required_details', array() ) ) ) ?><?php disabled( get_option( 'bookly_cst_create_account' ) ) ?>><?php esc_html_e( 'Phone field required', 'bookly' ) ?></option>
+                                    <option value="email"<?php selected( in_array( 'email', get_option( 'bookly_cst_required_details', array() ) ) && ! in_array( 'phone', get_option( 'bookly_cst_required_details', array() ) ) ) ?>><?php esc_html_e( 'Email field required', 'bookly' ) ?></option>
+                                    <option value="both"<?php selected( ! array_diff( array( 'phone', 'email' ), get_option( 'bookly_cst_required_details', array() ) ) ) ?>><?php esc_html_e( 'Both email and phone fields required', 'bookly' ) ?></option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id="bookly-show-login-button" <?php checked( get_option( 'bookly_app_show_login_button' ) ) ?>>
-                                        <?php _e( 'Show Login button', 'bookly' ) ?>
+                                        <?php esc_html_e( 'Show Login button', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id="bookly-cst-first-last-name" <?php checked( get_option( 'bookly_cst_first_last_name' ) ) ?> data-toggle="popover" data-trigger="focus" data-placement="auto bottom" data-content="<?php _e( 'Do not forget to update your email and SMS codes for customer names', 'bookly' ) ?>">
-                                        <?php _e( 'Use first and last name instead of full name', 'bookly' ) ?>
+                                        <input type="checkbox" id="bookly-cst-first-last-name" <?php checked( get_option( 'bookly_cst_first_last_name' ) ) ?> data-toggle="popover" data-trigger="focus" data-placement="auto bottom" data-content="<?php esc_attr_e( 'Do not forget to update your email and SMS codes for customer names', 'bookly' ) ?>">
+                                        <?php esc_html_e( 'Use first and last name instead of full name', 'bookly' ) ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="bookly-cst-show-email-confirm" <?php checked( get_option( 'bookly_app_show_email_confirm' ) ) ?>>
+                                        <?php esc_html_e( 'Email confirmation field', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -159,7 +175,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" id="bookly-show-notes" <?php checked( get_option( 'bookly_app_show_notes' ) ) ?>>
-                                        <?php _e( 'Show notes field', 'bookly' ) ?>
+                                        <?php esc_html_e( 'Show notes field', 'bookly' ) ?>
                                     </label>
                                 </div>
                             </div>
@@ -183,13 +199,13 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                         <div class="bookly-flex-cell" style="width:39px"><i class="alert-icon"></i></div>
                                         <div class="bookly-flex-cell">
                                             <div>
-                                                <?php _e( 'The booking form on this step may have different set or states of its elements. It depends on various conditions such as installed/activated add-ons, settings configuration or choices made on previous steps. Select option and click on the underlined text to edit.', 'bookly' ) ?>
+                                                <?php esc_html_e( 'The booking form on this step may have different set or states of its elements. It depends on various conditions such as installed/activated add-ons, settings configuration or choices made on previous steps. Select option and click on the underlined text to edit.', 'bookly' ) ?>
                                             </div>
                                             <div class="bookly-margin-top-lg">
                                                 <select id="bookly-done-step-view" class="form-control">
-                                                    <option value="booking-success"><?php _e( 'Form view in case of successful booking', 'bookly' ) ?></option>
-                                                    <option value="booking-limit-error"><?php _e( 'Form view in case the number of bookings exceeds the limit', 'bookly' ) ?></option>
-                                                    <option value="booking-processing"><?php _e( 'Form view in case of payment has been accepted for processing', 'bookly' ) ?></option>
+                                                    <option value="booking-success"><?php esc_html_e( 'Form view in case of successful booking', 'bookly' ) ?></option>
+                                                    <option value="booking-limit-error"><?php esc_html_e( 'Form view in case the number of bookings exceeds the limit', 'bookly' ) ?></option>
+                                                    <option value="booking-processing"><?php esc_html_e( 'Form view in case of payment has been accepted for processing', 'bookly' ) ?></option>
                                                 </select>
                                             </div>
                                         </div>

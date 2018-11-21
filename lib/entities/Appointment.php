@@ -10,8 +10,6 @@ use Bookly\Lib;
 class Appointment extends Lib\Base\Entity
 {
     /** @var int */
-    protected $series_id;
-    /** @var int */
     protected $location_id;
     /** @var int */
     protected $staff_id;
@@ -37,12 +35,13 @@ class Appointment extends Lib\Base\Entity
     protected $google_event_etag;
     /** @var string */
     protected $created_from = 'bookly';
+    /** @var string */
+    protected $created;
 
     protected static $table = 'bookly_appointments';
 
     protected static $schema = array(
         'id'                   => array( 'format' => '%d' ),
-        'series_id'            => array( 'format' => '%d', 'reference' => array( 'entity' => 'Series' ) ),
         'location_id'          => array( 'format' => '%d' ),
         'staff_id'             => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
         'staff_any'            => array( 'format' => '%d' ),
@@ -56,6 +55,7 @@ class Appointment extends Lib\Base\Entity
         'google_event_id'      => array( 'format' => '%s' ),
         'google_event_etag'    => array( 'format' => '%s' ),
         'created_from'         => array( 'format' => '%s' ),
+        'created'              => array( 'format' => '%s' ),
     );
 
     /**
@@ -117,9 +117,10 @@ class Appointment extends Lib\Base\Entity
      * Set array of customers associated with this appointment.
      *
      * @param array  $cst_data  Array of customer IDs, custom_fields, number_of_persons, extras and status
+     * @param int    $series_id
      * @return CustomerAppointment[] Array of customer_appointment with changed status
      */
-    public function saveCustomerAppointments( array $cst_data )
+    public function saveCustomerAppointments( array $cst_data, $series_id = null )
     {
         $ca_status_changed = array();
         $ca_data = array();
@@ -150,6 +151,7 @@ class Appointment extends Lib\Base\Entity
 
             $customer_appointment = new CustomerAppointment();
             $customer_appointment
+                ->setSeriesId( $series_id )
                 ->setAppointmentId( $this->getId() )
                 ->setCustomerId( $ca_data[ $id ]['id'] )
                 ->setCustomFields( json_encode( $ca_data[ $id ]['custom_fields'] ) )
@@ -163,6 +165,7 @@ class Appointment extends Lib\Base\Entity
                 ->setCreated( current_time( 'mysql' ) )
                 ->setTimeZone( $time_zone['time_zone'] )
                 ->setTimeZoneOffset( $time_zone['time_zone_offset'] )
+                ->setExtrasConsiderDuration( $ca_data[ $id ]['extras_consider_duration'] )
                 ->save();
             $ca_status_changed[] = $customer_appointment;
             Lib\Proxy\Files::attachFiles( $ca_data[ $id ]['custom_fields'], $customer_appointment );
@@ -218,11 +221,12 @@ class Appointment extends Lib\Base\Entity
     {
         $duration = 0;
         // Calculate extras duration for appointments with duration < 1 day.
-        if ( strtotime( $this->getEndDate() ) - strtotime( $this->getStartDate() ) < DAY_IN_SECONDS ) {
+        if ( Lib\Config::serviceExtrasActive() && ( strtotime( $this->getEndDate() ) - strtotime( $this->getStartDate() ) < DAY_IN_SECONDS ) ) {
             $customer_appointments = CustomerAppointment::query()
                 ->select( 'extras' )
                 ->where( 'appointment_id', $this->getId() )
                 ->whereIn( 'status', array( CustomerAppointment::STATUS_PENDING, CustomerAppointment::STATUS_APPROVED ) )
+                ->where( 'extras_consider_duration', 1 )
                 ->fetchArray();
             foreach ( $customer_appointments as $customer_appointment ) {
                 if ( $customer_appointment['extras'] != '[]' ) {
@@ -273,40 +277,6 @@ class Appointment extends Lib\Base\Entity
     /**************************************************************************
      * Entity Fields Getters & Setters                                        *
      **************************************************************************/
-
-    /**
-     * Gets series_id
-     *
-     * @return int
-     */
-    public function getSeriesId()
-    {
-        return $this->series_id;
-    }
-
-    /**
-     * Sets series_id
-     *
-     * @param Series $series
-     * @return $this
-     */
-    public function setSeries( Series $series )
-    {
-        return $this->setSeriesId( $series->getId() );
-    }
-
-    /**
-     * Sets series_id
-     *
-     * @param int $series_id
-     * @return $this
-     */
-    public function setSeriesId( $series_id )
-    {
-        $this->series_id = $series_id;
-
-        return $this;
-    }
 
     /**
      * Gets location_id
@@ -628,6 +598,30 @@ class Appointment extends Lib\Base\Entity
         return $this;
     }
 
+    /**
+     * Gets created
+     *
+     * @return string
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Sets created
+     *
+     * @param string $created
+     * @return $this
+     */
+    public function setCreated( $created )
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+
     /**************************************************************************
      * Overridden Methods                                                     *
      **************************************************************************/
@@ -655,6 +649,10 @@ class Appointment extends Lib\Base\Entity
             }
         }
 
+        if ( $this->getId() == null ) {
+            $this->setCreated( current_time( 'mysql' ) );
+        }
+
         return parent::save();
     }
 
@@ -676,15 +674,8 @@ class Appointment extends Lib\Base\Entity
         }
 
         $result = parent::delete();
-        if ( $result ) {
-            if ( $this->hasGoogleCalendarEvent() ) {
-                Lib\Proxy\Pro::deleteGoogleCalendarEvent( $this );
-            }
-            if ( $this->getSeriesId() !== null ) {
-                if ( Appointment::query()->where( 'series_id', $this->getSeriesId() )->count() === 0 ) {
-                    Series::query()->delete()->where( 'id', $this->getSeriesId() )->execute();
-                }
-            }
+        if ( $result && $this->hasGoogleCalendarEvent() ) {
+            Lib\Proxy\Pro::deleteGoogleCalendarEvent( $this );
         }
 
         return $result;

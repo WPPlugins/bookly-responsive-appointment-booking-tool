@@ -124,19 +124,6 @@ class Ajax extends Lib\Base\Ajax
     }
 
     /**
-     * Delete customers.
-     */
-    public static function deleteCustomers()
-    {
-        foreach ( self::parameter( 'data', array() ) as $id ) {
-            $customer = new Lib\Entities\Customer();
-            $customer->load( $id );
-            $customer->deleteWithWPUser( (bool) self::parameter( 'with_wp_user' ) );
-        }
-        wp_send_json_success();
-    }
-
-    /**
      * Merge customers.
      */
     public static function mergeCustomers()
@@ -228,7 +215,6 @@ class Ajax extends Lib\Base\Ajax
             if ( ! Lib\Utils\Common::isCurrentUserAdmin() ) {
                 switch ( $action ) {
                     case 'getCustomers':
-                    case 'deleteCustomers':
                         return Lib\Entities\Staff::query()
                             ->where( 'wp_user_id', get_current_user_id() )
                             ->count() > 0;

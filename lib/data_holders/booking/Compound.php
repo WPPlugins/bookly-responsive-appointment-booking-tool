@@ -15,6 +15,12 @@ class Compound extends Item
     protected $compound_token;
     /** @var Simple[] */
     protected $items = array();
+    /** @var array */
+    protected $extras;
+    /** @var int */
+    protected $service_duration;
+    /** @var Lib\Slots\DatePoint */
+    protected $total_end;
 
     /**
      * Constructor.
@@ -28,36 +34,42 @@ class Compound extends Item
     }
 
     /**
-     * Get compound service.
-     *
-     * @return Lib\Entities\Service
+     * @inheritdoc
      */
-    public function getService()
+    public function getAppointment()
     {
-        return $this->compound_service;
+        return $this->items[0]->getAppointment();
     }
 
     /**
-     * Set compound token.
-     *
-     * @param string $token
-     * @return $this
+     * @inheritdoc
      */
-    public function setToken( $token )
+    public function getCA()
     {
-        $this->compound_token = $token;
-
-        return $this;
+        return $this->items[0]->getCA();
     }
 
     /**
-     * Get compound token.
-     *
-     * @return string
+     * G@inheritdoc
      */
-    public function getToken()
+    public function getDeposit()
     {
-        return $this->compound_token;
+        return $this->compound_service->getDeposit();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtras()
+    {
+        if ( $this->extras === null ) {
+            $this->extras = array();
+            foreach ( $this->items as $item ) {
+                $this->extras += $item->getExtras();
+            }
+        }
+
+        return $this->extras;
     }
 
     /**
@@ -84,39 +96,33 @@ class Compound extends Item
     }
 
     /**
-     * Get staff.
-     *
-     * @return Lib\Entities\Staff
+     * @inheritdoc
      */
-    public function getStaff()
+    public function getService()
     {
-        return $this->items[0]->getStaff();
+        return $this->compound_service;
     }
 
     /**
-     * Get appointment.
-     *
-     * @return Lib\Entities\Appointment
+     * @inheritdoc
      */
-    public function getAppointment()
+    public function getServiceDuration()
     {
-        return $this->items[0]->getAppointment();
+        if ( $this->service_duration === null ) {
+            $result = Lib\Entities\SubService::query( 'ss' )
+                ->select( 'SUM(COALESCE(s.duration, ss.duration)) AS duration' )
+                ->leftJoin( 'Service', 's', 's.id = ss.sub_service_id' )
+                ->where( 'ss.service_id', $this->compound_service->getId() )
+                ->fetchRow()
+            ;
+            $this->service_duration = $result['duration'];
+        }
+
+        return $this->service_duration;
     }
 
     /**
-     * Get customer appointment.
-     *
-     * @return Lib\Entities\CustomerAppointment
-     */
-    public function getCA()
-    {
-        return $this->items[0]->getCA();
-    }
-
-    /**
-     * Get service price.
-     *
-     * @return float
+     * @inheritdoc
      */
     public function getServicePrice()
     {
@@ -124,39 +130,15 @@ class Compound extends Item
     }
 
     /**
-     * Get total price.
-     *
-     * @return float
+     * @inheritdoc
      */
-    public function getTotalPrice()
+    public function getStaff()
     {
-        // Service price.
-        $service_price = $this->getServicePrice();
-
-        // Extras.
-        $extras = (array) Lib\Proxy\ServiceExtras::getInfo( json_decode( $this->getCA()->getExtras(), true ), true );
-        $extras_total_price = 0.0;
-        foreach ( $extras as $extra ) {
-            $extras_total_price += $extra['price'];
-        }
-
-        return ( $service_price + $extras_total_price ) * $this->getCA()->getNumberOfPersons() * $this->getCA()->getUnits();
+        return $this->items[0]->getStaff();
     }
 
     /**
-     * Get deposit.
-     *
-     * @return string
-     */
-    public function getDeposit()
-    {
-        return $this->items[0]->getDeposit();
-    }
-
-    /**
-     * Gets tax
-     *
-     * @return float
+     * @inheritdoc
      */
     public function getTax()
     {
@@ -171,7 +153,7 @@ class Compound extends Item
     }
 
     /**
-     * Sets tax
+     * Set tax.
      *
      * @param float $tax
      * @return $this
@@ -181,6 +163,69 @@ class Compound extends Item
         $this->tax = $tax;
 
         return $this;
+    }
+
+    /**
+     * Get compound token.
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->compound_token;
+    }
+
+    /**
+     * Set compound token.
+     *
+     * @param string $token
+     * @return $this
+     */
+    public function setToken( $token )
+    {
+        $this->compound_token = $token;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTotalEnd()
+    {
+        if ( $this->total_end === null ) {
+            foreach ( $this->items as $item ) {
+                $item_end = $item->getTotalEnd();
+                if ( $this->total_end === null ) {
+                    $this->total_end = $item_end;
+                } else if ( $item_end->gt( $this->total_end ) ) {
+                    $this->total_end = $item_end;
+                }
+            }
+        }
+
+        return $this->total_end;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTotalPrice()
+    {
+        // Service price.
+        $service_price = $this->getServicePrice();
+
+        // Extras.
+        $extras = (array) Lib\Proxy\ServiceExtras::getInfo( json_decode( $this->getCA()->getExtras(), true ), true );
+        $extras_total_price = 0.0;
+        foreach ( $extras as $extra ) {
+            $extras_total_price += $extra['price'];
+        }
+
+        return $service_price * $this->getCA()->getNumberOfPersons() +
+             $extras_total_price * (
+                 $this->getCA()->getExtrasMultiplyNop() ? $this->getCA()->getNumberOfPersons() : 1
+             );
     }
 
     /**

@@ -53,7 +53,7 @@ use Bookly\Lib\Config;
                             <?php if ( ! empty ( $item['extras'] ) ) : ?>
                                 <ul class="bookly-list list-dots">
                                     <?php foreach ( $item['extras'] as $extra ) : ?>
-                                        <li><?php if ( $extra['quantity'] > 1 ) echo $extra['quantity'] . '&nbsp;&times;&nbsp;' ?><?php echo esc_html( $extra['title'] ) ?></li>
+                                        <li><?php if ( $payment['extras_multiply_nop'] && $item['number_of_persons'] > 1 ) echo $item['number_of_persons'] . '&nbsp;&times;&nbsp;' ?><?php if ( $extra['quantity'] > 1 ) echo $extra['quantity'] . '&nbsp;&times;&nbsp;' ?><?php echo esc_html( $extra['title'] ) ?></li>
                                     <?php endforeach ?>
                                 </ul>
                             <?php endif ?>

@@ -26,13 +26,35 @@ class Series extends Item
     }
 
     /**
-     * Get series.
-     *
-     * @return Lib\Entities\Series
+     * @inheritdoc
      */
-    public function getSeries()
+    public function getAppointment()
     {
-        return $this->series;
+        return $this->items[0]->getAppointment();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCA()
+    {
+        return $this->items[0]->getCA();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDeposit()
+    {
+        return $this->items[0]->getDeposit();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtras()
+    {
+        return $this->items[0]->getExtras();
     }
 
     /**
@@ -59,9 +81,7 @@ class Series extends Item
     }
 
     /**
-     * Get service.
-     *
-     * @return Lib\Entities\Service
+     * @inheritdoc
      */
     public function getService()
     {
@@ -69,39 +89,15 @@ class Series extends Item
     }
 
     /**
-     * Get staff.
-     *
-     * @return Lib\Entities\Staff
+     * @inheritdoc
      */
-    public function getStaff()
+    public function getServiceDuration()
     {
-        return $this->items[0]->getStaff();
+        return $this->items[0]->getServiceDuration();
     }
 
     /**
-     * Get appointment.
-     *
-     * @return Lib\Entities\Appointment
-     */
-    public function getAppointment()
-    {
-        return $this->items[0]->getAppointment();
-    }
-
-    /**
-     * Get customer appointment.
-     *
-     * @return Lib\Entities\CustomerAppointment
-     */
-    public function getCA()
-    {
-        return $this->items[0]->getCA();
-    }
-
-    /**
-     * Get service price.
-     *
-     * @return float
+     * @inheritdoc
      */
     public function getServicePrice()
     {
@@ -109,38 +105,25 @@ class Series extends Item
     }
 
     /**
-     * Get total price.
+     * Get series.
      *
-     * @return float
+     * @return Lib\Entities\Series
      */
-    public function getTotalPrice()
+    public function getSeries()
     {
-        $price = 0.0;
-        $break_on_first = get_option( 'bookly_recurring_appointments_payment' ) == 'first';
-        foreach ( $this->items as $item ) {
-            $price += $item->getTotalPrice();
-            if ( $break_on_first ) {
-                break;
-            }
-        }
-
-        return $price;
+        return $this->series;
     }
 
     /**
-     * Get deposit.
-     *
-     * @return string
+     * @inheritdoc
      */
-    public function getDeposit()
+    public function getStaff()
     {
-        return $this->items[0]->getDeposit();
+        return $this->items[0]->getStaff();
     }
 
     /**
-     * Gets tax
-     *
-     * @return float
+     * @inheritdoc
      */
     public function getTax()
     {
@@ -157,7 +140,7 @@ class Series extends Item
     }
 
     /**
-     * Sets tax
+     * Set tax.
      *
      * @param float $tax
      * @return $this
@@ -167,6 +150,31 @@ class Series extends Item
         $this->tax = $tax;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTotalEnd()
+    {
+        return $this->items[0]->getTotalEnd();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTotalPrice()
+    {
+        $price = 0.0;
+        $break_on_first = get_option( 'bookly_recurring_appointments_payment' ) == 'first';
+        foreach ( $this->items as $item ) {
+            $price += $item->getTotalPrice();
+            if ( $break_on_first ) {
+                break;
+            }
+        }
+
+        return $price;
     }
 
     /**

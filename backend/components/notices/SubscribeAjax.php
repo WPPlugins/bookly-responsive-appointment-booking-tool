@@ -15,12 +15,22 @@ class SubscribeAjax extends Lib\Base\Ajax
     public static function subscribe()
     {
         $email = self::parameter( 'email' );
+        $state = 'invalid';
         if ( is_email( $email ) ) {
-            Lib\API::registerSubscriber( $email );
+            $state = Lib\API::registerSubscriber( $email );
+        }
 
-            wp_send_json_success( array( 'message' => __( 'Sent successfully.', 'bookly' ) ) );
-        } else {
-            wp_send_json_error( array( 'message' => __( 'Invalid email.', 'bookly' ) ) );
+        switch ( $state ) {
+            case 'success':
+                wp_send_json_success( array( 'message' => __( 'Please, check your email to confirm the subscription. Thank you!', 'bookly' ) ) );
+                break;
+            case 'exists':
+                wp_send_json_success( array( 'message' => __( 'Given email address is already subscribed, thank you!', 'bookly' ) ) );
+                break;
+            case 'invalid':
+            default:
+                wp_send_json_error( array( 'message' => __( 'This email address is not valid.', 'bookly' ) ) );
+                break;
         }
     }
 

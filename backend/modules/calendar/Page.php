@@ -26,12 +26,13 @@ class Page extends Lib\Base\Ajax
             'backend' => array(
                 'bootstrap/js/bootstrap.min.js' => array( 'jquery' ),
                 'js/alert.js' => array( 'jquery' ),
+                'js/dropdown.js' => array( 'jquery' ),
             ),
             'module' => array(
                 'js/fullcalendar.min.js'   => array( 'bookly-moment.min.js' ),
                 'js/fc-multistaff-view.js' => array( 'bookly-fullcalendar.min.js' ),
                 'js/calendar-common.js'    => array( 'bookly-fc-multistaff-view.js' ),
-                'js/calendar.js'           => array( 'bookly-calendar-common.js' ),
+                'js/calendar.js'           => array( 'bookly-calendar-common.js', 'bookly-dropdown.js' ),
             ),
         ) );
 
@@ -56,7 +57,6 @@ class Page extends Lib\Base\Ajax
             'month'           => __( 'Month', 'bookly' ),
             'allDay'          => __( 'All Day', 'bookly' ),
             'delete'          => __( 'Delete',  'bookly' ),
-            'noStaffSelected' => __( 'No staff selected', 'bookly' ),
             'are_you_sure'    => __( 'Are you sure?',     'bookly' ),
             'startOfWeek'     => (int) get_option( 'start_of_week' ),
             'recurring_appointments' => array(
@@ -72,10 +72,40 @@ class Page extends Lib\Base\Ajax
                 'title'  => __( 'Package', 'bookly' ),
             ),
         ) );
-        $staff = Lib\Entities\Staff::query()->findOne();
-        $staff_members = $staff ? Lib\Proxy\Pro::prepareStaffMembers( array( $staff ) ) : array();
 
-        self::renderTemplate( 'calendar', compact( 'staff_members' ) );
+        // Staff.
+        if ( Lib\Config::proActive() ) {
+            if ( Lib\Utils\Common::isCurrentUserAdmin() ) {
+                $staff_members = Lib\Entities\Staff::query()
+                    ->whereNot( 'visibility', 'archive' )
+                    ->sortBy( 'position' )
+                    ->find()
+                ;
+                $staff_dropdown_data = Lib\Proxy\Pro::getStaffDataForDropDown();
+            } else {
+                $staff_members = Lib\Entities\Staff::query()
+                    ->where( 'wp_user_id', get_current_user_id() )
+                    ->whereNot( 'visibility', 'archive' )
+                    ->find()
+                ;
+                $staff_dropdown_data = array(
+                    0 => array(
+                        'name'  => '',
+                        'items' => empty ( $staff_members ) ? array() : array( $staff_members[0]->getFields() )
+                    )
+                );
+            }
+        } else {
+            $staff_members = array( Lib\Entities\Staff::query()->findOne() );
+            $staff_dropdown_data = array(
+                0 => array(
+                    'name'  => '',
+                    'items' => empty ( $staff_members ) ? array() : array( $staff_members[0]->getFields() )
+                )
+            );
+        }
+
+        self::renderTemplate( 'calendar', compact( 'staff_members', 'staff_dropdown_data' ) );
     }
 
     /**
@@ -98,6 +128,7 @@ class Page extends Lib\Base\Ajax
             '{appointment_time}'  => '',
             '{booking_number}'    => '',
             '{category_name}'     => '',
+            '{client_address}'    => '',
             '{client_email}'      => '',
             '{client_name}'       => '',
             '{client_first_name}' => '',
@@ -116,6 +147,7 @@ class Page extends Lib\Base\Ajax
             '{payment_status}'    => '',
             '{payment_type}'      => '',
             '{service_capacity}'  => '',
+            '{service_duration}'  => '',
             '{service_info}'      => '',
             '{service_name}'      => '',
             '{service_price}'     => '',
@@ -128,7 +160,7 @@ class Page extends Lib\Base\Ajax
             '{total_price}'       => '',
         );
         $query
-            ->select( 'a.id, a.series_id, a.staff_any, a.location_id, a.start_date, DATE_ADD(a.end_date, INTERVAL a.extras_duration SECOND) AS end_date,
+            ->select( 'a.id, ca.series_id, a.staff_any, a.location_id, a.start_date, DATE_ADD(a.end_date, INTERVAL IF(ca.extras_consider_duration, a.extras_duration, 0) SECOND) AS end_date,
                 COALESCE(s.title,a.custom_service_name) AS service_name, COALESCE(s.color,"silver") AS service_color, s.info AS service_info,
                 COALESCE(ss.price,a.custom_service_price) AS service_price,
                 st.full_name AS staff_name, st.email AS staff_email, st.info AS staff_info, st.phone AS staff_phone,
@@ -141,6 +173,7 @@ class Page extends Lib\Base\Ajax
                 ca.custom_fields,
                 ca.status AS appointment_status,
                 ca.extras,
+                ca.extras_multiply_nop,
                 ca.package_id,
                 ct.name AS category_name,
                 c.full_name AS client_name, c.first_name AS client_first_name, c.last_name AS client_last_name, c.phone AS client_phone, c.email AS client_email, c.id AS customer_id,
@@ -161,6 +194,10 @@ class Page extends Lib\Base\Ajax
             $query->addSelect( '1 AS service_capacity' );
         }
 
+        if ( Lib\Config::proActive() ) {
+            $query->addSelect( 'c.country, c.state, c.postcode, c.city, c.street, c.street_number, c.additional_address' );
+        }
+
         $appointments =  $query->fetchArray();
 
         foreach ( $appointments as $key => $appointment ) {
@@ -169,8 +206,9 @@ class Page extends Lib\Base\Ajax
             $codes['{appointment_time}'] = $appointment['duration'] >= DAY_IN_SECONDS ? $appointment['start_time_info'] : Lib\Utils\DateTime::formatTime( $appointment['start_date'] );
             $codes['{booking_number}']   = $appointment['id'];
             $codes['{on_waiting_list}']  = $appointment['on_waiting_list'];
-            $codes['{service_name}']     = $appointment['service_name'] ?  esc_html( $appointment['service_name'] ) : __( 'Untitled', 'bookly' );
+            $codes['{service_name}']     = $appointment['service_name'] ? esc_html( $appointment['service_name'] ) : __( 'Untitled', 'bookly' );
             $codes['{service_price}']    = Lib\Utils\Price::format( $appointment['service_price'] * $appointment['units'] );
+            $codes['{service_duration}'] = Lib\Utils\DateTime::secondsToInterval( $appointment['duration'] * $appointment['units'] );
             $codes['{signed_up}']        = $appointment['total_number_of_persons'];
             foreach ( array( 'staff_name', 'staff_phone', 'staff_info', 'staff_email', 'service_info', 'service_capacity', 'category_name' ) as $field ) {
                 $codes[ '{' . $field . '}' ] = esc_html( $appointment[ $field ] );

@@ -43,7 +43,7 @@ echo $progress_tracker;
 
     <?php endif ?>
     <div class="bookly-box bookly-table">
-        <?php if ( ! get_option( 'bookly_cst_first_last_name' ) ) : ?>
+        <?php if ( ! Lib\Config::showFirstLastName() ) : ?>
         <div class="bookly-form-group">
             <label><?php echo Common::getTranslatedOption( 'bookly_l10n_label_name' ) ?></label>
             <div>
@@ -59,14 +59,19 @@ echo $progress_tracker;
             </div>
             <div class="bookly-js-user-phone-error bookly-label-error"></div>
         </div>
-        <div class="bookly-form-group">
-            <label><?php echo Common::getTranslatedOption( 'bookly_l10n_label_email' ) ?></label>
-            <div>
-                <input class="bookly-js-user-email" maxlength="255" type="text" value="<?php echo esc_attr( $userData->getEmail() ) ?>"/>
-            </div>
-            <div class="bookly-js-user-email-error bookly-label-error"></div>
-        </div>
+        <?php if ( Lib\Config::showFirstLastName() || ( ! Lib\Config::showFirstLastName() && ! Lib\Config::showEmailConfirm() ) ) : ?>
+            <?php $self::renderTemplate( '_details_email', compact('userData') ) ?>
+        <?php endif ?>
+        <?php if ( Lib\Config::showFirstLastName() && Lib\Config::showEmailConfirm() ) : ?>
+            <?php $self::renderTemplate( '_details_email_confirm', compact('userData') ) ?>
+        <?php endif ?>
     </div>
+    <?php if ( ! Lib\Config::showFirstLastName() && Lib\Config::showEmailConfirm() ) : ?>
+        <div class="bookly-box bookly-table">
+            <?php $self::renderTemplate( '_details_email', compact( 'userData' ) ) ?>
+            <?php $self::renderTemplate( '_details_email_confirm', compact( 'userData' ) ) ?>
+        </div>
+    <?php endif ?>
 
     <?php Proxy\Pro::renderDetailsAddress( $userData ) ?>
     <?php Proxy\Pro::renderDetailsBirthday( $userData ) ?>
@@ -88,10 +93,14 @@ echo $progress_tracker;
 <?php Proxy\RecurringAppointments::renderInfoMessage( $userData ) ?>
 
 <div class="bookly-box bookly-nav-steps">
+    <?php if ( $show_back_btn ) : ?>
     <button class="bookly-back-step bookly-js-back-step bookly-btn ladda-button" data-style="zoom-in" data-spinner-size="40">
         <span class="ladda-label"><?php echo Common::getTranslatedOption( 'bookly_l10n_button_back' ) ?></span>
     </button>
-    <button class="bookly-next-step bookly-js-next-step bookly-btn ladda-button" data-style="zoom-in" data-spinner-size="40">
-        <span class="ladda-label"><?php echo Common::getTranslatedOption( 'bookly_l10n_step_details_button_next' ) ?></span>
-    </button>
+    <?php endif ?>
+    <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
+        <button class="bookly-next-step bookly-js-next-step bookly-btn ladda-button" data-style="zoom-in" data-spinner-size="40">
+            <span class="ladda-label"><?php echo Common::getTranslatedOption( 'bookly_l10n_step_details_button_next' ) ?></span>
+        </button>
+    </div>
 </div>

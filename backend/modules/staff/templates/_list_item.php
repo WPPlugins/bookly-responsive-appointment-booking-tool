@@ -1,11 +1,12 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 use Bookly\Backend\Modules\Staff\Proxy;
+use Bookly\Lib\Config;
 $img = wp_get_attachment_image_src( $staff['attachment_id'], 'thumbnail' );
 ?>
-<li class="bookly-nav-item<?php if ( $active_staff_id == $staff['id'] ) : ?> active<?php endif ?>" id="bookly-staff-<?php echo $staff['id'] ?>" data-staff-id="<?php echo $staff['id'] ?>">
+<li class="bookly-nav-item<?php if ( Config::proActive() && $staff['visibility'] == 'archive' ): ?> bookly-staff-archived bookly-js-archived<?php endif ?>" id="bookly-staff-<?php echo $staff['id'] ?>" data-staff-id="<?php echo $staff['id'] ?>" <?php if ( $staff['visibility'] == 'archive' ) : ?> style="display: none"<?php endif ?>>
     <div class="bookly-flexbox">
         <div class="bookly-flex-cell bookly-vertical-middle" style="width: 1%">
-            <i class="bookly-js-handle bookly-icon bookly-icon-draghandle bookly-margin-right-sm bookly-cursor-move" title="<?php _e( 'Reorder', 'bookly' ) ?>"></i>
+            <i class="bookly-js-handle bookly-icon bookly-icon-draghandle bookly-margin-right-sm bookly-cursor-move" title="<?php esc_attr_e( 'Reorder', 'bookly' ) ?>"></i>
         </div>
         <div class="bookly-flex-cell bookly-vertical-middle" style="width: 1%">
             <div class="bookly-thumb bookly-thumb-sm bookly-margin-right-lg"

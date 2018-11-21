@@ -51,8 +51,9 @@ class Scheduler
      * @param string    $repeat repeat period, could be one of self::REPEAT_*
      * @param array     $params additional params we should know to build schedule
      * @param array     $exclude slots we can't use for schedule
+     * @param bool      $waiting_list_enabled
      */
-    public function __construct( Lib\Chain $chain, $datetime, $until, $repeat, array $params, array $exclude )
+    public function __construct( Lib\Chain $chain, $datetime, $until, $repeat, array $params, array $exclude, $waiting_list_enabled = null )
     {
         // Set up UserBookingData.
         $this->userData = new Lib\UserBookingData( null );
@@ -82,7 +83,8 @@ class Scheduler
             },
             function ( DatePoint $client_dp, $groups_count, $slots_count ) {
                 return $groups_count >= 1 ? 2 : 0;
-            }
+            },
+            $waiting_list_enabled
         );
 
         $this->finder->prepare();

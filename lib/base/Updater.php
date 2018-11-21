@@ -49,37 +49,6 @@ abstract class Updater extends Schema
     }
 
     /**
-     * Get table name.
-     *
-     * @param string $table
-     * @return string
-     */
-    protected function getTableName( $table )
-    {
-        /** @global \wpdb $wpdb */
-        global $wpdb;
-
-        return $wpdb->prefix . $table;
-    }
-
-    /**
-     * Check table exists
-     *
-     * @param $table
-     *
-     * @return bool
-     */
-    protected function tableExists( $table )
-    {
-        global $wpdb;
-
-        return (bool) $wpdb->query( $wpdb->prepare(
-            'SELECT 1 FROM `information_schema`.`tables` WHERE `table_name` = %s AND `table_schema` = SCHEMA() LIMIT 1',
-            $this->getTableName( $table )
-        ) );
-    }
-
-    /**
      * Execute array queries where the key is the table name.
      *
      * @param array $data key is table name
@@ -110,6 +79,25 @@ abstract class Updater extends Schema
         foreach ( $options as $old_name => $new_name ) {
             $wpdb->query( $wpdb->prepare(
                 'UPDATE `' . $wpdb->options . '` SET `option_name` = %s WHERE `option_name` = %s',
+                $new_name,
+                $old_name
+            ) );
+        }
+    }
+
+    /**
+     * Rename user meta keys.
+     *
+     * @param array $meta
+     */
+    protected function renameUserMeta( array $meta )
+    {
+        /** @global \wpdb $wpdb */
+        global $wpdb;
+
+        foreach ( $meta as $old_name => $new_name ) {
+            $wpdb->query( $wpdb->prepare(
+                'UPDATE `' . $wpdb->usermeta . '` SET `meta_key` = %s WHERE `meta_key` = %s',
                 $new_name,
                 $old_name
             ) );

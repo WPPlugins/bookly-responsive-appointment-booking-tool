@@ -11,6 +11,8 @@ class Staff extends Lib\Base\Entity
 {
     /** @var  integer */
     protected $wp_user_id;
+    /** @var  int */
+    protected $category_id;
     /** @var  integer */
     protected $attachment_id;
     /** @var  string */
@@ -21,6 +23,8 @@ class Staff extends Lib\Base\Entity
     protected $phone;
     /** @var  string */
     protected $info;
+    /** @var  int */
+    protected $working_time_limit;
     /** @var  string */
     protected $visibility = 'public';
     /** @var  int */
@@ -31,35 +35,43 @@ class Staff extends Lib\Base\Entity
     protected static $table = 'bookly_staff';
 
     protected static $schema = array(
-        'id'            => array( 'format' => '%d' ),
-        'wp_user_id'    => array( 'format' => '%d' ),
-        'attachment_id' => array( 'format' => '%d' ),
-        'full_name'     => array( 'format' => '%s' ),
-        'email'         => array( 'format' => '%s' ),
-        'phone'         => array( 'format' => '%s' ),
-        'info'          => array( 'format' => '%s' ),
-        'visibility'    => array( 'format' => '%s' ),
-        'position'      => array( 'format' => '%d' ),
-        'google_data'   => array( 'format' => '%s' ),
+        'id'                 => array( 'format' => '%d' ),
+        'wp_user_id'         => array( 'format' => '%d' ),
+        'category_id'        => array( 'format' => '%d' ),
+        'attachment_id'      => array( 'format' => '%d' ),
+        'full_name'          => array( 'format' => '%s' ),
+        'email'              => array( 'format' => '%s' ),
+        'phone'              => array( 'format' => '%s' ),
+        'info'               => array( 'format' => '%s' ),
+        'working_time_limit' => array( 'format' => '%d' ),
+        'visibility'         => array( 'format' => '%s' ),
+        'position'           => array( 'format' => '%d' ),
+        'google_data'        => array( 'format' => '%s' ),
     );
 
     /**
      * Get schedule items of staff member.
      *
+     * @param int $location_id
      * @return StaffScheduleItem[]
      */
-    public function getScheduleItems()
+    public function getScheduleItems( $location_id = null )
     {
         $start_of_week = (int) get_option( 'start_of_week' );
         // Start of week affects the sorting.
         // If it is 0(Sun) then the result should be 1,2,3,4,5,6,7.
         // If it is 1(Mon) then the result should be 2,3,4,5,6,7,1.
         // If it is 2(Tue) then the result should be 3,4,5,6,7,1,2. Etc.
-        return StaffScheduleItem::query()
+        $query = StaffScheduleItem::query()
             ->where( 'staff_id',  $this->getId() )
             ->sortBy( "IF(r.day_index + 10 - {$start_of_week} > 10, r.day_index + 10 - {$start_of_week}, 16 + r.day_index)" )
-            ->indexBy( 'day_index' )
-            ->find();
+            ->indexBy( 'day_index' );
+        $query = Lib\Proxy\Locations::prepareStaffScheduleQuery(
+            $query,
+            $location_id,
+            $this->getId()
+        );
+        return $query->find();
     }
 
     /**
@@ -74,7 +86,11 @@ class Staff extends Lib\Base\Entity
 
         if ( $this->getId() ) {
             $query = StaffService::query( 'ss' )
-                ->select( 'ss.*, s.title, s.duration, s.units_min, s.units_max, s.price AS service_price, s.color, s.capacity_min AS service_capacity_min, s.capacity_max AS service_capacity_max, ss.location_id' )
+                ->select( 'ss.*, s.title, s.duration, s.units_min, s.units_max, s.price AS service_price, s.color, ss.location_id' )
+                ->addSelect( sprintf( '%s AS service_capacity_min, %s AS service_capacity_max',
+                    Lib\Proxy\Shared::prepareStatement( 1, 's.capacity_min', 'Service' ),
+                    Lib\Proxy\Shared::prepareStatement( 1, 's.capacity_max', 'Service' )
+                ) )
                 ->leftJoin( 'Service', 's', 's.id = ss.service_id' )
                 ->where( 'ss.staff_id', $this->getId() )
                 ->where( 's.type', $type );
@@ -104,6 +120,15 @@ class Staff extends Lib\Base\Entity
         }
 
         return $result;
+    }
+
+    /**
+     * Check whether staff is archived or not.
+     * @return bool
+     */
+    public function isArchived()
+    {
+        return $this->getVisibility() == 'archive';
     }
 
     /**
@@ -141,6 +166,33 @@ class Staff extends Lib\Base\Entity
         return Lib\Utils\Common::getTranslatedString( 'staff_' . $this->getId() . '_info', $this->getInfo(), $locale );
     }
 
+    /**
+     * Get workload for given date.
+     *
+     * @param string $date 'Y-m-d'
+     * @param array  $exclude list of appointment id's to exclude
+     * @return int
+     */
+    public function getWorkload( $date, $exclude = array() )
+    {
+        $start_date   = $date . ' 00:00:00';
+        $end_date     = date_create( $date )->modify( '+1 day' )->format( 'Y-m-d H:i:s' );
+        $appointments = Lib\Entities\Appointment::query( 'a' )
+            ->select( 'a.start_date, DATE_ADD(`a`.`end_date`, INTERVAL `a`.`extras_duration` SECOND) as end_date' )
+            ->where( 'staff_id', $this->getId() )
+            ->whereLt( 'start_date', $end_date )
+            ->whereGt( 'end_date', $start_date )
+            ->whereNotIn( 'id', $exclude )
+            ->fetchArray();
+
+        $workload = 0;
+        foreach ( $appointments as $appointment ) {
+            $workload += min( strtotime( $end_date ), strtotime( $appointment['end_date'] ) ) - max( strtotime( $start_date ), strtotime( $appointment['start_date'] ) );
+        }
+
+        return $workload;
+    }
+
     /**************************************************************************
      * Entity Fields Getters & Setters                                        *
      **************************************************************************/
@@ -164,6 +216,29 @@ class Staff extends Lib\Base\Entity
     public function setWpUserId( $wp_user_id )
     {
         $this->wp_user_id = $wp_user_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets category_id
+     *
+     * @return int
+     */
+    public function getCategoryId()
+    {
+        return $this->category_id;
+    }
+
+    /**
+     * Sets category_id
+     *
+     * @param int $category_id
+     * @return $this
+     */
+    public function setCategoryId( $category_id )
+    {
+        $this->category_id = $category_id;
 
         return $this;
     }
@@ -279,6 +354,29 @@ class Staff extends Lib\Base\Entity
     public function setInfo( $info )
     {
         $this->info = $info;
+
+        return $this;
+    }
+
+    /**
+     * Gets working_time_limit
+     *
+     * @return int
+     */
+    public function getWorkingTimeLimit()
+    {
+        return $this->working_time_limit;
+    }
+
+    /**
+     * Sets working_time_limit
+     *
+     * @param int $working_time_limit
+     * @return $this
+     */
+    public function setWorkingTimeLimit( $working_time_limit )
+    {
+        $this->working_time_limit = $working_time_limit;
 
         return $this;
     }

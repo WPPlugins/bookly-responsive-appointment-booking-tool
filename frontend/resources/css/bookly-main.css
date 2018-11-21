@@ -153,10 +153,13 @@ button.bookly-square:active {
 }
 .bookly-time-next {
     background-position: 50% -56px;
-    margin-left: 10px !important;
 }
 .bookly-time-prev {
     background-position: 50% 8px;
+}
+.bookly-right.bookly-time-next,
+.bookly-right.bookly-time-prev {
+    margin-left: 10px !important;
 }
 
 .bookly-square,
@@ -806,7 +809,7 @@ label.bookly-square {
 
 /* Cart */
 .bookly-go-to-cart {
-    margin-right: 10px;
+    margin-right: 10px!important;
     width: 35px;
     height: 35px;
     float: left!important;

@@ -29,7 +29,6 @@ use Bookly\Backend\Components;
                         <?php _e( 'Customers', 'bookly' ) ?>
                     </li>
                     <?php Proxy\Pro::renderGoogleCalendarMenuItem() ?>
-                    <?php Proxy\ProSettings::renderProMenuItem() ?>
                     <?php Proxy\Shared::renderMenuItem() ?>
                     <li class="bookly-nav-item" data-target="#bookly_settings_payments" data-toggle="tab">
                         <?php _e( 'Payments', 'bookly' ) ?>
@@ -64,7 +63,6 @@ use Bookly\Backend\Components;
                                 <?php include '_customers.php' ?>
                             </div>
                             <?php Proxy\Pro::renderGoogleCalendarTab() ?>
-                            <?php Proxy\ProSettings::renderProTab() ?>
                             <?php Proxy\Shared::renderTab() ?>
                             <div class="tab-pane" id="bookly_settings_payments">
                                 <?php include '_paymentsForm.php' ?>

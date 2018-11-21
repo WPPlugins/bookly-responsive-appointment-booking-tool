@@ -36,7 +36,7 @@ abstract class Installer extends Schema
     public function uninstall()
     {
         $this->removeData();
-        $this->dropPluginTables();
+        $this->dropTables();
     }
 
     /**
@@ -62,7 +62,7 @@ abstract class Installer extends Schema
      */
     public function dropTables()
     {
-        $this->dropPluginTables();
+        $this->drop( $this->getTables() );
     }
 
     /**
@@ -105,7 +105,21 @@ abstract class Installer extends Schema
         delete_option( $plugin_prefix . 'db_version' );
         delete_option( $plugin_prefix . 'installation_time' );
         delete_option( $plugin_prefix . 'grace_start' );
-        delete_option( $plugin_prefix . 'enabled' );
         delete_option( $plugin_class::getPurchaseCodeOption() );
+    }
+
+    /**
+     * Get plugin table names.
+     *
+     * @return array
+     */
+    private function getTables()
+    {
+        $tables = array();
+        foreach ( \Bookly\Lib\Plugin::getEntityClasses() as $entity_class ) {
+            $tables[] = $entity_class::getTableName();
+        }
+
+        return $tables;
     }
 }

@@ -61,6 +61,7 @@ class Codes
     public $package_price;
     public $package_size;
     public $payment_type;
+    public $payment_status;
     public $schedule;
     public $series_token;
     public $service_duration;
@@ -151,11 +152,15 @@ class Codes
                     'time'     => array( 'show' => '1', ),
                     'employee' => array( 'show' => '1', ),
                     'price'    => array( 'show' => '1', ),
+                    'deposit'  => array( 'show' => (int) Config::depositPaymentsActive() ),
                     'tax'      => array( 'show' => (int) Config::taxesActive(), ),
                 );
             }
             if ( ! Proxy\Taxes::showTaxColumn() ) {
                 unset( $cart_columns['tax'] );
+            }
+            if ( ! Config::depositPaymentsActive() ) {
+                unset( $cart_columns['deposit'] );
             }
             $ths = array();
             foreach ( $cart_columns as $column => $attr ) {
@@ -178,6 +183,9 @@ class Codes
                             break;
                         case 'price':
                             $ths[] = __( 'Price', 'bookly' );
+                            break;
+                        case 'deposit':
+                            $ths[] = __( 'Deposit', 'bookly' );
                             break;
                     }
                 }
@@ -207,13 +215,13 @@ class Codes
                                 $tds[] = $service_name;
                                 break;
                             case 'date':
-                                $tds[] = Utils\DateTime::formatDate( $codes['appointment_start'] );
+                                $tds[] = $codes['appointment_start'] === null ? __( 'N/A', 'bookly' ) : Utils\DateTime::formatDate( $codes['appointment_start'] );
                                 break;
                             case 'time':
                                 if ( $codes['appointment_start_info'] !== null ) {
                                     $tds[] = $codes['appointment_start_info'];
                                 } else {
-                                    $tds[] = Utils\DateTime::formatTime( $codes['appointment_start'] );
+                                    $tds[] = $codes['appointment_start'] === null ? __( 'N/A', 'bookly' ) :  Utils\DateTime::formatTime( $codes['appointment_start'] );
                                 }
                                 break;
                             case 'tax':
@@ -224,6 +232,9 @@ class Codes
                                 break;
                             case 'price':
                                 $tds[] = Utils\Price::format( $codes['appointment_price'] );
+                                break;
+                            case 'deposit':
+                                $tds[] = $codes['deposit'];
                                 break;
                         }
                     }
@@ -295,7 +306,8 @@ class Codes
             '{next_day_agenda}'                 => $this->next_day_agenda,
             '{next_day_agenda_extended}'        => $this->next_day_agenda_extended,
             '{number_of_persons}'               => $this->number_of_persons,
-            '{payment_type}'                    => $this->payment_type,
+            '{payment_type}'                    => Entities\Payment::typeToString( $this->payment_type ),
+            '{payment_status}'                  => Entities\Payment::statusToString( $this->payment_status ),
             '{reject_appointment_url}'          => $this->appointment_token ? admin_url( 'admin-ajax.php?action=bookly_reject_appointment&token=' . urlencode( Utils\Common::xorEncrypt( $this->appointment_token, 'reject' ) ) ) : '',
             '{service_info}'                    => $format == 'html' ? nl2br( $this->service_info ) : $this->service_info,
             '{service_name}'                    => $this->service_name,
@@ -330,7 +342,7 @@ class Codes
             } else {
                 $impersonal_symbol = "X";
             }
-            $impersonal_codes[ $name ] = str_repeat( $impersonal_symbol, $count->length );
+            $impersonal_codes[ $name ] = preg_replace( '/[^\s]/', $impersonal_symbol, $code );
         }
         $this->impersonal_message = strtr( $text, $impersonal_codes );
 
@@ -359,7 +371,8 @@ class Codes
         $this->staff_name    = $item->getStaff()->getTranslatedName();
 
         if ( $order->hasPayment() ) {
-            $this->payment_type = Entities\Payment::typeToString( $order->getPayment()->getType() );
+            $this->payment_type   = Entities\Payment::typeToString( $order->getPayment()->getType() );
+            $this->payment_status = Entities\Payment::statusToString( $order->getPayment()->getStatus() );
         }
 
         Proxy\Shared::prepareNotificationCodesForOrder( $this );
@@ -379,30 +392,12 @@ class Codes
         $codes->order = $order;
         $codes->item  = $item;
 
-        if ( $item->getService()->getType() == Entities\Service::TYPE_COMPOUND ) {
-            // The appointment ends when the last service ends in the compound service.
-            $bounding = Entities\Appointment::query( 'a' )
-                ->select( 'MIN(a.start_date) AS start, MAX(DATE_ADD(a.end_date, INTERVAL a.extras_duration SECOND)) AS end' )
-                ->leftJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id' )
-                ->where( 'ca.compound_token', $item->getCA()->getCompoundToken() )
-                ->groupBy( 'ca.compound_token' )
-                ->fetchRow();
-            $appointment_start = $bounding['start'];
-            $appointment_end   = $bounding['end'];
-        } else {
-            // Normal start and end.
-            $appointment_start = $item->getAppointment()->getStartDate();
-            $appointment_end   = date_create( $item->getAppointment()->getEndDate() )
-                ->modify( '+' . $item->getAppointment()->getExtrasDuration() . ' sec' )
-                ->format( 'Y-m-d H:i:s' );
-        }
-
         $staff_photo = wp_get_attachment_image_src( $item->getStaff()->getAttachmentId(), 'full' );
 
-        $codes->appointment_end        = $appointment_end;
+        $codes->appointment_end        = $item->getTotalEnd()->format( 'Y-m-d H:i:s' );
         $codes->appointment_end_info   = $item->getService()->getEndTimeInfo();
         $codes->appointment_notes      = $item->getCA()->getNotes();
-        $codes->appointment_start      = $appointment_start;
+        $codes->appointment_start      = $item->getAppointment()->getStartDate();
         $codes->appointment_start_info = $item->getService()->getStartTimeInfo();
         $codes->appointment_token      = $item->getCA()->getToken();
         $codes->booking_number         = $item->getAppointment()->getId();
@@ -417,7 +412,7 @@ class Codes
         );
         $codes->number_of_persons      = $item->getCA()->getNumberOfPersons();
         $codes->service_price          = $item->getServicePrice();
-        $codes->service_duration       = $item->getService()->getDuration() * ( $item->getCA()->getUnits() ?: 1 );
+        $codes->service_duration       = $item->getServiceDuration();
         $codes->staff_email            = $item->getStaff()->getEmail();
         $codes->staff_phone            = $item->getStaff()->getPhone();
         $codes->staff_photo            = $staff_photo ? $staff_photo[0] : '';
@@ -428,6 +423,8 @@ class Codes
             $codes->total_price = $order->getPayment()->getTotal();
             $codes->total_tax   = $order->getPayment()->getTax();
             $codes->invoice_number = $order->getPayment()->getId();
+            $codes->payment_status = $order->getPayment()->getStatus();
+            $codes->payment_type   = $order->getPayment()->getType();
         } else {
             $codes->amount_paid = '';
             $codes->amount_due  = '';
@@ -437,6 +434,8 @@ class Codes
             if ( Config::taxesActive() && get_option( 'bookly_taxes_in_price' ) == 'excluded' ) {
                 $codes->total_price += $codes->total_tax;
             }
+            $codes->payment_status = '';
+            $codes->payment_type   = '';
         }
 
         $codes->refresh();
@@ -483,6 +482,7 @@ class Codes
             'appointment_price' => 24,
             'cancel_url'        => '#',
             'appointment_start_info' => null,
+            'deposit'           => Proxy\DepositPayments::formatDeposit( 12, '50%' )
         ) );
 
         $codes->agenda_date                 = Utils\DateTime::formatDate( current_time( 'mysql' ) );

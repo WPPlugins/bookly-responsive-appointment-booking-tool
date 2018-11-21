@@ -2,7 +2,9 @@ import $ from 'jquery';
 import {opt, laddaStart, scrollTo} from './shared.js';
 import stepService from './service_step.js';
 import stepTime from './time_step.js';
+import stepRepeat from './repeat_step.js';
 import stepCart from './cart_step.js';
+import stepDetails from './details_step.js';
 
 /**
  * Extras step.
@@ -42,9 +44,9 @@ export default function stepExtras(params) {
                     $input;
 
                 var extrasChanged = function($extras_item, quantity) {
-                    var $input = $extras_item.find('input');
-                    var $total = $extras_item.find('.bookly-js-extras-total-price');
-                    var total_price = quantity * parseFloat($extras_item.data('price'));
+                    var $input = $extras_item.find('input'),
+                        $total = $extras_item.find('.bookly-js-extras-total-price'),
+                        total_price = quantity * parseFloat($extras_item.data('price'));
 
                     $total.text(currency.format.replace('1', total_price.toFixed(currency.precision)));
                     $input.val(quantity);
@@ -53,15 +55,16 @@ export default function stepExtras(params) {
                     // Updating summary
                     var amount = 0;
                     $extras_items.each(function (index, elem) {
-                        var $this = $(this);
-                        amount += parseFloat($this.data('price')) * $this.find('input').val();
+                        var $this = $(this),
+                            multiplier = $this.closest('.bookly-js-extras-container').data('multiplier');
+                        amount += parseFloat($this.data('price')) * $this.find('input').val() * multiplier;
                     });
                     if (amount) {
                         $extras_summary.html(' + ' + currency.format.replace('1', amount.toFixed(currency.precision)));
                     } else {
                         $extras_summary.html('');
                     }
-                }
+                };
 
                 $extras_items.each(function (index, elem) {
                     var $this = $(this);
@@ -115,15 +118,27 @@ export default function stepExtras(params) {
                         xhrFields: {withCredentials: true},
                         crossDomain: 'withCredentials' in new XMLHttpRequest(),
                         success: function (response) {
-                            stepTime({form_id: params.form_id});
+                            if(opt[params.form_id].step_extras == 'before_step_time') {
+                                stepTime({form_id: params.form_id, prev_step: 'extras'});
+                            } else if (!opt[params.form_id].skip_steps.repeat) {
+                                stepRepeat({form_id: params.form_id});
+                            } else if (!opt[params.form_id].skip_steps.cart) {
+                                stepCart({form_id: params.form_id, add_to_cart : true, from_step : 'time'});
+                            } else {
+                                stepDetails({form_id: params.form_id, add_to_cart : true});
+                            }
                         }
                     });
                 });
                 $back_step.on('click', function (e) {
                     e.preventDefault();
                     laddaStart(this);
-                    stepService({form_id: params.form_id});
-                }).toggle(!opt[params.form_id].skip_steps.service);
+                    if (opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_time) {
+                        stepTime({form_id: params.form_id, prev_step: 'extras'});
+                    } else {
+                        stepService({form_id: params.form_id});
+                    }
+                });
             }
         }
     });

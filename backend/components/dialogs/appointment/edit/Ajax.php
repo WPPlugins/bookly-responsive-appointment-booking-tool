@@ -29,15 +29,15 @@ class Ajax extends Lib\Base\Ajax
             : Lib\Entities\Service::TYPE_SIMPLE;
 
         $result = array(
-            'staff'          => array(),
-            'customers'      => array(),
-            'start_time'     => array(),
-            'end_time'       => array(),
-            'app_start_time' => null,  // Appointment start time which may not be in the list of start times.
-            'app_end_time'   => null,  // Appointment end time which may not be in the list of end times.
-            'week_days'      => array(),
-            'time_interval'  => Lib\Config::getTimeSlotLength(),
-            'status'         => array(
+            'staff'                    => array(),
+            'customers'                => array(),
+            'start_time'               => array(),
+            'end_time'                 => array(),
+            'app_start_time'           => null,  // Appointment start time which may not be in the list of start times.
+            'app_end_time'             => null,  // Appointment end time which may not be in the list of end times.
+            'week_days'                => array(),
+            'time_interval'            => Lib\Config::getTimeSlotLength(),
+            'status'                   => array(
                 'items' => array(
                     'pending'    => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_PENDING ),
                     'approved'   => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_APPROVED ),
@@ -45,13 +45,17 @@ class Ajax extends Lib\Base\Ajax
                     'rejected'   => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_REJECTED ),
                     'waitlisted' => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_WAITLISTED ),
                     'done'       => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_DONE ),
-                )
+                ),
             ),
+            'extras_consider_duration' => (int) Lib\Proxy\ServiceExtras::considerDuration( true ),
+            'extras_multiply_nop'      => (int) get_option( 'bookly_service_extras_multiply_nop', 1 ),
         );
 
         // Staff list.
         $staff         = Lib\Entities\Staff::query()->findOne();
-        $staff_members = $staff ? Lib\Proxy\Pro::prepareStaffMembers( array( $staff ) ) : array();
+        $staff_members = $staff ? Lib\Config::proActive() ? Lib\Entities\Staff::query()->find() : array( $staff ) : array();
+        $postfix_archived = sprintf( ' (%s)', __( 'Archived', 'bookly' ) );
+
         $max_duration  = 0;
 
         foreach ( $staff_members as $staff_member ) {
@@ -104,7 +108,8 @@ class Ajax extends Lib\Base\Ajax
             }
             $result['staff'][] = array(
                 'id'        => $staff_member->getId(),
-                'full_name' => $staff_member->getFullName(),
+                'full_name' => $staff_member->getFullName() . ( $staff_member->getVisibility() == 'archive' ? $postfix_archived : '' ),
+                'archived'  => $staff_member->getVisibility() == 'archive',
                 'services'  => $services,
                 'locations' => $locations,
             );
@@ -180,7 +185,6 @@ class Ajax extends Lib\Base\Ajax
                     a.start_date,
                     a.end_date,
                     a.internal_note,
-                    a.series_id,
                     a.location_id' )
                 ->leftJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id' )
                 ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id AND ss.location_id = a.location_id' )
@@ -213,19 +217,23 @@ class Ajax extends Lib\Base\Ajax
             $response['data']['custom_service_name']     = $info['custom_service_name'];
             $response['data']['custom_service_price']    = (float) $info['custom_service_price'];
             $response['data']['internal_note']           = $info['internal_note'];
-            $response['data']['series_id']               = $info['series_id'];
             $response['data']['location_id']             = $info['location_id'];
 
             $customers = Lib\Entities\CustomerAppointment::query( 'ca' )
                 ->select( 'ca.id,
+                    ca.series_id,
                     ca.customer_id,
                     ca.package_id,
                     ca.custom_fields,
                     ca.extras,
+                    ca.extras_multiply_nop,
+                    ca.extras_consider_duration,
                     ca.number_of_persons,
                     ca.notes,
                     ca.status,
                     ca.payment_id,
+                    ca.collaborative_service_id,
+                    ca.collaborative_token,
                     ca.compound_service_id,
                     ca.compound_token,
                     ca.time_zone,
@@ -252,6 +260,13 @@ class Ajax extends Lib\Base\Ajax
                         Lib\Entities\Payment::statusToString( $customer['payment_status'] )
                     );
                 }
+                $collaborative_service = '';
+                if ( $customer['collaborative_service_id'] !== null ) {
+                    $service = new Lib\Entities\Service();
+                    if ( $service->load( $customer['collaborative_service_id'] ) ) {
+                        $collaborative_service = $service->getTranslatedTitle();
+                    }
+                }
                 $compound_service = '';
                 if ( $customer['compound_service_id'] !== null ) {
                     $service = new Lib\Entities\Service();
@@ -261,21 +276,26 @@ class Ajax extends Lib\Base\Ajax
                 }
                 $custom_fields = (array) json_decode( $customer['custom_fields'], true );
                 $response['data']['customers'][] = array(
-                    'id'                => $customer['customer_id'],
-                    'ca_id'             => $customer['id'],
-                    'package_id'        => $customer['package_id'],
-                    'compound_service'  => $compound_service,
-                    'compound_token'    => $customer['compound_token'],
-                    'custom_fields'     => $custom_fields,
-                    'files'             => Lib\Proxy\Files::getFileNamesForCustomFields( $custom_fields ),
-                    'extras'            => (array) json_decode( $customer['extras'], true ),
-                    'number_of_persons' => $customer['number_of_persons'],
-                    'notes'             => $customer['notes'],
-                    'payment_id'        => $customer['payment_id'],
-                    'payment_type'      => $customer['payment'] != $customer['payment_total'] ? 'partial' : 'full',
-                    'payment_title'     => $payment_title,
-                    'status'            => $customer['status'],
-                    'timezone'          => Lib\Proxy\Pro::getCustomerTimezone( $customer['time_zone'], $customer['time_zone_offset'] ),
+                    'id'                       => $customer['customer_id'],
+                    'ca_id'                    => $customer['id'],
+                    'series_id'                => $customer['series_id'],
+                    'package_id'               => $customer['package_id'],
+                    'collaborative_service'    => $collaborative_service,
+                    'collaborative_token'      => $customer['collaborative_token'],
+                    'compound_service'         => $compound_service,
+                    'compound_token'           => $customer['compound_token'],
+                    'custom_fields'            => $custom_fields,
+                    'files'                    => Lib\Proxy\Files::getFileNamesForCustomFields( $custom_fields ),
+                    'extras'                   => (array) json_decode( $customer['extras'], true ),
+                    'extras_multiply_nop'      => $customer['extras_multiply_nop'],
+                    'extras_consider_duration' => (int) $customer['extras_consider_duration'],
+                    'number_of_persons'        => $customer['number_of_persons'],
+                    'notes'                    => $customer['notes'],
+                    'payment_id'               => $customer['payment_id'],
+                    'payment_type'             => $customer['payment'] != $customer['payment_total'] ? 'partial' : 'full',
+                    'payment_title'            => $payment_title,
+                    'status'                  => $customer['status'],
+                    'timezone'                 => Lib\Proxy\Pro::getCustomerTimezone( $customer['time_zone'], $customer['time_zone_offset'] ),
                 );
             }
         }
@@ -343,9 +363,11 @@ class Ajax extends Lib\Base\Ajax
                 $customer['status'] == Lib\Entities\CustomerAppointment::STATUS_APPROVED
             ) {
                 $total_number_of_persons += $customer['number_of_persons'];
-                $extras_duration = Lib\Proxy\ServiceExtras::getTotalDuration( $customer['extras'] );
-                if ( $extras_duration > $max_extras_duration ) {
-                    $max_extras_duration = $extras_duration;
+                if ( $customer['extras_consider_duration'] ) {
+                    $extras_duration = Lib\Proxy\ServiceExtras::getTotalDuration( $customer['extras'] );
+                    if ( $extras_duration > $max_extras_duration ) {
+                        $max_extras_duration = $extras_duration;
+                    }
                 }
             }
             $customers[ $i ]['created_from'] = ( $created_from == 'backend' ) ? 'backend' : 'frontend';
@@ -378,24 +400,8 @@ class Ajax extends Lib\Base\Ajax
             if ( ! $skip_date && $repeat['enabled'] ) {
                 // Series.
                 if ( ! empty ( $schedule ) ) {
-                    // Create new series.
-                    $series = new Lib\Entities\Series();
-                    $series
-                        ->setRepeat( self::parameter( 'repeat' ) )
-                        ->setToken( Lib\Utils\Common::generateToken( get_class( $series ), 'token' ) )
-                        ->save();
-
-                    if ( $notification != 'no' ) {
-                        // Create order per each customer to send notifications.
-                        /** @var DataHolders\Order[] $orders */
-                        $orders = array();
-                        foreach ( $customers as $customer ) {
-                            $order = DataHolders\Order::create( Lib\Entities\Customer::find( $customer['id'] ) )
-                                ->addItem( 0, DataHolders\Series::create( $series ) )
-                            ;
-                            $orders[ $customer['id'] ] = $order;
-                        }
-                    }
+                    /** @var DataHolders\Order[] $orders */
+                    $orders = array();
 
                     if ( $service_id ) {
                         $service = Lib\Entities\Service::find( $service_id );
@@ -404,51 +410,84 @@ class Ajax extends Lib\Base\Ajax
                         $service
                             ->setTitle( $custom_service_name )
                             ->setDuration( $duration )
-                            ->setPrice( $custom_service_price )
-                        ;
+                            ->setPrice( $custom_service_price );
                     }
 
-                    foreach ( $schedule as $slot ) {
-                        $slot = json_decode( $slot );
-                        $appointment = new Lib\Entities\Appointment();
-                        $appointment
-                            ->setSeries( $series )
-                            ->setLocationId( $location_id )
-                            ->setStaffId( $staff_id )
-                            ->setServiceId( $service_id )
-                            ->setCustomServiceName( $custom_service_name )
-                            ->setCustomServicePrice( $custom_service_price )
-                            ->setStartDate( $slot[0][2] )
-                            ->setEndDate( Lib\Slots\DatePoint::fromStr( $slot[0][2] )->modify( $duration )->format( 'Y-m-d H:i:s' ) )
-                            ->setInternalNote( $internal_note )
-                            ->setExtrasDuration( $max_extras_duration )
-                        ;
+                    foreach ( $customers as $customer ) {
+                        // Create new series.
+                        $series = new Lib\Entities\Series();
+                        $series
+                            ->setRepeat( self::parameter( 'repeat' ) )
+                            ->setToken( Lib\Utils\Common::generateToken( get_class( $series ), 'token' ) )
+                            ->save();
 
-                        if ( $appointment->save() !== false ) {
-                            // Save customer appointments.
-                            $ca_list = $appointment->saveCustomerAppointments( $customers );
-                            // Google Calendar.
-                            Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
-                            // Waiting list.
-                            Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
+                        // Create order
+                        if ( $notification != 'no' ) {
+                            $orders[ $customer['id'] ] = DataHolders\Order::create( Lib\Entities\Customer::find( $customer['id'] ) )
+                                ->addItem( 0, DataHolders\Series::create( $series ) );
+                        }
 
-                            if ( $notification != 'no' ) {
-                                foreach ( $ca_list as $ca ) {
-                                    $item = DataHolders\Simple::create( $ca )
-                                        ->setService( $service )
-                                        ->setAppointment( $appointment )
-                                    ;
-                                    $orders[ $ca->getCustomerId() ]->getItem( 0 )->addItem( $item );
+                        foreach ( $schedule as $slot ) {
+                            $slot       = json_decode( $slot, true );
+                            $start_date = $slot[0][2];
+                            $end_date   = Lib\Slots\DatePoint::fromStr( $start_date )->modify( $duration )->format( 'Y-m-d H:i:s' );
+                            // Try to find existing appointment
+                            $appointment = Lib\Entities\Appointment::query( 'a' )
+                                ->leftJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id' )
+                                ->where( 'a.staff_id', $staff_id )
+                                ->where( 'a.service_id', $service_id )
+                                ->whereNot( 'ca.status', Lib\Entities\CustomerAppointment::STATUS_CANCELLED )
+                                ->whereNot( 'ca.status', Lib\Entities\CustomerAppointment::STATUS_REJECTED )
+                                ->where( 'start_date', $start_date )
+                                ->findOne();
+
+                            $ca_customers = array();
+                            if ( ! $appointment ) {
+                                // Create appointment.
+                                $appointment = new Lib\Entities\Appointment();
+                                $appointment
+                                    ->setLocationId( $location_id )
+                                    ->setStaffId( $staff_id )
+                                    ->setServiceId( $service_id )
+                                    ->setCustomServiceName( $custom_service_name )
+                                    ->setCustomServicePrice( $custom_service_price )
+                                    ->setStartDate( $start_date )
+                                    ->setEndDate( $end_date )
+                                    ->setInternalNote( $internal_note )
+                                    ->setExtrasDuration( $max_extras_duration )
+                                    ->save();
+                            } else {
+                                foreach ( $appointment->getCustomerAppointments( true ) as $ca ) {
+                                    $ca_customer                  = $ca->getFields();
+                                    $ca_customer['ca_id']         = $ca->getId();
+                                    $ca_customer['extras']        = json_decode( $ca_customer['extras'], true );
+                                    $ca_customer['custom_fields'] = json_decode( $ca_customer['custom_fields'], true );
+                                    $ca_customers[]               = $ca_customer;
+                                }
+                            }
+
+                            if ( $appointment->getId() ) {
+                                // Save customer appointments.
+                                $ca_list = $appointment->saveCustomerAppointments( array_merge( $ca_customers, array( $customer ) ), $series->getId() );
+                                // Google Calendar.
+                                Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                                // Waiting list.
+                                Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
+
+                                if ( $notification != 'no' ) {
+                                    foreach ( $ca_list as $ca ) {
+                                        $item = DataHolders\Simple::create( $ca )
+                                            ->setService( $service )
+                                            ->setAppointment( $appointment );
+                                        $orders[ $ca->getCustomerId() ]->getItem( 0 )->addItem( $item );
+                                    }
                                 }
                             }
                         }
-                    }
-                    foreach ( $customers as $customer ) {
                         if ( $customer['payment_create'] === true ) {
                             Proxy\RecurringAppointments::createBackendPayment( $series, $customer );
                         }
                     }
-
                     if ( $notification != 'no' ) {
                         foreach ( $orders as $order ) {
                             Lib\Proxy\RecurringAppointments::sendRecurring( $order->getItem( 0 ), $order );
@@ -482,11 +521,9 @@ class Ajax extends Lib\Base\Ajax
                     // Save customer appointments.
                     $ca_status_changed = $appointment->saveCustomerAppointments( $customers );
 
-                    if ( $appointment->getSeriesId() ) {
-                        foreach ( $customers as $customer ) {
-                            if ( $customer['payment_create'] === true ) {
-                                Proxy\RecurringAppointments::createBackendPayment( Lib\Entities\Series::find( $appointment->getSeriesId() ), $customer );
-                            }
+                    foreach ( $customers as $customer ) {
+                        if ( $customer['payment_create'] === true && $customer['series_id'] ) {
+                            Proxy\RecurringAppointments::createBackendPayment( Lib\Entities\Series::find( $customer['series_id'] ), $customer );
                         }
                     }
 
@@ -533,6 +570,7 @@ class Ajax extends Lib\Base\Ajax
         $end_date       = self::parameter( 'end_date' );
         $staff_id       = (int) self::parameter( 'staff_id' );
         $service_id     = (int) self::parameter( 'service_id' );
+        $location_id    = Lib\Proxy\Locations::prepareStaffScheduleLocationId( self::parameter( 'location_id' ), $staff_id ) ?: null;
         $appointment_id = (int) self::parameter( 'appointment_id' );
         $appointment_duration = strtotime( $end_date ) - strtotime( $start_date );
         $customers      = json_decode( self::parameter( 'customers', '[]' ), true );
@@ -544,17 +582,18 @@ class Ajax extends Lib\Base\Ajax
             'date_interval_warning'            => false,
             'interval_not_in_staff_schedule'   => false,
             'interval_not_in_service_schedule' => false,
+            'staff_reaches_working_time_limit' => false,
             'customers_appointments_limit'     => array(),
         );
 
         $max_extras_duration = 0;
         foreach ( $customers as $customer ) {
-            if ( $customer['status'] == Lib\Entities\CustomerAppointment::STATUS_PENDING ||
-                $customer['status'] == Lib\Entities\CustomerAppointment::STATUS_APPROVED
-            ) {
-                $extras_duration = Lib\Proxy\ServiceExtras::getTotalDuration( $customer['extras'] );
-                if ( $extras_duration > $max_extras_duration ) {
-                    $max_extras_duration = $extras_duration;
+            if ( in_array( $customer['status'], array( Lib\Entities\CustomerAppointment::STATUS_PENDING, Lib\Entities\CustomerAppointment::STATUS_APPROVED ) ) ) {
+                if ( $customer['extras_consider_duration'] ) {
+                    $extras_duration = Lib\Proxy\ServiceExtras::getTotalDuration( $customer['extras'] );
+                    if ( $extras_duration > $max_extras_duration ) {
+                        $max_extras_duration = $extras_duration;
+                    }
                 }
             }
         }
@@ -571,6 +610,10 @@ class Ajax extends Lib\Base\Ajax
             $interval_valid = true;
             if ( $staff_id && $start_date ) {
                 $staff = Lib\Entities\Staff::find( $staff_id );
+
+                // Check if interval is suitable for staff's hours limit
+                $result['staff_reaches_working_time_limit'] = Lib\Proxy\Pro::getWorkingTimeLimitError( $staff, $start_date, $end_date, $appointment_duration + $max_extras_duration, $appointment_id ) ?: false;
+
                 if ( $service_duration >= DAY_IN_SECONDS ) {
                     // For services with duration 24+ hours check holidays and days off
                     for ( $day = 0; $day < $service_duration / DAY_IN_SECONDS; $day ++ ) {
@@ -581,6 +624,7 @@ class Ajax extends Lib\Base\Ajax
                              ! Lib\Entities\StaffScheduleItem::query()
                                  ->select( 'id' )
                                  ->where( 'staff_id', $staff_id )
+                                 ->where( 'location_id', $location_id )
                                  ->where( 'day_index', $week_day )
                                  ->whereNot( 'start_time', null )
                                  ->fetchRow()
@@ -617,6 +661,7 @@ class Ajax extends Lib\Base\Ajax
                                 $ssi      = Lib\Entities\StaffScheduleItem::query()
                                     ->select( 'id' )
                                     ->where( 'staff_id', $staff_id )
+                                    ->where( 'location_id', $location_id )
                                     ->where( 'day_index', $week_day )
                                     ->whereNot( 'start_time', null )
                                     ->whereLte( 'start_time', $day_start_time )

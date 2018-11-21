@@ -9,9 +9,10 @@ use Bookly\Lib;
  */
 abstract class Item
 {
-    const TYPE_SIMPLE   = 1;
-    const TYPE_COMPOUND = 2;
-    const TYPE_SERIES   = 3;
+    const TYPE_SIMPLE        = 1;
+    const TYPE_COLLABORATIVE = 2;
+    const TYPE_COMPOUND      = 3;
+    const TYPE_SERIES        = 4;
 
     /** @var int */
     protected $type;
@@ -39,6 +40,16 @@ abstract class Item
     }
 
     /**
+     * Check if item is collaborative.
+     *
+     * @return bool
+     */
+    public function isCollaborative()
+    {
+        return $this->type == self::TYPE_COLLABORATIVE;
+    }
+
+    /**
      * Check if item is compound.
      *
      * @return bool
@@ -59,20 +70,6 @@ abstract class Item
     }
 
     /**
-     * Get service.
-     *
-     * @return Lib\Entities\Service;
-     */
-    abstract public function getService();
-
-    /**
-     * Get staff.
-     *
-     * @return Lib\Entities\Staff
-     */
-    abstract public function getStaff();
-
-    /**
      * Get appointment.
      *
      * @return Lib\Entities\Appointment
@@ -87,6 +84,38 @@ abstract class Item
     abstract public function getCA();
 
     /**
+     * Get deposit.
+     *
+     * @return string
+     */
+    abstract public function getDeposit();
+
+    /**
+     * Get extras.
+     *
+     * @return array
+     */
+    abstract public function getExtras();
+
+    /**
+     * Get service.
+     *
+     * @return Lib\Entities\Service;
+     */
+    abstract public function getService();
+
+
+    /**
+     * Get service duration.
+     *
+     * For compound or collaborative services the duration
+     * is calculated based on duration of sub services.
+     *
+     * @return int
+     */
+    abstract public function getServiceDuration();
+
+    /**
      * Get service price.
      *
      * @return float
@@ -94,18 +123,11 @@ abstract class Item
     abstract public function getServicePrice();
 
     /**
-     * Get total price.
+     * Get staff.
      *
-     * @return float
+     * @return Lib\Entities\Staff
      */
-    abstract public function getTotalPrice();
-
-    /**
-     * Get deposit.
-     *
-     * @return string
-     */
-    abstract public function getDeposit();
+    abstract public function getStaff();
 
     /**
      * Get tax.
@@ -114,5 +136,20 @@ abstract class Item
      */
     abstract public function getTax();
 
+    /**
+     * Get appointment end time taking into account extras duration.
+     *
+     * For compound or collaborative services the total end
+     * is calculated based on ending time of sub services.
+     *
+     * @return Lib\Slots\DatePoint
+     */
+    abstract public function getTotalEnd();
 
+    /**
+     * Get total price.
+     *
+     * @return float
+     */
+    abstract public function getTotalPrice();
 }

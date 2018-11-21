@@ -38,6 +38,8 @@ abstract class Routine
         $hours = get_option( 'bookly_cron_reminder_times' );
         /** @var DataHolders\Booking\Compound[] $compounds */
         $compounds = array();
+        /** @var DataHolders\Booking\Collaborative[] $collaboratives */
+        $collaboratives = array();
 
         switch ( $notification->getType() ) {
             case 'staff_agenda':
@@ -85,6 +87,13 @@ abstract class Routine
                                     );
                                 }
                                 $compounds[ $ca['compound_token'] ]->addItem( DataHolders\Booking\Simple::create( new Entities\CustomerAppointment( $ca ) ) );
+                            } else if ( $ca['collaborative_token'] != '' ) {
+                                if ( ! isset ( $collaboratives[ $ca['collaborative_token'] ] ) ) {
+                                    $collaboratives[ $ca['collaborative_token'] ] = DataHolders\Booking\Collaborative::create(
+                                        Entities\Service::find( $ca['collaborative_service_id'] )
+                                    );
+                                }
+                                $collaboratives[ $ca['collaborative_token'] ]->addItem( DataHolders\Booking\Simple::create( new Entities\CustomerAppointment( $ca ) ) );
                             } else {
                                 $simple = DataHolders\Booking\Simple::create( new Entities\CustomerAppointment( $ca ) );
                                 if ( Lib\Notifications\Sender::sendFromCronToClient( $notification, $simple ) ) {
@@ -96,6 +105,14 @@ abstract class Routine
                             if ( Lib\Notifications\Sender::sendFromCronToClient( $notification, $compound ) ) {
                                 /** @var DataHolders\Booking\Simple $item */
                                 foreach ( $compound->getItems() as $item ) {
+                                    Lib\Notifications\Sender::wasSent( $notification, $item->getCA()->getId() );
+                                }
+                            }
+                        }
+                        foreach ( $collaboratives as $collaborative ) {
+                            if ( Lib\Notifications\Sender::sendFromCronToClient( $notification, $collaborative ) ) {
+                                /** @var DataHolders\Booking\Simple $item */
+                                foreach ( $collaborative->getItems() as $item ) {
                                     Lib\Notifications\Sender::wasSent( $notification, $item->getCA()->getId() );
                                 }
                             }
@@ -134,6 +151,13 @@ abstract class Routine
                                     );
                                 }
                                 $compounds[ $ca['compound_token'] ]->addItem( DataHolders\Booking\Simple::create( new Entities\CustomerAppointment( $ca ) ) );
+                            } else if ( $ca['collaborative_token'] != '' ) {
+                                if ( ! isset ( $collaboratives[ $ca['collaborative_token'] ] ) ) {
+                                    $collaboratives[ $ca['collaborative_token'] ] = DataHolders\Booking\Collaborative::create(
+                                        Entities\Service::find( $ca['collaborative_service_id'] )
+                                    );
+                                }
+                                $collaboratives[ $ca['collaborative_token'] ]->addItem( DataHolders\Booking\Simple::create( new Entities\CustomerAppointment( $ca ) ) );
                             } else {
                                 $simple = DataHolders\Booking\Simple::create( new Entities\CustomerAppointment( $ca ) );
                                 if ( Lib\Notifications\Sender::sendFromCronToClient( $notification, $simple ) ) {
@@ -145,6 +169,14 @@ abstract class Routine
                             if ( Lib\Notifications\Sender::sendFromCronToClient( $notification, $compound ) ) {
                                 /** @var DataHolders\Booking\Simple $item */
                                 foreach ( $compound->getItems() as $item ) {
+                                    Lib\Notifications\Sender::wasSent( $notification, $item->getCA()->getId() );
+                                }
+                            }
+                        }
+                        foreach ( $collaboratives as $collaborative ) {
+                            if ( Lib\Notifications\Sender::sendFromCronToClient( $notification, $collaborative ) ) {
+                                /** @var DataHolders\Booking\Simple $item */
+                                foreach ( $collaborative->getItems() as $item ) {
                                     Lib\Notifications\Sender::wasSent( $notification, $item->getCA()->getId() );
                                 }
                             }
@@ -164,6 +196,13 @@ abstract class Routine
                             );
                         }
                         $compounds[ $ca->getCompoundToken() ]->addItem( DataHolders\Booking\Simple::create( $ca ) );
+                    } else if ( $ca->getCollaborativeToken() != '' ) {
+                        if ( ! isset ( $collaboratives[ $ca->getCollaborativeToken() ] ) ) {
+                            $collaboratives[ $ca->getCollaborativeToken() ] = DataHolders\Booking\Collaborative::create(
+                                Entities\Service::find( $ca->getCollaborativeServiceId() )
+                            );
+                        }
+                        $collaboratives[ $ca->getCollaborativeToken() ]->addItem( DataHolders\Booking\Simple::create( $ca ) );
                     } else {
                         $simple = DataHolders\Booking\Simple::create( $ca );
                         if ( Lib\Notifications\Sender::sendFromCronToClient( $notification, $simple ) ) {
@@ -179,6 +218,14 @@ abstract class Routine
                         }
                     }
                 }
+            foreach ( $collaboratives as $collaborative ) {
+                if ( Lib\Notifications\Sender::sendFromCronToClient( $notification, $collaborative ) ) {
+                    /** @var DataHolders\Booking\Simple $item */
+                    foreach ( $collaborative->getItems() as $item ) {
+                        Lib\Notifications\Sender::wasSent( $notification, $item->getCA()->getId() );
+                    }
+                }
+            }
                 break;
             case 'client_birthday_greeting':
                 if ( self::isTimeToSend( $hours[ $notification->getType() ] ) ) {
@@ -322,7 +369,11 @@ abstract class Routine
         /** @var \wpdb $wpdb */
         global $wpdb;
 
-        $ca_list = array();
+        $ca_list  = array();
+        $services = $settings->forServices();
+        if ( $services != 'any' && count( $services ) == 0 ) {
+            return $ca_list;
+        }
 
         if ( $settings->getAtHour() !== null ) {
             // Send at time after start_date date (some day at 08:00)
@@ -355,7 +406,9 @@ abstract class Routine
         if ( $settings->getStatus() != 'any' ) {
             $query .= sprintf( ' AND `ca`.`status` = "%s"', $settings->getStatus() );
         }
-
+        if ( is_array( $services ) ) {
+            $query .= sprintf( ' AND ( `a`.`service_id` IN (%1$s) OR `ca`.`compound_service_id` IN (%1$s) )', implode( ', ', $services ) );
+        }
         foreach ( (array) $wpdb->get_results( $query, ARRAY_A ) as $fields ) {
             $ca_list[] = new Entities\CustomerAppointment( $fields );
         }
@@ -374,7 +427,12 @@ abstract class Routine
     {
         /** @var \wpdb $wpdb */
         global $wpdb;
-        $ca_list = array();
+
+        $ca_list  = array();
+        $services = $settings->forServices();
+        if ( $services != 'any' && count( $services ) == 0 ) {
+            return $ca_list;
+        }
 
         if ( $settings->getAtHour() !== null ) {
             // Send at time after status changed date (some day at 08:00)
@@ -408,7 +466,9 @@ abstract class Routine
         if ( $settings->getStatus() != 'any' ) {
             $query .= sprintf( ' AND `ca`.`status` = "%s"', $settings->getStatus() );
         }
-
+        if ( is_array( $services ) ) {
+            $query .= sprintf( ' AND ( `a`.`service_id` IN (%1$s) OR `ca`.`compound_service_id` IN (%1$s) )', implode( ', ', $services ) );
+        }
         foreach ( (array) $wpdb->get_results( $query, ARRAY_A ) as $fields ) {
             $ca_list[] = new Entities\CustomerAppointment( $fields );
         }
@@ -427,7 +487,12 @@ abstract class Routine
     {
         /** @var \wpdb $wpdb */
         global $wpdb;
+
         $ca_list = array();
+        $services = $settings->forServices();
+        if ( $services != 'any' && count( $services ) == 0 ) {
+            return $ca_list;
+        }
 
         if ( $settings->getAtHour() !== null ) {
             // Send at time after created date (some day at 08:00)
@@ -461,7 +526,9 @@ abstract class Routine
         if ( $settings->getStatus() != 'any' ) {
             $query .= sprintf( ' AND `ca`.`status` = "%s"', $settings->getStatus() );
         }
-
+        if ( is_array( $services ) ) {
+            $query .= sprintf( ' AND ( `a`.`service_id` IN (%1$s) OR `ca`.`compound_service_id` IN (%1$s) )', implode( ', ', $services ) );
+        }
         foreach ( (array) $wpdb->get_results( $query, ARRAY_A ) as $fields ) {
             $ca_list[] = new Entities\CustomerAppointment( $fields );
         }
@@ -481,14 +548,19 @@ abstract class Routine
         /** @var \wpdb $wpdb */
         global $wpdb;
 
-        $ca_list = array();
+        $ca_list  = array();
+        $services = $settings->forServices();
+        if ( $services != 'any' && count( $services ) == 0 ) {
+            return $ca_list;
+        }
+
         $replace = array(
-            '{ab_appointments}'          => Entities\Appointment::getTableName(),
-            '{ab_customer_appointments}' => Entities\CustomerAppointment::getTableName(),
-            '{ab_customers}'             => Entities\Customer::getTableName(),
-            '{ab_sent_notifications}'    => Entities\SentNotification::getTableName(),
-            '{ca2_status_equal}'         => 'true',
-            '{ca3_status_equal}'         => 'true',
+            '{bookly_appointments}'          => Entities\Appointment::getTableName(),
+            '{bookly_customer_appointments}' => Entities\CustomerAppointment::getTableName(),
+            '{bookly_customers}'             => Entities\Customer::getTableName(),
+            '{bookly_sent_notifications}'    => Entities\SentNotification::getTableName(),
+            '{ca2_status_equal}'             => 'true',
+            '{ca3_status_equal}'             => 'true',
         );
 
         if ( $settings->getAtHour() !== null ) {
@@ -509,20 +581,20 @@ abstract class Routine
 
         if ( self::$hours >= $settings->getSendAtHour() ) {
             $query = sprintf(
-                'SELECT `ca`.*, `a`.`start_date` FROM `{ab_customer_appointments}` `ca`
-                    LEFT JOIN `{ab_appointments}` `a` ON `a`.`id` = `ca`.`appointment_id`
+                'SELECT `ca`.*, `a`.`start_date` FROM `{bookly_customer_appointments}` `ca`
+                    LEFT JOIN `{bookly_appointments}` `a` ON `a`.`id` = `ca`.`appointment_id`
                 WHERE `ca`.`id` IN(
                     SELECT (
-                        SELECT `ca2`.`id` FROM `{ab_appointments}` `a`
-                            INNER JOIN `{ab_customer_appointments}` `ca2` ON `ca2`.`appointment_id` = `a`.`id` 
+                        SELECT `ca2`.`id` FROM `{bookly_appointments}` `a`
+                            INNER JOIN `{bookly_customer_appointments}` `ca2` ON `ca2`.`appointment_id` = `a`.`id` 
                         WHERE `ca2`.`customer_id` = `c`.`id`
                             AND {ca2_status_equal}
                             AND `a`.`start_date` = (
-                                SELECT MAX(`a2`.`start_date`) FROM `{ab_appointments}` `a2`
-                                    INNER JOIN `{ab_customer_appointments}` `ca3` ON `ca3`.`appointment_id` = `a2`.`id`
+                                SELECT MAX(`a2`.`start_date`) FROM `{bookly_appointments}` `a2`
+                                    INNER JOIN `{bookly_customer_appointments}` `ca3` ON `ca3`.`appointment_id` = `a2`.`id`
                                 WHERE `ca3`.`customer_id` = `c`.`id` AND {ca3_status_equal}
                             ) LIMIT 1
-                        ) `last_ca_id` FROM `{ab_customers}` `c`
+                        ) `last_ca_id` FROM `{bookly_customers}` `c`
                     )
                     AND {sent_time_interval}
                     AND NOT EXISTS ( %s )',
@@ -535,7 +607,9 @@ abstract class Routine
             }
 
             $query = strtr( $query, $replace );
-
+            if ( is_array( $services ) ) {
+                $query .= sprintf( ' AND ( `a`.`service_id` IN (%1$s) OR `ca`.`compound_service_id` IN (%1$s) )', implode( ', ', $services ) );
+            }
             foreach ( (array) $wpdb->get_results( $query, ARRAY_A ) as $fields ) {
                 $ca_list[] = new Entities\CustomerAppointment( $fields );
             }
@@ -616,7 +690,8 @@ abstract class Routine
                 LEFT JOIN `%s` `s`  ON `s`.`id`  = `a`.`service_id`
                 LEFT JOIN `%s` `st` ON `st`.`id` = `a`.`staff_id`
                 LEFT JOIN `%s` `ss` ON `ss`.`staff_id` = `a`.`staff_id` AND `ss`.`service_id` = `a`.`service_id`
-                WHERE `ca`.`status` IN("%s","%s")
+                WHERE `st`.`visibility` != "archive"
+                    AND `ca`.`status` IN("%s","%s")
                     AND DATE("%s") = DATE(`a`.`start_date`)
                     AND NOT EXISTS (
                         SELECT * FROM `%s` `sn` 
@@ -735,7 +810,9 @@ abstract class Routine
                             $staff_phone = $appointment->staff_phone;
                         }
 
-                        if ( $notification->getGateway() == 'email' && $staff_email != '' || $notification->getGateway() == 'sms' && $staff_phone != '' ) {
+                        if ( $notification->getGateway() == 'email' && $staff_email != ''
+                            || $notification->getGateway() == 'sms' && $staff_phone != ''
+                        ) {
                             $staff_photo                     = wp_get_attachment_image_src( $appointment->staff_attachment_id, 'full' );
                             $codes                           = new Lib\Notifications\Codes();
                             $codes->agenda_date              = Lib\Utils\DateTime::formatDate( date( 'Y-m-d', current_time( 'timestamp' ) + abs( $settings->getOffsetHours() * HOUR_IN_SECONDS ) ) );

@@ -3,6 +3,7 @@ jQuery(function($) {
         $color_picker                   = $('.bookly-js-color-picker'),
         $editableElements               = $('.bookly-js-editable'),
         $show_progress_tracker          = $('#bookly-show-progress-tracker'),
+        $align_buttons_left             = $('#bookly-align-buttons-left'),
         $step_settings                  = $('#bookly-step-settings'),
         $bookly_show_step_extras        = $('#bookly-show-step-extras'),
         $bookly_show_step_repeat        = $('#bookly-show-step-repeat'),
@@ -46,6 +47,7 @@ jQuery(function($) {
         $show_login_button              = $('#bookly-show-login-button'),
         $show_facebook_login_button     = $('#bookly-show-facebook-login-button'),
         $first_last_name                = $('#bookly-cst-first-last-name'),
+        $confirm_email                  = $('#bookly-cst-show-email-confirm'),
         $show_notes_field               = $('#bookly-show-notes'),
         $show_birthday_fields           = $('#bookly-show-birthday'),
         $show_address_fields            = $('#bookly-show-address'),
@@ -140,6 +142,15 @@ jQuery(function($) {
     $show_progress_tracker.on('change', function() {
         $('.bookly-progress-tracker').toggle(this.checked);
     }).trigger('change');
+
+    // Align buttons to the left
+    $align_buttons_left.on('change', function () {
+        if (this.checked) {
+            $('.bookly-nav-steps > div.bookly-right').removeClass('bookly-right').addClass('bookly-left');
+        } else {
+            $('.bookly-nav-steps > div.bookly-left').removeClass('bookly-left').addClass('bookly-right');
+        }
+    });
 
     // Show steps.
     $('.bookly-js-show-step').on('change', function () {
@@ -548,11 +559,54 @@ jQuery(function($) {
     $first_last_name.on('change', function () {
         $first_last_name.popover('toggle');
         if (this.checked) {
-            $('.bookly-details-full-name').css('display', 'none');
-            $('.bookly-details-first-last-name').css('display', 'table');
+            $('.bookly-js-details-full-name').addClass('collapse');
+            $('.bookly-js-details-first-last-name').removeClass('collapse');
+            if ($confirm_email.is(':checked')) {
+                $('.bookly-js-details-email').removeClass('collapse');
+                $('.bookly-js-details-confirm').removeClass('collapse');
+                $('.bookly-js-details-email-confirm').addClass('collapse');
+            } else {
+                $('.bookly-js-details-email').removeClass('collapse');
+                $('.bookly-js-details-confirm').addClass('collapse');
+                $('.bookly-js-details-email-confirm').addClass('collapse');
+            }
         } else {
-            $('.bookly-details-full-name').css('display', 'block');
-            $('.bookly-details-first-last-name').css('display', 'none');
+            $('.bookly-js-details-full-name').removeClass('collapse');
+            $('.bookly-js-details-first-last-name').addClass('collapse');
+            if ($confirm_email.is(':checked')) {
+                $('.bookly-js-details-email').addClass('collapse');
+                $('.bookly-js-details-confirm').addClass('collapse');
+                $('.bookly-js-details-email-confirm').removeClass('collapse');
+            } else {
+                $('.bookly-js-details-email').removeClass('collapse');
+                $('.bookly-js-details-confirm').addClass('collapse');
+                $('.bookly-js-details-email-confirm').addClass('collapse');
+            }
+        }
+    });
+
+    // Show first and last name.
+    $confirm_email.on('change', function () {
+        if (this.checked) {
+            if ($first_last_name.is(':checked')) {
+                $('.bookly-js-details-email').removeClass('collapse');
+                $('.bookly-js-details-confirm').removeClass('collapse');
+                $('.bookly-js-details-email-confirm').addClass('collapse');
+            } else {
+                $('.bookly-js-details-email').addClass('collapse');
+                $('.bookly-js-details-confirm').addClass('collapse');
+                $('.bookly-js-details-email-confirm').removeClass('collapse');
+            }
+        } else {
+            if ($first_last_name.is(':checked')) {
+                $('.bookly-js-details-email').removeClass('collapse');
+                $('.bookly-js-details-confirm').addClass('collapse');
+                $('.bookly-js-details-email-confirm').addClass('collapse');
+            } else {
+                $('.bookly-js-details-email').removeClass('collapse');
+                $('.bookly-js-details-confirm').addClass('collapse');
+                $('.bookly-js-details-email-confirm').addClass('collapse');
+            }
         }
     });
 
@@ -718,6 +772,7 @@ jQuery(function($) {
                 'bookly_app_show_birthday'              : Number($show_birthday_fields.prop('checked')),
                 'bookly_app_show_address'               : Number($show_address_fields.prop('checked')),
                 'bookly_app_show_progress_tracker'      : Number($show_progress_tracker.prop('checked')),
+                'bookly_app_align_buttons_left'         : Number($align_buttons_left.prop('checked')),
                 'bookly_app_staff_name_with_price'      : Number($staff_name_with_price.prop('checked')),
                 'bookly_app_service_duration_with_price': Number($service_duration_with_price.prop('checked')),
                 'bookly_app_required_employee'          : Number($required_employee.prop('checked')),
@@ -726,6 +781,7 @@ jQuery(function($) {
                 'bookly_ratings_app_show_on_frontend'   : Number($show_ratings.prop('checked')),
                 'bookly_cst_required_details'           : $required_details.val() == 'both' ? ['phone', 'email'] : [$required_details.val()],
                 'bookly_cst_first_last_name'            : Number($first_last_name.prop('checked')),
+                'bookly_app_show_email_confirm'         : Number($confirm_email.prop('checked')),
                 'bookly_service_extras_enabled'         : Number($bookly_show_step_extras.prop('checked')),
                 'bookly_recurring_appointments_enabled' : Number($bookly_show_step_repeat.prop('checked')),
                 'bookly_cart_enabled'                   : Number($bookly_show_step_cart.prop('checked')),

@@ -34,9 +34,8 @@ class Ajax extends Lib\Base\Ajax
         $form = new Forms\StaffMemberNew();
         $form->bind( self::postParameters() );
 
-        $staff = $form->save();
-        if ( $staff ) {
-            wp_send_json_success( array( 'html' => self::renderTemplate( '_list_item', array( 'staff' => $staff->getFields() ), false ) ) );
+        if ( $staff = $form->save() ) {
+            wp_send_json_success( array( 'id' => $staff->getId(), 'name' => $staff->getFullName(), 'category' => $staff->getCategoryId() ) );
         }
     }
 
@@ -45,13 +44,34 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function updateStaffPosition()
     {
-        $staff_sorts = self::parameter( 'position' );
-        foreach ( $staff_sorts as $position => $staff_id ) {
-            $staff_sort = new Lib\Entities\Staff();
-            $staff_sort->load( $staff_id );
-            $staff_sort->setPosition( $position );
-            $staff_sort->save();
+        $data = self::parameter( 'data' );
+        foreach ( $data['staff'] as $position => $staff_data ) {
+            $staff = Lib\Entities\Staff::find( $staff_data['staff_id'] );
+            $staff
+                ->setPosition( $position )
+                ->setCategoryId( $staff_data['category_id'] !== '' ? $staff_data['category_id'] : null )
+                ->save();
         }
+
+        Proxy\Pro::updateCategoriesPositions( $data['categories'] );
+
+        wp_send_json_success();
+    }
+
+    public static function updateStaffCategoriesFilter()
+    {
+        $category_id = self::parameter( 'category_id' ) ?: 0;
+        $collapsed   = self::parameter( 'collapsed' );
+        $filter      = (array) get_user_meta( get_current_user_id(), 'bookly_filter_staff_categories', true );
+        if ( $collapsed ) {
+            $filter[$category_id] = true;
+            update_user_meta( get_current_user_id(), 'bookly_filter_staff_categories', $filter );
+        } else {
+            $filter[$category_id] = false;
+            update_user_meta( get_current_user_id(), 'bookly_filter_staff_categories', $filter );
+        }
+
+        wp_send_json_success();
     }
 
     /**
@@ -75,12 +95,14 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function getStaffSchedule()
     {
-        $staff_id = self::parameter( 'staff_id' );
-        $staff    = new Lib\Entities\Staff();
+        $staff_id    = self::parameter( 'staff_id' );
+        $location_id = self::parameter( 'location_id' );
+        $staff       = new Lib\Entities\Staff();
         $staff->load( $staff_id );
-        $schedule_items = $staff->getScheduleItems();
-        $html = self::renderTemplate( 'schedule', compact( 'schedule_items', 'staff_id' ), false );
-        wp_send_json_success( compact( 'html' ) );
+        $schedule_items = $staff->getScheduleItems( $location_id );
+        $html           = self::renderTemplate( 'schedule', compact( 'schedule_items', 'staff_id', 'location_id' ), false );
+        $schedule       = (array) Proxy\Locations::getStaffSchedule( $staff_id, $location_id );
+        wp_send_json_success( compact( 'html', 'schedule' ) );
     }
 
     /**
@@ -91,6 +113,9 @@ class Ajax extends Lib\Base\Ajax
         $form = new Forms\StaffSchedule();
         $form->bind( self::postParameters() );
         $form->save();
+
+        Proxy\Shared::updateStaffSchedule( self::postParameters() );
+
         wp_send_json_success();
     }
 
@@ -253,6 +278,7 @@ class Ajax extends Lib\Base\Ajax
             array( 'alert' => array( 'error' => array() ), 'tpl' => array() ),
             $staff
         );
+        $tpl_data = $data['tpl'];
 
         $users_for_staff = Lib\Utils\Common::isCurrentUserAdmin() ? $form->getUsersForStaff( $staff->getId() ) : array();
 
@@ -261,7 +287,7 @@ class Ajax extends Lib\Base\Ajax
                 'edit'    => self::renderTemplate( 'edit', compact( 'staff' ), false ),
                 'details' => self::renderTemplate(
                     '_details',
-                    compact( 'staff', 'users_for_staff' ) + array( 'tpl_data' => $data['tpl'] ),
+                    compact( 'staff', 'users_for_staff', 'tpl_data' ),
                     false
                 ),
             ),
@@ -295,7 +321,12 @@ class Ajax extends Lib\Base\Ajax
         }
 
         $params = self::postParameters();
-
+        if ( ! $params['category_id'] ) {
+            $params['category_id'] = null;
+        }
+        if ( ! $params['working_time_limit'] ) {
+            $params['working_time_limit'] = null;
+        }
         $form = new Forms\StaffMemberEdit();
         $form->bind( $params, $_FILES );
 
@@ -331,20 +362,25 @@ class Ajax extends Lib\Base\Ajax
             } else {
                 /** @var Lib\Entities\Appointment $appointment */
                 $appointment = Lib\Entities\Appointment::query( 'a' )
-                    ->select( 'MAX(a.start_date) AS start_date')
+                    ->select( 'MAX(a.start_date) AS start_date' )
                     ->where( 'a.staff_id', $staff_id )
                     ->whereGt( 'a.start_date', current_time( 'mysql' ) )
                     ->groupBy( 'a.staff_id' )
-                    ->findOne();
-
+                    ->fetchRow();
+                $filter_url = '';
                 if ( $appointment ) {
-                    $last_month = date_create( $appointment->getStartDate() )->modify( 'last day of' )->format( 'Y-m-d' );
-                    $action = 'show_modal';
+                    $last_month = date_create( $appointment['start_date'] )->modify( 'last day of' )->format( 'Y-m-d' );
+                    $action     = 'show_modal';
                     $filter_url = sprintf( '%s#staff=%d&range=%s-%s',
                         Lib\Utils\Common::escAdminUrl( \Bookly\Backend\Modules\Appointments\Ajax::pageSlug() ),
                         $staff_id,
                         date_create( current_time( 'mysql' ) )->format( 'Y-m-d' ),
                         $last_month );
+                    wp_send_json_error( compact( 'action', 'filter_url' ) );
+                }
+                $filter_url = Proxy\Shared::getAffectedAppointmentsFilter( $filter_url, $staff_id );
+                if ( $filter_url ) {
+                    $action     = 'show_modal';
                     wp_send_json_error( compact( 'action', 'filter_url' ) );
                 } else {
                     $action = 'confirm';

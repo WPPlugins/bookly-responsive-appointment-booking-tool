@@ -13,7 +13,7 @@ class StaffSchedule extends Lib\Base\Form
 
     public function configure()
     {
-        $this->setFields( array( 'days', 'staff_id', 'start_time', 'end_time' ) );
+        $this->setFields( array( 'days', 'staff_id', 'start_time', 'end_time', 'location_id' ) );
     }
 
     public function save()

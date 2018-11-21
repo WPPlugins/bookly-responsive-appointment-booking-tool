@@ -4,7 +4,7 @@ jQuery(function ($) {
         jQuery.extend(obj.options, options);
 
         // Loads schedule list
-        if (!$container.children().length) {
+        if (!$container.children().length || obj.options.refresh) {
             $container.html('<div class="bookly-loading"></div>');
             $.ajax({
                 type: 'POST',
@@ -16,8 +16,9 @@ jQuery(function ($) {
                 success: function (response) {
                     // fill in the container
                     $container.html(response.data.html);
+                    $container.booklyHelp();
 
-
+                    var schedule = response.data.schedule;
                     // init 'add break' functionality
                     $('.bookly-js-toggle-popover:not(.break-interval)', $container).popover({
                         html: true,
@@ -57,7 +58,7 @@ jQuery(function ($) {
                         });
                     });
 
-                    $container
+                    $container.off()
                     // Save Schedule
                         .on('click', '#bookly-schedule-save', function (e) {
                             e.preventDefault();
@@ -67,6 +68,9 @@ jQuery(function ($) {
                             $('select.working-schedule-start, select.working-schedule-end, input:hidden', $container).each(function () {
                                 data[this.name] = this.value;
                             });
+                            data['location_id'] = $('#staff_location_id', $container).val();
+                            data['custom_location_settings'] = $('#custom_location_settings', $container).val();
+                            data['staff_id'] = options.get_staff_schedule.staff_id;
                             $.post(ajaxurl, $.param(data), function () {
                                 ladda.stop();
                                 obj.options.booklyAlert({success: [obj.options.l10n.saved]});
@@ -235,7 +239,38 @@ jQuery(function ($) {
                             } else {
                                 $this.closest('.row').find('.bookly-hide-on-off').show();
                             }
-                        });
+                        })
+                        // Change location
+                        .on('change', '#staff_location_id', function () {
+                            $('.tab-pane > div').hide();
+                            var get_staff_schedule = {
+                                    action    : options.get_staff_schedule.action,
+                                    staff_id  : options.get_staff_schedule.staff_id,
+                                    csrf_token: options.get_staff_schedule.csrf_token,
+                                },
+                                staff_location_id  = $('#staff_location_id', $container).val();
+                            if ( staff_location_id != '') {
+                                get_staff_schedule['location_id'] = staff_location_id;
+                            }
+                            new BooklyStaffSchedule($container, {
+                                get_staff_schedule: get_staff_schedule,
+                                l10n              : options.l10n,
+                                refresh           : true
+                            });
+
+                            $container.show();
+                        })
+                        // Change default/custom settings for location
+                        .on('change', '#custom_location_settings', function () {
+                            if ($(this).val() == 1) {
+                                $('.panel', $container).show();
+                            } else {
+                                $('.panel', $container).hide();
+                            }
+                        })
+                    ;
+
+                    $('#custom_location_settings', $container).trigger('change');
                     $('.working-schedule-start', $container).trigger('change');
                     $('.break-start', $container).trigger('change');
                 }

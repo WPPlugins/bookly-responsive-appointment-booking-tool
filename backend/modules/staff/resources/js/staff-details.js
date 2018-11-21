@@ -29,7 +29,7 @@ jQuery(function ($) {
                 $staff_wp_user          = $('#bookly-wp-user', $container),
                 $staff_email            = $('#bookly-email', $container),
                 $staff_phone            = $('#bookly-phone', $container),
-                $location_row           = $('.locations-row', $container),
+                $staffLocations         = $('#bookly-js-locations', $container),
                 $unsaved_changes        = $('.bookly-js-unsaved-changes'),
                 $unsaved_changes_save   = $('.bookly-js-unsaved-changes .bookly-js-save-changes'),
                 $unsaved_changes_ignore = $('.bookly-js-unsaved-changes .bookly-js-ignore-changes'),
@@ -58,33 +58,13 @@ jQuery(function ($) {
                 }
             });
 
-            $('input.bookly-js-all-locations, input.bookly-location', $container).on('change', function () {
-                if ($(this).hasClass('bookly-js-all-locations')) {
-                    $location_row.find('.bookly-location').prop('checked', $(this).prop('checked'));
-                } else {
-                    $location_row.find('.bookly-js-all-locations').prop('checked', $location_row.find('.bookly-location:not(:checked)').length == 0);
-                }
-                updateLocationsButton();
-            });
+            $staffLocations.booklyDropdown();
 
             $('button:reset', $container).on('click', function () {
-                setTimeout(updateLocationsButton, 0);
+                setTimeout(function () {
+                    $staffLocations.booklyDropdown('reset');
+                }, 0);
             });
-
-            function updateLocationsButton() {
-                var locations_checked = $location_row.find('.bookly-location:checked').length;
-                if (locations_checked == 0) {
-                    $location_row.find('.bookly-locations-count').text(obj.options.l10n.selector.nothing_selected);
-                } else if (locations_checked == 1) {
-                    $location_row.find('.bookly-locations-count').text($location_row.find('.bookly-location:checked').data('location_name'));
-                } else {
-                    if (locations_checked == $location_row.find('.bookly-location').length) {
-                        $location_row.find('.bookly-locations-count').text(obj.options.l10n.selector.all_selected);
-                    } else {
-                        $location_row.find('.bookly-locations-count').text(locations_checked + '/' + $location_row.find('.bookly-location').length);
-                    }
-                }
-            }
 
             $container.on('change', 'select,input,textarea', function () {
                 has_changes = true;
@@ -112,13 +92,15 @@ jQuery(function ($) {
             $unsaved_changes_ignore.on('click', function () {
                 window.location.href = $unsaved_changes.data('url');
             });
-            updateLocationsButton();
 
             // Save staff member details.
             $('#bookly-details-save', $container).on('click', function (e) {
                 e.preventDefault();
                 var ladda = Ladda.create(this);
                 ladda.start();
+                // for BooklyPro listener in archive.js
+                // When button disabled, listeners don't process
+                $(this).removeAttr('disabled');
                 save(function (response) {
                     if (response.success) {
                         obj.options.booklyAlert({success: [obj.options.l10n.saved]});

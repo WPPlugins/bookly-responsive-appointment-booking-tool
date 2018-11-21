@@ -4,11 +4,9 @@ namespace Bookly\Backend\Components\Dialogs\Customer\Proxy;
 use Bookly\Lib;
 
 /**
- * Class CustomerInformation
- * @package Bookly\Backend\Components\Dialogs\Customer\Proxy
- *
- * @method static void renderCustomerDialog() Render 'Customer Information' row in edit customer dialog.
- * @method static array prepareCustomerFormData( array $params ) Prepare customer info fields before saving customer form.
+ * @since Bookly 16.2
+ * @deprecated
+ * Proxy file was moved
  */
 abstract class CustomerInformation extends Lib\Base\Proxy
 {

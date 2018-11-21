@@ -64,7 +64,6 @@ class Codes
                 'cancel_appointment_url'         => __( 'URL of cancel appointment link (to use inside <a> tag)', 'bookly' ),
                 'cancellation_reason'            => __( 'reason you mentioned while deleting appointment', 'bookly' ),
                 'google_calendar_url'            => __( 'URL for adding event to client\'s Google Calendar (to use inside <a> tag)', 'bookly' ),
-                'number_of_persons'              => __( 'number of persons', 'bookly' ),
                 'reject_appointment_url'         => __( 'URL of reject appointment link (to use inside <a> tag)', 'bookly' ),
             ),
             'payment' => array(

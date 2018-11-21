@@ -10,6 +10,7 @@ namespace Bookly\Lib;
  * @method static bool cartActive()                    Check whether Cart add-on is active or not.
  * @method static bool chainAppointmentsActive()       Check whether Chain Appointment add-on is active or not.
  * @method static bool compoundServicesActive()        Check whether Compound Services add-on is active or not.
+ * @method static bool collaborativeServicesActive()   Check whether Collaborative Services add-on is active or not.
  * @method static bool couponsActive()                 Check whether Coupons add-on is active or not.
  * @method static bool customerGroupsActive()          Check whether Customer Groups add-on is active or not.
  * @method static bool customerInformationActive()     Check whether Customer Information add-on is active or not.
@@ -73,20 +74,22 @@ abstract class Config
         // Services.
         $query = Entities\Service::query( 's' )
             ->select( 's.id, s.category_id, s.title, s.position, s.duration, s.price' )
+            ->addSelect( sprintf( '%s AS min_capacity, %s AS max_capacity',
+                Proxy\Shared::prepareStatement( 1, 'MIN(ss.capacity_min)', 'StaffService' ),
+                Proxy\Shared::prepareStatement( 1, 'MAX(ss.capacity_max)', 'StaffService' )
+            ) )
             ->innerJoin( 'StaffService', 'ss', 'ss.service_id = s.id' )
+            ->leftJoin( 'Staff', 'st', 'st.id = ss.staff_id' )
             ->where( 's.type',  Entities\Service::TYPE_SIMPLE )
-            ->where( 's.visibility', Entities\Service::VISIBILITY_PUBLIC )
+            ->where( 'st.visibility', 'public' )
             ->groupBy( 's.id' );
-        if ( self::groupBookingActive() && get_option( 'bookly_group_booking_enabled' ) ) {
-            $query->addSelect( 'MIN(ss.capacity_min) AS min_capacity, MAX(ss.capacity_max) AS max_capacity' );
-        } else {
-            $query->addSelect( '1 AS min_capacity, 1 AS max_capacity' );
-        }
 
         $query = Proxy\Shared::prepareCaSeStQuery( $query );
+
         if ( ! Proxy\Locations::servicesPerLocationAllowed() ) {
             $query->where( 'ss.location_id', null );
         }
+
         foreach ( $query->fetchArray() as $row ) {
             $result['services'][ $row['id'] ] = array(
                 'id'          => (int) $row['id'],
@@ -111,22 +114,19 @@ abstract class Config
             $result = Proxy\Shared::prepareCategoryService( $result, $row );
         }
 
-        if ( self::groupBookingActive() && get_option( 'bookly_group_booking_enabled' ) ) {
-            $fields = 'st.id, st.full_name, st.position, ss.service_id, ss.capacity_min, ss.capacity_max, ss.price';
-        } else {
-            $fields = 'st.id, st.full_name, st.position, ss.service_id, 1 AS capacity_min, 1 AS capacity_max, ss.price';
-        }
-
         // Staff.
         $query = Entities\Staff::query( 'st' )
-            ->select( $fields )
+            ->select( sprintf( 'st.id, st.full_name, st.position, ss.service_id, %s AS capacity_min, %s AS capacity_max, ss.price',
+                Proxy\Shared::prepareStatement( 1, 'ss.capacity_min', 'StaffService' ),
+                Proxy\Shared::prepareStatement( 1, 'ss.capacity_max', 'StaffService' )
+            ) )
             ->innerJoin( 'StaffService', 'ss', 'ss.staff_id = st.id' )
             ->leftJoin( 'Service', 's', 's.id = ss.service_id' )
-            ->whereNot( 'st.visibility', 'private' )
-            ->whereNot( 's.type', Entities\Service::TYPE_PACKAGE )
-            ->where( 's.visibility', Entities\Service::VISIBILITY_PUBLIC );
+            ->where( 'st.visibility', 'public' )
+            ->whereNot( 's.type', Entities\Service::TYPE_PACKAGE );
 
         $query = Proxy\Shared::prepareCaSeStQuery( $query );
+
         if ( ! Proxy\Locations::servicesPerLocationAllowed() ) {
             $query
                 ->addSelect( 'ss.location_id' )
@@ -181,9 +181,9 @@ abstract class Config
         $res = array_merge(
             Entities\StaffScheduleItem::query()
                 ->select( '`r`.`day_index`, MIN(`r`.`start_time`) AS `start_time`, MAX(`r`.`end_time`) AS `end_time`' )
-                ->leftJoin( 'Staff', 's', '`s`.`id` = `r`.`staff_id`' )
+                ->leftJoin( 'Staff', 'st', '`st`.`id` = `r`.`staff_id`' )
                 ->whereNot( 'r.start_time', null )
-                ->whereNot( 's.visibility', 'private' )
+                ->where( 'st.visibility', 'public' )
                 ->groupBy( 'day_index' )
                 ->fetchArray(),
             (array) Proxy\SpecialDays::getDaysAndTimes()
@@ -401,6 +401,16 @@ abstract class Config
     public static function showFirstLastName()
     {
         return (bool) get_option( 'bookly_cst_first_last_name', false );
+    }
+
+    /**
+     * Whether to use email confirmation.
+     *
+     * @return bool
+     */
+    public static function showEmailConfirm()
+    {
+        return (bool) get_option( 'bookly_app_show_email_confirm', false );
     }
 
     /**

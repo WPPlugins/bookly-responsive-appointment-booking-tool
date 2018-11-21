@@ -22,9 +22,14 @@ class Ajax extends Page
      */
     public static function getStaffAppointments()
     {
+        if ( Lib\Config::proActive() ) {
+            $staff_members = Lib\Utils\Common::isCurrentUserAdmin()
+                ? Lib\Entities\Staff::query()->sortBy( 'position' )->whereNot( 'visibility', 'archive' )->find()
+                : Lib\Entities\Staff::query()->where( 'wp_user_id', get_current_user_id() )->whereNot( 'visibility', 'archive' )->find();
+        } else {
+            $staff_members = array( Lib\Entities\Staff::query()->findOne() );
+        }
         $result        = array();
-        $staff         = Lib\Entities\Staff::query()->findOne();
-        $staff_members = $staff ? Lib\Proxy\Pro::prepareStaffMembers( array( $staff ) ) : array();
         $one_day       = new \DateInterval( 'P1D' );
         $start_date    = new \DateTime( self::parameter( 'start' ) );
         $end_date      = new \DateTime( self::parameter( 'end' ) );

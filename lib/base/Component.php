@@ -20,17 +20,6 @@ abstract class Component extends Cache
      ******************************************************************************************************************/
 
     /**
-     * Verify CSRF token.
-     *
-     * @param string $action
-     * @return bool
-     */
-    protected static function csrfTokenValid( $action = null )
-    {
-        return wp_verify_nonce( static::parameter( 'csrf_token' ), 'bookly' ) == 1;
-    }
-
-    /**
      * Get admin page slug.
      *
      * @return string
@@ -69,6 +58,17 @@ abstract class Component extends Cache
     /******************************************************************************************************************
      * Protected methods                                                                                              *
      ******************************************************************************************************************/
+
+    /**
+     * Verify CSRF token.
+     *
+     * @param string $action
+     * @return bool
+     */
+    protected static function csrfTokenValid( $action = null )
+    {
+        return wp_verify_nonce( static::parameter( 'csrf_token' ), 'bookly' ) == 1;
+    }
 
     /**
      * Get path to component directory.

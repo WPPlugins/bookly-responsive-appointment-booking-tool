@@ -30,6 +30,8 @@ jQuery(function($) {
         $tiny_mce_container.detach().appendTo('#' + message_id + ' .bookly-js-tinymce-message');
         tinymce.init(tinyMCEPreInit.mceInit['bookly-js-tinymce-area']);
         tinymce.get('bookly-js-tinymce-area').setContent($panel.find('.bookly-js-message-input').val());
+        // Trigger for displaying settings for current notification type.
+        $("select[name$='[type]']", $panel).trigger('change');
     });
 
     $container.on('shown.bs.collapse', '.panel', function () {
@@ -60,23 +62,52 @@ jQuery(function($) {
         template: '<div class="popover bookly-font-xs" style="width: 220px" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
     });
 
+    // Hide recipients staff and admin for compound, collaborate services
+    var dropdownOptions = {};
+    if (BooklyL10n.onlyClient.length) {
+        dropdownOptions = {
+            onChange: function (values) {
+                var $panel  = $(this).closest('.panel'),
+                    checked = this.booklyDropdown('getSelected'),
+                    disable = false
+                ;
+                if (values.length > 0) {
+                    for (var i = 0; i < BooklyL10n.onlyClient.length; i++) {
+                        if (checked.indexOf(BooklyL10n.onlyClient[i]) != -1) {
+                            disable = true;
+                            break;
+                        }
+                    }
+                }
+                $.each(['staff', 'admin'], function (index, value) {
+                    var $checkbox = $("[name$='[to_" + value + "]']", $panel);
+                    $checkbox.attr('disabled', disable);
+                    if (disable) {
+                        $checkbox.prop('checked', !disable);
+                    }
+                });
+            }
+        };
+    }
+    $('.bookly-js-services', $custom_notifications).booklyDropdown(dropdownOptions);
+
     $custom_notifications
         .on('change', "select[name$='[type]']", function () {
-            var $panel        = $(this).closest('.panel'),
-                $settings     = $panel.find('.bookly-js-settings'),
-                $attach       = $panel.find('.bookly-js-attach'),
-                value         = $(this).find(':selected').val(),
-                set           = $(this).find(':selected').data('set'),
-                to            = $(this).find(':selected').data('to'),
-                showAttach    = $(this).find(':selected').data('attach-show')||[]
+            var $panel     = $(this).closest('.panel'),
+                $settings  = $panel.find('.bookly-js-settings'),
+                $attach    = $panel.find('.bookly-js-attach'),
+                value      = $(this).find(':selected').val(),
+                set        = $(this).find(':selected').data('set'),
+                $set       = $panel.find('.bookly-js-' + set),
+                to         = $(this).find(':selected').data('to'),
+                showAttach = $(this).find(':selected').data('attach-show')||[]
             ;
-
             $panel.find('table.bookly-codes').each(function () {
                 $(this).toggle($(this).hasClass('bookly-js-codes-' + value));
             });
 
             $.each(['customer', 'staff', 'admin'], function (index, value) {
-                $panel.find("[name$='[to_" + value + "]']").closest('.checkbox-inline').toggle(to.indexOf(value) != -1);
+                $("[name$='[to_" + value + "]']",$panel).removeAttr('disabled').closest('.checkbox-inline').toggle(to.indexOf(value) != -1);
             });
 
             $attach.hide();
@@ -90,10 +121,42 @@ jQuery(function($) {
 
             switch (set) {
                 case 'after_event':
-                    var $set = $panel.find('.bookly-js-' + set);
-                    $set.find('.bookly-js-to').toggle(value == 'ca_status_changed');
-                    $set.find('.bookly-js-with').toggle(value != 'ca_status_changed');
+                    $('.bookly-js-services', $set).trigger('dropdown.change');
+                    $('.bookly-js-to', $set).toggle(value == 'ca_status_changed');
+                    $('.bookly-js-with', $set).toggle(value != 'ca_status_changed');
                     break;
+                case 'existing_event_with_date_and_time':
+                    $('.bookly-js-services', $set).trigger('dropdown.change');
+                    break;
+            }
+            // Trigger for disable/enable recipients checkboxes,
+            // for services in custom notifications where the recipient is client only.
+            $("input[name$='[" + set + "][services][any]']", $set).trigger('change');
+        })
+        .on('change', "input[name$='[any]']", function () {
+            var checked = $(this).prop('checked'),
+                $panel  = $(this).closest('.panel'),
+                disable = false;
+            $('[data-toggle=dropdown]', $(this).parent()).prop('disabled', checked);
+            if (BooklyL10n.onlyClient.length > 0) {
+                if (checked && BooklyL10n.onlyClient.length > 0) {
+                    disable = true;
+                } else {
+                    var selected = $('.bookly-js-services', $(this).parent()).booklyDropdown('getSelected');
+                    for (var i = 0; i < BooklyL10n.onlyClient.length; i++) {
+                        if (selected.indexOf(BooklyL10n.onlyClient[i]) != -1) {
+                            disable = true;
+                            break;
+                        }
+                    }
+                }
+                $.each(['staff', 'admin'], function (index, value) {
+                    var $checkbox = $("[name$='[to_" + value + "]']", $panel);
+                    $checkbox.attr('disabled', disable);
+                    if (disable) {
+                        $checkbox.prop('checked', !disable);
+                    }
+                });
             }
         })
         .on('click', '.bookly-js-delete', function () {
@@ -127,8 +190,7 @@ jQuery(function($) {
                     }
                 });
             }
-        })
-        .find("select[name$='[type]']").trigger('change');
+        });
 
     $('button[type=reset]').on('click', function () {
         setTimeout(function () {
@@ -136,7 +198,7 @@ jQuery(function($) {
         }, 0);
     });
 
-    $("#bookly-js-new-notification").on('click', function () {
+    $('#bookly-js-new-notification').on('click', function () {
         var ladda = Ladda.create(this);
         ladda.start();
         $.ajax({
@@ -155,7 +217,8 @@ jQuery(function($) {
                         $panel = $subject.closest('.panel-collapse');
 
                     $panel.collapse('show');
-                    $panel.find("select[name$='[type]']").trigger('change');
+                    $('.bookly-js-services', $panel).booklyDropdown(dropdownOptions);
+                    $("select[name$='[type]']", $panel).trigger('change');
                     $subject.focus();
                 }
             },

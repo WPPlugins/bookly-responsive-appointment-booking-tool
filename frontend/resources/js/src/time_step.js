@@ -11,6 +11,16 @@ import stepDetails from './details_step.js';
  */
 var xhr_render_time = null;
 export default function stepTime(params, error_message) {
+    if (opt[params.form_id].no_time || opt[params.form_id].skip_steps.time) {
+        if (!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_extras) {
+            stepExtras({form_id: params.form_id});
+        } else if (!opt[params.form_id].skip_steps.cart) {
+            stepCart({form_id: params.form_id,add_to_cart: true, from_step: (params && params.prev_step) ? params.prev_step : 'service'});
+        } else {
+            stepDetails({form_id: params.form_id, add_to_cart : true});
+        }
+        return;
+    }
     if (xhr_render_time != null) {
         xhr_render_time.abort();
         xhr_render_time = null;
@@ -86,7 +96,11 @@ export default function stepTime(params, error_message) {
                 e.preventDefault();
                 laddaStart(this);
                 if (!opt[params.form_id].skip_steps.extras && !opt[params.form_id].no_extras) {
-                    stepExtras({form_id: params.form_id});
+                    if (opt[params.form_id].step_extras == 'before_step_time') {
+                        stepExtras({form_id: params.form_id});
+                    } else {
+                        stepService({form_id: params.form_id});
+                    }
                 } else {
                     stepService({form_id: params.form_id});
                 }
@@ -429,6 +443,15 @@ export default function stepTime(params, error_message) {
                     $current_screen = $screens.eq(0);
                 }
 
+                $('button.bookly-time-skip', $container).off('click').on('click', function (e) {
+                    laddaStart(this);
+                    if (!opt[params.form_id].skip_steps.cart) {
+                        stepCart({form_id: params.form_id, add_to_cart: true, from_step: 'time'});
+                    } else {
+                        stepDetails({form_id: params.form_id, add_to_cart : true});
+                    }
+                });
+
                 // On click on a slot.
                 $('button.bookly-hour', $container).off('click').on('click', function (e) {
                     e.preventDefault();
@@ -449,7 +472,9 @@ export default function stepTime(params, error_message) {
                         xhrFields : { withCredentials: true },
                         crossDomain : 'withCredentials' in new XMLHttpRequest(),
                         success : function (response) {
-                            if (!opt[params.form_id].skip_steps.repeat) {
+                            if(!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_extras) {
+                                stepExtras({form_id: params.form_id});
+                            } else if (!opt[params.form_id].skip_steps.repeat) {
                                 stepRepeat({form_id: params.form_id});
                             } else if (!opt[params.form_id].skip_steps.cart) {
                                 stepCart({form_id: params.form_id, add_to_cart : true, from_step : 'time'});

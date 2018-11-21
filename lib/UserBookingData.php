@@ -8,6 +8,7 @@ namespace Bookly\Lib;
 class UserBookingData
 {
     // Protected properties
+    protected $first_rendered_step = 1;
 
     // Step 0
     /** @var string */
@@ -39,6 +40,8 @@ class UserBookingData
     protected $last_name;
     /** @var string */
     protected $email;
+    /** @var string */
+    protected $email_confirm;
     /** @var string */
     protected $country;
     /** @var string */
@@ -85,6 +88,7 @@ class UserBookingData
 
     // Frontend expect variables
     private $properties = array(
+        'first_rendered_step',
         // Step 0
         'time_zone',
         'time_zone_offset',
@@ -101,6 +105,7 @@ class UserBookingData
         'first_name',
         'last_name',
         'email',
+        'email_confirm',
         'phone',
         'birthday',
         'additional_address',
@@ -167,6 +172,7 @@ class UserBookingData
                     ->setFirstName( $customer->getFirstName() )
                     ->setLastName( $customer->getLastName() )
                     ->setEmail( $customer->getEmail() )
+                    ->setEmailConfirm( $customer->getEmail() )
                     ->setPhone( $customer->getPhone() )
                     ->setBirthday( $birthday )
                     ->setCountry( $customer->getCountry() )
@@ -183,7 +189,8 @@ class UserBookingData
                     ->setFullName( $current_user->display_name )
                     ->setFirstName( $current_user->user_firstname )
                     ->setLastName( $current_user->user_lastname )
-                    ->setEmail( $current_user->user_email );
+                    ->setEmail( $current_user->user_email )
+                    ->setEmailConfirm( $current_user->user_email );
             }
         } elseif ( get_option( 'bookly_cst_remember_in_cookie' ) && isset( $_COOKIE['bookly-cst-full-name'] ) ) {
             $date = explode( '-', $_COOKIE['bookly-cst-birthday'] );
@@ -198,6 +205,7 @@ class UserBookingData
                 ->setFirstName( $_COOKIE['bookly-cst-first-name'] )
                 ->setLastName( $_COOKIE['bookly-cst-last-name'] )
                 ->setEmail( $_COOKIE['bookly-cst-email'] )
+                ->setEmailConfirm( $_COOKIE['bookly-cst-email'] )
                 ->setPhone( $_COOKIE['bookly-cst-phone'] )
                 ->setBirthday( $birthday )
                 ->setCountry( $_COOKIE['bookly-cst-country'] )
@@ -229,10 +237,10 @@ class UserBookingData
         $times = Entities\StaffScheduleItem::query( 'ss' )
             ->select( 'SUBSTRING_INDEX(MIN(ss.start_time), ":", 2) AS min_start_time,
                 SUBSTRING_INDEX(MAX(ss.end_time), ":", 2) AS max_end_time' )
-            ->leftJoin( 'Staff', 's', 's.id = ss.staff_id' )
+            ->leftJoin( 'Staff', 'st', 'st.id = ss.staff_id' )
             ->whereNot( 'start_time', null )
             // Only for visible staff get working hours.
-            ->whereNot( 's.visibility', 'private' )
+            ->where( 'st.visibility', 'public' )
             ->fetchRow();
         $times = Proxy\Shared::adjustMinAndMaxTimes( $times );
         $this
@@ -314,8 +322,11 @@ class UserBookingData
                     $this->chain->add( $item );
                 }
             } elseif ( $name == 'cart' ) {
+                $consider_extras_duration = Proxy\ServiceExtras::considerDuration( true );
                 foreach ( $value as $key => $_data ) {
-                    $this->cart->get( $key )->setData( $_data );
+                    $this->cart->get( $key )
+                        ->setData( $_data )
+                        ->setConsiderExtrasDuration( $consider_extras_duration );
                 }
             } elseif ( $name === 'repeat' ) {
                 $this->setRepeated( $value );
@@ -375,7 +386,7 @@ class UserBookingData
         } else {
             $series_unique_id = 0;
         }
-
+        $consider_extras_duration = Proxy\ServiceExtras::considerDuration( true );
         $cart_items_repeats = array();
         for ( $i = 0; $i < $repeated; $i++ ) {
             $items_in_repeat = array();
@@ -383,7 +394,7 @@ class UserBookingData
                 for ( $q = 0; $q < $chain_item->getQuantity(); ++ $q ) {
                     $cart_item_slots = array();
 
-                    if ( $chain_item->getService()->getType() == Entities\Service::TYPE_COMPOUND ) {
+                    if ( $chain_item->getService()->withSubServices() ) {
                         foreach ( $chain_item->getSubServices() as $sub_service ) {
                             $cart_item_slots[] = $slots[ $slots_idx ++ ];
                         }
@@ -401,6 +412,7 @@ class UserBookingData
                     $cart_item
                         ->setSeriesUniqueId( $chain_item->getSeriesUniqueId()?: $series_unique_id )
                         ->setExtras( $chain_item->getExtras() )
+                        ->setConsiderExtrasDuration( $consider_extras_duration )
                         ->setLocationId( $chain_item->getLocationId() )
                         ->setNumberOfPersons( $chain_item->getNumberOfPersons() )
                         ->setUnits( $chain_item->getUnits() )
@@ -493,6 +505,9 @@ class UserBookingData
                     break;
                 case 'email':
                     $validator->validateEmail( $field_name, $data );
+                    break;
+                case 'email_confirm':
+                    $validator->validateEmailConfirm( $field_name, $data );
                     break;
                 case 'birthday':
                     $validator->validateBirthday( $field_name, $field_value );
@@ -718,6 +733,19 @@ class UserBookingData
     }
 
     /**
+     * Delete coupon.
+     *
+     * @return $this
+     */
+    public function deleteCoupon()
+    {
+        $this->coupon = null;
+        $this->coupon_code = null;
+
+        return $this;
+    }
+
+    /**
      * Set payment ( PayPal, 2Checkout, PayU Latam, Mollie ) transaction status.
      *
      * @param string $gateway
@@ -788,6 +816,29 @@ class UserBookingData
     /**************************************************************************
      * UserData Getters & Setters                                             *
      **************************************************************************/
+
+    /**
+     * Gets first rendered step
+     *
+     * @return int
+     */
+    public function getFirstStep()
+    {
+        return $this->first_rendered_step;
+    }
+
+    /**
+     * Sets first rendered step
+     *
+     * @param int $first_step
+     * @return $this
+     */
+    public function setFirstStep( $first_step )
+    {
+        $this->first_rendered_step = $first_step;
+
+        return $this;
+    }
 
     /**
      * Gets time_zone
@@ -1061,6 +1112,29 @@ class UserBookingData
     public function setEmail( $email )
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Gets email_confirm
+     *
+     * @return string
+     */
+    public function getEmailConfirm()
+    {
+        return $this->email_confirm;
+    }
+
+    /**
+     * Sets email_confirm
+     *
+     * @param string $email_confirm
+     * @return $this
+     */
+    public function setEmailConfirm( $email_confirm )
+    {
+        $this->email_confirm = $email_confirm;
 
         return $this;
     }

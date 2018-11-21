@@ -34,30 +34,24 @@ use Bookly\Backend\Modules\Calendar\Proxy;
                         </li>
                     <?php endforeach ?>
                     <?php if ( Common::isCurrentUserAdmin() ) : ?>
-                        <div class="btn-group pull-right bookly-margin-top-xs">
-                            <button class="btn btn-default dropdown-toggle bookly-js-staff-filter bookly-flexbox" data-toggle="dropdown">
-                                <div class="bookly-flex-cell"><i class="dashicons dashicons-admin-users bookly-margin-right-md"></i></div>
-                                <div class="bookly-flex-cell text-left"><span id="bookly-staff-button"></span></div>
-                                <div class="bookly-flex-cell"><div class="bookly-margin-left-md"><span class="caret"></span></div></div>
-                            </button>
-                            <ul class="dropdown-menu bookly-entity-selector">
-                                <li>
-                                    <a class="checkbox" href="javascript:void(0)">
-                                        <label><input type="checkbox" id="bookly-check-all-entities"><?php _e( 'All staff', 'bookly' ) ?></label>
-                                    </a>
+                        <ul id="bookly-js-staff-filter"
+                            data-container-class="pull-right bookly-margin-top-xs"
+                            data-txt-select-all="<?php esc_attr_e( 'All staff', 'bookly' ) ?>"
+                            data-txt-all-selected="<?php esc_attr_e( 'All staff', 'bookly' ) ?>"
+                            data-txt-nothing-selected="<?php esc_attr_e( 'No staff selected', 'bookly' ) ?>"
+                        >
+                            <?php foreach ( $staff_dropdown_data as $category_id => $category ): ?>
+                                <li<?php if ( ! $category_id ) : ?> data-flatten-if-single<?php endif ?>><?php echo esc_html( $category['name'] ) ?>
+                                    <ul>
+                                        <?php foreach ( $category['items'] as $staff ) : ?>
+                                            <li data-value="<?php echo $staff['id'] ?>">
+                                                <?php echo esc_html( $staff['full_name'] ) ?>
+                                            </li>
+                                        <?php endforeach ?>
+                                    </ul>
                                 </li>
-                                <?php foreach ( $staff_members as $staff ) : ?>
-                                    <li>
-                                        <a class="checkbox" href="javascript:void(0)">
-                                            <label>
-                                                <input type="checkbox" id="bookly-filter-staff-<?php echo $staff->getId() ?>" value="<?php echo $staff->getId() ?>" data-staff_name="<?php echo esc_attr( $staff->getFullName() ) ?>" class="bookly-js-check-entity">
-                                                <?php echo esc_html( $staff->getFullName() ) ?>
-                                            </label>
-                                        </a>
-                                    </li>
-                                <?php endforeach ?>
-                            </ul>
-                        </div>
+                            <?php endforeach ?>
+                        </ul>
                     <?php endif ?>
                     <?php Proxy\Locations::renderCalendarLocationFilter() ?>
                     <?php Proxy\AdvancedGoogleCalendar::renderSyncButton( $staff_members ) ?>

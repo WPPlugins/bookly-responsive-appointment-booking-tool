@@ -18,11 +18,12 @@ class Buttons extends Lib\Base\Component
      */
     public static function render( $page_slug )
     {
-        static::enqueueStyles( array(
+        self::enqueueStyles( array(
+            'backend'  => array( 'css/fontawesome-all.min.css' ),
             'frontend' => array( 'css/ladda.min.css', ),
         ) );
 
-        static::enqueueScripts( array(
+        self::enqueueScripts( array(
             'backend'  => array( 'js/alert.js' => array( 'jquery' ), ),
             'frontend' => array(
                 'js/spin.min.js'  => array( 'jquery' ),

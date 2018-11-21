@@ -17,6 +17,8 @@ class CustomerAppointment extends Lib\Base\Entity
     const STATUS_WAITLISTED = 'waitlisted';
     const STATUS_DONE       = 'done';
 
+    /** @var int */
+    protected $series_id;
     /** @var  int */
     protected $package_id;
     /** @var  int */
@@ -33,6 +35,10 @@ class CustomerAppointment extends Lib\Base\Entity
     protected $notes;
     /** @var  string */
     protected $extras = '[]';
+    /** @var  int */
+    protected $extras_multiply_nop;
+    /** @var  int */
+    protected $extras_consider_duration = 1;
     /** @var  string */
     protected $custom_fields = '[]';
     /** @var  string self::STATUS_* */
@@ -52,6 +58,10 @@ class CustomerAppointment extends Lib\Base\Entity
     /** @var  string */
     protected $locale;
     /** @var  int */
+    protected $collaborative_service_id;
+    /** @var  string */
+    protected $collaborative_token;
+    /** @var  int */
     protected $compound_service_id;
     /** @var  string */
     protected $compound_token;
@@ -63,28 +73,33 @@ class CustomerAppointment extends Lib\Base\Entity
     protected static $table = 'bookly_customer_appointments';
 
     protected static $schema = array(
-        'id'                  => array( 'format' => '%d' ),
-        'package_id'          => array( 'format' => '%d' ),
-        'customer_id'         => array( 'format' => '%d', 'reference' => array( 'entity' => 'Customer' ) ),
-        'appointment_id'      => array( 'format' => '%d', 'reference' => array( 'entity' => 'Appointment' ) ),
-        'payment_id'          => array( 'format' => '%d', 'reference' => array( 'entity' => 'Payment' ) ),
-        'number_of_persons'   => array( 'format' => '%d' ),
-        'units'               => array( 'format' => '%d' ),
-        'notes'               => array( 'format' => '%s' ),
-        'extras'              => array( 'format' => '%s' ),
-        'custom_fields'       => array( 'format' => '%s' ),
-        'status'              => array( 'format' => '%s' ),
-        'status_changed_at'   => array( 'format' => '%s' ),
-        'token'               => array( 'format' => '%s' ),
-        'time_zone'           => array( 'format' => '%s' ),
-        'time_zone_offset'    => array( 'format' => '%d' ),
-        'rating'              => array( 'format' => '%d' ),
-        'rating_comment'      => array( 'format' => '%s' ),
-        'locale'              => array( 'format' => '%s' ),
-        'compound_service_id' => array( 'format' => '%d' ),
-        'compound_token'      => array( 'format' => '%s' ),
-        'created_from'        => array( 'format' => '%s' ),
-        'created'             => array( 'format' => '%s' ),
+        'id'                       => array( 'format' => '%d' ),
+        'series_id'                => array( 'format' => '%d', 'reference' => array( 'entity' => 'Series' ) ),
+        'package_id'               => array( 'format' => '%d' ),
+        'customer_id'              => array( 'format' => '%d', 'reference' => array( 'entity' => 'Customer' ) ),
+        'appointment_id'           => array( 'format' => '%d', 'reference' => array( 'entity' => 'Appointment' ) ),
+        'payment_id'               => array( 'format' => '%d', 'reference' => array( 'entity' => 'Payment' ) ),
+        'number_of_persons'        => array( 'format' => '%d' ),
+        'units'                    => array( 'format' => '%d' ),
+        'notes'                    => array( 'format' => '%s' ),
+        'extras'                   => array( 'format' => '%s' ),
+        'extras_multiply_nop'      => array( 'format' => '%d' ),
+        'extras_consider_duration' => array( 'format' => '%d' ),
+        'custom_fields'            => array( 'format' => '%s' ),
+        'status'                   => array( 'format' => '%s' ),
+        'status_changed_at'        => array( 'format' => '%s' ),
+        'token'                    => array( 'format' => '%s' ),
+        'time_zone'                => array( 'format' => '%s' ),
+        'time_zone_offset'         => array( 'format' => '%d' ),
+        'rating'                   => array( 'format' => '%d' ),
+        'rating_comment'           => array( 'format' => '%s' ),
+        'locale'                   => array( 'format' => '%s' ),
+        'collaborative_service_id' => array( 'format' => '%d' ),
+        'collaborative_token'      => array( 'format' => '%s' ),
+        'compound_service_id'      => array( 'format' => '%d' ),
+        'compound_token'           => array( 'format' => '%s' ),
+        'created_from'             => array( 'format' => '%s' ),
+        'created'                  => array( 'format' => '%s' ),
     );
 
     /** @var Customer */
@@ -138,6 +153,9 @@ class CustomerAppointment extends Lib\Base\Entity
         }
     }
 
+    /**
+     * @return string
+     */
     public function getStatusTitle()
     {
         return self::statusToString( $this->getStatus() );
@@ -147,10 +165,8 @@ class CustomerAppointment extends Lib\Base\Entity
     {
         $appointment = new Appointment();
         if ( $appointment->load( $this->getAppointmentId() ) ) {
-            if ( $this->getStatus() != CustomerAppointment::STATUS_CANCELLED
-                && $this->getStatus()!= CustomerAppointment::STATUS_REJECTED
-            ) {
-                $this->setStatus( CustomerAppointment::STATUS_CANCELLED );
+            if ( ! in_array( $this->getStatus(), array( self::STATUS_CANCELLED, self::STATUS_REJECTED ) ) ) {
+                $this->setStatus( self::STATUS_CANCELLED );
                 Lib\Notifications\Sender::sendSingle( DataHolders\Simple::create( $this ) );
             }
 
@@ -207,29 +223,68 @@ class CustomerAppointment extends Lib\Base\Entity
     }
 
     /**
+     * Get customer appointment statuses.
+     *
      * @return array
      */
     public static function getStatuses()
     {
-        $statuses = array(
-            CustomerAppointment::STATUS_PENDING,
-            CustomerAppointment::STATUS_APPROVED,
-            CustomerAppointment::STATUS_CANCELLED,
-            CustomerAppointment::STATUS_REJECTED,
-        );
-        if ( Lib\Config::waitingListActive() ) {
-            $statuses[] = CustomerAppointment::STATUS_WAITLISTED;
-        }
-        if ( Lib\Config::tasksActive() ) {
-            $statuses[] = CustomerAppointment::STATUS_DONE;
+        if ( ! self::hasInCache( __FUNCTION__ ) ) {
+            $statuses = array(
+                self::STATUS_PENDING,
+                self::STATUS_APPROVED,
+                self::STATUS_CANCELLED,
+                self::STATUS_REJECTED,
+            );
+            if ( Lib\Config::waitingListActive() ) {
+                $statuses[] = self::STATUS_WAITLISTED;
+            }
+            if ( Lib\Config::tasksActive() ) {
+                $statuses[] = self::STATUS_DONE;
+            }
+            self::putInCache( __FUNCTION__, $statuses );
         }
 
-        return $statuses;
+        return self::getFromCache( __FUNCTION__ );
     }
 
     /**************************************************************************
      * Entity Fields Getters & Setters                                        *
      **************************************************************************/
+
+    /**
+     * Gets series_id
+     *
+     * @return int
+     */
+    public function getSeriesId()
+    {
+        return $this->series_id;
+    }
+
+    /**
+     * Sets series_id
+     *
+     * @param Series $series
+     * @return $this
+     */
+    public function setSeries( Series $series )
+    {
+        return $this->setSeriesId( $series->getId() );
+    }
+
+    /**
+     * Sets series_id
+     *
+     * @param int $series_id
+     * @return $this
+     */
+    public function setSeriesId( $series_id )
+    {
+        $this->series_id = $series_id;
+
+        return $this;
+    }
 
     /**
      * Gets customer_id
@@ -439,6 +494,52 @@ class CustomerAppointment extends Lib\Base\Entity
     public function setExtras( $extras )
     {
         $this->extras = $extras;
+
+        return $this;
+    }
+
+    /**
+     * Gets extras_consider_duration
+     *
+     * @return bool
+     */
+    public function getExtrasConsiderDuration()
+    {
+        return $this->extras_consider_duration;
+    }
+
+    /**
+     * Sets extras_consider_duration
+     *
+     * @param int $extras_consider_duration
+     * @return $this
+     */
+    public function setExtrasConsiderDuration( $extras_consider_duration )
+    {
+        $this->extras_consider_duration = $extras_consider_duration;
+
+        return $this;
+    }
+
+    /**
+     * Gets extras_multiply_nop
+     *
+     * @return string
+     */
+    public function getExtrasMultiplyNop()
+    {
+        return $this->extras_multiply_nop;
+    }
+
+    /**
+     * Sets extras_multiply_nop
+     *
+     * @param string $extras_multiply_nop
+     * @return $this
+     */
+    public function setExtrasMultiplyNop( $extras_multiply_nop )
+    {
+        $this->extras_multiply_nop = $extras_multiply_nop;
 
         return $this;
     }
@@ -655,6 +756,29 @@ class CustomerAppointment extends Lib\Base\Entity
     }
 
     /**
+     * Gets collaborative_service_id
+     *
+     * @return int
+     */
+    public function getCollaborativeServiceId()
+    {
+        return $this->collaborative_service_id;
+    }
+
+    /**
+     * Sets collaborative_service_id
+     *
+     * @param int $collaborative_service_id
+     * @return $this
+     */
+    public function setCollaborativeServiceId( $collaborative_service_id )
+    {
+        $this->collaborative_service_id = $collaborative_service_id;
+
+        return $this;
+    }
+
+    /**
      * Gets compound_service_id
      *
      * @return int
@@ -673,6 +797,29 @@ class CustomerAppointment extends Lib\Base\Entity
     public function setCompoundServiceId( $compound_service_id )
     {
         $this->compound_service_id = $compound_service_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets collaborative_token
+     *
+     * @return string
+     */
+    public function getCollaborativeToken()
+    {
+        return $this->collaborative_token;
+    }
+
+    /**
+     * Sets collaborative_token
+     *
+     * @param string $collaborative_token
+     * @return $this
+     */
+    public function setCollaborativeToken( $collaborative_token )
+    {
+        $this->collaborative_token = $collaborative_token;
 
         return $this;
     }
@@ -796,9 +943,29 @@ class CustomerAppointment extends Lib\Base\Entity
             $this->setStatusChangedAt( current_time( 'mysql' ) );
         }
 
+        if ( $this->getExtrasMultiplyNop() === null ) {
+            $this->setExtrasMultiplyNop( get_option( 'bookly_service_extras_multiply_nop', 1 ) );
+        }
+
         $this->just_created = $this->getId() === null;
 
         return parent::save();
     }
 
+    /**
+     * Delete entity from database
+     *
+     * @return false|int
+     */
+    public function delete()
+    {
+        $result = parent::delete();
+        if ( $result && $this->getSeriesId() !== null ) {
+            if ( self::query()->where( 'series_id', $this->getSeriesId() )->count() === 0 ) {
+                Series::query()->delete()->where( 'id', $this->getSeriesId() )->execute();
+            }
+        }
+
+        return $result;
+    }
 }

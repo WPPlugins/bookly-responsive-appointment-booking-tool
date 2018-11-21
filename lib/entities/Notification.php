@@ -179,12 +179,12 @@ class Notification extends Lib\Base\Entity
     public static function getCustomNotificationTypes()
     {
         return array(
-            Lib\Entities\Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED,
-            Lib\Entities\Notification::TYPE_APPOINTMENT_START_TIME,
-            Lib\Entities\Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
-            Lib\Entities\Notification::TYPE_LAST_CUSTOMER_APPOINTMENT,
-            Lib\Entities\Notification::TYPE_CUSTOMER_BIRTHDAY,
-            Lib\Entities\Notification::TYPE_STAFF_DAY_AGENDA,
+            self::TYPE_CUSTOMER_APPOINTMENT_CREATED,
+            self::TYPE_APPOINTMENT_START_TIME,
+            self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            self::TYPE_LAST_CUSTOMER_APPOINTMENT,
+            self::TYPE_CUSTOMER_BIRTHDAY,
+            self::TYPE_STAFF_DAY_AGENDA,
         );
     }
 
@@ -214,12 +214,12 @@ class Notification extends Lib\Base\Entity
                 'staff_rejected_appointment'       => __( 'Notification to staff member about rejected appointment', 'bookly' ),
                 'staff_pending_appointment'        => __( 'Notification to staff member about pending appointment', 'bookly' ),
 
-                Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => __( 'Custom notification', 'bookly' ) .': ' .__( 'Event notification', 'bookly' ) . ' / ' . __( 'Status changed', 'bookly' ),
-                Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED        => __( 'Custom notification', 'bookly' ) .': ' .__( 'Event notification', 'bookly' ) . ' / ' . __( 'New booking', 'bookly' ),
-                Notification::TYPE_APPOINTMENT_START_TIME              => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Appointment date and time', 'bookly' ),
-                Notification::TYPE_CUSTOMER_BIRTHDAY                   => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Customer\'s birthday', 'bookly' ),
-                Notification::TYPE_LAST_CUSTOMER_APPOINTMENT           => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Last client\'s appointment', 'bookly' ),
-                Notification::TYPE_STAFF_DAY_AGENDA                    => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Full day agenda', 'bookly' ),
+                self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => __( 'Custom notification', 'bookly' ) .': ' .__( 'Event notification', 'bookly' ) . ' / ' . __( 'Status changed', 'bookly' ),
+                self::TYPE_CUSTOMER_APPOINTMENT_CREATED        => __( 'Custom notification', 'bookly' ) .': ' .__( 'Event notification', 'bookly' ) . ' / ' . __( 'New booking', 'bookly' ),
+                self::TYPE_APPOINTMENT_START_TIME              => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Appointment date and time', 'bookly' ),
+                self::TYPE_CUSTOMER_BIRTHDAY                   => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Customer\'s birthday', 'bookly' ),
+                self::TYPE_LAST_CUSTOMER_APPOINTMENT           => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Last client\'s appointment', 'bookly' ),
+                self::TYPE_STAFF_DAY_AGENDA                    => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Full day agenda', 'bookly' ),
 
                 /** @see \Bookly\Backend\Modules\Sms\Ajax::executeSendTestSms */
                 'test_message'                     => __( 'Test message', 'bookly' ),
@@ -258,12 +258,12 @@ class Notification extends Lib\Base\Entity
                 'client_reminder_2nd'              => 17,
                 'client_reminder_3rd'              => 18,
 
-                Notification::TYPE_STAFF_DAY_AGENDA                    => 9,
-                Notification::TYPE_CUSTOMER_BIRTHDAY                   => 15,
-                Notification::TYPE_APPOINTMENT_START_TIME              => 19,
-                Notification::TYPE_LAST_CUSTOMER_APPOINTMENT           => 20,
-                Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => 21,
-                Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED        => 22,
+                self::TYPE_STAFF_DAY_AGENDA                    => 9,
+                self::TYPE_CUSTOMER_BIRTHDAY                   => 15,
+                self::TYPE_APPOINTMENT_START_TIME              => 19,
+                self::TYPE_LAST_CUSTOMER_APPOINTMENT           => 20,
+                self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => 21,
+                self::TYPE_CUSTOMER_APPOINTMENT_CREATED        => 22,
 
                 // Recurring Appointments add-on   => [31-38],
                 // Waiting List add-on             => [51-53],

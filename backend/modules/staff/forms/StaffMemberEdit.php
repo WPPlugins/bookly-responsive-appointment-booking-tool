@@ -14,6 +14,8 @@ class StaffMemberEdit extends StaffMember
     {
         $this->setFields( array(
             'wp_user_id',
+            'category_id',
+            'working_time_limit',
             'full_name',
             'email',
             'phone',

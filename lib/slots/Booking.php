@@ -22,6 +22,8 @@ class Booking
     /** @var int */
     protected $extras_duration;
     /** @var bool */
+    protected $one_booking_per_slot;
+    /** @var bool */
     protected $from_google;
 
     /**
@@ -36,18 +38,20 @@ class Booking
      * @param int $padding_left
      * @param int $padding_right
      * @param int $extras_duration
+     * @param bool $one_booking_per_slot
      * @param bool $from_google
      */
-    public function __construct( $location_id, $service_id, $nop, $on_waiting_list, $start, $end, $padding_left, $padding_right, $extras_duration, $from_google )
+    public function __construct( $location_id, $service_id, $nop, $on_waiting_list, $start, $end, $padding_left, $padding_right, $extras_duration, $one_booking_per_slot, $from_google )
     {
-        $this->location_id        = (int) $location_id;
-        $this->service_id         = (int) $service_id;
-        $this->nop                = (int) $nop;
-        $this->on_waiting_list    = (int) $on_waiting_list;
-        $this->range              = Range::fromDates( $start, $end );
-        $this->range_with_padding = $this->range->transform( - (int) $padding_left, (int) $padding_right );
-        $this->extras_duration    = (int) $extras_duration;
-        $this->from_google        = (bool) $from_google;
+        $this->location_id          = (int) $location_id;
+        $this->service_id           = (int) $service_id;
+        $this->nop                  = (int) $nop;
+        $this->on_waiting_list      = (int) $on_waiting_list;
+        $this->range                = Range::fromDates( $start, $end );
+        $this->range_with_padding   = $this->range->transform( - (int) $padding_left, (int) $padding_right );
+        $this->extras_duration      = (int) $extras_duration;
+        $this->one_booking_per_slot = (bool) $one_booking_per_slot;
+        $this->from_google          = (bool) $from_google;
     }
 
     /**
@@ -131,6 +135,16 @@ class Booking
     public function extrasDuration()
     {
         return $this->extras_duration;
+    }
+
+    /**
+     * Get one_booking_pre_slot.
+     *
+     * @return int
+     */
+    public function oneBookingPerSlot()
+    {
+        return $this->one_booking_per_slot;
     }
 
     /**

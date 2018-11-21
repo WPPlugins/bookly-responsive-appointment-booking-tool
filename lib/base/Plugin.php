@@ -104,9 +104,12 @@ abstract class Plugin
      */
     public static function run()
     {
-        // Start session.
         if ( ! session_id() ) {
-            @session_start();
+            // WP 4.9+ fix loopback request failure
+            if ( ! isset( $_GET['wp_scrape_key'] ) ) {
+                // Start session.
+                @session_start();
+            }
         }
 
         /** @var static $plugin_class */
@@ -114,10 +117,7 @@ abstract class Plugin
 
         // WP hooks.
         $plugin_class::registerHooks();
-        // Update checker.
-        if ( ! $plugin_class::embedded() ) {
-            $plugin_class::initUpdateChecker();
-        }
+
         // Init.
         $plugin_class::init();
 
@@ -139,6 +139,7 @@ abstract class Plugin
         } else {
             $installer_class = static::getRootNamespace() . '\Lib\Installer';
             $installer = new $installer_class();
+            /** @var Installer $installer */
             $installer->install();
         }
     }
@@ -176,6 +177,7 @@ abstract class Plugin
             do_action( 'bookly_plugin_uninstall', static::getSlug() );
         } else {
             $installer_class = static::getRootNamespace() . '\Lib\Installer';
+            /** @var Installer $installer */
             $installer = new $installer_class();
             $installer->uninstall();
         }
@@ -440,18 +442,6 @@ abstract class Plugin
 
         if ( Lib\Config::proActive() ) {
             PluginPro::registerHooks( $plugin_class );
-        }
-    }
-
-    /**
-     * Init update checker.
-     */
-    protected static function initUpdateChecker()
-    {
-        /** @var static $plugin_class */
-        $plugin_class = get_called_class();
-        if ( $plugin_class != 'Bookly\Lib\Plugin' && Lib\Config::proActive() ) {
-            PluginPro::initPluginUpdateChecker( $plugin_class );
         }
     }
 

@@ -5,6 +5,8 @@ import stepRepeat from './repeat_step.js';
 import stepCart from './cart_step.js';
 import stepPayment from './payment_step.js';
 import stepComplete from './complete_step.js';
+import stepService from "./service_step";
+import stepExtras from "./extras_step";
 
 /**
  * Details step.
@@ -40,6 +42,7 @@ export default function stepDetails(params) {
                     $guest_info                 = $('.bookly-js-guest',                 $container),
                     $phone_field                = $('.bookly-js-user-phone-input',      $container),
                     $email_field                = $('.bookly-js-user-email',            $container),
+                    $email_confirm_field        = $('.bookly-js-user-email-confirm',    $container),
                     $birthday_day_field         = $('.bookly-js-select-birthday-day',   $container),
                     $birthday_month_field       = $('.bookly-js-select-birthday-month', $container),
                     $birthday_year_field        = $('.bookly-js-select-birthday-year',  $container),
@@ -60,27 +63,28 @@ export default function stepDetails(params) {
                     $address_street_number_error= $('.bookly-js-address-street_number-error',       $container),
                     $address_additional_error   = $('.bookly-js-address-additional_address-error',  $container),
 
-                    $birthday_day_error         = $('.bookly-js-select-birthday-day-error',     $container),
-                    $birthday_month_error       = $('.bookly-js-select-birthday-month-error',   $container),
-                    $birthday_year_error        = $('.bookly-js-select-birthday-year-error',    $container),
-                    $full_name_field            = $('.bookly-js-full-name',             $container),
-                    $first_name_field           = $('.bookly-js-first-name',            $container),
-                    $last_name_field            = $('.bookly-js-last-name',             $container),
-                    $notes_field                = $('.bookly-js-user-notes',            $container),
-                    $custom_field               = $('.bookly-custom-field',             $container),
-                    $info_field                 = $('.bookly-js-info-field',            $container),
-                    $phone_error                = $('.bookly-js-user-phone-error',      $container),
-                    $email_error                = $('.bookly-js-user-email-error',      $container),
-                    $name_error                 = $('.bookly-js-full-name-error',       $container),
-                    $first_name_error           = $('.bookly-js-first-name-error',      $container),
-                    $last_name_error            = $('.bookly-js-last-name-error',       $container),
-                    $captcha                    = $('.bookly-js-captcha-img',           $container),
-                    $custom_error               = $('.bookly-custom-field-error',       $container),
-                    $info_error                 = $('.bookly-js-info-field-error',      $container),
-                    $modals                     = $('.bookly-js-modal',                 $container),
-                    $login_modal                = $('.bookly-js-login',                 $container),
-                    $cst_modal                  = $('.bookly-js-cst-duplicate',         $container),
-                    $next_btn                   = $('.bookly-js-next-step',             $container),
+                    $birthday_day_error         = $('.bookly-js-select-birthday-day-error',   $container),
+                    $birthday_month_error       = $('.bookly-js-select-birthday-month-error', $container),
+                    $birthday_year_error        = $('.bookly-js-select-birthday-year-error',  $container),
+                    $full_name_field            = $('.bookly-js-full-name',                   $container),
+                    $first_name_field           = $('.bookly-js-first-name',                  $container),
+                    $last_name_field            = $('.bookly-js-last-name',                   $container),
+                    $notes_field                = $('.bookly-js-user-notes',                  $container),
+                    $custom_field               = $('.bookly-custom-field',                   $container),
+                    $info_field                 = $('.bookly-js-info-field',                  $container),
+                    $phone_error                = $('.bookly-js-user-phone-error',            $container),
+                    $email_error                = $('.bookly-js-user-email-error',            $container),
+                    $email_confirm_error        = $('.bookly-js-user-email-confirm-error',   $container),
+                    $name_error                 = $('.bookly-js-full-name-error',             $container),
+                    $first_name_error           = $('.bookly-js-first-name-error',            $container),
+                    $last_name_error            = $('.bookly-js-last-name-error',             $container),
+                    $captcha                    = $('.bookly-js-captcha-img',                 $container),
+                    $custom_error               = $('.bookly-custom-field-error',             $container),
+                    $info_error                 = $('.bookly-js-info-field-error',            $container),
+                    $modals                     = $('.bookly-js-modal',                       $container),
+                    $login_modal                = $('.bookly-js-login',                       $container),
+                    $cst_modal                  = $('.bookly-js-cst-duplicate',               $container),
+                    $next_btn                   = $('.bookly-js-next-step',                   $container),
 
                     $errors                     = $([
                         $birthday_day_error,
@@ -98,6 +102,7 @@ export default function stepDetails(params) {
                         $last_name_error,
                         $phone_error,
                         $email_error,
+                        $email_confirm_error,
                         $custom_error,
                         $info_error
                     ]).map($.fn.toArray),
@@ -118,6 +123,7 @@ export default function stepDetails(params) {
                         $last_name_field,
                         $phone_field,
                         $email_field,
+                        $email_confirm_field,
                         $custom_field,
                         $info_field
                     ]).map($.fn.toArray)
@@ -421,6 +427,7 @@ export default function stepDetails(params) {
                         last_name             : $last_name_field.val(),
                         phone                 : phone_number,
                         email                 : $email_field.val(),
+                        email_confirm         : $email_confirm_field.val(),
                         birthday              : {
                             day          : $birthday_day_field.val(),
                             month        : $birthday_month_field.val(),
@@ -514,6 +521,11 @@ export default function stepDetails(params) {
                                                 name: 'email',
                                                 errorElement: $email_error,
                                                 formElement: $email_field
+                                            },
+                                            {
+                                                name: 'email_confirm',
+                                                errorElement: $email_confirm_error,
+                                                formElement: $email_confirm_field
                                             },
                                             {
                                                 name: 'birthday_day',
@@ -623,8 +635,16 @@ export default function stepDetails(params) {
                     laddaStart(this);
                     if (!opt[params.form_id].skip_steps.cart) {
                         stepCart({form_id: params.form_id});
+                    } else if (opt[params.form_id].no_time) {
+                        if (opt[params.form_id].no_extras) {
+                            stepService({form_id: params.form_id});
+                        } else {
+                            stepExtras({form_id: params.form_id});
+                        }
                     } else if (!opt[params.form_id].skip_steps.repeat) {
                         stepRepeat({form_id: params.form_id});
+                    } else if (!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_extras) {
+                        stepExtras({form_id: params.form_id});
                     } else {
                         stepTime({form_id: params.form_id});
                     }

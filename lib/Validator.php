@@ -39,6 +39,19 @@ class Validator
         }
     }
 
+    /**
+     * Validate email confirm.
+     *
+     * @param string $field
+     * @param array $data
+     */
+    public function validateEmailConfirm( $field, $data )
+    {
+        if ( Config::showEmailConfirm() && $data['email'] != $data['email_confirm'] ) {
+            $this->errors[ $field ] = Utils\Common::getTranslatedOption( 'bookly_l10n_email_confirm_not_match' );
+        }
+    }
+
     public function validateBirthday( $field_name, array $data )
     {
         $required = get_option( 'bookly_cst_required_birthday' );

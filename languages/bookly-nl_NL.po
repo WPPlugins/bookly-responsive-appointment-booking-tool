@@ -233,26 +233,6 @@ msgid "Yesterday"
 msgstr "Gisteren"
 
 #: 
-msgid "Last 7 Days"
-msgstr "Laatste 7 Dagen"
-
-#: 
-msgid "Last 30 Days"
-msgstr "Laatste 30 Dagen"
-
-#: 
-msgid "This Month"
-msgstr "Deze Maand"
-
-#: 
-msgid "Next Month"
-msgstr "Volgende Maand"
-
-#: 
-msgid "Custom Range"
-msgstr "Aangepast Datumbereik"
-
-#: 
 msgid "Apply"
 msgstr "Toepassen"
 
@@ -577,16 +557,8 @@ msgid "Delete customers"
 msgstr "Verwijder klanten"
 
 #: 
-msgid "You are about to delete customers which may have WordPress accounts associated to them. Do you want to delete those accounts too (if there are any)?"
-msgstr "U verwijdert klanten die waarschijnlijk ook een WordPress account hebben. Wilt u deze accounts ook verwijderen (als deze er zijn)?"
-
-#: 
 msgid "Remember my choice"
 msgstr "Onthoud mijn keuze"
-
-#: 
-msgid "No, delete just customers"
-msgstr "Nee, verwijder alleen klanten"
 
 #: 
 msgid "Yes"
@@ -841,10 +813,6 @@ msgid "To send scheduled notifications please execute the following command hour
 msgstr "Om geplande meldingen te verzenden, voer de volgende opdracht per uur uit met uw cron:"
 
 #: 
-msgid "Last Month"
-msgstr "Afgelopen Maand"
-
-#: 
 msgid "No payments for selected period and criteria."
 msgstr "Geen betalingen voor de geselecteerde periode en criteria."
 
@@ -1062,10 +1030,6 @@ msgstr "Lengte tijdsblok"
 #: 
 msgid "Select a time interval which will be used as a step when building all time slots in the system."
 msgstr "Selecteer een tijdinterval dat wordt gebruikt als een stap bij het bouwen van tijdvensters in het systeem."
-
-#: 
-msgid "Service duration as slot length"
-msgstr "Dienst duur als slot lengte"
 
 #: 
 msgid "Enable this option to make slot length equal to service duration at the Time step of booking form."
@@ -1290,10 +1254,6 @@ msgstr "Normale prijs"
 #: 
 msgid "Price with custom Sender ID"
 msgstr "Prijs met aangepaste Afzender ID"
-
-#: 
-msgid "If you do not see your country in the list please contact us at <a href=\"mailto:support@ladela.com\">support@ladela.com</a>."
-msgstr "Staat uw land niet in de lijst, neem dan contact met ons op via <a href=\"mailto:support@ladela.com\">support@ladela.com</a>."
 
 #: 
 msgid "Order"
@@ -1558,10 +1518,6 @@ msgstr "Hulp nodig? Neem hier contact met ons op."
 #: 
 msgid "Contact Us"
 msgstr "Neem Contact Op"
-
-#: 
-msgid "We care about your experience using Bookly!<br/>Leave a review and tell others what you think."
-msgstr "Wij geven om uw ervaring met Bookly!<br/>Laat een beoordeling achter en anderen vertellen wat u denkt."
 
 #: 
 msgid "Feedback"
@@ -2676,10 +2632,6 @@ msgid "Set the URL of a page that is shown to staff when the rejection of appoin
 msgstr "Stel de URL van een pagina in die wordt getoond aan personeel als de afwijzing van een afspraak niet kan worden uitgevoerd (door gewijzigde status, enz.)."
 
 #: 
-msgid "Notification name"
-msgstr "Melding naam"
-
-#: 
 msgid "You are trying to use the service too often. Please contact us to make a booking."
 msgstr "U probeert deze dienst te vaak te gebruiken. Neem contact met ons op om een boeking uit te voeren."
 
@@ -3466,10 +3418,6 @@ msgid "Not allowed"
 msgstr "Niet toegestaan"
 
 #: 
-msgid "There is no time slots for selected date."
-msgstr "Er zijn geen tijdssloten voor de geselecteerde datum."
-
-#: 
 msgid "Unfortunately, you're not able to cancel the appointment because the required time limit prior to canceling has expired."
 msgstr "Helaas bent u niet in staat de afspraak te annuleren omdat de vereist tijdslimiet voor het annuleren is verlopen."
 
@@ -3909,20 +3857,8 @@ msgid "Locations"
 msgstr "Locaties"
 
 #: 
-msgid "Set services for location"
-msgstr "Stel diensten in voor locatie"
-
-#: 
 msgid "Use custom settings"
 msgstr "Gebruik aangepaste instellingen"
-
-#: 
-msgid "Use default"
-msgstr "Gebruik standaard"
-
-#: 
-msgid "Use custom"
-msgstr "Gebruik aangepast"
 
 #: 
 msgid "Select locations where the services are provided."
@@ -3931,10 +3867,6 @@ msgstr "Selecteer locaties als de diensten zijn geleverd."
 #: 
 msgid "Custom settings for location"
 msgstr "Aangepaste instellingen voor locatie"
-
-#: 
-msgid "Enable this setting to be able to set custom service settings for staff members for different locations."
-msgstr "Schakel deze instelling in om aangepaste dienst instellingen voor stafleden voor verschillende locaties mogelijk te maken."
 
 #: 
 msgid "location info"
@@ -3951,10 +3883,6 @@ msgstr "Nieuwe Locatie"
 #: 
 msgid "Edit Location"
 msgstr "Wijzig Locatie"
-
-#: 
-msgid "All Staff"
-msgstr "Al het personeel"
 
 #: 
 msgid "Add Location"
@@ -4880,14 +4808,6 @@ msgid "Limit appointments per customer"
 msgstr "Limiet afspraken per klant"
 
 #: 
-msgid "Allows you to limit the frequency of service bookings per customer."
-msgstr "Maakt het mogelijk om de frequentie van dienst boekingen per klant te limiteren."
-
-#: 
-msgid "per day"
-msgstr "per dag"
-
-#: 
 msgid "per week"
 msgstr "per week"
 
@@ -4938,10 +4858,6 @@ msgstr "Reden"
 #: 
 msgid "Manual adjustment"
 msgstr "Handmatige aanpassing"
-
-#: 
-msgid "%s is used on another domain %s.<br/>In order to use the purchase code on this domain, please dissociate it in the admin panel of the other domain.<br/>If you do not have access to the admin area, please contact our technical support at support@ladela.com to transfer the license manually."
-msgstr "%s wordt gebruikt op een ander domein %s.<br/>Als u de aankoopcode voor dit domein wilt gebruiken, scheidt u deze af in het beheerder dashboard van het andere domein. <br/> Neem contact op met onze technische ondersteuning op support@ladela.com als u geen toegang hebt tot het beheerdersgedeelte om de licentie handmatig over te zetten."
 
 #: 
 msgid "<a class=\"%s\" href=\"#\">Click here</a> to dissociate this purchase code from the current domain (use to move the plugin to another site)."
@@ -5126,10 +5042,6 @@ msgstr "pagina's met een andere tijd"
 #: 
 msgid "Restore"
 msgstr "Herstellen"
-
-#: 
-msgid "View Series"
-msgstr "Bekijk Series"
 
 #: 
 msgid "Some of the desired time slots are busy. System offers the nearest time slot instead. Click the Edit button to select another time if needed."
@@ -6490,4 +6402,544 @@ msgstr "Probeer de Bookly Pro add-on"
 #: 
 msgid "<b>Bookly Lite rebrands into Bookly with more features available.</b><br/><br/>We have changed the architecture of Bookly Lite and Bookly to optimize the development of both plugin versions and add more features to the new free Bookly. To learn more about the major Bookly update, check our <a href=\"%s\" target=\"_blank\">blog post</a>."
 msgstr "<b>Bookly Lite zet zichzelf om in Bookly met meer beschikbare functies. </b><br/><br/>We hebben de architectuur van Bookly Lite en Bookly gewijzigd om de ontwikkeling van beide plugin versies te optimaliseren en hebben meer functies aan de nieuwe gratis Bookly toegevoegd. Om meer te weten te komen over de grote Bookly update, lees dan ons <a href=\"%s\" target=\"_blank\">blogbericht</a>."
+
+#: 
+msgid "Group appointments"
+msgstr "Groepsafspraken"
+
+#: 
+msgid "Create new appointment for every recurring booking"
+msgstr "Maak nieuwe afspraak voor elke herhalende boeking"
+
+#: 
+msgid "Add customer to available group bookings"
+msgstr "Voeg klant aan beschikbare groepsboekingen toe"
+
+#: 
+msgid "One booking per time slot"
+msgstr "Een boeking per tijdvak"
+
+#: 
+msgid "Enable this option if you want to limit the possibility of booking within the service capacity to one time."
+msgstr "Schakel deze optie in als u de mogelijkheid van boeken binnen een bepaalde service capaciteit wilt beperking tot een keer."
+
+#: 
+msgid "Equal duration"
+msgstr "Gelijke duur"
+
+#: 
+msgid "Make every service duration equal to the duration of the longest one."
+msgstr "Maak elke service tijdsduur gelijk aan de tijdsduur van de langste."
+
+#: 
+msgid "Collaborative"
+msgstr "Samenwerkend"
+
+#: 
+msgid "Collaborative service"
+msgstr "Samenwerkende service"
+
+#: 
+msgid "Part of collaborative service"
+msgstr "Onderdeel van samenwerkende service"
+
+#: 
+msgid "There are no time slots for selected date."
+msgstr "Er zijn geen tijdvakken voor de geselecteerde datum."
+
+#: 
+msgid "Confirm email"
+msgstr "Bevestig e-mail"
+
+#: 
+msgid "Email confirmation doesn't match"
+msgstr "E-mail bevestiging komt niet overeen"
+
+#: 
+msgid "Created at any time"
+msgstr "Aangemaakt op elk moment"
+
+#: 
+msgid "Created"
+msgstr "Aangemaakt"
+
+#: 
+msgid "Any time"
+msgstr "Elk moment"
+
+#: 
+msgid "Last 7 days"
+msgstr "Afgelopen 7 dagen"
+
+#: 
+msgid "Last 30 days"
+msgstr "Afgelopen 30 dagen"
+
+#: 
+msgid "This month"
+msgstr "Deze maand"
+
+#: 
+msgid "Custom range"
+msgstr "Aangepast bereik"
+
+#: 
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#: 
+msgid "Send invoice"
+msgstr "Stuur factuur"
+
+#: 
+msgid "Note: invoice will be sent to your PayPal email address"
+msgstr "Opmerking: factuur zal naar uw Paypal e-mailadres worden verstuurd"
+
+#: 
+msgid "Company address"
+msgstr "Adres bedrijf"
+
+#: 
+msgid "Company address line 2"
+msgstr "Adres bedrijf regel 2"
+
+#: 
+msgid "VAT"
+msgstr "VAT"
+
+#: 
+msgid "Company code"
+msgstr "Bedrijfscode"
+
+#: 
+msgid "Additional text to include into invoice"
+msgstr "Extra tekst om op te nemen in de factuur"
+
+#: 
+msgid "Confirm your email"
+msgstr "Bevestig uw e-mail"
+
+#: 
+msgid "Thank you for registration."
+msgstr "Bedankt voor het registreren."
+
+#: 
+msgid "Confirmation is sent to %s."
+msgstr "Bevestiging is verzonden naar %s."
+
+#: 
+msgid "Once you confirm your e-mail address, you will get an access to Bookly SMS service."
+msgstr "Als u eenmaal uw e-mailadres bevestigd, krijgt u toegang tot de Bookly SMS service."
+
+#: 
+msgid "If you do not see your country in the list please contact us at <a href=\"mailto:support@bookly.info\">support@bookly.info</a>."
+msgstr "Als u uw land niet in de lijst ziet, neem dan contact met ons op via <a href=\"mailto:support@bookly.info\">support@bookly.info</a>."
+
+#: 
+msgid "Last month"
+msgstr "Afgelopen maand"
+
+#: 
+msgid "Hello,\n"
+"\n"
+"Thank you for registering at Bookly SMS service. Please click the link below to verify your email address.\n"
+"\n"
+"<a href='%s'>%s</a>\n"
+"\n"
+"Bookly"
+msgstr "Hallo,\n"
+"\n"
+"Bedankt voor het registreren bij de Bookly SMS service. Klik op onderstaande link om uw e-mailadres te verifiëren.\n"
+"\n"
+"<a href='%s'>%s</a>\n"
+"\n"
+"Bookly"
+
+#: 
+msgid "Bookly SMS service  email confirmation"
+msgstr "Bookly SMS service e-mail bevestiging"
+
+#: 
+msgid "Add new item to the category"
+msgstr "Voeg nieuw item aan categorie toe"
+
+#: 
+msgid "Edit category name"
+msgstr "Wijzig naam categorie"
+
+#: 
+msgid "Delete category"
+msgstr "Verwijder categorie"
+
+#: 
+msgid "Archive"
+msgstr "Archiveer"
+
+#: 
+msgid "The working time in the provider's schedule is associated with another location."
+msgstr "De werktijd in de planning van de leverancier is gekoppeld met een andere locatie."
+
+#: 
+msgid "Set slot length as service duration"
+msgstr "Stel lengte vak als service tijdsduur in"
+
+#: 
+msgid "The time interval which is used as a step when building all time slots for the service at the Time step. The setting overrides global settings in Settings  General. Use Default to apply global settings."
+msgstr "De tijdsinterval die wordt gebruikt als een stap bij het bouwen van alle tijdvakken voor de service in de Tijd stap. De instelling gaat voor de algemene instellingen in de Instellingen Algemeen. Gebruik Standaard om algemene instellingen toe te passen."
+
+#: 
+msgid "Slot length as service duration"
+msgstr "Lengte vak als service tijdsduur"
+
+#: 
+msgid "You must select at least one repeat option for recurring services."
+msgstr "U moet tenminste een herhaaloptie voor herhalende services kiezen."
+
+#: 
+msgid "Align buttons to the left"
+msgstr "Lijn knoppen aan de linkerkant uit"
+
+#: 
+msgid "Email confirmation field"
+msgstr "E-mail bevestigingsveld"
+
+#: 
+msgid "Booking exceeds the working hours limit for staff member"
+msgstr "Boeking overschrijdt de limiet van werkuren van personeelslid"
+
+#: 
+msgid "View series"
+msgstr "Bekijk series"
+
+#: 
+msgid "Delete customers with existing bookings"
+msgstr "Verwijder klanten met bestaande boekingen"
+
+#: 
+msgid "Deleted Customer"
+msgstr "Verwijder Klant"
+
+#: 
+msgid "Please, check your email to confirm the subscription. Thank you!"
+msgstr "Controleer uw e-mail om het abonnement te bevestigen. Dank u wel!"
+
+#: 
+msgid "Given email address is already subscribed, thank you!"
+msgstr "Opgegeven e-mailadres is reeds geabonneerd, dank u wel!"
+
+#: 
+msgid "This email address is not valid."
+msgstr "Dit e-mailadres is niet geldig."
+
+#: 
+msgid "Feature requests"
+msgstr "Functieverzoeken"
+
+#: 
+msgid "In the Feature Requests section of our Community, you can make suggestions about what you'd like to see in our future releases."
+msgstr "In de sectie Functieverzoeken van onze Gemeenschap kunt u een suggestie doen van wat u in onze toekomstige uitgaven wilt zien."
+
+#: 
+msgid "Before you post, please check if the same suggestion has already been made. If so, vote for ideas you like and add a comment with the details about your situation."
+msgstr "Voordat u plaatst, let er dan op of dezelfde suggestie niet reeds gedaan is. Als dit het geval is, stem dan op ideeën die u leuk vindt en voeg een opmerking toe met details over deze situatie."
+
+#: 
+msgid "It's much easier for us to address a suggestion if we clearly understand the context of the issue, the problem, and why it matters to you. When commenting or posting, please consider these questions so we can get a better idea of the problem you're facing:"
+msgstr "Het is veel eenvoudiger voor ons om en suggestie aan te pakken als we de context van het probleem begrijpen. Houd rekening met deze vragen bij het plaatsen van opmerkingen of het plaatsen van berichten zodat we een beter beeld krijgen van het probleem waarmee u wordt geconfronteerd:"
+
+#: 
+msgid "What is the issue you're struggling with?"
+msgstr "Wat is het probleem waar u mee zit?"
+
+#: 
+msgid "Where in your workflow do you encounter this issue?"
+msgstr "Waar in de werkstroom komt u dit probleem tegen?"
+
+#: 
+msgid "Is this something that impacts just you, your whole team, or your customers?"
+msgstr "Is dit iets wat invloed op alleen u heeft, of het hele team, of uw klanten?"
+
+#: 
+msgid "don't show this notification again"
+msgstr "toon deze melding niet meer"
+
+#: 
+msgid "Proceed to Feature requests"
+msgstr "Verdergaan nar Functieaanvragen"
+
+#: 
+msgid "We care about your experience of using Bookly!<br/>Leave a review and tell others what you think."
+msgstr "Wij geven om uw ervaring bij het gebruik van Bookly!<br/>Laat een beoordeling achter en vertel anderen wat u denkt."
+
+#: 
+msgid "%s is used on another domain %s.<br/>In order to use the purchase code on this domain, please dissociate it in the admin panel of the other domain.<br/>If you do not have access to the admin area, please contact our technical support at support@bookly.info to transfer the license manually."
+msgstr "%s wordt gebruikt op een ander domein %s.<br/>Als u de aankoopcode voor dit domein wilt gebruiken, splitst u dit af in het dashboard van de beheerder van het andere domein.<br/>Als u geen toegang tot het beheerdersgedeelte hebt, neem dan contact op met onze technische ondersteuning op support@bookly.info om de licentie handmatig over te zetten."
+
+#: 
+msgid "Archiving Staff"
+msgstr "Personeel Archiveren"
+
+#: 
+msgid "Ok, continue editing"
+msgstr "Ok, doorgaan met bewerken"
+
+#: 
+msgid "Limit working hours per day"
+msgstr "Beperk werkuren per dag"
+
+#: 
+msgid "Unlimited"
+msgstr "Onbeperkt"
+
+#: 
+msgid "Customer section"
+msgstr "Klantsectie"
+
+#: 
+msgid "Appointment section"
+msgstr "Afsprakensectie"
+
+#: 
+msgid "Period (before and after)"
+msgstr "Periode (voor en na)"
+
+#: 
+msgid "upcoming"
+msgstr "aankomende"
+
+#: 
+msgid "per 24 hours"
+msgstr "per 24 uur"
+
+#: 
+msgid "per 7 days"
+msgstr "per 7 dagen"
+
+#: 
+msgid "Least occupied for period"
+msgstr "Minst bezet in periode"
+
+#: 
+msgid "Most occupied for period"
+msgstr "Meest bezet in periode"
+
+#: 
+msgid "For service"
+msgstr "Voor service"
+
+#: 
+msgid "Skip"
+msgstr "Overslaan"
+
+#: 
+msgid "Your task is done"
+msgstr "Uw taak is afgerond"
+
+#: 
+msgid "Dear {client_name}.\n"
+"\n"
+"Your task {service_name} has been done.\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Beste {client_name}.\n"
+"\n"
+"Uw taak {service_name} is afgerond.\n"
+"\n"
+"Bedankt voor het kiezen van ons bedrijf.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Task is done"
+msgstr "Taak is afgerond"
+
+#: 
+msgid "Hello.\n"
+"\n"
+"The following task has been done.\n"
+"\n"
+"Service: {service_name}\n"
+"\n"
+"Client name: {client_name}\n"
+"\n"
+"Client phone: {client_phone}\n"
+"\n"
+"Client email: {client_email}"
+msgstr "Hallo\n"
+"\n"
+"De volgende taak is afgerond.\n"
+"\n"
+"Service: {service_name}\n"
+"\n"
+"Naam client: {client_name}\n"
+"\n"
+"Telefoon client: {client_phone}\n"
+"\n"
+"E-mail client: {client_email}"
+
+#: 
+msgid "Dear {client_name}.\n"
+"Your task {service_name} has been done.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Beste {client_name}.\n"
+"Uw taak {service_name} is afgerond.\n"
+"Bedankt dat u kiest voor ons bedrijf.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Hello.\n"
+"The following task has been done.\n"
+"Service: {service_name}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr "Hallo.\n"
+"De volgende taak is afgerond.\n"
+"Service: {service_name}\n"
+"Naam client: {client_name}\n"
+"Telefoon client: {client_phone}\n"
+"E-mail client: {client_email}"
+
+#: 
+msgid "Time step settings"
+msgstr "Tijdstap instellingen"
+
+#: 
+msgid "This setting allows to display the step of selecting an appointment time, hide it and create a task without due time, or display the time step, but allow a customer to skip it."
+msgstr "Met deze instelling kunt u de stap weergeven van het selecteren van een afspraaktijd, deze verbergen en een taak zonder opgestelde tijd te maken, of de tijdstap weergeven, maar een klant toestaan deze over te slaan."
+
+#: 
+msgid "Optional"
+msgstr "Optioneel"
+
+#: 
+msgid "Coupon code"
+msgstr "Kortingscode"
+
+#: 
+msgid "Extras Step"
+msgstr "Extra Stap"
+
+#: 
+msgid "After Service step"
+msgstr "Na Service stap"
+
+#: 
+msgid "After Time step (Extras duration settings will be ignored)"
+msgstr "Na Tijd stap (Extra tijdsduur instellingen zullen worden genegeerd)"
+
+#: 
+msgid "Set Default values that will be used in all locations where Use default settings is selected. To use custom settings in a location, select Use custom settings and enter custom values."
+msgstr "Stel Standaard waarden in die in alle locaties zullen worden gebruikt waar Gebruik standaard instellingen zijn geselecteerd. Om aangepaste instellingen in een locatie te gebruiken, selecteer Gebruik aangepaste instellingen en vul aangepaste waarden in."
+
+#: 
+msgid "Default settings"
+msgstr "Standaard instellingen"
+
+#: 
+msgid "Use default settings"
+msgstr "Gebruik standaard instellingen"
+
+#: 
+msgid "Enable this setting to be able to set custom settings for staff members for different locations."
+msgstr "Schakel deze instelling in om aangepaste instellingen in te stellen voor personeel voor verschillende locaties."
+
+#: 
+msgid "Booking exceeds your working hours limit"
+msgstr "Booking overschrijdt uw limiet aan werkuren"
+
+#: 
+msgid "This setting allows limiting the total time occupied by bookings per day for staff member. Padding time is not included."
+msgstr "Deze instelling staat het beperken van de totale tijd toe die bezet is per dag voor personeel door bookings. Opvultijd is niet inbegrepen."
+
+#: 
+msgid "This section describes information that is displayed about appointment."
+msgstr "Deze sectie beschrijft informatie die wordt getoond over een afspraak."
+
+#: 
+msgid "This section describes information that is displayed about each participant of the appointment."
+msgstr "Deze sectie beschrijft informatie die wordt getoond over elke deelnemer van de afspraak."
+
+#: 
+msgid "Active from"
+msgstr "Actief vanaf"
+
+#: 
+msgid "Max appointments"
+msgstr "Max afspraken"
+
+#: 
+msgid "Your account has been disabled. Contact your website administrator to continue."
+msgstr "Uw account is uitgeschakeld. Neem contact op met de beheerde van uw website om verder te gaan."
+
+#: 
+msgid "You are going to archive item which is involved in upcoming appointments. Please double check and edit appointments before this item archive if needed."
+msgstr "U gat een item archiveren die deel uitmaakt van komende afspraken. Controleer nogmaals en bewerk de afspraken voordat dit item, indien nodig, wordt gearchiveerd."
+
+#: 
+msgid "Set number of days before and after appointment that will be taken into account when calculating providers occupancy. 0 means the day of booking."
+msgstr "Stel aantal dagen voor en na een afspraak in waar rekening mee wordt gehouden bij het bereken van de bezetting van leveranciers. 0 betekent de dag van boeking."
+
+#: 
+msgid "This setting allows you to limit the number of appointments that can be booked by a customer in any given period. Restriction may end after a fixed period or with the beginning of the next calendar period  new day, week, month, etc."
+msgstr "Met deze instelling kunt u het aantal afspraken beperken dat door een klant in een bepaalde periode kan worden geboekt. Beperking kan eindigen na een vaste periode of aan het begin van de volgende kalenderperiode, nieuwe dag, week, maand, etc."
+
+#: 
+msgid "per day"
+msgstr "per dag"
+
+#: 
+msgid "per 30 days"
+msgstr "per 30 dagen"
+
+#: 
+msgid "per 365 days"
+msgstr "per 365 dagen"
+
+#: 
+msgid "Copy invoice to another email(s)"
+msgstr "Kopieer factuur naar andere e-mail(s)"
+
+#: 
+msgid "Enter one or more email addresses separated by commas."
+msgstr "Vul een of mesrdere e-mailadressen in, gescheiden door komma's."
+
+#: 
+msgid "Show archived staff"
+msgstr "Toon gearchiveerd personeel"
+
+#: 
+msgid "Hide archived staff"
+msgstr "Verberg gearchiveerd personeel"
+
+#: 
+msgid "Can't change calendar for archived staff"
+msgstr "Wijzig kalender niet voor gearchiveerd personeel"
+
+#: 
+msgid "You are going to delete customers with existing bookings. Notifications will not be sent to them."
+msgstr "U gaat klanten verwijderen met bestaande boekingen. Er worden geen meldingen naar hen verzonden."
+
+#: 
+msgid "You are going to delete customers, are you sure?"
+msgstr "U gaat klanten verwijderen, weet u het zeker?"
+
+#: 
+msgid "Delete customers' WordPress accounts if there are any"
+msgstr "Verwijder Wordpress accounts van klanten, als die er zijn"
+
+#: 
+msgid "Export only active coupons"
+msgstr "Exporteer alleen actieve kortingsbonnen"
 

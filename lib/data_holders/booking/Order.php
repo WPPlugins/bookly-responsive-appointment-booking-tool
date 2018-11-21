@@ -192,7 +192,7 @@ class Order
                 }
 
                 // Series.
-                if ( $series_unique_id = $appointment->getSeriesId() ) {
+                if ( $series_unique_id = $ca_list[0]->getSeriesId() ) {
                     if ( ! $order->hasItem( $series_unique_id ) ) {
                         $series = Lib\DataHolders\Booking\Series::create( Lib\Entities\Series::find( $series_unique_id ) );
                         $order->addItem( $series_unique_id, $series );

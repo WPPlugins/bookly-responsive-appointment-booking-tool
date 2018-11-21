@@ -13,9 +13,9 @@ class Finder
     /** @var Lib\UserBookingData */
     protected $userData;
     /** @var array|null */
-    protected $last_fetched_slot = null;
+    protected $last_fetched_slot;
     /** @var string|null */
-    protected $selected_date = null;
+    protected $selected_date;
 
     // Configuration.
     /** @var int */
@@ -38,8 +38,6 @@ class Finder
     protected $staff = array();
     /** @var Schedule[] */
     protected $service_schedule = array();
-    /** @var array */
-    protected $service_extras_ids = array();
 
     // Dates in WP time zone.
     /** @var DatePoint */
@@ -67,15 +65,16 @@ class Finder
      * @param Lib\UserBookingData $userData
      * @param callable $callback_group
      * @param callable $callback_stop
+     * @param bool     $waiting_list_enabled
      */
-    public function __construct( Lib\UserBookingData $userData, $callback_group = null, $callback_stop = null )
+    public function __construct( Lib\UserBookingData $userData, $callback_group = null, $callback_stop = null, $waiting_list_enabled = null )
     {
         $this->userData                    = $userData;
         $this->slot_length                 = Lib\Config::getTimeSlotLength();
         $this->srv_duration_as_slot_length = Lib\Config::useServiceDurationAsSlotLength();
         $this->show_calendar               = Lib\Config::showCalendar();
         $this->show_blocked_slots          = Lib\Config::showBlockedTimeSlots();
-        $this->waiting_list_enabled        = Lib\Config::waitingListActive() && get_option( 'bookly_waiting_list_enabled' );
+        $this->waiting_list_enabled        = $waiting_list_enabled === null ? Lib\Config::waitingListActive() && get_option( 'bookly_waiting_list_enabled' ) : $waiting_list_enabled;
 
         // Prepare group callback.
         if ( is_callable( $callback_group ) ) {
@@ -87,16 +86,12 @@ class Finder
         // Prepare stop callback.
         if ( is_callable( $callback_stop ) ) {
             $this->callback_stop = $callback_stop;
+        } elseif ( $this->show_calendar ) {
+            $this->callback_stop = array( $this, '_stopCalendar' );
+        } elseif ( Lib\Config::showDayPerColumn() ) {
+            $this->callback_stop = array( $this, '_stopDayPerColumn' );
         } else {
-            if ( $this->show_calendar ) {
-                $this->callback_stop = array( $this, '_stopCalendar' );
-            } else {
-                if ( Lib\Config::showDayPerColumn() ) {
-                    $this->callback_stop = array( $this, '_stopDayPerColumn' );
-                } else {
-                    $this->callback_stop = array( $this, '_stopDefault' );
-                }
-            }
+            $this->callback_stop = array( $this, '_stopDefault' );
         }
     }
 
@@ -109,7 +104,6 @@ class Finder
     {
         $this->_prepareDates();
         $this->_prepareStaffData();
-        $this->_prepareServiceExtrasIds();
 
         return $this;
     }
@@ -125,71 +119,88 @@ class Finder
 
         /** @var Lib\ChainItem $chain_item */
         foreach ( array_reverse( $this->userData->chain->getItems() ) as $chain_item ) {
-            $compound_service_id = $chain_item->getService()->isCompound() ? $chain_item->getService()->getId() : null;
-            $chain_extras = $chain_item->getExtras();
+            $parent_service_id = $chain_item->getService()->withSubServices()
+                ? $chain_item->getService()->getId()
+                : null;
+            $is_collaborative  = $chain_item->getService()->isCollaborative();
+            $sub_services      = $chain_item->getSubServicesWithSpareTime();
+            $extras            = $chain_item->distributeExtrasAcrossSubServices();
+            $extras_durations  = array();
+
+            // Calculate extras durations (and max duration for collaborative services).
+            $consider_extras_duration   = (bool) Lib\Proxy\ServiceExtras::considerDuration();
+            $collaborative_max_duration = null;
+            foreach ( $sub_services as $key => $sub_service ) {
+                if ( $sub_service instanceof Lib\Entities\Service ) {
+                    $extras_durations[ $key ] = $consider_extras_duration
+                        ? (int) Lib\Proxy\ServiceExtras::getTotalDuration( $extras[ $key ] )
+                        : 0;
+                    if ( $is_collaborative ) {
+                        $duration = ( $chain_item->getUnits() ?: 1 ) * $sub_service->getDuration() + $extras_durations[ $key ];
+                        if ( $duration > $collaborative_max_duration ) {
+                            $collaborative_max_duration = $duration;
+                        }
+                    }
+                }
+            }
+            $collaborative_spare_time = 0;
+            if ( $is_collaborative && ! $chain_item->getService()->getCollaborativeEqualDuration() ) {
+                // If duration is different then the last sub-service must find next slots after
+                // the longest sub-service ends, use $collaborative_spare_time for that.
+                $collaborative_spare_time   = $collaborative_max_duration - $duration;
+                $collaborative_max_duration = null;
+            }
+
+            $extras_durations = array_reverse( $extras_durations );
+
             for ( $q = 0; $q < $chain_item->getQuantity(); ++ $q ) {
-                $sub_services   = $chain_item->getSubServicesWithSpareTime();
-                $services_count = count( $sub_services ) - 1;
-                $spare_time     = 0;
+                $spare_time = $collaborative_spare_time;
+                $connection = Generator::CONNECTION_CONSECUTIVE;
                 foreach ( array_reverse( $sub_services ) as $key => $sub_service ) {
-                    $service_duration = ( $chain_item->getUnits() ?: 1 ) * $sub_service->getDuration();
-
                     if ( $sub_service instanceof Lib\Entities\Service ) {
-                        $extras_duration = 0;
-                        $sub_service_id  = $sub_service->getId();
+                        $service_id       = $sub_service->getId();
+                        $service_duration = $collaborative_max_duration !== null
+                            ? $collaborative_max_duration - $extras_durations[ $key ]
+                            : ( $chain_item->getUnits() ?: 1 ) * $sub_service->getDuration();
 
-                        if ( Lib\Config::serviceExtrasActive() ) {
-                            if ( Lib\Config::compoundServicesActive() ) {
-                                $apply_sub_service_extras = true;
-
-                                // Check if there's a repeating service before the current one.
-                                for ( $i = $services_count - ( $key + 1 ); $i >= 0; $i -- ) {
-                                    if ( $sub_services[ $i ]->getId() == $sub_service_id ) {
-                                        // Extras will be assigned only to one/unique service,
-                                        // and won't be multiplied across.
-                                        $apply_sub_service_extras = false;
-                                        break;
-                                    }
-                                }
-
-                                if ( $apply_sub_service_extras ) {
-                                    $extras = array();
-                                    foreach ( $this->service_extras_ids[ $sub_service_id ] as $extras_id ) {
-                                        if ( array_key_exists( $extras_id, $chain_extras ) ) {
-                                            $extras[ $extras_id ] = $chain_extras[ $extras_id ];
-                                        }
-                                    }
-                                    $extras_duration = (int) Lib\Proxy\ServiceExtras::getTotalDuration( $extras );
-                                }
-                            } else {
-                                $extras_duration = (int) Lib\Proxy\ServiceExtras::getTotalDuration( $chain_extras );
-                            }
+                        $slot_length = $chain_item->getService()->getSlotLength();
+                        if ( $slot_length === Lib\Entities\Service::SLOT_LENGTH_DEFAULT ) {
+                            $slot_length = $this->srv_duration_as_slot_length ? $service_duration : $this->slot_length;
+                        } else if ( $slot_length === Lib\Entities\Service::SLOT_LENGTH_AS_SERVICE_DURATION ) {
+                            $slot_length = $service_duration;
+                        } else {
+                            $slot_length = (int) $slot_length;
                         }
 
                         $generator = new Generator(
                             array_intersect_key( $this->staff, array_flip( $chain_item->getStaffIdsForSubService( $sub_service ) ) ),
-                            isset ( $this->service_schedule[ $compound_service_id ][ $sub_service_id ] )
-                                ? $this->service_schedule[ $compound_service_id ][ $sub_service_id ]
+                            isset ( $this->service_schedule[ $parent_service_id ][ $service_id ] )
+                                ? $this->service_schedule[ $parent_service_id ][ $service_id ]
                                 : null,
-                            $this->srv_duration_as_slot_length ? $service_duration : $this->slot_length,
+                            $slot_length,
                             $chain_item->getLocationId(),
-                            $sub_service_id,
+                            $service_id,
                             $service_duration,
-                            $sub_service->getPaddingLeft(),
-                            $sub_service->getPaddingRight(),
+                            Lib\Config::proActive() ? $sub_service->getPaddingLeft() : 0,
+                            Lib\Config::proActive() ? $sub_service->getPaddingRight(): 0,
                             $chain_item->getNumberOfPersons(),
-                            $extras_duration,
+                            $extras_durations[ $key ],
                             $this->start_dp,
                             $this->userData->getTimeFrom(),
                             $this->userData->getTimeTo(),
                             $spare_time,
                             $this->waiting_list_enabled,
-                            $generator
+                            $generator,
+                            $connection
                         );
                         $spare_time = 0;
+                        if ( $is_collaborative ) {
+                            // Change connection type for collaborative services.
+                            $connection = Generator::CONNECTION_PARALLEL;
+                        }
                     } else {
                         /** @var Lib\Entities\SubService $sub_service */
-                        $spare_time += $service_duration;
+                        $spare_time += ( $chain_item->getUnits() ?: 1 ) * $sub_service->getDuration();
                     }
                 }
             }
@@ -384,7 +395,7 @@ class Finder
         // Prepare staff IDs for each service.
         $staff_ids = array();
         foreach ( $this->userData->chain->getItems() as $chain_item ) {
-            $compound_service_id = $chain_item->getService()->isCompound()
+            $parent_service_id = $chain_item->getService()->withSubServices()
                 ? $chain_item->getService()->getId()
                 : null;
             $sub_services = $chain_item->getSubServices();
@@ -397,7 +408,7 @@ class Finder
                 $staff_ids[ $service_id ] = array_unique( array_merge( $staff_ids[ $service_id ], $_staff_ids ) );
                 // Service schedule.
                 if ( Lib\Config::serviceScheduleActive() && $service_id ) {
-                    $this->_prepareServiceSchedule( $compound_service_id, $service_id );
+                    $this->_prepareServiceSchedule( $parent_service_id, $service_id );
                 }
             }
         }
@@ -424,13 +435,20 @@ class Finder
                         1,
                         1,
                         Lib\Entities\Service::PREFERRED_MOST_EXPENSIVE,
+                        array(),
                         0
                     );
                 }
             }
         }
         $query = Lib\Entities\StaffService::query( 'ss' )
-            ->select( 'ss.service_id, ss.price, ss.staff_id, s.staff_preference' )
+            ->select( 'ss.service_id, ss.price, ss.staff_id' )
+            ->addSelect( sprintf( '%s AS staff_preference, %s AS staff_preference_settings, %s AS capacity_min, %s AS capacity_max',
+                Lib\Proxy\Shared::prepareStatement( '\'' . Lib\Entities\Service::PREFERRED_LEAST_EXPENSIVE . '\'', 's.staff_preference', 'Service' ),
+                Lib\Proxy\Shared::prepareStatement( '\'{}\'', 's.staff_preference_settings', 'Service' ),
+                Lib\Proxy\Shared::prepareStatement( 1, 'ss.capacity_min', 'StaffService' ),
+                Lib\Proxy\Shared::prepareStatement( 1, 'ss.capacity_max', 'StaffService' )
+            ) )
             ->leftJoin( 'Service', 's', 's.id = ss.service_id' )
             ->whereRaw( implode( ' OR ', $where ), array() );
 
@@ -441,11 +459,7 @@ class Finder
                 ->addSelect( 'ss.location_id' )
                 ->where( 'ss.location_id', null );
         }
-        if ( Lib\Config::groupBookingActive() && get_option( 'bookly_group_booking_enabled' ) ) {
-            $query->addSelect( 'ss.capacity_min, ss.capacity_max' );
-        } else {
-            $query->addSelect( '1 AS capacity_min, 1 AS capacity_max' );
-        }
+
         if ( ! Lib\Config::proActive() ) {
             // Staff preference order
             $query->addSelect( '1 AS position' );
@@ -463,8 +477,33 @@ class Finder
                 $row['capacity_min'],
                 $row['capacity_max'],
                 $row['staff_preference'],
+                (array) json_decode( $row['staff_preference_settings'], true ),
                 $row['position']
             );
+        }
+
+        // Working schedule.
+        $working_schedule = Lib\Entities\StaffScheduleItem::query( 'ssi' )
+            ->select( 'ssi.*, break.start_time AS break_start, break.end_time AS break_end' )
+            ->leftJoin( 'ScheduleItemBreak', 'break', 'break.staff_schedule_item_id = ssi.id' )
+            ->whereIn( 'ssi.staff_id', array_keys( $this->staff ) )
+            ->where( 'ssi.location_id', null )
+            ->whereNot( 'ssi.start_time', null )
+            ->fetchArray();
+        $working_schedule = Lib\Proxy\Locations::prepareWorkingSchedule( $working_schedule, array_keys( $this->staff ) );
+        foreach ( $working_schedule as $item ) {
+            $location_id = $item['location_id'] ?: 0;
+            if ( ! in_array( $location_id, $this->staff[ $item['staff_id'] ]->getScheduleLocations() ) ) {
+                $this->staff[ $item['staff_id'] ]->setSchedule( new Schedule(), $location_id );
+            }
+            $weekday  = $item['day_index'] - 1;
+            $schedule = $this->staff[ $item['staff_id'] ]->getSchedule( $location_id );
+            if ( ! $schedule->hasDay( $weekday ) ) {
+                $schedule->addDay( $weekday, $item['start_time'], $item['end_time'] );
+            }
+            if ( $item['break_start'] ) {
+                $schedule->addBreak( $item['day_index'] - 1, $item['break_start'], $item['break_end'] );
+            }
         }
 
         // Holidays.
@@ -474,45 +513,34 @@ class Finder
             ->whereRaw( 'h.repeat_event = 1 OR h.date >= %s', array( $this->start_dp->format( 'Y-m-d' ) ) )
             ->fetchArray();
         foreach ( $holidays as $holiday ) {
-            $this->staff[ $holiday['staff_id'] ]->getSchedule()->addHoliday( $holiday['date'] );
-        }
-
-        // Working schedule.
-        $working_schedule = Lib\Entities\StaffScheduleItem::query( 'ssi' )
-            ->select( 'ssi.*, break.start_time AS break_start, break.end_time AS break_end' )
-            ->leftJoin( 'ScheduleItemBreak', 'break', 'break.staff_schedule_item_id = ssi.id' )
-            ->whereIn( 'ssi.staff_id', array_keys( $this->staff ) )
-            ->whereNot( 'ssi.start_time', null )
-            ->fetchArray();
-        foreach ( $working_schedule as $item ) {
-            $weekday  = $item['day_index'] - 1;
-            $schedule = $this->staff[ $item['staff_id'] ]->getSchedule();
-            if ( ! $schedule->hasDay( $weekday ) ) {
-                $schedule->addDay( $weekday, $item['start_time'], $item['end_time'] );
-            }
-            if ( $item['break_start'] ) {
-                $schedule->addBreak( $item['day_index'] - 1, $item['break_start'], $item['break_end'] );
-            }
+            $this->staff[ $holiday['staff_id'] ]->addHoliday( $holiday['date'] );
         }
 
         // Special days.
         $special_days = (array) Lib\Proxy\SpecialDays::getSchedule( array_keys( $this->staff ), $this->start_dp->value(), $this->end_dp->value() );
         foreach ( $special_days as $day ) {
-            $schedule = $this->staff[ $day['staff_id'] ]->getSchedule();
-            if ( ! $schedule->hasSpecialDay( $day['date'] ) ) {
-                $schedule->addSpecialDay( $day['date'], $day['start_time'], $day['end_time'] );
-            }
-            if ( $day['break_start'] ) {
-                $schedule->addSpecialBreak( $day['date'], $day['break_start'], $day['break_end'] );
-            }
+            $this->staff[ $day['staff_id'] ]->addSpecialDay( $day );
         }
 
-        // Prepare padding_left for first service.
-        $chain         = $this->userData->chain->getItems();
-        $first_item    = $chain[0];
-        $services      = $first_item->getSubServices();
-        $first_service = $services[0];
-        $padding_left  = $first_service->getPaddingLeft();
+        $padding_left = 0;
+
+        // Hours limits.
+        if ( Lib\Config::proActive() ) {
+            $limits = Lib\Entities\Staff::query( 'st' )
+                ->select( 'id, working_time_limit' )
+                ->whereIn( 'id', array_keys( $this->staff ) )
+                ->fetchArray();
+            foreach ( $limits as $limit ) {
+                $this->staff[ $limit['id'] ]->setWorkingTimeLimit( $limit['working_time_limit'] );
+            }
+
+            // Prepare padding_left for first service.
+            $chain         = $this->userData->chain->getItems();
+            $first_item    = $chain[0];
+            $services      = $first_item->getSubServices();
+            $first_service = $services[0];
+            $padding_left  = $first_service->getPaddingLeft();
+        }
 
         // Take into account the statuses.
         $statuses = array(
@@ -531,19 +559,26 @@ class Finder
                 `a`.`staff_id`,
                 `a`.`service_id`,
                 `a`.`start_date`,
-                DATE_ADD(`a`.`end_date`, INTERVAL `a`.`extras_duration` SECOND) AS `end_date`,
+                DATE_ADD(`a`.`end_date`, INTERVAL IF(`ca`.`extras_consider_duration`, `a`.`extras_duration`, 0) SECOND) AS `end_date`,
                 `a`.`extras_duration`,
-                COALESCE(`s`.`padding_left`,0) AS `padding_left`,
-                COALESCE(`s`.`padding_right`,0) AS `padding_right`,
+                `s`.`one_booking_per_slot`,
+                %s AS `padding_left`,
+                %s AS `padding_right`,
                 SUM(`ca`.`number_of_persons`) AS `number_of_bookings`,
                 SUM(IF(`ca`.`status` = "%s", `ca`.`number_of_persons`, 0)) AS `waitlisted`',
+                Lib\Proxy\Shared::prepareStatement( 0, 'COALESCE(s.padding_left,0)', 'Service' ),
+                Lib\Proxy\Shared::prepareStatement( 0, 'COALESCE(s.padding_right,0)', 'Service' ),
                 Lib\Entities\CustomerAppointment::STATUS_WAITLISTED
             ) )
             ->leftJoin( 'CustomerAppointment', 'ca', '`ca`.`appointment_id` = `a`.`id`' )
             ->leftJoin( 'Service', 's', '`s`.`id` = `a`.`service_id`' )
             ->whereIn( 'a.staff_id', array_keys( $this->staff ) )
             ->whereRaw( sprintf( 'ca.status IN ("%s") OR ca.status IS NULL', implode('","', $statuses ) ), array() )
-            ->whereRaw( 'DATE_ADD( `a`.`end_date`, INTERVAL (COALESCE(`s`.`padding_right`,0) + %d) SECOND) >= %s', array( $padding_left, $this->start_dp->format( 'Y-m-d' ) ) )
+            ->whereRaw( 'DATE_ADD(a.end_date, INTERVAL (' . Lib\Proxy\Shared::prepareStatement( 0, 'COALESCE(s.padding_right,0)', 'Service' ) . ' + %d) SECOND) >= %s',
+                array(
+                    $padding_left,
+                    $this->start_dp->format( 'Y-m-d' ),
+                ) )
             ->groupBy( 'a.id' )
             ->fetchArray();
         foreach ( $bookings as $booking ) {
@@ -557,6 +592,7 @@ class Finder
                 $booking['padding_left'],
                 $booking['padding_right'],
                 $booking['extras_duration'],
+                $booking['one_booking_per_slot'],
                 false
             ) );
         }
@@ -575,15 +611,15 @@ class Finder
     /**
      * Prepare service schedule.
      *
-     * @param int $compound_service_id
+     * @param int $parent_service_id
      * @param int $service_id
      */
-    private function _prepareServiceSchedule( $compound_service_id, $service_id )
+    private function _prepareServiceSchedule( $parent_service_id, $service_id )
     {
-        if ( ! isset ( $this->service_schedule[ $compound_service_id ][ $service_id ] ) ) {
+        if ( ! isset ( $this->service_schedule[ $parent_service_id ][ $service_id ] ) ) {
             $schedule = new Schedule();
             // Working schedule.
-            $working_schedule = (array) Lib\Proxy\ServiceSchedule::getSchedule( $compound_service_id ?: $service_id );
+            $working_schedule = (array) Lib\Proxy\ServiceSchedule::getSchedule( $parent_service_id ?: $service_id );
             foreach ( $working_schedule as $item ) {
                 $weekday = $item['day_index'] - 1;
                 if ( ! $schedule->hasDay( $weekday ) ) {
@@ -595,7 +631,7 @@ class Finder
             }
             // Service special days.
             $special_days = (array) Lib\Proxy\SpecialDays::getServiceSchedule(
-                $compound_service_id ?: $service_id,
+                $parent_service_id ?: $service_id,
                 $this->start_dp->value(),
                 $this->end_dp->value()
             );
@@ -608,32 +644,7 @@ class Finder
                 }
             }
             // Add schedule to array.
-            $this->service_schedule[ $compound_service_id ][ $service_id ] = $schedule;
-        }
-    }
-
-    /**
-     * Fill the array service with supported extras ids.
-     * [service_id] = ServiceExtra[]
-     */
-    private function _prepareServiceExtrasIds()
-    {
-        foreach ( $this->userData->chain->getItems() as $item ) {
-            if ( $item->getService()->getType() == Lib\Entities\Service::TYPE_COMPOUND ) {
-                foreach ( $item->getSubServices() as $sub_service ) {
-                    if ( ! array_key_exists( $sub_service->getId(), $this->service_extras_ids ) ) {
-                        $this->service_extras_ids[ $sub_service->getId() ] =
-                            array_map( function ( $extras ) {
-                                return $extras->getId();
-                            }, (array) Lib\Proxy\ServiceExtras::findByServiceId( $sub_service->getId() ) );
-                    }
-                }
-            } elseif ( ! array_key_exists( $item->getService()->getId(), $this->service_extras_ids ) ) {
-                $this->service_extras_ids[ $item->getService()->getId() ] =
-                    array_map( function ( $extras ) {
-                        return $extras->getId();
-                    }, (array) Lib\Proxy\ServiceExtras::findByServiceId( $item->getService()->getId() ) );
-            }
+            $this->service_schedule[ $parent_service_id ][ $service_id ] = $schedule;
         }
     }
 
@@ -673,9 +684,10 @@ class Finder
                                 0,
                                 $range->start()->format( 'Y-m-d H:i:s' ),
                                 $range->end()->format( 'Y-m-d H:i:s' ),
-                                $service->getPaddingLeft(),
-                                $service->getPaddingRight(),
+                                Lib\Config::proActive() ? $service->getPaddingLeft() : 0,
+                                Lib\Config::proActive() ? $service->getPaddingRight(): 0,
                                 $extras_duration,
+                                $service->getOneBookingPerSlot(),
                                 false
                             ) );
                         }

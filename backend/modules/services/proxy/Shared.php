@@ -7,6 +7,7 @@ use Bookly\Lib;
  * Class Shared
  * @package Bookly\Backend\Modules\Services\Proxy
  *
+ * @method static array availableTypes( array $types ) Get service types for active add-ons.
  * @method static void  enqueueAssetsForServices() Enqueue assets for page Services.
  * @method static array prepareServiceColors( array $colors, int $service_id, int $service_type ) Prepare colors for service.
  * @method static array prepareUpdateService( array $data ) Prepare update service settings in add-ons.

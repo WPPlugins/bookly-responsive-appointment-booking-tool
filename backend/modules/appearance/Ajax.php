@@ -37,6 +37,7 @@ class Ajax extends Lib\Base\Ajax
             'bookly_l10n_label_ccard_expire',
             'bookly_l10n_label_ccard_number',
             'bookly_l10n_label_email',
+            'bookly_l10n_label_email_confirm',
             'bookly_l10n_label_employee',
             'bookly_l10n_label_service_duration',
             'bookly_l10n_label_finish_by',
@@ -70,6 +71,7 @@ class Ajax extends Lib\Base\Ajax
             'bookly_l10n_step_done',
             // Validator errors.
             'bookly_l10n_required_email',
+            'bookly_l10n_email_confirm_not_match',
             'bookly_l10n_required_employee',
             'bookly_l10n_required_name',
             'bookly_l10n_required_first_name',
@@ -89,10 +91,12 @@ class Ajax extends Lib\Base\Ajax
             'bookly_app_show_facebook_login_button',
             'bookly_app_show_notes',
             'bookly_app_show_progress_tracker',
+            'bookly_app_align_buttons_left',
             'bookly_app_staff_name_with_price',
             'bookly_cst_required_details',
             'bookly_app_service_duration_with_price',
             'bookly_cst_first_last_name',
+            'bookly_app_show_email_confirm',
             // Options.
             'bookly_multiply_appointments_quantity_max',
         ) ) );

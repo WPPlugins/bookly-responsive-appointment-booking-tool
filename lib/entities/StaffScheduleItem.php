@@ -12,6 +12,8 @@ class StaffScheduleItem extends Lib\Base\Entity
     /** @var  int */
     protected $staff_id;
     /** @var  int */
+    protected $location_id;
+    /** @var  int */
     protected $day_index;
     /** @var  int */
     protected $start_time;
@@ -21,11 +23,12 @@ class StaffScheduleItem extends Lib\Base\Entity
     protected static $table = 'bookly_staff_schedule_items';
 
     protected static $schema = array(
-        'id'         => array( 'format' => '%d' ),
-        'staff_id'   => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
-        'day_index'  => array( 'format' => '%d' ),
-        'start_time' => array( 'format' => '%s' ),
-        'end_time'   => array( 'format' => '%s' ),
+        'id'          => array( 'format' => '%d' ),
+        'staff_id'    => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
+        'location_id' => array( 'format' => '%d' ),
+        'day_index'   => array( 'format' => '%d' ),
+        'start_time'  => array( 'format' => '%s' ),
+        'end_time'    => array( 'format' => '%s' ),
     );
 
     /**
@@ -82,6 +85,30 @@ class StaffScheduleItem extends Lib\Base\Entity
     public function setStaffId( $staff_id )
     {
         $this->staff_id = $staff_id;
+
+        return $this;
+    }
+
+
+    /**
+     * Gets location_id
+     *
+     * @return int
+     */
+    public function getLocationId()
+    {
+        return $this->location_id;
+    }
+
+    /**
+     * Sets location_id
+     *
+     * @param int $location_id
+     * @return $this
+     */
+    public function setLocationId( $location_id )
+    {
+        $this->location_id = $location_id;
 
         return $this;
     }

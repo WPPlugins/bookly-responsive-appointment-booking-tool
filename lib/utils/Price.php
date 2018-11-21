@@ -10,6 +10,7 @@ abstract class Price
     /** @var array */
     private static $currencies = array(
         'AED' => array( 'symbol' => 'AED',  'format' => '{price|2} {symbol}' ),
+        'AOA' => array( 'symbol' => 'Kz',   'format' => '{symbol} {price|2}' ),
         'ARS' => array( 'symbol' => '$',    'format' => '{symbol}{price|2}' ),
         'AUD' => array( 'symbol' => 'A$',   'format' => '{symbol}{price|2}' ),
         'BAM' => array( 'symbol' => 'KM',   'format' => '{price|2} {symbol}' ),
@@ -40,6 +41,7 @@ abstract class Price
         'ILS' => array( 'symbol' => '₪',    'format' => '{price|2} {symbol}' ),
         'INR' => array( 'symbol' => '₹',    'format' => '{price|2} {symbol}' ),
         'ISK' => array( 'symbol' => 'kr',   'format' => '{price|0} {symbol}' ),
+        'JOD' => array( 'symbol' => 'JD',   'format' => '{symbol}{price|2}' ),
         'JPY' => array( 'symbol' => '¥',    'format' => '{symbol}{price|0}' ),
         'KES' => array( 'symbol' => 'KSh',  'format' => '{symbol} {price|2}' ),
         'KRW' => array( 'symbol' => '₩',    'format' => '{price|2} {symbol}' ),

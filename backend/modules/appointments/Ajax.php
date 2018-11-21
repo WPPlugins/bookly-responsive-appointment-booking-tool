@@ -15,12 +15,13 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function getAppointments()
     {
-        $columns = self::parameter( 'columns' );
-        $order   = self::parameter( 'order' );
-        $filter  = self::parameter( 'filter' );
+        $columns     = self::parameter( 'columns' );
+        $order       = self::parameter( 'order' );
+        $filter      = self::parameter( 'filter' );
         $postfix_any = sprintf( ' (%s)', get_option( 'bookly_l10n_option_employee' ) );
+        $postfix_archived = sprintf( ' (%s)', __( 'Archived', 'bookly' ) );
 
-        $query = Lib\Entities\CustomerAppointment::query( 'ca' )
+        $query = Lib\Entities\Appointment::query( 'a' )
             ->select( 'a.id,
                 ca.payment_id,
                 ca.status,
@@ -28,21 +29,24 @@ class Ajax extends Lib\Base\Ajax
                 ca.notes,
                 ca.number_of_persons,
                 ca.extras,
+                ca.extras_multiply_nop,
                 ca.rating,
                 ca.rating_comment,
+                COALESCE(ca.created, a.created) as created_date,
                 a.start_date,
                 a.staff_any,
                 c.full_name  AS customer_full_name,
                 c.phone      AS customer_phone,
                 c.email      AS customer_email,
                 st.full_name AS staff_name,
+                st.visibility AS staff_visibility,
                 p.paid       AS payment,
                 p.total      AS payment_total,
                 p.type       AS payment_type,
                 p.status     AS payment_status,
                 COALESCE(s.title, a.custom_service_name) AS service_title,
-                TIME_TO_SEC(TIMEDIFF(a.end_date, a.start_date)) + a.extras_duration AS service_duration' )
-            ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
+                TIME_TO_SEC(TIMEDIFF(a.end_date, a.start_date)) + IF(ca.extras_consider_duration, a.extras_duration, 0) AS service_duration' )
+            ->leftJoin( 'CustomerAppointment', 'ca', 'a.id = ca.appointment_id' )
             ->leftJoin( 'Service', 's', 's.id = a.service_id' )
             ->leftJoin( 'Customer', 'c', 'c.id = ca.customer_id' )
             ->leftJoin( 'Payment', 'p', 'p.id = ca.payment_id' )
@@ -61,12 +65,20 @@ class Ajax extends Lib\Base\Ajax
             $query->where( 'a.id', $filter['id'] );
         }
 
-        if ( $filter['date'] ) {
+        if ( $filter['date'] == 'any' ) {
+            $query->whereNot( 'a.start_date', null );
+        } elseif ( $filter['date'] == 'null' ) {
+            $query->where( 'a.start_date', null );
+        } else {
             list ( $start, $end ) = explode( ' - ', $filter['date'], 2 );
             $end = date( 'Y-m-d', strtotime( $end ) + DAY_IN_SECONDS );
             $query->whereBetween( 'a.start_date', $start, $end );
-        } else {
-            $query->where( 'a.start_date', null );
+        }
+
+        if ( $filter['created_date'] != 'any' ) {
+            list ( $start, $end ) = explode( ' - ', $filter['created_date'], 2 );
+            $end = date( 'Y-m-d', strtotime( $end ) + DAY_IN_SECONDS );
+            $query->havingRaw( 'created_date BETWEEN %s AND %s', array( $start, $end ) );
         }
 
         if ( $filter['staff'] != '' ) {
@@ -91,7 +103,7 @@ class Ajax extends Lib\Base\Ajax
         }
 
         $custom_fields = array();
-        $fields_data = (array) Lib\Proxy\CustomFields::getWhichHaveData();
+        $fields_data   = (array) Lib\Proxy\CustomFields::getWhichHaveData();
         foreach ( $fields_data as $field_data ) {
             $custom_fields[ $field_data->id ] = '';
         }
@@ -122,33 +134,44 @@ class Ajax extends Lib\Base\Ajax
             foreach ( (array) Lib\Proxy\CustomFields::getForCustomerAppointment( $customer_appointment ) as $custom_field ) {
                 $custom_fields[ $custom_field['id'] ] = $custom_field['value'];
             }
+            if ( $row['ca_id'] !== null ) {
+                $extras = (array) Lib\Proxy\ServiceExtras::getInfo( json_decode( $row['extras'], true ), false );
+                if ( $row['extras_multiply_nop'] && $row['number_of_persons'] > 1 ) {
+                    foreach ( $extras as $index => $extra ) {
+                        $extras[ $index ]['title'] = '<i class="fa fa-user"></i>&nbsp;' . $row['number_of_persons'] . '&nbsp;&times;&nbsp;' . $extra['title'];
+                    }
+                }
+            } else {
+                $extras = array();
+            }
 
             $data[] = array(
                 'id'                => $row['id'],
                 'start_date'        => $row['start_date'] === null ? __( 'N/A', 'bookly' ) : Lib\Utils\DateTime::formatDateTime( $row['start_date'] ),
                 'staff'             => array(
-                    'name' => $row['staff_name'] . ( $row['staff_any'] ? $postfix_any : '' ),
+                    'name' => $row['staff_name'] . ( $row['staff_any'] ? $postfix_any : '' ) . ( $row['staff_visibility'] == 'archive' ? $postfix_archived : '' ),
                 ),
                 'customer'          => array(
-                    'full_name' => $row['customer_full_name'],
-                    'phone'     => $row['customer_phone'],
-                    'email'     => $row['customer_email'],
+                    'full_name' => $row['ca_id'] === null ? __( 'N/A', 'bookly' ) : $row['customer_full_name'],
+                    'phone'     => $row['ca_id'] === null ? __( 'N/A', 'bookly' ) : $row['customer_phone'],
+                    'email'     => $row['ca_id'] === null ? __( 'N/A', 'bookly' ) : $row['customer_email'],
                 ),
                 'service'           => array(
                     'title'    => $row['service_title'],
                     'duration' => $service_duration,
-                    'extras'   => (array) Lib\Proxy\ServiceExtras::getInfo( json_decode( $row['extras'], true ), false ),
+                    'extras'   => $extras,
                 ),
                 'status'            => $row['status'],
                 'payment'           => $payment_title,
                 'notes'             => $row['notes'],
-                'number_of_persons' => $row['number_of_persons'],
+                'number_of_persons' => (int) $row['number_of_persons'],
                 'rating'            => $row['rating'],
                 'rating_comment'    => $row['rating_comment'],
                 'custom_fields'     => $custom_fields,
                 'ca_id'             => $row['ca_id'],
                 'attachment'        => $row['attachment'],
                 'payment_id'        => $row['payment_id'],
+                'created_date'      => Lib\Utils\DateTime::formatDateTime( $row['created_date'] ),
             );
 
             $custom_fields = array_map( function () { return ''; }, $custom_fields );
@@ -170,8 +193,20 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function deleteCustomerAppointments()
     {
+        // Customer appointments to delete
+        $ca_list           = array();
+        // Appointments without customers to delete
+        $appointments_list = array();
+        foreach ( self::parameter( 'data', array() ) as $ca_data ) {
+            if ( $ca_data['ca_id'] === 'null' ) {
+                $appointments_list[] = $ca_data['id'];
+            } else {
+                $ca_list[] = $ca_data['ca_id'];
+            }
+        }
+
         /** @var Lib\Entities\CustomerAppointment $ca */
-        foreach ( Lib\Entities\CustomerAppointment::query()->whereIn( 'id', self::parameter( 'data', array() ) )->find() as $ca ) {
+        foreach ( Lib\Entities\CustomerAppointment::query()->whereIn( 'id', $ca_list )->find() as $ca ) {
             if ( self::parameter( 'notify' ) ) {
                 switch ( $ca->getStatus() ) {
                     case Lib\Entities\CustomerAppointment::STATUS_PENDING:
@@ -190,6 +225,15 @@ class Ajax extends Lib\Base\Ajax
             }
             $ca->deleteCascade();
         }
+
+        /** @var Lib\Entities\Appointment $appointment */
+        foreach ( Lib\Entities\Appointment::query()->whereIn( 'id', $appointments_list )->find() as $appointment ) {
+            $ca = $appointment->getCustomerAppointments();
+            if ( empty( $ca ) ) {
+                $appointment->delete();
+            }
+        }
+
         wp_send_json_success();
     }
 }

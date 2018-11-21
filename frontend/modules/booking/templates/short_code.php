@@ -3,10 +3,10 @@ use Bookly\Lib;
 ?>
 <!--
 Plugin Name: Bookly – Responsive WordPress Appointment Booking and Scheduling Plugin
-Plugin URI: http://booking-wp-plugin.com
+Plugin URI: https://www.booking-wp-plugin.com/?utm_source=bookly_admin&utm_medium=plugins_page&utm_campaign=plugins_page
 Version: <?php echo Lib\Plugin::getVersion() ?>
 -->
-<?php if ( $print_assets ) include '_css.php' ?>
+<?php if ( ! $self::$css_printed ) : include '_css.php'; $self::$css_printed = true; endif  ?>
 <div id="bookly-form-<?php echo $form_id ?>" class="bookly-form" data-form_id="<?php echo $form_id ?>">
     <div style="text-align: center"><img src="<?php echo includes_url( 'js/tinymce/skins/lightgray/img/loader.gif' ) ?>" alt="<?php esc_attr_e( 'Loading...', 'bookly' ) ?>" /></div>
 </div>
@@ -42,9 +42,3 @@ Version: <?php echo Lib\Plugin::getVersion() ?>
         window.bookly( <?php echo json_encode( $bookly_options ) ?> );
     });
 </script>
-
-<?php if ( trim( $custom_css ) ): ?>
-    <style type="text/css">
-        <?php echo $custom_css; ?>
-    </style>
-<?php endif; ?>

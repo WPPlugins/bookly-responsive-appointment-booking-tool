@@ -113,16 +113,18 @@ class Payment extends Lib\Base\Entity
      */
     public function setDetailsFromOrder( DataHolders\Order $order, Lib\CartInfo $cart_info )
     {
+        $extras_multiply_nop = get_option( 'bookly_service_extras_multiply_nop', 1 );
+
         $details = array(
-            'items'        => array(),
-            'coupon'       => null,
-            'subtotal'     => array( 'price' => 0, 'deposit' => 0 ),
-            'customer'     => $order->getCustomer()->getFullName(),
-            'tax_in_price' => 'excluded',
-            'tax_paid'     => null,
+            'items'               => array(),
+            'coupon'              => null,
+            'subtotal'            => array( 'price' => 0, 'deposit' => 0 ),
+            'customer'            => $order->getCustomer()->getFullName(),
+            'tax_in_price'        => 'excluded',
+            'tax_paid'            => null,
+            'extras_multiply_nop' => $extras_multiply_nop,
         );
 
-        $extras_multiply_nop = get_option( 'bookly_service_extras_multiply_nop', 1 );
         foreach ( $order->getItems() as $item ) {
             $items = $item->isSeries() ? $item->getItems() : array( $item );
             /** @var DataHolders\Item $sub_item */
@@ -134,7 +136,7 @@ class Payment extends Lib\Base\Entity
                 $extras    = array();
                 $extras_price = 0;
                 $sub_items = array();
-                if ( $sub_item->isCompound() ) {
+                if ( $sub_item->isCollaborative() || $sub_item->isCompound() ) {
                     foreach ( $sub_item->getItems() as $si ) {
                         $sub_items[] = $si;
                     }

@@ -233,26 +233,6 @@ msgid "Yesterday"
 msgstr "Včera"
 
 #: 
-msgid "Last 7 Days"
-msgstr "Posledních 7 dní"
-
-#: 
-msgid "Last 30 Days"
-msgstr "Posledních 30 dní"
-
-#: 
-msgid "This Month"
-msgstr "Tento měsíc"
-
-#: 
-msgid "Next Month"
-msgstr "Příští měsíc"
-
-#: 
-msgid "Custom Range"
-msgstr "Vlastní pole"
-
-#: 
 msgid "Apply"
 msgstr "Použít"
 
@@ -577,16 +557,8 @@ msgid "Delete customers"
 msgstr "Vymaž zákazníky"
 
 #: 
-msgid "You are about to delete customers which may have WordPress accounts associated to them. Do you want to delete those accounts too (if there are any)?"
-msgstr "Chystáte se vymazat zákazníky, kteří mohou mít připojené WordPress účty. Chcete smazat tyto účty také (pokud nějaké jsou)?"
-
-#: 
 msgid "Remember my choice"
 msgstr "Zapamatovat moji volbu"
-
-#: 
-msgid "No, delete just customers"
-msgstr "Ne, vymaž pouze zákazníky"
 
 #: 
 msgid "Yes"
@@ -843,10 +815,6 @@ msgid "To send scheduled notifications please execute the following command hour
 msgstr "K odesílání naplánovaných upozornění prosím přidejte následující příkaz do hodinového intervalu v CRONu"
 
 #: 
-msgid "Last Month"
-msgstr "Minulý měsíc"
-
-#: 
 msgid "No payments for selected period and criteria."
 msgstr "Žádné platby ve vybraném časovém okně a v rámci zadaných kritérií."
 
@@ -1065,10 +1033,6 @@ msgstr "Délka časového okna"
 #: 
 msgid "Select a time interval which will be used as a step when building all time slots in the system."
 msgstr "Vyber časový interval, který bude použit jako krok, až se budou začleňovat všechny časová okna do systému."
-
-#: 
-msgid "Service duration as slot length"
-msgstr "Doba trvání služby jako délka časového okna"
 
 #: 
 msgid "Enable this option to make slot length equal to service duration at the Time step of booking form."
@@ -1293,10 +1257,6 @@ msgstr "Běžná cena"
 #: 
 msgid "Price with custom Sender ID"
 msgstr "Cena s vlastním ID Odesílatele"
-
-#: 
-msgid "If you do not see your country in the list please contact us at <a href=\"mailto:support@ladela.com\">support@ladela.com</a>."
-msgstr "Pokud nevidíte svojí zemi na seznamu, kontaktuje nás prosím na  <a href=\"mailto:support@ladela.com\">support@ladela.com</a>."
 
 #: 
 msgid "Order"
@@ -1561,10 +1521,6 @@ msgstr "Potřebujete poradit? Kontaktuje nás zde."
 #: 
 msgid "Contact Us"
 msgstr "Kontaktujte nás"
-
-#: 
-msgid "We care about your experience using Bookly!<br/>Leave a review and tell others what you think."
-msgstr "Záleží nám na vaší zpětné vazbě při využívání služby Bookly! <br/> Zanechte nám recenzi a řekněte ostatním, co si Bookly myslíte."
 
 #: 
 msgid "Feedback"
@@ -2673,10 +2629,6 @@ msgid "Set the URL of a page that is shown to staff when the rejection of appoin
 msgstr "Nastavit URL stránky, které se zobrazí zaměstnanci potom co zamítnutí rezervace není možné provést (např. z důvod změny stavu apod.)."
 
 #: 
-msgid "Notification name"
-msgstr "název oznámení"
-
-#: 
 msgid "You are trying to use the service too often. Please contact us to make a booking."
 msgstr "Snažíte se službu používat příliš často. Prosím, kontaktujte nás pro vytvoření rezervace."
 
@@ -3475,10 +3427,6 @@ msgid "Not allowed"
 msgstr "Nepovoleno"
 
 #: 
-msgid "There is no time slots for selected date."
-msgstr ""
-
-#: 
 msgid "Unfortunately, you're not able to cancel the appointment because the required time limit prior to canceling has expired."
 msgstr "Bohužel nemůžete rezervaci zrušit, protože vypršela požadovaná lhůta před jejím zrušením."
 
@@ -3904,19 +3852,7 @@ msgid "Locations"
 msgstr "Lokace"
 
 #: 
-msgid "Set services for location"
-msgstr ""
-
-#: 
 msgid "Use custom settings"
-msgstr ""
-
-#: 
-msgid "Use default"
-msgstr ""
-
-#: 
-msgid "Use custom"
 msgstr ""
 
 #: 
@@ -3925,10 +3861,6 @@ msgstr ""
 
 #: 
 msgid "Custom settings for location"
-msgstr ""
-
-#: 
-msgid "Enable this setting to be able to set custom service settings for staff members for different locations."
 msgstr ""
 
 #: 
@@ -3945,10 +3877,6 @@ msgstr ""
 
 #: 
 msgid "Edit Location"
-msgstr ""
-
-#: 
-msgid "All Staff"
 msgstr ""
 
 #: 
@@ -4866,14 +4794,6 @@ msgid "Limit appointments per customer"
 msgstr "Omezení počtu rezervaci na zákazníka"
 
 #: 
-msgid "Allows you to limit the frequency of service bookings per customer."
-msgstr "Umožňuje omezit frekvenci rezervace služby pro zákazníka"
-
-#: 
-msgid "per day"
-msgstr "za den"
-
-#: 
 msgid "per week"
 msgstr "za týden"
 
@@ -4923,10 +4843,6 @@ msgstr ""
 
 #: 
 msgid "Manual adjustment"
-msgstr ""
-
-#: 
-msgid "%s is used on another domain %s.<br/>In order to use the purchase code on this domain, please dissociate it in the admin panel of the other domain.<br/>If you do not have access to the admin area, please contact our technical support at support@ladela.com to transfer the license manually."
 msgstr ""
 
 #: 
@@ -5111,10 +5027,6 @@ msgstr ""
 
 #: 
 msgid "Restore"
-msgstr ""
-
-#: 
-msgid "View Series"
 msgstr ""
 
 #: 
@@ -6284,5 +6196,511 @@ msgstr ""
 
 #: 
 msgid "<b>Bookly Lite rebrands into Bookly with more features available.</b><br/><br/>We have changed the architecture of Bookly Lite and Bookly to optimize the development of both plugin versions and add more features to the new free Bookly. To learn more about the major Bookly update, check our <a href=\"%s\" target=\"_blank\">blog post</a>."
+msgstr ""
+
+#: 
+msgid "Group appointments"
+msgstr ""
+
+#: 
+msgid "Create new appointment for every recurring booking"
+msgstr ""
+
+#: 
+msgid "Add customer to available group bookings"
+msgstr ""
+
+#: 
+msgid "One booking per time slot"
+msgstr ""
+
+#: 
+msgid "Enable this option if you want to limit the possibility of booking within the service capacity to one time."
+msgstr ""
+
+#: 
+msgid "Equal duration"
+msgstr ""
+
+#: 
+msgid "Make every service duration equal to the duration of the longest one."
+msgstr ""
+
+#: 
+msgid "Collaborative"
+msgstr ""
+
+#: 
+msgid "Collaborative service"
+msgstr ""
+
+#: 
+msgid "Part of collaborative service"
+msgstr ""
+
+#: 
+msgid "There are no time slots for selected date."
+msgstr ""
+
+#: 
+msgid "Confirm email"
+msgstr ""
+
+#: 
+msgid "Email confirmation doesn't match"
+msgstr ""
+
+#: 
+msgid "Created at any time"
+msgstr ""
+
+#: 
+msgid "Created"
+msgstr ""
+
+#: 
+msgid "Any time"
+msgstr ""
+
+#: 
+msgid "Last 7 days"
+msgstr ""
+
+#: 
+msgid "Last 30 days"
+msgstr ""
+
+#: 
+msgid "This month"
+msgstr ""
+
+#: 
+msgid "Custom range"
+msgstr ""
+
+#: 
+msgid "Archived"
+msgstr ""
+
+#: 
+msgid "Send invoice"
+msgstr ""
+
+#: 
+msgid "Note: invoice will be sent to your PayPal email address"
+msgstr ""
+
+#: 
+msgid "Company address"
+msgstr ""
+
+#: 
+msgid "Company address line 2"
+msgstr ""
+
+#: 
+msgid "VAT"
+msgstr ""
+
+#: 
+msgid "Company code"
+msgstr ""
+
+#: 
+msgid "Additional text to include into invoice"
+msgstr ""
+
+#: 
+msgid "Confirm your email"
+msgstr ""
+
+#: 
+msgid "Thank you for registration."
+msgstr ""
+
+#: 
+msgid "Confirmation is sent to %s."
+msgstr ""
+
+#: 
+msgid "Once you confirm your e-mail address, you will get an access to Bookly SMS service."
+msgstr ""
+
+#: 
+msgid "If you do not see your country in the list please contact us at <a href=\"mailto:support@bookly.info\">support@bookly.info</a>."
+msgstr ""
+
+#: 
+msgid "Last month"
+msgstr ""
+
+#: 
+msgid "Hello,\n"
+"\n"
+"Thank you for registering at Bookly SMS service. Please click the link below to verify your email address.\n"
+"\n"
+"<a href='%s'>%s</a>\n"
+"\n"
+"Bookly"
+msgstr ""
+
+#: 
+msgid "Bookly SMS service  email confirmation"
+msgstr ""
+
+#: 
+msgid "Add new item to the category"
+msgstr ""
+
+#: 
+msgid "Edit category name"
+msgstr ""
+
+#: 
+msgid "Delete category"
+msgstr ""
+
+#: 
+msgid "Archive"
+msgstr ""
+
+#: 
+msgid "The working time in the provider's schedule is associated with another location."
+msgstr ""
+
+#: 
+msgid "Set slot length as service duration"
+msgstr ""
+
+#: 
+msgid "The time interval which is used as a step when building all time slots for the service at the Time step. The setting overrides global settings in Settings  General. Use Default to apply global settings."
+msgstr ""
+
+#: 
+msgid "Slot length as service duration"
+msgstr ""
+
+#: 
+msgid "You must select at least one repeat option for recurring services."
+msgstr ""
+
+#: 
+msgid "Align buttons to the left"
+msgstr ""
+
+#: 
+msgid "Email confirmation field"
+msgstr ""
+
+#: 
+msgid "Booking exceeds the working hours limit for staff member"
+msgstr ""
+
+#: 
+msgid "View series"
+msgstr ""
+
+#: 
+msgid "Delete customers with existing bookings"
+msgstr ""
+
+#: 
+msgid "Deleted Customer"
+msgstr ""
+
+#: 
+msgid "Please, check your email to confirm the subscription. Thank you!"
+msgstr ""
+
+#: 
+msgid "Given email address is already subscribed, thank you!"
+msgstr ""
+
+#: 
+msgid "This email address is not valid."
+msgstr ""
+
+#: 
+msgid "Feature requests"
+msgstr ""
+
+#: 
+msgid "In the Feature Requests section of our Community, you can make suggestions about what you'd like to see in our future releases."
+msgstr ""
+
+#: 
+msgid "Before you post, please check if the same suggestion has already been made. If so, vote for ideas you like and add a comment with the details about your situation."
+msgstr ""
+
+#: 
+msgid "It's much easier for us to address a suggestion if we clearly understand the context of the issue, the problem, and why it matters to you. When commenting or posting, please consider these questions so we can get a better idea of the problem you're facing:"
+msgstr ""
+
+#: 
+msgid "What is the issue you're struggling with?"
+msgstr ""
+
+#: 
+msgid "Where in your workflow do you encounter this issue?"
+msgstr ""
+
+#: 
+msgid "Is this something that impacts just you, your whole team, or your customers?"
+msgstr ""
+
+#: 
+msgid "don't show this notification again"
+msgstr ""
+
+#: 
+msgid "Proceed to Feature requests"
+msgstr ""
+
+#: 
+msgid "We care about your experience of using Bookly!<br/>Leave a review and tell others what you think."
+msgstr ""
+
+#: 
+msgid "%s is used on another domain %s.<br/>In order to use the purchase code on this domain, please dissociate it in the admin panel of the other domain.<br/>If you do not have access to the admin area, please contact our technical support at support@bookly.info to transfer the license manually."
+msgstr ""
+
+#: 
+msgid "Archiving Staff"
+msgstr ""
+
+#: 
+msgid "Ok, continue editing"
+msgstr ""
+
+#: 
+msgid "Limit working hours per day"
+msgstr ""
+
+#: 
+msgid "Unlimited"
+msgstr ""
+
+#: 
+msgid "Customer section"
+msgstr ""
+
+#: 
+msgid "Appointment section"
+msgstr ""
+
+#: 
+msgid "Period (before and after)"
+msgstr ""
+
+#: 
+msgid "upcoming"
+msgstr ""
+
+#: 
+msgid "per 24 hours"
+msgstr ""
+
+#: 
+msgid "per 7 days"
+msgstr ""
+
+#: 
+msgid "Least occupied for period"
+msgstr ""
+
+#: 
+msgid "Most occupied for period"
+msgstr ""
+
+#: 
+msgid "For service"
+msgstr ""
+
+#: 
+msgid "Skip"
+msgstr ""
+
+#: 
+msgid "Your task is done"
+msgstr ""
+
+#: 
+msgid "Dear {client_name}.\n"
+"\n"
+"Your task {service_name} has been done.\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+
+#: 
+msgid "Task is done"
+msgstr ""
+
+#: 
+msgid "Hello.\n"
+"\n"
+"The following task has been done.\n"
+"\n"
+"Service: {service_name}\n"
+"\n"
+"Client name: {client_name}\n"
+"\n"
+"Client phone: {client_phone}\n"
+"\n"
+"Client email: {client_email}"
+msgstr ""
+
+#: 
+msgid "Dear {client_name}.\n"
+"Your task {service_name} has been done.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+
+#: 
+msgid "Hello.\n"
+"The following task has been done.\n"
+"Service: {service_name}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr ""
+
+#: 
+msgid "Time step settings"
+msgstr ""
+
+#: 
+msgid "This setting allows to display the step of selecting an appointment time, hide it and create a task without due time, or display the time step, but allow a customer to skip it."
+msgstr ""
+
+#: 
+msgid "Optional"
+msgstr ""
+
+#: 
+msgid "Coupon code"
+msgstr ""
+
+#: 
+msgid "Extras Step"
+msgstr ""
+
+#: 
+msgid "After Service step"
+msgstr ""
+
+#: 
+msgid "After Time step (Extras duration settings will be ignored)"
+msgstr ""
+
+#: 
+msgid "Set Default values that will be used in all locations where Use default settings is selected. To use custom settings in a location, select Use custom settings and enter custom values."
+msgstr ""
+
+#: 
+msgid "Default settings"
+msgstr ""
+
+#: 
+msgid "Use default settings"
+msgstr ""
+
+#: 
+msgid "Enable this setting to be able to set custom settings for staff members for different locations."
+msgstr ""
+
+#: 
+msgid "Booking exceeds your working hours limit"
+msgstr ""
+
+#: 
+msgid "This setting allows limiting the total time occupied by bookings per day for staff member. Padding time is not included."
+msgstr ""
+
+#: 
+msgid "This section describes information that is displayed about appointment."
+msgstr ""
+
+#: 
+msgid "This section describes information that is displayed about each participant of the appointment."
+msgstr ""
+
+#: 
+msgid "Active from"
+msgstr ""
+
+#: 
+msgid "Max appointments"
+msgstr ""
+
+#: 
+msgid "Your account has been disabled. Contact your website administrator to continue."
+msgstr ""
+
+#: 
+msgid "You are going to archive item which is involved in upcoming appointments. Please double check and edit appointments before this item archive if needed."
+msgstr ""
+
+#: 
+msgid "Set number of days before and after appointment that will be taken into account when calculating providers occupancy. 0 means the day of booking."
+msgstr ""
+
+#: 
+msgid "This setting allows you to limit the number of appointments that can be booked by a customer in any given period. Restriction may end after a fixed period or with the beginning of the next calendar period  new day, week, month, etc."
+msgstr ""
+
+#: 
+msgid "per day"
+msgstr ""
+
+#: 
+msgid "per 30 days"
+msgstr ""
+
+#: 
+msgid "per 365 days"
+msgstr ""
+
+#: 
+msgid "Copy invoice to another email(s)"
+msgstr ""
+
+#: 
+msgid "Enter one or more email addresses separated by commas."
+msgstr ""
+
+#: 
+msgid "Show archived staff"
+msgstr ""
+
+#: 
+msgid "Hide archived staff"
+msgstr ""
+
+#: 
+msgid "Can't change calendar for archived staff"
+msgstr ""
+
+#: 
+msgid "You are going to delete customers with existing bookings. Notifications will not be sent to them."
+msgstr ""
+
+#: 
+msgid "You are going to delete customers, are you sure?"
+msgstr ""
+
+#: 
+msgid "Delete customers' WordPress accounts if there are any"
+msgstr ""
+
+#: 
+msgid "Export only active coupons"
 msgstr ""
 

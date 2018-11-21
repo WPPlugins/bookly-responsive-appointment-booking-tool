@@ -17,7 +17,7 @@ abstract class Backend
         add_action( 'admin_menu', array( __CLASS__, 'addAdminMenu' ) );
 
         add_action( 'admin_notices', function () {
-            $bookly_page = isset ( $_REQUEST['page'] ) && strpos( $_REQUEST['page'], 'bookly-' ) === 0;
+            $bookly_page = isset ( $_REQUEST['page'] ) && strncmp( $_REQUEST['page'], 'bookly-', 7 ) === 0;
             if ( $bookly_page ) {
                 // Subscribe notice.
                 Components\Notices\Subscribe::render();

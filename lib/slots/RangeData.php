@@ -23,6 +23,8 @@ class RangeData
     protected $nop;
     /** @var Range */
     protected $next_slot;
+    /** @var Range */
+    protected $alt_slot;
 
     /**
      * Constructor.
@@ -35,17 +37,29 @@ class RangeData
      * @param int $capacity
      * @param int $nop
      * @param Range|null $next_slot
+     * @param Range|null $alt_slot
      */
-    public function __construct( $service_id, $staff_id, $location_id = 0, $state = Range::AVAILABLE, $on_waiting_list = 0, $next_slot = null, $capacity = 1, $nop = 0 )
+    public function __construct(
+        $service_id,
+        $staff_id,
+        $location_id = 0,
+        $state = Range::AVAILABLE,
+        $on_waiting_list = 0,
+        $capacity = 1,
+        $nop = 0,
+        $next_slot = null,
+        $alt_slot = null
+    )
     {
         $this->service_id      = $service_id;
         $this->staff_id        = $staff_id;
         $this->location_id     = $location_id;
         $this->state           = $state;
         $this->on_waiting_list = $on_waiting_list;
-        $this->next_slot       = $next_slot;
         $this->capacity        = $capacity;
         $this->nop             = $nop;
+        $this->next_slot       = $next_slot;
+        $this->alt_slot        = $alt_slot;
     }
 
     /**
@@ -129,6 +143,16 @@ class RangeData
     }
 
     /**
+     * Get alternative slot.
+     *
+     * @return Range
+     */
+    public function altSlot()
+    {
+        return $this->alt_slot;
+    }
+
+    /**
      * Check whether next slot is set.
      *
      * @return bool
@@ -139,6 +163,16 @@ class RangeData
     }
 
     /**
+     * Check whether alternative slot is set.
+     *
+     * @return bool
+     */
+    public function hasAltSlot()
+    {
+        return $this->alt_slot != null;
+    }
+
+    /**
      * Create a copy of the data with new staff ID.
      *
      * @param int $new_staff_id
@@ -146,7 +180,7 @@ class RangeData
      */
     public function replaceStaffId( $new_staff_id )
     {
-        return new static( $this->service_id, $new_staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->next_slot, $this->capacity, $this->nop );
+        return new static( $this->service_id, $new_staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->capacity, $this->nop, $this->next_slot, $this->alt_slot );
     }
 
     /**
@@ -157,7 +191,7 @@ class RangeData
      */
     public function replaceState( $new_state )
     {
-        return new static( $this->service_id, $this->staff_id, $this->location_id, $new_state, $this->on_waiting_list, $this->next_slot, $this->capacity, $this->nop );
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $new_state, $this->on_waiting_list, $this->capacity, $this->nop, $this->next_slot, $this->alt_slot );
     }
 
     /**
@@ -168,7 +202,29 @@ class RangeData
      */
     public function replaceOnWaitingList( $new_on_waiting_list )
     {
-        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $new_on_waiting_list, $this->next_slot, $this->capacity, $this->nop );
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $new_on_waiting_list, $this->capacity, $this->nop, $this->next_slot, $this->alt_slot );
+    }
+
+    /**
+     * Create a copy of the data with new capacity.
+     *
+     * @param int $new_capacity
+     * @return static
+     */
+    public function replaceCapacity( $new_capacity )
+    {
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $new_capacity, $this->nop, $this->next_slot, $this->alt_slot );
+    }
+
+    /**
+     * Create a copy of the data with new nop.
+     *
+     * @param int $new_nop
+     * @return static
+     */
+    public function replaceNop( $new_nop )
+    {
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->capacity, $new_nop, $this->next_slot, $this->alt_slot );
     }
 
     /**
@@ -179,16 +235,17 @@ class RangeData
      */
     public function replaceNextSlot( $new_next_slot )
     {
-        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $new_next_slot, $this->capacity, $this->nop );
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->capacity, $this->nop, $new_next_slot, $this->alt_slot );
     }
 
-    public function replaceNop( $new_nop )
+    /**
+     * Create a copy of the data with new alternative slot.
+     *
+     * @param Range|null $new_alt_slot
+     * @return static
+     */
+    public function replaceAltSlot( $new_alt_slot )
     {
-        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->next_slot, $this->capacity, $new_nop );
-    }
-
-    public function replaceCapacity( $new_capacity )
-    {
-        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->next_slot, $new_capacity, $this->nop );
+        return new static( $this->service_id, $this->staff_id, $this->location_id, $this->state, $this->on_waiting_list, $this->capacity, $this->nop, $this->next_slot, $new_alt_slot );
     }
 }

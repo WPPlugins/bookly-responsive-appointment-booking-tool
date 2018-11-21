@@ -32,22 +32,66 @@ class Simple extends Item
     }
 
     /**
-     * Set service.
+     * @inheritdoc
+     */
+    public function getAppointment()
+    {
+        if ( ! $this->appointment ) {
+            $this->appointment = Lib\Entities\Appointment::find( $this->ca->getAppointmentId() );
+        }
+
+        return $this->appointment;
+    }
+
+    /**
+     * Set appointment.
      *
-     * @param Lib\Entities\Service $service
+     * @param Lib\Entities\Appointment $appointment
      * @return $this
      */
-    public function setService( Lib\Entities\Service $service )
+    public function setAppointment( Lib\Entities\Appointment $appointment )
     {
-        $this->service = $service;
+        $this->appointment = $appointment;
 
         return $this;
     }
 
     /**
-     * Get service.
-     *
-     * @return Lib\Entities\Service
+     * @inheritdoc
+     */
+    public function getCA()
+    {
+        return $this->ca;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDeposit()
+    {
+        if ( ! $this->staff_service ) {
+            $this->staff_service = new Lib\Entities\StaffService();
+            $this->staff_service->loadBy(
+                array(
+                    'staff_id'    => $this->getStaff()->getId(),
+                    'service_id'  => $this->getService()->getId(),
+                    'location_id' => Lib\Proxy\Locations::prepareStaffLocationId( $this->appointment->getLocationId(), $this->getStaff()->getId() ) ?: null,
+                ) );
+        }
+
+        return $this->staff_service->getDeposit();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtras()
+    {
+        return json_decode( $this->getCA()->getExtras(), true );
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getService()
     {
@@ -71,73 +115,28 @@ class Simple extends Item
     }
 
     /**
-     * Set staff.
+     * Set service.
      *
-     * @param Lib\Entities\Staff $staff
+     * @param Lib\Entities\Service $service
      * @return $this
      */
-    public function setStaff( Lib\Entities\Staff $staff )
+    public function setService( Lib\Entities\Service $service )
     {
-        $this->staff = $staff;
+        $this->service = $service;
 
         return $this;
     }
 
     /**
-     * Get staff.
-     *
-     * @return Lib\Entities\Staff
+     * @inheritdoc
      */
-    public function getStaff()
+    public function getServiceDuration()
     {
-        if ( ! $this->staff ) {
-            $this->staff = Lib\Entities\Staff::find( $this->getAppointment()->getStaffId() );
-        }
-
-        return $this->staff;
+        return $this->getService()->getDuration() * $this->getCA()->getUnits();
     }
 
     /**
-     * Set appointment.
-     *
-     * @param Lib\Entities\Appointment $appointment
-     * @return $this
-     */
-    public function setAppointment( Lib\Entities\Appointment $appointment )
-    {
-        $this->appointment = $appointment;
-
-        return $this;
-    }
-
-    /**
-     * Get appointment.
-     *
-     * @return Lib\Entities\Appointment
-     */
-    public function getAppointment()
-    {
-        if ( ! $this->appointment ) {
-            $this->appointment = Lib\Entities\Appointment::find( $this->ca->getAppointmentId() );
-        }
-
-        return $this->appointment;
-    }
-
-    /**
-     * Get customer appointment.
-     *
-     * @return Lib\Entities\CustomerAppointment
-     */
-    public function getCA()
-    {
-        return $this->ca;
-    }
-
-    /**
-     * Get service price.
-     *
-     * @return float
+     * @inheritdoc
      */
     public function getServicePrice()
     {
@@ -166,43 +165,31 @@ class Simple extends Item
     }
 
     /**
-     * Get total price.
-     *
-     * @return float
+     * @inheritdoc
      */
-    public function getTotalPrice()
+    public function getStaff()
     {
-        // Service price.
-        $price = $this->getServicePrice();
-        $nop   = $this->getCA()->getNumberOfPersons();
-
-        return Lib\Proxy\ServiceExtras::prepareServicePrice( $price * $nop, $price, $nop, json_decode( $this->getCA()->getExtras(), true ) );
-    }
-
-    /**
-     * Get deposit.
-     *
-     * @return string
-     */
-    public function getDeposit()
-    {
-        if ( ! $this->staff_service ) {
-            $this->staff_service = new Lib\Entities\StaffService();
-            $this->staff_service->loadBy(
-                array(
-                    'staff_id'    => $this->getStaff()->getId(),
-                    'service_id'  => $this->getService()->getId(),
-                    'location_id' => Lib\Proxy\Locations::prepareStaffLocationId( $this->appointment->getLocationId(), $this->getStaff()->getId() ) ?: null,
-                ) );
+        if ( ! $this->staff ) {
+            $this->staff = Lib\Entities\Staff::find( $this->getAppointment()->getStaffId() );
         }
 
-        return $this->staff_service->getDeposit();
+        return $this->staff;
     }
 
     /**
-     * Gets tax
+     * Set staff.
      *
-     * @return float
+     * @param Lib\Entities\Staff $staff
+     * @return $this
+     */
+    public function setStaff( Lib\Entities\Staff $staff )
+    {
+        $this->staff = $staff;
+
+        return $this;
+    }
+    /**
+     * @inheritdoc
      */
     public function getTax()
     {
@@ -217,7 +204,7 @@ class Simple extends Item
     }
 
     /**
-     * Sets tax
+     * Set tax.
      *
      * @param float $tax
      * @return $this
@@ -227,6 +214,27 @@ class Simple extends Item
         $this->tax = $tax;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTotalEnd()
+    {
+        return Lib\Slots\DatePoint::fromStr( $this->getAppointment()->getEndDate() )
+            ->modify( $this->getAppointment()->getExtrasDuration() );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTotalPrice()
+    {
+        // Service price.
+        $price = $this->getServicePrice();
+        $nop   = $this->getCA()->getNumberOfPersons();
+
+        return Lib\Proxy\ServiceExtras::prepareServicePrice( $price * $nop, $price, $nop, json_decode( $this->getCA()->getExtras(), true ) );
     }
 
     /**

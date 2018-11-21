@@ -82,6 +82,28 @@ abstract class Common
     }
 
     /**
+     * Check whether any of the current posts in the loop contains given short code.
+     *
+     * @param string $short_code
+     * @return bool
+     */
+    public static function postsHaveShortCode( $short_code )
+    {
+        /** @global \WP_Query $wp_query */
+        global $wp_query;
+
+        if ( $wp_query && $wp_query->posts !== null ) {
+            foreach ( $wp_query->posts as $post ) {
+                if ( has_shortcode( $post->post_content, $short_code ) ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Add utm_source, utm_medium, utm_campaign parameters to url
      *
      * @param $url
@@ -171,6 +193,41 @@ abstract class Common
         }
 
         return $options;
+    }
+
+    /**
+     * Get services grouped by categories for drop-down list.
+     *
+     * @param string $raw_where
+     * @return array
+     */
+    public static function getServiceDataForDropDown( $raw_where = null )
+    {
+        $result = array();
+
+        $query = Lib\Entities\Service::query( 's' )
+            ->select( 'c.id AS category_id, c.name, s.id, s.title' )
+            ->leftJoin( 'Category', 'c', 'c.id = s.category_id' )
+            ->sortBy( 'COALESCE(c.position,99999), s.position' )
+        ;
+        if ( $raw_where !== null ) {
+            $query->whereRaw( $raw_where, array() );
+        }
+        foreach ( $query->fetchArray() as $row ) {
+            $category_id = (int) $row['category_id'];
+            if ( ! isset ( $result[ $category_id ] ) ) {
+                $result[ $category_id ] = array(
+                    'name'  => $category_id ? $row['name'] : __( 'Uncategorized', 'bookly' ),
+                    'items' => array(),
+                );
+            }
+            $result[ $category_id ]['items'][] = array(
+                'id'    => $row['id'],
+                'title' => $row['title'],
+            );
+        }
+
+        return $result;
     }
 
     /**

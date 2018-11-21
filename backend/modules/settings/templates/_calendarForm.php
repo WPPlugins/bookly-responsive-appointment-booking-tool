@@ -1,6 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 use Bookly\Backend\Components\Controls\Buttons;
 use Bookly\Backend\Components\Controls\Inputs;
+use Bookly\Backend\Components\Settings;
 ?>
 <form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'calendar' ) ) ?>">
     <?php if ( Bookly\Lib\Config::groupBookingActive() ) : ?>
@@ -18,11 +19,11 @@ use Bookly\Backend\Components\Controls\Inputs;
         <input id="bookly_appointment_participants" type="hidden" name="bookly_appointment_participants" value="bookly_cal_one_participant">
     <?php endif ?>
     <div class="form-group" id="bookly_cal_one_participant">
-        <textarea class="form-control" rows="9" name="bookly_cal_one_participant" placeholder="<?php _e( 'Enter a value', 'bookly' ) ?>"><?php echo esc_textarea( get_option( 'bookly_cal_one_participant' ) ) ?></textarea><br/>
+        <?php Settings\Inputs::renderTextArea( 'bookly_cal_one_participant', '' ) ?>
         <?php $self::renderTemplate( '_calendar_codes', array( 'participants' => 'one' ) ) ?>
     </div>
     <div class="form-group" id="bookly_cal_many_participants">
-        <textarea class="form-control" rows="9" name="bookly_cal_many_participants" placeholder="<?php _e( 'Enter a value', 'bookly' ) ?>"><?php echo esc_textarea( get_option( 'bookly_cal_many_participants' ) ) ?></textarea><br/>
+        <?php Settings\Inputs::renderTextArea( 'bookly_cal_many_participants', '' ) ?>
         <?php $self::renderTemplate( '_calendar_codes', array( 'participants' => 'many' ) ) ?>
     </div>
 

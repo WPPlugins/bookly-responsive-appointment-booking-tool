@@ -253,7 +253,7 @@ abstract class Entity extends Cache
     /**
      * Delete entity from database.
      *
-     * @return bool|false|int
+     * @return false|int
      */
     public function delete()
     {

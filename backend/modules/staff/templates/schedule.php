@@ -2,6 +2,7 @@
 use Bookly\Backend\Components\Controls\Buttons;
 use Bookly\Backend\Components\Controls\Inputs;
 use Bookly\Backend\Modules\Staff\Forms\Widgets\TimeChoice;
+use Bookly\Backend\Modules\Staff\Proxy;
 /** @var \Bookly\Lib\Entities\StaffScheduleItem[] $schedule_items */
 $working_start  = new TimeChoice( array( 'empty_value' => __( 'OFF', 'bookly' ), 'type' => 'from' ) );
 $working_end    = new TimeChoice( array( 'use_empty' => false, 'type' => 'to' ) );
@@ -11,6 +12,7 @@ $break_end     = clone $working_end;
 ?>
 <div>
     <form>
+        <?php Proxy\Locations::renderLocationSwitcher( $staff_id, $location_id, 'custom_schedule' ) ?>
         <?php foreach ( $schedule_items as $item ) : ?>
             <div data-id="<?php echo $item->getDayIndex() ?>"
                 data-staff_schedule_item_id="<?php echo $item->getId() ?>"
@@ -19,11 +21,11 @@ $break_end     = clone $working_end;
                 <div class="panel-heading bookly-padding-vertical-md">
                     <div class="row">
                         <div class="col-sm-7 col-lg-5">
-                            <span class="panel-title"><?php _e( \Bookly\Lib\Utils\DateTime::getWeekDayByNumber( $item->getDayIndex() - 1 ) /* take translation from WP catalog */ ) ?></span>
+                            <span class="panel-title"><?php esc_html_e( \Bookly\Lib\Utils\DateTime::getWeekDayByNumber( $item->getDayIndex() - 1 ) /* take translation from WP catalog */ ) ?></span>
                         </div>
                         <div class="col-sm-5 col-lg-7 hidden-xs hidden-sm">
                             <div class="bookly-font-smaller bookly-color-gray">
-                                <?php _e( 'Breaks', 'bookly' ) ?>
+                                <?php esc_html_e( 'Breaks', 'bookly' ) ?>
                             </div>
                         </div>
                     </div>
@@ -32,7 +34,7 @@ $break_end     = clone $working_end;
                 <div class="panel-body padding-lr-none">
                     <div class="row">
                         <div class="col-sm-7 col-lg-5">
-                            <div class="bookly-flexbox">
+                            <div class="bookly-flexbox form-group">
                                 <div class="bookly-flex-cell" style="width: 50%">
                                     <?php
                                         $day_is_not_available = null === $item->getStartTime();
@@ -45,7 +47,7 @@ $break_end     = clone $working_end;
                                 </div>
                                 <div class="bookly-flex-cell text-center" style="width: 1%">
                                     <div class="bookly-margin-horizontal-lg bookly-hide-on-off">
-                                        <?php _e( 'to', 'bookly' ) ?>
+                                        <?php esc_html_e( 'to', 'bookly' ) ?>
                                     </div>
                                 </div>
                                 <div class="bookly-flex-cell" style="width: 50%">
@@ -59,10 +61,7 @@ $break_end     = clone $working_end;
                                 </div>
                             </div>
 
-                            <input type="hidden"
-                                   name="days[<?php echo $item->getId() ?>]"
-                                   value="<?php echo $item->getDayIndex() ?>"
-                            >
+                            <input type="hidden" name="days[<?php echo $item->getId() ?>]" value="<?php echo $item->getDayIndex() ?>">
                         </div>
 
                         <div class="col-sm-5 col-lg-7">
@@ -70,7 +69,7 @@ $break_end     = clone $working_end;
                                 <button type="button"
                                         class="bookly-js-toggle-popover btn btn-link bookly-btn-unborder bookly-margin-vertical-screenxs-sm"
                                         data-popover-content=".bookly-js-content-break-<?php echo $item->getId() ?>">
-                                    <?php _e( 'add break', 'bookly' ) ?>
+                                    <?php esc_html_e( 'add break', 'bookly' ) ?>
                                 </button>
 
                                 <div class="bookly-js-content-break-<?php echo $item->getId() ?> hidden">
@@ -83,7 +82,7 @@ $break_end     = clone $working_end;
                                             </div>
                                             <div class="bookly-flex-cell" style="width: 4%;">
                                                 <div class="bookly-margin-horizontal-lg">
-                                                    <?php _e( 'to', 'bookly' ) ?>
+                                                    <?php esc_html_e( 'to', 'bookly' ) ?>
                                                 </div>
                                             </div>
                                             <div class="bookly-flex-cell" style="width: 48%;">

@@ -38,17 +38,22 @@ abstract class API
             'body'    => array(
                 'email'    => $email,
                 'site_url' => site_url(),
+                'src'      => Config::proActive() ? 'bookly_admin_pro' : 'bookly_admin_free'
             ),
         ) );
-
+        $state = 'invalid';
         if ( ! is_wp_error( $response ) && isset ( $response['body'] ) ) {
             $json = json_decode( $response['body'], true );
-            if ( isset ( $json['success'] ) && $json['success'] ) {
-                return true;
+            if ( isset ( $json['success'] ) ) {
+                if ( $json['success'] ) {
+                    $state = 'success';
+                } else {
+                    $state = $json['errors'][0];
+                }
             }
         }
 
-        return false;
+        return $state;
     }
 
     /**
@@ -131,7 +136,7 @@ abstract class API
 
         $services['visible_simple'] = Entities\Service::query( 's' )
             ->where( 's.type', Entities\Service::TYPE_SIMPLE )
-            ->whereNot( 's.visibility', 'private' )
+            ->whereNot( 's.visibility', Entities\Service::VISIBILITY_PRIVATE )
             ->count();
 
         // Max duration.
@@ -143,7 +148,7 @@ abstract class API
             ->select( 'MAX(ss.capacity_max) AS max_capacity' )
             ->innerJoin( 'StaffService', 'ss', 'ss.service_id = s.id' )
             ->where( 's.type', Entities\Service::TYPE_SIMPLE )
-            ->whereNot( 's.visibility', 'private' )
+            ->whereNot( 's.visibility', Entities\Service::VISIBILITY_PRIVATE )
             ->fetchRow();
         $services['max_capacity'] = $row['max_capacity'];
 
@@ -278,11 +283,10 @@ abstract class API
         // Bookings in Series.
         if ( Config::recurringAppointmentsActive() && get_option( 'bookly_recurring_appointments_enabled' ) ) {
             $rows = Entities\CustomerAppointment::query( 'ca' )
-                ->select( 'ap.series_id, IF(ap.series_id IS NULL, COUNT(*), 1) AS in_series, DATE_FORMAT(created, \'%%Y-%%m-%%d\') AS cur_date' )
-                ->innerJoin( 'Appointment', 'ap', 'ca.appointment_id = ap.id' )
+                ->select( 'series_id, IF(series_id IS NULL, COUNT(*), 1) AS in_series, DATE_FORMAT(created, \'%%Y-%%m-%%d\') AS cur_date' )
                 ->whereGte( 'created', date_create( current_time( 'mysql' ) )->modify( '-10 days' )->format( 'Y-m-d' ) )
                 ->whereLt( 'created', date_create( current_time( 'mysql' ) )->format( 'Y-m-d' ) )
-                ->groupBy( 'ap.series_id, cur_date' )
+                ->groupBy( 'series_id, cur_date' )
                 ->fetchArray();
 
             foreach ( $rows as $record ) {

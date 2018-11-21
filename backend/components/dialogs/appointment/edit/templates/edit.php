@@ -13,25 +13,25 @@ use Bookly\Lib\Entities\CustomerAppointment;
                 <form ng-submit=processForm()>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <div class="modal-title h2"><?php _e( 'New appointment', 'bookly' ) ?></div>
+                        <div class="modal-title h2"><?php esc_html_e( 'New appointment', 'bookly' ) ?></div>
                     </div>
                     <div ng-show=loading class="modal-body">
                         <div class="bookly-loading"></div>
                     </div>
                     <div ng-hide="loading || form.screen != 'main'" class="modal-body">
                         <div class=form-group>
-                            <label for="bookly-provider"><?php _e( 'Provider', 'bookly' ) ?></label>
-                            <select id="bookly-provider" class="form-control" ng-model="form.staff" ng-options="s.full_name + (form.staff_any == s ? ' (' + dataSource.l10n.staff_any + ')' : '') for s in dataSource.data.staff" ng-change="onStaffChange()"></select>
+                            <label for="bookly-provider"><?php esc_html_e( 'Provider', 'bookly' ) ?></label>
+                            <select id="bookly-provider" class="form-control" ng-model="form.staff" ng-options="s.full_name + (form.staff_any == s ? ' (' + dataSource.l10n.staff_any + ')' : '') for s in dataSource.data.staff | filter:filterStaff" ng-change="onStaffChange()"></select>
                         </div>
 
                         <div class=form-group>
-                            <label for="bookly-service"><?php _e( 'Service', 'bookly' ) ?></label>
+                            <label for="bookly-service"><?php esc_html_e( 'Service', 'bookly' ) ?></label>
                             <select id="bookly-service" class="form-control" ng-model="form.service"
                                     ng-options="s.title for s in form.staff.services" ng-change="onServiceChange()">
-                                <option value=""><?php _e( '-- Select a service --', 'bookly' ) ?></option>
+                                <option value=""><?php esc_html_e( '-- Select a service --', 'bookly' ) ?></option>
                             </select>
                             <p class="text-danger" my-slide-up="errors.service_required">
-                                <?php _e( 'Please select a service', 'bookly' ) ?>
+                                <?php esc_html_e( 'Please select a service', 'bookly' ) ?>
                             </p>
                         </div>
 
@@ -39,7 +39,7 @@ use Bookly\Lib\Entities\CustomerAppointment;
 
                         <?php if ( Config::locationsActive() ): ?>
                             <div class="form-group">
-                                <label for="bookly-appointment-location"><?php _e( 'Location', 'bookly' ) ?></label>
+                                <label for="bookly-appointment-location"><?php esc_html_e( 'Location', 'bookly' ) ?></label>
                                 <select id="bookly-appointment-location" class="form-control" ng-model="form.location"
                                         ng-options="l.name for l in form.staff.locations" ng-change="onLocationChange()">
                                     <option value=""></option>
@@ -53,14 +53,14 @@ use Bookly\Lib\Entities\CustomerAppointment;
                             <div class=form-group>
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <label for="bookly-date"><?php _e( 'Date', 'bookly' ) ?></label>
+                                        <label for="bookly-date"><?php esc_html_e( 'Date', 'bookly' ) ?></label>
                                         <input id="bookly-date" class="form-control" type=text
                                                ng-model=form.date ui-date="dateOptions" autocomplete="off"
                                                ng-change=onDateChange()>
                                     </div>
                                     <div class="col-sm-8">
                                         <div ng-hide="form.service.duration >= 86400">
-                                            <label for="bookly-period"><?php _e( 'Period', 'bookly' ) ?></label>
+                                            <label for="bookly-period"><?php esc_html_e( 'Period', 'bookly' ) ?></label>
                                             <div class="bookly-flexbox">
                                                 <div class="bookly-flex-cell">
                                                     <select id="bookly-period" class="form-control" ng-model=form.start_time
@@ -68,7 +68,7 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                                             ng-change=onStartTimeChange()></select>
                                                 </div>
                                                 <div class="bookly-flex-cell" style="width: 4%">
-                                                    <div class="bookly-margin-horizontal-md"><?php _e( 'to', 'bookly' ) ?></div>
+                                                    <div class="bookly-margin-horizontal-md"><?php esc_html_e( 'to', 'bookly' ) ?></div>
                                                 </div>
                                                 <div class="bookly-flex-cell" style="width: 48%">
                                                     <select class="form-control" ng-model=form.end_time
@@ -77,20 +77,25 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                                 </div>
                                             </div>
                                             <p class="text-success" my-slide-up=errors.date_interval_warning id=date_interval_warning_msg>
-                                                <?php _e( 'Selected period doesn\'t match service duration', 'bookly' ) ?>
+                                                <?php esc_html_e( 'Selected period doesn\'t match service duration', 'bookly' ) ?>
                                             </p>
                                             <p class="text-success" my-slide-up="errors.time_interval" ng-bind="errors.time_interval"></p>
                                         </div>
                                     </div>
                                     <div class="text-success col-sm-12" my-slide-up=errors.date_interval_not_available id=date_interval_not_available_msg>
-                                        <?php _e( 'The selected period is occupied by another appointment', 'bookly' ) ?>
+                                        <?php esc_html_e( 'The selected period is occupied by another appointment', 'bookly' ) ?>
                                     </div>
                                 </div>
                                 <p class="text-success" my-slide-up=errors.interval_not_in_staff_schedule id=interval_not_in_staff_schedule_msg>
-                                    <?php _e( 'Selected period doesn\'t match provider\'s schedule', 'bookly' ) ?>
+                                    <?php esc_html_e( 'Selected period doesn\'t match provider\'s schedule', 'bookly' ) ?>
                                 </p>
                                 <p class="text-success" my-slide-up=errors.interval_not_in_service_schedule id=interval_not_in_service_schedule_msg>
-                                    <?php _e( 'Selected period doesn\'t match service schedule', 'bookly' ) ?>
+                                    <?php esc_html_e( 'Selected period doesn\'t match service schedule', 'bookly' ) ?>
+                                </p>
+                                <p class="text-success" my-slide-up=errors.staff_reaches_working_time_limit id=staff_reaches_working_time_limit_msg>
+                                    <?php is_admin() ?
+                                        esc_html_e( 'Booking exceeds the working hours limit for staff member', 'bookly' ) :
+                                        esc_html_e( 'Booking exceeds your working hours limit', 'bookly' ) ?>
                                 </p>
                             </div>
 
@@ -98,7 +103,7 @@ use Bookly\Lib\Entities\CustomerAppointment;
                         </div>
 
                         <div class=form-group>
-                            <label for="bookly-select2"><?php _e( 'Customers', 'bookly' ) ?></label>
+                            <label for="bookly-select2"><?php esc_html_e( 'Customers', 'bookly' ) ?></label>
                             <span ng-show="form.service && form.service.id" title="<?php esc_attr_e( 'Selected / maximum', 'bookly' ) ?>">
                                 ({{dataSource.getTotalNumberOfPersons()}}/{{form.service.capacity_max}})
                             </span>
@@ -106,12 +111,14 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                 <i class="fa fa-fw" ng-class="{'fa-angle-down':!form.expand_customers_list, 'fa-angle-up':form.expand_customers_list}"></i>
                             </span>
                             <p class="text-success" ng-show=form.service my-slide-up="form.service.capacity_min > 1 && form.service.capacity_min > dataSource.getTotalNumberOfPersons()">
-                                <?php _e( 'Minimum capacity', 'bookly' ) ?>: {{form.service.capacity_min}}
+                                <?php esc_html_e( 'Minimum capacity', 'bookly' ) ?>: {{form.service.capacity_min}}
                             </p>
                             <ul class="bookly-flexbox">
                                 <li ng-repeat="customer in form.customers" class="bookly-flex-row" ng-hide="$index > 4 && !form.expand_customers_list">
-                                    <a ng-click="editCustomerDetails(customer)" title="<?php esc_attr_e( 'Edit booking details', 'bookly' ) ?>" class="bookly-flex-cell bookly-padding-bottom-sm" href>{{customer.name}}</a>
-                                    <span class="bookly-flex-cell text-right text-nowrap bookly-padding-bottom-sm">
+                                    <div class="bookly-flex-cell-sm">
+                                        <a ng-click="editCustomerDetails(customer)" title="<?php esc_attr_e( 'Edit booking details', 'bookly' ) ?>" class="bookly-flex-cell bookly-padding-bottom-sm" href>{{customer.name}}</a>
+                                    </div>
+                                    <div class="bookly-flex-cell-sm text-right text-nowrap bookly-padding-bottom-sm">
                                         <?php Proxy\Shared::renderAppointmentDialogCustomersList() ?>
                                         <span class="dropdown">
                                             <button type="button" class="btn btn-sm btn-default bookly-margin-left-xs" data-toggle="dropdown" popover="<?php esc_attr_e( 'Status', 'bookly' ) ?>: {{statusToString(customer.status)}}">
@@ -173,9 +180,14 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                             <span class="fa fa-fw fa-calendar-alt"></span>
                                         </button>
                                         <?php endif ?>
+                                        <?php if ( Config::recurringAppointmentsActive() ) : ?>
+                                        <button type="button" class="btn btn-sm btn-default bookly-margin-left-xs" ng-click="schViewSeries(customer)" ng-show="customer.series_id" popover="<?php esc_attr_e( 'View series', 'bookly' ) ?>">
+                                            <span class="fa fa-fw fa-link"></span>
+                                        </button>
+                                        <?php endif ?>
                                         <a ng-click="removeCustomer(customer)" class="fa fa-fw fa-trash-alt text-danger bookly-vertical-middle" href="#"
                                            popover="<?php esc_attr_e( 'Remove customer', 'bookly' ) ?>"></a>
-                                    </span>
+                                    </div>
                                 </li>
                             </ul>
                             <span class="btn btn-default" ng-show="form.customers.length > 5 && !form.expand_customers_list" ng-click="form.expand_customers_list = !form.expand_customers_list" style="width: 100%; line-height: 0; padding-top: 0; padding-bottom: 8px; margin-bottom: 10px;" role="button">...</span>
@@ -190,7 +202,7 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                         <span class="input-group-btn">
                                             <a class="btn btn-success" ng-click="openNewCustomerDialog()">
                                                 <i class="fa fa-fw fa-plus"></i>
-                                                <?php _e( 'New customer', 'bookly' ) ?>
+                                                <?php esc_html_e( 'New customer', 'bookly' ) ?>
                                             </a>
                                         </span>
                                     </div>
@@ -203,19 +215,19 @@ use Bookly\Lib\Entities\CustomerAppointment;
                         </div>
 
                         <div class=form-group>
-                            <label for="bookly-notification"><?php _e( 'Send notifications', 'bookly' ) ?></label>
+                            <label for="bookly-notification"><?php esc_html_e( 'Send notifications', 'bookly' ) ?></label>
                             <p class="help-block"><?php is_admin() ?
-                                    _e( 'If email or SMS notifications are enabled and you want customers or staff member to be notified about this appointment after saving, select appropriate option before clicking Save. With "If status changed" the notifications are sent to those customers whose status has just been changed. With "To all customers" the notifications are sent to everyone in the list.', 'bookly' ) :
-                                    _e( 'If email or SMS notifications are enabled and you want customers or yourself to be notified about this appointment after saving, select appropriate option before clicking Save. With "If status changed" the notifications are sent to those customers whose status has just been changed. With "To all customers" the notifications are sent to everyone in the list.', 'bookly' ) ?></p>
+                                    esc_html_e( 'If email or SMS notifications are enabled and you want customers or staff member to be notified about this appointment after saving, select appropriate option before clicking Save. With "If status changed" the notifications are sent to those customers whose status has just been changed. With "To all customers" the notifications are sent to everyone in the list.', 'bookly' ) :
+                                    esc_html_e( 'If email or SMS notifications are enabled and you want customers or yourself to be notified about this appointment after saving, select appropriate option before clicking Save. With "If status changed" the notifications are sent to those customers whose status has just been changed. With "To all customers" the notifications are sent to everyone in the list.', 'bookly' ) ?></p>
                             <select class="form-control" style="margin-top: 0" ng-model=form.notification id="bookly-notification" ng-init="form.notification = '<?php echo get_user_meta( get_current_user_id(), 'bookly_appointment_form_send_notifications', true ) ?>' || 'no'" >
-                                <option value="no"><?php _e( 'Don\'t send', 'bookly' ) ?></option>
-                                <option value="changed_status"><?php _e( 'If status changed', 'bookly' ) ?></option>
-                                <option value="all"><?php _e( 'To all customers', 'bookly' ) ?></option>
+                                <option value="no"><?php esc_html_e( 'Don\'t send', 'bookly' ) ?></option>
+                                <option value="changed_status"><?php esc_html_e( 'If status changed', 'bookly' ) ?></option>
+                                <option value="all"><?php esc_html_e( 'To all customers', 'bookly' ) ?></option>
                             </select>
                         </div>
 
                         <div class=form-group>
-                            <label for="bookly-internal-note"><?php _e( 'Internal note', 'bookly' ) ?></label>
+                            <label for="bookly-internal-note"><?php esc_html_e( 'Internal note', 'bookly' ) ?></label>
                             <textarea class="form-control" ng-model=form.internal_note id="bookly-internal-note"></textarea>
                         </div>
                     </div>
@@ -236,6 +248,6 @@ use Bookly\Lib\Entities\CustomerAppointment;
 
     <?php Dialogs\Appointment\CustomerDetails\Dialog::render() ?>
     <?php AttachPaymentProxy\Pro::renderAttachPaymentDialog() ?>
-    <?php Dialogs\Customer\Edit::render() ?>
+    <?php Dialogs\Customer\Edit\Dialog::render() ?>
     <?php Dialogs\Payment\Dialog::render() ?>
 </div>

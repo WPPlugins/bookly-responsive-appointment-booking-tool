@@ -9,34 +9,52 @@ use Bookly\Lib;
  */
 class Service extends Lib\Base\Entity
 {
-    const TYPE_SIMPLE   = 'simple';
-    const TYPE_COMPOUND = 'compound';
-    const TYPE_PACKAGE  = 'package';
+    const TYPE_SIMPLE        = 'simple';
+    const TYPE_COLLABORATIVE = 'collaborative';
+    const TYPE_COMPOUND      = 'compound';
+    const TYPE_PACKAGE       = 'package';
 
-    const PREFERRED_ORDER           = 'order';
-    const PREFERRED_LEAST_OCCUPIED  = 'least_occupied';
-    const PREFERRED_MOST_OCCUPIED   = 'most_occupied';
-    const PREFERRED_LEAST_EXPENSIVE = 'least_expensive';
-    const PREFERRED_MOST_EXPENSIVE  = 'most_expensive';
+    const PREFERRED_ORDER                     = 'order';
+    const PREFERRED_LEAST_OCCUPIED            = 'least_occupied';
+    const PREFERRED_MOST_OCCUPIED             = 'most_occupied';
+    const PREFERRED_LEAST_OCCUPIED_FOR_PERIOD = 'least_occupied_for_period';
+    const PREFERRED_MOST_OCCUPIED_FOR_PERIOD  = 'most_occupied_for_period';
+    const PREFERRED_LEAST_EXPENSIVE           = 'least_expensive';
+    const PREFERRED_MOST_EXPENSIVE            = 'most_expensive';
 
     const VISIBILITY_PUBLIC      = 'public';
     const VISIBILITY_PRIVATE     = 'private';
     const VISIBILITY_GROUP_BASED = 'group';
 
+    const START_TIME_REQUIRED = 'required';
+    const START_TIME_OPTIONAL = 'optional';
+    const START_TIME_OFF      = 'off';
+
+    const SLOT_LENGTH_DEFAULT             = 'default';
+    const SLOT_LENGTH_AS_SERVICE_DURATION = 'as_service_duration';
+
     /** @var  int */
     protected $category_id;
+    /** @var  string */
+    protected $type = 'simple';
     /** @var  string */
     protected $title;
     /** @var  int */
     protected $duration = 900;
+    /** @var  string */
+    protected $slot_length = 'default';
     /** @var  float */
     protected $price = 0;
     /** @var  string */
     protected $color;
+    /** @var  string */
+    protected $deposit = '100%';
     /** @var  int */
     protected $capacity_min = 1;
     /** @var  int */
     protected $capacity_max = 1;
+    /** @var  int */
+    protected $one_booking_per_slot = 0;
     /** @var  int */
     protected $padding_left = 0;
     /** @var  int */
@@ -47,8 +65,6 @@ class Service extends Lib\Base\Entity
     protected $start_time_info;
     /** @var  string */
     protected $end_time_info;
-    /** @var  string */
-    protected $type = 'simple';
     /** @var  int */
     protected $package_life_time;
     /** @var  int */
@@ -61,50 +77,65 @@ class Service extends Lib\Base\Entity
     protected $limit_period = 'off';
     /** @var  string */
     protected $staff_preference = Service::PREFERRED_MOST_EXPENSIVE;
+    /** @var  string */
+    protected $staff_preference_settings = '{}';
     /** @var  bool */
     protected $recurrence_enabled = 1;
     /** @var  string */
     protected $recurrence_frequencies = 'daily,weekly,biweekly,monthly';
-    /** @var  string */
-    protected $visibility = Service::VISIBILITY_PUBLIC;
-    /** @var  int */
-    protected $position = 9999;
     /** @var  int */
     protected $units_min = 1;
     /** @var  int */
     protected $units_max = 1;
+    /** @var  int */
+    protected $time_requirements = Service::START_TIME_REQUIRED;
+    /** @var  bool */
+    protected $collaborative_equal_duration = 0;
+    /** @var  string */
+    protected $visibility = Service::VISIBILITY_PUBLIC;
+    /** @var  int */
+    protected $position = 9999;
 
 
     protected static $table = 'bookly_services';
 
     protected static $schema = array(
-        'id'                     => array( 'format' => '%d' ),
-        'category_id'            => array( 'format' => '%d', 'reference' => array( 'entity' => 'Category' ) ),
-        'title'                  => array( 'format' => '%s' ),
-        'duration'               => array( 'format' => '%d' ),
-        'price'                  => array( 'format' => '%f' ),
-        'color'                  => array( 'format' => '%s' ),
-        'capacity_min'           => array( 'format' => '%d' ),
-        'capacity_max'           => array( 'format' => '%d' ),
-        'padding_left'           => array( 'format' => '%d' ),
-        'padding_right'          => array( 'format' => '%d' ),
-        'info'                   => array( 'format' => '%s' ),
-        'start_time_info'        => array( 'format' => '%s' ),
-        'end_time_info'          => array( 'format' => '%s' ),
-        'type'                   => array( 'format' => '%s' ),
-        'package_life_time'      => array( 'format' => '%d' ),
-        'package_size'           => array( 'format' => '%d' ),
-        'package_unassigned'     => array( 'format' => '%d' ),
-        'appointments_limit'     => array( 'format' => '%d' ),
-        'limit_period'           => array( 'format' => '%s' ),
-        'staff_preference'       => array( 'format' => '%s' ),
-        'recurrence_enabled'     => array( 'format' => '%d' ),
-        'recurrence_frequencies' => array( 'format' => '%s' ),
-        'visibility'             => array( 'format' => '%s' ),
-        'position'               => array( 'format' => '%d' ),
-        'units_min'              => array( 'format' => '%d' ),
-        'units_max'              => array( 'format' => '%d' ),
+        'id'                           => array( 'format' => '%d' ),
+        'category_id'                  => array( 'format' => '%d', 'reference' => array( 'entity' => 'Category' ) ),
+        'type'                         => array( 'format' => '%s' ),
+        'title'                        => array( 'format' => '%s' ),
+        'duration'                     => array( 'format' => '%d' ),
+        'slot_length'                  => array( 'format' => '%s' ),
+        'price'                        => array( 'format' => '%f' ),
+        'color'                        => array( 'format' => '%s' ),
+        'deposit'                      => array( 'format' => '%s' ),
+        'capacity_min'                 => array( 'format' => '%d' ),
+        'capacity_max'                 => array( 'format' => '%d' ),
+        'one_booking_per_slot'         => array( 'format' => '%d' ),
+        'padding_left'                 => array( 'format' => '%d' ),
+        'padding_right'                => array( 'format' => '%d' ),
+        'info'                         => array( 'format' => '%s' ),
+        'start_time_info'              => array( 'format' => '%s' ),
+        'end_time_info'                => array( 'format' => '%s' ),
+        'package_life_time'            => array( 'format' => '%d' ),
+        'package_size'                 => array( 'format' => '%d' ),
+        'package_unassigned'           => array( 'format' => '%d' ),
+        'appointments_limit'           => array( 'format' => '%d' ),
+        'limit_period'                 => array( 'format' => '%s' ),
+        'staff_preference'             => array( 'format' => '%s' ),
+        'staff_preference_settings'    => array( 'format' => '%s' ),
+        'recurrence_enabled'           => array( 'format' => '%d' ),
+        'recurrence_frequencies'       => array( 'format' => '%s' ),
+        'units_min'                    => array( 'format' => '%d' ),
+        'units_max'                    => array( 'format' => '%d' ),
+        'time_requirements'            => array( 'format' => '%s' ),
+        'collaborative_equal_duration' => array( 'format' => '%d' ),
+        'visibility'                   => array( 'format' => '%s' ),
+        'position'                     => array( 'format' => '%d' ),
     );
+
+    /** @var \BooklyServiceExtras\Lib\Entities\ServiceExtra[] */
+    protected $extras = null;
 
     /**
      * Get translated title (if empty returns "Untitled").
@@ -152,7 +183,7 @@ class Service extends Lib\Base\Entity
      */
     public function getSubServices()
     {
-        return Service::query( 's' )
+        return self::query( 's' )
             ->select( 's.*' )
             ->innerJoin( 'SubService', 'ss', 'ss.sub_service_id = s.id' )
             ->where( 'ss.service_id', $this->getId() )
@@ -161,16 +192,50 @@ class Service extends Lib\Base\Entity
     }
 
     /**
+     * Get min duration for service.
+     *
+     * @return float|int
+     */
+    public function getMinDuration()
+    {
+        return $this->duration * $this->units_min;
+    }
+
+    /**
+     * Get max duration for service.
+     *
+     * @return float|int
+     */
+    public function getMaxDuration()
+    {
+        return $this->duration * $this->units_max;
+    }
+
+    /**
+     * Get extras associated with service.
+     *
+     * @return \BooklyServiceExtras\Lib\Entities\ServiceExtra[]
+     */
+    public function getExtras()
+    {
+        if ( $this->extras === null ) {
+            $this->extras = (array) Lib\Proxy\ServiceExtras::findByServiceId( $this->getId() );
+        }
+
+        return $this->extras;
+    }
+
+    /**
      * Check if given customer has reached the appointments limit for this service.
      *
-     * @param int $customer_id
+     * @param int   $customer_id
      * @param array $appointment_dates format( 'Y-m-d H:i:s' )
      * @return bool
      */
     public function appointmentsLimitReached( $customer_id, array $appointment_dates )
     {
-        if ( $this->getLimitPeriod() != 'off' && $this->getAppointmentsLimit() > 0 ) {
-            if ( $this->isCompound() ) {
+        if ( Lib\Config::proActive() && $this->getLimitPeriod() != 'off' && $this->getAppointmentsLimit() > 0 ) {
+            if ( $this->withSubServices() ) {
                 // Compound service.
                 $sub_services        = $this->getSubServices();
                 $compound_service_id = $this->getId();
@@ -180,34 +245,98 @@ class Service extends Lib\Base\Entity
                 $compound_service_id = null;
                 $service_id          = $this->getId();
             }
-            foreach ( $appointment_dates as $appointment_date ) {
-                $bound_start = date_create( $appointment_date )->modify( sprintf( '-1 %s', $this->getLimitPeriod() ) )->format( 'Y-m-d H:i:s' );
-                $bound_end   = $appointment_date;
-                $db_count    = CustomerAppointment::query( 'ca' )
-                    ->leftJoin( 'Appointment', 'a', 'ca.appointment_id = a.id' )
-                    ->where( 'a.service_id', $service_id )
-                    ->where( 'ca.compound_service_id', $compound_service_id )
-                    ->where( 'ca.customer_id', $customer_id )
-                    ->whereGt( 'a.start_date', $bound_start )
-                    ->whereLt( 'a.start_date', $bound_end )
-                    ->whereNot( 'ca.status', CustomerAppointment::STATUS_WAITLISTED )
-                    ->count();
-                $cart_count  = 0;
-                $bound_start = strtotime( $bound_start );
-                $bound_end   = strtotime( $bound_end );
-                foreach ( $appointment_dates as $date ) {
-                    $cur_date = strtotime( $date );
-                    if ( $cur_date < $bound_end && $cur_date > $bound_start ) {
-                        $cart_count ++;
+
+            switch ( $this->getLimitPeriod() ) {
+                case 'upcoming':
+                    $db_count = CustomerAppointment::query( 'ca' )
+                        ->leftJoin( 'Appointment', 'a', 'ca.appointment_id = a.id' )
+                        ->where( 'a.service_id', $service_id )
+                        ->where( 'ca.compound_service_id', $compound_service_id )
+                        ->where( 'ca.customer_id', $customer_id )
+                        ->whereGt( 'a.start_date', current_time( 'mysql' ) )
+                        ->whereNot( 'ca.status', CustomerAppointment::STATUS_WAITLISTED )
+                        ->count();
+                    if ( $db_count + count( $appointment_dates ) > $this->getAppointmentsLimit() ) {
+                        return true;
                     }
-                }
-                if ( $db_count + $cart_count >= $this->getAppointmentsLimit() ) {
-                    return true;
-                }
+                    break;
+                default:
+                    foreach ( $appointment_dates as $appointment_date ) {
+                        switch ( $this->getLimitPeriod() ) {
+                            case 'calendar_day':
+                                $bound_start = date_create( $appointment_date )->format( 'Y-m-d 00:00:00' );
+                                $bound_end   = date_create( $appointment_date )->format( 'Y-m-d 23:59:59' );
+                                break;
+                            case 'calendar_week':
+                                $week_day    = date_create( $appointment_date )->format( 'w' );
+                                $start_week  = (int) get_option( 'start_of_week' );
+                                $delta       = $week_day < $start_week ? $start_week + $week_day - 7 : $start_week - $week_day;
+                                $start_date  = date_create( $appointment_date )->modify( $delta . ' day' );
+                                $bound_start = $start_date->format( 'Y-m-d 00:00:00' );
+                                $bound_end   = $start_date->modify( '+6 day' )->format( 'Y-m-d 23:59:59' );
+                                break;
+                            case 'calendar_month':
+                                $bound_start = date_create( $appointment_date )->modify( 'first day of this month' )->format( 'Y-m-d 00:00:00' );
+                                $bound_end   = date_create( $appointment_date )->modify( 'last day of this month' )->format( 'Y-m-d 23:59:59' );
+                                break;
+                            case 'calendar_year':
+                                $bound_start = date_create( $appointment_date )->modify( 'first day of January' )->format( 'Y-m-d 00:00:00' );
+                                $bound_end   = date_create( $appointment_date )->modify( 'last day of December' )->format( 'Y-m-d 23:59:59' );
+                                break;
+                            case 'day':
+                                $bound_start = date_create( $appointment_date )->modify( '-1 day' )->format( 'Y-m-d H:i:s' );
+                                $bound_end   = $appointment_date;
+                                break;
+                            case 'week':
+                                $bound_start = date_create( $appointment_date )->modify( '-1 week' )->format( 'Y-m-d H:i:s' );
+                                $bound_end   = $appointment_date;
+                                break;
+                            case 'month':
+                                $bound_start = date_create( $appointment_date )->modify( '-30 days' )->format( 'Y-m-d H:i:s' );
+                                $bound_end   = $appointment_date;
+                                break;
+                            case 'year':
+                                $bound_start = date_create( $appointment_date )->modify( '-365 days' )->format( 'Y-m-d H:i:s' );
+                                $bound_end   = $appointment_date;
+                                break;
+                        }
+                        $db_count    = CustomerAppointment::query( 'ca' )
+                            ->leftJoin( 'Appointment', 'a', 'ca.appointment_id = a.id' )
+                            ->where( 'a.service_id', $service_id )
+                            ->where( 'ca.compound_service_id', $compound_service_id )
+                            ->where( 'ca.customer_id', $customer_id )
+                            ->whereGt( 'a.start_date', $bound_start )
+                            ->whereLt( 'a.start_date', $bound_end )
+                            ->whereNot( 'ca.status', CustomerAppointment::STATUS_WAITLISTED )
+                            ->count();
+                        $cart_count  = 0;
+                        $bound_start = strtotime( $bound_start );
+                        $bound_end   = strtotime( $bound_end );
+                        foreach ( $appointment_dates as $date ) {
+                            $cur_date = strtotime( $date );
+                            if ( $cur_date <= $bound_end && $cur_date >= $bound_start ) {
+                                $cart_count ++;
+                            }
+                        }
+                        if ( $db_count + $cart_count > $this->getAppointmentsLimit() ) {
+                            return true;
+                        }
+                    }
+                    break;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Check if service is a collaborative service.
+     *
+     * @return bool
+     */
+    public function isCollaborative()
+    {
+        return $this->getType() == self::TYPE_COLLABORATIVE;
     }
 
     /**
@@ -231,23 +360,13 @@ class Service extends Lib\Base\Entity
     }
 
     /**
-     * Get min duration for service.
+     * Check whether service should have sub services or not.
      *
-     * @return float|int
+     * @return bool
      */
-    public function getMinDuration()
+    public function withSubServices()
     {
-        return $this->duration * $this->units_min;
-    }
-
-    /**
-     * Get max duration for service.
-     *
-     * @return float|int
-     */
-    public function getMaxDuration()
-    {
-        return $this->duration * $this->units_max;
+        return $this->isCompound() || $this->isCollaborative();
     }
 
     /**************************************************************************
@@ -284,6 +403,29 @@ class Service extends Lib\Base\Entity
     public function setCategoryId( $category_id )
     {
         $this->category_id = $category_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Sets type
+     *
+     * @param string $type
+     * @return $this
+     */
+    public function setType( $type )
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -335,6 +477,29 @@ class Service extends Lib\Base\Entity
     }
 
     /**
+     * Gets slot length
+     *
+     * @return string
+     */
+    public function getSlotLength()
+    {
+        return $this->slot_length;
+    }
+
+    /**
+     * Sets slot length
+     *
+     * @param string $slot_length
+     * @return $this
+     */
+    public function setSlotLength( $slot_length )
+    {
+        $this->slot_length = $slot_length;
+
+        return $this;
+    }
+
+    /**
      * Gets price
      *
      * @return float
@@ -381,6 +546,29 @@ class Service extends Lib\Base\Entity
     }
 
     /**
+     * Gets deposit
+     *
+     * @return string
+     */
+    public function getDeposit()
+    {
+        return $this->deposit;
+    }
+
+    /**
+     * Sets deposit
+     *
+     * @param string $deposit
+     * @return $this
+     */
+    public function setDeposit( $deposit )
+    {
+        $this->deposit = $deposit;
+
+        return $this;
+    }
+
+    /**
      * Gets capacity_min
      *
      * @return int
@@ -422,6 +610,29 @@ class Service extends Lib\Base\Entity
     public function setCapacityMax( $capacity_max )
     {
         $this->capacity_max = $capacity_max;
+
+        return $this;
+    }
+
+    /**
+     * Gets one_booking_per_slot
+     *
+     * @return int
+     */
+    public function getOneBookingPerSlot()
+    {
+        return $this->one_booking_per_slot;
+    }
+
+    /**
+     * Sets one_booking_per_slot
+     *
+     * @param int $one_booking_per_slot
+     * @return $this
+     */
+    public function setOneBookingPerSlot( $one_booking_per_slot )
+    {
+        $this->one_booking_per_slot = $one_booking_per_slot;
 
         return $this;
     }
@@ -537,29 +748,6 @@ class Service extends Lib\Base\Entity
     public function setEndTimeInfo( $end_time_info )
     {
         $this->end_time_info = $end_time_info;
-
-        return $this;
-    }
-
-    /**
-     * Gets type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Sets type
-     *
-     * @param string $type
-     * @return $this
-     */
-    public function setType( $type )
-    {
-        $this->type = $type;
 
         return $this;
     }
@@ -703,47 +891,24 @@ class Service extends Lib\Base\Entity
     }
 
     /**
-     * Gets visibility
+     * Gets staff_preference_settings
      *
      * @return string
      */
-    public function getVisibility()
+    public function getStaffPreferenceSettings()
     {
-        return $this->visibility;
+        return $this->staff_preference_settings;
     }
 
     /**
-     * Sets visibility
+     * Sets staff_preference_settings
      *
-     * @param string $visibility
+     * @param string $staff_preference_settings
      * @return $this
      */
-    public function setVisibility( $visibility )
+    public function setStaffPreferenceSettings( $staff_preference_settings )
     {
-        $this->visibility = $visibility;
-
-        return $this;
-    }
-
-    /**
-     * Gets position
-     *
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * Sets position
-     *
-     * @param int $position
-     * @return $this
-     */
-    public function setPosition( $position )
-    {
-        $this->position = $position;
+        $this->staff_preference_settings = $staff_preference_settings;
 
         return $this;
     }
@@ -782,6 +947,25 @@ class Service extends Lib\Base\Entity
     public function setUnitsMax( $units_max )
     {
         $this->units_max = $units_max;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeRequirements()
+    {
+        return $this->time_requirements;
+    }
+
+    /**
+     * @param int $time_requirements
+     * @return $this
+     */
+    public function setTimeRequirements( $time_requirements )
+    {
+        $this->time_requirements = $time_requirements;
 
         return $this;
     }
@@ -828,6 +1012,75 @@ class Service extends Lib\Base\Entity
     public function setRecurrenceFrequencies( $recurrence_frequencies )
     {
         $this->recurrence_frequencies = $recurrence_frequencies;
+
+        return $this;
+    }
+
+    /**
+     * Gets collaborative_equal_duration
+     *
+     * @return bool
+     */
+    public function getCollaborativeEqualDuration()
+    {
+        return $this->collaborative_equal_duration;
+    }
+
+    /**
+     * Sets collaborative_equal_duration
+     *
+     * @param bool collaborative_equal_duration
+     * @return $this
+     */
+    public function setCollaborativeEqualDuration( $recurrence_frequencies )
+    {
+        $this->recurrence_frequencies = $recurrence_frequencies;
+
+        return $this;
+    }
+
+    /**
+     * Gets visibility
+     *
+     * @return string
+     */
+    public function getVisibility()
+    {
+        return $this->visibility;
+    }
+
+    /**
+     * Sets visibility
+     *
+     * @param string $visibility
+     * @return $this
+     */
+    public function setVisibility( $visibility )
+    {
+        $this->visibility = $visibility;
+
+        return $this;
+    }
+
+    /**
+     * Gets position
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Sets position
+     *
+     * @param int $position
+     * @return $this
+     */
+    public function setPosition( $position )
+    {
+        $this->position = $position;
 
         return $this;
     }

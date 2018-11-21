@@ -42,12 +42,14 @@ echo $progress_tracker;
             <?php Proxy\Shared::renderChainItemTailTip() ?>
         </div>
         <div class="bookly-nav-steps bookly-box">
-            <button class="bookly-right bookly-mobile-next-step bookly-js-mobile-next-step bookly-btn bookly-none ladda-button" data-style="zoom-in" data-spinner-size="40">
-                <span class="ladda-label"><?php echo \Bookly\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_step_service_mobile_button_next' ) ?></span>
-            </button>
             <?php if ( $show_cart_btn ) : ?>
                 <button class="bookly-go-to-cart bookly-js-go-to-cart bookly-round bookly-round-md ladda-button" data-style="zoom-in" data-spinner-size="30"><span class="ladda-label"><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
             <?php endif ?>
+            <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
+                <button class="bookly-right bookly-mobile-next-step bookly-js-mobile-next-step bookly-btn bookly-none ladda-button" data-style="zoom-in" data-spinner-size="40">
+                    <span class="ladda-label"><?php echo \Bookly\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_step_service_mobile_button_next' ) ?></span>
+                </button>
+            </div>
         </div>
     </div>
     <div class="bookly-mobile-step-2 bookly-js-mobile-step-2">
@@ -103,12 +105,14 @@ echo $progress_tracker;
             <button class="bookly-left bookly-mobile-prev-step bookly-js-mobile-prev-step bookly-btn bookly-none ladda-button" data-style="zoom-in" data-spinner-size="40">
                 <span class="ladda-label"><?php echo Bookly\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_button_back' ) ?></span>
             </button>
-            <button class="bookly-next-step bookly-js-next-step bookly-btn ladda-button" data-style="zoom-in" data-spinner-size="40">
-                <span class="ladda-label"><?php echo Bookly\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_step_service_button_next' ) ?></span>
-            </button>
             <?php if ( $show_cart_btn ) : ?>
                 <button class="bookly-go-to-cart bookly-js-go-to-cart bookly-round bookly-round-md ladda-button" data-style="zoom-in" data-spinner-size="30"><span class="ladda-label"><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
             <?php endif ?>
+            <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
+                <button class="bookly-next-step bookly-js-next-step bookly-btn ladda-button" data-style="zoom-in" data-spinner-size="40">
+                    <span class="ladda-label"><?php echo Bookly\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_step_service_button_next' ) ?></span>
+                </button>
+            </div>
         </div>
     </div>
 </div>

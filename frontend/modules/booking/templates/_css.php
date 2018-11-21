@@ -1,6 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     $color = get_option( 'bookly_app_color', '#f4662f' );
     $checkbox_img = plugins_url( 'frontend/resources/images/checkbox.png', \Bookly\Lib\Plugin::getMainFile() );
+    $custom_css = trim( get_option( 'bookly_app_custom_styles' ) );
 ?>
 <style type="text/css">
     /* Color */
@@ -52,3 +53,9 @@
     .bookly-columnizer .bookly-hour:hover { border: 2px solid <?php echo $color ?>!important; color: <?php echo $color ?>!important; }
     .bookly-columnizer .bookly-hour:hover .bookly-hour-icon { background: none; border: 2px solid <?php echo $color ?>!important; color: <?php echo $color ?>!important; }
 </style>
+
+<?php if ( $custom_css != '' ) : ?>
+    <style type="text/css">
+        <?php echo $custom_css ?>
+    </style>
+<?php endif ?>

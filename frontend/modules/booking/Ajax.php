@@ -93,7 +93,7 @@ class Ajax extends Lib\Base\Ajax
                 'defaults'                   => Lib\Session::getFormVar( self::parameter( 'form_id' ), 'defaults' ),
                 'required'                   => array(
                     'staff'    => (int) get_option( 'bookly_app_required_employee' ),
-                    'location' => (int) ( get_option( 'bookly_app_required_location' ) || get_option( 'bookly_locations_allow_services_per_location' ) ),
+                    'location' => (int) ( Lib\Config::locationsActive() && ( get_option( 'bookly_app_required_location' ) || get_option( 'bookly_locations_allow_services_per_location' ) ) ),
                 ),
             );
         } else {
@@ -114,7 +114,10 @@ class Ajax extends Lib\Base\Ajax
         $response = null;
         $userData = new Lib\UserBookingData( self::parameter( 'form_id' ) );
         $loaded   = $userData->load();
-        if ( ! $loaded && Lib\Session::hasFormVar( self::parameter( 'form_id' ), 'skip_service_step' ) ) {
+        if ( ! $loaded ) {
+            // all previous steps are skipped
+            self::_setDataForSkippedServiceStep( $userData );
+            $userData->setFirstStep( Steps::EXTRAS );
             $loaded = true;
         }
 
@@ -141,10 +144,10 @@ class Ajax extends Lib\Base\Ajax
             $precision = substr_count( $price, '0' );
 
             $response = array(
-                'success'       => true,
-                'csrf_token'    => Lib\Utils\Common::getCsrfToken(),
-                'currency'      => array( 'format' => $format, 'precision' => $precision ),
-                'html'          => Proxy\ServiceExtras::getStepHtml( $userData, $show_cart_btn, $info_text, $progress_tracker ),
+                'success'    => true,
+                'csrf_token' => Lib\Utils\Common::getCsrfToken(),
+                'currency'   => array( 'format' => $format, 'precision' => $precision ),
+                'html'       => Proxy\ServiceExtras::getStepHtml( $userData, $show_cart_btn, $info_text, $progress_tracker, $userData->getFirstStep() != Steps::EXTRAS ),
             );
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
@@ -165,7 +168,10 @@ class Ajax extends Lib\Base\Ajax
         $userData = new Lib\UserBookingData( self::parameter( 'form_id' ) );
         $loaded   = $userData->load();
 
-        if ( ! $loaded && Lib\Session::hasFormVar( self::parameter( 'form_id' ), 'skip_service_step' ) ) {
+        if ( ! $loaded ) {
+            // all previous steps are skipped
+            self::_setDataForSkippedServiceStep( $userData );
+            $userData->setFirstStep( Steps::TIME );
             $loaded = true;
         }
 
@@ -233,6 +239,7 @@ class Ajax extends Lib\Base\Ajax
                     'date'              => Lib\Config::showCalendar() ? $finder->getSelectedDateForPickadate() : null,
                     'has_slots'         => ! empty ( $slots_data ),
                     'show_cart_btn'     => self::_showCartButton( $userData ),
+                    'userData'          => $userData,
                 ), false ),
             );
 
@@ -279,7 +286,7 @@ class Ajax extends Lib\Base\Ajax
                         'data'            => $slot->buildSlotData(),
                         'time_text'       => $slot->start()->toClientTz()->formatI18n( $finder->isServiceDurationInDays() ? 'D, M d' : get_option( 'time_format' ) ),
                         'status'          => $slot->waitingListEverStarted() ? 'waiting-list' : ( $slot->fullyBooked() ? 'booked' : '' ),
-                        'additional_text' => $slot->waitingListEverStarted() ? '(' . $slot->maxOnWaitingList() . ')' : ( Lib\Config::groupBookingActive() ? Proxy\GroupBooking::getTimeSlotText( $slot ) : '' ),
+                        'additional_text' => $slot->waitingListEverStarted() ? '(' . $slot->maxOnWaitingList() . ')' : ( Lib\Config::groupBookingActive() && get_option( 'bookly_group_booking_enabled' ) ? Proxy\GroupBooking::getTimeSlotText( $slot ) : '' ),
                     );
                 }
             }
@@ -307,7 +314,7 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function renderRepeat()
     {
-        $form_id = self::parameter( 'form_id' );
+        $form_id  = self::parameter( 'form_id' );
         $userData = new Lib\UserBookingData( $form_id );
 
         if ( $userData->load() ) {
@@ -374,8 +381,16 @@ class Ajax extends Lib\Base\Ajax
     public static function renderCart()
     {
         $userData = new Lib\UserBookingData( self::parameter( 'form_id' ) );
+        $loaded   = $userData->load();
+        if ( ! $loaded ) {
+            // all previous steps are skipped
+            self::_setDataForSkippedServiceStep( $userData );
+            $userData->setFirstStep( Steps::CART );
+            $loaded = true;
+        }
 
-        if ( $userData->load() ) {
+        if ( $loaded ) {
+            $userData = Proxy\Tasks::prepareUserData( $userData );
             if ( self::hasParameter( 'add_to_cart' ) ) {
                 $userData->addChainToCart();
             }
@@ -384,7 +399,7 @@ class Ajax extends Lib\Base\Ajax
 
             $response = array(
                 'success' => true,
-                'html'    => Proxy\Cart::getStepHtml( $userData, $progress_tracker, $info_text ),
+                'html'    => Proxy\Cart::getStepHtml( $userData, $progress_tracker, $info_text, $userData->getFirstStep() != Steps::CART ),
             );
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
@@ -401,10 +416,17 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function renderDetails()
     {
-        $form_id  = self::parameter( 'form_id' );
-        $userData = new Lib\UserBookingData( $form_id );
+        $userData = new Lib\UserBookingData( self::parameter( 'form_id' ) );
+        $loaded   = $userData->load();
+        if ( ! $loaded ) {
+            // all previous steps are skipped
+            self::_setDataForSkippedServiceStep( $userData );
+            $userData->setFirstStep( Steps::DETAILS );
+            $loaded = true;
+        }
 
-        if ( $userData->load() ) {
+        if ( $loaded ) {
+            $userData = Proxy\Tasks::prepareUserData( $userData );
             if ( ! Lib\Config::showStepCart() ) {
                 $userData->addChainToCart();
             }
@@ -420,6 +442,7 @@ class Ajax extends Lib\Base\Ajax
                 'info_text'        => InfoText::prepare( Steps::DETAILS, $info_text, $userData ),
                 'info_text_guest'  => InfoText::prepare( Steps::DETAILS, $info_text_guest, $userData ),
                 'userData'         => $userData,
+                'show_back_btn'    => $userData->getFirstStep() != Steps::DETAILS,
             ), false );
 
             // Render additional templates.
@@ -475,7 +498,15 @@ class Ajax extends Lib\Base\Ajax
             if ( ! $show_cart ) {
                 $userData->addChainToCart();
             }
+
+            if ( $userData->getCouponCode() ) {
+                if ( ! $userData->getCoupon()->validForCart( $userData->cart ) || ! $userData->getCoupon()->validForCustomer( $userData->getCustomer() ) ) {
+                    $userData->deleteCoupon();
+                }
+            }
+
             $cart_info = $userData->cart->getInfo();
+
             if ( $cart_info->getTotal() <= 0 || $cart_info->getDeposit() <= 0 ) {
                 $payment_disabled = true;
             }
@@ -820,9 +851,12 @@ class Ajax extends Lib\Base\Ajax
             // Check that all items can be switched to approved.
             foreach ( $ca_list as $ca ) {
                 $ca_status = $ca->getStatus();
-                if ( $ca_status != Lib\Entities\CustomerAppointment::STATUS_APPROVED ) {
+                if ( $ca_status == Lib\Entities\CustomerAppointment::STATUS_DONE ) {
+                    $success = false;
+                    break;
+                } elseif ( $ca_status != Lib\Entities\CustomerAppointment::STATUS_APPROVED ) {
                     if ( $ca_status != Lib\Entities\CustomerAppointment::STATUS_CANCELLED &&
-                        $ca_status != Lib\Entities\CustomerAppointment::STATUS_REJECTED ) {
+                         $ca_status != Lib\Entities\CustomerAppointment::STATUS_REJECTED ) {
                         $appointment = new Lib\Entities\Appointment();
                         $appointment->load( $ca->getAppointmentId() );
                         if ( $ca_status == Lib\Entities\CustomerAppointment::STATUS_WAITLISTED ) {
@@ -887,7 +921,8 @@ class Ajax extends Lib\Base\Ajax
             foreach ( $ca_list as $ca ) {
                 $ca_status = $ca->getStatus();
                 if ( $ca_status != Lib\Entities\CustomerAppointment::STATUS_REJECTED &&
-                    $ca_status != Lib\Entities\CustomerAppointment::STATUS_CANCELLED ) {
+                    $ca_status != Lib\Entities\CustomerAppointment::STATUS_CANCELLED &&
+                    $ca_status != Lib\Entities\CustomerAppointment::STATUS_DONE ) {
                     $appointment = new Lib\Entities\Appointment();
                     $appointment->load( $ca->getAppointmentId() );
                     $updates[] = array( $ca, $appointment );
@@ -1037,8 +1072,10 @@ class Ajax extends Lib\Base\Ajax
             $result = self::renderTemplate( '_progress_tracker', array(
                 'step' => $step,
                 'show_cart' => Lib\Config::showStepCart(),
-                'payment_disabled'  => $payment_disabled,
-                'skip_service_step' => Lib\Session::hasFormVar( self::parameter( 'form_id' ), 'skip_service_step' )
+                'payment_disabled'   => $payment_disabled,
+                'skip_service_step'  => Lib\Session::hasFormVar( self::parameter( 'form_id' ), 'skip_service_step' ),
+                // step extras before step time
+                'step_extras_active' => $step > 3 || ( $step >= 2 && self::parameter( 'action' ) == 'bookly_render_extras' )
             ), false );
         }
 
@@ -1068,18 +1105,17 @@ class Ajax extends Lib\Base\Ajax
         $service_id = $defaults['service_id'];
         if ( $defaults['staff_id'] == 0 ) {
             $service    = Lib\Entities\Service::find( $defaults['service_id'] );
-            $service_id = ( $service && $service->isCompound() )
+            $service_id = ( $service && $service->withSubServices() )
                 ? reset( $service->getSubServices() )->getId()
                 : $service_id;
             $staff_ids  = Lib\Entities\StaffService::query()
-                ->select( 'staff_id AS id' )
                 ->where( 'service_id', $service_id )
-                ->fetchCol( 'id' );
+                ->fetchCol( 'staff_id' );
         } else {
             $staff_ids = array( $defaults['staff_id'] );
         }
         // Date.
-        $date_from = Lib\Slots\DatePoint::now()->modify( Lib\Proxy\Pro::getMinimumTimePriorBooking() );
+        $date_from  = Lib\Slots\DatePoint::now()->modify( Lib\Proxy\Pro::getMinimumTimePriorBooking() );
         // Days and times.
         $days_times = Lib\Config::getDaysAndTimes();
         $time_from  = key( $days_times['times'] );

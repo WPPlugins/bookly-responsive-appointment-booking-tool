@@ -33,6 +33,7 @@ abstract class Sender
             foreach ( $order->getItems() as $item ) {
                 switch ( $item->getType() ) {
                     case DataHolders\Item::TYPE_SIMPLE:
+                    case DataHolders\Item::TYPE_COLLABORATIVE:
                     case DataHolders\Item::TYPE_COMPOUND:
                         self::sendSingle( $item, $order );
                         break;
@@ -65,11 +66,11 @@ abstract class Sender
         $status                    = $item->getCA()->getStatus();
         $staff_email_notification  = $to_staff ? self::_getEmailNotification( 'staff', $status ) : false;
         $staff_sms_notification    = $to_staff ? self::_getSmsNotification( 'staff', $status ) : false;
-        $client_email_notification = $to_customer && $order->getCustomer()->getEmail() != '' ? self::_getEmailNotification( 'client', $status ) : false;
+        $client_email_notification = $to_customer ? self::_getEmailNotification( 'client', $status ) : false;
         $client_sms_notification   = $to_customer ? self::_getSmsNotification( 'client', $status ) : false;
 
         if ( $staff_email_notification || $staff_sms_notification || $client_email_notification || $client_sms_notification ) {
-            $wp_locale      = self::_getWpLocale();
+            $wp_locale = self::_getWpLocale();
             // Set wp locale for staff,
             // reason - it was changed on front-end.
             self::_switchLocale( $wp_locale );
@@ -80,13 +81,23 @@ abstract class Sender
                 $codes->cancellation_reason = $codes_data['cancellation_reason'];
             }
 
-            // Notify staff by email.
-            if ( $staff_email_notification ) {
-                self::_sendEmailToStaff( $staff_email_notification, $codes, $item->getStaff()->getEmail() );
-            }
-            // Notify staff by SMS.
-            if ( $staff_sms_notification ) {
-                self::_sendSmsToStaff( $staff_sms_notification, $codes, $item->getStaff()->getPhone() );
+            // Send notifications to staff.
+            if ( $item->isSimple() ) {
+                if ( ! $item->getStaff()->isArchived() ) {
+                    // Notify staff by email.
+                    if ( $staff_email_notification ) {
+                        self::_sendEmailToStaff( $staff_email_notification, $codes, $item->getStaff()->getEmail() );
+                    }
+                    // Notify staff by SMS.
+                    if ( $staff_sms_notification ) {
+                        self::_sendSmsToStaff( $staff_sms_notification, $codes, $item->getStaff()->getPhone() );
+                    }
+                }
+            } else {
+                // Compound and collaborative items.
+                foreach ( $item->getItems() as $sub_item ) {
+                    self::sendSingle( $sub_item, null, $codes_data, true, false );
+                }
             }
 
             // Send notifications to client.
@@ -98,8 +109,8 @@ abstract class Sender
 
                 // Client time zone offset.
                 if ( $item->getCA()->getTimeZoneOffset() !== null ) {
-                    $codes->appointment_start = self::_applyTimeZone( $codes->appointment_start, $item->getCA() );
-                    $codes->appointment_end   = self::_applyTimeZone( $codes->appointment_end, $item->getCA() );
+                    $codes->appointment_start = $codes->appointment_start === null ? null : self::_applyTimeZone( $codes->appointment_start, $item->getCA() );
+                    $codes->appointment_end   = $codes->appointment_start === null ? null : self::_applyTimeZone( $codes->appointment_end, $item->getCA() );
                 }
                 // Notify client by email.
                 if ( $client_email_notification ) {
@@ -143,8 +154,8 @@ abstract class Sender
 
         // Client time zone offset.
         if ( $item->getCA()->getTimeZoneOffset() !== null ) {
-            $codes->appointment_start = self::_applyTimeZone( $codes->appointment_start, $item->getCA() );
-            $codes->appointment_end   = self::_applyTimeZone( $codes->appointment_end, $item->getCA() );
+            $codes->appointment_start = $codes->appointment_start === null ? null : self::_applyTimeZone( $codes->appointment_start, $item->getCA() );
+            $codes->appointment_end   = $codes->appointment_start === null ? null : self::_applyTimeZone( $codes->appointment_end, $item->getCA() );
         }
 
         // Send notification to client.
@@ -358,7 +369,12 @@ abstract class Sender
             if ( Config::proActive() || $notification->getGateway() == 'sms' ) {
                 $settings = new Settings( $notification );
                 if ( $settings->getInstant() && in_array( $settings->getStatus(), array( 'any', $ca->getStatus() ) ) ) {
-                    Sender::_send( $notification, array( $ca ) );
+                    $services = $settings->forServices();
+                    if( $services == 'any'
+                        || in_array( Entities\Appointment::find( $ca->getAppointmentId() )->getServiceId(), $services )
+                    ) {
+                        self::_send( $notification, array( $ca ) );
+                    }
                 }
             }
         }
@@ -377,7 +393,12 @@ abstract class Sender
             if ( Config::proActive() || $notification->getGateway() == 'sms' ) {
                 $settings = new Settings( $notification );
                 if ( $settings->getInstant() && in_array( $settings->getStatus(), array( 'any', $ca->getStatus() ) ) ) {
-                    Sender::_send( $notification, array( $ca ) );
+                    $services = $settings->forServices();
+                    if( $services == 'any'
+                        || in_array( Entities\Appointment::find( $ca->getAppointmentId() )->getServiceId(), $services )
+                    ) {
+                        self::_send( $notification, array( $ca ) );
+                    }
                 }
             }
         }
@@ -389,7 +410,7 @@ abstract class Sender
      */
     public static function sendCustomNotification( Notification $notification, array $ca_list )
     {
-        Sender::_send( $notification, $ca_list );
+        self::_send( $notification, $ca_list );
     }
 
     /**
@@ -845,6 +866,7 @@ abstract class Sender
                 }
 
                 if ( $notification->getToStaff() &&
+                    $simple->getStaff()->getVisibility() != 'archive' &&
                     ( $notification->getGateway() == 'email' && $simple->getStaff()->getEmail() != ''
                         || $notification->getGateway() == 'sms' && $simple->getStaff()->getPhone() != '' )
                 ) {

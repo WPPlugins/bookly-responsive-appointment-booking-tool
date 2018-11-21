@@ -24,7 +24,7 @@ class Ajax extends Lib\Base\Ajax
             ->leftJoin( 'CustomerAppointment', 'ca', 'ca.payment_id = p.id' )
             ->leftJoin( 'Customer', 'c', 'c.id = ca.customer_id' )
             ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
-            ->leftJoin( 'Service', 's', 's.id = COALESCE(ca.compound_service_id, a.service_id)' )
+            ->leftJoin( 'Service', 's', 's.id = COALESCE(ca.compound_service_id, ca.collaborative_service_id, a.service_id)' )
             ->leftJoin( 'Staff', 'st', 'st.id = a.staff_id' )
             ->groupBy( 'p.id' );
 

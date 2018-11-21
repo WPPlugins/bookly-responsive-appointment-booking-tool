@@ -8,16 +8,10 @@ jQuery(function($) {
         $checkAllButton       = $('#bookly-check-all'),
         $customerDialog       = $('#bookly-customer-dialog'),
         $addButton            = $('#bookly-add'),
-        $deleteButton         = $('#bookly-delete'),
-        $deleteDialog         = $('#bookly-delete-dialog'),
-        $deleteButtonNo       = $('#bookly-delete-no'),
-        $deleteButtonYes      = $('#bookly-delete-yes'),
         $selectForMergeButton = $('#bookly-select-for-merge'),
         $mergeWithButton      = $('#bookly-merge-with'),
         $mergeDialog          = $('#bookly-merge-dialog'),
         $mergeButton          = $('#bookly-merge'),
-        $rememberChoice       = $('#bookly-delete-remember-choice'),
-        rememberedChoice,
         row
     ;
 
@@ -183,72 +177,16 @@ jQuery(function($) {
         var $scope = angular.element(this).scope();
         $scope.$apply(function ($scope) {
             $scope.customer = customer;
-            setTimeout(function() {
+            setTimeout(function () {
                 if (BooklyL10nCustDialog.intlTelInput.enabled) {
-                    $customerDialog.find('#phone').intlTelInput('setNumber', customer.phone);
+                    $('#phone', $customerDialog).intlTelInput('setNumber', customer.phone);
                 } else {
-                    $customerDialog.find('#phone').val(customer.phone);
+                    $('#phone', $customerDialog).val(customer.phone);
                 }
+                $('#wp_user', $customerDialog).trigger('change.select2');
             }, 0);
         });
     });
-
-    /**
-     * Delete customers.
-     */
-    $deleteButton.on('click', function () {
-        if (rememberedChoice === undefined) {
-            $deleteDialog.modal('show');
-        } else {
-            deleteCustomers(this, rememberedChoice);
-        }}
-    );
-
-    $deleteButtonNo.on('click', function () {
-        if ($rememberChoice.prop('checked')) {
-            rememberedChoice = false;
-        }
-        deleteCustomers(this, false);
-    });
-
-    $deleteButtonYes.on('click', function () {
-        if ($rememberChoice.prop('checked')) {
-            rememberedChoice = true;
-        }
-        deleteCustomers(this, true);
-    });
-
-    function deleteCustomers(button, with_wp_user) {
-        var ladda = Ladda.create(button);
-        ladda.start();
-
-        var data = [];
-        var $checkboxes = $customersList.find('tbody input:checked');
-        $checkboxes.each(function () {
-            data.push(this.value);
-        });
-
-        $.ajax({
-            url  : ajaxurl,
-            type : 'POST',
-            data : {
-                action       : 'bookly_delete_customers',
-                csrf_token   : BooklyL10n.csrfToken,
-                data         : data,
-                with_wp_user : with_wp_user ? 1 : 0
-            },
-            dataType : 'json',
-            success  : function(response) {
-                ladda.stop();
-                $deleteDialog.modal('hide');
-                if (response.success) {
-                    dt.ajax.reload(null, false);
-                } else {
-                    alert(response.data.message);
-                }
-            }
-        });
-    }
 
     /**
      * On filters change.
@@ -302,9 +240,9 @@ jQuery(function($) {
      * Merge customers.
      */
     $mergeButton.on('click', function () {
-        var ladda = Ladda.create(this);
+        var ladda = Ladda.create(this),
+            ids = [];
         ladda.start();
-        var ids = [];
         mdt.rows().every(function () {
             ids.push(this.data().id);
         });

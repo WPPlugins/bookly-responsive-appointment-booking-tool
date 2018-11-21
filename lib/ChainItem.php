@@ -92,7 +92,7 @@ class ChainItem
     {
         if ( $this->sub_services === null ) {
             $service = $this->getService();
-            if ( $service->isCompound() ) {
+            if ( $service->withSubServices() ) {
                 $this->sub_services = $service->getSubServices();
             } else {
                 $this->sub_services = array( $service );
@@ -111,7 +111,7 @@ class ChainItem
     {
         $result  = array();
         $service = $this->getService();
-        if ( $service->getType() == Entities\Service::TYPE_COMPOUND ) {
+        if ( $service->withSubServices() ) {
             $items  = Entities\SubService::query( 'ss' )
                 ->where( 'ss.service_id', $service->getId() )
                 ->sortBy( 'ss.position' )
@@ -127,6 +127,34 @@ class ChainItem
             }
         } else {
             $result[] = $service;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Distribute extras across slots.
+     *
+     * @return array
+     */
+    public function distributeExtrasAcrossSubServices()
+    {
+        $result = array();
+
+        $extras = $this->getExtras();
+        foreach ( $this->getSubServicesWithSpareTime() as $key => $service ) {
+            if ( $service instanceof Entities\Service ) {
+                $result[ $key ] = array();
+                foreach ( $service->getExtras() as $item ) {
+                    $extras_id = $item->getId();
+                    if ( isset ( $extras[ $extras_id ] ) ) {
+                        $result[ $key ][ $extras_id ] = $extras[ $extras_id ];
+                        // Extras are assigned only to one/unique service,
+                        // and won't be multiplied across.
+                        unset ( $extras[ $extras_id ] );
+                    }
+                }
+            }
         }
 
         return $result;

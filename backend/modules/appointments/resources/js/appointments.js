@@ -1,23 +1,24 @@
 jQuery(function($) {
 
     var
-        $appointments_list = $('#bookly-appointments-list'),
-        $check_all_button  = $('#bookly-check-all'),
-        $id_filter         = $('#bookly-filter-id'),
-        $date_filter       = $('#bookly-filter-date'),
-        $staff_filter      = $('#bookly-filter-staff'),
-        $customer_filter   = $('#bookly-filter-customer'),
-        $service_filter    = $('#bookly-filter-service'),
-        $status_filter     = $('#bookly-filter-status'),
-        $add_button        = $('#bookly-add'),
-        $print_dialog      = $('#bookly-print-dialog'),
-        $print_button      = $('#bookly-print'),
-        $export_dialog     = $('#bookly-export-dialog'),
-        $export_button     = $('#bookly-export'),
-        $delete_button     = $('#bookly-delete'),
-        isMobile           = false,
-        urlParts           = document.URL.split('#')
-        ;
+        $appointmentsList   = $('#bookly-appointments-list'),
+        $checkAllButton     = $('#bookly-check-all'),
+        $idFilter           = $('#bookly-filter-id'),
+        $dateFilter         = $('#bookly-filter-date'),
+        $creationDateFilter = $('#bookly-filter-creation-date'),
+        $staffFilter        = $('#bookly-filter-staff'),
+        $customerFilter     = $('#bookly-filter-customer'),
+        $serviceFilter      = $('#bookly-filter-service'),
+        $statusFilter       = $('#bookly-filter-status'),
+        $addButton          = $('#bookly-add'),
+        $printDialog        = $('#bookly-print-dialog'),
+        $printButton        = $('#bookly-print'),
+        $exportDialog       = $('#bookly-export-dialog'),
+        $exportButton       = $('#bookly-export'),
+        $deleteButton       = $('#bookly-delete'),
+        isMobile            = false,
+        urlParts            = document.URL.split('#')
+    ;
 
     try {
         document.createEvent("TouchEvent");
@@ -36,10 +37,14 @@ jQuery(function($) {
                 var format = 'YYYY-MM-DD',
                     start  = moment(params['1'].substring(0, 10)),
                     end    = moment(params['1'].substring(11));
-                $date_filter
+                $dateFilter
                     .data('date', start.format(format) + ' - ' + end.format(format))
                     .find('span')
                     .html(start.format(BooklyL10n.mjsDateFormat) + ' - ' + end.format(BooklyL10n.mjsDateFormat));
+            } else if (params[0] == 'tasks') {
+                $dateFilter
+                    .data('date', 'null').find('span')
+                    .html(BooklyL10n.tasks.title);
             } else {
                 $('#bookly-filter-' + params[0]).val(params[1]);
             }
@@ -77,13 +82,13 @@ jQuery(function($) {
                 }
             }
         },
-        { data: 'customer.email', render: $.fn.dataTable.render.text(), responsivePriority: 5 }
+        { data: 'customer.email', render: $.fn.dataTable.render.text(), responsivePriority: 3 }
     ];
     if (BooklyL10n.add_columns.number_of_persons) {
         columns.push({
             data: 'number_of_persons',
             render: $.fn.dataTable.render.text(),
-            responsivePriority: 4
+            responsivePriority: 3
         });
     }
     columns = columns.concat([
@@ -104,7 +109,7 @@ jQuery(function($) {
                 }
             }
         },
-        { data: 'service.duration', responsivePriority: 2 },
+        { data: 'service.duration', responsivePriority: 3 },
         { data: 'status', responsivePriority: 2 },
         {
             data: 'payment',
@@ -125,7 +130,7 @@ jQuery(function($) {
                     return '<a href="#" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-content="' + $.fn.dataTable.render.text().display(row.rating_comment) + '">' + $.fn.dataTable.render.text().display(row.rating) + '</a>';
                 }
             },
-            responsivePriority: 2
+            responsivePriority: 1
         });
     }
 
@@ -133,16 +138,21 @@ jQuery(function($) {
         columns.push({
             data: 'notes',
             render: $.fn.dataTable.render.text(),
-            responsivePriority: 4
+            responsivePriority: 3
         });
     }
     $.each(BooklyL10n.cf_columns, function (i, cf_id) {
         columns.push({
             data: 'custom_fields.' + cf_id,
             render: $.fn.dataTable.render.text(),
-            responsivePriority: 4,
+            responsivePriority: 3,
             orderable: false
         });
+    });
+    columns.push({
+        data: 'created_date',
+        render: $.fn.dataTable.render.text(),
+        responsivePriority: 3
     });
     if (BooklyL10n.add_columns.attachments) {
         columns.push({
@@ -157,7 +167,7 @@ jQuery(function($) {
         });
     }
 
-    var dt = $appointments_list.DataTable({
+    var dt = $appointmentsList.DataTable({
         order: [[ 1, 'desc' ]],
         info: false,
         paging: false,
@@ -176,12 +186,13 @@ jQuery(function($) {
             data: function (d) {
                 return $.extend({action: 'bookly_get_appointments', csrf_token : BooklyL10n.csrf_token}, {
                     filter: {
-                        id      : $id_filter.val(),
-                        date    : $date_filter.data('date'),
-                        staff   : $staff_filter.val(),
-                        customer: $customer_filter.val(),
-                        service : $service_filter.val(),
-                        status  : $status_filter.val()
+                        id          : $idFilter.val(),
+                        date        : $dateFilter.data('date'),
+                        created_date: $creationDateFilter.data('date'),
+                        staff       : $staffFilter.val(),
+                        customer    : $customerFilter.val(),
+                        service     : $serviceFilter.val(),
+                        status      : $statusFilter.val()
                     }
                 }, d);
             }
@@ -198,7 +209,7 @@ jQuery(function($) {
                 responsivePriority: 1,
                 orderable: false,
                 render: function ( data, type, row, meta ) {
-                    return '<input type="checkbox" value="' + row.ca_id + '" />';
+                    return '<input type="checkbox" value="' + row.ca_id + '" data-appointment="' + row.id + '" />';
                 }
             }
         ]),
@@ -211,7 +222,7 @@ jQuery(function($) {
     /**
      * Add appointment.
      */
-    $add_button.on('click', function () {
+    $addButton.on('click', function () {
         showAppointmentDialog(
             null,
             null,
@@ -225,7 +236,7 @@ jQuery(function($) {
     /**
      * Edit appointment.
      */
-    $appointments_list
+    $appointmentsList
         .on('click', 'button.bookly-js-edit', function (e) {
             e.preventDefault();
             var data = dt.row($(this).closest('td')).data();
@@ -242,9 +253,9 @@ jQuery(function($) {
     /**
      * Export.
      */
-    $export_button.on('click', function () {
+    $exportButton.on('click', function () {
         var columns = [];
-        $export_dialog.find('input:checked').each(function () {
+        $exportDialog.find('input:checked').each(function () {
             columns.push(this.value);
         });
         var config = {
@@ -261,9 +272,9 @@ jQuery(function($) {
     /**
      * Print.
      */
-    $print_button.on('click', function () {
+    $printButton.on('click', function () {
         var columns = [];
-        $print_dialog.find('input:checked').each(function () {
+        $printDialog.find('input:checked').each(function () {
             columns.push(this.value);
         });
         var config = {
@@ -283,28 +294,28 @@ jQuery(function($) {
     /**
      * Select all appointments.
      */
-    $check_all_button.on('change', function () {
-        $appointments_list.find('tbody input:checkbox').prop('checked', this.checked);
+    $checkAllButton.on('change', function () {
+        $appointmentsList.find('tbody input:checkbox').prop('checked', this.checked);
     });
 
     /**
      * On appointment select.
      */
-    $appointments_list.on('change', 'tbody input:checkbox', function () {
-        $check_all_button.prop('checked', $appointments_list.find('tbody input:not(:checked)').length == 0);
+    $appointmentsList.on('change', 'tbody input:checkbox', function () {
+        $checkAllButton.prop('checked', $appointmentsList.find('tbody input:not(:checked)').length == 0);
     });
 
     /**
      * Delete appointments.
      */
-    $delete_button.on('click', function () {
+    $deleteButton.on('click', function () {
         var ladda = Ladda.create(this);
         ladda.start();
 
         var data = [];
-        var $checkboxes = $appointments_list.find('tbody input:checked');
+        var $checkboxes = $appointmentsList.find('tbody input:checked');
         $checkboxes.each(function () {
-            data.push(this.value);
+            data.push({ca_id: this.value, id: $(this).data('appointment')});
         });
 
         $.ajax({
@@ -331,7 +342,7 @@ jQuery(function($) {
     });
 
     /**
-     * Init date range picker.
+     * Init date range pickers.
      */
     moment.locale('en', {
         months       : BooklyL10n.calendar.longMonths,
@@ -341,24 +352,29 @@ jQuery(function($) {
         weekdaysMin  : BooklyL10n.calendar.shortDays
     });
 
-    var picker_ranges = {};
-    picker_ranges[BooklyL10n.yesterday]  = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
-    picker_ranges[BooklyL10n.today]      = [moment(), moment()];
-    picker_ranges[BooklyL10n.tomorrow]   = [moment().add(1, 'days'), moment().add(1, 'days')];
-    picker_ranges[BooklyL10n.last_7]     = [moment().subtract(7, 'days'), moment()];
-    picker_ranges[BooklyL10n.last_30]    = [moment().subtract(30, 'days'), moment()];
-    picker_ranges[BooklyL10n.this_month] = [moment().startOf('month'), moment().endOf('month')];
-    picker_ranges[BooklyL10n.next_month] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
+    var
+        pickerRanges1 = {},
+        pickerRanges2 = {}
+    ;
+    pickerRanges1[BooklyL10n.any_time]   = [moment(), moment().add(100, 'years')];
+    pickerRanges1[BooklyL10n.yesterday]  = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
+    pickerRanges1[BooklyL10n.today]      = [moment(), moment()];
+    pickerRanges1[BooklyL10n.tomorrow]   = [moment().add(1, 'days'), moment().add(1, 'days')];
+    pickerRanges1[BooklyL10n.last_7]     = [moment().subtract(7, 'days'), moment()];
+    pickerRanges1[BooklyL10n.last_30]    = [moment().subtract(30, 'days'), moment()];
+    pickerRanges1[BooklyL10n.this_month] = [moment().startOf('month'), moment().endOf('month')];
+    pickerRanges1[BooklyL10n.next_month] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
+    $.extend(pickerRanges2, pickerRanges1);
     if (BooklyL10n.tasks.enabled) {
-        picker_ranges[BooklyL10n.tasks.title] = [moment(), moment().add(1, 'days')];
+        pickerRanges1[BooklyL10n.tasks.title] = [moment(), moment().add(1, 'days')];
     }
 
-    $date_filter.daterangepicker(
+    $dateFilter.daterangepicker(
         {
-            parentEl: $date_filter.parent(),
+            parentEl: $dateFilter.parent(),
             startDate: moment().startOf('month'),
             endDate: moment().endOf('month'),
-            ranges: picker_ranges,
+            ranges: pickerRanges1,
             autoUpdateInput: false,
             locale: {
                 applyLabel : BooklyL10n.apply,
@@ -373,17 +389,68 @@ jQuery(function($) {
             }
         },
         function(start, end, label) {
-            if (label != BooklyL10n.tasks.title) {
-                var format = 'YYYY-MM-DD';
-                $date_filter
-                    .data('date', start.format(format) + ' - ' + end.format(format))
-                    .find('span')
-                    .html(start.format(BooklyL10n.mjsDateFormat) + ' - ' + end.format(BooklyL10n.mjsDateFormat));
-            } else {
-                $date_filter
-                    .data('date', null)
-                    .find('span')
-                    .html(BooklyL10n.tasks.title);
+            switch (label) {
+                case BooklyL10n.tasks.title:
+                    $dateFilter
+                        .data('date', 'null')
+                        .find('span')
+                        .html(BooklyL10n.tasks.title);
+                    break;
+                case BooklyL10n.any_time:
+                    $dateFilter
+                        .data('date', 'any')
+                        .find('span')
+                        .html(BooklyL10n.any_time);
+                    break;
+                default:
+                    var format = 'YYYY-MM-DD';
+                    $dateFilter
+                        .data('date', start.format(format) + ' - ' + end.format(format))
+                        .find('span')
+                        .html(start.format(BooklyL10n.mjsDateFormat) + ' - ' + end.format(BooklyL10n.mjsDateFormat));
+            }
+        }
+    );
+
+    $creationDateFilter.daterangepicker(
+        {
+            parentEl: $creationDateFilter.parent(),
+            startDate: moment(),
+            endDate: moment().add(100, 'years'),
+            ranges: pickerRanges2,
+            autoUpdateInput: false,
+            locale: {
+                applyLabel : BooklyL10n.apply,
+                cancelLabel: BooklyL10n.cancel,
+                fromLabel  : BooklyL10n.from,
+                toLabel    : BooklyL10n.to,
+                customRangeLabel: BooklyL10n.custom_range,
+                daysOfWeek : BooklyL10n.calendar.shortDays,
+                monthNames : BooklyL10n.calendar.longMonths,
+                firstDay   : parseInt(BooklyL10n.startOfWeek),
+                format     : BooklyL10n.mjsDateFormat
+            }
+        },
+        function(start, end, label) {
+            switch (label) {
+                case BooklyL10n.tasks.title:
+                    $creationDateFilter
+                        .data('date', 'null')
+                        .find('span')
+                        .html(BooklyL10n.tasks.title);
+                    break;
+                case BooklyL10n.any_time:
+                    $creationDateFilter
+                        .data('date', 'any')
+                        .find('span')
+                        .html(BooklyL10n.any_time);
+                    break;
+                default:
+                    var format = 'YYYY-MM-DD';
+                    $creationDateFilter
+                        .data('date', start.format(format) + ' - ' + end.format(format))
+                        .find('span')
+                        .html(start.format(BooklyL10n.mjsDateFormat) + ' - ' + end.format(BooklyL10n.mjsDateFormat));
             }
         }
     );
@@ -405,10 +472,11 @@ jQuery(function($) {
             }
         });
 
-    $id_filter.on('keyup', function () { dt.ajax.reload(); });
-    $date_filter.on('apply.daterangepicker', function () { dt.ajax.reload(); });
-    $staff_filter.on('change', function () { dt.ajax.reload(); });
-    $customer_filter.on('change', function () { dt.ajax.reload(); });
-    $service_filter.on('change', function () { dt.ajax.reload(); });
-    $status_filter.on('change', function () { dt.ajax.reload(); });
+    $idFilter.on('keyup', function () { dt.ajax.reload(); });
+    $dateFilter.on('apply.daterangepicker', function () { dt.ajax.reload(); });
+    $creationDateFilter.on('apply.daterangepicker', function () { dt.ajax.reload(); });
+    $staffFilter.on('change', function () { dt.ajax.reload(); });
+    $customerFilter.on('change', function () { dt.ajax.reload(); });
+    $serviceFilter.on('change', function () { dt.ajax.reload(); });
+    $statusFilter.on('change', function () { dt.ajax.reload(); });
 });

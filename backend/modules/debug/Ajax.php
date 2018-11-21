@@ -34,9 +34,6 @@ class Ajax extends Page
             }
             $plugin_prefix   = $plugin::getPrefix();
             $options_postfix = array( 'data_loaded', 'grace_start', 'db_version', 'installation_time' );
-            if ( $plugin_prefix != 'bookly_' ) {
-                $options_postfix[] = 'enabled';
-            }
             foreach ( $options_postfix as $option ) {
                 $option_name = $plugin_prefix . $option;
                 $result['options'][ $option_name ] = get_option( $option_name );
@@ -131,9 +128,6 @@ class Ajax extends Page
 
                     $plugin_prefix   = $plugin::getPrefix();
                     $options_postfix = array( 'data_loaded', 'grace_start', 'db_version' );
-                    if ( $plugin_prefix != 'bookly_' ) {
-                        $options_postfix[] = 'enabled';
-                    }
                     foreach ( $options_postfix as $option ) {
                         $option_name = $plugin_prefix . $option;
                         add_option( $option_name, $data['options'][ $option_name ] );

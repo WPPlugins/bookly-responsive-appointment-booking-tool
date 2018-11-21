@@ -9,7 +9,7 @@ import stepCart from './cart_step.js';
  */
 export default function stepService(params) {
     if (opt[params.form_id].skip_steps.service) {
-        if (!opt[params.form_id].skip_steps.extras) {
+        if (!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'before_step_time') {
             stepExtras(params)
         } else {
             stepTime(params);
@@ -150,23 +150,22 @@ export default function stepService(params) {
                                     });
                                 }
                             } else if (staff_member.services.hasOwnProperty(service_id)) {
-                                if (staff_member.services[service_id].locations.hasOwnProperty(_location_id)) {
-                                    _min_capacity = _min_capacity ? Math.min(_min_capacity, staff_member.services[service_id].locations[_location_id].min_capacity) : staff_member.services[service_id].locations[_location_id].min_capacity;
-                                    _max_capacity = _max_capacity ? Math.max(_max_capacity, staff_member.services[service_id].locations[_location_id].max_capacity) : staff_member.services[service_id].locations[_location_id].max_capacity;
-                                    if ( staff_member.services[service_id].locations[_location_id].price != null) {
-                                        _staff[id] = {
-                                            id   : id,
-                                            name : staff_member.name + ' (' + staff_member.services[service_id].locations[_location_id].price + ')',
-                                            pos  : staff_member.pos
-                                        };
-                                    } else {
-                                        _staff[id] = {
-                                            id   : id,
-                                            name : staff_member.name,
-                                            pos  : staff_member.pos
-                                        };
+                                $.each(staff_member.services[service_id].locations, function(loc_id, loc_srv) {
+                                    if (_location_id && _location_id != loc_id) {
+                                        return true;
                                     }
-                                }
+                                    _min_capacity = _min_capacity ? Math.min(_min_capacity, loc_srv.min_capacity) : loc_srv.min_capacity;
+                                    _max_capacity = _max_capacity ? Math.max(_max_capacity, loc_srv.max_capacity) : loc_srv.max_capacity;
+                                    _staff[id] = {
+                                        id   : id,
+                                        name : staff_member.name + (
+                                            loc_srv.price != null && (_location_id || !services_per_location)
+                                                ? ' (' + loc_srv.price + ')'
+                                                : ''
+                                        ),
+                                        pos  : staff_member.pos
+                                    };
+                                });
                             }
                         }
                     });
@@ -275,7 +274,7 @@ export default function stepService(params) {
                         if (service_id) {
                             var valid = false;
                             $.each(locations[location_id].staff, function(id) {
-                                if (staff[id].services.hasOwnProperty(service_id)) {
+                                if (staff[id].services.hasOwnProperty(service_id) && staff[id].services[service_id].locations.hasOwnProperty(_location_id)) {
                                     valid = true;
                                     return false;
                                 }
@@ -303,6 +302,7 @@ export default function stepService(params) {
                         }
                     }
                     setSelects($chain_item, location_id, category_id, service_id, staff_id);
+                    updateServiceDurationSelect($chain_item, service_id, staff_id, location_id);
                 });
 
                 // Category select change
@@ -341,23 +341,24 @@ export default function stepService(params) {
                 });
 
                 var updateServiceDurationSelect = function($chain_item, service_id, staff_id, location_id) {
-                    var $units_duration = $chain_item.find('.bookly-js-select-units-duration');
+                    var $units_duration = $chain_item.find('.bookly-js-select-units-duration'),
+                        current_duration = $units_duration.val();
                     $units_duration.find('option').remove();
                     if (service_id) {
                         var getUnitsByStaffId = function (staff_id) {
-                            if (!staff_id) {
-                                return services[service_id]['units'];
+                            if (!staff_id || services_per_location && !location_id) {
+                                return services[service_id].hasOwnProperty('units')
+                                    ? services[service_id]['units']
+                                    : [{'value': '', 'title': '-'}];
                             }
 
                             var locationId = location_id ? location_id : 0,
                                 staffLocations = staff[staff_id].services[service_id].locations;
-
-                            if (!(staffLocations instanceof Array) || !staffLocations.length) {
-                                return [];
+                            if (staffLocations === undefined) {
+                                return [{'value': '', 'title': '-'}];
                             }
-
-                            var staffLocation = staffLocations.indexOf(locationId) !== -1 ? staffLocations[locationId] : staffLocations[0];
-                            return staffLocation.units || [];
+                            var staffLocation = staffLocations.hasOwnProperty(locationId) ? staffLocations[locationId] : staffLocations[0];
+                            return staffLocation.units || [{'value': '', 'title': '-'}];
                         };
 
                         // add slots for picked service
@@ -367,6 +368,9 @@ export default function stepService(params) {
                                 text: item.title
                             }));
                         });
+                        if ($units_duration.find('option[value="' + current_duration + '"]').length != 0) {
+                            $units_duration.val(current_duration);
+                        }
                     } else {
                         $units_duration.append($('<option>', {
                             value: '',
@@ -485,8 +489,13 @@ export default function stepService(params) {
                     if (chain_item.service_id) {
                         $('.bookly-js-select-service', $chain_item).val(chain_item.service_id).trigger('change');
                         if (opt[params.form_id].form_attributes.hide_categories) {
-                            // Deselect category to keep full list of services.
-                            $('.bookly-js-select-category', $chain_item).val('');
+                            if (opt[params.form_id].form_attributes.hasOwnProperty('const_category_id')) {
+                                // Keep category selected by 'admin'.
+                                $('.bookly-js-select-category', $chain_item).val(opt[params.form_id].form_attributes.const_category_id);
+                            } else {
+                                // Deselect category to keep full list of services.
+                                $('.bookly-js-select-category', $chain_item).val('');
+                            }
                         }
                     }
                     if (!opt[params.form_id].form_attributes.hide_staff_members && chain_item.staff_ids.length == 1 && chain_item.staff_ids[0]) {
@@ -635,11 +644,14 @@ export default function stepService(params) {
                         laddaStart(this);
 
                         // Prepare chain data.
-                        var chain = {};
-                        var has_extras = 0;
+                        var chain = {},
+                            has_extras = 0,
+                            time_requirements = 0,
+                            _time_requirements = {'required': 2, 'optional': 1, 'off': 0};
                         $('.bookly-js-chain-item:not(.bookly-js-draft)', $container).each(function () {
-                            var $chain_item = $(this);
-                            var staff_ids = [];
+                            var $chain_item = $(this),
+                                staff_ids = [],
+                                _service = services[$('.bookly-js-select-service', $chain_item).val()];
                             if ($('.bookly-js-select-employee', $chain_item).val()) {
                                 staff_ids.push($('.bookly-js-select-employee', $chain_item).val());
                             } else {
@@ -658,7 +670,8 @@ export default function stepService(params) {
                                 number_of_persons : $('.bookly-js-select-number-of-persons', $chain_item).val() || 1,
                                 quantity          : $('.bookly-js-select-quantity', $chain_item).val() ? $('.bookly-js-select-quantity', $chain_item).val() : 1
                             };
-                            has_extras += services[$('.bookly-js-select-service', $chain_item).val()].has_extras;
+                            time_requirements = Math.max(time_requirements, _time_requirements[_service.hasOwnProperty('time_requirements') ? _service.time_requirements : 'required']);
+                            has_extras += _service.has_extras;
                         });
 
                         // Prepare days.
@@ -684,16 +697,16 @@ export default function stepService(params) {
                             xhrFields   : { withCredentials: true },
                             crossDomain : 'withCredentials' in new XMLHttpRequest(),
                             success     : function (response) {
-                                if (!opt[params.form_id].skip_steps.extras) {
-                                    if (has_extras == 0) {
-                                        opt[params.form_id].no_extras = true;
+                                opt[params.form_id].no_time = time_requirements == 0;
+                                opt[params.form_id].no_extras = has_extras == 0;
+                                if (opt[params.form_id].skip_steps.extras) {
+                                    stepTime({form_id: params.form_id});
+                                } else {
+                                    if (has_extras == 0 || opt[params.form_id].step_extras == 'after_step_time') {
                                         stepTime({form_id: params.form_id});
                                     } else {
-                                        opt[params.form_id].no_extras = false;
                                         stepExtras({form_id: params.form_id});
                                     }
-                                } else {
-                                    stepTime({form_id: params.form_id});
                                 }
                             }
                         });

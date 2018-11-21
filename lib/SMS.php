@@ -9,26 +9,30 @@ class SMS
 {
     const API_URL = 'http://sms.booking-wp-plugin.com';
 
-    const REGISTER            = '/1.0/users';                            //POST
-    const AUTHENTICATE        = '/1.0/users';                            //GET
-    const LOG_OUT             = '/1.0/users/%token%/logout';             //GET
-    const GET_PROFILE_INFO    = '/1.0/users/%token%';                    //GET
+    const AUTHENTICATE        = '/1.1/users';                            //GET
+    const CONFIRM_EMAIL       = '/1.1/confirm';                          //POST
+    const GET_PROFILE_INFO    = '/1.1/users/%token%';                    //GET
+    const REGISTER            = '/1.1/users';                            //POST
+    const SEND_SMS            = '/1.1/users/%token%/sms';                //POST
+    const SET_INVOICE_DATA    = '/1.1/users/%token%/invoice';            //POST
+
+    const CANCEL_SENDER_ID    = '/1.0/users/%token%/sender-ids/cancel';  //GET
+    const GET_PRICES          = '/1.0/prices';                           //GET
+    const GET_PURCHASES_LIST  = '/1.0/users/%token%/purchases';          //GET
+    const GET_SENDER_IDS_LIST = '/1.0/users/%token%/sender-ids';         //GET
     const GET_SMS_LIST        = '/1.0/users/%token%/sms';                //GET
     const GET_SMS_SUMMARY     = '/1.0/users/%token%/sms/summary';        //GET
-    const GET_PURCHASES_LIST  = '/1.0/users/%token%/purchases';          //GET
-    const SEND_SMS            = '/1.1/users/%token%/sms';                //POST
-    const GET_PRICES          = '/1.0/prices';                           //GET
-    const PASSWORD_FORGOT     = '/1.0/recoveries';                       //POST
+    const LOG_OUT             = '/1.0/users/%token%/logout';             //GET
     const PASSWORD_CHANGE     = '/1.0/users/%token%';                    //PATCH
+    const PASSWORD_FORGOT     = '/1.0/recoveries';                       //POST
     const PREAPPROVAL_CREATE  = '/1.0/users/%token%/paypal/preapproval'; //POST
     const PREAPPROVAL_DELETE  = '/1.0/users/%token%/paypal/preapproval'; //DELETE
-    const GET_SENDER_IDS_LIST = '/1.0/users/%token%/sender-ids';         //GET
     const REQUEST_SENDER_ID   = '/1.0/users/%token%/sender-ids';         //POST
     const RESET_SENDER_ID     = '/1.0/users/%token%/sender-ids/reset';   //GET
-    const CANCEL_SENDER_ID    = '/1.0/users/%token%/sender-ids/cancel';  //GET
 
+    /** @var string */
     private $username;
-
+    /** @var string */
     private $token;
 
     private $balance;
@@ -40,6 +44,8 @@ class SMS
     private $auto_recharge;
     /** @var \stdClass */
     private $sms;
+    /** @var \stdClass */
+    private $invoice;
 
     /**
      * Constructor.
@@ -69,10 +75,7 @@ class SMS
 
         $response = $this->sendPostRequest( self::REGISTER, $data );
         if ( $response ) {
-            update_option( 'bookly_sms_token', $response->token );
-            $this->token = $response->token;
-
-            return true;
+            return $response->token;
         }
 
         return false;
@@ -90,6 +93,29 @@ class SMS
         $data = array( '_username' => $username, '_password' => $password );
 
         $response = $this->sendGetRequest( self::AUTHENTICATE, $data );
+        if ( $response ) {
+            update_option( 'bookly_sms_token', $response->token );
+            $this->token = $response->token;
+
+            return true;
+        } elseif ( in_array( 'Email confirm required', $this->errors ) ) {
+            return 'ERROR_EMAIL_CONFIRM_REQUIRED';
+        }
+
+        return false;
+    }
+
+    /**
+     * Apply email confirmation token.
+     *
+     * @param string $token
+     * @return bool
+     */
+    public function confirmEmail( $token )
+    {
+        $data = array( '_token' => $token );
+
+        $response = $this->sendPostRequest( self::CONFIRM_EMAIL, $data );
         if ( $response ) {
             update_option( 'bookly_sms_token', $response->token );
             $this->token = $response->token;
@@ -207,8 +233,7 @@ class SMS
                         if ( in_array( $response->gateway_status, array( 1, 10, 11, 12, 13 ) ) ) {  // @see SMS::getSmsList
 
                             return true;
-
-                        } else if ( $response->gateway_status == 3 ) {
+                        } elseif ( $response->gateway_status == 3 ) {
                             $this->errors[] = __( 'Your don\'t have enough Bookly SMS credits to send this message. Please add funds to your balance and try again.', 'bookly' );
                         } else {
                             $this->errors[] = __( 'Failed to send SMS.', 'bookly' );
@@ -217,6 +242,25 @@ class SMS
                 }
             } else {
                 $this->errors[] = __( 'Phone number is empty.', 'bookly' );
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Set invoice data ( client info )
+     *
+     * @param array $settings with keys [ send, company_name, company_address, company_address_l2, company_vat, company_code, send_copy, cc, company_add_text ]
+     * @return bool
+     */
+    public function sendInvoiceData( array $settings )
+    {
+        if ( $this->token ) {
+            $response = $this->sendPostRequest( self::SET_INVOICE_DATA, array( 'invoice' => $settings ) );
+            if ( $response ) {
+
+                return true;
             }
         }
 
@@ -262,7 +306,7 @@ class SMS
                 $this->sender_id     = $response->sender_id;
                 $this->auto_recharge = $response->auto_recharge;
                 $this->sms           = $response->sms;
-
+                $this->invoice       = $response->invoice;
                 self::setUndeliveredSmsCount( $this->sms->undelivered_count );
 
                 return true;
@@ -272,6 +316,16 @@ class SMS
         self::setUndeliveredSmsCount( 0 );
 
         return false;
+    }
+
+    /**
+     * Client data ror invoice.
+     *
+     * @return array
+     */
+    public function getInvoiceData()
+    {
+        return (array) $this->invoice;
     }
 
     /**
@@ -377,7 +431,7 @@ class SMS
                     $date_time     = Utils\DateTime::UTCToWPTimeZone( $item->datetime );
                     $item->date    = Utils\DateTime::formatDate( $date_time );
                     $item->time    = Utils\DateTime::formatTime( $date_time );
-                    $item->message = nl2br( htmlspecialchars( $item->message ) );
+                    $item->message = nl2br( preg_replace( '/([^\s]{50})+/U', '$1 ', htmlspecialchars( $item->message ) ) );
                     $item->phone   = '+' . $item->phone;
                     $item->charge  = rtrim( $item->charge, '0' );
                     $item->info    = nl2br( htmlspecialchars( $item->info ) );
@@ -494,7 +548,7 @@ class SMS
     /**
      * Request new SENDER ID.
      *
-     * @param $sender_id
+     * @param string $sender_id
      * @return \stdClass|false
      */
     public function requestSenderId( $sender_id )
@@ -549,8 +603,8 @@ class SMS
     /**
      * Send GET request.
      *
-     * @param       $path
-     * @param array $data
+     * @param string $path
+     * @param array  $data
      * @return \stdClass|false
      */
     private function sendGetRequest( $path, array $data = array() )
@@ -563,8 +617,8 @@ class SMS
     /**
      * Send POST request.
      *
-     * @param       $path
-     * @param array $data
+     * @param string $path
+     * @param array  $data
      * @return \stdClass|false
      */
     private function sendPostRequest( $path, array $data )
@@ -577,8 +631,8 @@ class SMS
     /**
      * Send PATCH request.
      *
-     * @param       $path
-     * @param array $data
+     * @param string $path
+     * @param array  $data
      * @return \stdClass|false
      */
     private function sendPatchRequest( $path, array $data )
@@ -591,8 +645,8 @@ class SMS
     /**
      * Send DELETE request.
      *
-     * @param       $path
-     * @param array $data
+     * @param string $path
+     * @param array  $data
      * @return \stdClass|false
      */
     private function sendDeleteRequest( $path, array $data )
@@ -704,14 +758,14 @@ class SMS
      * Prepare URL.
      *
      * @param string $path
-     * @param array $data
+     * @param array  $data
      * @return string
      */
     private function _prepareUrl( $path, array &$data )
     {
         $url = self::API_URL . str_replace( '%token%', $this->token, $path );
         foreach ( $data as $key => $value ) {
-            if ( $key{0} == '%' && substr( $key,-1 ) == '%' ) {
+            if ( strpos( $key, '%' ) === 0 && substr( $key, - 1 ) == '%' ) {
                 $url = str_replace( $key, $value, $url );
                 unset ( $data[ $key ] );
             }

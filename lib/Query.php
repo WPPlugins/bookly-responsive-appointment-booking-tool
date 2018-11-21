@@ -537,7 +537,21 @@ class Query
      */
     public function set( $column, $value )
     {
-        $this->set[] = array( 'column' => $column, 'value' => $value );
+        $this->set[] = array( 'type' => 'set', 'column' => $column, 'value' => $value );
+
+        return $this;
+    }
+
+    /**
+     * Set raw column(s) and values for UPDATE.
+     *
+     * @param string $statement
+     * @param array  $values
+     * @return $this
+     */
+    public function setRaw( $statement, array $values )
+    {
+        $this->set[] = array( 'type' => 'raw_set', 'statement' => $statement, 'values' => $values );
 
         return $this;
     }
@@ -693,10 +707,21 @@ class Query
 
         // SET for UPDATE
         if ( ! empty( $this->set ) ) {
-            foreach ( $this->set as $s ){
-                list ( $field, $format ) = $this->_normalize( $s['column'] );
-                $set .= "$field = {$format},";
-                $values[] = $s['value'];
+            foreach ( $this->set as $s ) {
+                if( $s['type'] == 'set' ) {
+                    list ( $field, $format ) = $this->_normalize( $s['column'] );
+                    if ( $s['value'] === null ) {
+                        $set .= $field . ' = NULL,';
+                    } else {
+                        $set .= $field . ' = ' . $format . ',';
+                        $values[] = $s['value'];
+                    }
+                } elseif ( $s['type'] == 'raw_set' ) {
+                    $set .= $s['statement'] . ',';
+                    foreach ( $s['values'] as $value ) {
+                        $values[] = $value;
+                    }
+                }
             }
             $set = substr( $set, 0, - 1 );
         }

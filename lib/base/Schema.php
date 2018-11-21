@@ -45,23 +45,6 @@ abstract class Schema
     }
 
     /**
-     * Drop plugin tables.
-     */
-    protected function dropPluginTables()
-    {
-        $tables = array();
-
-        $plugin_class = Plugin::getPluginFor( $this );
-        foreach ( $plugin_class::getEntityClasses() as $entity_class ) {
-            $tables[] = $entity_class::getTableName();
-        }
-
-        if ( ! empty ( $tables ) ) {
-            $this->drop( $tables );
-        }
-    }
-
-    /**
      * Drop table columns.
      *
      * @param $table
@@ -71,18 +54,32 @@ abstract class Schema
     {
         global $wpdb;
 
+        $this->dropTableForeignKeys( $table, $columns );
+
+        foreach ( $columns as $column ) {
+            $wpdb->query( "ALTER TABLE `$table` DROP COLUMN `$column`" );
+        }
+    }
+
+    /**
+     * Drop table foreign keys.
+     *
+     * @param $table
+     * @param array $columns
+     */
+    protected function dropTableForeignKeys( $table, array $columns )
+    {
+        global $wpdb;
+
         $get_foreign_keys = sprintf(
             'SELECT constraint_name FROM information_schema.key_column_usage
-                WHERE TABLE_SCHEMA = SCHEMA() AND table_name = "%s" AND column_name IN (%s)',
+                WHERE TABLE_SCHEMA = SCHEMA() AND table_name = "%s" AND column_name IN (%s) AND REFERENCED_TABLE_NAME IS NOT NULL',
             $table,
             implode( ', ', array_fill( 0, count( $columns ), '%s' ) )
         );
         $constraints = $wpdb->get_results( $wpdb->prepare( $get_foreign_keys, $columns ) );
         foreach ( $constraints as $foreign_key ) {
             $wpdb->query( "ALTER TABLE `$table` DROP FOREIGN KEY `$foreign_key->constraint_name`" );
-        }
-        foreach ( $columns as $column ) {
-            $wpdb->query( "ALTER TABLE `$table` DROP COLUMN `$column`" );
         }
     }
 
@@ -119,4 +116,34 @@ abstract class Schema
         return $wpdb->rows_affected;
     }
 
+    /**
+     * Get table name.
+     *
+     * @param string $table
+     * @return string
+     */
+    protected function getTableName( $table )
+    {
+        /** @global \wpdb $wpdb */
+        global $wpdb;
+
+        return $wpdb->prefix . $table;
+    }
+
+    /**
+     * Check table exists
+     *
+     * @param $table
+     *
+     * @return bool
+     */
+    protected function tableExists( $table )
+    {
+        global $wpdb;
+
+        return (bool) $wpdb->query( $wpdb->prepare(
+            'SELECT 1 FROM `information_schema`.`tables` WHERE `table_name` = %s AND `table_schema` = SCHEMA() LIMIT 1',
+            $this->getTableName( $table )
+        ) );
+    }
 }

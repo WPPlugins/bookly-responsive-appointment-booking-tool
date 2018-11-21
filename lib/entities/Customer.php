@@ -112,7 +112,7 @@ class Customer extends Lib\Base\Entity
     public function getUpcomingAppointments()
     {
         return $this->_buildQueryForAppointments()
-            ->whereGte( 'a.start_date', current_time( 'Y-m-d 00:00:00' ) )
+            ->whereRaw( 'a.start_date >= "%s" OR (a.start_date IS NULL AND ca.status != "%s")', array( current_time( 'Y-m-d 00:00:00' ), CustomerAppointment::STATUS_DONE ) )
             ->fetchArray();
     }
 
@@ -128,7 +128,7 @@ class Customer extends Lib\Base\Entity
         $result = array( 'more' => true, 'appointments' => array() );
 
         $records = $this->_buildQueryForAppointments()
-            ->whereLt( 'a.start_date', current_time( 'Y-m-d 00:00:00' ) )
+            ->whereRaw( 'a.start_date < "%s" OR (a.start_date IS NULL AND ca.status = "%s")', array( current_time( 'Y-m-d 00:00:00' ), CustomerAppointment::STATUS_DONE ) )
             ->limit( $limit + 1 )
             ->offset( ( $page - 1 ) * $limit )
             ->fetchArray();
@@ -163,11 +163,12 @@ class Customer extends Lib\Base\Entity
                     s.category_id,
                     ca.status AS appointment_status,
                     ca.extras,
+                    ca.collaborative_service_id,
                     ca.compound_token,
                     ca.number_of_persons,
                     ca.custom_fields,
                     ca.appointment_id,
-                    IF (ca.compound_service_id IS NULL, COALESCE(ss.price, a.custom_service_price), s.price) AS price,
+                    IF (ca.compound_service_id IS NULL AND ca.collaborative_service_id IS NULL, COALESCE(ss.price, a.custom_service_price), s.price) AS price,
                     IF (ca.time_zone_offset IS NULL,
                         a.start_date,
                         DATE_SUB(a.start_date, INTERVAL ' . $client_diff . ' + ca.time_zone_offset MINUTE)
@@ -176,7 +177,7 @@ class Customer extends Lib\Base\Entity
             ->leftJoin( 'Staff', 'st', 'st.id = a.staff_id' )
             ->leftJoin( 'Customer', 'customer', 'customer.wp_user_id = ' . $this->getWpUserId() )
             ->innerJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id AND ca.customer_id = customer.id' )
-            ->leftJoin( 'Service', 's', 's.id = COALESCE(ca.compound_service_id, a.service_id)' )
+            ->leftJoin( 'Service', 's', 's.id = COALESCE(ca.compound_service_id, ca.collaborative_service_id, a.service_id)' )
             ->leftJoin( 'Category', 'c', 'c.id = s.category_id' )
             ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id AND ss.location_id <=> a.location_id' )
             ->leftJoin( 'Payment', 'p', 'p.id = ca.payment_id' )

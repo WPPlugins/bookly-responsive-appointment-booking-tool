@@ -8,7 +8,7 @@ jQuery(function ($) {
             ladda.stop();
             if (response.success) {
                 $alert.alert('close');
-                booklyAlert({success : [response.data.message]});
+                booklyAlert({success: [response.data.message]});
             } else {
                 $alert.find('.input-group').addClass('has-error');
                 booklyAlert({error : [response.data.message]});
@@ -18,7 +18,7 @@ jQuery(function ($) {
     $alert.on('close.bs.alert', function () {
         $.post(ajaxurl, {action: 'bookly_dismiss_subscribe_notice', csrf_token : SupportL10n.csrf_token}, function () {
             // Indicator for Selenium that request has completed.
-            $('.bookly-js-subscribe-notice').remove();
+            $alert.remove();
         });
     });
 });

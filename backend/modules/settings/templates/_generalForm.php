@@ -10,7 +10,7 @@ use Bookly\Backend\Modules\Settings\Proxy;
     <?php
         Selects::renderSingle( 'bookly_gen_time_slot_length', __( 'Time slot length', 'bookly' ), __( 'Select a time interval which will be used as a step when building all time slots in the system.', 'bookly' ),
         $values['bookly_gen_time_slot_length'] );
-        Selects::renderSingle( 'bookly_gen_service_duration_as_slot_length', __( 'Service duration as slot length', 'bookly' ), __( 'Enable this option to make slot length equal to service duration at the Time step of booking form.', 'bookly' ) );
+        Selects::renderSingle( 'bookly_gen_service_duration_as_slot_length', __( 'Set slot length as service duration', 'bookly' ), __( 'Enable this option to make slot length equal to service duration at the Time step of booking form.', 'bookly' ) );
         Selects::renderSingle( 'bookly_gen_default_appointment_status', __( 'Default appointment status', 'bookly' ), __( 'Select status for newly booked appointments.', 'bookly' ), array( array( CustomerAppointment::STATUS_PENDING, __( 'Pending', 'bookly' ) ), array( CustomerAppointment::STATUS_APPROVED, __( 'Approved', 'bookly' ) ), ) );
         Proxy\Pro::renderMinimumTimeRequirement();
         Inputs::renderNumber( 'bookly_gen_max_days_for_booking', __( 'Number of days available for booking', 'bookly' ), __( 'Set how far in the future the clients can book appointments.', 'bookly' ), 1, 1 );

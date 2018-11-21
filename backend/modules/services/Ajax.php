@@ -15,7 +15,7 @@ class Ajax extends Page
      */
     public static function getCategoryServices()
     {
-        wp_send_json_success( self::renderTemplate( '_list', self::_getCaSeStCollections(), false ) );
+        wp_send_json_success( self::renderTemplate( '_list', self::_getTemplateData(), false ) );
     }
 
     /**
@@ -96,7 +96,7 @@ class Ajax extends Page
         $form->bind( self::postParameters() );
         $form->getObject()->setDuration( Lib\Config::getTimeSlotLength() );
         $service = $form->save();
-        $data = self::_getCaSeStCollections( $service->getCategoryId() );
+        $data = self::_getTemplateData( $service->getCategoryId() );
 
         Proxy\Shared::serviceCreated( $service, self::postParameters() );
 
@@ -119,21 +119,34 @@ class Ajax extends Page
         } else {
             /** @var Lib\Entities\Appointment $appointment */
             $appointment = Lib\Entities\Appointment::query( 'a' )
+                ->select( 'a.service_id, a.start_date' )
                 ->whereIn( 'a.service_id', $service_ids )
                 ->whereGt( 'a.start_date', current_time( 'mysql' ) )
                 ->sortBy( 'a.start_date' )
                 ->order( 'DESC' )
                 ->limit( '1' )
-                ->findOne();
+                ->fetchRow();
 
             if ( $appointment ) {
-                $last_month = date_create( $appointment->getStartDate() )->modify( 'last day of' )->format( 'Y-m-d' );
-                $action = 'show_modal';
+                $last_month = date_create( $appointment['start_date'] )->modify( 'last day of' )->format( 'Y-m-d' );
+                $action     = 'show_modal';
                 $filter_url = sprintf( '%s#service=%d&range=%s-%s',
                     Lib\Utils\Common::escAdminUrl( \Bookly\Backend\Modules\Appointments\Page::pageSlug() ),
-                    $appointment->getServiceId(),
+                    $appointment['service_id'],
                     date_create( current_time( 'mysql' ) )->format( 'Y-m-d' ),
                     $last_month );
+                wp_send_json_error( compact( 'action', 'filter_url' ) );
+            } elseif ( $task = Lib\Entities\Appointment::query( 'a' )
+                ->select( 'a.service_id' )
+                ->whereIn( 'a.service_id', $service_ids )
+                ->where( 'a.start_date', null )
+                ->limit( 1 )
+                ->fetchRow()
+            ) {
+                $action     = 'show_modal';
+                $filter_url = sprintf( '%s#service=%d&tasks',
+                    Lib\Utils\Common::escAdminUrl( \Bookly\Backend\Modules\Appointments\Page::pageSlug() ),
+                    $task['service_id'] );
                 wp_send_json_error( compact( 'action', 'filter_url' ) );
             } else {
                 $action = 'confirm';

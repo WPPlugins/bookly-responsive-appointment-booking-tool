@@ -8,67 +8,67 @@ use Bookly\Backend\Components\TinyMce\Proxy;
             <?php Proxy\Shared::renderBooklyFormHead() ?>
             <tr>
                 <td>
-                    <label for="bookly-select-category"><?php _e( 'Default value for category select', 'bookly' ) ?></label>
+                    <label for="bookly-select-category"><?php esc_html_e( 'Default value for category select', 'bookly' ) ?></label>
                 </td>
                 <td>
                     <select id="bookly-select-category">
-                        <option value=""><?php _e( 'Select category', 'bookly' ) ?></option>
+                        <option value=""><?php esc_html_e( 'Select category', 'bookly' ) ?></option>
                     </select>
-                    <div><label><input type="checkbox" id="bookly-hide-categories" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
+                    <div><label><input type="checkbox" id="bookly-hide-categories" /><?php esc_html_e( 'Hide this field', 'bookly' ) ?></label></div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="bookly-select-service"><?php _e( 'Default value for service select', 'bookly' ) ?></label>
+                    <label for="bookly-select-service"><?php esc_html_e( 'Default value for service select', 'bookly' ) ?></label>
                 </td>
                 <td>
                     <select id="bookly-select-service">
-                        <option value=""><?php _e( 'Select service', 'bookly' ) ?></option>
+                        <option value=""><?php esc_html_e( 'Select service', 'bookly' ) ?></option>
                     </select>
-                    <div><label><input type="checkbox" id="bookly-hide-services" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
-                    <i><?php _e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'bookly' ) ?></i>
+                    <div><label><input type="checkbox" id="bookly-hide-services" /><?php esc_html_e( 'Hide this field', 'bookly' ) ?></label></div>
+                    <i><?php esc_html_e( 'Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it', 'bookly' ) ?></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="bookly-select-employee"><?php _e( 'Default value for employee select', 'bookly' ) ?></label>
+                    <label for="bookly-select-employee"><?php esc_html_e( 'Default value for employee select', 'bookly' ) ?></label>
                 </td>
                 <td>
                     <select class="bookly-select-mobile" id="bookly-select-employee">
-                        <option value=""><?php _e( 'Any', 'bookly' ) ?></option>
+                        <option value=""><?php esc_html_e( 'Any', 'bookly' ) ?></option>
                     </select>
-                    <div><label><input type="checkbox" id="bookly-hide-employee" /><?php _e( 'Hide this field', 'bookly' ) ?></label></div>
+                    <div><label><input type="checkbox" id="bookly-hide-employee" /><?php esc_html_e( 'Hide this field', 'bookly' ) ?></label></div>
                 </td>
             </tr>
             <?php Proxy\Shared::renderBooklyFormFields() ?>
             <tr>
                 <td>
-                    <label for="bookly-hide-date"><?php _e( 'Date', 'bookly' ) ?></label>
+                    <label for="bookly-hide-date"><?php esc_html_e( 'Date', 'bookly' ) ?></label>
                 </td>
                 <td>
-                    <label><input type="checkbox" id="bookly-hide-date" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="bookly-hide-week-days"><?php _e( 'Week days', 'bookly' ) ?></label>
-                </td>
-                <td>
-                    <label><input type="checkbox" id="bookly-hide-week-days" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
+                    <label><input type="checkbox" id="bookly-hide-date" /><?php esc_html_e( 'Hide this block', 'bookly' ) ?></label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="bookly-hide-time-range"><?php _e( 'Time range', 'bookly' ) ?></label>
+                    <label for="bookly-hide-week-days"><?php esc_html_e( 'Week days', 'bookly' ) ?></label>
                 </td>
                 <td>
-                    <label><input type="checkbox" id="bookly-hide-time-range" /><?php _e( 'Hide this block', 'bookly' ) ?></label>
+                    <label><input type="checkbox" id="bookly-hide-week-days" /><?php esc_html_e( 'Hide this block', 'bookly' ) ?></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="bookly-hide-time-range"><?php esc_html_e( 'Time range', 'bookly' ) ?></label>
+                </td>
+                <td>
+                    <label><input type="checkbox" id="bookly-hide-time-range" /><?php esc_html_e( 'Hide this block', 'bookly' ) ?></label>
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <input class="button button-primary" id="bookly-insert-shortcode" type="submit" value="<?php _e( 'Insert', 'bookly' ) ?>" />
+                    <button class="button button-primary bookly-js-insert-shortcode" type="button"><?php esc_html_e( 'Insert', 'bookly' ) ?></button>
                 </td>
             </tr>
         </table>
@@ -91,22 +91,23 @@ use Bookly\Backend\Components\TinyMce\Proxy;
 </style>
 <script type="text/javascript">
     jQuery(function ($) {
-        var $select_location        = $('#bookly-select-location'),
-            $select_category        = $('#bookly-select-category'),
-            $select_service         = $('#bookly-select-service'),
-            $select_employee        = $('#bookly-select-employee'),
-            $hide_locations         = $('#bookly-hide-locations'),
-            $hide_categories        = $('#bookly-hide-categories'),
-            $hide_services          = $('#bookly-hide-services'),
-            $hide_staff             = $('#bookly-hide-employee'),
-            $hide_service_duration  = $('#bookly-hide-service-duration'),
-            $hide_number_of_persons = $('#bookly-hide-number-of-persons'),
-            $hide_quantity          = $('#bookly-hide-quantity'),
-            $hide_date              = $('#bookly-hide-date'),
-            $hide_week_days         = $('#bookly-hide-week-days'),
-            $hide_time_range        = $('#bookly-hide-time-range'),
+        var $form                   = $('#bookly-shortcode-form'),
+            $select_location        = $('#bookly-select-location',$form),
+            $select_category        = $('#bookly-select-category',$form),
+            $select_service         = $('#bookly-select-service',$form),
+            $select_employee        = $('#bookly-select-employee',$form),
+            $hide_locations         = $('#bookly-hide-locations',$form),
+            $hide_categories        = $('#bookly-hide-categories',$form),
+            $hide_services          = $('#bookly-hide-services',$form),
+            $hide_staff             = $('#bookly-hide-employee',$form),
+            $hide_service_duration  = $('#bookly-hide-service-duration',$form),
+            $hide_number_of_persons = $('#bookly-hide-number-of-persons',$form),
+            $hide_quantity          = $('#bookly-hide-quantity',$form),
+            $hide_date              = $('#bookly-hide-date',$form),
+            $hide_week_days         = $('#bookly-hide-week-days',$form),
+            $hide_time_range        = $('#bookly-hide-time-range',$form),
             $add_button             = $('#add-bookly-form'),
-            $insert                 = $('#bookly-insert-shortcode'),
+            $insert                 = $('button.bookly-js-insert-shortcode', $form),
             location_custom         = <?php echo (int) Bookly\Lib\Proxy\Locations::servicesPerLocationAllowed() ?>,
             locations               = <?php echo json_encode( $casest['locations'] ) ?>,
             categories              = <?php echo json_encode( $casest['categories'] ) ?>,

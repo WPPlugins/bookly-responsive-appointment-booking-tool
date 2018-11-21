@@ -315,6 +315,16 @@ class Range
     }
 
     /**
+     * Get capacity.
+     *
+     * @return int
+     */
+    public function capacity()
+    {
+        return $this->data->capacity();
+    }
+
+    /**
      * Get next slot.
      *
      * @return self
@@ -325,7 +335,27 @@ class Range
     }
 
     /**
-     * Create a copy of the data with new staff ID.
+     * Get alternative slot.
+     *
+     * @return self
+     */
+    public function altSlot()
+    {
+        return $this->data->altSlot();
+    }
+
+    /**
+     * Check whether alternative slot is set.
+     *
+     * @return bool
+     */
+    public function hasAltSlot()
+    {
+        return $this->data->hasAltSlot();
+    }
+
+    /**
+     * Create a copy of the range with new staff ID in data.
      *
      * @param int $new_staff_id
      * @return self
@@ -336,7 +366,7 @@ class Range
     }
 
     /**
-     * Create a copy of the data with new state.
+     * Create a copy of the range with new state in data.
      *
      * @param int $new_state
      * @return self
@@ -347,7 +377,7 @@ class Range
     }
 
     /**
-     * Create a copy of the data with new capacity.
+     * Create a copy of the range with new capacity in data.
      *
      * @param int $new_capacity
      * @return self
@@ -358,7 +388,7 @@ class Range
     }
 
     /**
-     * Create a copy of the data with new nop.
+     * Create a copy of the range with new nop in data.
      *
      * @param int $new_nop
      * @return self
@@ -369,7 +399,7 @@ class Range
     }
 
     /**
-     * Create a copy of the data with new next slot.
+     * Create a copy of the range with new next slot in data.
      *
      * @param self|null $new_next_slot
      * @return self
@@ -377,6 +407,17 @@ class Range
     public function replaceNextSlot( $new_next_slot )
     {
         return $this->replaceData( $this->data->replaceNextSlot( $new_next_slot ) );
+    }
+
+    /**
+     * Create a copy of the range with new alternative slot in data.
+     *
+     * @param self|null $new_alt_slot
+     * @return self
+     */
+    public function replaceAltSlot( $new_alt_slot )
+    {
+        return $this->replaceData( $this->data->replaceAltSlot( $new_alt_slot ) );
     }
 
     /**
@@ -457,22 +498,16 @@ class Range
     }
 
     /**
+     * Get maximal nop.
+     *
      * @return int
      */
-    public function capacity()
-    {
-        return $this->data->capacity();
-    }
-
-    /**
-     * @return int
-     */
-    public function nop()
+    public function maxNop()
     {
         $result = $this->data->nop();
 
         if ( $this->data()->hasNextSlot() ) {
-            $result = max( $result, $this->nextSlot()->nop() );
+            $result = max( $result, $this->nextSlot()->maxNop() );
         }
 
         return $result;

@@ -5,7 +5,7 @@ Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
 Tested up to: 4.9.8
 Requires PHP: 5.3.7
-Stable tag: 16.1
+Stable tag: 16.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -106,6 +106,7 @@ Also, Bookly is an excellent solution for **web studios** and **developers**, wh
 ### 4. Bookly Pro add-on features:
 
 **Bookly Pro** add-on allows you to use more features and settings, install other add-ons for Bookly, includes six months of customer support, and provides you with advanced capabilities for automating your **online scheduling system**. Some of them include:
+
   * **Unlimited** number of **staff members** with an individual working schedule and ability to manage their profiles and online booking calendar
   * **Unlimited** number of **services** with additional settings (padding time, visibility, limitations, etc.)
   * Ability to receive secure and flexible **online payments** on your website
@@ -196,7 +197,7 @@ You can access all Bookly capabilities from the admin area, which will be an int
 
 1. In *Bookly menu –> SMS Notifications*, click on "Register" in the login form on the left side of the page;
 2. Top up your balance by one of the standard $10, $25, $50, or $100 amounts (transaction processed by PayPal);
-3. If you use cron for scheduled notifications, make sure to update your cron settings by replacing the current command with the following:
+3. To send scheduled notifications please execute the following command hourly with your cron:
 wget -q -O - http://[your-domain]/wp-cron.php
 4. Choose notification types and build your messages using shortcodes: tick a checkbox, and an editor field will open. Write the copy, format it as you like, and add personalized data using shortcodes that you’ll see just below the text edit window.
 

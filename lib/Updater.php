@@ -7,6 +7,81 @@ namespace Bookly\Lib;
  */
 class Updater extends Base\Updater
 {
+    function update_16_2()
+    {
+        /** @global \wpdb $wpdb */
+        global $wpdb;
+
+        $this->dropTableForeignKeys( $this->getTableName( 'bookly_staff_schedule_items' ), array( 'staff_id' ) );
+
+        $this->alterTables( array(
+            'bookly_staff' => array(
+                'ALTER TABLE `%s` ADD COLUMN `category_id` INT UNSIGNED DEFAULT NULL AFTER `id`',
+                'ALTER TABLE `%s` ADD COLUMN `working_time_limit` INT UNSIGNED DEFAULT NULL AFTER `info`',
+                'ALTER TABLE `%s` CHANGE COLUMN `visibility` `visibility` ENUM(\'public\',\'private\',\'archive\') NOT NULL DEFAULT \'public\'',
+            ),
+            'bookly_services' => array(
+                'ALTER TABLE `%s` ADD COLUMN `time_requirements` ENUM("required","optional","off") NOT NULL DEFAULT "required" AFTER `recurrence_frequencies`',
+                'ALTER TABLE `%s` CHANGE `type` `type` ENUM("simple","collaborative","compound","package") NOT NULL DEFAULT "simple"',
+                'ALTER TABLE `%s` ADD COLUMN `collaborative_equal_duration` TINYINT(1) NOT NULL DEFAULT 0 AFTER `time_requirements`',
+                'ALTER TABLE `%s` ADD COLUMN `deposit` VARCHAR(100) NOT NULL DEFAULT "100%%" AFTER `color`',
+                'ALTER TABLE `%s` CHANGE `staff_preference` `staff_preference` ENUM("order", "least_occupied", "most_occupied", "least_occupied_for_period", "most_occupied_for_period", "least_expensive", "most_expensive") NOT NULL DEFAULT "most_expensive"',
+                'ALTER TABLE `%s` ADD COLUMN `staff_preference_settings` TEXT DEFAULT NULL AFTER `staff_preference`',
+                'ALTER TABLE `%s` ADD COLUMN `one_booking_per_slot` TINYINT(1) NOT NULL DEFAULT 0 AFTER `capacity_max`',
+                'ALTER TABLE `%s` CHANGE `limit_period` `limit_period` ENUM("off","day","week","month","year","upcoming","calendar_day","calendar_week","calendar_month","calendar_year") NOT NULL DEFAULT "off"',
+                'ALTER TABLE `%s` ADD COLUMN `slot_length` VARCHAR(255) NOT NULL DEFAULT "default" AFTER `duration`',
+            ),
+            'bookly_customer_appointments' => array(
+                'ALTER TABLE `%s` ADD COLUMN `series_id` INT UNSIGNED DEFAULT NULL AFTER `id`',
+                'ALTER TABLE `%s` ADD COLUMN `extras_consider_duration` TINYINT(1) NOT NULL DEFAULT 1 AFTER `extras`',
+                'ALTER TABLE `%s` ADD COLUMN `extras_multiply_nop` TINYINT(1) NOT NULL DEFAULT 1 AFTER `extras`',
+                'ALTER TABLE `%s` ADD CONSTRAINT FOREIGN KEY (`series_id`) REFERENCES `' . $this->getTableName( 'bookly_series' ) . '` (`id`) ON DELETE SET NULL ON UPDATE CASCADE',
+                'ALTER TABLE `%s` ADD COLUMN `collaborative_token` VARCHAR(255) DEFAULT NULL AFTER `locale`',
+                'ALTER TABLE `%s` ADD COLUMN `collaborative_service_id` INT UNSIGNED DEFAULT NULL AFTER `locale`',
+            ),
+            'bookly_staff_schedule_items' => array(
+                'ALTER TABLE `%s` ADD COLUMN `location_id` INT UNSIGNED DEFAULT NULL AFTER `staff_id`',
+                'ALTER TABLE `%s` DROP INDEX `unique_ids_idx`',
+                'ALTER TABLE `%s` ADD CONSTRAINT FOREIGN KEY (`staff_id`) REFERENCES `' . $this->getTableName( 'bookly_staff' ) . '` (`id`) ON DELETE CASCADE ON UPDATE CASCADE',
+                'ALTER TABLE `%s` ADD UNIQUE KEY unique_ids_idx (staff_id, day_index, location_id)',
+            ),
+            'bookly_appointments' => array(
+                'ALTER TABLE `%s` ADD COLUMN `created` DATETIME DEFAULT NULL',
+            ),
+        ) );
+
+        $wpdb->query( sprintf( 'UPDATE `%s` SET `staff_preference_settings` = "{}"', $this->getTableName( 'bookly_services' ) ) );
+        $wpdb->query( sprintf( 'UPDATE `%s` `ca` LEFT JOIN `%s` `a` ON `a`.`id` = `ca`.`appointment_id` SET `ca`.`series_id`=`a`.`series_id`', $this->getTableName( 'bookly_customer_appointments' ), $this->getTableName( 'bookly_appointments' ) ) );
+
+        $this->dropTableColumns( $this->getTableName( 'bookly_appointments' ), array( 'series_id' ) );
+
+        $notifications_table = $this->getTableName( 'bookly_notifications' );
+        $records = $wpdb->get_results( sprintf(
+            'SELECT id, `settings` FROM `%s` WHERE `type` IN (\'appointment_start_time\', \'customer_birthday\', \'last_appointment\', \'ca_status_changed\', \'ca_created\')',
+            $notifications_table
+        ), ARRAY_A );
+
+        $for_any_services = array( 'services' => array( 'any' => 1, 'ids' => array() ) );
+        foreach ( $records as $record ) {
+            $settings = (array) json_decode( $record['settings'], true );
+            foreach ( array( 'after_event', 'existing_event_with_date_and_time' ) as $set ) {
+                $result = array_merge( $for_any_services, $settings[ $set ] );
+                $settings[ $set ] = $result;
+            }
+            $wpdb->query( sprintf( 'UPDATE `%s` SET `settings`= \'%s\' WHERE id = %d',
+                $notifications_table,
+                json_encode( $settings ),
+                $record['id'] ) );
+        }
+
+        add_option( 'bookly_app_align_buttons_left', '0' );
+        add_option( 'bookly_app_show_email_confirm', '0' );
+
+        $this->addL10nOptions( array(
+            'bookly_l10n_label_email_confirm'     => __( 'Confirm email', 'bookly' ),
+            'bookly_l10n_email_confirm_not_match' => __( 'Email confirmation doesn\'t match', 'bookly' ),
+        ) );
+    }
 
     function update_16_0()
     {

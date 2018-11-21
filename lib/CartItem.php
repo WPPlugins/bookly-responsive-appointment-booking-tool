@@ -30,6 +30,8 @@ class CartItem
     // Step extras
     /** @var  array */
     protected $extras = array();
+    /** @var  bool */
+    protected $consider_extras_duration = true;
 
     // Step time
     /** @var  array */
@@ -64,12 +66,15 @@ class CartItem
      * Set data.
      *
      * @param array $data
+     * @return $this
      */
     public function setData( array $data )
     {
         foreach ( $data as $name => $value ) {
             $this->{$name} = $value;
         }
+
+        return $this;
     }
 
     /**
@@ -116,7 +121,7 @@ class CartItem
         if ( isset ( $service_prices_cache[ $staff_id ][ $service_id ][ $location_id ][ $service_start ] ) ) {
             $service_price = $service_prices_cache[ $staff_id ][ $service_id ][ $location_id ][ $service_start ];
         } else {
-            if ( $service->getType() == Entities\Service::TYPE_COMPOUND ) {
+            if ( $service->withSubServices() ) {
                 $service_price = $service->getPrice();
             } else {
                 $staff_service = new Entities\StaffService();
@@ -141,6 +146,10 @@ class CartItem
      */
     public function getDeposit()
     {
+        $service = Entities\Service::find( $this->service_id );
+        if ( $service && $service->withSubServices() ) {
+            return $service->getDeposit();
+        }
         list ( $service_id, $staff_id, , $location_id ) = $this->slots[0];
         $staff_service = new Entities\StaffService();
         $location_id = Proxy\Locations::prepareStaffLocationId( $location_id, $staff_id  ) ?: null;
@@ -188,10 +197,47 @@ class CartItem
      * Get duration of service's extras.
      *
      * @return int
+     * @todo The result may be incorrect for compound and collaborative services.
      */
     public function getExtrasDuration()
     {
-        return (int) Proxy\ServiceExtras::getTotalDuration( $this->extras );
+        return $this->consider_extras_duration
+            ? (int) Proxy\ServiceExtras::getTotalDuration( $this->extras )
+            : 0;
+    }
+
+    /**
+     * Distribute extras across slots.
+     *
+     * @return array
+     */
+    public function distributeExtrasAcrossSlots()
+    {
+        $result = array();
+
+        $with_sub_services = $this->getService()->withSubServices();
+        $extras = $this->getExtras();
+        foreach ( $this->getSlots() as $key => $slot ) {
+            list ( $service_id, $staff_id, $datetime ) = $slot;
+            $service = Entities\Service::find( $service_id );
+
+            if ( $with_sub_services ) {
+                $result[ $key ] = array();
+                foreach ( $service->getExtras() as $item ) {
+                    $extras_id = $item->getId();
+                    if ( isset ( $extras[ $extras_id ] ) ) {
+                        $result[ $key ][ $extras_id ] = $extras[ $extras_id ];
+                        // Extras are assigned only to one/unique service,
+                        // and won't be multiplied across.
+                        unset ( $extras[ $extras_id ] );
+                    }
+                }
+            } else {
+                $result[ $key ] = $extras;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -542,6 +588,19 @@ class CartItem
     public function setFirstInSeries( $first_in_series )
     {
         $this->first_in_series = $first_in_series;
+
+        return $this;
+    }
+
+    /**
+     * Sets consider_extras_duration
+     *
+     * @param bool $consider_extras_duration
+     * @return $this
+     */
+    public function setConsiderExtrasDuration( $consider_extras_duration )
+    {
+        $this->consider_extras_duration = $consider_extras_duration;
 
         return $this;
     }

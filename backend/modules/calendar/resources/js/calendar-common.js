@@ -35,27 +35,15 @@ jQuery(function ($) {
                     action: 'bookly_get_staff_appointments',
                     csrf_token: obj.options.l10n.csrf_token,
                     staff_ids: function () {
-                        var ids = [];
                         if (obj.options.is_backend && obj.options.getCurrentStaffId() == 0) {
-                            var staffMembers = obj.options.getStaffMembers();
-                            for (var i = 0; i < staffMembers.length; ++i) {
-                                ids.push(staffMembers[i].id);
-                            }
+                            return obj.options.getStaffMemberIds();
                         } else {
-                            ids.push(obj.options.getCurrentStaffId());
+                            return [obj.options.getCurrentStaffId()];
                         }
-                        return ids;
                     },
                     location_ids: function() {
                         if (obj.options.is_backend) {
-                            var ids = [];
-                            $('.bookly-js-locations-filter input').each(function () {
-                                var input = $(this);
-                                if (input.prop('checked')) {
-                                    ids.push(input.val());
-                                }
-                            });
-                            return ids;
+                            return obj.options.getLocationIds();
                         } else {
                             return ['all'];
                         }
@@ -65,20 +53,17 @@ jQuery(function ($) {
             eventAfterRender: function (calEvent, $calEventList, calendar) {
                 if (calEvent.rendering !== 'background') {
                     $calEventList.each(function () {
-                        var $calEvent   = $(this),
-                            titleHeight = $calEvent.find('.fc-title').height(),
-                            origHeight  = $calEvent.outerHeight()
-                        ;
-                        $calEvent.removeClass('fc-short');
-                        if (origHeight < titleHeight) {
-                            var z_index = $calEvent.zIndex();
-                            // Mouse handlers.
-                            $calEvent.on('mouseenter', function () {
-                                $calEvent.css({'z-index': 64, bottom: '', height: ''});
+                        var $calEvent  = $(this),
+                            origHeight = $calEvent.outerHeight(),
+                            z_index    = $calEvent.zIndex();
+                        // Mouse handlers.
+                        $calEvent
+                            .on('mouseenter', function () {
+                                $calEvent.css({'z-index': 64, bottom: '', 'min-height': origHeight, height: ''});
                             }).on('mouseleave', function () {
                                 $calEvent.css({'z-index': z_index, height: origHeight});
-                            });
-                        }
+                            })
+                            .removeClass('fc-short');
                     });
                 }
             },
@@ -308,7 +293,8 @@ jQuery(function ($) {
     Calendar.prototype.options = {
         fullcalendar: {},
         getCurrentStaffId: function () { return -1; },
-        getStaffMembers:   function () { return []; },
+        getStaffMemberIds: function () { return []; },
+        getLocationIds:    function () { return []; },
         l10n: {},
         is_backend: true
     };

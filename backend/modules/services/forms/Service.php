@@ -18,13 +18,16 @@ class Service extends Lib\Base\Form
     {
         $fields = array(
             'id',
+            'category_id',
             'title',
             'duration',
+            'slot_length',
             'price',
-            'category_id',
             'color',
+            'deposit',
             'capacity_min',
             'capacity_max',
+            'one_booking_per_slot',
             'padding_left',
             'padding_right',
             'package_life_time',
@@ -38,6 +41,8 @@ class Service extends Lib\Base\Form
             'type',
             'sub_services',
             'staff_preference',
+            'staff_preferred_period_before',
+            'staff_preferred_period_after',
             'recurrence_enabled',
             'recurrence_frequencies',
             'visibility',
@@ -46,6 +51,8 @@ class Service extends Lib\Base\Form
             'unit_duration',
             'units_min',
             'units_max',
+            'time_requirements',
+            'collaborative_equal_duration',
         );
 
         $this->setFields( $fields );

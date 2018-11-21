@@ -10,6 +10,9 @@ use Bookly\Frontend\Modules\Booking\Lib\Errors;
  */
 class ShortCode extends Lib\Base\Component
 {
+    /** @var bool  Whether inline CSS has already been printed or not */
+    protected static $css_printed = false;
+
     /**
      * Init component.
      */
@@ -18,70 +21,97 @@ class ShortCode extends Lib\Base\Component
         // Register short code.
         add_shortcode( 'bookly-form', array( __CLASS__, 'render' ) );
 
-        add_action(
-            get_option( 'bookly_gen_link_assets_method' ) == 'enqueue' ? 'wp_enqueue_scripts' : 'wp_loaded',
-            array( __CLASS__, 'linkAssets' )
-        );
+        // Assets.
+        if ( get_option( 'bookly_gen_link_assets_method' ) == 'enqueue' ) {
+            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'linkStyles' ) );
+            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'linkScripts' ) );
+        } else {
+            add_action( 'wp_print_styles', array( __CLASS__, 'linkStyles' ) );
+            add_action( 'wp_print_scripts', array( __CLASS__, 'linkScripts' ) );
+        }
     }
 
     /**
-     * Link assets.
+     * Link styles.
      */
-    public static function linkAssets()
+    public static function linkStyles()
     {
-        /** @var \WP_Locale $wp_locale */
+        if (
+            get_option( 'bookly_gen_link_assets_method' ) == 'enqueue' ||
+            Lib\Utils\Common::postsHaveShortCode( 'bookly-form' )
+        ) {
+            $version   = Lib\Plugin::getVersion();
+            $resources = plugins_url( 'frontend\resources', Lib\Plugin::getMainFile() );
+
+            if ( get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ) {
+                wp_enqueue_style( 'bookly-intlTelInput', $resources . '/css/intlTelInput.css', array(), $version );
+            }
+            wp_enqueue_style( 'bookly-ladda-min', $resources . '/css/ladda.min.css', array(), $version );
+            wp_enqueue_style( 'bookly-picker', $resources . '/css/picker.classic.css', array(), $version );
+            wp_enqueue_style( 'bookly-picker-date', $resources . '/css/picker.classic.date.css', array(), $version );
+            if ( is_rtl() ) {
+                wp_enqueue_style( 'bookly-rtl', $resources . '/css/bookly-rtl.css', array(), $version );
+            }
+
+            wp_enqueue_style( 'bookly-main', $resources . '/css/bookly-main.css',
+                Proxy\Shared::enqueueBookingStyles( get_option( 'bookly_cst_phone_default_country' ) != 'disabled'
+                    ? array( 'bookly-intlTelInput', 'bookly-picker-date' )
+                    : array( 'bookly-picker-date' ) ),
+                $version
+            );
+        }
+    }
+
+    /**
+     * Link scripts.
+     */
+    public static function linkScripts()
+    {
+        /** @global \WP_Locale $wp_locale */
         global $wp_locale, $sitepress;
 
-        $link_style  = get_option( 'bookly_gen_link_assets_method' ) == 'enqueue' ? 'wp_enqueue_style'  : 'wp_register_style';
-        $link_script = get_option( 'bookly_gen_link_assets_method' ) == 'enqueue' ? 'wp_enqueue_script' : 'wp_register_script';
-        $version     = Lib\Plugin::getVersion();
-        $resources   = plugins_url( 'frontend\resources', Lib\Plugin::getBasename() );
+        if (
+            get_option( 'bookly_gen_link_assets_method' ) == 'enqueue' ||
+            Lib\Utils\Common::postsHaveShortCode( 'bookly-form' )
+        ) {
+            $version   = Lib\Plugin::getVersion();
+            $resources = plugins_url( 'frontend\resources', Lib\Plugin::getMainFile() );
 
-        // Assets for [bookly-form].
-        if ( get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ) {
-            call_user_func( $link_style, 'bookly-intlTelInput', $resources . '/css/intlTelInput.css', array(), $version );
+            wp_enqueue_script( 'bookly-spin', $resources . '/js/spin.min.js', array(), $version );
+            wp_enqueue_script( 'bookly-ladda', $resources . '/js/ladda.min.js', array( 'bookly-spin' ), $version );
+            wp_enqueue_script( 'bookly-hammer', $resources . '/js/hammer.min.js', array( 'jquery' ), $version );
+            wp_enqueue_script( 'bookly-jq-hammer', $resources . '/js/jquery.hammer.min.js', array( 'jquery' ), $version );
+            wp_enqueue_script( 'bookly-picker', $resources . '/js/picker.js', array( 'jquery' ), $version );
+            wp_enqueue_script( 'bookly-picker-date', $resources . '/js/picker.date.js', array( 'bookly-picker' ), $version );
+            if ( get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ) {
+                wp_enqueue_script( 'bookly-intlTelInput', $resources . '/js/intlTelInput.min.js', array( 'jquery' ), $version );
+            }
+
+            wp_enqueue_script( 'bookly', $resources . '/js/bookly.min.js',
+                Proxy\Shared::enqueueBookingScripts( array( 'bookly-ladda', 'bookly-hammer', 'bookly-picker-date' ) ),
+                $version
+            );
+
+            // Prepare URL for AJAX requests.
+            $ajaxurl = admin_url( 'admin-ajax.php' );
+
+            // Support WPML.
+            if ( $sitepress instanceof \SitePress ) {
+                $ajaxurl = add_query_arg( array( 'lang' => $sitepress->get_current_language() ), $ajaxurl );
+            }
+
+            wp_localize_script( 'bookly', 'BooklyL10n', array(
+                'ajaxurl'    => $ajaxurl,
+                'csrf_token' => Lib\Utils\Common::getCsrfToken(),
+                'today'      => __( 'Today', 'bookly' ),
+                'months'     => array_values( $wp_locale->month ),
+                'days'       => array_values( $wp_locale->weekday ),
+                'daysShort'  => array_values( $wp_locale->weekday_abbrev ),
+                'nextMonth'  => __( 'Next month', 'bookly' ),
+                'prevMonth'  => __( 'Previous month', 'bookly' ),
+                'show_more'  => __( 'Show more', 'bookly' ),
+            ) );
         }
-        call_user_func( $link_style, 'bookly-ladda-min',    $resources . '/css/ladda.min.css',       array(), $version );
-        call_user_func( $link_style, 'bookly-picker',       $resources . '/css/picker.classic.css',  array(), $version );
-        call_user_func( $link_style, 'bookly-picker-date',  $resources . '/css/picker.classic.date.css', array(), $version );
-        call_user_func( $link_style, 'bookly-main',         $resources . '/css/bookly-main.css',     get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ? array( 'bookly-intlTelInput', 'bookly-picker-date' ) : array( 'bookly-picker-date' ), $version );
-        if ( is_rtl() ) {
-            call_user_func( $link_style, 'bookly-rtl',      $resources . '/css/bookly-rtl.css',      array(), $version );
-        }
-        call_user_func( $link_script, 'bookly-spin',        $resources . '/js/spin.min.js',          array(), $version );
-        call_user_func( $link_script, 'bookly-ladda',       $resources . '/js/ladda.min.js',         array( 'bookly-spin' ), $version );
-        call_user_func( $link_script, 'bookly-hammer',      $resources . '/js/hammer.min.js',        array( 'jquery' ), $version );
-        call_user_func( $link_script, 'bookly-jq-hammer',   $resources . '/js/jquery.hammer.min.js', array( 'jquery' ), $version );
-        call_user_func( $link_script, 'bookly-picker',      $resources . '/js/picker.js',            array( 'jquery' ), $version );
-        call_user_func( $link_script, 'bookly-picker-date', $resources . '/js/picker.date.js',       array( 'bookly-picker' ), $version );
-        if ( get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ) {
-            call_user_func( $link_script, 'bookly-intlTelInput', $resources . '/js/intlTelInput.min.js', array( 'jquery' ), $version );
-        }
-
-        call_user_func( $link_script, 'bookly', $resources . '/js/bookly.min.js',
-            Proxy\Shared::enqueueBookingAssets( array( 'bookly-ladda', 'bookly-hammer', 'bookly-picker-date' ) ),
-            $version
-        );
-
-        // Prepare URL for AJAX requests.
-        $ajaxurl = admin_url( 'admin-ajax.php' );
-
-        // Support WPML.
-        if ( $sitepress instanceof \SitePress ) {
-            $ajaxurl = add_query_arg( array( 'lang' => $sitepress->get_current_language() ), $ajaxurl );
-        }
-
-        wp_localize_script( 'bookly', 'BooklyL10n', array(
-            'ajaxurl'    => $ajaxurl,
-            'csrf_token' => Lib\Utils\Common::getCsrfToken(),
-            'today'      => __( 'Today', 'bookly' ),
-            'months'     => array_values( $wp_locale->month ),
-            'days'       => array_values( $wp_locale->weekday ),
-            'daysShort'  => array_values( $wp_locale->weekday_abbrev ),
-            'nextMonth'  => __( 'Next month', 'bookly' ),
-            'prevMonth'  => __( 'Previous month', 'bookly' ),
-            'show_more'  => __( 'Show more', 'bookly' ),
-        ) );
     }
 
     /**
@@ -95,38 +125,6 @@ class ShortCode extends Lib\Base\Component
     {
         // Disable caching.
         Lib\Utils\Common::noCache();
-
-        $assets = '';
-
-        if ( get_option( 'bookly_gen_link_assets_method' ) == 'print' ) {
-            $print_assets = ! wp_script_is( 'bookly', 'done' );
-            if ( $print_assets ) {
-                ob_start();
-
-                // The styles and scripts are registered in Frontend.php
-                wp_print_styles( 'bookly-intlTelInput' );
-                wp_print_styles( 'bookly-ladda-min' );
-                wp_print_styles( 'bookly-picker' );
-                wp_print_styles( 'bookly-picker-date' );
-                wp_print_styles( 'bookly-main' );
-
-                wp_print_scripts( 'bookly-spin' );
-                wp_print_scripts( 'bookly-ladda' );
-                wp_print_scripts( 'bookly-picker' );
-                wp_print_scripts( 'bookly-picker-date' );
-                wp_print_scripts( 'bookly-hammer' );
-                wp_print_scripts( 'bookly-jq-hammer' );
-                wp_print_scripts( 'bookly-intlTelInput' );
-
-                Proxy\Shared::printBookingAssets();
-
-                wp_print_scripts( 'bookly' );
-
-                $assets = ob_get_clean();
-            }
-        } else {
-            $print_assets = true; // to print CSS in template.
-        }
 
         // Generate unique form id.
         $form_id = uniqid();
@@ -178,6 +176,11 @@ class ShortCode extends Lib\Base\Component
             'hide_week_days'         => in_array( 'week_days', $fields_to_hide ),
             'hide_time_range'        => in_array( 'time_range', $fields_to_hide ),
         );
+        if ( $form_attributes['hide_categories'] && $category_id ) {
+            // Keeping 'admin' preselected category,
+            // for case when customer clicks back to Service step.
+            $form_attributes['const_category_id'] = $category_id;
+        }
 
         // Set service step fields for Add-ons.
         if ( Lib\Config::customDurationActive() && get_option( 'bookly_custom_duration_enabled' ) ) {
@@ -210,17 +213,6 @@ class ShortCode extends Lib\Base\Component
         Lib\Session::setFormVar( $form_id, 'defaults', compact( 'service_id', 'staff_id', 'location_id', 'category_id' ) );
         Lib\Session::setFormVar( $form_id, 'last_touched', time() );
 
-        $skip_steps = array(
-            'service_part1' => (int) $hide_service_part1,
-            'service_part2' => (int) $hide_service_part2,
-            'extras'        => (int) ( ! Lib\Config::serviceExtrasActive() || ! get_option( 'bookly_service_extras_enabled' ) ),
-            'repeat'        => (int) ( ! Lib\Config::recurringAppointmentsActive() || ! get_option( 'bookly_recurring_appointments_enabled' ) ),
-            'cart'          => (int) ( Lib\Config::wooCommerceEnabled() ?: ! Lib\Config::showStepCart() ),
-        );
-
-        // Custom CSS.
-        $custom_css = get_option( 'bookly_app_custom_styles' );
-
         // Errors.
         $errors = array(
             Errors::SESSION_ERROR               => __( 'Session error.', 'bookly' ),
@@ -231,13 +223,23 @@ class ShortCode extends Lib\Base\Component
             Errors::PAYMENT_ERROR               => __( 'Error.', 'bookly' ),
             Errors::INCORRECT_USERNAME_PASSWORD => __( 'Incorrect username or password.' ),
         );
-        $errors = Proxy\Shared::prepareBookingErrorCodes( $errors );
 
         // Set parameters for bookly form.
         $bookly_options = array(
             'form_id'              => $form_id,
             'status'               => $status,
-            'skip_steps'           => $skip_steps,
+            'skip_steps'           => array(
+                /**
+                 * [extras,time,repeat]
+                 * can be modified @see Proxy\Shared::booklyFormOptions
+                 */
+                'service_part1' => (int) $hide_service_part1,
+                'service_part2' => (int) $hide_service_part2,
+                'extras'        => (int) true,
+                'time'          => (int) false,
+                'repeat'        => (int) ( ! Lib\Config::recurringAppointmentsActive() || ! get_option( 'bookly_recurring_appointments_enabled' ) ),
+                'cart'          => (int) ( Lib\Config::wooCommerceEnabled() ?: ! Lib\Config::showStepCart() ),
+            ),
             'errors'               => $errors,
             'form_attributes'      => $form_attributes,
             'use_client_time_zone' => (int) Lib\Config::useClientTimeZone(),
@@ -247,9 +249,9 @@ class ShortCode extends Lib\Base\Component
 
         $bookly_options = Proxy\Shared::booklyFormOptions( $bookly_options );
 
-        return $assets . self::renderTemplate(
+        return self::renderTemplate(
             'short_code',
-            compact( 'print_assets', 'form_id', 'custom_css', 'bookly_options' ),
+            compact( 'form_id', 'bookly_options' ),
             false
         );
     }

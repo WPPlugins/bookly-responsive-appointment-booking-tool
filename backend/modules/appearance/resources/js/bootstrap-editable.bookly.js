@@ -13,7 +13,7 @@ jQuery(function($) {
         value2html: function (values, element) {
             $.each(values, function (option_name, option_value) {
                 // Find all elements which display option value.
-                $('.bookly-js-option.' + option_name).each(function () {
+                $('.bookly-js-option[data-option="' + option_name + '"]').each(function () {
                     var $this = $(this);
                     if (!$this.hasClass('editable') || $this.is(element)) {
                         // Update text.

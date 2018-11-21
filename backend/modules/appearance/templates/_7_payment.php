@@ -43,8 +43,10 @@ use Bookly\Backend\Modules\Appearance\Proxy;
         <div class="bookly-back-step bookly-js-back-step bookly-btn">
             <?php Editable::renderString( array( 'bookly_l10n_button_back' ) ) ?>
         </div>
-        <div class="bookly-next-step bookly-js-next-step bookly-btn">
-            <?php Editable::renderString( array( 'bookly_l10n_step_payment_button_next' ) ) ?>
+        <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
+            <div class="bookly-next-step bookly-js-next-step bookly-btn">
+                <?php Editable::renderString( array( 'bookly_l10n_step_payment_button_next' ) ) ?>
+            </div>
         </div>
     </div>
 </div>

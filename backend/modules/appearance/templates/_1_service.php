@@ -2,7 +2,6 @@
 use Bookly\Lib\Utils\Price;
 use Bookly\Lib\Utils\DateTime;
 use Bookly\Backend\Modules\Appearance\Proxy;
-use Bookly\Lib\Config;
 use Bookly\Backend\Components\Appearance\Editable;
 /** @var WP_Locale $wp_locale */
 global $wp_locale;
@@ -150,10 +149,12 @@ global $wp_locale;
                 <div class="bookly-right bookly-mobile-prev-step bookly-js-mobile-prev-step bookly-btn bookly-none">
                     <?php Editable::renderString( array( 'bookly_l10n_button_back' ) ) ?>
                 </div>
-                <div class="bookly-next-step bookly-js-next-step bookly-btn">
-                    <?php Editable::renderString( array( 'bookly_l10n_step_service_button_next' ) ) ?>
-                </div>
                 <button class="bookly-go-to-cart bookly-js-go-to-cart bookly-round bookly-round-md ladda-button"><span><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
+                <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
+                    <div class="bookly-next-step bookly-js-next-step bookly-btn">
+                        <?php Editable::renderString( array( 'bookly_l10n_step_service_button_next' ) ) ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

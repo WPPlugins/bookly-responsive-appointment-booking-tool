@@ -29,7 +29,8 @@ abstract class Plugin extends Base\Plugin
         // Init ajax.
         Backend\Components\Dialogs\Appointment\Delete\Ajax::init();
         Backend\Components\Dialogs\Appointment\Edit\Ajax::init();
-        Backend\Components\Dialogs\Customer\EditAjax::init();
+        Backend\Components\Dialogs\Customer\Edit\Ajax::init();
+        Backend\Components\Dialogs\Customer\Delete\Ajax::init();
         Backend\Components\Dialogs\Payment\Ajax::init();
         Backend\Components\Notices\CollectStatsAjax::init();
         Backend\Components\Notices\LiteRebrandingAjax::init();

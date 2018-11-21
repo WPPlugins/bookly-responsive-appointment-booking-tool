@@ -1,6 +1,6 @@
 jQuery(function($) {
     // Remember user choice in the modal dialog.
-    var update_staff_choice   = null,
+    var updateStaffChoice     = null,
         $no_result            = $('#bookly-services-wrapper .no-result'),
         $new_category_popover = $('#bookly-new-category'),
         $new_category_form    = $('#new-category-form'),
@@ -215,47 +215,200 @@ jQuery(function($) {
             delete_services(ajaxurl, data);
         })
 
-        .on('change', 'input.bookly-check-all-entities, input.bookly-js-check-entity', function () {
-            var $container = $(this).parents('.form-group');
-            if ($(this).hasClass('bookly-check-all-entities')) {
-                $container.find('.bookly-js-check-entity').prop('checked', $(this).prop('checked'));
-            } else {
-                $container.find('.bookly-check-all-entities').prop('checked', $container.find('.bookly-js-check-entity:not(:checked)').length == 0);
+        // On service expand.
+        .on('show.bs.collapse', '.bookly-js-collapse', function () {
+            if ($(this).data('bookly-inited')) {
+                return;
             }
-            var $form = $(this).closest('.panel.bookly-js-collapse'),
-                service_id   = $form.data('service-id'),
-                service_type = $form.find('.bookly-js-service-type input[name="type"]:checked').val(),
-                staff_index  = $(this).closest('li').index() + 1;
-            if (service_type == 'simple' && !$(this).is(':checked')) {
-                $('#services_list .panel.bookly-js-collapse').each(function () {
-                    if ($(this).find('.bookly-js-service-type input[name="type"]:checked').val() == 'package' && $(this).find('.bookly-js-package-sub-service option:selected').val() == service_id) {
-                        $(this).find('.bookly-entity-selector li:nth-child(' + staff_index + ') input').prop('checked', false).trigger('change');
+            var $panel            = $(this),
+                $types            = $panel.find('.bookly-js-service-type input:radio'),  // simple, compound, package, etc.
+                $colorPicker      = $panel.find('.bookly-js-color-picker'),
+                $visibility       = $panel.find('.bookly-js-visibility'),
+                $capacity         = $panel.find('.bookly-js-capacity'),  // min and max
+                $duration         = $panel.find('.bookly-js-duration'),
+                $unitsBlock       = $panel.find('.bookly-js-units-block'),
+                $unitDuration     = $panel.find('.bookly-js-unit-duration'),
+                $providers        = $panel.find('.bookly-js-providers'),
+                $staffPreference  = $panel.find('[name=staff_preference]'),
+                $prefStaffOrder   = $panel.find('.bookly-js-preferred-staff-order'),
+                $prefStaffList    = $panel.find('.bookly-js-preferred-staff-list'),
+                $prefPeriod       = $panel.find('.bookly-js-preferred-period'),
+                $simpleDropdowns  = $panel.find('.bookly-js-simple-dropdown'),
+                $repeat           = $panel.find('[name="recurrence_enabled"]'),
+                $btnSave          = $panel.find('.ajax-service-send'),
+                $btnReset         = $panel.find('.js-reset')
+            ;
+            // Color picker.
+            initColorPicker($colorPicker);
+            // Visibility.
+            $visibility.on('change', function () {
+                $panel.find('.bookly-js-groups-list').toggle(this.value === 'group');
+            });
+            // Capacity (min and max).
+            $capacity.on('keyup change', function () {
+                checkCapacityError($panel);
+            });
+            // Duration (and unit duration).
+            $duration.on('change', function () {
+                if (this.value === 'custom') {
+                    $panel.find('.bookly-js-price-label').hide();
+                    $panel.find('.bookly-js-unit-price-label').show();
+                    $unitsBlock.show();
+                } else {
+                    $panel.find('.bookly-js-price-label').show();
+                    $panel.find('.bookly-js-unit-price-label').hide();
+                    $unitDuration.val(this.value);
+                    $unitsBlock.hide();
+                }
+            });
+            $duration.add($unitDuration).on('change', function () {
+                $panel.find('[name=start_time_info]').closest('.form-group').toggle(this.value >= 86400);
+            }).trigger('change');
+            // Providers.
+            $providers.booklyDropdown({
+                onChange: function (values, selected, all) {
+                    var serviceId   = $panel.data('service-id'),
+                        serviceType = $types.filter(':checked').val()
+                    ;
+                    if (serviceType === 'simple' && !selected) {
+                        $('#services_list .panel.bookly-js-collapse').each(function () {
+                            var $anotherPanel = $(this);
+                            if (
+                                $anotherPanel.find('.bookly-js-service-type input:radio:checked').val() === 'package' &&
+                                $anotherPanel.find('.bookly-js-package-sub-service option:selected').val() == serviceId
+                            ) {
+                                if (all) {
+                                    $anotherPanel.find('.bookly-js-providers').booklyDropdown('deselectAll');
+                                } else {
+                                    $anotherPanel.find('.bookly-js-providers').booklyDropdown('deselect', values);
+                                }
+                            }
+                        });
+                    } else if (serviceType === 'package' && selected) {
+                        var subServiceId = $panel.find('.bookly-js-package-sub-service option:selected').val();
+                        $('#services_list .panel.bookly-js-collapse').each(function () {
+                            var $anotherPanel = $(this);
+                            if (
+                                $anotherPanel.find('.bookly-js-service-type input:radio:checked').val() === 'simple' &&
+                                $anotherPanel.data('service-id') == subServiceId
+                            ) {
+                                if (all) {
+                                    $anotherPanel.find('.bookly-js-providers').booklyDropdown('selectAll');
+                                } else {
+                                    $anotherPanel.find('.bookly-js-providers').booklyDropdown('select', values);
+                                }
+                            }
+                        });
                     }
-                });
-            } else if (service_type == 'package' && $(this).is(':checked')) {
-                var sub_service_id = $form.find('.bookly-js-package-sub-service option:selected').val();
-                $('#services_list .panel.bookly-js-collapse').each(function () {
-                    if ($(this).find('.bookly-js-service-type input[name="type"]:checked').val() == 'simple' && $(this).data('service-id') == sub_service_id) {
-                        $(this).find('.bookly-entity-selector li:nth-child(' + staff_index + ') input').prop('checked', true).trigger('change');
-                    }
-                });
-            }
-            updateSelectorButton($container);
-        })
+                }
+            });
+            $repeat.on('change', function() {
+                checkRepeatError($panel);
+            });
+            $panel.on('change', '.bookly-js-frequencies input[type="checkbox"]', function () {
+                checkRepeatError($panel);
+            });
+            // Providers preference.
+            $staffPreference.on('change', function () {
+                /** @see Service::PREFERRED_ORDER */
+                if (this.value === 'order' && $prefStaffList.html() === '') {
+                    var $staffIds  = $staffPreference.data('default'),
+                        $draggable = $('<div class="bookly-flex-cell"><i class="bookly-js-handle bookly-margin-right-sm bookly-icon bookly-icon-draghandle bookly-cursor-move"></i><input type="hidden" name="positions[]" /></div>');
+                    $draggable.find('i').attr('title', BooklyL10n.reorder);
+                    $staffIds.forEach(function (staffId) {
+                        $prefStaffList.append($draggable.clone().find('input').val(staffId).end().append(BooklyL10n.staff[staffId]));
+                    });
+                    Object.keys(BooklyL10n.staff).forEach(function (staffId) {
+                        staffId = parseInt(staffId);
+                        if ($staffIds.indexOf(staffId) === -1) {
+                            $prefStaffList.append($draggable.clone().find('input').val(staffId).end().append(BooklyL10n.staff[staffId]));
+                        }
+                    });
+                }
+                $prefStaffOrder.toggle(this.value === 'order');
+                $prefPeriod.toggle(this.value === 'least_occupied_for_period' || this.value === 'most_occupied_for_period');
+            }).trigger('change');
+            // Preferred providers order.
+            $prefStaffList.sortable({
+                axis   : 'y',
+                handle : '.bookly-js-handle',
+                update : function() {
+                    var positions = [];
+                    $prefStaffList.find('input').each(function () {
+                        positions.push(this.value);
+                    });
+                    $.ajax({
+                        type : 'POST',
+                        url  : ajaxurl,
+                        data : {
+                            action: 'bookly_pro_update_service_staff_preference_orders',
+                            service_id: $panel.data('service-id'),
+                            positions: positions,
+                            csrf_token: BooklyL10n.csrf_token
+                        }
+                    });
+                }
+            });
+            // Save button.
+            $btnSave.on('click', function (e) {
+                e.preventDefault();
+                var showModal = false;
+                if (updateStaffChoice === null) {
+                    $panel.find('.bookly-js-question').each(function () {
+                        if ($(this).data('last_value') !== this.value) {
+                            showModal = true;
+                        }
+                    });
+                }
+                if (showModal) {
+                    $update_service_modal.data('panel', $panel).modal('show');
+                } else {
+                    submitServiceFrom($panel, updateStaffChoice);
+                }
+            });
+            // Reset button.
+            $btnReset.on('click', function () {
+                var $this  = $(this),
+                    $form  = $this.closest('form');
 
-        .on('change', '.bookly-js-service-unit-duration', function () {
-            var $service = $(this).closest('.panel'),
-                $custom_duration = $service.find('.bookly-js-service-unit-fields');
-            if ($(this).val() == 'custom') {
-                $service.find('.bookly-js-price-label').hide();
-                $service.find('.bookly-js-unit-price-label').show();
-                $custom_duration.show();
-            } else {
-                $service.find('.bookly-js-price-label').show();
-                $service.find('.bookly-js-unit-price-label').hide();
-                $custom_duration.find('[name="unit_duration"]').val($(this).val())
-                $custom_duration.hide();
+                $form.trigger('reset');
+                $colorPicker.val($colorPicker.data('last-color')).trigger('change');
+                $visibility.trigger('change');
+                $duration.trigger('change');
+                checkCapacityError($panel);
+                checkRepeatError($panel);
+                $prefStaffList.html('');
+                $staffPreference.trigger('change');
+                $panel.find('.parent-range-start').trigger('change');
+                $panel.find('input[name=type]:checked').trigger('change');
+
+                setTimeout(function () {
+                    $providers.booklyDropdown('reset');
+                    $simpleDropdowns.booklyDropdown('reset');
+                    $(document.body).trigger('service.resetForm', [$panel]);
+                }, 0);
+            });
+            // Fields that are repeated at staff level.
+            $panel.find('.bookly-js-question').each(function () {
+                $(this).data('last_value', this.value);
+            });
+            // Service types.
+            if ($types.size() > 1) {
+                $panel.find('.bookly-js-service-type').show();
+                $types.on( 'change', function () {
+                    $panel.find('.bookly-js-service').hide();
+                    $panel.find('.bookly-js-service-' + this.value).css('display', '');
+                    // Toggle class for inline or vertical displaying color circles
+                    $('.bookly-js-service-color', $panel).toggleClass('bookly-vertical-colors', this.value === 'collaborative');
+                });
+                $types.filter(':checked').trigger('change');
             }
+            // Other drop-downs.
+            $simpleDropdowns.booklyDropdown();
+
+            $(document.body).trigger( 'service.initForm', [$panel] );
+
+            $panel.data('bookly-inited', 1);
         });
 
     // Modal window events.
@@ -263,23 +416,23 @@ jQuery(function($) {
         .on('click', '.bookly-yes', function() {
             $update_service_modal.modal('hide');
             if ( $('#bookly-remember-my-choice').prop('checked') ) {
-                update_staff_choice = true;
+                updateStaffChoice = true;
             }
-            submitServiceFrom($update_service_modal.data('input'),true);
+            submitServiceFrom($update_service_modal.data('panel'), true);
         })
         .on('click', '.bookly-no', function() {
             if ( $('#bookly-remember-my-choice').prop('checked') ) {
-                update_staff_choice = false;
+                updateStaffChoice = false;
             }
-            submitServiceFrom($update_service_modal.data('input'),false);
-        });
+            submitServiceFrom($update_service_modal.data('panel'), false);
+        })
+    ;
 
     function refreshList(response,service_id) {
         var $list = $('#bookly-js-services-list');
         $list.html(response);
         if (response.indexOf('panel') >= 0) {
             $no_result.hide();
-            onCollapseInitServiceForm();
             $list.booklyHelp();
         } else {
             $no_result.show();
@@ -300,19 +453,18 @@ jQuery(function($) {
         });
     }
 
-    function submitServiceFrom($form, update_staff) {
-        $form.find('input[name=update_staff]').val(update_staff ? 1 : 0);
-        $form.find('input[name=package_service_changed]').val($form.find('[name=package_service]').data('last_value') != $form.find('[name=package_service]').val() ? 1 : 0);
-        var ladda = rangeTools.ladda($form.find('button.ajax-service-send[type=submit]').get(0)),
-            data = $form.serializeArray();
-        $(document.body).trigger( 'service.submitForm', [ $form, data ] );
+    function submitServiceFrom($panel, update_staff) {
+        $panel.find('input[name=update_staff]').val(update_staff ? 1 : 0);
+        $panel.find('input[name=package_service_changed]').val($panel.find('[name=package_service]').data('last_value') != $panel.find('[name=package_service]').val() ? 1 : 0);
+        var ladda = rangeTools.ladda($panel.find('button.ajax-service-send[type=submit]').get(0)),
+            data = $panel.find('form').serializeArray();
+        $(document.body).trigger( 'service.submitForm', [ $panel, data ] );
         $.post(ajaxurl, data, function (response) {
             if (response.success) {
-                var $panel = $form.parents('.bookly-js-collapse'),
-                    $price = $form.find('[name=price]'),
-                    $capacity_min = $form.find('[name=capacity_min]'),
-                    $capacity_max = $form.find('[name=capacity_max]'),
-                    $package_service = $form.find('[name=package_service]');
+                var $price = $panel.find('[name=price]'),
+                    $capacity_min = $panel.find('[name=capacity_min]'),
+                    $capacity_max = $panel.find('[name=capacity_max]'),
+                    $package_service = $panel.find('[name=package_service]');
                 $panel.find('.bookly-js-service-color span:nth-child(1)').css('background-color', response.data.colors[0] == '-1' ? 'grey' : response.data.colors[0]);
                 $panel.find('.bookly-js-service-color span:nth-child(2)').css('background-color', response.data.colors[1] == '-1' ? 'grey' : response.data.colors[1]);
                 $panel.find('.bookly-js-service-color span:nth-child(3)').css('background-color', response.data.colors[2] == '-1' ? 'grey' : response.data.colors[2]);
@@ -328,7 +480,7 @@ jQuery(function($) {
                     ExtrasL10n.list = response.data.new_extras_list
                 }
                 $.each(response.data.new_extras_ids, function (front_id, real_id) {
-                    var $li = $('li.extra.new[data-extra-id="' + front_id + '"]', $form);
+                    var $li = $('li.extra.new[data-extra-id="' + front_id + '"]', $panel);
                     $('[name^="extras"]', $li).each(function () {
                         $(this).attr('name', $(this).attr('name').replace('[' + front_id + ']', '[' + real_id + ']'));
                     });
@@ -349,21 +501,6 @@ jQuery(function($) {
         });
     }
 
-    function updateSelectorButton($container) {
-        var entity_checked = $container.find('.bookly-js-check-entity:checked').length,
-            $check_all = $container.find('.bookly-check-all-entities');
-        if (entity_checked == 0) {
-            $container.find('.bookly-entity-counter').text($check_all.data('nothing'));
-        } else if (entity_checked == 1) {
-            $container.find('.bookly-entity-counter').text($container.find('.bookly-js-check-entity:checked').data('title'));
-        } else if (entity_checked == $container.find('.bookly-js-check-entity').length) {
-            $container.find('.bookly-entity-counter').text($check_all.data('title'));
-            $check_all.prop('checked', true);
-        } else {
-            $container.find('.bookly-entity-counter').text(entity_checked + '/' + $container.find('.bookly-js-check-entity').length);
-        }
-    }
-
     function checkCapacityError($panel) {
         if (parseInt($panel.find('[name="capacity_min"]').val()) > parseInt($panel.find('[name="capacity_max"]').val())) {
             $panel.find('form .bookly-js-services-error').html(BooklyL10n.capacity_error);
@@ -373,6 +510,20 @@ jQuery(function($) {
             $panel.find('form .bookly-js-services-error').html('');
             $panel.find('[name="capacity_min"]').closest('.form-group').removeClass('has-error');
             $panel.find('form .ajax-service-send').prop('disabled', false);
+        }
+    }
+
+    function checkRepeatError($panel) {
+        if ($panel.find('[name="recurrence_enabled"]').val() == 1 && $panel.find('[name="recurrence_frequencies[]"]:checked').length == 0) {
+            $panel.find('[name="recurrence_enabled"]').closest('.form-group').addClass('has-error');
+            $panel.find('.bookly-js-frequencies').closest('.form-group').find('button.dropdown-toggle').addClass('btn-danger').removeClass('btn-default');
+            $panel.find('form .bookly-js-recurrence-error').html(BooklyL10n.recurrence_error);
+            $panel.find('.ajax-service-send').prop('disabled', true);
+        } else {
+            $panel.find('[name="recurrence_enabled"]').closest('.form-group').removeClass('has-error');
+            $panel.find('.bookly-js-frequencies').closest('.form-group').find('button.dropdown-toggle').removeClass('btn-danger').addClass('btn-default');
+            $panel.find('form .bookly-js-recurrence-error').html('');
+            $panel.find('.ajax-service-send').prop('disabled', false);
         }
     }
 
@@ -425,138 +576,5 @@ jQuery(function($) {
         }
     }
 
-    function onCollapseInitServiceForm() {
-        $('.panel-collapse').on('show.bs.collapse.bookly', function () {
-            var $panel = $(this),
-                $staff_preference = $panel.find('[name=staff_preference]:last-child'),
-                $staff_list = $panel.find('.bookly-staff-list'),
-                $staff_box  = $panel.find('.bookly-preference-box');
-            $staff_preference.on('change', function () {
-                /** @see Service::PREFERRED_ORDER */
-                if ($(this).val() == 'order' && $staff_list.html() == '') {
-                    var $staff_ids = $staff_preference.data('default'),
-                        $draggable = $('<div class="bookly-flex-cell"><i class="bookly-js-handle bookly-margin-right-sm bookly-icon bookly-icon-draghandle bookly-cursor-move" title="' + BooklyL10n.reorder + '"></i><input type="hidden" name="positions[]"></div>');
-
-                    $staff_ids.forEach(function (staff_id) {
-                        $staff_list.append($draggable.clone().find('input').val(staff_id).end().append(BooklyL10n.staff[staff_id]));
-                    });
-                    Object.keys(BooklyL10n.staff).forEach(function (staff_id) {
-                        staff_id = parseInt(staff_id);
-                        if ($staff_ids.indexOf(staff_id) == -1) {
-                            $staff_list.append($draggable.clone().find('input').val(staff_id).end().append(BooklyL10n.staff[staff_id]));
-                        }
-                    });
-                }
-                $staff_box.toggle($(this).val() == 'order');
-            }).trigger('change');
-
-            initColorPicker($panel.find('.bookly-js-color-picker'));
-
-            $('[data-toggle="popover"]').popover({
-                html: true,
-                placement: 'top',
-                trigger: 'hover',
-                template: '<div class="popover bookly-font-xs" style="width: 220px" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-            });
-
-            $.each($('.bookly-js-entity-selector-container',$(this)), function () {
-                updateSelectorButton($(this));
-            });
-
-            $panel
-                .find('[name=duration], [name=unit_duration]').on('change', function () {
-                    $panel.find('[name=start_time_info]').closest('.form-group').toggle($(this).val() >= 86400);
-                }).trigger('change');
-
-            $panel
-                .find('.bookly-js-capacity').on('keyup change', function () {
-                    checkCapacityError($(this).parents('.bookly-js-collapse'));
-                });
-
-            $panel
-                .find('.bookly-js-visibility').on('change', function () {
-                    if ($(this).val() == 'group') {
-                        $panel.find('.bookly-js-groups-list').show();
-                    } else {
-                        $panel.find('.bookly-js-groups-list').hide();
-                    }
-                });
-
-            $panel
-                .find('.ajax-service-send').on('click', function (e) {
-                    e.preventDefault();
-                    var $form = $(this).parents('form'),
-                        show_modal = false;
-                    if(update_staff_choice === null) {
-                        $('.bookly-question', $form).each(function () {
-                            if ($(this).data('last_value') != this.value) {
-                                show_modal = true;
-                            }
-                        });
-                    }
-                    if (show_modal) {
-                        $update_service_modal.data('input', $form).modal('show');
-                    } else {
-                        submitServiceFrom($form, update_staff_choice);
-                    }
-                });
-
-            $panel
-                .find('.js-reset').on('click', function () {
-                    $(this).parents('form').trigger('reset');
-                    var $color = $(this).parents('form').find('.wp-color-picker'),
-                        $panel = $(this).parents('.bookly-js-collapse');
-                    $.each($('.bookly-js-entity-selector-container',$panel), function () {
-                        updateSelectorButton($(this));
-                    });
-                    checkCapacityError($panel);
-
-                    $staff_list.html('');
-                    $staff_preference.trigger('change');
-                    $color.val($color.data('last-color')).trigger('change');
-                    $panel.find('.parent-range-start').trigger('change');
-                    $panel.find('input[name=type]:checked').trigger('change');
-                    $panel.find('.bookly-js-visibility').trigger('change');
-                    $panel.find('.bookly-js-service-unit-duration').trigger('change');
-                    setTimeout(function () {
-                        $(document.body).trigger('service.resetForm', [$panel, $panel.closest('.panel').data('service-id')]);
-                    }, 50);
-                });
-
-            $panel
-                .find('.bookly-question').each(function () {
-                    $(this).data('last_value', this.value);
-                });
-
-            $staff_list.sortable({
-                axis   : 'y',
-                handle : '.bookly-js-handle',
-                update : function() {
-                    var positions = [];
-                    $('[name="positions[]"]', $(this)).each(function () {
-                        positions.push(this.value);
-                    });
-
-                    $.ajax({
-                        type : 'POST',
-                        url  : ajaxurl,
-                        data : {action: 'bookly_pro_update_service_staff_preference_orders', service_id: $(this).data('service_id'), positions: positions, csrf_token: BooklyL10n.csrf_token}
-                    });
-                }
-            });
-            $panel.unbind('show.bs.collapse.bookly');
-            if ($('input[name=type]', $panel).length > 1) {
-                $('.bookly-js-service-type', $panel).show();
-                $('input[name=type]', $panel).on( 'change', function(){
-                    $panel.closest('.panel').find('.bookly-js-service').hide();
-                    $panel.closest('.panel').find('.bookly-js-service-' + this.value).show();
-                });
-                $('input[name=type]:checked', $panel).trigger('change');
-            }
-            $(document.body).trigger( 'service.initForm', [ $panel, $panel.closest('.panel').data('service-id') ] );
-        });
-    }
-
     makeSortable();
-    onCollapseInitServiceForm();
 });

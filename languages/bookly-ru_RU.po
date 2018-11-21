@@ -233,26 +233,6 @@ msgid "Yesterday"
 msgstr "Вчера"
 
 #: 
-msgid "Last 7 Days"
-msgstr "Последние 7 дней"
-
-#: 
-msgid "Last 30 Days"
-msgstr "Последние 30 дней"
-
-#: 
-msgid "This Month"
-msgstr "Текущий месяц"
-
-#: 
-msgid "Next Month"
-msgstr "Следующий месяц"
-
-#: 
-msgid "Custom Range"
-msgstr "Произвольный диапазон"
-
-#: 
 msgid "Apply"
 msgstr "Применить"
 
@@ -577,16 +557,8 @@ msgid "Delete customers"
 msgstr "Удаление клиентов"
 
 #: 
-msgid "You are about to delete customers which may have WordPress accounts associated to them. Do you want to delete those accounts too (if there are any)?"
-msgstr "Вы собираетесь удалить клиентов, с которыми могут быть связаны учётные записи пользователей в WordPress'е. Желаете ли вы, чтобы эти учётные записи (если таковые имеются) были удалены вместе с клиентами?"
-
-#: 
 msgid "Remember my choice"
 msgstr "Запомнить мой выбор"
-
-#: 
-msgid "No, delete just customers"
-msgstr "Нет, удалить только клиентов"
 
 #: 
 msgid "Yes"
@@ -841,10 +813,6 @@ msgid "To send scheduled notifications please execute the following command hour
 msgstr "Чтобы отправлять напоминающие уведомления, пожалуйста, настройте cron на ежечасное исполнение следующей команды:"
 
 #: 
-msgid "Last Month"
-msgstr "Прошлый месяц"
-
-#: 
 msgid "No payments for selected period and criteria."
 msgstr "Нет платежей за выбранный период и по выбранным критериям."
 
@@ -1063,10 +1031,6 @@ msgstr "Длина временного интервала"
 #: 
 msgid "Select a time interval which will be used as a step when building all time slots in the system."
 msgstr "Выберите интервал, который будет использован в качестве шага при построении всех временных списков в системе."
-
-#: 
-msgid "Service duration as slot length"
-msgstr "Продолжительность сервиса в качестве длины интервала"
 
 #: 
 msgid "Enable this option to make slot length equal to service duration at the Time step of booking form."
@@ -1291,10 +1255,6 @@ msgstr "Обычная цена"
 #: 
 msgid "Price with custom Sender ID"
 msgstr "Цена с изменённым ID отправителя"
-
-#: 
-msgid "If you do not see your country in the list please contact us at <a href=\"mailto:support@ladela.com\">support@ladela.com</a>."
-msgstr "Если вы не нашли свою страну в списке, пожалуйста, свяжитесь с нами по адресу <a href=\"mailto:support@ladela.com\">support@ladela.com</a>."
 
 #: 
 msgid "Order"
@@ -1559,10 +1519,6 @@ msgstr "Нужна помощь? Свяжитесь с нами тут."
 #: 
 msgid "Contact Us"
 msgstr "Свяжитесь с нами"
-
-#: 
-msgid "We care about your experience using Bookly!<br/>Leave a review and tell others what you think."
-msgstr "Нам небезразличен ваш опыт использования Bookly!<br/>Пожалуйста, оставьте отзыв и расскажите другим, что вы думаете о продукте."
 
 #: 
 msgid "Feedback"
@@ -2681,10 +2637,6 @@ msgid "Set the URL of a page that is shown to staff when the rejection of appoin
 msgstr "Укажите URL страницы, которая будет показана сотруднику в случае, когда отказ во встрече невозможен (по причине ранее изменённого статуса и др.)."
 
 #: 
-msgid "Notification name"
-msgstr "Название уведомления"
-
-#: 
 msgid "You are trying to use the service too often. Please contact us to make a booking."
 msgstr "Вы слишком часто используете форму бронирования. Пожалуйста, свяжитесь с нами, чтобы сделать заказ."
 
@@ -3482,10 +3434,6 @@ msgid "Not allowed"
 msgstr "Не допускается"
 
 #: 
-msgid "There is no time slots for selected date."
-msgstr "Для выбранной даты нет доступного времени."
-
-#: 
 msgid "Unfortunately, you're not able to cancel the appointment because the required time limit prior to canceling has expired."
 msgstr "К сожалению, отменить это бронирование не удалось, так как истёк срок минимального промежутка времени между отменой и встречей."
 
@@ -3747,7 +3695,7 @@ msgstr "Выберите формат отображения занятости 
 
 #: 
 msgid "[Booked/Max capacity]"
-msgstr "[Заронировано/Максимальная вместимость]"
+msgstr "[Забронировано/Максимальная вместимость]"
 
 #: 
 msgid "[Available left]"
@@ -3924,20 +3872,8 @@ msgid "Locations"
 msgstr "Места"
 
 #: 
-msgid "Set services for location"
-msgstr "Укажите сервисы для места"
-
-#: 
 msgid "Use custom settings"
 msgstr "Использовать пользовательские настройки"
-
-#: 
-msgid "Use default"
-msgstr "Использовать начальное значение"
-
-#: 
-msgid "Use custom"
-msgstr "Использовать особое значение"
 
 #: 
 msgid "Select locations where the services are provided."
@@ -3946,10 +3882,6 @@ msgstr "Выберите места, в которых предоставляю�
 #: 
 msgid "Custom settings for location"
 msgstr "Пользовательские настройки для места"
-
-#: 
-msgid "Enable this setting to be able to set custom service settings for staff members for different locations."
-msgstr "Включите эту настройку, чтобы иметь возможность указывать пользовательские настройки для услуги, предоставляемой сотрудником в разных местах."
 
 #: 
 msgid "location info"
@@ -3966,10 +3898,6 @@ msgstr "Новое место"
 #: 
 msgid "Edit Location"
 msgstr "Редактировать место"
-
-#: 
-msgid "All Staff"
-msgstr "Весь персонал"
 
 #: 
 msgid "Add Location"
@@ -4897,14 +4825,6 @@ msgid "Limit appointments per customer"
 msgstr "Ограничить встречи на одного клиента"
 
 #: 
-msgid "Allows you to limit the frequency of service bookings per customer."
-msgstr "Позволяет вам задать ограничение на количество броней от одного и того же клиента за указанный промежуток времени."
-
-#: 
-msgid "per day"
-msgstr "в день"
-
-#: 
 msgid "per week"
 msgstr "в неделю"
 
@@ -4955,10 +4875,6 @@ msgstr "Причина"
 #: 
 msgid "Manual adjustment"
 msgstr "Ручная коррекция"
-
-#: 
-msgid "%s is used on another domain %s.<br/>In order to use the purchase code on this domain, please dissociate it in the admin panel of the other domain.<br/>If you do not have access to the admin area, please contact our technical support at support@ladela.com to transfer the license manually."
-msgstr "%s используется на другом домене %s.<br/>Чтобы использовать лицензионный ключ на текущем домене, пожалуйста, отсоедините его в административной панели сайта другого домена.<br/>Если у вас нет доступа к административной панели, пожалуйста, свяжитесь с нашей технической поддержкой по эл. почте support@ladela.com."
 
 #: 
 msgid "<a class=\"%s\" href=\"#\">Click here</a> to dissociate this purchase code from the current domain (use to move the plugin to another site)."
@@ -5143,10 +5059,6 @@ msgstr "страницы с другим временем"
 #: 
 msgid "Restore"
 msgstr "Восстановить"
-
-#: 
-msgid "View Series"
-msgstr "Просмотреть серию"
 
 #: 
 msgid "Some of the desired time slots are busy. System offers the nearest time slot instead. Click the Edit button to select another time if needed."
@@ -6504,4 +6416,544 @@ msgstr "Купить Bookly Pro"
 #: 
 msgid "<b>Bookly Lite rebrands into Bookly with more features available.</b><br/><br/>We have changed the architecture of Bookly Lite and Bookly to optimize the development of both plugin versions and add more features to the new free Bookly. To learn more about the major Bookly update, check our <a href=\"%s\" target=\"_blank\">blog post</a>."
 msgstr "<b>Bookly Lite переименовывается в Bookly с большим количеством доступных функций.</b><br/><br/>Мы изменили архитектуру Bookly Lite и Bookly для того, чтобы оптимизировать разработку двух версий плагина и добавить больше функций в бесплатную версию Bookly. Подробнее о новом Bookly читайте в <a href=\"%s\" target=\"_blank\">нашем блоге</a>."
+
+#: 
+msgid "Group appointments"
+msgstr "Групповые встречи"
+
+#: 
+msgid "Create new appointment for every recurring booking"
+msgstr "Создавать новую встречу для каждого повторяющегося бронирования"
+
+#: 
+msgid "Add customer to available group bookings"
+msgstr "Добавить клиента в в доступные групповые бронирования"
+
+#: 
+msgid "One booking per time slot"
+msgstr "Одно бронирование для временного интервала"
+
+#: 
+msgid "Enable this option if you want to limit the possibility of booking within the service capacity to one time."
+msgstr "Включите эту настройку, если хотите ограничить возможность бронирования в рамках вместимости услуги одним разом."
+
+#: 
+msgid "Equal duration"
+msgstr "Равная продолжительность"
+
+#: 
+msgid "Make every service duration equal to the duration of the longest one."
+msgstr "Приравнять продолжительность каждой услуги к длительности самой продолжительной из входящих в состав услуг."
+
+#: 
+msgid "Collaborative"
+msgstr "Совместный"
+
+#: 
+msgid "Collaborative service"
+msgstr "Совместный сервис"
+
+#: 
+msgid "Part of collaborative service"
+msgstr "Часть совместного сервиса"
+
+#: 
+msgid "There are no time slots for selected date."
+msgstr "Для выбранной даты нет свободных временных интервалов."
+
+#: 
+msgid "Confirm email"
+msgstr "Подтвердите адрес эл. почты"
+
+#: 
+msgid "Email confirmation doesn't match"
+msgstr "Введённые адреса эл. почты не совпадают друг с другом"
+
+#: 
+msgid "Created at any time"
+msgstr "Создана в любое время"
+
+#: 
+msgid "Created"
+msgstr "Создана"
+
+#: 
+msgid "Any time"
+msgstr "Любое время"
+
+#: 
+msgid "Last 7 days"
+msgstr "Последние 7 дней"
+
+#: 
+msgid "Last 30 days"
+msgstr "Последние 30 дней"
+
+#: 
+msgid "This month"
+msgstr "Текущий месяц"
+
+#: 
+msgid "Custom range"
+msgstr "Произвольный диапазон"
+
+#: 
+msgid "Archived"
+msgstr "В архиве"
+
+#: 
+msgid "Send invoice"
+msgstr "Отправить счёт"
+
+#: 
+msgid "Note: invoice will be sent to your PayPal email address"
+msgstr "Примечание: счёт будет отправлен на ваш адрес эл. почты PayPal"
+
+#: 
+msgid "Company address"
+msgstr "Адрес компании"
+
+#: 
+msgid "Company address line 2"
+msgstr "Адрес компании строка 2"
+
+#: 
+msgid "VAT"
+msgstr "НДС"
+
+#: 
+msgid "Company code"
+msgstr "Код компании"
+
+#: 
+msgid "Additional text to include into invoice"
+msgstr "Дополнительный текст, который можно добавить к счёту"
+
+#: 
+msgid "Confirm your email"
+msgstr "Подтвердите адрес эл. почты"
+
+#: 
+msgid "Thank you for registration."
+msgstr "Спасибо за регистрацию."
+
+#: 
+msgid "Confirmation is sent to %s."
+msgstr "Подтверждение отправлено на %s."
+
+#: 
+msgid "Once you confirm your e-mail address, you will get an access to Bookly SMS service."
+msgstr "Как только вы подтвердите свой адрес эл. почты, вы получите доступ к сервису Bookly SMS."
+
+#: 
+msgid "If you do not see your country in the list please contact us at <a href=\"mailto:support@bookly.info\">support@bookly.info</a>."
+msgstr "Если вы не нашли свою страну в списке, пожалуйста, свяжитесь с нами по адресу <a href=\"mailto:support@bookly.info\">support@bookly.info</a>."
+
+#: 
+msgid "Last month"
+msgstr "Прошлый месяц"
+
+#: 
+msgid "Hello,\n"
+"\n"
+"Thank you for registering at Bookly SMS service. Please click the link below to verify your email address.\n"
+"\n"
+"<a href='%s'>%s</a>\n"
+"\n"
+"Bookly"
+msgstr "Здравствуйте,\n"
+"\n"
+"Благодарим Вас за регистрацию в сервисе Bookly SMS. Для подтверждения адреса эл. почты, нажмите на ссылку ниже.\n"
+"\n"
+"<a href='%s'>%s</a>\n"
+"\n"
+"Bookly"
+
+#: 
+msgid "Bookly SMS service  email confirmation"
+msgstr "Сервис Bookly SMS – подтверждение адреса эл. почты"
+
+#: 
+msgid "Add new item to the category"
+msgstr "Добавить новый элемент в категорию"
+
+#: 
+msgid "Edit category name"
+msgstr "Редактировать название категории"
+
+#: 
+msgid "Delete category"
+msgstr "Удалить категорию"
+
+#: 
+msgid "Archive"
+msgstr "Архивировать"
+
+#: 
+msgid "The working time in the provider's schedule is associated with another location."
+msgstr "Указанное время в графике сотрудника связано с другим местоположением."
+
+#: 
+msgid "Set slot length as service duration"
+msgstr "Установить длину интервала в качестве продолжительности сервиса"
+
+#: 
+msgid "The time interval which is used as a step when building all time slots for the service at the Time step. The setting overrides global settings in Settings  General. Use Default to apply global settings."
+msgstr "Интервал, который будет использован в качестве шага при построении всех временных списков для услуги на шаге Время. Эта настройка переопределяет глобальные настройки, указанные в Настройки > Общие. Выберите По умолчанию, чтобы использовать глобальные настройки."
+
+#: 
+msgid "Slot length as service duration"
+msgstr "Длина интервала в качестве продолжительности сервиса"
+
+#: 
+msgid "You must select at least one repeat option for recurring services."
+msgstr "Для работы повторяющихся сервисов необходимо выбрать хотя бы одну опцию повторения."
+
+#: 
+msgid "Align buttons to the left"
+msgstr "Выровнять кнопки по левому краю"
+
+#: 
+msgid "Email confirmation field"
+msgstr "Поле подтверждения эл. почты"
+
+#: 
+msgid "Booking exceeds the working hours limit for staff member"
+msgstr "Бронирование превышает допустимое количество рабочих часов для сотрудника."
+
+#: 
+msgid "View series"
+msgstr "Просмотреть серию"
+
+#: 
+msgid "Delete customers with existing bookings"
+msgstr "Удалить клиентов с существующими бронированиями"
+
+#: 
+msgid "Deleted Customer"
+msgstr "Удалённый клиент"
+
+#: 
+msgid "Please, check your email to confirm the subscription. Thank you!"
+msgstr "Пожалуйста, проверьте свою электронную почту, чтобы подтвердить подписку. Спасибо!"
+
+#: 
+msgid "Given email address is already subscribed, thank you!"
+msgstr "Данный адрес эл. почты уже подписан, спасибо!"
+
+#: 
+msgid "This email address is not valid."
+msgstr "Этот адрес эл. почты недействителен."
+
+#: 
+msgid "Feature requests"
+msgstr "Запросы функций"
+
+#: 
+msgid "In the Feature Requests section of our Community, you can make suggestions about what you'd like to see in our future releases."
+msgstr "В разделе \"Запросы Функций\" нашего сообщества вы можете сделать предложения о том, что бы вы хотели видеть в наших будущих релизах."
+
+#: 
+msgid "Before you post, please check if the same suggestion has already been made. If so, vote for ideas you like and add a comment with the details about your situation."
+msgstr "Перед публикацией, пожалуйста, проверьте, было ли сделано такое же предложение. Если да, голосуйте за понравившиеся идеи и оставляйте комментарии с детальным описанием своей ситуации."
+
+#: 
+msgid "It's much easier for us to address a suggestion if we clearly understand the context of the issue, the problem, and why it matters to you. When commenting or posting, please consider these questions so we can get a better idea of the problem you're facing:"
+msgstr "Нам будет гораздо проще работать с предложением, если мы чётко поймём контекст проблемы и почему это имеет для вас значение. Когда вы комментируете или публикуете предложение, пожалуйста, учитывайте следующие вопросы, чтобы мы могли лучше понять проблему, с которой вы столкнулись:"
+
+#: 
+msgid "What is the issue you're struggling with?"
+msgstr "Какие трудности вы испытываете?"
+
+#: 
+msgid "Where in your workflow do you encounter this issue?"
+msgstr "Где в вашем рабочем процессе проявляется эта проблема?"
+
+#: 
+msgid "Is this something that impacts just you, your whole team, or your customers?"
+msgstr "Это влияет только на вас, на всю вашу команду или на ваших клиентов?"
+
+#: 
+msgid "don't show this notification again"
+msgstr "больше не показывать это сообщение"
+
+#: 
+msgid "Proceed to Feature requests"
+msgstr "Перейти к Запросам функций"
+
+#: 
+msgid "We care about your experience of using Bookly!<br/>Leave a review and tell others what you think."
+msgstr "Для нас важен ваш опыт использования Bookly!<br/>Оставьте отзыв и расскажите другим, что вы думаете."
+
+#: 
+msgid "%s is used on another domain %s.<br/>In order to use the purchase code on this domain, please dissociate it in the admin panel of the other domain.<br/>If you do not have access to the admin area, please contact our technical support at support@bookly.info to transfer the license manually."
+msgstr "%s используется на другом домене %s.<br/>Чтобы использовать этот лицензионный ключ на этом домене, пожалуйста, отсоедините его в административной панели другого домена.<br/>Если у вас нет доступа к административной панели, пожалуйста, свяжитесь с нашей технической поддержкой по адресу support@bookly.info для переноса лицензионного ключа вручную."
+
+#: 
+msgid "Archiving Staff"
+msgstr "Архивация Сотрудника"
+
+#: 
+msgid "Ok, continue editing"
+msgstr "Продолжить редактирование"
+
+#: 
+msgid "Limit working hours per day"
+msgstr "Ограничить количество рабочих часов в день"
+
+#: 
+msgid "Unlimited"
+msgstr "Без ограничений"
+
+#: 
+msgid "Customer section"
+msgstr "О клиенте"
+
+#: 
+msgid "Appointment section"
+msgstr "О встрече"
+
+#: 
+msgid "Period (before and after)"
+msgstr "Период (до и после)"
+
+#: 
+msgid "upcoming"
+msgstr "предстоящих"
+
+#: 
+msgid "per 24 hours"
+msgstr "в течение 24 часов"
+
+#: 
+msgid "per 7 days"
+msgstr "в течение 7 дней"
+
+#: 
+msgid "Least occupied for period"
+msgstr "Менее загруженный в течение периода"
+
+#: 
+msgid "Most occupied for period"
+msgstr "Более загруженный в течение периода"
+
+#: 
+msgid "For service"
+msgstr "Для сервиса"
+
+#: 
+msgid "Skip"
+msgstr "Пропустить"
+
+#: 
+msgid "Your task is done"
+msgstr "Ваша задача выполнена"
+
+#: 
+msgid "Dear {client_name}.\n"
+"\n"
+"Your task {service_name} has been done.\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Дорогой(ая) {client_name}.\n"
+"\n"
+"Ваша задача {service_name} выполнена.\n"
+"\n"
+"Спасибо, что выбрали нашу компанию.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Task is done"
+msgstr "Задача выполнена"
+
+#: 
+msgid "Hello.\n"
+"\n"
+"The following task has been done.\n"
+"\n"
+"Service: {service_name}\n"
+"\n"
+"Client name: {client_name}\n"
+"\n"
+"Client phone: {client_phone}\n"
+"\n"
+"Client email: {client_email}"
+msgstr "Здравствуйте.\n"
+"\n"
+"Следующая задача была выполнена.\n"
+"\n"
+"Сервис: {service_name}\n"
+"\n"
+"Имя клиента: {client_name}\n"
+"\n"
+"Телефон клиента: {client_phone}\n"
+"\n"
+"Электронная почта клиента: {client_email}"
+
+#: 
+msgid "Dear {client_name}.\n"
+"Your task {service_name} has been done.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Дорогой(ая) {client_name}.\n"
+"Ваша задача {service_name} выполнена.\n"
+"Спасибо, что выбрали нашу компанию.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Hello.\n"
+"The following task has been done.\n"
+"Service: {service_name}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr "Здравствуйте.\n"
+"Следующая задача была выполнена.\n"
+"Сервис: {service_name}\n"
+"Имя клиента: {client_name}\n"
+"Телефон клиента: {client_phone}\n"
+"Электронная почта клиента: {client_email}"
+
+#: 
+msgid "Time step settings"
+msgstr "Настройки шага Время"
+
+#: 
+msgid "This setting allows to display the step of selecting an appointment time, hide it and create a task without due time, or display the time step, but allow a customer to skip it."
+msgstr "Эта настройка позволяет отобразить шаг выбора времени встречи, скрыть его и создать задачу без времени выполнения или отобразить шаг Время, но позволить клиенту пропустить его."
+
+#: 
+msgid "Optional"
+msgstr "Опциональный"
+
+#: 
+msgid "Coupon code"
+msgstr "Код купона"
+
+#: 
+msgid "Extras Step"
+msgstr "Шаг Дополнения"
+
+#: 
+msgid "After Service step"
+msgstr "После шага Сервис"
+
+#: 
+msgid "After Time step (Extras duration settings will be ignored)"
+msgstr "После шага Время (настройки длительности Дополнений будут проигнорированы)"
+
+#: 
+msgid "Set Default values that will be used in all locations where Use default settings is selected. To use custom settings in a location, select Use custom settings and enter custom values."
+msgstr "Установите значения по умолчанию, которые будут использованы во всех местах, где выбрано \"Использовать настройки по умолчанию\". Для использования в месте пользовательских настроек, выберите \"Использовать пользовательские настройки\" и введите пользовательские значения."
+
+#: 
+msgid "Default settings"
+msgstr "Настройки по умолчанию"
+
+#: 
+msgid "Use default settings"
+msgstr "Использовать настройки по умолчанию"
+
+#: 
+msgid "Enable this setting to be able to set custom settings for staff members for different locations."
+msgstr "Включите эту настройку, чтобы устанавливать пользовательские настройки для сотрудников в разных местах."
+
+#: 
+msgid "Booking exceeds your working hours limit"
+msgstr "Бронирование превышает ваше допустимое количество рабочих часов"
+
+#: 
+msgid "This setting allows limiting the total time occupied by bookings per day for staff member. Padding time is not included."
+msgstr "Настройка позволяет ограничить суммарное время, которое может быть занято бронированиями в сутки для сотрудника. Время паузы не учитывается."
+
+#: 
+msgid "This section describes information that is displayed about appointment."
+msgstr "Данный раздел описывает выводимую информацию о встрече."
+
+#: 
+msgid "This section describes information that is displayed about each participant of the appointment."
+msgstr "Данный раздел описывает выводимую информацию о каждом клиенте, участвующем во встрече."
+
+#: 
+msgid "Active from"
+msgstr "Активен с"
+
+#: 
+msgid "Max appointments"
+msgstr "Максимально встреч"
+
+#: 
+msgid "Your account has been disabled. Contact your website administrator to continue."
+msgstr "Ваша учётная запись была отключена. Чтобы продолжить, обратитесь к администратору вашего веб-сайта."
+
+#: 
+msgid "You are going to archive item which is involved in upcoming appointments. Please double check and edit appointments before this item archive if needed."
+msgstr "Вы собираетесь архивировать элемент, который участвует в предстоящих встречах. При необходимости, пожалуйста, дважды проверьте и отредактируйте встречи перед архивацией."
+
+#: 
+msgid "Set number of days before and after appointment that will be taken into account when calculating providers occupancy. 0 means the day of booking."
+msgstr "Установите количество дней до и после встречи, которые будут учитываться при расчете занятости сотрудников. 0 означает день бронирования."
+
+#: 
+msgid "This setting allows you to limit the number of appointments that can be booked by a customer in any given period. Restriction may end after a fixed period or with the beginning of the next calendar period  new day, week, month, etc."
+msgstr "Эта настройка позволяет вам ограничить количество встреч, которые могут быть забронированы клиентом в течение любого заданного периода. Ограничение может заканчиваться через фиксированное количество дней или с началом следующего календарного периода: новый день, неделя, месяц и т.д."
+
+#: 
+msgid "per day"
+msgstr "в течение дня"
+
+#: 
+msgid "per 30 days"
+msgstr "в течение 30 дней"
+
+#: 
+msgid "per 365 days"
+msgstr "в течение 365 дней"
+
+#: 
+msgid "Copy invoice to another email(s)"
+msgstr "Отправить копию счёта на адрес(а) эл. почты"
+
+#: 
+msgid "Enter one or more email addresses separated by commas."
+msgstr "Введите один или несколько адресов электронной почты разделяя их запятыми."
+
+#: 
+msgid "Show archived staff"
+msgstr "Показать архивированных сотрудников"
+
+#: 
+msgid "Hide archived staff"
+msgstr "Скрыть архивированных сотрудников"
+
+#: 
+msgid "Can't change calendar for archived staff"
+msgstr "Невозможно изменить календарь для архивированного сотрудника"
+
+#: 
+msgid "You are going to delete customers with existing bookings. Notifications will not be sent to them."
+msgstr "Вы собираетесь удалить клиентов с существующими бронированиями. Уведомления для них не будут отправлены."
+
+#: 
+msgid "You are going to delete customers, are you sure?"
+msgstr "Вы собираетесь удалить клиентов, вы уверены?"
+
+#: 
+msgid "Delete customers' WordPress accounts if there are any"
+msgstr "Удалить учетные записи WordPress клиентов, если таковые имеются"
+
+#: 
+msgid "Export only active coupons"
+msgstr "Экспортировать только активные купоны"
 

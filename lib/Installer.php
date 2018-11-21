@@ -220,7 +220,9 @@ class Installer extends Base\Installer
             'bookly_app_show_login_button'               => '0',
             'bookly_app_show_notes'                      => '1',
             'bookly_app_show_progress_tracker'           => '1',
+            'bookly_app_align_buttons_left'              => '0',
             'bookly_app_staff_name_with_price'           => '1',
+            'bookly_app_show_email_confirm'              => '0',
             'bookly_l10n_button_apply'                   => __( 'Apply', 'bookly' ),
             'bookly_l10n_button_back'                    => __( 'Back', 'bookly' ),
             'bookly_l10n_info_complete_step'             => __( 'Thank you! Your booking is complete. An email with details of your booking has been sent to you.', 'bookly' ),
@@ -237,6 +239,7 @@ class Installer extends Base\Installer
             'bookly_l10n_label_ccard_expire'             => __( 'Expiration Date', 'bookly' ),
             'bookly_l10n_label_ccard_number'             => __( 'Credit Card Number', 'bookly' ),
             'bookly_l10n_label_email'                    => __( 'Email', 'bookly' ),
+            'bookly_l10n_label_email_confirm'            => __( 'Confirm email', 'bookly' ),
             'bookly_l10n_label_employee'                 => __( 'Employee', 'bookly' ),
             'bookly_l10n_label_finish_by'                => __( 'Finish by', 'bookly' ),
             'bookly_l10n_label_name'                     => __( 'Name', 'bookly' ),
@@ -257,6 +260,7 @@ class Installer extends Base\Installer
             'bookly_l10n_option_month'                   => __( 'Select month', 'bookly' ),
             'bookly_l10n_option_year'                    => __( 'Select year', 'bookly' ),
             'bookly_l10n_required_email'                 => __( 'Please tell us your email', 'bookly' ),
+            'bookly_l10n_email_confirm_not_match'        => __( 'Email confirmation doesn\'t match', 'bookly' ),
             'bookly_l10n_required_employee'              => __( 'Please select an employee', 'bookly' ),
             'bookly_l10n_required_name'                  => __( 'Please tell us your name', 'bookly' ),
             'bookly_l10n_required_first_name'            => __( 'Please tell us your first name', 'bookly' ),
@@ -359,33 +363,31 @@ class Installer extends Base\Installer
      */
     public function uninstall()
     {
-        /** @var Plugin $plugin */
-        foreach ( apply_filters( 'bookly_plugins', array() ) as $plugin ) {
-            if ( $plugin::embedded() ) {
-                $installer_class = $plugin::getRootNamespace() . '\Lib\Installer';
-                $installer       = new $installer_class();
-                $installer->uninstall();
-            }
-        }
+        /** @var \wpdb */
+        global $wpdb;
 
         $this->removeData();
-        $this->dropPluginTables();
+        $this->dropTables();
         $this->_removeL10nData();
 
         // Remove user meta.
-        foreach ( get_users( array( 'role' => 'administrator' ) ) as $admin ) {
-            delete_user_meta( $admin->ID, 'bookly_filter_appointments_list' );
-            delete_user_meta( $admin->ID, 'bookly_dismiss_appearance_notice' );
-            delete_user_meta( $admin->ID, 'bookly_dismiss_contact_us_notice' );
-            delete_user_meta( $admin->ID, 'bookly_dismiss_feedback_notice' );
-            delete_user_meta( $admin->ID, 'bookly_dismiss_subscribe_notice' );
-            delete_user_meta( $admin->ID, 'bookly_dismiss_nps_notice' );
-            delete_user_meta( $admin->ID, 'bookly_dismiss_collect_stats_notice' );
-            delete_user_meta( $admin->ID, 'bookly_show_collecting_stats_notice' );
-            delete_user_meta( $admin->ID, 'bookly_show_lite_rebranding_notice' );
-            delete_user_meta( $admin->ID, 'bookly_contact_us_btn_clicked' );
-            delete_user_meta( $admin->ID, 'bookly_appointment_form_send_notifications' );
-        }
+        $meta_names = array(
+            'bookly_appointment_form_send_notifications',
+            'bookly_contact_us_btn_clicked',
+            'bookly_delete_customers_options',
+            'bookly_dismiss_appearance_notice',
+            'bookly_dismiss_collect_stats_notice',
+            'bookly_dismiss_contact_us_notice',
+            'bookly_dismiss_feedback_notice',
+            'bookly_dismiss_nps_notice',
+            'bookly_dismiss_subscribe_notice',
+            'bookly_feature_requests_rules_hide',
+            'bookly_filter_appointments_list',
+            'bookly_filter_staff_categories',
+            'bookly_show_collecting_stats_notice',
+        );
+        $wpdb->query( $wpdb->prepare( sprintf( 'DELETE FROM `' . $wpdb->usermeta . '` WHERE meta_key IN (%s)',
+            implode( ', ', array_fill( 0, count( $meta_names ), '%s' ) ) ), $meta_names ) );
 
         wp_clear_scheduled_hook( 'bookly_daily_routine' );
         wp_clear_scheduled_hook( 'bookly_hourly_routine' );
@@ -401,16 +403,18 @@ class Installer extends Base\Installer
 
         $wpdb->query(
             'CREATE TABLE IF NOT EXISTS `' . Entities\Staff::getTableName() . '` (
-                `id`            INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `wp_user_id`    BIGINT(20) UNSIGNED DEFAULT NULL,
-                `attachment_id` INT UNSIGNED DEFAULT NULL,
-                `full_name`     VARCHAR(255) DEFAULT NULL,
-                `email`         VARCHAR(255) DEFAULT NULL,
-                `phone`         VARCHAR(255) DEFAULT NULL,
-                `info`          TEXT DEFAULT NULL,
-                `visibility`    ENUM("public","private") NOT NULL DEFAULT "public",
-                `position`      INT NOT NULL DEFAULT 9999,
-                `google_data`   TEXT DEFAULT NULL
+                `id`                 INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `category_id`        INT UNSIGNED DEFAULT NULL,
+                `wp_user_id`         BIGINT(20) UNSIGNED DEFAULT NULL,
+                `attachment_id`      INT UNSIGNED DEFAULT NULL,
+                `full_name`          VARCHAR(255) DEFAULT NULL,
+                `email`              VARCHAR(255) DEFAULT NULL,
+                `phone`              VARCHAR(255) DEFAULT NULL,
+                `info`               TEXT DEFAULT NULL,
+                `working_time_limit` INT UNSIGNED DEFAULT NULL,
+                `visibility`         ENUM("public","private","archive") NOT NULL DEFAULT "public",
+                `position`           INT NOT NULL DEFAULT 9999,
+                `google_data`        TEXT DEFAULT NULL
             ) ENGINE = INNODB
             DEFAULT CHARACTER SET = utf8
             COLLATE = utf8_general_ci'
@@ -428,32 +432,38 @@ class Installer extends Base\Installer
 
         $wpdb->query(
             'CREATE TABLE IF NOT EXISTS `' . Entities\Service::getTableName() . '` (
-                `id`                     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `category_id`            INT UNSIGNED DEFAULT NULL,
-                `title`                  VARCHAR(255) DEFAULT "",
-                `duration`               INT NOT NULL DEFAULT 900,
-                `price`                  DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-                `color`                  VARCHAR(255) NOT NULL DEFAULT "#FFFFFF",
-                `capacity_min`           INT NOT NULL DEFAULT 1,
-                `capacity_max`           INT NOT NULL DEFAULT 1,
-                `padding_left`           INT NOT NULL DEFAULT 0,
-                `padding_right`          INT NOT NULL DEFAULT 0,
-                `info`                   TEXT DEFAULT NULL,
-                `start_time_info`        VARCHAR(255) DEFAULT "",
-                `end_time_info`          VARCHAR(255) DEFAULT "",
-                `units_min`              INT UNSIGNED NOT NULL DEFAULT 1,
-                `units_max`              INT UNSIGNED NOT NULL DEFAULT 1,
-                `type`                   ENUM("simple","compound","package") NOT NULL DEFAULT "simple",
-                `package_life_time`      INT DEFAULT NULL,
-                `package_size`           INT DEFAULT NULL,
-                `package_unassigned`     TINYINT(1) NOT NULL DEFAULT 0,
-                `appointments_limit`     INT DEFAULT NULL,
-                `limit_period`           ENUM("off", "day","week","month","year") NOT NULL DEFAULT "off",
-                `staff_preference`       ENUM("order", "least_occupied", "most_occupied", "least_expensive", "most_expensive") NOT NULL DEFAULT "most_expensive",
-                `recurrence_enabled`     TINYINT(1) NOT NULL DEFAULT 1,
-                `recurrence_frequencies` SET("daily","weekly","biweekly","monthly") NOT NULL DEFAULT "daily,weekly,biweekly,monthly",
-                `visibility`             ENUM("public","private","group") NOT NULL DEFAULT "public",
-                `position`               INT NOT NULL DEFAULT 9999,
+                `id`                           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `category_id`                  INT UNSIGNED DEFAULT NULL,
+                `type`                         ENUM("simple","collaborative","compound","package") NOT NULL DEFAULT "simple",
+                `title`                        VARCHAR(255) DEFAULT "",
+                `duration`                     INT NOT NULL DEFAULT 900,
+                `slot_length`                  VARCHAR(255) NOT NULL DEFAULT "default",
+                `price`                        DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+                `color`                        VARCHAR(255) NOT NULL DEFAULT "#FFFFFF",
+                `deposit`                      VARCHAR(100) NOT NULL DEFAULT "100%",
+                `capacity_min`                 INT NOT NULL DEFAULT 1,
+                `capacity_max`                 INT NOT NULL DEFAULT 1,
+                `one_booking_per_slot`         TINYINT(1) NOT NULL DEFAULT 0,
+                `padding_left`                 INT NOT NULL DEFAULT 0,
+                `padding_right`                INT NOT NULL DEFAULT 0,
+                `info`                         TEXT DEFAULT NULL,
+                `start_time_info`              VARCHAR(255) DEFAULT "",
+                `end_time_info`                VARCHAR(255) DEFAULT "",
+                `units_min`                    INT UNSIGNED NOT NULL DEFAULT 1,
+                `units_max`                    INT UNSIGNED NOT NULL DEFAULT 1,
+                `package_life_time`            INT DEFAULT NULL,
+                `package_size`                 INT DEFAULT NULL,
+                `package_unassigned`           TINYINT(1) NOT NULL DEFAULT 0,
+                `appointments_limit`           INT DEFAULT NULL,
+                `limit_period`                 ENUM("off","day","week","month","year","upcoming","calendar_day","calendar_week","calendar_month","calendar_year") NOT NULL DEFAULT "off",
+                `staff_preference`             ENUM("order", "least_occupied", "most_occupied", "least_occupied_for_period", "most_occupied_for_period", "least_expensive", "most_expensive") NOT NULL DEFAULT "most_expensive",
+                `staff_preference_settings`    TEXT DEFAULT NULL,
+                `recurrence_enabled`           TINYINT(1) NOT NULL DEFAULT 1,
+                `recurrence_frequencies`       SET("daily","weekly","biweekly","monthly") NOT NULL DEFAULT "daily,weekly,biweekly,monthly",
+                `time_requirements`            ENUM("required","optional","off") NOT NULL DEFAULT "required",
+                `collaborative_equal_duration` TINYINT(1) NOT NULL DEFAULT 0,
+                `visibility`                   ENUM("public","private","group") NOT NULL DEFAULT "public",
+                `position`                     INT NOT NULL DEFAULT 9999,
                 CONSTRAINT
                     FOREIGN KEY (category_id)
                     REFERENCES ' . Entities\Category::getTableName() . '(id)
@@ -489,12 +499,13 @@ class Installer extends Base\Installer
 
         $wpdb->query(
             'CREATE TABLE IF NOT EXISTS `' . Entities\StaffScheduleItem::getTableName() . '` (
-                `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `staff_id`   INT UNSIGNED NOT NULL,
-                `day_index`  INT UNSIGNED NOT NULL,
-                `start_time` TIME DEFAULT NULL,
-                `end_time`   TIME DEFAULT NULL,
-                UNIQUE KEY unique_ids_idx (staff_id, day_index),
+                `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `staff_id`    INT UNSIGNED NOT NULL,
+                `location_id` INT UNSIGNED DEFAULT NULL,
+                `day_index`   INT UNSIGNED NOT NULL,
+                `start_time`  TIME DEFAULT NULL,
+                `end_time`    TIME DEFAULT NULL,
+                UNIQUE KEY unique_ids_idx (staff_id, day_index, location_id),
                 CONSTRAINT
                     FOREIGN KEY (staff_id)
                     REFERENCES ' . Entities\Staff::getTableName() . '(id)
@@ -606,7 +617,6 @@ class Installer extends Base\Installer
         $wpdb->query(
             'CREATE TABLE IF NOT EXISTS `' . Entities\Appointment::getTableName() . '` (
                 `id`                   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `series_id`            INT UNSIGNED DEFAULT NULL,
                 `location_id`          INT UNSIGNED DEFAULT NULL,
                 `staff_id`             INT UNSIGNED NOT NULL,
                 `staff_any`            TINYINT(1) NOT NULL DEFAULT 0,
@@ -620,11 +630,7 @@ class Installer extends Base\Installer
                 `google_event_id`      VARCHAR(255) DEFAULT NULL,
                 `google_event_etag`    VARCHAR(255) DEFAULT NULL,
                 `created_from`         ENUM("bookly","google") NOT NULL DEFAULT "bookly",
-                CONSTRAINT
-                    FOREIGN KEY (series_id)
-                    REFERENCES  ' . Entities\Series::getTableName() . '(id)
-                    ON DELETE CASCADE
-                    ON UPDATE CASCADE,
+                `created`              DATETIME NOT NULL,
                 CONSTRAINT
                     FOREIGN KEY (staff_id)
                     REFERENCES ' . Entities\Staff::getTableName() . '(id)
@@ -676,28 +682,33 @@ class Installer extends Base\Installer
 
         $wpdb->query(
             'CREATE TABLE IF NOT EXISTS `' . Entities\CustomerAppointment::getTableName() . '` (
-                `id`                  INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `package_id`          INT UNSIGNED DEFAULT NULL,
-                `customer_id`         INT UNSIGNED NOT NULL,
-                `appointment_id`      INT UNSIGNED NOT NULL,
-                `payment_id`          INT UNSIGNED DEFAULT NULL,
-                `number_of_persons`   INT UNSIGNED NOT NULL DEFAULT 1,
-                `units`               INT UNSIGNED NOT NULL DEFAULT 1,
-                `notes`               TEXT DEFAULT NULL,
-                `extras`              TEXT DEFAULT NULL,
-                `custom_fields`       TEXT DEFAULT NULL,
-                `status`              ENUM("pending","approved","cancelled","rejected","waitlisted","done") NOT NULL DEFAULT "approved",
-                `status_changed_at`   DATETIME NULL,
-                `token`               VARCHAR(255) DEFAULT NULL,
-                `time_zone`           VARCHAR(255) DEFAULT NULL,
-                `time_zone_offset`    INT DEFAULT NULL,
-                `rating`              INT DEFAULT NULL,
-                `rating_comment`      TEXT DEFAULT NULL,
-                `locale`              VARCHAR(8) NULL,
-                `compound_service_id` INT UNSIGNED DEFAULT NULL,
-                `compound_token`      VARCHAR(255) DEFAULT NULL,
-                `created_from`        ENUM("frontend","backend") NOT NULL DEFAULT "frontend",
-                `created`             DATETIME NOT NULL,
+                `id`                       INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `series_id`                INT UNSIGNED DEFAULT NULL,
+                `package_id`               INT UNSIGNED DEFAULT NULL,
+                `customer_id`              INT UNSIGNED NOT NULL,
+                `appointment_id`           INT UNSIGNED NOT NULL,
+                `payment_id`               INT UNSIGNED DEFAULT NULL,
+                `number_of_persons`        INT UNSIGNED NOT NULL DEFAULT 1,
+                `units`                    INT UNSIGNED NOT NULL DEFAULT 1,
+                `notes`                    TEXT DEFAULT NULL,
+                `extras`                   TEXT DEFAULT NULL,
+                `extras_multiply_nop`      TINYINT(1) NOT NULL DEFAULT 1,
+                `extras_consider_duration` TINYINT(1) NOT NULL DEFAULT 1,
+                `custom_fields`            TEXT DEFAULT NULL,
+                `status`                   ENUM("pending","approved","cancelled","rejected","waitlisted","done") NOT NULL DEFAULT "approved",
+                `status_changed_at`        DATETIME NULL,
+                `token`                    VARCHAR(255) DEFAULT NULL,
+                `time_zone`                VARCHAR(255) DEFAULT NULL,
+                `time_zone_offset`         INT DEFAULT NULL,
+                `rating`                   INT DEFAULT NULL,
+                `rating_comment`           TEXT DEFAULT NULL,
+                `locale`                   VARCHAR(8) NULL,
+                `collaborative_service_id` INT UNSIGNED DEFAULT NULL,
+                `collaborative_token`      VARCHAR(255) DEFAULT NULL,
+                `compound_service_id`      INT UNSIGNED DEFAULT NULL,
+                `compound_token`           VARCHAR(255) DEFAULT NULL,
+                `created_from`             ENUM("frontend","backend") NOT NULL DEFAULT "frontend",
+                `created`                  DATETIME NOT NULL,
                 CONSTRAINT
                     FOREIGN KEY (customer_id)
                     REFERENCES  ' . Entities\Customer::getTableName() . '(id)
@@ -708,6 +719,11 @@ class Installer extends Base\Installer
                     REFERENCES  ' . Entities\Appointment::getTableName() . '(id)
                     ON DELETE   CASCADE
                     ON UPDATE   CASCADE,
+                CONSTRAINT
+                    FOREIGN KEY (series_id)
+                    REFERENCES  ' . Entities\Series::getTableName() . '(id)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE,
                 CONSTRAINT
                     FOREIGN KEY (payment_id)
                     REFERENCES ' . Entities\Payment::getTableName() . '(id)

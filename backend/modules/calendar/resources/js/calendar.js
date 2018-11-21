@@ -1,55 +1,122 @@
 jQuery(function ($) {
 
-    var $fullCalendar = $('#bookly-fc-wrapper .bookly-js-calendar-element'),
-        $tabs         = $('.bookly-js-calendar-tab'),
-        $staff        = $('input.bookly-js-check-entity'),
-        $showAll      = $('input#bookly-check-all-entities'),
-        firstHour     = new Date().getHours(),
-        $syncButton   = $('#bookly-google-calendar-sync'),
-        $staffButton  = $('#bookly-staff-button'),
-        staffMembers  = [],
-        staffIds      = getCookie('bookly_cal_st_ids'),
-        tabId         = getCookie('bookly_cal_tab_id'),
-        lastView      = getCookie('bookly_cal_view'),
-        views         = 'month,agendaWeek,agendaDay,multiStaffDay';
+    var $fullCalendar    = $('#bookly-fc-wrapper .bookly-js-calendar-element'),
+        $tabs            = $('.bookly-js-calendar-tab'),
+        $staffFilter     = $('#bookly-js-staff-filter'),
+        $locationsFilter = $('#bookly-js-locations-filter'),
+        firstHour        = new Date().getHours(),
+        $syncButton      = $('#bookly-google-calendar-sync'),
+        staffMembers     = [],  // Do not override staffMembers, it is used as a reference
+        staffIds         = getCookie('bookly_cal_st_ids'),
+        locationIds      = getCookie('bookly_cal_location_ids'),
+        tabId            = getCookie('bookly_cal_tab_id'),
+        lastView         = getCookie('bookly_cal_view'),
+        views            = 'month,agendaWeek,agendaDay,multiStaffDay';
 
     if (views.indexOf(lastView) == -1) {
         lastView = 'multiStaffDay';
     }
-    // Init tabs and staff member filters.
-    if (staffIds === null) {
-        $staff.each(function (index, value) {
-            this.checked = true;
-            $tabs.filter('[data-staff_id=' + this.value + ']').show();
-        });
-    } else if (staffIds != '') {
-        $.each(staffIds.split(','), function (index, value) {
-            $staff.filter('[value=' + value + ']').prop('checked', true);
-            $tabs.filter('[data-staff_id=' + value + ']').show();
-        });
-    } else {
-        $('.bookly-js-staff-filter.dropdown-toggle').dropdown('toggle');
-    }
-
-    $tabs.filter('[data-staff_id=' + tabId + ']').addClass('active');
-    if ($tabs.filter('li.active').length == 0) {
-        $tabs.eq(0).addClass('active').show();
-        $staff.filter('[value=' + $tabs.eq(0).data('staff_id') + ']').prop('checked', true);
-    }
-    updateStaffButton();
 
     /**
-     * Calculate height of FullCalendar.
-     *
-     * @return {number}
+     * Init tabs.
      */
-    function heightFC() {
-        var height = $(window).height() - $('#bookly-fc-wrapper').offset().top - 20;
-
-        return height > 620 ? height : 620;
+    $tabs.on('click', function (e) {
+        e.preventDefault();
+        $tabs.removeClass('active');
+        $(this).addClass('active');
+        var staff_id = $(this).data('staff_id');
+        setCookie('bookly_cal_tab_id', staff_id);
+        if (staff_id == 0) {
+            $('.fc-agendaDay-button').hide();
+            $('.fc-multiStaffDay-button').show();
+            $fullCalendar.fullCalendar('changeView', 'multiStaffDay');
+            $fullCalendar.fullCalendar('refetchEvents');
+        } else {
+            $('.fc-multiStaffDay-button').hide();
+            $('.fc-agendaDay-button').show();
+            var view = $fullCalendar.fullCalendar('getView');
+            if (view.type == 'multiStaffDay') {
+                $fullCalendar.fullCalendar('changeView', 'agendaDay');
+            }
+            $fullCalendar.fullCalendar('refetchEvents');
+        }
+    });
+    $tabs.filter('[data-staff_id=' + tabId + ']').addClass('active');
+    if ($tabs.filter('li.active').length === 0) {
+        $tabs.eq(0).addClass('active').show();
     }
 
-    var options = {
+    /**
+     * Init staff filter.
+     */
+    $staffFilter.booklyDropdown({
+        onChange: function (values, selected, all) {
+            var ids = [];
+            staffMembers.length = 0;
+            this.booklyDropdown('getSelectedExt').forEach(function (item) {
+                ids.push(item.value);
+                staffMembers.push({id: item.value, name: item.name});
+            });
+            setCookie('bookly_cal_st_ids', ids);
+            if (all) {
+                $tabs.filter('[data-staff_id!=0]').toggle(selected);
+            } else {
+                values.forEach(function (value) {
+                    $tabs.filter('[data-staff_id=' + value + ']').toggle(selected);
+                });
+            }
+            if ($tabs.filter(':visible.active').length === 0) {
+                $tabs.filter(':visible:first').triggerHandler('click');
+            } else if ($tabs.filter('.active').data('staff_id') === 0) {
+                var view = $fullCalendar.fullCalendar('getView');
+                if (view.type === 'multiStaffDay') {
+                    view.displayView($fullCalendar.fullCalendar('getDate'));
+                }
+                $fullCalendar.fullCalendar('refetchEvents');
+            }
+        }
+    });
+    if (staffIds === null) {
+        $staffFilter.booklyDropdown('selectAll');
+    } else if (staffIds !== '') {
+        $staffFilter.booklyDropdown('setSelected', staffIds.split(','));
+    } else {
+        $staffFilter.booklyDropdown('toggle');
+    }
+    // Populate staffMembers.
+    $staffFilter.booklyDropdown('getSelectedExt').forEach(function (item) {
+        staffMembers.push({id: item.value, name: item.name});
+        $tabs.filter('[data-staff_id=' + item.value + ']').show();
+    });
+
+    /**
+     * Init locations filter.
+     */
+    $locationsFilter.booklyDropdown({
+        onChange: function (values, selected, all) {
+            locationIds = this.booklyDropdown('getSelected');
+            setCookie('bookly_cal_location_ids', locationIds);
+            var view = $fullCalendar.fullCalendar('getView');
+            if (view.type === 'multiStaffDay') {
+                view.displayView($fullCalendar.fullCalendar('getDate'));
+            }
+            $fullCalendar.fullCalendar('refetchEvents');
+        }
+    });
+    if (locationIds === null) {
+        $locationsFilter.booklyDropdown('selectAll');
+    } else if (locationIds !== '') {
+        $locationsFilter.booklyDropdown('setSelected', locationIds.split(','));
+    } else {
+        $locationsFilter.booklyDropdown('toggle');
+    }
+    // Populate locationIds.
+    locationIds = $locationsFilter.booklyDropdown('getSelected');
+
+    /**
+     * Init FullCalendar.
+     */
+    new BooklyCalendar($fullCalendar, {
         fullcalendar: {
             // General Display.
             header: {
@@ -76,124 +143,25 @@ jQuery(function ($) {
         getCurrentStaffId: function () {
             return $tabs.filter('.active').data('staff_id');
         },
-        getStaffMembers: function () {
-            return staffMembers;
+        getStaffMemberIds: function () {
+            var ids = [];
+            staffMembers.forEach(function (staff) {
+                ids.push(staff.id);
+            });
+
+            return ids;
+        },
+        getLocationIds: function () {
+            return locationIds;
         },
         l10n: BooklyL10n
-    };
-
-    /**
-     * @param {jQuery} $container
-     * @param {Object} callbacks
-     */
-    function initLocationFilter($container, callbacks)
-    {
-        var elements = {};
-
-        var initElements = function() {
-            elements.toggleButton = $container.find('.bookly-js-toggle-button');
-            elements.title = $container.find('.bookly-js-locations-title');
-
-            elements.items = $container.find('input[type=checkbox]');
-            elements.itemAllLocations = elements.items.filter('.bookly-js-all-locations');
-            elements.itemNoLocations = elements.items.filter('.bookly-js-no-locations');
-            elements.locationItems = elements.items.filter('.bookly-js-locations-item');
-        };
-
-        var restoreItemsFromCookie = function () {
-            var selectedValues = getCookie('bookly_cal_location_ids');
-
-            if (!selectedValues) {
-                return;
-            }
-
-            selectedValues = selectedValues.split(',');
-
-            if (selectedValues.indexOf('all') !== -1) {
-                elements.locationItems.prop('checked', true);
-            } else {
-                selectedValues.forEach(function (value) {
-                    elements.locationItems.filter('[value=' + value + ']').prop('checked', true);
-                });
-            }
-        };
-
-        var getSelectedItems = function () {
-            return elements.locationItems.filter(':checked');
-        };
-
-        var updateTitle = function() {
-            var selectedItems = getSelectedItems(),
-                selectedCount = selectedItems.length,
-                locationCount = elements.locationItems.length;
-
-            if (selectedCount === 0) {
-                elements.title.text($container.data('nothing_selected'));
-            } else if (selectedCount === locationCount) {
-                elements.title.text($container.data('all_selected'));
-            } else if (selectedCount === 1) {
-                elements.title.text(selectedItems.data('name'));
-            } else {
-                elements.title.text(selectedCount + '/' + locationCount);
-            }
-
-            elements.itemAllLocations.prop('checked', selectedCount === locationCount);
-        };
-
-        var saveCookie = function () {
-            var selectedItems = getSelectedItems(),
-                selectedValues = [];
-
-            selectedItems.each(function () {
-                selectedValues.push(this.value);
-            });
-
-            setCookie('bookly_cal_location_ids', selectedValues);
-        };
-
-        var initEvents = function () {
-            elements.itemAllLocations.on('change', function () {
-                elements.locationItems.prop('checked', elements.itemAllLocations.prop('checked'));
-            });
-
-            elements.items.on('change', function() {
-                updateTitle();
-                saveCookie();
-
-                if (callbacks.change instanceof Function) {
-                    callbacks.change();
-                }
-            });
-        };
-
-        function setDefaultLocations()
-        {
-            var locationIds = getCookie('bookly_cal_location_ids');
-
-            if (!locationIds) {
-                $container.find('input[type="checkbox"]').prop('checked', true);
-                setCookie('bookly_cal_location_ids', ['all']);
-            }
-        }
-
-        initElements();
-        setDefaultLocations();
-        restoreItemsFromCookie();
-        initEvents();
-        updateTitle();
-    }
-
-    initLocationFilter($('.bookly-js-locations-filter'), {
-        change: function() {
-            var view = $fullCalendar.fullCalendar('getView');
-            if (view.type === 'multiStaffDay') {
-                view.displayView($fullCalendar.fullCalendar('getDate'));
-            }
-            $fullCalendar.fullCalendar('refetchEvents');
-        }
     });
 
-    var calendar = new BooklyCalendar($fullCalendar, options);
+    function heightFC() {
+        var height = $(window).height() - $('#bookly-fc-wrapper').offset().top - 20;
+
+        return height > 620 ? height : 620;
+    }
 
     $('.fc-agendaDay-button').addClass('fc-corner-right');
     if ($tabs.filter('.active').data('staff_id') == 0) {
@@ -205,85 +173,6 @@ jQuery(function ($) {
     $(window).on('resize', function () {
         $fullCalendar.fullCalendar('option', 'height', heightFC());
     });
-
-    // Click on tabs.
-    $tabs.on('click', function (e) {
-        e.preventDefault();
-        $tabs.removeClass('active');
-        $(this).addClass('active');
-        var staff_id = $(this).data('staff_id');
-        setCookie('bookly_cal_tab_id', staff_id);
-
-        if (staff_id == 0) {
-            $('.fc-agendaDay-button').hide();
-            $('.fc-multiStaffDay-button').show();
-            $fullCalendar.fullCalendar('changeView', 'multiStaffDay');
-            $fullCalendar.fullCalendar('refetchEvents');
-        } else {
-            $('.fc-multiStaffDay-button').hide();
-            $('.fc-agendaDay-button').show();
-            var view = $fullCalendar.fullCalendar('getView');
-            if (view.type == 'multiStaffDay') {
-                $fullCalendar.fullCalendar('changeView', 'agendaDay');
-            }
-            $fullCalendar.fullCalendar('refetchEvents');
-        }
-    });
-
-    $('.dropdown-menu').on('click', function (e) {
-        e.stopPropagation();
-    });
-
-    /**
-     * On show all staff checkbox click.
-     */
-    $showAll.on('change', function () {
-        $tabs.filter('[data-staff_id!=0]').toggle(this.checked);
-        $staff
-            .prop('checked', this.checked)
-            .filter(':first').triggerHandler('change');
-    });
-
-    /**
-     * On staff checkbox click.
-     */
-    $staff.on('change', function (e) {
-        updateStaffButton();
-
-        $tabs.filter('[data-staff_id=' + this.value + ']').toggle(this.checked);
-        if ($tabs.filter(':visible.active').length == 0) {
-            $tabs.filter(':visible:first').triggerHandler('click');
-        } else if ($tabs.filter('.active').data('staff_id') == 0) {
-            var view = $fullCalendar.fullCalendar('getView');
-            if (view.type == 'multiStaffDay') {
-                view.displayView($fullCalendar.fullCalendar('getDate'));
-            }
-            $fullCalendar.fullCalendar('refetchEvents');
-        }
-    });
-
-    function updateStaffButton() {
-        $showAll.prop('checked', $staff.filter(':not(:checked)').length == 0);
-
-        // Update staffMembers array.
-        var ids = [];
-        staffMembers.length = 0;
-        $staff.filter(':checked').each(function () {
-            staffMembers.push({id: this.value, name: this.getAttribute('data-staff_name')});
-            ids.push(this.value);
-        });
-        setCookie('bookly_cal_st_ids', ids);
-
-        // Update button text.
-        var number = $staff.filter(':checked').length;
-        if (number == 0) {
-            $staffButton.text(BooklyL10n.noStaffSelected);
-        } else if (number == 1) {
-            $staffButton.text($staff.filter(':checked').data('staff_name'));
-        } else {
-            $staffButton.text(number + '/' + $staff.length);
-        }
-    }
 
     /**
      * Set cookie.
@@ -327,5 +216,4 @@ jQuery(function ($) {
             'json'
         );
     });
-
 });

@@ -22,10 +22,12 @@ use Bookly\Lib\DataHolders\Booking as DataHolders;
  * @method static string getLastCustomerTimezone( int $customer_id ) Get last appointment timezone for customer.
  * @method static int    getMinimumTimePriorBooking() Get minimum time ( in seconds ) prior to booking.
  * @method static int    getMinimumTimePriorCancel() Get minimum time ( in seconds ) prior to cancel.
+ * @method static array  getStaffDataForDropDown() Get staff grouped by categories for drop-down list.
  * @method static array  getTimeZoneOffset( string $time_zone_value ) Get timezone offset from string.
  * @method static bool   graceExpired() Check whether grace period has expired or not.
  * @method static string prepareNotificationMessage( \string $message, \string $recipient, \string $gateway ) Prepare notification for staff.
- * @method static Lib\Entities\Staff[] prepareStaffMembers( Lib\Entities\Staff[] $staff_members ) Prepare staff members.
+ * @method static Lib\Slots\RangeCollection prepareGeneratorRanges( Lib\Slots\RangeCollection $ranges, Lib\Slots\Staff $staff, int $duration ) Prepare range collection depends on staff hours limit.
+ * @method static bool   getWorkingTimeLimitError( Lib\Entities\Staff $staff, string $start_date, string $end_date, int $duration, int $appointment_id ) Check if interval is suitable for staff's hours limit.
  * @method static void   revokeGoogleCalendarToken( Lib\Entities\Staff $staff ) Revoke Google Calendar token for given staff.
  * @method static void   sendCombined( DataHolders\Order $order ) Send combined notifications.
  * @method static bool   showFacebookLoginButton() Whether to show Facebook login button at the time step of booking form.

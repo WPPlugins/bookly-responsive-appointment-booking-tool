@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import {opt, laddaStart, scrollTo} from './shared.js';
+import stepExtras from './extras_step.js';
 import stepTime from './time_step.js';
 import stepCart from './cart_step.js';
 
@@ -558,7 +559,11 @@ export default function stepRepeat(params, error) {
                             xhrFields: {withCredentials: true},
                             crossDomain: 'withCredentials' in new XMLHttpRequest(),
                             success: function (response) {
-                                stepTime({form_id: params.form_id});
+                                if (!opt[params.form_id].skip_steps.extras && opt[params.form_id].step_extras == 'after_step_time' && !opt[params.form_id].no_extras) {
+                                    stepExtras({form_id: params.form_id});
+                                } else {
+                                    stepTime({form_id: params.form_id});
+                                }
                             }
                         });
                     });

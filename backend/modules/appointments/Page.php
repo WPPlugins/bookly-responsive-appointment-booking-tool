@@ -53,14 +53,15 @@ class Page extends Lib\Base\Component
         $show_attachments = Lib\Config::filesActive() && count( Lib\Proxy\Files::getAllIds() ) > 0;
         wp_localize_script( 'bookly-appointments.js', 'BooklyL10n', array(
             'csrf_token'      => Lib\Utils\Common::getCsrfToken(),
+            'any_time'        => __( 'Any time', 'bookly' ),
             'tomorrow'        => __( 'Tomorrow', 'bookly' ),
             'today'           => __( 'Today', 'bookly' ),
             'yesterday'       => __( 'Yesterday', 'bookly' ),
-            'last_7'          => __( 'Last 7 Days', 'bookly' ),
-            'last_30'         => __( 'Last 30 Days', 'bookly' ),
-            'this_month'      => __( 'This Month', 'bookly' ),
-            'next_month'      => __( 'Next Month', 'bookly' ),
-            'custom_range'    => __( 'Custom Range', 'bookly' ),
+            'last_7'          => __( 'Last 7 days', 'bookly' ),
+            'last_30'         => __( 'Last 30 days', 'bookly' ),
+            'this_month'      => __( 'This month', 'bookly' ),
+            'next_month'      => __( 'Next month', 'bookly' ),
+            'custom_range'    => __( 'Custom range', 'bookly' ),
             'apply'           => __( 'Apply', 'bookly' ),
             'cancel'          => __( 'Cancel', 'bookly' ),
             'to'              => __( 'To', 'bookly' ),
@@ -89,7 +90,7 @@ class Page extends Lib\Base\Component
         ) );
 
         // Filters data
-        $staff_members = Lib\Entities\Staff::query( 's' )->select( 's.id, s.full_name' )->fetchArray();
+        $staff_members = Lib\Entities\Staff::query( 's' )->select( 's.id, s.full_name' )->whereNot( 'visibility', 'archive' )->fetchArray();
         $customers = Lib\Entities\Customer::query( 'c' )->select( 'c.id, c.full_name, c.first_name, c.last_name' )->fetchArray();
         $services  = Lib\Entities\Service::query( 's' )->select( 's.id, s.title' )->where( 'type', Lib\Entities\Service::TYPE_SIMPLE )->fetchArray();
 

@@ -1,10 +1,11 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 use Bookly\Backend\Components\Controls\Buttons;
 use Bookly\Backend\Components\Settings\Selects;
+use Bookly\Backend\Components\Sms\Custom;
 use Bookly\Backend\Modules\Sms\Proxy;
+use Bookly\Lib\Config;
 use Bookly\Lib\Entities\Notification;
 use Bookly\Lib\Utils\Common;
-use Bookly\Lib;
 /** @var Bookly\Backend\Modules\Notifications\Forms\Notifications $form */
 ?>
 <form action="<?php echo esc_url( remove_query_arg( array( 'paypal_result', 'auto-recharge', 'tab' ) ) ) ?>" method="post">
@@ -57,7 +58,7 @@ use Bookly\Lib;
         <?php endforeach ?>
     </div>
 
-    <?php if ( $form->types['combined'] && Lib\Config::proActive() ) : ?>
+    <?php if ( $form->types['combined'] && Config::proActive() ) : ?>
         <h4 class="bookly-block-head bookly-color-gray"><?php _e( 'Combined', 'bookly' ) ?></h4>
         <div class="panel-group bookly-margin-vertical-xlg" id="bookly-js-combined-notifications" role="tablist" aria-multiselectable="true">
             <?php foreach ( $form->getNotifications( 'combined' ) as $notification ) :
@@ -97,7 +98,7 @@ use Bookly\Lib;
     <h4 class="bookly-block-head bookly-color-gray"><?php _e( 'Custom', 'bookly' ) ?></h4>
     <div class="panel-group bookly-margin-vertical-xlg" id="bookly-js-custom-notifications">
         <?php foreach ( $form->getNotifications( 'custom' ) as $notification ) :
-            $self::renderTemplate( '_custom_notification', compact( 'form', 'notification', 'statuses' ) );
+            Custom\Notification::render( $form, $notification );
         endforeach ?>
     </div>
 

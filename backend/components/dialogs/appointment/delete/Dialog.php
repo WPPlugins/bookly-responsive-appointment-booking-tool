@@ -14,11 +14,11 @@ class Dialog extends Lib\Base\Component
      */
     public static function render()
     {
-        static::enqueueStyles( array(
+        self::enqueueStyles( array(
             'frontend' => array( 'css/ladda.min.css', ),
         ) );
 
-        static::enqueueScripts( array(
+        self::enqueueScripts( array(
             'frontend' => array(
                 'js/spin.min.js'  => array( 'jquery' ),
                 'js/ladda.min.js' => array( 'jquery' ),
