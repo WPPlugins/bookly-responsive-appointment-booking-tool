@@ -118,6 +118,11 @@ abstract class Plugin
         // WP hooks.
         $plugin_class::registerHooks();
 
+        // Update checker.
+        if ( ! $plugin_class::embedded() ) {
+            $plugin_class::initUpdateChecker();
+        }
+
         // Init.
         $plugin_class::init();
 
@@ -451,6 +456,18 @@ abstract class Plugin
     protected static function init()
     {
 
+    }
+
+    /**
+     * Init update checker.
+     */
+    protected static function initUpdateChecker()
+    {
+        /** @var static $plugin_class */
+        $plugin_class = get_called_class();
+        if ( $plugin_class != 'Bookly\Lib\Plugin' && Lib\Config::proActive() ) {
+            PluginPro::initPluginUpdateChecker( $plugin_class );
+        }
     }
 
     /**

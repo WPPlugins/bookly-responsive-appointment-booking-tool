@@ -5,7 +5,7 @@ Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
 Tested up to: 4.9.8
 Requires PHP: 5.3.7
-Stable tag: 16.2
+Stable tag: 16.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -47,7 +47,7 @@ _**PLEASE NOTE** that online payments, unlimited number of staff members and ser
 ## 2. Benefits for the business owner
 **No coding experience** required to set up Bookly. We did our best to make it as **easy and quick** as possible to install and **start using Bookly free** scheduling software on your WordPress website. And with our **Bookly Pro add-on** and other add-ons, you will bring **online scheduling** experience for you and your customers to the **next level**.
 
-You will be able to navigate the **Booking Admin Panel** like a pro, **approve** and **adjust** your appointments, and **automate your online scheduling** to concentrate on the most important part of your business – serving your customers and **grow sales**. 
+You will be able to navigate the **Booking Admin Panel** like a pro, **approve** and **adjust** your appointments, and **automate your online scheduling** to concentrate on the most important part of your business – serving your customers and **grow sales**.
 
 You can change the **layout** and **modify the appearance** of the booking form to match your business, website, and branding, manage your services and the customers' list and send **email** and **SMS notifications** – all in one place.
 
@@ -106,7 +106,6 @@ Also, Bookly is an excellent solution for **web studios** and **developers**, wh
 ### 4. Bookly Pro add-on features:
 
 **Bookly Pro** add-on allows you to use more features and settings, install other add-ons for Bookly, includes six months of customer support, and provides you with advanced capabilities for automating your **online scheduling system**. Some of them include:
-
   * **Unlimited** number of **staff members** with an individual working schedule and ability to manage their profiles and online booking calendar
   * **Unlimited** number of **services** with additional settings (padding time, visibility, limitations, etc.)
   * Ability to receive secure and flexible **online payments** on your website
@@ -179,7 +178,7 @@ We recommend visiting our [Help Center](https://support.booking-wp-plugin.com/hc
 
 Regular License of Bookly Pro add-on includes six months of support which is available online 24/7. After the support pack expires, it can be [renewed at any time](https://help.market.envato.com/hc/en-us/articles/207886473-Extending-and-Renewing-Item-Support).
 
-= I’ve installed Bookly. How do I get it running? = 
+= I’ve installed Bookly. How do I get it running? =
 
 To start using Bookly, you’ll need to add a staff member and at least one service. To publish a booking form on your website, go to the Pages/Posts and click on the "Add Bookly booking form" button in the page editor.
 
@@ -188,7 +187,7 @@ To start using Bookly, you’ll need to add a staff member and at least one serv
 Appearance section in Bookly menu is the place to start with. Change the colors, update interface texts, show/hide particular fields, and much more.
 If you want to remove fields, make sure you only check the right boxes to the booking form.
 
-= Do I need to know how to code in order to install or use Bookly? = 
+= Do I need to know how to code in order to install or use Bookly? =
 
 No, if your website runs on WordPress.
 You can access all Bookly capabilities from the admin area, which will be an integral part of your WordPress dashboard.
@@ -197,15 +196,15 @@ You can access all Bookly capabilities from the admin area, which will be an int
 
 1. In *Bookly menu –> SMS Notifications*, click on "Register" in the login form on the left side of the page;
 2. Top up your balance by one of the standard $10, $25, $50, or $100 amounts (transaction processed by PayPal);
-3. To send scheduled notifications please execute the following command hourly with your cron:
+3. If you use cron for scheduled notifications, make sure to update your cron settings by replacing the current command with the following:
 wget -q -O - http://[your-domain]/wp-cron.php
 4. Choose notification types and build your messages using shortcodes: tick a checkbox, and an editor field will open. Write the copy, format it as you like, and add personalized data using shortcodes that you’ll see just below the text edit window.
 
 To learn more, please visit our [Help Center](https://support.booking-wp-plugin.com/hc/en-us/articles/212411289?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG).
 
-= I want to learn more about all Bookly features. = 
+= I want to learn more about all Bookly features. =
 
-You can find more details about Bookly Pro features [here](https://www.booking-wp-plugin.com/features/?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) (paid version requires the Bookly Pro add-on). 
+You can find more details about Bookly Pro features [here](https://www.booking-wp-plugin.com/features/?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) (paid version requires the Bookly Pro add-on).
 Check out our [video tutorials](https://www.youtube.com/channel/UCO4v4UcvU43enNcHU8BN5XA?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) about main Bookly features.
 
 = How do I suggest a feature for future versions of Bookly? =
@@ -237,40 +236,40 @@ We've created a [discussion board](https://support.booking-wp-plugin.com/hc/en-u
 
 == Installation ==
 
-= MINIMUM REQUIREMENTS = 
+= MINIMUM REQUIREMENTS =
   * WordPress 3.7 or greater
   * PHP version 5.3.7 or greater
-  * MySQL version 5.0 or greater  
- 
-= AUTOMATIC INSTALLATION = 
+  * MySQL version 5.0 or greater
+
+= AUTOMATIC INSTALLATION =
 Automatic installation is the easiest option as WordPress handles the file transfers itself and you don’t even need to leave your web browser. To do an automatic install of Bookly, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
 
 In the search field type “Bookly” and click Search Plugins. Once you have found our plugin, you can install it simply by clicking Install Now. WordPress will automatically complete the installation.
 
-= MANUAL INSTALLATION = 
+= MANUAL INSTALLATION =
 The manual installation method involves downloading our plugin and uploading it to your web server via your favorite FTP application.
 
 1. Download the plugin file to your computer and unzip it.
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installations wp-content/plugins/ directory.
 3. Activate the plugin in the *WordPress sidebar menu –> Plugins*.
 
-= GETTING STARTED = 
-When the title of the plugin has appeared on your dashboard, you may start the setup. The following steps are required to make it possible for customers to use your newly installed plugin:  
+= GETTING STARTED =
+When the title of the plugin has appeared on your dashboard, you may start the setup. The following steps are required to make it possible for customers to use your newly installed plugin:
 
-  * Create a staff member of your company;  
-  * Define a category of services and list of services in each category (you can add up to five services with free version of Bookly);  
-  * Determine the price and the duration of services;  
-  * Associate services with a staff member;  
-  * Set a working schedule for a staff member;  
+  * Create a staff member of your company;
+  * Define a category of services and list of services in each category (you can add up to five services with free version of Bookly);
+  * Determine the price and the duration of services;
+  * Associate services with a staff member;
+  * Set a working schedule for a staff member;
   * Add booking form to a website page.
 
-Upon the completion of these steps, customers can book appointments. In the Calendar section of the administrator’s view, administrators can add the information about appointments manually. The website administrator can also look through and set:  
+Upon the completion of these steps, customers can book appointments. In the Calendar section of the administrator’s view, administrators can add the information about appointments manually. The website administrator can also look through and set:
 
-  * Appearance mode of booking forms;  
-  * Staff member’s individual schedule;  
-  * Staff member’s individual service prices;  
-  * Set holidays and days off; 
-  * List of customers with contact information;  
+  * Appearance mode of booking forms;
+  * Staff member’s individual schedule;
+  * Staff member’s individual service prices;
+  * Set holidays and days off;
+  * List of customers with contact information;
   * Email Notifications and SMS reminders.
 
 == Changelog ==
