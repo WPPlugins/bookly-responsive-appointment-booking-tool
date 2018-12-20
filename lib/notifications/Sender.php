@@ -579,9 +579,8 @@ abstract class Sender
             $subject = $codes->replace( $notification->getSubject(), 'text' );
 
             // Message.
-            $message      = Proxy\Pro::prepareNotificationMessage( $notification->getMessage(), 'admin', $notification->getGateway() );
-            $send_as_html = Config::sendEmailAsHtml() == 'html';
-            if ( $send_as_html ) {
+            $message = Proxy\Pro::prepareNotificationMessage( $notification->getMessage(), 'admin', $notification->getGateway() );
+            if ( Config::sendEmailAsHtml() ) {
                 $message = wpautop( $codes->replace( $message, 'html' ) );
             } else {
                 $message = $codes->replace( $message, 'text' );

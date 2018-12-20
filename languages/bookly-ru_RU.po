@@ -3758,18 +3758,6 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_website}"
 
 #: 
-msgid "New invoice #{invoice_number}"
-msgstr "Новый счёт №{invoice_number}"
-
-#: 
-msgid "Hello.\n"
-"\n"
-"Attached please find invoice #{invoice_number} for an appointment scheduled by {client_first_name} {client_last_name}"
-msgstr "Здравствуйте.\n"
-"\n"
-"В прикрепленном файле прилагается счёт №{invoice_number} за встречу, назначенную {client_first_name} {client_last_name}"
-
-#: 
 msgid "Invoice for your appointment"
 msgstr "Счёт за вашу встречу"
 
@@ -5871,10 +5859,6 @@ msgid "total price without tax"
 msgstr "общая стоимость бронирования без налога"
 
 #: 
-msgid "Note if you use price correction to change the service cost according to the payment gateway used, tax will not be calculated for the additional amount to the cost. If you need to report the exact tax amount to the payment system, do not use additional charge."
-msgstr "Обратите внимание, если вы используете корректировку цены для изменения стоимости услуги в соответствии с используемой платежной системой, налог не будет рассчитываться для надбавки к стоимости. Если вам нужно сообщить точную сумму налога в платежную систему, не используйте надбавку к стоимости."
-
-#: 
 msgid "Dear {client_name}.\n"
 "\n"
 "This is a confirmation that you have been added to the waiting list for {service_name} on {appointment_date} at {appointment_time}.\n"
@@ -6155,7 +6139,7 @@ msgstr "Необходимо указать название группы"
 
 #: 
 msgid "Important: for two-way sync, your website must use HTTPS. Google Calendar API will be able to send notifications to HTTPS address only if there is a valid SSL certificate installed on your web server. Follow the steps in this <a href=\"%s\" target=\"_blank\">document</a> to <b>verify and register your domain</b>."
-msgstr "Важно: для двусторонней синхронизации ваш сайт должен использовать HTTPS. API Google Календаря сможет отправлять уведомления на HTTPS-адрес только в том случае, если на вашем веб-сервере установлен действительный SSL сертификат. Выполните действия, описанные в этом <a href=\"%s\" target=\"_blank\"> документе </a>, чтобы <b> проверить и зарегистрировать свой домен </ b>."
+msgstr "Важно: для двусторонней синхронизации ваш сайт должен использовать HTTPS. API Google Календаря сможет отправлять уведомления на HTTPS-адрес только в том случае, если на вашем веб-сервере установлен действительный SSL сертификат. Выполните действия, описанные в этом <a href=\"%s\" target=\"_blank\"> документе </a>, чтобы <b> проверить и зарегистрировать свой домен </b>."
 
 #: 
 msgid "Allows to set the start and end times for an appointment for services with the duration of 1 day or longer. This time will be displayed in notifications to customers, backend calendar and codes for booking form."

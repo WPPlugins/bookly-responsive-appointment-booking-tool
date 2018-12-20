@@ -405,7 +405,9 @@ jQuery(function ($) {
     function updateStaffPositions() {
         var data = {'categories': [], 'staff': []};
         $categories_list.find('.panel[data-category]').each(function () {
-            data.categories.push($(this).data('category'));
+            if ($(this).data('category')) {
+                data.categories.push($(this).data('category'));
+            }
         });
         $categories_list.find('.bookly-js-staff-members').children('li').each(function () {
             var $this       = $(this),

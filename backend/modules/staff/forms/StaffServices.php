@@ -77,14 +77,20 @@ class StaffServices extends Lib\Base\Form
                 ->where( 'location_id', $location_id )
                 ->whereNotIn( 'service_id', (array) $this->data['service'] )
                 ->execute();
-            if ( isset ( $this->data['service'] ) && ( ( ! isset ( $this->data['custom_services'] ) || $this->data['custom_services'] == '1' ) ) ) {
+            if ( isset ( $this->data['service'] ) && ( ! isset ( $this->data['custom_services'] ) || $this->data['custom_services'] == '1' ) ) {
                 foreach ( $this->data['service'] as $service_id ) {
                     $staff_service = new Lib\Entities\StaffService();
                     $staff_service->loadBy( compact( 'staff_id', 'service_id', 'location_id' ) );
+                    if ( isset( $this->data['capacity_min'][ $service_id ] ) ) {
+                        $staff_service->setCapacityMin( $this->data['capacity_min'][ $service_id ] );
+                    }
+                    if ( isset( $this->data['capacity_max'][ $service_id ] ) ) {
+                        $staff_service->setCapacityMax( $this->data['capacity_max'][ $service_id ] );
+                    }
+                    if ( isset( $this->data['deposit'][ $service_id ] ) ) {
+                        $staff_service->setDeposit( $this->data['deposit'][ $service_id ] );
+                    }
                     $staff_service
-                        ->setCapacityMin( $this->data['capacity_min'][ $service_id ] )
-                        ->setCapacityMax( $this->data['capacity_max'][ $service_id ] )
-                        ->setDeposit( isset ( $this->data['deposit'] ) ? $this->data['deposit'][ $service_id ] : '100%' )
                         ->setPrice( $this->data['price'][ $service_id ] )
                         ->setServiceId( $service_id )
                         ->setStaffId( $staff_id )

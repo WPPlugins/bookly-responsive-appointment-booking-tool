@@ -68,6 +68,7 @@ class Codes
             ),
             'payment' => array(
                 'payment_type'                   => __( 'payment type', 'bookly' ),
+                'payment_status'                 => __( 'payment status', 'bookly' ),
                 'total_price'                    => __( 'total price of booking (sum of all cart items after applying coupon)' ),
             ),
             'service' => array(

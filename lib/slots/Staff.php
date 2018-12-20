@@ -27,7 +27,7 @@ class Staff
      */
     public function __construct()
     {
-        $this->schedule = array();
+        $this->schedule = array( new Schedule() );
         $this->bookings = array();
         $this->services = array();
     }

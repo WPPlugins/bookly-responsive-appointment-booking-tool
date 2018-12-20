@@ -371,8 +371,8 @@ class Codes
         $this->staff_name    = $item->getStaff()->getTranslatedName();
 
         if ( $order->hasPayment() ) {
-            $this->payment_type   = Entities\Payment::typeToString( $order->getPayment()->getType() );
-            $this->payment_status = Entities\Payment::statusToString( $order->getPayment()->getStatus() );
+            $this->payment_type   = $order->getPayment()->getType();
+            $this->payment_status = $order->getPayment()->getStatus();
         }
 
         Proxy\Shared::prepareNotificationCodesForOrder( $this );

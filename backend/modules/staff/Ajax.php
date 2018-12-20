@@ -45,16 +45,18 @@ class Ajax extends Lib\Base\Ajax
     public static function updateStaffPosition()
     {
         $data = self::parameter( 'data' );
-        foreach ( $data['staff'] as $position => $staff_data ) {
-            $staff = Lib\Entities\Staff::find( $staff_data['staff_id'] );
-            $staff
-                ->setPosition( $position )
-                ->setCategoryId( $staff_data['category_id'] !== '' ? $staff_data['category_id'] : null )
-                ->save();
+        if ( isset( $data['staff'] ) ) {
+            foreach ( $data['staff'] as $position => $staff_data ) {
+                $staff = Lib\Entities\Staff::find( $staff_data['staff_id'] );
+                $staff
+                    ->setPosition( $position )
+                    ->setCategoryId( $staff_data['category_id'] !== '' ? $staff_data['category_id'] : null )
+                    ->save();
+            }
         }
-
-        Proxy\Pro::updateCategoriesPositions( $data['categories'] );
-
+        if ( isset( $data['categories'] ) ) {
+            Proxy\Pro::updateCategoriesPositions( $data['categories'] );
+        }
         wp_send_json_success();
     }
 
