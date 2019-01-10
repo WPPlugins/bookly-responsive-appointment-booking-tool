@@ -220,8 +220,14 @@ class Cart
             }
 
             foreach ( $cart_item->getSlots() as $key => $slot ) {
-                list ( $service_id, $staff_id, $datetime ) = $slot;
+                list ( $service_id, $staff_id, $start_datetime ) = $slot;
+
                 $service = Entities\Service::find( $service_id );
+                $item_duration = $collaborative_max_duration !== null
+                    ? $collaborative_max_duration - $collaborative_extras_durations[ $key ]
+                    : $cart_item->getUnits() * $service->getDuration();
+
+                $end_datetime = $start_datetime !== null ? date( 'Y-m-d H:i:s', strtotime( $start_datetime ) + $item_duration ) : null;
 
                 /*
                  * Get appointment with the same params.
@@ -230,11 +236,12 @@ class Cart
                  */
                 $appointment = new Entities\Appointment();
                 // Do not try to find appointment for tasks
-                if ( $datetime !== null ) {
+                if ( $start_datetime !== null ) {
                     $appointment->loadBy( array(
                         'service_id' => $service_id,
                         'staff_id'   => $staff_id,
-                        'start_date' => $datetime,
+                        'start_date' => $start_datetime,
+                        'end_date'   => $end_datetime,
                     ) );
                 }
                 if ( $appointment->isLoaded() == false ) {
@@ -244,16 +251,8 @@ class Cart
                         ->setServiceId( $service_id )
                         ->setStaffId( $staff_id )
                         ->setStaffAny( count( $cart_item->getStaffIds() ) > 1 )
-                        ->setStartDate( $datetime )
-                        ->setEndDate(
-                            $datetime !== null
-                                ? date( 'Y-m-d H:i:s', strtotime( $datetime ) + (
-                                    $collaborative_max_duration !== null
-                                        ? $collaborative_max_duration - $collaborative_extras_durations[ $key ]
-                                        : $cart_item->getUnits() * $service->getDuration()
-                                ) )
-                                : null
-                        )
+                        ->setStartDate( $start_datetime )
+                        ->setEndDate( $end_datetime )
                         ->save();
                 } else {
                     $update = false;
@@ -331,7 +330,7 @@ class Cart
                     $item = $collaborative->addItem( $item );
                 }
                 if ( $series ) {
-                    $series->addItem( $item );
+                    $series->addItem( $i, $item );
                 } else {
                     $order->addItem( $i, $item );
                 }

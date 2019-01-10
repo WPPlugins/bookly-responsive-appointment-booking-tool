@@ -35,6 +35,7 @@
                 date                : null,
                 start_time          : null,
                 end_time            : null,
+                end_date            : null,
                 repeat              : {
                     enabled  : null,
                     repeat   : null,
@@ -228,7 +229,8 @@
                 ds.form.end_time_data = ds.getDataForEndTime();
                 var d = ds.form.service ? ds.form.service.duration * ds.form.service.units_min : ds.data.time_interval;
                 if (d < 86400) {
-                    ds.form.end_time = ds.findTime('end', moment(ds.form.start_time.value, 'HH:mm').add(d, 'seconds').format('HH:mm'));
+                    ds.form.end_date = moment(ds.form.start_time.value, 'HH:mm').add(d, 'seconds');
+                    ds.form.end_time = ds.findTime('end', ds.form.end_date.format('HH:mm'));
                 }
             },
             getStartAndEndDates : function() {
@@ -257,6 +259,7 @@
                 } else {
                     start_time = ds.form.start_time.value.split(':');
                     end_time   = ds.form.end_time.value.split(':');
+                    end_date   = ds.form.end_date;
                 }
                 start_date.hours(start_time[0]);
                 start_date.minutes(start_time[1]);
@@ -417,6 +420,7 @@
                                 skip_date            : start_date === null ? 1 : 0,
                                 end_time             : null,
                                 end_time_data        : [],
+                                end_date             : end_date,
                                 repeat               : {
                                     enabled : 0,
                                     repeat  : 'daily',
@@ -441,10 +445,15 @@
                             if (start_date !== null) {
                                 $scope.form.date = start_date.clone().local().toDate();
                                 $scope.form.start_time = $scope.dataSource.findTime('start', start_date.format('HH:mm'));
-                                $scope.dataSource.setEndTimeBasedOnService();
-                                $scope.form.end_time = start_date.format('YYYY-MM-DD') == end_date.format('YYYY-MM-DD')
-                                    ? $scope.dataSource.findTime('end', end_date.format('HH:mm'))
-                                    : $scope.dataSource.findTime('end', (Math.floor((end_date - start_date) / 3600000) + start_date.hour()) + end_date.format(':mm'));
+                                if(response.data.service_id) {
+                                    $scope.dataSource.setEndTimeBasedOnService();
+                                    $scope.form.end_time = start_date.format('YYYY-MM-DD') == end_date.format('YYYY-MM-DD')
+                                        ? $scope.dataSource.findTime('end', end_date.format('HH:mm'))
+                                        : $scope.dataSource.findTime('end', (Math.floor((end_date - start_date) / 3600000) + start_date.hour()) + end_date.format(':mm'));
+                                } else {
+                                    $scope.form.end_time_data = $scope.dataSource.getDataForEndTime();
+                                    $scope.form.end_time = $scope.dataSource.findTime('end', moment(end_date, 'HH:mm').format('HH:mm'));
+                                }
                             } else {
                                 $scope.form.date = moment().local().toDate();
                                 $scope.form.start_time = $scope.dataSource.findTime('start', moment().format('HH:mm'));

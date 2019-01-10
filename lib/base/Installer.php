@@ -116,8 +116,11 @@ abstract class Installer extends Schema
     private function getTables()
     {
         $tables = array();
-        foreach ( \Bookly\Lib\Plugin::getEntityClasses() as $entity_class ) {
-            $tables[] = $entity_class::getTableName();
+        // Check instance because, add-ons for Bookly < 16.4 can call this method, and drop Bookly tables
+        if ( $this instanceof \Bookly\Lib\Installer ) {
+            foreach ( \Bookly\Lib\Plugin::getEntityClasses() as $entity_class ) {
+                $tables[] = $entity_class::getTableName();
+            }
         }
 
         return $tables;

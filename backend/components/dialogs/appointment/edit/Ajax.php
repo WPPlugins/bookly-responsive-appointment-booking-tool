@@ -427,7 +427,7 @@ class Ajax extends Lib\Base\Ajax
                                 ->addItem( 0, DataHolders\Series::create( $series ) );
                         }
 
-                        foreach ( $schedule as $slot ) {
+                        foreach ( $schedule as $i => $slot ) {
                             $slot       = json_decode( $slot, true );
                             $start_date = $slot[0][2];
                             $end_date   = Lib\Slots\DatePoint::fromStr( $start_date )->modify( $duration )->format( 'Y-m-d H:i:s' );
@@ -479,7 +479,7 @@ class Ajax extends Lib\Base\Ajax
                                         $item = DataHolders\Simple::create( $ca )
                                             ->setService( $service )
                                             ->setAppointment( $appointment );
-                                        $orders[ $ca->getCustomerId() ]->getItem( 0 )->addItem( $item );
+                                        $orders[ $ca->getCustomerId() ]->getItem( 0 )->addItem( $i, $item );
                                     }
                                 }
                             }

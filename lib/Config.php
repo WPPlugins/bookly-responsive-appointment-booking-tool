@@ -440,7 +440,7 @@ abstract class Config
      */
     public static function showWideTimeSlots()
     {
-        return self::groupBookingActive() && get_option( 'bookly_group_booking_enabled' ) && get_option( 'bookly_group_booking_app_show_nop' );
+        return self::groupBookingActive() && get_option( 'bookly_group_booking_app_show_nop' );
     }
 
     /**

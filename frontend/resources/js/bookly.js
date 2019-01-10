@@ -1839,10 +1839,6 @@
             }
             return;
         }
-        if (xhr_render_time != null) {
-            xhr_render_time.abort();
-            xhr_render_time = null;
-        }
         var data = {
                 action    : 'bookly_render_time',
                 csrf_token: BooklyL10n.csrf_token,
@@ -1872,6 +1868,13 @@
             });
 
             return response;
+        }
+
+        function dropAjax() {
+            if (xhr_render_time != null) {
+                xhr_render_time.abort();
+                xhr_render_time = null;
+            }
         }
 
         xhr_render_time = $.ajax({
@@ -1935,6 +1938,7 @@
                     opt[params.form_id].timeZone       = this.value;
                     opt[params.form_id].timeZoneOffset = undefined;
                     showSpinner();
+                    dropAjax();
                     stepTime({
                         form_id: params.form_id,
                         time_zone: opt[params.form_id].timeZone
@@ -1975,6 +1979,7 @@
                                     $time_next_button.toggle($screens.length != 1);
                                 } else {
                                     // Load new data from server.
+                                    dropAjax();
                                     stepTime({form_id: params.form_id, selected_date : date});
                                     showSpinner();
                                 }
@@ -1986,13 +1991,15 @@
                         },
                         onRender: function() {
                             var date = new Date(Date.UTC(this.get('view').year, this.get('view').month));
-                            $('.picker__nav--next').on('click', function() {
+                            $('.picker__nav--next', $container).on('click', function() {
                                 date.setUTCMonth(date.getUTCMonth() + 1);
+                                dropAjax();
                                 stepTime({form_id: params.form_id, selected_date : date.toJSON().substr(0, 10)});
                                 showSpinner();
                             });
-                            $('.picker__nav--prev').on('click', function() {
+                            $('.picker__nav--prev', $container).on('click', function() {
                                 date.setUTCMonth(date.getUTCMonth() - 1);
+                                dropAjax();
                                 stepTime({form_id: params.form_id, selected_date : date.toJSON().substr(0, 10)});
                                 showSpinner();
                             });
@@ -2271,7 +2278,12 @@
                     });
 
                     // On click on a slot.
+                    var xhr_session_save = null;
                     $('button.bookly-hour', $container).off('click').on('click', function (e) {
+                        if ( xhr_session_save != null) {
+                            xhr_session_save.abort();
+                            xhr_session_save = null;
+                        }
                         e.preventDefault();
                         var $this = $(this),
                             data = {
@@ -2282,7 +2294,7 @@
                             };
                         $this.attr({'data-style': 'zoom-in','data-spinner-color':'#333','data-spinner-size':'40'});
                         laddaStart(this);
-                        $.ajax({
+                        xhr_session_save = $.ajax({
                             type : 'POST',
                             url  : BooklyL10n.ajaxurl,
                             data : data,

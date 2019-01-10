@@ -297,13 +297,6 @@ jQuery(function($) {
     // Show number of persons
     $show_nop.on('change', function () {
         $('.bookly-js-nop').toggle( this.checked );
-        if (this.checked) {
-            $time_step_nop.closest('[data-toggle="popover"]').popover('destroy');
-            $time_step_nop.prop('disabled', false);
-        } else {
-            $time_step_nop.closest('[data-toggle="popover"]').popover();
-            $time_step_nop.prop('checked', false).prop('disabled', true).trigger('change');
-        }
     }).trigger('change');
 
     // Show quantity

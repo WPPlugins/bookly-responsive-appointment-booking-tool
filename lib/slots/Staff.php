@@ -40,7 +40,9 @@ class Staff
      */
     public function getSchedule( $location_id = 0 )
     {
-        return $this->schedule[ $location_id ];
+        return isset ( $this->schedule[ $location_id ] )
+            ? $this->schedule[ $location_id ]
+            : $this->schedule[0];
     }
 
     /**

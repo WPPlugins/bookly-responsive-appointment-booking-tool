@@ -175,6 +175,8 @@ class CustomerAppointment extends Lib\Base\Entity
             } else {
                 if ( $this->getCompoundToken() ) {
                     Lib\Proxy\CompoundServices::cancelAppointment( $this );
+                } elseif ( $this->getCollaborativeToken() ) {
+                    Lib\Proxy\CollaborativeServices::cancelAppointment( $this );
                 } else {
                     $this->save();
                     if ( $this->getExtras() != '[]' ) {

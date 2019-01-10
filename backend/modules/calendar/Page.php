@@ -96,7 +96,8 @@ class Page extends Lib\Base\Ajax
                 );
             }
         } else {
-            $staff_members = array( Lib\Entities\Staff::query()->findOne() );
+            $staff = Lib\Entities\Staff::query()->findOne();
+            $staff_members = $staff ? array( $staff ) : array();
             $staff_dropdown_data = array(
                 0 => array(
                     'name'  => '',

@@ -96,8 +96,17 @@ use Bookly\Backend\Modules\Payments\Proxy;
                     </thead>
                     <tfoot>
                         <tr>
-                            <th colspan="7"><div class="pull-right"><?php _e( 'Total', 'bookly' ) ?>:</div></th>
-                            <th colspan="4"><span id="bookly-payment-total"></span></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th><div class="pull-right"><?php _e( 'Total', 'bookly' ) ?>:</div></th>
+                            <th><span id="bookly-payment-total"></span></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>

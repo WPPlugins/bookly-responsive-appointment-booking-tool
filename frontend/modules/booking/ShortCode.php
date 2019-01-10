@@ -10,9 +10,6 @@ use Bookly\Frontend\Modules\Booking\Lib\Errors;
  */
 class ShortCode extends Lib\Base\Component
 {
-    /** @var bool  Whether inline CSS has already been printed or not */
-    protected static $css_printed = false;
-
     /**
      * Init component.
      */

@@ -6,7 +6,7 @@ Plugin Name: Bookly – Responsive WordPress Appointment Booking and Scheduling 
 Plugin URI: https://www.booking-wp-plugin.com/?utm_source=bookly_admin&utm_medium=plugins_page&utm_campaign=plugins_page
 Version: <?php echo Lib\Plugin::getVersion() ?>
 -->
-<?php if ( ! $self::$css_printed ) : include '_css.php'; $self::$css_printed = true; endif  ?>
+<?php include '_css.php' ?>
 <div id="bookly-form-<?php echo $form_id ?>" class="bookly-form" data-form_id="<?php echo $form_id ?>">
     <div style="text-align: center"><img src="<?php echo includes_url( 'js/tinymce/skins/lightgray/img/loader.gif' ) ?>" alt="<?php esc_attr_e( 'Loading...', 'bookly' ) ?>" /></div>
 </div>

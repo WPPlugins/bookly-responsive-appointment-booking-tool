@@ -207,7 +207,7 @@ class Order
                     $item = $compound->addItem( $item );
                 }
                 if ( $series ) {
-                    $series->addItem( $item );
+                    $series->addItem( $i, $item );
                 } else {
                     $order->addItem( $i, $item );
                 }

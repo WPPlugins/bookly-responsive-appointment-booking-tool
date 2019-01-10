@@ -60,12 +60,13 @@ class Series extends Item
     /**
      * Add item.
      *
+     * @param string $id
      * @param Item $item
      * @return $this
      */
-    public function addItem( Item $item )
+    public function addItem( $id, Item $item )
     {
-        $this->items[] = $item;
+        $this->items[ $id ] = $item;
 
         return $this;
     }

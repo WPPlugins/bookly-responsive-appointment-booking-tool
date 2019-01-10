@@ -193,30 +193,31 @@ class UserBookingData
                     ->setEmailConfirm( $current_user->user_email );
             }
         } elseif ( get_option( 'bookly_cst_remember_in_cookie' ) && isset( $_COOKIE['bookly-cst-full-name'] ) ) {
-            $date = explode( '-', $_COOKIE['bookly-cst-birthday'] );
-            $birthday = array(
-                'year'  => $date[0],
-                'month' => isset( $date[1] ) ? (int) $date[1] : 0,
-                'day'   => isset( $date[2] ) ? (int) $date[2] : 0,
-            );
-
             $this
                 ->setFullName( $_COOKIE['bookly-cst-full-name'] )
-                ->setFirstName( $_COOKIE['bookly-cst-first-name'] )
-                ->setLastName( $_COOKIE['bookly-cst-last-name'] )
                 ->setEmail( $_COOKIE['bookly-cst-email'] )
                 ->setEmailConfirm( $_COOKIE['bookly-cst-email'] )
                 ->setPhone( $_COOKIE['bookly-cst-phone'] )
-                ->setBirthday( $birthday )
-                ->setCountry( $_COOKIE['bookly-cst-country'] )
-                ->setState( $_COOKIE['bookly-cst-state'] )
-                ->setPostcode( $_COOKIE['bookly-cst-postcode'] )
-                ->setCity( $_COOKIE['bookly-cst-city'] )
-                ->setStreet( $_COOKIE['bookly-cst-street'] )
-                ->setStreetNumber( $_COOKIE['bookly-cst-street-number'] )
-                ->setAdditionalAddress( $_COOKIE['bookly-cst-additional-address'] )
                 ->setInfoFields( (array) json_decode( stripslashes( $_COOKIE['bookly-cst-info-fields'] ), true ) )
             ;
+            if ( isset( $_COOKIE['bookly-cst-birthday'] ) ) {
+                $date     = explode( '-', $_COOKIE['bookly-cst-birthday'] );
+                $birthday = array(
+                    'year'  => $date[0],
+                    'month' => isset( $date[1] ) ? (int) $date[1] : 0,
+                    'day'   => isset( $date[2] ) ? (int) $date[2] : 0,
+                );
+                $this->setBirthday( $birthday );
+            }
+            if ( isset( $_COOKIE['bookly-cst-first-name'] ) ) { $this->setFirstName( $_COOKIE['bookly-cst-first-name'] ); }
+            if ( isset( $_COOKIE['bookly-cst-last-name'] ) ) { $this->setLastName( $_COOKIE['bookly-cst-last-name'] ); }
+            if ( isset( $_COOKIE['bookly-cst-country'] ) ) { $this->setCountry( $_COOKIE['bookly-cst-country'] ); }
+            if ( isset( $_COOKIE['bookly-cst-state'] ) ) { $this->setState( $_COOKIE['bookly-cst-state'] ); }
+            if ( isset( $_COOKIE['bookly-cst-postcode'] ) ) { $this->setPostcode( $_COOKIE['bookly-cst-postcode'] ); }
+            if ( isset( $_COOKIE['bookly-cst-city'] ) ) { $this->setCity( $_COOKIE['bookly-cst-city'] ); }
+            if ( isset( $_COOKIE['bookly-cst-street'] ) ) { $this->setStreet( $_COOKIE['bookly-cst-street'] ); }
+            if ( isset( $_COOKIE['bookly-cst-street-number'] ) ) { $this->setStreetNumber( $_COOKIE['bookly-cst-street-number'] ); }
+            if ( isset( $_COOKIE['bookly-cst-additional-address'] ) ) { $this->setAdditionalAddress( $_COOKIE['bookly-cst-additional-address'] ); }
         }
 
         // Register destructor (should work in cases when regular __destruct() does not work).
