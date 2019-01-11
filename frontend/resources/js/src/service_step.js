@@ -61,7 +61,7 @@ export default function stepService(params) {
                     staff                      = response.staff,
                     chain                      = response.chain,
                     required                   = response.required,
-                    defaults                   = response.defaults,
+                    defaults                   = opt[params.form_id].defaults,
                     services_per_location      = response.services_per_location,
                     last_chain_key             = 0,
                     category_selected          = false,

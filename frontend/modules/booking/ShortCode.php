@@ -242,6 +242,7 @@ class ShortCode extends Lib\Base\Component
             'use_client_time_zone' => (int) Lib\Config::useClientTimeZone(),
             'start_of_week'        => (int) get_option( 'start_of_week' ),
             'date_format'          => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_PICKADATE ),
+            'defaults'             => compact( 'service_id', 'staff_id', 'location_id', 'category_id' ),
         );
 
         $bookly_options = Proxy\Shared::booklyFormOptions( $bookly_options );

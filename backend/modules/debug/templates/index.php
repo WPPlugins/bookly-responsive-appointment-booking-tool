@@ -1,5 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 use Bookly\Backend\Components\Controls\Inputs;
+use Bookly\Backend\Components\Controls\Buttons;
 ?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
@@ -85,7 +86,7 @@ use Bookly\Backend\Components\Controls\Inputs;
                                                 <td><?php echo $constraint['column_name'] ?></td>
                                                 <td><?php echo $constraint['referenced_table_name'] ?></td>
                                                 <td><?php echo $constraint['referenced_column_name'] ?></td>
-                                                <td><?php echo $constraint['status'] ? 'OK' : 'ERROR' ?></td>
+                                                <td><?php echo $constraint['status'] ? 'OK' : '<button class="btn btn-success btn-xs" type="button" data-action="fix-constraint">FIX…</button>' ?></td>
                                             </tr>
                                         <?php endforeach ?>
                                         </tbody>
@@ -98,6 +99,58 @@ use Bookly\Backend\Components\Controls\Inputs;
                     </div>
                 </div>
             <?php endforeach ?>
+        </div>
+    </div>
+    <div id="bookly-js-add-constraint" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add constraint</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="bookly-js-loading" style="height: 120px;"></div>
+                    <div class="bookly-js-loading">
+                    <pre>
+   ALTER TABLE `<span id="bookly-js-table"></span>`
+ADD CONSTRAINT
+   FOREIGN KEY (`<span id="bookly-js-column"></span>`)
+    REFERENCES `<span id="bookly-js-ref_table"></span>` (`<span id="bookly-js-ref_column"></span>`)
+     ON DELETE <select id="bookly-js-DELETE_RULE">
+            <option></option>
+            <option value="RESTRICT">RESTRICT</option>
+            <option value="CASCADE">CASCADE</option>
+            <option value="SET NULL">SET NULL</option>
+            <option value="NO ACTIONS">NO ACTIONS</option>
+            </select>
+     ON UPDATE <select id="bookly-js-UPDATE_RULE">
+            <option></option>
+            <option value="RESTRICT">RESTRICT</option>
+            <option value="CASCADE">CASCADE</option>
+            <option value="SET NULL">SET NULL</option>
+            <option value="NO ACTIONS">NO ACTIONS</option>
+            </select></pre>
+                </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left">
+                        <div class="btn-group bookly-js-fix-consistency">
+                            <button type="button" class="btn btn-lg btn-danger bookly-js-auto ladda-button" data-spinner-size="40" data-style="zoom-in" data-action="fix-consistency"><span class="ladda-label">Consistency…</span></button>
+                            <button type="button" class="btn btn-lg btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="bookly-js-update" href="#" data-action="fix-consistency">UPDATE `<span class="bookly-js-ref_table"></span>` SET `<span class="bookly-js-ref_column"></span>` = NULL WHERE `<span class="bookly-js-ref_column"></span>` NOT IN (…)</a></li>
+                                <li><a class="bookly-js-delete" href="#" data-action="fix-consistency">DELETE FROM `<span class="bookly-js-ref_table"></span>` WHERE `<span class="bookly-js-ref_column"></span>` NOT IN (…)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <?php Buttons::renderCustom( null, 'bookly-js-delete btn-lg btn-danger pull-left', 'Delete rows…', array( 'style' => 'display:none' ) ) ?>
+                    <?php Buttons::renderCustom( null, 'bookly-js-save btn-lg btn-success', 'Add constraint' ) ?>
+                    <?php Buttons::renderCustom( null, 'btn-lg btn-default', 'Close', array( 'data-dismiss' => 'modal' ) ) ?>
+                </div>
+            </div>
         </div>
     </div>
 </div>

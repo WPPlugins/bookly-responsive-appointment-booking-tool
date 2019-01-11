@@ -8,563 +8,563 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: 
+#:
 msgid "Calendar"
 msgstr "Календарь"
 
-#: 
+#:
 msgid "Appointments"
 msgstr "Встречи"
 
-#: 
+#:
 msgid "Staff Members"
 msgstr "Персонал"
 
-#: 
+#:
 msgid "Services"
 msgstr "Сервисы"
 
-#: 
+#:
 msgid "SMS Notifications"
 msgstr "SMS уведомления"
 
-#: 
+#:
 msgid "Email Notifications"
 msgstr "Email уведомления"
 
-#: 
+#:
 msgid "Customers"
 msgstr "Клиенты"
 
-#: 
+#:
 msgid "Payments"
 msgstr "Платежи"
 
-#: 
+#:
 msgid "Appearance"
 msgstr "Внешний вид"
 
-#: 
+#:
 msgid "Settings"
 msgstr "Настройки"
 
-#: 
+#:
 msgid "Custom Fields"
 msgstr "Пользовательские поля"
 
-#: 
+#:
 msgid "Profile"
 msgstr "Профиль"
 
-#: 
+#:
 msgid "Messages"
 msgstr "Сообщения"
 
-#: 
+#:
 msgid "Today"
 msgstr "Сегодня"
 
-#: 
+#:
 msgid "Next month"
 msgstr "Следующий месяц"
 
-#: 
+#:
 msgid "Previous month"
 msgstr "Предыдущий месяц"
 
-#: 
+#:
 msgid "Settings saved."
 msgstr "Настройки сохранены."
 
-#: 
+#:
 msgid "Your custom CSS was saved. Please refresh the page to see your changes."
 msgstr "Пользовательские CSS были сохранены. Пожалуйста, обновите страницу для того, чтобы увидеть изменения."
 
-#: 
+#:
 msgid "Visible when the chosen time slot has been already booked"
 msgstr "Показывается, когда выбранное время уже забронировано."
 
-#: 
+#:
 msgid "Date"
 msgstr "Дата"
 
-#: 
+#:
 msgid "Time"
 msgstr "Время"
 
-#: 
+#:
 msgid "Price"
 msgstr "Цена"
 
-#: 
+#:
 msgid "Edit"
 msgstr "Редактировать"
 
-#: 
+#:
 msgid "Total"
 msgstr "Всего"
 
-#: 
+#:
 msgid "Visible to non-logged in customers only"
 msgstr "Показывается только клиентам, которые не выполнили вход в систему"
 
-#: 
+#:
 msgid "total quantity of appointments in cart"
 msgstr "количество бронируемых встреч"
 
-#: 
+#:
 msgid "booking number"
 msgstr "номер бронирования"
 
-#: 
+#:
 msgid "name of category"
 msgstr "название категории"
 
-#: 
+#:
 msgid "login form"
 msgstr "форма входа"
 
-#: 
+#:
 msgid "number of persons"
 msgstr "количество персон"
 
-#: 
+#:
 msgid "date of service"
 msgstr "дата сервиса"
 
-#: 
+#:
 msgid "info of service"
 msgstr "информация о сервисе"
 
-#: 
+#:
 msgid "name of service"
 msgstr "название сервиса"
 
-#: 
+#:
 msgid "price of service"
 msgstr "цена сервиса"
 
-#: 
+#:
 msgid "time of service"
 msgstr "время сервиса"
 
-#: 
+#:
 msgid "info of staff"
 msgstr "информация о работнике"
 
-#: 
+#:
 msgid "name of staff"
 msgstr "имя работника"
 
-#: 
+#:
 msgid "total price of booking"
 msgstr "итоговая цена"
 
-#: 
+#:
 msgid "Edit custom CSS"
 msgstr "Редактировать пользовательские CSS"
 
-#: 
+#:
 msgid "Set up your custom CSS styles"
 msgstr "Настройте ваши CSS стили"
 
-#: 
+#:
 msgid "Save"
 msgstr "Сохранить"
 
-#: 
+#:
 msgid "Cancel"
 msgstr "Отмена"
 
-#: 
+#:
 msgid "Show form progress tracker"
 msgstr "Показывать индикатор прогресса"
 
-#: 
+#:
 msgid "Click on the underlined text to edit."
 msgstr "Кликните на подчёркнутый текст, чтобы изменить его."
 
-#: 
+#:
 msgid "Make selecting employee required"
 msgstr "Сделать выбор работника обязательным"
 
-#: 
+#:
 msgid "Show service price next to employee name"
 msgstr "Показывать цену сервиса после имени работника"
 
-#: 
+#:
 msgid "Show service duration next to service name"
 msgstr "Показывать продолжительность сервиса после его названия"
 
-#: 
+#:
 msgid "Show calendar"
 msgstr "Показывать календарь"
 
-#: 
+#:
 msgid "Show blocked timeslots"
 msgstr "Показывать недоступные интервалы"
 
-#: 
+#:
 msgid "Show each day in one column"
 msgstr "Показывать каждый день в отдельной колонке"
 
-#: 
+#:
 msgid "Show Login button"
 msgstr "Показать кнопку логина"
 
-#: 
+#:
 msgid "Do not forget to update your email and SMS codes for customer names"
 msgstr "Не забудьте обновить коды для отображения имени клиента в email и SMS уведомлениях."
 
-#: 
+#:
 msgid "Use first and last name instead of full name"
 msgstr "Использовать фамилию и имя вместо полного имени"
 
-#: 
+#:
 msgid "The booking form on this step may have different set or states of its elements. It depends on various conditions such as installed/activated add-ons, settings configuration or choices made on previous steps. Select option and click on the underlined text to edit."
 msgstr "Форма бронирования на этом шаге может иметь разный набор или состояние элементов. Это зависит от различных условий, таких как установленные/активированные дополнения, настройки конфигурации или выбор, сделанный на предыдущих шагах. Выберите параметр и нажмите на подчеркнутый текст для редактирования."
 
-#: 
+#:
 msgid "Tomorrow"
 msgstr "Завтра"
 
-#: 
+#:
 msgid "Yesterday"
 msgstr "Вчера"
 
-#: 
+#:
 msgid "Apply"
 msgstr "Применить"
 
-#: 
+#:
 msgid "To"
 msgstr "По"
 
-#: 
+#:
 msgid "From"
 msgstr "С"
 
-#: 
+#:
 msgid "Are you sure?"
 msgstr "Вы уверены?"
 
-#: 
+#:
 msgid "No appointments for selected period."
 msgstr "Нет встреч за выбранный период."
 
-#: 
+#:
 msgid "Processing..."
 msgstr "Обработка..."
 
-#: 
+#:
 msgid "%s of %s"
 msgstr "%s из %s "
 
-#: 
+#:
 msgid "No."
 msgstr "№"
 
-#: 
+#:
 msgid "Customer Name"
 msgstr "Имя клиента"
 
-#: 
+#:
 msgid "Customer Phone"
 msgstr "Телефон клиента"
 
-#: 
+#:
 msgid "Customer Email"
 msgstr "Эл. почта клиента"
 
-#: 
+#:
 msgid "Duration"
 msgstr "Продолжительность"
 
-#: 
+#:
 msgid "Status"
 msgstr "Статус"
 
-#: 
+#:
 msgid "Payment"
 msgstr "Оплата"
 
-#: 
+#:
 msgid "Appointment Date"
 msgstr "Дата встречи"
 
-#: 
+#:
 msgid "New appointment"
 msgstr "Новая встреча"
 
-#: 
+#:
 msgid "Customer"
 msgstr "Клиент"
 
-#: 
+#:
 msgid "Edit appointment"
 msgstr "Редактировать встречу"
 
-#: 
+#:
 msgid "Week"
 msgstr "Неделя"
 
-#: 
+#:
 msgid "Day"
 msgstr "День"
 
-#: 
+#:
 msgid "Month"
 msgstr "Месяц"
 
-#: 
+#:
 msgid "All Day"
 msgstr "Весь день"
 
-#: 
+#:
 msgid "Delete"
 msgstr "Удалить"
 
-#: 
+#:
 msgid "No staff selected"
 msgstr "Персонал не выбран"
 
-#: 
+#:
 msgid "Recurring appointments"
 msgstr "Повторяющиеся встречи"
 
-#: 
+#:
 msgid "On waiting list"
 msgstr "В списке ожидания"
 
-#: 
+#:
 msgid "Start time must not be empty"
 msgstr "Время начала не должно быть пустым"
 
-#: 
+#:
 msgid "End time must not be empty"
 msgstr "Время окончания не должно быть пустым"
 
-#: 
+#:
 msgid "End time must not be equal to start time"
 msgstr "Время окончания не должно равняться времени начала"
 
-#: 
+#:
 msgid "The number of customers should not be more than %d"
 msgstr "Количество клиентов не должно быть больше %d"
 
-#: 
+#:
 msgid "Could not save appointment in database."
 msgstr "Не удалось сохранить встречу в базе данных."
 
-#: 
+#:
 msgid "Untitled"
 msgstr "Без имени"
 
-#: 
+#:
 msgid "Provider"
 msgstr "Сотрудник"
 
-#: 
+#:
 msgid "Service"
 msgstr "Сервис"
 
-#: 
+#:
 msgid "-- Select a service --"
 msgstr "-- Выберите сервис --"
 
-#: 
+#:
 msgid "Please select a service"
 msgstr "Пожалуйста, выберите сервис"
 
-#: 
+#:
 msgid "Location"
 msgstr "Место"
 
-#: 
+#:
 msgid "Period"
 msgstr "Период"
 
-#: 
+#:
 msgid "to"
 msgstr "до"
 
-#: 
+#:
 msgid "Selected period doesn't match service duration"
 msgstr "Выбранный период времени не совпадает с длительностью сервиса"
 
-#: 
+#:
 msgid "The selected period is occupied by another appointment"
 msgstr "Выбранный период занят другой встречей"
 
-#: 
+#:
 msgid "Selected / maximum"
 msgstr "Выбрано / максимум"
 
-#: 
+#:
 msgid "Minimum capacity"
 msgstr "Минимальная вместимость"
 
-#: 
+#:
 msgid "Edit booking details"
 msgstr "Редактировать детали бронирования"
 
-#: 
+#:
 msgid "Remove customer"
 msgstr "Удалить клиента из списка"
 
-#: 
+#:
 msgid "-- Search customers --"
 msgstr "-- Поиск клиентов --"
 
-#: 
+#:
 msgid "New customer"
 msgstr "Новый клиент"
 
-#: 
+#:
 msgid "Send notifications"
 msgstr "Отправить уведомления"
 
-#: 
+#:
 msgid "If email or SMS notifications are enabled and you want customers or staff member to be notified about this appointment after saving, select appropriate option before clicking Save. With \"If status changed\" the notifications are sent to those customers whose status has just been changed. With \"To all customers\" the notifications are sent to everyone in the list."
 msgstr "Если уведомления по эл. почте или SMS включены, и вы хотите, чтобы клиент и/или исполнитель получили уведомления сразу после сохранения этой встречи, выберите необходимый пункт перед тем как нажать на кнопку Сохранить. При выборе \"Если изменился статус\" уведомления будут отосланы только тем клиентам, для которых статус встречи был только что изменён. При выборе \"Всем клиентам\" уведомления будут отосланы всем клиентам из списка."
 
-#: 
+#:
 msgid "If email or SMS notifications are enabled and you want customers or yourself to be notified about this appointment after saving, select appropriate option before clicking Save. With \"If status changed\" the notifications are sent to those customers whose status has just been changed. With \"To all customers\" the notifications are sent to everyone in the list."
 msgstr "Если уведомления по эл. почте или SMS включены, и вы хотите, чтобы клиент или вы получили уведомления сразу после сохранения этой встречи, выберите необходимый пункт перед тем как нажать на кнопку Сохранить. При выборе \"Если изменился статус\" уведомления будут отосланы только тем клиентам, для которых статус встречи был только что изменён. При выборе \"Всем клиентам\" уведомления будут отосланы всем клиентам из списка."
 
-#: 
+#:
 msgid "Don't send"
 msgstr "Не отправлять"
 
-#: 
+#:
 msgid "If status changed"
 msgstr "Если изменился статус"
 
-#: 
+#:
 msgid "To all customers"
 msgstr "Всем клиентам"
 
-#: 
+#:
 msgid "Internal note"
 msgstr "Внутренняя заметка"
 
-#: 
+#:
 msgid "Number of persons"
 msgstr "Количество персон"
 
-#: 
+#:
 msgid "Cancellation reason (optional)"
 msgstr "Причина отмены (необязательно)"
 
-#: 
+#:
 msgid "All"
 msgstr "Все"
 
-#: 
+#:
 msgid "All staff"
 msgstr "Весь персонал"
 
-#: 
+#:
 msgid "Add staff members."
 msgstr "Добавить сотрудников."
 
-#: 
+#:
 msgid "Add Staff Members"
 msgstr "Добавить сотрудников"
 
-#: 
+#:
 msgid "Add Services"
 msgstr "Добавить сервисы"
 
-#: 
+#:
 msgid "All services"
 msgstr "Все сервисы"
 
-#: 
+#:
 msgid "Code"
 msgstr "Код"
 
-#: 
+#:
 msgid "All Services"
 msgstr "Все сервисы"
 
-#: 
+#:
 msgid "Reorder"
 msgstr "Переместить"
 
-#: 
+#:
 msgid "No customers found."
 msgstr "Клиенты не найдены."
 
-#: 
+#:
 msgid "Edit customer"
 msgstr "Редактировать клиента"
 
-#: 
+#:
 msgid "Create customer"
 msgstr "Создать клиента"
 
-#: 
+#:
 msgid "Quick search customer"
 msgstr "Быстрый поиск клиента"
 
-#: 
+#:
 msgid "User"
 msgstr "Пользователь"
 
-#: 
+#:
 msgid "Notes"
 msgstr "Заметки"
 
-#: 
+#:
 msgid "Last appointment"
 msgstr "Последняя встреча"
 
-#: 
+#:
 msgid "Total appointments"
 msgstr "Всего встреч"
 
-#: 
+#:
 msgid "New Customer"
 msgstr "Новый клиент"
 
-#: 
+#:
 msgid "First name"
 msgstr "Имя"
 
-#: 
+#:
 msgid "Required"
 msgstr "Обязательно"
 
-#: 
+#:
 msgid "Last name"
 msgstr "Фамилия"
 
-#: 
+#:
 msgid "Name"
 msgstr "Имя"
 
-#: 
+#:
 msgid "Phone"
 msgstr "Телефон"
 
-#: 
+#:
 msgid "Email"
 msgstr "Электронная почта"
 
-#: 
+#:
 msgid "Delete customers"
 msgstr "Удаление клиентов"
 
-#: 
+#:
 msgid "Remember my choice"
 msgstr "Запомнить мой выбор"
 
-#: 
+#:
 msgid "Yes"
 msgstr "Да"
 
-#: 
+#:
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d день"
@@ -572,291 +572,291 @@ msgstr[1] "%d дня"
 msgstr[2] "%d дней"
 msgstr[3] "%d дней"
 
-#: 
+#:
 msgid "Sent successfully."
 msgstr "Успешно отослано."
 
-#: 
+#:
 msgid "Subject"
 msgstr "Тема"
 
-#: 
+#:
 msgid "Message"
 msgstr "Сообщение"
 
-#: 
+#:
 msgid "Send copy to administrators"
 msgstr "Отправлять копию администраторам"
 
-#: 
+#:
 msgid "Sending time"
 msgstr "Время отправки"
 
-#: 
+#:
 msgid "Set the time you want the notification to be sent."
 msgstr "Укажите желаемое время отправки уведомления."
 
-#: 
+#:
 msgid "%s before"
 msgstr "за %s"
 
-#: 
+#:
 msgid "date of appointment"
 msgstr "дата встречи"
 
-#: 
+#:
 msgid "time of appointment"
 msgstr "время встречи"
 
-#: 
+#:
 msgid "end date of appointment"
 msgstr "дата окончания встречи"
 
-#: 
+#:
 msgid "end time of appointment"
 msgstr "время окончания встречи"
 
-#: 
+#:
 msgid "URL of approve appointment link (to use inside <a> tag)"
 msgstr "URL для подтверждения встречи (для использования внутри тега <a>)"
 
-#: 
+#:
 msgid "cancel appointment link"
 msgstr "ссылка для отмены встречи"
 
-#: 
+#:
 msgid "URL of cancel appointment link (to use inside <a> tag)"
 msgstr "URL для отмены встречи (для использования внутри тега <a>)"
 
-#: 
+#:
 msgid "reason you mentioned while deleting appointment"
 msgstr "причина, указанная при удалении встречи"
 
-#: 
+#:
 msgid "email of client"
 msgstr "эл. почта клиента"
 
-#: 
+#:
 msgid "full name of client"
 msgstr "полное имя клиента"
 
-#: 
+#:
 msgid "first name of client"
 msgstr "имя клиента"
 
-#: 
+#:
 msgid "last name of client"
 msgstr "фамилия клиента"
 
-#: 
+#:
 msgid "phone of client"
 msgstr "телефон клиента"
 
-#: 
+#:
 msgid "name of company"
 msgstr "название компании"
 
-#: 
+#:
 msgid "company logo"
 msgstr "логотип компании"
 
-#: 
+#:
 msgid "address of company"
 msgstr "адрес компании"
 
-#: 
+#:
 msgid "company phone"
 msgstr "телефон компании"
 
-#: 
+#:
 msgid "company web-site address"
 msgstr "веб-сайт компании"
 
-#: 
+#:
 msgid "URL for adding event to client's Google Calendar (to use inside <a> tag)"
 msgstr "URL для добавления события в Google Календарь клиента (для использования внутри тега <a>)"
 
-#: 
+#:
 msgid "payment type"
 msgstr "тип платежа"
 
-#: 
+#:
 msgid "duration of service"
 msgstr "продолжительность сервиса"
 
-#: 
+#:
 msgid "email of staff"
 msgstr "эл. почта работника"
 
-#: 
+#:
 msgid "phone of staff"
 msgstr "телефон работника"
 
-#: 
+#:
 msgid "photo of staff"
 msgstr "фото работника"
 
-#: 
+#:
 msgid "total price of booking (sum of all cart items after applying coupon)"
 msgstr "итоговая цена бронирования (сумма всех товаров в корзине после применения купона)"
 
-#: 
+#:
 msgid "cart information"
 msgstr "данные из корзины"
 
-#: 
+#:
 msgid "cart information with cancel"
 msgstr "данные из корзины с возможностью отмены"
 
-#: 
+#:
 msgid "customer new username"
 msgstr "новое имя пользователя клиента"
 
-#: 
+#:
 msgid "customer new password"
 msgstr "новый пароль клиента"
 
-#: 
+#:
 msgid "site address"
 msgstr "адрес сайта"
 
-#: 
+#:
 msgid "date of next day"
 msgstr "дата завтрашнего дня"
 
-#: 
+#:
 msgid "staff agenda for next day"
 msgstr "расписание сотрудника на следующий день"
 
-#: 
+#:
 msgid "Test Email Notifications"
 msgstr "Тестировать уведомления по эл. почте"
 
-#: 
+#:
 msgid "To email"
 msgstr "Отправить на"
 
-#: 
+#:
 msgid "Sender name"
 msgstr "Имя отправителя"
 
-#: 
+#:
 msgid "Sender email"
 msgstr "Электронная почта отправителя"
 
-#: 
+#:
 msgid "Reply directly to customers"
 msgstr "Отвечать напрямую клиентам"
 
-#: 
+#:
 msgid "Disabled"
 msgstr "Выключено"
 
-#: 
+#:
 msgid "Enabled"
 msgstr "Включено"
 
-#: 
+#:
 msgid "Send emails as"
 msgstr "Отправлять письма как"
 
-#: 
+#:
 msgid "HTML"
 msgstr "HTML"
 
-#: 
+#:
 msgid "Text"
 msgstr "Текст"
 
-#: 
+#:
 msgid "Notification templates"
 msgstr "Шаблоны уведомлений"
 
-#: 
+#:
 msgid "All templates"
 msgstr "Все шаблоны"
 
-#: 
+#:
 msgid "Send"
 msgstr "Отправить"
 
-#: 
+#:
 msgid "Close"
 msgstr "Закрыть"
 
-#: 
+#:
 msgid "HTML allows formatting, colors, fonts, positioning, etc. With Text you must use Text mode of rich-text editors below. On some servers only text emails are sent successfully."
 msgstr "HTML позволяет использовать форматирование, цвета, шрифты, позиционирование и т.д. В режиме Текст вы должны использовать только вкладку Текст в редакторах, расположенных ниже. На некоторых серверах письма отправляются успешно только в режиме Текст."
 
-#: 
+#:
 msgid "If this option is enabled then the email address of the customer is used as a sender email address for notifications sent to staff members and administrators."
 msgstr "Если эта настройка включена, тогда эл. почта клиента будет использована в качестве адреса отправителя уведомлений для сотрудников и администраторов."
 
-#: 
+#:
 msgid "Single"
 msgstr "Одиночные"
 
-#: 
+#:
 msgid "Codes"
 msgstr "Коды"
 
-#: 
+#:
 msgid "Combined"
 msgstr "Объединённые"
 
-#: 
+#:
 msgid "To send scheduled notifications please refer to <a href=\"%1$s\">Bookly Multisite</a> add-on <a href=\"%2$s\">message</a>."
 msgstr "Чтобы отправлять напоминающие уведомления, пожалуйста, обратите внимание на <a href=\"%2$s\">сообщение</a> от аддона <a href=\"%1$s\">Bookly Multisite</a>."
 
-#: 
+#:
 msgid "To send scheduled notifications please execute the following command hourly with your cron:"
 msgstr "Чтобы отправлять напоминающие уведомления, пожалуйста, настройте cron на ежечасное исполнение следующей команды:"
 
-#: 
+#:
 msgid "No payments for selected period and criteria."
 msgstr "Нет платежей за выбранный период и по выбранным критериям."
 
-#: 
+#:
 msgid "Details"
 msgstr "Детали"
 
-#: 
+#:
 msgid "See details for more items"
 msgstr "Для получения информации о других товарах из заказа, смотрите \"Детали\""
 
-#: 
+#:
 msgid "Type"
 msgstr "Тип"
 
-#: 
+#:
 msgid "Deposit"
 msgstr "Аванс"
 
-#: 
+#:
 msgid "Subtotal"
 msgstr "Промежуточный итог"
 
-#: 
+#:
 msgid "Paid"
 msgstr "Оплачено"
 
-#: 
+#:
 msgid "Due"
 msgstr "Долг"
 
-#: 
+#:
 msgid "Complete payment"
 msgstr "Завершить платёж"
 
-#: 
+#:
 msgid "Amount"
 msgstr "Сумма"
 
-#: 
+#:
 msgid "Min capacity should not be greater than max capacity."
 msgstr "Минимальная вместимость не должна быть больше максимальной."
 
-#: 
+#:
 msgid "%d service"
 msgid_plural "%d services"
 msgstr[0] "%d сервис"
@@ -864,807 +864,807 @@ msgstr[1] "%d сервиса"
 msgstr[2] "%d сервисов"
 msgstr[3] "%d сервисов"
 
-#: 
+#:
 msgid "Simple"
 msgstr "Простой"
 
-#: 
+#:
 msgid "Title"
 msgstr "Название"
 
-#: 
+#:
 msgid "Color"
 msgstr "Цвет"
 
-#: 
+#:
 msgid "Visibility"
 msgstr "Видимость"
 
-#: 
+#:
 msgid "Public"
 msgstr "Открытый"
 
-#: 
+#:
 msgid "Private"
 msgstr "Закрытый"
 
-#: 
+#:
 msgid "OFF"
 msgstr "ВЫКЛЮЧИТЬ"
 
-#: 
+#:
 msgid "Providers"
 msgstr "Исполнители"
 
-#: 
+#:
 msgid "Category"
 msgstr "Категория"
 
-#: 
+#:
 msgid "Uncategorized"
 msgstr "Без категории"
 
-#: 
+#:
 msgid "Info"
 msgstr "Информация"
 
-#: 
+#:
 msgid "This text can be inserted into notifications with %s code."
 msgstr "Этот текст может быть использован в уведомлениях при помощи кода %s."
 
-#: 
+#:
 msgid "New Category"
 msgstr "Новая категория"
 
-#: 
+#:
 msgid "Add Service"
 msgstr "Добавить сервис"
 
-#: 
+#:
 msgid "No services found. Please add services."
 msgstr "Сервисы не найдены. Пожалуйста, добавьте сервисы."
 
-#: 
+#:
 msgid "Update service setting"
 msgstr "Изменение настройки сервиса"
 
-#: 
+#:
 msgid "You are about to change a service setting which is also configured separately for each staff member. Do you want to update it in staff settings too?"
 msgstr "Вы собираетесь изменить параметр сервиса, который также настраивается отдельно для каждого сотрудника. Желаете ли вы, чтобы этот параметр был изменён и у сотрудников?"
 
-#: 
+#:
 msgid "No, update just here in services"
 msgstr "Нет, изменить только тут в настройках сервиса"
 
-#: 
+#:
 msgid "WooCommerce cart is not set up. Follow the <a href=\"%s\">link</a> to correct this problem."
 msgstr "Корзина WooCommerce не настроена. Проследуйте по <a href=\"%s\">ссылке</a> для того, чтобы исправить эту проблему."
 
-#: 
+#:
 msgid "Repeat every year"
 msgstr "Повторять каждый год"
 
-#: 
+#:
 msgid "We are not working on this day"
 msgstr "Мы не работаем в этот день"
 
-#: 
+#:
 msgid "Appointment with one participant"
 msgstr "Встреча с одним клиентом"
 
-#: 
+#:
 msgid "Appointment with many participants"
 msgstr "Встреча со многими клиентами"
 
-#: 
+#:
 msgid "Enter a value"
 msgstr "Введите значение"
 
-#: 
+#:
 msgid "capacity of service"
 msgstr "вместимость сервиса"
 
-#: 
+#:
 msgid "number of persons already in the list"
 msgstr "количество человек в списке"
 
-#: 
+#:
 msgid "status of payment"
 msgstr "статус платежа"
 
-#: 
+#:
 msgid "status of appointment"
 msgstr "статус встречи"
 
-#: 
+#:
 msgid "Cart"
 msgstr "Корзина"
 
-#: 
+#:
 msgid "Image"
 msgstr "Изображение"
 
-#: 
+#:
 msgid "Company name"
 msgstr "Имя компании"
 
-#: 
+#:
 msgid "Address"
 msgstr "Адрес"
 
-#: 
+#:
 msgid "Website"
 msgstr "Веб-сайт"
 
-#: 
+#:
 msgid "Phone field default country"
 msgstr "Страна в поле ввода номера телефона"
 
-#: 
+#:
 msgid "Select default country for the phone field in the 'Details' step of booking. You can also let Bookly determine the country based on the IP address of the client."
 msgstr "Укажите страну, которая будет выбрана по умолчанию в поле ввода номера телефона на шаге \"Детали\" во время бронирования. Вы также можете позволить Bookly автоматически определять страну пользователя по его IP адресу."
 
-#: 
+#:
 msgid "Guess country by user's IP address"
 msgstr "Определять страну по IP адресу пользователя"
 
-#: 
+#:
 msgid "Default country code"
 msgstr "Код страны по умолчанию"
 
-#: 
+#:
 msgid "Your clients must have their phone numbers in international format in order to receive text messages. However you can specify a default country code that will be used as a prefix for all phone numbers that do not start with \"+\" or \"00\". E.g. if you enter \"1\" as the default country code and a client enters their phone as \"(600) 555-2222\" the resulting phone number to send the SMS to will be \"+1600555222\"."
 msgstr "Для того, чтобы получать текстовые сообщения, телефонные номера ваших клиентов должны быть в международном формате. Однако, вы можете указать код страны по умолчанию, который будет использоваться в качестве префикса для всех номеров, которые не начинаются на \"+\" или \"00\". Например, если вы укажите код страны как \"1\" и клиент введёт свой номер как \"(600) 555-2222\", тогда SMS будет отправлено на номер \"+1600555222\"."
 
-#: 
+#:
 msgid "Remember personal information in cookies"
 msgstr "Запоминать личные данные в файлах cookie"
 
-#: 
+#:
 msgid "If this setting is enabled then returning customers will have their personal information fields filled in at the Details step with the data previously saved in cookies."
 msgstr "Если этот параметр включён, то при повторном бронировании на шаге \"Детали\" поля с личной информацией клиентов будут автоматически заполнены данными, ранее сохранёнными в файлах cookie."
 
-#: 
+#:
 msgid "Time slot length"
 msgstr "Длина временного интервала"
 
-#: 
+#:
 msgid "Select a time interval which will be used as a step when building all time slots in the system."
 msgstr "Выберите интервал, который будет использован в качестве шага при построении всех временных списков в системе."
 
-#: 
+#:
 msgid "Enable this option to make slot length equal to service duration at the Time step of booking form."
 msgstr "Включите эту настройку, чтобы сделать длину интервалов равной продолжительности сервиса на шаге Время в форме бронирования."
 
-#: 
+#:
 msgid "Default appointment status"
 msgstr "Первоначальный статус встречи"
 
-#: 
+#:
 msgid "Select status for newly booked appointments."
 msgstr "Укажите, какой статус должны получать новые встречи"
 
-#: 
+#:
 msgid "Pending"
 msgstr "В ожидании"
 
-#: 
+#:
 msgid "Approved"
 msgstr "Подтверждено"
 
-#: 
+#:
 msgid "Approve appointment URL (success)"
 msgstr "URL страницы после подтверждения забронированной встречи (в случае успеха)"
 
-#: 
+#:
 msgid "Set the URL of a page that is shown to staff after they successfully approved the appointment."
 msgstr "Укажите URL страницы, которая будет показана сотруднику в случае успешного подтверждения встречи."
 
-#: 
+#:
 msgid "Approve appointment URL (denied)"
 msgstr "URL страницы после подтверждения забронированной встречи (в случае отказа)"
 
-#: 
+#:
 msgid "Set the URL of a page that is shown to staff when the approval of appointment cannot be done (due to capacity, changed status, etc.)."
 msgstr "Укажите URL страницы, которая будет показана сотруднику в случае, когда подтверждение встречи невозможно (по причине превышения вместимости, ранее изменённого статуса и др.)."
 
-#: 
+#:
 msgid "Cancel appointment URL (success)"
 msgstr "URL страницы после отмены забронированной встречи (в случае успеха)"
 
-#: 
+#:
 msgid "Set the URL of a page that is shown to clients after they successfully cancelled their appointment."
 msgstr "Укажите URL страницы, которая будет показана клиенту в случае успешной отмены встречи."
 
-#: 
+#:
 msgid "Cancel appointment URL (denied)"
 msgstr "URL страницы после отмены забронированной встречи (в случае отказа)"
 
-#: 
+#:
 msgid "Set the URL of a page that is shown to clients when the cancellation of appointment is not available anymore."
 msgstr "Укажите URL страницы, которая будет показана клиенту в случае отказа в отмене встречи."
 
-#: 
+#:
 msgid "Number of days available for booking"
 msgstr "Количество дней доступных для бронирования"
 
-#: 
+#:
 msgid "Set how far in the future the clients can book appointments."
 msgstr "Укажите, насколько далеко в будущем клиенты смогут бронировать встречи."
 
-#: 
+#:
 msgid "Display available time slots in client's time zone"
 msgstr "Показывать доступное для бронирования время в часовом поясе клиента"
 
-#: 
+#:
 msgid "Allow staff members to edit their profiles"
 msgstr "Резрешить персоналу редактировать свои профили"
 
-#: 
+#:
 msgid "If this option is enabled then all staff members who are associated with WordPress users will be able to edit their own profiles, services, schedule and days off."
 msgstr "Если эта настройка включена, тогда все работники, которые связаны с пользователями WordPress'а, могут редактировать свои профили, сервисы, расписание и выходные дни."
 
-#: 
+#:
 msgid "Method to include Bookly JavaScript and CSS files on the page"
 msgstr "Метод подключения JavaScript и CSS файлов Bookly на странице"
 
-#: 
+#:
 msgid "With \"Enqueue\" method the JavaScript and CSS files of Bookly will be included on all pages of your website. This method should work with all themes. With \"Print\" method the files will be included only on the pages which contain Bookly booking form. This method may not work with all themes."
 msgstr "При методе  \"Enqueue\" JavaScript и CSS файлы Bookly будут подключаться на всех страницах вашего сайта. Этот метод должен работать со всеми темами. При методе \"Print\" файлы будут подключаться только на тех страницах, на которых есть форма бронирования от Bookly. Этот метод может не работать в некоторых темах."
 
-#: 
+#:
 msgid "Help us improve Bookly by sending anonymous usage stats"
 msgstr "Помогите нам улучшить Bookly, отправляя анонимную статистику использования"
 
-#: 
+#:
 msgid "Instructions"
 msgstr "Иструкция"
 
-#: 
+#:
 msgid "Please note, the business hours below work as a template for all new staff members. To render a list of available time slots the system takes into account only staff members' schedule, not the company business hours. Be sure to check the schedule of your staff members if you have some unexpected behavior of the booking system."
 msgstr "Обратите внимание, что рабочее время, представленное ниже, используется только в качестве шаблона для новых сотрудников. Для отображения списка доступных временных интервалов система учитывает только расписание сотрудников, а не компании. Обязательно проверьте расписание ваших сотрудников, если у вас есть сомнения по поводу работы системы бронирования."
 
-#: 
+#:
 msgid "Currency"
 msgstr "Валюта"
 
-#: 
+#:
 msgid "Price format"
 msgstr "Формат цен"
 
-#: 
+#:
 msgid "Service paid locally"
 msgstr "Оплата сервиса наличными"
 
-#: 
+#:
 msgid "No"
 msgstr "Нет"
 
-#: 
+#:
 msgid "Client"
 msgstr "Клиент"
 
-#: 
+#:
 msgid "General"
 msgstr "Общие"
 
-#: 
+#:
 msgid "Company"
 msgstr "Компания"
 
-#: 
+#:
 msgid "Business Hours"
 msgstr "Часы работы"
 
-#: 
+#:
 msgid "Holidays"
 msgstr "Праздники"
 
-#: 
+#:
 msgid "Please accept terms and conditions."
 msgstr "Пожалуйста, согласитесь с условиями использования."
 
-#: 
+#:
 msgid "Your payment has been accepted for processing."
 msgstr "Ваш платёж был принят на обработку."
 
-#: 
+#:
 msgid "Your payment has been interrupted."
 msgstr "Ваш платёж был прерван."
 
-#: 
+#:
 msgid "Auto-Recharge enabled."
 msgstr "Автопополнение включено"
 
-#: 
+#:
 msgid "You declined the Auto-Recharge of your balance."
 msgstr "Вы отключили автопополнение своего счёта."
 
-#: 
+#:
 msgid "Please enter old password."
 msgstr "Пожалуйста, введите старый пароль."
 
-#: 
+#:
 msgid "Passwords must be the same."
 msgstr "Пароли должны совпадать."
 
-#: 
+#:
 msgid "Sender ID request is sent."
 msgstr "Запрос отправлен."
 
-#: 
+#:
 msgid "Sender ID is reset to default."
 msgstr "ID отправителя восстановлен до первоначального значения."
 
-#: 
+#:
 msgid "No records for selected period."
 msgstr "Нет записей за выбранный период."
 
-#: 
+#:
 msgid "No records."
 msgstr "Нет записей."
 
-#: 
+#:
 msgid "Auto-Recharge has failed, please replenish your balance directly."
 msgstr "Не удалось включить автопополнение. Пожалуйста, пополните счёт прямым платежом."
 
-#: 
+#:
 msgid "Auto-Recharge disabled"
 msgstr "Автопополнение выключено"
 
-#: 
+#:
 msgid "Error. Can't disable Auto-Recharge, you can perform this action in your PayPal account."
 msgstr "Ошибка. Не удалось отключить автопополнение. Вы можете проделать данную операцию в своём аккаунте PayPal."
 
-#: 
+#:
 msgid "SMS has been sent successfully."
 msgstr "SMS было отправлено успешно."
 
-#: 
+#:
 msgid "We will only charge your PayPal account when your balance falls below $10."
 msgstr "С Вашего счёта PayPal будет списана соответствующая сумма только в случае, когда баланс опустится ниже $10."
 
-#: 
+#:
 msgid "Enable Auto-Recharge"
 msgstr "Включить автопополнение"
 
-#: 
+#:
 msgid "Disable Auto-Recharge"
 msgstr "Выключить автопополнение"
 
-#: 
+#:
 msgid "Administrator phone"
 msgstr "Телефон администратора"
 
-#: 
+#:
 msgid "Enter a phone number in international format. E.g. for the United States a valid phone number would be +17327572923."
 msgstr "Введите номер телефона в международном формате. Например, правильный номер для России будет +79052022284."
 
-#: 
+#:
 msgid "Send test SMS"
 msgstr "Отправить тестовое SMS"
 
-#: 
+#:
 msgid "Country"
 msgstr "Страна"
 
-#: 
+#:
 msgid "Regular price"
 msgstr "Обычная цена"
 
-#: 
+#:
 msgid "Price with custom Sender ID"
 msgstr "Цена с изменённым ID отправителя"
 
-#: 
+#:
 msgid "Order"
 msgstr "Заказ"
 
-#: 
+#:
 msgid "Please take into account that not all countries by law allow custom SMS sender ID. Please check if particular country supports custom sender ID in our price list. Also please note that prices for messages with custom sender ID are usually 20% - 25% higher than normal message price."
 msgstr "Имейте в виду, что не во всех странах согласно закону разрешается изменять ID отправителя. Пожалуйста, проверяйте доступность данной услуги для каждой страны в нашем прайс-листе. Также имейте в виду, что цена за SMS, отправленную с изменённым ID отправителя, обычно на 20%-25% выше, чем за обычную SMS."
 
-#: 
+#:
 msgid "Request Sender ID"
 msgstr "Запросить новый ID отправителя"
 
-#: 
+#:
 msgid "or"
 msgstr "или"
 
-#: 
+#:
 msgid "Reset to default"
 msgstr "Восстановить первоначальное значение"
 
-#: 
+#:
 msgid "Can only contain letters or digits (up to 11 characters)."
 msgstr "Разрешаются буквы и цифры (до 11 знаков включительно)."
 
-#: 
+#:
 msgid "Request"
 msgstr "Запросить"
 
-#: 
+#:
 msgid "Cancel request"
 msgstr "Отменить запрос"
 
-#: 
+#:
 msgid "Requested ID"
 msgstr "Запрошенный ID"
 
-#: 
+#:
 msgid "Status Date"
 msgstr "Дата статуса"
 
-#: 
+#:
 msgid "Sender ID"
 msgstr "ID отправителя"
 
-#: 
+#:
 msgid "Cost"
 msgstr "Стоимость"
 
-#: 
+#:
 msgid "Your balance"
 msgstr "Ваш баланс"
 
-#: 
+#:
 msgid "Send email notification to administrators at low balance"
 msgstr "Отправлять уведомления о низком балансе администраторам по эл. почте "
 
-#: 
+#:
 msgid "Send weekly summary to administrators"
 msgstr "Отправлять еженедельный отчёт администраторам"
 
-#: 
+#:
 msgid "Change"
 msgstr "Изменить"
 
-#: 
+#:
 msgid "Approved at"
 msgstr "Подтверждено"
 
-#: 
+#:
 msgid "Log out"
 msgstr "Выйти"
 
-#: 
+#:
 msgid "Notifications"
 msgstr "Уведомления"
 
-#: 
+#:
 msgid "Add money"
 msgstr "Пополнить счёт"
 
-#: 
+#:
 msgid "Auto-Recharge"
 msgstr "Автопополнение"
 
-#: 
+#:
 msgid "Purchases"
 msgstr "Пополнения"
 
-#: 
+#:
 msgid "SMS Details"
 msgstr "Детали SMS"
 
-#: 
+#:
 msgid "Price list"
 msgstr "Цены"
 
-#: 
+#:
 msgid "SMS Notifications (or \"Bookly SMS\") is a service for notifying your customers via text messages which are sent to mobile phones."
 msgstr "SMS уведомления (или \"Bookly SMS\") это сервис уведомлений ваших клиентов посредством текстовых сообщений, отсылаемых на мобильные телефоны."
 
-#: 
+#:
 msgid "It is necessary to register in order to start using this service."
 msgstr "Для того, чтобы начать пользоваться данным сервисов, необходимо сначала зарегистрироваться."
 
-#: 
+#:
 msgid "After registration you will need to configure notification messages and top up your balance in order to start sending SMS."
 msgstr "После регистрации необходимо будет настроить тексты уведомлений, а также пополнить счёт для того, чтобы начать отсылать SMS."
 
-#: 
+#:
 msgid "Login"
 msgstr "Вход"
 
-#: 
+#:
 msgid "Password"
 msgstr "Пароль"
 
-#: 
+#:
 msgid "Log In"
 msgstr "Войти"
 
-#: 
+#:
 msgid "Registration"
 msgstr "Регистрация"
 
-#: 
+#:
 msgid "Forgot password"
 msgstr "Восстановление пароля"
 
-#: 
+#:
 msgid "Repeat password"
 msgstr "Повторите пароль"
 
-#: 
+#:
 msgid "Register"
 msgstr "Зарегистрироваться"
 
-#: 
+#:
 msgid "Enter code from email"
 msgstr "Введите код из письма."
 
-#: 
+#:
 msgid "New password"
 msgstr "Новый пароль"
 
-#: 
+#:
 msgid "Repeat new password"
 msgstr "Повторите новый пароль"
 
-#: 
+#:
 msgid "Next"
 msgstr "Далее"
 
-#: 
+#:
 msgid "Change password"
 msgstr "Смена пароля"
 
-#: 
+#:
 msgid "Old password"
 msgstr "Старый пароль"
 
-#: 
+#:
 msgid "All locations"
 msgstr "Все места"
 
-#: 
+#:
 msgid "No locations selected"
 msgstr "Места не выбраны"
 
-#: 
+#:
 msgid "The start time must be less than the end one"
 msgstr "Начальное время должно быть меньше конечного"
 
-#: 
+#:
 msgid "The requested interval is not available"
 msgstr "Запрашиваемый интервал недоступен"
 
-#: 
+#:
 msgid "Error adding the break interval"
 msgstr "Ошибка добавления интервала перерыва"
 
-#: 
+#:
 msgid "Delete break"
 msgstr "Удалить перерыв"
 
-#: 
+#:
 msgid "Breaks"
 msgstr "Перерывы"
 
-#: 
+#:
 msgid "Full name"
 msgstr "Полное имя"
 
-#: 
+#:
 msgid "If this staff member requires separate login to access personal calendar, a regular WP user needs to be created for this purpose."
 msgstr "Если этому сотруднику требуется отдельный логин для доступа в личный календарь, тогда для этой цели должен быть создан обычный пользователь WP."
 
-#: 
+#:
 msgid "User with \"Administrator\" role will have access to calendars and settings of all staff members, user with another role will have access only to personal calendar and settings."
 msgstr "Пользователь с ролью \"Администратор\"  будет иметь доступ к календарям и настройкам всех сотрудников, пользователь с иной ролью будет иметь доступ только к личному календарю и настройкам."
 
-#: 
+#:
 msgid "If you leave this field blank, this staff member will not be able to access personal calendar using WP backend."
 msgstr "Если Вы оставите это поле пустым, сотрудник не сможет получить доступ к календарю из административной панели."
 
-#: 
+#:
 msgid "Select from WP users"
 msgstr "Выбрать из пользователей WP"
 
-#: 
+#:
 msgid "To make staff member invisible to your customers set the visibility to \"Private\"."
 msgstr "Чтобы сделать сотрудника  невидимым для клиентов, установите видимость в значение \"Закрытый\"."
 
-#: 
+#:
 msgid "New Staff Member"
 msgstr "Новый сотрудник"
 
-#: 
+#:
 msgid "Schedule"
 msgstr "График"
 
-#: 
+#:
 msgid "Days off"
 msgstr "Нерабочие дни"
 
-#: 
+#:
 msgid "add break"
 msgstr "добавить перерыв"
 
-#: 
+#:
 msgid "Reset"
 msgstr "Сбросить"
 
-#: 
+#:
 msgid "All fields marked with an asterisk (*) are required."
 msgstr "Все поля, отмеченные звёздочкой (*), обязательны для заполнения."
 
-#: 
+#:
 msgid "Invalid email."
 msgstr "Неверный адрес электронной почты."
 
-#: 
+#:
 msgid "Error sending support request."
 msgstr "Ошибка при отправке запроса."
 
-#: 
+#:
 msgid "Show all notifications"
 msgstr "Показать все уведомления"
 
-#: 
+#:
 msgid "Mark all notifications as read"
 msgstr "Пометить все уведомления как прочитанные"
 
-#: 
+#:
 msgid "Documentation"
 msgstr "Документация"
 
-#: 
+#:
 msgid "Need help? Contact us here."
 msgstr "Нужна помощь? Свяжитесь с нами тут."
 
-#: 
+#:
 msgid "Contact Us"
 msgstr "Свяжитесь с нами"
 
-#: 
+#:
 msgid "Feedback"
 msgstr "Отзыв"
 
-#: 
+#:
 msgid "Leave us a message"
 msgstr "Отправьте нам сообщение"
 
-#: 
+#:
 msgid "Your name"
 msgstr "Ваше имя"
 
-#: 
+#:
 msgid "Email address"
 msgstr "Адрес электронной почты"
 
-#: 
+#:
 msgid "How can we help you?"
 msgstr "Чем мы можем быть вам полезны?"
 
-#: 
+#:
 msgid "How likely is it that you would recommend Bookly to a friend or colleague?"
 msgstr "Насколько велика вероятность того, что вы порекомендуете Bookly другу или коллеге?"
 
-#: 
+#:
 msgid "What do you think should be improved?"
 msgstr "Как вы думаете, что необходимо улучшить?"
 
-#: 
+#:
 msgid "Please enter your email (optional)"
 msgstr "Пожалуйста, введите свой адрес электронной почты (необязательно)"
 
-#: 
+#:
 msgid "Please leave your feedback <a href=\"%s\" target=\"_blank\">here</a>."
 msgstr "Пожалуйста, оставьте свой отзыв <a href=\"%s\" target=\"_blank\">тут</a>."
 
-#: 
+#:
 msgid "Subscribe to monthly emails about Bookly improvements and new releases."
 msgstr "Подпишитесь на ежемесячную рассылку об улучшениях в Bookly и новых релизах."
 
-#: 
+#:
 msgid "Add Bookly booking form"
 msgstr "Добавить форму бронирования Bookly"
 
-#: 
+#:
 msgid "Staff"
 msgstr "Персонал"
 
-#: 
+#:
 msgid "Insert"
 msgstr "Вставить"
 
-#: 
+#:
 msgid "Default value for category select"
 msgstr "Начальное значение для категории"
 
-#: 
+#:
 msgid "Select category"
 msgstr "Выберите категорию"
 
-#: 
+#:
 msgid "Hide this field"
 msgstr "Не показывать это поле"
 
-#: 
+#:
 msgid "Default value for service select"
 msgstr "Начальное значение для сервиса"
 
-#: 
+#:
 msgid "Select service"
 msgstr "Выберите сервис"
 
-#: 
+#:
 msgid "Please be aware that a value in this field is required in the frontend. If you choose to hide this field, please be sure to select a default value for it"
 msgstr "Имейте в виду, что это поле является обязательным для заполнения. Поэтому, если вы выберите не показывать это поле, тогда, пожалуйста, задайте ему какое-то значение."
 
-#: 
+#:
 msgid "Default value for employee select"
 msgstr "Начальное значение для работника"
 
-#: 
+#:
 msgid "Any"
 msgstr "Любой"
 
-#: 
+#:
 msgid "Hide this block"
 msgstr "Не показывать этот блок"
 
-#: 
+#:
 msgid "Week days"
 msgstr "Дни недели"
 
-#: 
+#:
 msgid "Time range"
 msgstr "Выбор времени"
 
-#: 
+#:
 msgid "Insert Appointment Booking Form"
 msgstr "Вставить форму для бронирования"
 
-#: 
+#:
 msgid "Show more"
 msgstr "Показать ещё"
 
-#: 
+#:
 msgid "Session error."
 msgstr "Ошибка сессии."
 
-#: 
+#:
 msgid "Form ID error."
 msgstr "Ошибка Form ID."
 
-#: 
+#:
 msgid "Pay locally is not available."
 msgstr "Оплата наличными не доступна."
 
-#: 
+#:
 msgid "Invalid gateway."
 msgstr "Неверный шлюз."
 
-#: 
+#:
 msgid "No time is available for selected criteria."
 msgstr "По выбранным критериям нет доступного времени."
 
-#: 
+#:
 msgid "Data already in use"
 msgstr "Данные уже используется"
 
-#: 
+#:
 msgid "Page Redirection"
 msgstr "Перенаправление на другую страницу"
 
-#: 
+#:
 msgid "If you are not redirected automatically, follow the <a href=\"%s\">link</a>."
 msgstr "Если автоматическое перенаправление не сработало, нажмите на эту <a href=\"%s\">ссылку</a>."
 
-#: 
+#:
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: 
+#:
 msgid "Error"
 msgstr "Ошибка"
 
-#: 
+#:
 msgid " and %d more item"
 msgid_plural " and %d more items"
 msgstr[0] " и ещё %d пункт"
@@ -1672,11 +1672,11 @@ msgstr[1] " и ещё %d пункта"
 msgstr[2] " и ещё %d пунктов"
 msgstr[3] " и ещё %d пунктов"
 
-#: 
+#:
 msgid "Your appointment information"
 msgstr "Информация о Вашей брони"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "This is a confirmation that you have booked {service_name}.\n"
@@ -1700,7 +1700,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "This is a confirmation that you have booked the following items:\n"
@@ -1724,11 +1724,11 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "New booking information"
 msgstr "Информация о новом бронировании"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "You have a new booking.\n"
@@ -1750,11 +1750,11 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Booking cancellation"
 msgstr "Отмена встречи"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
@@ -1774,7 +1774,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "The following booking has been cancelled.\n"
@@ -1796,11 +1796,11 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Email клиента: {client_email}"
 
-#: 
+#:
 msgid "Booking rejection"
 msgstr "Отказ в бронировании"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "Your booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n"
@@ -1824,7 +1824,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "The following booking has been rejected.\n"
@@ -1850,7 +1850,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Email клиента: {client_email}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "An account was created for you at {site_address}\n"
@@ -1870,11 +1870,11 @@ msgstr "Здравствуйте.\n"
 "\n"
 "Спасибо."
 
-#: 
+#:
 msgid "Happy Birthday!"
 msgstr "С днём рождения!"
 
-#: 
+#:
 msgid "Dear {client_name},\n"
 "\n"
 "Happy birthday!\n"
@@ -1898,7 +1898,7 @@ msgstr "Дорогой(ая) {client_name},\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "This is a confirmation that you have booked {service_name}.\n"
 "We are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n"
@@ -1914,7 +1914,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "This is a confirmation that you have booked the following items:\n"
 "{cart_info}\n"
@@ -1930,7 +1930,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "You have a new booking.\n"
 "Service: {service_name}\n"
@@ -1948,7 +1948,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
 "Thank you for choosing our company.\n"
@@ -1962,7 +1962,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "The following booking has been cancelled.\n"
 "Service: {service_name}\n"
@@ -1980,7 +1980,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Email клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "Your booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n"
 "Reason: {cancellation_reason}\n"
@@ -1996,7 +1996,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "The following booking has been rejected.\n"
 "Reason: {cancellation_reason}\n"
@@ -2016,7 +2016,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Email клиента: {client_email}"
 
-#: 
+#:
 msgid "Hello.\n"
 "An account was created for you at {site_address}\n"
 "Your user details:\n"
@@ -2034,7 +2034,7 @@ msgstr "Здравствуйте.\n"
 "\n"
 "Спасибо."
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "We would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\n"
 "Thank you for choosing our company.\n"
@@ -2048,7 +2048,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "We would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\n"
 "Thank you for choosing our company.\n"
@@ -2062,7 +2062,7 @@ msgstr "Дорогой(ая) {client_name},\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "Thank you for choosing {company_name}. We hope you were satisfied with your {service_name}.\n"
 "Thank you and we look forward to seeing you again soon.\n"
@@ -2076,7 +2076,7 @@ msgstr "Дорогой(ая)  {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Dear {client_name},\n"
 "Happy birthday!\n"
 "We wish you all the best.\n"
@@ -2094,7 +2094,7 @@ msgstr "Дорогой(ая) {client_name},\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "Your agenda for tomorrow is:\n"
 "{next_day_agenda}"
@@ -2102,145 +2102,145 @@ msgstr "Здравствуйте.\n"
 "Ваше расписание на завтра:\n"
 "{next_day_agenda}"
 
-#: 
+#:
 msgid "Back"
 msgstr "Назад"
 
-#: 
+#:
 msgid "Book More"
 msgstr "Забронировать ещё"
 
-#: 
+#:
 msgid "Below you can find a list of services selected for booking.\n"
 "Click BOOK MORE if you want to add more services."
 msgstr "Ниже Вы можете найти список сервисов, выбранных для бронирования.\n"
 "Нажмите на кнопку ЗАБРОНИРОВАТЬ ЕЩЁ, чтобы добавить другие сервисы."
 
-#: 
+#:
 msgid "Thank you! Your booking is complete. An email with details of your booking has been sent to you."
 msgstr "Благодарим Вас! Бронирование завершено. Вам отослано электронное письмо с деталями Вашей брони."
 
-#: 
+#:
 msgid "You selected a booking for {service_name} by {staff_name} at {service_time} on {service_date}. The price for the service is {service_price}.\n"
 "Please provide your details in the form below to proceed with booking."
 msgstr "Вы выбрали {service_name} от {staff_name} на {service_date} в {service_time}. Цена за этот сервис {service_price}.\n"
 "Пожалуйста, введите свои данные, чтобы продолжить бронирование."
 
-#: 
+#:
 msgid "Please tell us how you would like to pay: "
 msgstr "Пожалуйста, скажите нам, как бы Вы хотели расплатиться:"
 
-#: 
+#:
 msgid "Please select service: "
 msgstr "Пожалуйста, выберите сервис:"
 
-#: 
+#:
 msgid "Below you can find a list of available time slots for {service_name} by {staff_name}.\n"
 "Click on a time slot to proceed with booking."
 msgstr "Ниже Вы можете найти список доступных временных интервалов для {service_name} от {staff_name}.\n"
 "Нажмите на кнопку временного интервала, чтобы продолжить бронирование."
 
-#: 
+#:
 msgid "Card Security Code"
 msgstr "CVV/CVC"
 
-#: 
+#:
 msgid "Expiration Date"
 msgstr "Срок действия"
 
-#: 
+#:
 msgid "Credit Card Number"
 msgstr "Номер карты"
 
-#: 
+#:
 msgid "Coupon"
 msgstr "Купон"
 
-#: 
+#:
 msgid "Employee"
 msgstr "Работник"
 
-#: 
+#:
 msgid "Finish by"
 msgstr "Закончить в"
 
-#: 
+#:
 msgid "I will pay now with Credit Card"
 msgstr "Я оплачу кредитной картой"
 
-#: 
+#:
 msgid "I will pay locally"
 msgstr "Я оплачу наличными"
 
-#: 
+#:
 msgid "I will pay now with Mollie"
 msgstr "Я оплачу через Mollie"
 
-#: 
+#:
 msgid "I will pay now with PayPal"
 msgstr "Я оплачу через PayPal"
 
-#: 
+#:
 msgid "I'm available on or after"
 msgstr "Пожалуйста, выберите дату"
 
-#: 
+#:
 msgid "Start from"
 msgstr "Начать с"
 
-#: 
+#:
 msgid "Please tell us your email"
 msgstr "Пожалуйста, введите свой электронный адрес"
 
-#: 
+#:
 msgid "Please select an employee"
 msgstr "Пожалуйста, выберите работника"
 
-#: 
+#:
 msgid "Please tell us your name"
 msgstr "Пожалуйста, введите свое имя"
 
-#: 
+#:
 msgid "Please tell us your first name"
 msgstr "Пожалуйста, введите свое имя"
 
-#: 
+#:
 msgid "Please tell us your last name"
 msgstr "Пожалуйста, введите свою фамилию"
 
-#: 
+#:
 msgid "Please tell us your phone"
 msgstr "Пожалуйста, введите свой номер телефона"
 
-#: 
+#:
 msgid "The selected time is not available anymore. Please, choose another time slot."
 msgstr "Выбранное время больше не доступно. Пожалуйста, выберите другое время."
 
-#: 
+#:
 msgid "The highlighted time is not available anymore. Please, choose another time slot."
 msgstr "Подсвеченное время больше не доступно. Пожалуйста, выберите другое время."
 
-#: 
+#:
 msgid "Done"
 msgstr "Готово"
 
-#: 
+#:
 msgid "Signed up"
 msgstr "Забронировано"
 
-#: 
+#:
 msgid "Capacity"
 msgstr "Вместимость"
 
-#: 
+#:
 msgid "Appointment"
 msgstr "Встреча"
 
-#: 
+#:
 msgid "sent to our system"
 msgstr "отправлено в нашу систему"
 
-#: 
+#:
 msgid "Hope you had a good weekend! Here's a summary of messages we've delivered last week:\n"
 "{notification_list}\n"
 "\n"
@@ -2258,79 +2258,79 @@ msgstr "Надеемся, что у Вас были хорошие выходн�
 "Благодарим Вас за использование Bookly SMS. Мы желаем Вам удачной недели!\n"
 "Команда Bookly SMS."
 
-#: 
+#:
 msgid "more"
 msgstr "больше"
 
-#: 
+#:
 msgid "less"
 msgstr "меньше"
 
-#: 
+#:
 msgid "Bookly SMS weekly summary"
 msgstr "Bookly SMS – Еженедельный отчёт"
 
-#: 
+#:
 msgid "Your don't have enough Bookly SMS credits to send this message. Please add funds to your balance and try again."
 msgstr "У вас недостаточно средств на счету Bookly SMS. Пожалуйста, пополните счёт и попробуйте снова."
 
-#: 
+#:
 msgid "Failed to send SMS."
 msgstr "Отправка SMS не удалась."
 
-#: 
+#:
 msgid "Phone number is empty."
 msgstr "Номер телефона пустой."
 
-#: 
+#:
 msgid "Queued"
 msgstr "В очереди"
 
-#: 
+#:
 msgid "Out of credit"
 msgstr "Недостаточно средств"
 
-#: 
+#:
 msgid "Country out of service"
 msgstr "Страна не обслуживается"
 
-#: 
+#:
 msgid "Sending"
 msgstr "Отправляется"
 
-#: 
+#:
 msgid "Sent"
 msgstr "Отправлено"
 
-#: 
+#:
 msgid "Delivered"
 msgstr "Доставлено"
 
-#: 
+#:
 msgid "Failed"
 msgstr "Неудача"
 
-#: 
+#:
 msgid "Undelivered"
 msgstr "Не доставлено"
 
-#: 
+#:
 msgid "Default"
 msgstr "Начальное значение"
 
-#: 
+#:
 msgid "Declined"
 msgstr "Отказано"
 
-#: 
+#:
 msgid "Cancelled"
 msgstr "Отменено"
 
-#: 
+#:
 msgid "Error connecting to server."
 msgstr "Ошибка соединения с сервером."
 
-#: 
+#:
 msgid "Dear Bookly SMS customer.\n"
 "We would like to notify you that your Bookly SMS balance fell lower than 5 USD. To use our service without interruptions please recharge your balance by visiting Bookly SMS page <a href='%s'>here</a>.\n"
 "\n"
@@ -2340,167 +2340,167 @@ msgstr "Уважаемый пользователь Bookly SMS,\n"
 "\n"
 "Если Вы больше не желаете получать подобные уведомления, пожалуйста, обновите Ваши настройки <a href='%s'>тут</a>."
 
-#: 
+#:
 msgid "Bookly SMS - Low Balance"
 msgstr "Bookly SMS - Низкий баланс"
 
-#: 
+#:
 msgid "Empty password."
 msgstr "Пустой пароль."
 
-#: 
+#:
 msgid "Incorrect password."
 msgstr "Неверный пароль."
 
-#: 
+#:
 msgid "Incorrect recovery code."
 msgstr "Неверный код восстановления."
 
-#: 
+#:
 msgid "Incorrect email or password."
 msgstr "Неверный адрес электронной почты или пароль."
 
-#: 
+#:
 msgid "Incorrect sender ID"
 msgstr "Неправильный ID отправителя"
 
-#: 
+#:
 msgid "Pending sender ID already exists."
 msgstr "На рассмотрении уже имеется ID отправителя."
 
-#: 
+#:
 msgid "Recovery code expired."
 msgstr "Код восстановления истёк."
 
-#: 
+#:
 msgid "Error sending email."
 msgstr "Ошибка при отправке электронного письма."
 
-#: 
+#:
 msgid "User not found."
 msgstr "Пользователь не найден."
 
-#: 
+#:
 msgid "Email already in use."
 msgstr "Этот адрес электронной почты уже используется."
 
-#: 
+#:
 msgid "Invalid email"
 msgstr "Неверный электронный адрес"
 
-#: 
+#:
 msgid "This email is already in use"
 msgstr "Этот адрес уже используется"
 
-#: 
+#:
 msgid "\"%s\" is too long (%d characters max)."
 msgstr "\"%s\" слишком длинное (%d символов максимально)."
 
-#: 
+#:
 msgid "Invalid number"
 msgstr "Неправильный номер"
 
-#: 
+#:
 msgid "Invalid date"
 msgstr "Неправильная дата"
 
-#: 
+#:
 msgid "Invalid time"
 msgstr "Неправильное время"
 
-#: 
+#:
 msgid "Your %s: %s is already associated with another %s.<br/>Press Update if we should update your user data, or press Cancel to edit entered data."
 msgstr "%s: %s уже используются для другого %s.<br/>Нажмите Обновить, чтобы перезаписать данные и продолжить, или нажмите Отмена, чтобы исправить введённые данные."
 
-#: 
+#:
 msgid "Rejected"
 msgstr "Отказано"
 
-#: 
+#:
 msgid "Notification to customer about approved appointment"
 msgstr "Уведомление для клиента о встрече со статусом \"Подтверждено\""
 
-#: 
+#:
 msgid "Notification to customer about approved appointments"
 msgstr "Уведомление для клиента о встречах со статусом \"Подтверждено\""
 
-#: 
+#:
 msgid "Notification to customer about cancelled appointment"
 msgstr "Уведомление для клиента о встрече со статусом \"Отменено\""
 
-#: 
+#:
 msgid "Notification to customer about rejected appointment"
 msgstr "Уведомление для клиента о встрече со статусом \"Отказано\""
 
-#: 
+#:
 msgid "Follow-up message in the same day after appointment (requires cron setup)"
 msgstr "Уведомление в день встречи после её завершения (необходимо настроить cron)"
 
-#: 
+#:
 msgid "Notification to customer about their WordPress user login details"
 msgstr "Уведомление для клиента о деталях его WordPress аккаунта"
 
-#: 
+#:
 msgid "Notification to customer about pending appointment"
 msgstr "Уведомление для клиента о встрече со статусом \"В ожидании\""
 
-#: 
+#:
 msgid "Notification to customer about pending appointments"
 msgstr "Уведомление для клиента о встречах со статусом \"В ожидании\""
 
-#: 
+#:
 msgid "Evening reminder to customer about next day appointment (requires cron setup)"
 msgstr "Вечернее уведомление для клиента о завтрашней забронированной встрече (необходимо настроить cron)"
 
-#: 
+#:
 msgid "1st reminder to customer about upcoming appointment (requires cron setup)"
 msgstr "1-е уведомление для клиента о предстоящей встрече (необходимо настроить cron)"
 
-#: 
+#:
 msgid "2nd reminder to customer about upcoming appointment (requires cron setup)"
 msgstr "2-е уведомление для клиента о предстоящей встрече (необходимо настроить cron)"
 
-#: 
+#:
 msgid "3rd reminder to customer about upcoming appointment (requires cron setup)"
 msgstr "3-е уведомление для клиента о предстоящей встрече (необходимо настроить cron)"
 
-#: 
+#:
 msgid "Customer birthday greeting (requires cron setup)"
 msgstr "Поздравление клиента с днём рождения (необходимо настроить cron)"
 
-#: 
+#:
 msgid "Evening notification with the next day agenda to staff member (requires cron setup)"
 msgstr "Вечернее уведомление для сотрудника о расписании на следующий день (необходимо настроить cron)"
 
-#: 
+#:
 msgid "Notification to staff member about approved appointment"
 msgstr "Уведомление для сотрудника о встрече со статусом \"Подтверждено\""
 
-#: 
+#:
 msgid "Notification to staff member about cancelled appointment"
 msgstr "Уведомление для сотрудника о встрече со статусом \"Отменено\""
 
-#: 
+#:
 msgid "Notification to staff member about rejected appointment"
 msgstr "Уведомление для сотрудника о встрече со статусом \"Отказано\""
 
-#: 
+#:
 msgid "Notification to staff member about pending appointment"
 msgstr "Уведомление для сотрудника о встрече со статусом \"В ожидании\""
 
-#: 
+#:
 msgid "Test message"
 msgstr "Тестовое сообщение"
 
-#: 
+#:
 msgid "Local"
 msgstr "Наличными"
 
-#: 
+#:
 msgid "Completed"
 msgstr "Завершён"
 
-#: 
+#:
 msgid "%d week"
 msgid_plural "%d weeks"
 msgstr[0] "%d неделя"
@@ -2508,215 +2508,215 @@ msgstr[1] "%d недели"
 msgstr[2] "%d недель"
 msgstr[3] "%d недель"
 
-#: 
+#:
 msgid "%d h"
 msgstr "%d ч"
 
-#: 
+#:
 msgid "%d min"
 msgstr "%d мин"
 
-#: 
+#:
 msgid "Form view in case of successful booking"
 msgstr "Вид формы при успешном бронировании"
 
-#: 
+#:
 msgid "Form view in case the number of bookings exceeds the limit"
 msgstr "Вид формы в случае, когда превышен лимит на количество бронирований"
 
-#: 
+#:
 msgid "Form view in case of payment has been accepted for processing"
 msgstr "Вид формы в случае, когда платёж принят на обработку"
 
-#: 
+#:
 msgid "No result found"
 msgstr "Результатов не найдено"
 
-#: 
+#:
 msgid "Package"
 msgstr "Пакет"
 
-#: 
+#:
 msgid "Package schedule"
 msgstr "Расписание пакета"
 
-#: 
+#:
 msgid "messages"
 msgstr "сообщения"
 
-#: 
+#:
 msgid "First"
 msgstr "Первая"
 
-#: 
+#:
 msgid "Previous"
 msgstr "Предыдущая"
 
-#: 
+#:
 msgid "Last"
 msgstr "Последняя"
 
-#: 
+#:
 msgid "URL of reject appointment link (to use inside <a> tag)"
 msgstr "URL для отказа во встрече (для использования внутри тега <a>)"
 
-#: 
+#:
 msgid "Custom notification"
 msgstr "Пользовательское уведомление"
 
-#: 
+#:
 msgid "Appointment date and time"
 msgstr "Дата и время встречи"
 
-#: 
+#:
 msgid "Customer's birthday"
 msgstr "День рождения клиента"
 
-#: 
+#:
 msgid "With status"
 msgstr "Со статусом"
 
-#: 
+#:
 msgid "Instantly"
 msgstr "Немедленно"
 
-#: 
+#:
 msgid "days"
 msgstr "дня"
 
-#: 
+#:
 msgid "after"
 msgstr "после"
 
-#: 
+#:
 msgid "at"
 msgstr "в"
 
-#: 
+#:
 msgid "before"
 msgstr "до"
 
-#: 
+#:
 msgid "Recipient"
 msgstr "Получатель"
 
-#: 
+#:
 msgid "Custom"
 msgstr "Пользовательские"
 
-#: 
+#:
 msgid "New Notification"
 msgstr "Новое уведомление"
 
-#: 
+#:
 msgid "Start and end times of the appointment"
 msgstr "Время начала и окончания встречи"
 
-#: 
+#:
 msgid "Show confirmation dialog before updating customer's data"
 msgstr "Показывать диалоговое окно подтверждения перед обновлением данных клиента"
 
-#: 
+#:
 msgid "If this option is enabled and customer enters contact info different from the previous order, a warning message will appear asking to update the data."
 msgstr "Если эта настройка включена и клиент вводит контактные данные, отличные от тех, что он вводил в предыдущий раз, то появится предупреждающее сообщение с просьбой обновить данные."
 
-#: 
+#:
 msgid "Reject appointment URL (success)"
 msgstr "URL страницы после отказа в забронированной встрече (в случае успеха)"
 
-#: 
+#:
 msgid "Set the URL of a page that is shown to staff after they successfully rejected the appointment."
 msgstr "Укажите URL страницы, которая будет показана сотруднику в случае успешного отказа во встрече."
 
-#: 
+#:
 msgid "Reject appointment URL (denied)"
 msgstr "URL страницы после отказа в забронированной встрече (в случае отказа)"
 
-#: 
+#:
 msgid "Set the URL of a page that is shown to staff when the rejection of appointment cannot be done (due to changed status, etc.)."
 msgstr "Укажите URL страницы, которая будет показана сотруднику в случае, когда отказ во встрече невозможен (по причине ранее изменённого статуса и др.)."
 
-#: 
+#:
 msgid "You are trying to use the service too often. Please contact us to make a booking."
 msgstr "Вы слишком часто используете форму бронирования. Пожалуйста, свяжитесь с нами, чтобы сделать заказ."
 
-#: 
+#:
 msgid "%s has reached the limit of bookings for this service"
 msgstr "Для %s достигнут предел бронирования этого сервиса"
 
-#: 
+#:
 msgid "Reminder notification"
 msgstr "Напоминание"
 
-#: 
+#:
 msgid "URL Settings"
 msgstr "Настройки URL"
 
-#: 
+#:
 msgid "on the same day"
 msgstr "в тот же день"
 
-#: 
+#:
 msgid "Administrators"
 msgstr "Администраторы"
 
-#: 
+#:
 msgid "Show notes field"
 msgstr "Показывать поле \"Примечания\""
 
-#: 
+#:
 msgid "customer notes for appointment"
 msgstr "примечания клиента для встречи"
 
-#: 
+#:
 msgid "URL of cancel appointment link with confirmation (to use inside <a> tag)"
 msgstr "URL для отмены встречи с подтверждением (для использования внутри тега <a>)"
 
-#: 
+#:
 msgid "agenda date"
 msgstr "дата расписания"
 
-#: 
+#:
 msgid "Attach ICS file"
 msgstr "Прикрепить файл ICS"
 
-#: 
+#:
 msgid "Event notification"
 msgstr "Уведомление о событии"
 
-#: 
+#:
 msgid "Status changed"
 msgstr "Изменение статуса"
 
-#: 
+#:
 msgid "New booking"
 msgstr "Новое бронирование"
 
-#: 
+#:
 msgid "Last client's appointment"
 msgstr "Последняя встреча клиента"
 
-#: 
+#:
 msgid "Full day agenda"
 msgstr "Рабочее расписание на день"
 
-#: 
+#:
 msgid "Notification period"
 msgstr "Период уведомлений"
 
-#: 
+#:
 msgid "Set period of time when system will attempt to deliver notification to user. Notification will be discarded after period expiration."
 msgstr "Установите период времени, в течение которого система будет пытаться доставить уведомление пользователю. Уведомление будет отклонено после истечения указанного периода."
 
-#: 
+#:
 msgid "Attachments"
 msgstr "Файлы"
 
-#: 
+#:
 msgid "time zone of client"
 msgstr "часовой пояс клиента"
 
-#: 
+#:
 msgid "Are you sure you want to dissociate this purchase code from %s?\n"
 "\n"
 "This will also remove the entered purchase code from this site."
@@ -2724,35 +2724,35 @@ msgstr "Вы уверены, что хотите отсоединить этот
 "\n"
 "Это действие также удалит введённый ключ с текущего сайта."
 
-#: 
+#:
 msgid "Price correction"
 msgstr "Коррекция"
 
-#: 
+#:
 msgid "Increase/Discount (%)"
 msgstr "Наценка/скидка (%)"
 
-#: 
+#:
 msgid "Addition/Deduction"
 msgstr "Добавление/вычет"
 
-#: 
+#:
 msgid "You are going to delete item which is involved in upcoming appointments. All related appointments will be deleted. Please double check and edit appointments before this item deletion if needed."
 msgstr "Вы собираетесь удалить сотрудника, который участвует в предстоящих встречах. Все соответствующие встречи будут удалены. Пожалуйста, перепроверьте и отредактируйте встречи до того, как удалять этого сотрудника."
 
-#: 
+#:
 msgid "Edit appointments"
 msgstr "Редактировать встречи"
 
-#: 
+#:
 msgid "Error."
 msgstr "Ошибка."
 
-#: 
+#:
 msgid "Internal Notes"
 msgstr "Внутренние заметки"
 
-#: 
+#:
 msgid "%d year"
 msgid_plural "%d years"
 msgstr[0] "%d год"
@@ -2760,7 +2760,7 @@ msgstr[1] "%d года"
 msgstr[2] "%d лет"
 msgstr[3] "%d лет"
 
-#: 
+#:
 msgid "%d month"
 msgid_plural "%d months"
 msgstr[0] "%d месяц"
@@ -2768,224 +2768,224 @@ msgstr[1] "%d месяца"
 msgstr[2] "%d месяцев"
 msgstr[3] "%d месяца"
 
-#: 
+#:
 msgid "Set order of the fields in calendar"
 msgstr "Установите порядок вывода полей в календаре"
 
-#: 
+#:
 msgid "Attach payment"
 msgstr "Привязать платёж"
 
-#: 
+#:
 msgid "Bind payment"
 msgstr "Привязать платёж"
 
-#: 
+#:
 msgid "Payment is not found."
 msgstr "Платёж не найден"
 
-#: 
+#:
 msgid "Invalid day"
 msgstr "Неправильный день"
 
-#: 
+#:
 msgid "Day is required"
 msgstr "Необходимо указать день"
 
-#: 
+#:
 msgid "Month is required"
 msgstr "Необходимо указать месяц"
 
-#: 
+#:
 msgid "Year is required"
 msgstr "Необходимо указать год"
 
-#: 
+#:
 msgid "Select day"
 msgstr "Выберите день"
 
-#: 
+#:
 msgid "Select month"
 msgstr "Выберите месяц"
 
-#: 
+#:
 msgid "Select year"
 msgstr "Выберите год"
 
-#: 
+#:
 msgid "Birthday"
 msgstr "День рождения"
 
-#: 
+#:
 msgid "Selected period doesn't match provider's schedule"
 msgstr "Выбранный период находится вне рабочего графика исполнителя"
 
-#: 
+#:
 msgid "Selected period doesn't match service schedule"
 msgstr "Выбранный период находится вне рабочего графика услуги"
 
-#: 
+#:
 msgid "The value is taken from client's browser."
 msgstr "Значение берётся из браузера клиента."
 
-#: 
+#:
 msgid "Tax"
 msgstr "Налог"
 
-#: 
+#:
 msgid "Group discount"
 msgstr "Скидка для группы"
 
-#: 
+#:
 msgid "Coupon discount"
 msgstr "Скидка по купону"
 
-#: 
+#:
 msgid "Send tax information"
 msgstr "Передавать информацию о налоге"
 
-#: 
+#:
 msgid "App ID"
 msgstr "ID приложения"
 
-#: 
+#:
 msgid "State/Region"
 msgstr "Штат/Регион"
 
-#: 
+#:
 msgid "Postal Code"
 msgstr "Почтовый индекс"
 
-#: 
+#:
 msgid "City"
 msgstr "Город"
 
-#: 
+#:
 msgid "Street Address"
 msgstr "Улица и номер дома"
 
-#: 
+#:
 msgid "Country is required"
 msgstr "Необходимо указать страну"
 
-#: 
+#:
 msgid "State is required"
 msgstr "Необходимо указать штат"
 
-#: 
+#:
 msgid "Postcode is required"
 msgstr "Необходимо указать почтовый индекс"
 
-#: 
+#:
 msgid "City is required"
 msgstr "Необходимо указать город"
 
-#: 
+#:
 msgid "Street is required"
 msgstr "Необходимо указать улицу"
 
-#: 
+#:
 msgid "address of client"
 msgstr "адрес клиента"
 
-#: 
+#:
 msgid "Invoice"
 msgstr "Счёт"
 
-#: 
+#:
 msgid "Phone field required"
 msgstr "Телефон обязателен"
 
-#: 
+#:
 msgid "Email field required"
 msgstr "Адрес эл. почты обязателен"
 
-#: 
+#:
 msgid "Both email and phone fields required"
 msgstr "Адрес эл. почты и номер телефона обязательны"
 
-#: 
+#:
 msgid "Additional Address"
 msgstr "Дополнительный адрес"
 
-#: 
+#:
 msgid "To set up Facebook integration, do the following:"
 msgstr "Для того, чтобы настроить интеграцию с Facebook, выполните следующее:"
 
-#: 
+#:
 msgid "Follow the steps at <a href=\"https://developers.facebook.com/docs/apps/register\" target=\"_blank\">https://developers.facebook.com/docs/apps/register</a> to create a Developer Account, register and configure your <b>Facebook App</b>. Below the App Details Panel click <b>Add Platform</b> button, select Website and enter your website URL."
 msgstr "Выполните шаги по ссылке <a href=\"https://developers.facebook.com/docs/apps/register\" target=\"_blank\">https://developers.facebook.com/docs/apps/register</a>, чтобы создать аккаунт разработчика, зарегистрировать и настроить ваше Facebook приложение. Под панелью \"Информация о приложении\" нажмите на кнопку <b>Добавить платформу</b>, выберите Веб-сайт и введите URL-адрес вашего сайта."
 
-#: 
+#:
 msgid "Go to your <a href=\"https://developers.facebook.com/apps/\" target=\"_blank\">App Dashboard</a>. In the left side navigation panel of the App Dashboard, click <b>Settings > Basic</b> to view the App Details Panel with your <b>App ID</b>. Use it in the form below."
 msgstr "Откройте вашу <a href=\"https://developers.facebook.com/apps/\" target=\"_blank\">панель приложений</a>. В левом меню навигации на панели приложений выберите  <b>Настройки > Основное</b>, чтобы открыть панель Информация о приложении, в которой будет отображаться <b>ID приложения</b>. Используйте его в форме ниже."
 
-#: 
+#:
 msgid "Additional address is required"
 msgstr "Необходимо ввести дополнительный адрес"
 
-#: 
+#:
 msgid "Merge with"
 msgstr "Объединить с"
 
-#: 
+#:
 msgid "Select for merge"
 msgstr "Выбрать для объединения"
 
-#: 
+#:
 msgid "Merge list"
 msgstr "Список для объединения"
 
-#: 
+#:
 msgid "Merge customers"
 msgstr "Объединить клиентов"
 
-#: 
+#:
 msgid "You are about to merge customers from the merge list with the selected one. This will result in losing the merged customers and moving all their appointments to the selected customer. Are you sure you want to continue?"
 msgstr "Вы собираетесь объединить клиентов из списка для объединения с выбранным клиентом. Это приведёт к потере объединённых клиентов и переносу всех назначенных встреч выбранному клиенту. Вы уверены, что хотите продолжить?"
 
-#: 
+#:
 msgid "Merge"
 msgstr "Объединить"
 
-#: 
+#:
 msgid "Allow duplicate customers"
 msgstr "Разрешить дубликаты клиентов"
 
-#: 
+#:
 msgid "If enabled, a new user will be created if any of the registration data during the booking is different."
 msgstr "Если включена, то при отличии каких-либо регистрационных данных, введённых клиентом при бронировании, будет создан новый пользователь.\n"
 ""
 
-#: 
+#:
 msgid "Sort by"
 msgstr "Сортировать по"
 
-#: 
+#:
 msgid "Best Sellers"
 msgstr "Лидеры продаж"
 
-#: 
+#:
 msgid "Best Rated"
 msgstr "Лучший рейтинг"
 
-#: 
+#:
 msgid "Newest Items"
 msgstr "Новые"
 
-#: 
+#:
 msgid "Price: low to high"
 msgstr "Цена: от низкой к высокой"
 
-#: 
+#:
 msgid "Price: high to low"
 msgstr "Цена: от высокой к низкой"
 
-#: 
+#:
 msgid "New"
 msgstr "Новый"
 
-#: 
+#:
 msgid "%d sale"
 msgid_plural "%d sales"
 msgstr[0] "%d продажа"
@@ -2993,7 +2993,7 @@ msgstr[1] "%d продажи"
 msgstr[2] "%d продаж"
 msgstr[3] "%d продаж"
 
-#: 
+#:
 msgid "%d review"
 msgid_plural "%d reviews"
 msgstr[0] "%d отзыв"
@@ -3001,743 +3001,743 @@ msgstr[1] "%d отзыва"
 msgstr[2] "%d отзывов"
 msgstr[3] "%d отзывов"
 
-#: 
+#:
 msgid "Installed"
 msgstr "Установлено"
 
-#: 
+#:
 msgid "Get it!"
 msgstr "Установить!"
 
-#: 
+#:
 msgid "I accept <a href=\"%1$s\" target=\"_blank\">Service Terms</a> and <a href=\"%2$s\" target=\"_blank\">Privacy Policy</a>"
 msgstr "Я принимаю <a href=\"%1$s\" target=\"_blank\">Условия предоставления услуги</a> и <a href=\"%2$s\" target=\"_blank\">Политику конфиденциальности</a>"
 
-#: 
+#:
 msgid "N/A"
 msgstr "N/A"
 
-#: 
+#:
 msgid "Create payment"
 msgstr "Создать платёж"
 
-#: 
+#:
 msgid "Search payment"
 msgstr "Поиск платежа"
 
-#: 
+#:
 msgid "Payment ID"
 msgstr "ID платежа"
 
-#: 
+#:
 msgid "Addons"
 msgstr "Дополнения"
 
-#: 
+#:
 msgid "This function is not available in the Bookly."
 msgstr "Эта функция недоступна в Bookly."
 
-#: 
+#:
 msgid "In <b>Checkout Options</b> of your 2Checkout account do the following steps:"
 msgstr "В разделе <b>Checkout Options</b> вашей учётной записи 2Checkout выполните следующие шаги:"
 
-#: 
+#:
 msgid "In <b>Direct Return</b> select <b>Header Redirect (Your URL)</b>."
 msgstr "В <b>Direct Return</b> выберите <b>Header Redirect (Your URL)</b>."
 
-#: 
+#:
 msgid "In <b>Approved URL</b> enter the URL of your booking page."
 msgstr "В <b>Approved URL</b> введите URL вашей страницы для бронирования."
 
-#: 
+#:
 msgid "Finally provide the necessary information in the form below."
 msgstr "Предоставьте необходимую информацию в форме ниже."
 
-#: 
+#:
 msgid "Account Number"
 msgstr "Номер учетной записи"
 
-#: 
+#:
 msgid "Secret Word"
 msgstr "Secret Word"
 
-#: 
+#:
 msgid "Sandbox Mode"
 msgstr "Sandbox Mode"
 
-#: 
+#:
 msgid "Invalid token provided"
 msgstr "Предоставлен неверный токен"
 
-#: 
+#:
 msgid "Invalid session"
 msgstr "Недопустимая сессия"
 
-#: 
+#:
 msgid "Google Calendar event"
 msgstr "Событие Google Календаря"
 
-#: 
+#:
 msgid "Synchronization mode"
 msgstr "Режим синхронизаци"
 
-#: 
+#:
 msgid "With \"One-way\" sync Bookly pushes new appointments and any further changes to Google Calendar. With \"Two-way front-end only\" sync Bookly will additionally fetch events from Google Calendar and remove corresponding time slots before displaying the Time step of the booking form (this may lead to a delay when users click Next to get to the Time step). With \"Two-way\" sync all bookings created in Bookly Calendar will be automatically copied to Google Calendar and vice versa. Important: your website must use HTTPS. Google Calendar API will be able to send notifications only if there is a valid SSL certificate installed on your web server."
 msgstr "В режиме \"Односторонней синхронизации\" Bookly передаёт информацию о новых встречах и любых дальнейших изменениях в Google Календарь. В режиме \"Двусторонней синхронизации для фронтенда\" Bookly будет дополнительно выгружать события из Google Календаря и удалять соответствующие временные интервалы перед тем, как отображать шаг Время в форме бронирования (это может привести к задержке, когда пользователи нажимают кнопку Далее, чтобы перейти к шагу Время). В режиме \"Двусторонней синхронизации\" все бронирования созданные в Календаре Bookly будут автоматически скопированы в Google Календарь и наоборот. Важно: ваш сайт должен использовать HTTPS. API Google Календаря сможет отправлять уведомления только в том случае, если на вашем веб-сервере установлен действительный SSL сертификат."
 
-#: 
+#:
 msgid "One-way"
 msgstr "Односторонняя синхронизация"
 
-#: 
+#:
 msgid "Two-way front-end only"
 msgstr "Двусторонняя синхронизация для фронтенда"
 
-#: 
+#:
 msgid "Two-way"
 msgstr "Двусторонняя"
 
-#: 
+#:
 msgid "Sync appointments history"
 msgstr "Синхронизировать прошлые события"
 
-#: 
+#:
 msgid "Specify how many days of past calendar data you wish to sync at the time of initial sync. If you enter 0, synchronization of past events will not be performed."
 msgstr "Установите значение в днях для синхронизации с прошедшими событиями при первом включении синхронизации. 0 означает, что синхронизация с прошедшими событиями не будет произведена."
 
-#: 
+#:
 msgid "Copy Google Calendar event titles"
 msgstr "Копировать названия событий Google Календаря"
 
-#: 
+#:
 msgid "If enabled then titles of Google Calendar events will be copied to Bookly appointments. If disabled, a standard title \"Google Calendar event\" will be used."
 msgstr "Если включена, то названия событий Google Календаря будут скопированы в Bookly встречи. Если выключена, то будет использоваться стандартное название \"Событие Google Календаря\"."
 
-#: 
+#:
 msgid "Synchronize with Google Calendar"
 msgstr "Синхронизировать с Google Календарём"
 
-#: 
+#:
 msgid "Google Calendar"
 msgstr "Google Календарь"
 
-#: 
+#:
 msgid "Calendars synchronized successfully."
 msgstr "Календари успешно синхронизированы."
 
-#: 
+#:
 msgid "API Login ID"
 msgstr "API Login ID"
 
-#: 
+#:
 msgid "API Transaction Key"
 msgstr "API Transaction Key"
 
-#: 
+#:
 msgid "Columns"
 msgstr "Колонки"
 
-#: 
+#:
 msgid "To use the cart, disable integration with WooCommerce <a href=\"%s\">here</a>."
 msgstr "Чтобы использовать корзину, отключите интеграцию с WooCommerce <a href=\"%s\">здесь</a>."
 
-#: 
+#:
 msgid "Remove"
 msgstr "Удалить"
 
-#: 
+#:
 msgid "Total tax"
 msgstr "Общая сумма налога"
 
-#: 
+#:
 msgid "Waiting list"
 msgstr "Лист ожидания"
 
-#: 
+#:
 msgid "Spare time"
 msgstr "Свободное время"
 
-#: 
+#:
 msgid "Add simple service"
 msgstr "Добавить простой сервис"
 
-#: 
+#:
 msgid "=== Spare time ==="
 msgstr "=== Свободное время ==="
 
-#: 
+#:
 msgid "Compound"
 msgstr "Составной"
 
-#: 
+#:
 msgid "Part of compound service"
 msgstr "Часть составного сервиса"
 
-#: 
+#:
 msgid "Compound service"
 msgstr "Составной сервис"
 
-#: 
+#:
 msgid "The total price for the booking is {total_price}."
 msgstr "Общая сумма за бронирование {total_price}."
 
-#: 
+#:
 msgid "You selected to book {appointments_count} appointments with total price {total_price}."
 msgstr "Вы выбрали для бронирования {appointments_count} встреч(и) с итоговой ценой {total_price}."
 
-#: 
+#:
 msgid "Coupons"
 msgstr "Купоны"
 
-#: 
+#:
 msgid "New coupon series"
 msgstr "Новая серия купонов"
 
-#: 
+#:
 msgid "New coupon"
 msgstr "Новый купон"
 
-#: 
+#:
 msgid "Edit coupon"
 msgstr "Редактировать купон"
 
-#: 
+#:
 msgid "You can enter a mask containing asterisks \"*\" for variables here and click Generate."
 msgstr "Здесь вы можете ввести маску, содержащую звёздочки «*» для замены на символы, и нажать Сгенерировать."
 
-#: 
+#:
 msgid "Generate"
 msgstr "Сгенерировать"
 
-#: 
+#:
 msgid "Mask"
 msgstr "Маска"
 
-#: 
+#:
 msgid "Enter a mask containing asterisks \"*\" for variables."
 msgstr "Введите маску, содержащую звёздочки «*» для замены на символы."
 
-#: 
+#:
 msgid "Discount (%)"
 msgstr "Скидка (%)"
 
-#: 
+#:
 msgid "Deduction"
 msgstr "Вычет"
 
-#: 
+#:
 msgid "Usage limit"
 msgstr "Ограничение на использование (количество раз)"
 
-#: 
+#:
 msgid "Once per customer"
 msgstr "По одному на клиента"
 
-#: 
+#:
 msgid "Select this option to limit the use of the coupon to 1 time per customer."
 msgstr "Включите эту настройку, чтобы ограничить использование купона до 1 раза для одного клиента."
 
-#: 
+#:
 msgid "Date limit (from and to)"
 msgstr "Ограничение по дате (с и по)"
 
-#: 
+#:
 msgid "No limit"
 msgstr "Без ограничений"
 
-#: 
+#:
 msgid "Clear field"
 msgstr "Очистить поле"
 
-#: 
+#:
 msgid "Limit appointments in cart (min and max)"
 msgstr "Ограничение на количество встреч в корзине (мин. и макс.)"
 
-#: 
+#:
 msgid "Specify minimum and maximum (optional) number of services of the same type required to apply a coupon."
 msgstr "Укажите минимальное и максимальное (необязательно) количество одинаковых сервисов, необходимых для применения купона."
 
-#: 
+#:
 msgid "Limit to customers"
 msgstr "Ограничение по клиентам"
 
-#: 
+#:
 msgid "Create another coupon"
 msgstr "Создать ещё купон"
 
-#: 
+#:
 msgid "Add Coupon Series"
 msgstr "Добавить серию купонов"
 
-#: 
+#:
 msgid "Add Coupon"
 msgstr "Добавить купон"
 
-#: 
+#:
 msgid "Show only active"
 msgstr "Показать только активные"
 
-#: 
+#:
 msgid "Customers limit"
 msgstr "Ограничение по клиентам"
 
-#: 
+#:
 msgid "Number of times used"
 msgstr "Использован (количество раз)"
 
-#: 
+#:
 msgid "Active until"
 msgstr "Активен до (вкл.)"
 
-#: 
+#:
 msgid "Min. appointments"
 msgstr "Мин. количество встреч"
 
-#: 
+#:
 msgid "Duplicate"
 msgstr "Дублировать"
 
-#: 
+#:
 msgid "No coupons found."
 msgstr "Купоны не найдены."
 
-#: 
+#:
 msgid "No service selected"
 msgstr "Не выбран сервис"
 
-#: 
+#:
 msgid "All customers"
 msgstr "Все клиенты"
 
-#: 
+#:
 msgid "Discount should be between 0 and 100."
 msgstr "Скидка должна принимать значение от 0 до 100."
 
-#: 
+#:
 msgid "Deduction should be a positive number."
 msgstr "Вычет должен быть положительным числом."
 
-#: 
+#:
 msgid "Min appointments should be greater than zero."
 msgstr "Мин. количество встреч должно быть больше нуля."
 
-#: 
+#:
 msgid "Max appointments should be greater than zero."
 msgstr "Макс. количество встреч должно быть больше нуля."
 
-#: 
+#:
 msgid "Please enter a non empty mask."
 msgstr "Пожалуйста, введите непустую маску."
 
-#: 
+#:
 msgid "It is not possible to generate %d codes for this mask. Only %d codes available."
 msgstr "Невозможно сгенерировать коды для этой маски в количестве %d. Доступное количество — %d."
 
-#: 
+#:
 msgid "All possible codes have already been generated for this mask."
 msgstr "Все возможные коды для этой маски уже были сгенерированы."
 
-#: 
+#:
 msgid "Default code mask"
 msgstr "Маска для кодов по умолчанию"
 
-#: 
+#:
 msgid "Enter default mask for auto-generated codes."
 msgstr "Введите маску по умолчанию для автоматически генерируемых кодов."
 
-#: 
+#:
 msgid "This coupon code is invalid or has been used"
 msgstr "Этот купон недействителен или уже был использован"
 
-#: 
+#:
 msgid "This coupon code has expired"
 msgstr "Срок действия у этого купона истёк"
 
-#: 
+#:
 msgid "Set service duration. If you select Custom, a client, while booking, will have to choose the duration of the service from several time units. In the \"Unit Price\" field specify the cost of 1 unit, so the total cost of the service will increase linearly with the increase of its duration."
 msgstr "Выберите длительность услуги. При выборе \"Произвольная\", клиент должен будет при бронировании выбрать длительность услуги из нескольких временных шагов. В поле \"Цена одного шага\" вам необходимо указать стоимость одного временного шага, таким образом общая стоимость услуги будет линейно увеличиваться с увеличением её длительности."
 
-#: 
+#:
 msgid "Unit duration"
 msgstr "Длительность шага"
 
-#: 
+#:
 msgid "Minimum units"
 msgstr "Минимально шагов"
 
-#: 
+#:
 msgid "Maximum units"
 msgstr "Максимально шагов"
 
-#: 
+#:
 msgid "Unit price"
 msgstr "Цена одного шага"
 
-#: 
+#:
 msgid "Show service price next to duration"
 msgstr "Показывать цену сервиса возле его продолжительности"
 
-#: 
+#:
 msgid "Customer cabinet (all services displayed in tabs)"
 msgstr "Пользовательский кабинет (все сервисы отображаются во вкладках)"
 
-#: 
+#:
 msgid "Appointment management"
 msgstr "Управление встречами"
 
-#: 
+#:
 msgid "Reschedule"
 msgstr "Перенести"
 
-#: 
+#:
 msgid "Profile management"
 msgstr "Управление профилем"
 
-#: 
+#:
 msgid "Wordpress password"
 msgstr "Пароль в WordPress"
 
-#: 
+#:
 msgid "Delete account"
 msgstr "Удалить учётную запись"
 
-#: 
+#:
 msgid "Add Customer Cabinet"
 msgstr "Добавить пользовательский кабинет"
 
-#: 
+#:
 msgid "WP user"
 msgstr "Пользователь WP"
 
-#: 
+#:
 msgid "Current password"
 msgstr "Текущий пароль"
 
-#: 
+#:
 msgid "Confirm password"
 msgstr "Подтвердить пароль"
 
-#: 
+#:
 msgid "You don't have permissions to view this content."
 msgstr "У вас нет прав для просмотра этой страницы."
 
-#: 
+#:
 msgid "No appointments."
 msgstr "Встреч нет."
 
-#: 
+#:
 msgid "Expired"
 msgstr "Завершилась"
 
-#: 
+#:
 msgid "Not allowed"
 msgstr "Не допускается"
 
-#: 
+#:
 msgid "Unfortunately, you're not able to cancel the appointment because the required time limit prior to canceling has expired."
 msgstr "К сожалению, отменить это бронирование не удалось, так как истёк срок минимального промежутка времени между отменой и встречей."
 
-#: 
+#:
 msgid "Profile updated successfully."
 msgstr "Профиль успешно обновлён."
 
-#: 
+#:
 msgid "Wrong current password"
 msgstr "Неверный текущий пароль"
 
-#: 
+#:
 msgid "Passwords mismatch"
 msgstr "Несоответствие паролей"
 
-#: 
+#:
 msgid "Cancel Appointment"
 msgstr "Отменить встречу"
 
-#: 
+#:
 msgid "You are going to cancel a scheduled appointment. Are you sure?"
 msgstr "Вы собираетесь отменить запланированную встречу. Вы уверены?"
 
-#: 
+#:
 msgid "You are going to delete your account and all information associated with it. Click Confirm to continue or Cancel to cancel the action."
 msgstr "Вы собираетесь удалить свой аккаунт и всю связанную с ним информацию. Нажмите Подтвердить, чтобы продолжить или Отменить, чтобы отменить действие."
 
-#: 
+#:
 msgid "This account cannot be deleted because it is associated with scheduled appointments. Please cancel bookings or contact the service provider."
 msgstr "Эта учетная запись не может быть удалена, поскольку она связана с запланированными встречами. Пожалуйста, отмените бронирования или свяжитесь с провайдером услуг."
 
-#: 
+#:
 msgid "Confirm"
 msgstr "Подтвердить"
 
-#: 
+#:
 msgid "OK"
 msgstr "OK"
 
-#: 
+#:
 msgid "Customer Information"
 msgstr "Информация о клиенте"
 
-#: 
+#:
 msgid "Text Field"
 msgstr "Текстовое поле"
 
-#: 
+#:
 msgid "Text Area"
 msgstr "Многострочный текст"
 
-#: 
+#:
 msgid "Text Content"
 msgstr "Текст"
 
-#: 
+#:
 msgid "Checkbox Group"
 msgstr "Группа галочек"
 
-#: 
+#:
 msgid "Radio Button Group"
 msgstr "Группа переключателей"
 
-#: 
+#:
 msgid "Drop Down"
 msgstr "Выпадающий список"
 
-#: 
+#:
 msgid "HTML allowed in all texts and labels."
 msgstr "Допускается использование HTML во всех текстах и названиях."
 
-#: 
+#:
 msgid "Remove field"
 msgstr "Удалить поле"
 
-#: 
+#:
 msgid "Enter a label"
 msgstr "Введите название"
 
-#: 
+#:
 msgid "Required field"
 msgstr "Обязательное поле"
 
-#: 
+#:
 msgid "Ask once"
 msgstr "Запрашивать данные один раз"
 
-#: 
+#:
 msgid "Enter a content"
 msgstr "Введите текст"
 
-#: 
+#:
 msgid "Checkbox"
 msgstr "Галочка"
 
-#: 
+#:
 msgid "Radio Button"
 msgstr "Переключатель"
 
-#: 
+#:
 msgid "Option"
 msgstr "Элемент"
 
-#: 
+#:
 msgid "Remove item"
 msgstr "Удалить элемент"
 
-#: 
+#:
 msgid "Incorrect code"
 msgstr "Неправильный код"
 
-#: 
+#:
 msgid "combined values of all custom fields"
 msgstr "данные из всех пользовательских полей"
 
-#: 
+#:
 msgid "Bind fields to services"
 msgstr "Связать поля с сервисами"
 
-#: 
+#:
 msgid "When this setting is enabled you will be able to create service specific custom fields."
 msgstr "Когда эта настройка включена, вы сможете создавать поля специфичные для каждого сервиса."
 
-#: 
+#:
 msgid "Merge repeating custom fields for multiple bookings of the service"
 msgstr "Объединить повторяющиеся пользовательские поля при множественном бронировании услуги"
 
-#: 
+#:
 msgid "If enabled, customers will see custom fields for unique appointments while booking multiple instances of the service. Repeating custom fields are merged (collapsed) into one field. If disabled, customers will see custom fields for each appointment in the set of bookings."
 msgstr "Если включено, клиенты будут видеть пользовательские поля для сервиса в единственном экземпляре даже при бронировании нескольких встреч для одного и того же сервиса. Повторяющиеся пользовательские поля объединяются (сворачиваются) в одно поле. Если отключено, клиенты будут видеть пользовательские поля для каждой встречи в отдельности."
 
-#: 
+#:
 msgid "Captcha"
 msgstr "Защитный код (Captcha)"
 
-#: 
+#:
 msgid "extended staff agenda for next day"
 msgstr "расширенное расписание на следующий день"
 
-#: 
+#:
 msgid "combined values of all custom fields (formatted in 2 columns)"
 msgstr "данные из всех пользовательских полей (отформатированные в 2 колонки)"
 
-#: 
+#:
 msgid "Another code"
 msgstr "Другой код"
 
-#: 
+#:
 msgid "Would you like to pay deposit or total price"
 msgstr "Вы хотите внести аванс или оплатить полную стоимость"
 
-#: 
+#:
 msgid "I will pay deposit"
 msgstr "Я внесу аванс"
 
-#: 
+#:
 msgid "I will pay total price"
 msgstr "Я оплачу полную стоимость"
 
-#: 
+#:
 msgid "Deposit options"
 msgstr "Варианты оплаты аванса"
 
-#: 
+#:
 msgid "If you enable \"Deposit only\", customers will be requested to pay only a deposit amount. If you enable \"Deposit or full price\", customers will be requested to pay a deposit amount or a full amount."
 msgstr "Если вы выберите \"Только аванс\", клиентам будет предложено оплатить только сумму аванса. Если вы выберите \"Аванс или полная стоимость\", клиентам будет предложено оплатить сумму аванса или полную стоимость."
 
-#: 
+#:
 msgid "Deposit only"
 msgstr "Только аванс"
 
-#: 
+#:
 msgid "Deposit or full price"
 msgstr "Аванс или полная стоимость"
 
-#: 
+#:
 msgid "amount due"
 msgstr "оставшаяся сумма"
 
-#: 
+#:
 msgid "amount to pay"
 msgstr "сумма к оплате"
 
-#: 
+#:
 msgid "total deposit amount to be paid"
 msgstr "итоговая сумма аванса к оплате"
 
-#: 
+#:
 msgid "amount paid"
 msgstr "оплаченная сумма"
 
-#: 
+#:
 msgid "Disable deposit update"
 msgstr "Отключить изменение депозита"
 
-#: 
+#:
 msgid "deposit value"
 msgstr "значение депозита"
 
-#: 
+#:
 msgid "Pay now"
 msgstr "Предоплата"
 
-#: 
+#:
 msgid "Pay now tax"
 msgstr "Налог для предоплаты"
 
-#: 
+#:
 msgid "download"
 msgstr "загрузить"
 
-#: 
+#:
 msgid "File Upload Field"
 msgstr "Поле Загрузки Файла"
 
-#: 
+#:
 msgid "Files"
 msgstr "Файлы"
 
-#: 
+#:
 msgid "Upload directory"
 msgstr "Путь к каталогу"
 
-#: 
+#:
 msgid "Enter the network folder path where the files will be stored. If necessary, make sure that there is no free web access to the folder materials."
 msgstr "Укажите адрес папки, в которой будут сохраняться файлы. При необходимости, убедитесь, что материалы папки недоступны для свободного скачивания из интернета."
 
-#: 
+#:
 msgid "Browse"
 msgstr "Выбрать"
 
-#: 
+#:
 msgid "File"
 msgstr "Файл"
 
-#: 
+#:
 msgid "number of uploaded files"
 msgstr "количество загруженных файлов"
 
-#: 
+#:
 msgid "Persons"
 msgstr "Персоны"
 
-#: 
+#:
 msgid "Capacity (min and max)"
 msgstr "Вместимость (мин. и макс.)"
 
-#: 
+#:
 msgid "Group Booking"
 msgstr "Групповое бронирование"
 
-#: 
+#:
 msgid "Group bookings information format"
 msgstr "Формат отображения информации о групповых бронированиях"
 
-#: 
+#:
 msgid "Select format for displaying the time slot occupancy for group bookings."
 msgstr "Выберите формат отображения занятости временного интервала для групповых бронирований."
 
-#: 
+#:
 msgid "[Booked/Max capacity]"
 msgstr "[Забронировано/Максимальная вместимость]"
 
-#: 
+#:
 msgid "[Available left]"
 msgstr "[Доступно]"
 
-#: 
+#:
 msgid "The minimum and maximum number of customers allowed to book the service for the certain time period."
 msgstr "Минимальное и максимальное количество клиентов, которые могут забронировать сервис на одно и то же время."
 
-#: 
+#:
 msgid "Show information about group bookings"
 msgstr "Показывать информацию о групповых бронированиях"
 
-#: 
+#:
 msgid "Disable capacity update"
 msgstr "Отключить изменение вместимости"
 
-#: 
+#:
 msgid "BILL TO"
 msgstr "ПЛАТЕЛЬЩИК"
 
-#: 
+#:
 msgid "Invoice#"
 msgstr "Счёт№"
 
-#: 
+#:
 msgid "Due date"
 msgstr "Срок платежа"
 
-#: 
+#:
 msgid "INVOICE"
 msgstr "СЧЁТ"
 
-#: 
+#:
 msgid "Thank you for your business"
 msgstr "Спасибо за ваш бизнес"
 
-#: 
+#:
 msgid "Invoice #{invoice_number} for your appointment"
 msgstr "Счёт №{invoice_number} за вашу встречу"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "Attached please find invoice #{invoice_number} for your appointment.\n"
@@ -3757,11 +3757,11 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "New invoice #{invoice_number}"
 msgstr "Новый счёт №{invoice_number}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "Attached please find invoice #{invoice_number} for an appointment scheduled by {client_first_name} {client_last_name}"
@@ -3769,11 +3769,11 @@ msgstr "Здравствуйте.\n"
 "\n"
 "В прикрепленном файле прилагается счёт №{invoice_number} за встречу, назначенную {client_first_name} {client_last_name}"
 
-#: 
+#:
 msgid "Invoice for your appointment"
 msgstr "Счёт за вашу встречу"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "Please download invoice #{invoice_number} here: {invoice_link}\n"
 "Thank you for choosing our company.\n"
@@ -3787,11 +3787,11 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "New invoice"
 msgstr "Новый счёт"
 
-#: 
+#:
 msgid "Hello.\n"
 "You have a new invoice #{invoice_number} for an appointment scheduled by {client_first_name} {client_last_name}.\n"
 "Please download invoice here: {invoice_link}"
@@ -3799,159 +3799,159 @@ msgstr "Здравствуйте.\n"
 "Вы получили новый счёт №{invoice_number} за встречу, назначенную {client_first_name} {client_last_name}.\n"
 "Пожалуйста, скачайте счёт здесь: {invoice_link}"
 
-#: 
+#:
 msgid "Invoices"
 msgstr "Счета"
 
-#: 
+#:
 msgid "Invoice due days"
 msgstr "Срок оплаты счёта"
 
-#: 
+#:
 msgid "This setting specifies the due period for the invoice (in days)."
 msgstr "Эта настройка определяет срок оплаты счёта (в днях)."
 
-#: 
+#:
 msgid "Invoice template"
 msgstr "Шаблон счёта"
 
-#: 
+#:
 msgid "Specify the template for the invoice."
 msgstr "Установите шаблон счёта."
 
-#: 
+#:
 msgid "Preview"
 msgstr "Предварительный просмотр"
 
-#: 
+#:
 msgid "Download invoices"
 msgstr "Скачать счета"
 
-#: 
+#:
 msgid "invoice creation date"
 msgstr "дата создания счёта"
 
-#: 
+#:
 msgid "due date of invoice"
 msgstr "дата оплаты счёта"
 
-#: 
+#:
 msgid "number of days to submit payment"
 msgstr "количество дней на оплату счёта"
 
-#: 
+#:
 msgid "invoice link"
 msgstr "ссылка на счёт"
 
-#: 
+#:
 msgid "invoice number"
 msgstr "номер счёта"
 
-#: 
+#:
 msgid "Attach invoice"
 msgstr "Прикрепить счёт"
 
-#: 
+#:
 msgid "Invoice due days: Please enter value in the following range (in days) - 1 to 365."
 msgstr "Срок оплаты счёта: Пожалуйста, введите значение в следующем диапазоне (в днях) – от 1 до 365."
 
-#: 
+#:
 msgid "Discount"
 msgstr "Скидка"
 
-#: 
+#:
 msgid "Select location"
 msgstr "Выберите место"
 
-#: 
+#:
 msgid "Please select a location"
 msgstr "Пожалуйста, выберите место"
 
-#: 
+#:
 msgid "Locations"
 msgstr "Места"
 
-#: 
+#:
 msgid "Use custom settings"
 msgstr "Использовать пользовательские настройки"
 
-#: 
+#:
 msgid "Select locations where the services are provided."
 msgstr "Выберите места, в которых предоставляются услуги."
 
-#: 
+#:
 msgid "Custom settings for location"
 msgstr "Пользовательские настройки для места"
 
-#: 
+#:
 msgid "location info"
 msgstr "информация о месте"
 
-#: 
+#:
 msgid "location name"
 msgstr "название места"
 
-#: 
+#:
 msgid "New Location"
 msgstr "Новое место"
 
-#: 
+#:
 msgid "Edit Location"
 msgstr "Редактировать место"
 
-#: 
+#:
 msgid "Add Location"
 msgstr "Добавить место"
 
-#: 
+#:
 msgid "No locations found."
 msgstr "Места отсутствуют."
 
-#: 
+#:
 msgid "W/o location"
 msgstr "Без места"
 
-#: 
+#:
 msgid "Make selecting location required"
 msgstr "Сделать выбор места обязательным"
 
-#: 
+#:
 msgid "Default value for location select"
 msgstr "Начальное значение для места"
 
-#: 
+#:
 msgid "Mollie accepts payments in Euro only."
 msgstr "Mollie принимает оплату только в евро."
 
-#: 
+#:
 msgid "Mollie error."
 msgstr "Ошибка Mollie."
 
-#: 
+#:
 msgid "API Key"
 msgstr "API Key"
 
-#: 
+#:
 msgid "Time interval of payment gateway"
 msgstr "Временное окно платёжной системы"
 
-#: 
+#:
 msgid "This setting determines the time limit after which the payment made via the payment gateway is considered to be incomplete. This functionality requires a scheduled cron job."
 msgstr "Эта настройка определяет время, через которое платёж, осуществляемый через платёжную систему, будет считаться невыполненненным. Для работы этой функциональности необходим работающий cron."
 
-#: 
+#:
 msgid "Quantity"
 msgstr "Количество"
 
-#: 
+#:
 msgid "Max quantity"
 msgstr "Максимальное количество"
 
-#: 
+#:
 msgid "Your package at {company_name}"
 msgstr "Ваш пакет в {company_name}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "This is a confirmation that you have booked {package_name}.\n"
@@ -3973,11 +3973,11 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "New package booking"
 msgstr "Новое бронирование пакета услуг"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "You have new package booking.\n"
@@ -4001,7 +4001,7 @@ msgstr "Здравствуйте.\n"
 "\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "This is a confirmation that you have booked {package_name}.\n"
 "We are waiting you at {company_address}.\n"
@@ -4020,7 +4020,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "You have new package booking.\n"
 "Package: {package_name}\n"
@@ -4034,11 +4034,11 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Service package is deactivated"
 msgstr "Пакет услуг деактивирован."
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "Your package of services {package_name} has been deactivated.\n"
@@ -4060,7 +4060,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "The following Package of services {package_name} has been deactivated.\n"
@@ -4080,7 +4080,7 @@ msgstr "Здравствуйте.\n"
 "\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "Your package of services {package_name} has been deactivated.\n"
 "Thank you for choosing our company.\n"
@@ -4096,7 +4096,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "The following Package of services {package_name} has been deactivated.\n"
 "Client name: {client_name}\n"
@@ -4108,599 +4108,599 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Notification to customer about purchased package"
 msgstr "Уведомление для клиента о покупке пакета"
 
-#: 
+#:
 msgid "Notification to staff member about purchased package"
 msgstr "Уведомление для сотрудника о покупке пакета"
 
-#: 
+#:
 msgid "Notification to customer about package deactivation"
 msgstr "Уведомление для клиента о деактивации пакета"
 
-#: 
+#:
 msgid "Notification to staff member about package deactivation"
 msgstr "Уведомление для сотрудника о деактивации пакета"
 
-#: 
+#:
 msgid "Packages"
 msgstr "Пакеты"
 
-#: 
+#:
 msgid "Unassigned"
 msgstr "Неназначенный"
 
-#: 
+#:
 msgid "Enable this setting so that the package can be displayed and available for booking when clients have not specified a particular provider."
 msgstr "Включите эту настройку, чтобы отображать пакет в списке доступных пакетов для бронирования в случаях, когда клиенты не выбрали конкретного исполнителя."
 
-#: 
+#:
 msgid "Life Time"
 msgstr "Время жизни"
 
-#: 
+#:
 msgid "The period in days when the customer can use a package of services."
 msgstr "Количество дней, в течение которых клиент может использовать пакет услуг."
 
-#: 
+#:
 msgid "New package"
 msgstr "Новый пакет"
 
-#: 
+#:
 msgid "Creation Date"
 msgstr "Дата создания"
 
-#: 
+#:
 msgid "Edit package"
 msgstr "Редактировать пакет"
 
-#: 
+#:
 msgid "No packages for selected period and criteria."
 msgstr "Нет пакетов за выбранный период и по выбранным критериям."
 
-#: 
+#:
 msgid "name of package"
 msgstr "название пакета"
 
-#: 
+#:
 msgid "package size"
 msgstr "размер пакета"
 
-#: 
+#:
 msgid "price of package"
 msgstr "цена пакета"
 
-#: 
+#:
 msgid "package life time"
 msgstr "время жизни пакета"
 
-#: 
+#:
 msgid "reason you mentioned while deleting package"
 msgstr "причина, которую вы указали при удалении пакета"
 
-#: 
+#:
 msgid "Add customer packages list"
 msgstr "Добавить список пакетов клиента"
 
-#: 
+#:
 msgid "Select service provider to see the packages provided. Or select unassigned package to see packages with no particular provider."
 msgstr "Выберите исполнителя, чтобы увидеть предоставляемые им пакеты. Или выберите неназначенный пакет, чтобы увидеть пакеты без указания конкретного исполнителя."
 
-#: 
+#:
 msgid "-- Select a package --"
 msgstr "-- Выберите пакет --"
 
-#: 
+#:
 msgid "Please select a package"
 msgstr "Пожалуйста, выберите пакет"
 
-#: 
+#:
 msgid "Incorrect location and package combination"
 msgstr "Неверное сочетание места и пакета"
 
-#: 
+#:
 msgid "Please select a customer"
 msgstr "Пожалуйста, выберите клиента"
 
-#: 
+#:
 msgid "If email or SMS notifications are enabled and you want customers and staff member to be notified about this package after saving, select appropriate option before clicking Save."
 msgstr "Если уведомления по эл. почте или SMS включены, и вы хотите, чтобы клиенты и исполнитель получили уведомления сразу после сохранения этого пакета, выберите необходимый пункт перед тем как нажать на кнопку Сохранить."
 
-#: 
+#:
 msgid "Save & schedule"
 msgstr "Сохранить и забронировать"
 
-#: 
+#:
 msgid "Could not save package in database."
 msgstr "Не удалось сохранить пакет в базе данных."
 
-#: 
+#:
 msgid "Selected appointment date exceeds the period when the customer can use a package of services."
 msgstr "Выбранная дата встречи находится за пределами времени жизни пакета."
 
-#: 
+#:
 msgid "Ignore"
 msgstr "Игнорировать"
 
-#: 
+#:
 msgid "Selected period is occupied by another appointment"
 msgstr "Выбранный период занят другой встречей"
 
-#: 
+#:
 msgid "Unfortunately, you're not able to book an appointment because the required time limit prior to booking has expired."
 msgstr "К сожалению, забронировать эту встречу не удалось, так как истёк срок минимального промежутка времени между бронированием и встречей."
 
-#: 
+#:
 msgid "You are trying to schedule an appointment in the past. Please select another time slot."
 msgstr "Вы пытаетесь забронировать встречу в прошлом. Пожалуйста, выберите другое время."
 
-#: 
+#:
 msgid "If email or SMS notifications are enabled and you want customers or staff member to be notified about this appointments after saving, select appropriate option before clicking Save."
 msgstr "Если уведомления по эл. почте или SMS включены, и вы хотите, чтобы клиенты или исполнитель получили уведомления сразу после сохранения этой встречи, выберите необходимый пункт перед тем как нажать на кнопку Сохранить."
 
-#: 
+#:
 msgid "If appointments changed"
 msgstr "Если изменились встречи"
 
-#: 
+#:
 msgid "Select appointment date"
 msgstr "Выбрать дату встречи"
 
-#: 
+#:
 msgid "Delete package appointment"
 msgstr "Удалить встречу в пакете"
 
-#: 
+#:
 msgid "Edit package appointment"
 msgstr "Редактировать встречу в пакете"
 
-#: 
+#:
 msgid "Expires"
 msgstr "Дата окончания"
 
-#: 
+#:
 msgid "PayPal ID"
 msgstr "PayPal ID"
 
-#: 
+#:
 msgid "Your PayPal ID or an email address associated with your PayPal account. Email addresses must be confirmed."
 msgstr "Ваш PayPal ID или адрес эл. почты, связанный с вашим PayPal аккаунтом. Адреса эл. почты должны быть подтверждены."
 
-#: 
+#:
 msgid "Incorrect payment data"
 msgstr "Неверные данные платежа"
 
-#: 
+#:
 msgid "Agent ID"
 msgstr "Agent ID"
 
-#: 
+#:
 msgid "Account ID"
 msgstr "Account ID"
 
-#: 
+#:
 msgid "Merchant ID"
 msgstr "Merchant ID"
 
-#: 
+#:
 msgid "Transaction rejected"
 msgstr "Транзакция отклонена"
 
-#: 
+#:
 msgid "Pending payment"
 msgstr "Платёж на рассмотрении"
 
-#: 
+#:
 msgid "License verification"
 msgstr "Подтверждение лицензии"
 
-#: 
+#:
 msgid "Form view in case of single booking"
 msgstr "Вид формы при бронировании одной встречи"
 
-#: 
+#:
 msgid "Form view in case of multiple booking"
 msgstr "Вид формы при бронировании нескольких встреч"
 
-#: 
+#:
 msgid "Export to CSV"
 msgstr "Экспортировать в CSV"
 
-#: 
+#:
 msgid "Delimiter"
 msgstr "Разделитель"
 
-#: 
+#:
 msgid "Comma (,)"
 msgstr "Запятая (,)"
 
-#: 
+#:
 msgid "Semicolon (;)"
 msgstr "Точка с запятой (;)"
 
-#: 
+#:
 msgid "Booking Time"
 msgstr "Дата и время встречи"
 
-#: 
+#:
 msgid "Print"
 msgstr "Печатать"
 
-#: 
+#:
 msgid "Extras"
 msgstr "Дополнения"
 
-#: 
+#:
 msgid "Date of birth"
 msgstr "Дата рождения"
 
-#: 
+#:
 msgid "Import"
 msgstr "Импорт"
 
-#: 
+#:
 msgid "Note"
 msgstr "Заметка"
 
-#: 
+#:
 msgid "Select file"
 msgstr "Выберите файл"
 
-#: 
+#:
 msgid "Please verify your license by providing a valid purchase code. Upon providing the purchase code you will get access to software updates, including feature improvements and important security fixes."
 msgstr "Пожалуйста, подтвердите свою лицензию, предоставив действительный код покупки. После предоставления кода покупки вы получите доступ к обновлениям программного обеспечения, а также к улучшениям функций и важным исправлениям безопасности."
 
-#: 
+#:
 msgid "If you do not provide a valid purchase code within {days}, access to your bookings will be disabled."
 msgstr "Если вы не предоставите действительный код покупки в течение {days}, доступ к вашим встречам будет отключен."
 
-#: 
+#:
 msgid "I have already made the purchase"
 msgstr "Я уже сделал покупку"
 
-#: 
+#:
 msgid "I want to make a purchase now"
 msgstr "Я хочу сделать покупку прямо сейчас"
 
-#: 
+#:
 msgid "I will provide license info later"
 msgstr "Я предоставлю информацию о лицензии позже"
 
-#: 
+#:
 msgid "Access to your bookings has been disabled."
 msgstr "Доступ к вашим встречам был отключен."
 
-#: 
+#:
 msgid "To enable access to your bookings, please verify your license by providing a valid purchase code."
 msgstr "Чтобы включить доступ к вашим встречам, пожалуйста, подтвердите свою лицензию, предоставив действительный код покупки."
 
-#: 
+#:
 msgid "License verification required"
 msgstr "Необходимо подтверждение лицензии"
 
-#: 
+#:
 msgid "Please contact your website administrator in order to verify the license."
 msgstr "Пожалуйста, свяжитесь с администратором вашего сайта для подтверждения лицензии."
 
-#: 
+#:
 msgid "If you do not verify the license within {days}, access to your bookings will be disabled."
 msgstr "Если вы не подтвердите лицензию в течение {days}, доступ к вашим встречам будет отключен."
 
-#: 
+#:
 msgid "To enable access to your bookings, please contact your website administrator in order to verify the license."
 msgstr "Чтобы включить доступ к своим встречам, пожалуйста, обратитесь к администратору вашего сайта для подтверждения лицензии."
 
-#: 
+#:
 msgid "Cannot find your purchase code? See this <a href=\"%s\" target=\"_blank\">page</a>."
 msgstr "Не находите свой код покупки? Посмотрите эту <a href=\"%s\" target=\"_blank\">страницу</a>."
 
-#: 
+#:
 msgid "Purchase Code"
 msgstr "Лицензионный ключ"
 
-#: 
+#:
 msgid "License verification succeeded"
 msgstr "Лицензия подтверждена"
 
-#: 
+#:
 msgid "Your license has been verified successfully."
 msgstr "Ваша лицензия была успешно подтверждена."
 
-#: 
+#:
 msgid "You have access to software updates, including feature improvements and important security fixes."
 msgstr "У вас есть доступ к обновлениям программного обеспечения, в том числе улучшениям функций и важным исправлениям безопасности."
 
-#: 
+#:
 msgid "Proceed"
 msgstr "Продолжить"
 
-#: 
+#:
 msgid "Specified order"
 msgstr "Указанный порядок"
 
-#: 
+#:
 msgid "Least occupied that day"
 msgstr "Менее загруженный в тот день"
 
-#: 
+#:
 msgid "Most occupied that day"
 msgstr "Более загруженный в тот день"
 
-#: 
+#:
 msgid "Least expensive"
 msgstr "Менее дорогой"
 
-#: 
+#:
 msgid "Most expensive"
 msgstr "Более дорогой"
 
-#: 
+#:
 msgid "To make service invisible to your customers set the visibility to \"Private\"."
 msgstr "Чтобы сделать сервис невидимым для клиентов, установите видимость в значение \"Закрытый\"."
 
-#: 
+#:
 msgid "Padding time (before and after)"
 msgstr "Пауза (до и после)"
 
-#: 
+#:
 msgid "Set padding time before and/or after an appointment. For example, if you require 15 minutes to prepare for the next appointment then you should set \"padding before\" to 15 min. If there is an appointment from 8:00 to 9:00 then the next available time slot will be 9:15 rather than 9:00."
 msgstr "Установите паузу до и/или после встречи. Например, если вам необходимо 15 минут, чтобы подготовиться к следующей встрече, тогда установите в поле \"пауза до\" значение 15 мин. Если уже есть встреча с 8:00 до 9:00, то следующий доступный для бронирования слот будет 9:15, а не 9:00."
 
-#: 
+#:
 msgid "Providers preference for ANY"
 msgstr "Предпочтение при автоматическом выборе исполнителя"
 
-#: 
+#:
 msgid "Allows you to define the rule of staff members auto assignment when ANY option is selected"
 msgstr "Позволяет вам указать то правило, которое будет использоваться при автоматическом назначении исполнителя, когда клиент выбрал вариант \"Любой\"."
 
-#: 
+#:
 msgid "Select product"
 msgstr "Выберите товар"
 
-#: 
+#:
 msgid "Create WordPress user account for customers"
 msgstr "Создавать клиентам учётные записи WordPress"
 
-#: 
+#:
 msgid "If this setting is enabled then Bookly will be creating WordPress user accounts for all new customers. If the user is logged in then the new customer will be associated with the existing user account."
 msgstr "Если эта настройка включена, тогда Bookly будет создавать учётную запись WordPress для каждого нового клиента. Если пользователь уже авторизован, тогда новый клиент будет связан с текущей учётной записью пользователя."
 
-#: 
+#:
 msgid "New user account role"
 msgstr "Роль новой учётной записи WordPress"
 
-#: 
+#:
 msgid "Select what role will be assigned to newly created WordPress user accounts for customers."
 msgstr "Выберите роль, которая будет назначена новой учётной записи WordPress, созданной для клиента."
 
-#: 
+#:
 msgid "Cancel appointment action"
 msgstr "Действие при отмене бронирования"
 
-#: 
+#:
 msgid "Select what happens when customer clicks cancel appointment link. With \"Delete\" the appointment will be deleted from the calendar. With \"Cancel\" only appointment status will be changed to \"Cancelled\"."
 msgstr "Выберите, что должно произойти, когда клиент переходит по ссылке для отмены бронирования. При выборе \"Удалить\" встреча будет удалена из календаря. При выборе \"Отмена\" будет изменён только статус встречи на \"Отменено\"."
 
-#: 
+#:
 msgid "Combined notifications"
 msgstr "Объединённые уведомления"
 
-#: 
+#:
 msgid "If combined notifications are enabled then your clients will receive single notification for entire booking instead of separate notification per each booked appointment (e.g. when cart is enabled). You will need to edit corresponding templates in Email and SMS Notifications."
 msgstr "Если объединённые уведомления включены, тогда ваши клиенты будут получать единое уведомление за всё бронирование вместо отдельных уведомлений за каждую забронированную встречу (например, когда используется корзина). Вам будет необходимо отредактировать соответствующие шаблоны в разделах Email и SMS уведомлений."
 
-#: 
+#:
 msgid "Minimum time requirement prior to booking"
 msgstr "Минимальный промежуток времени между бронированием и встречей"
 
-#: 
+#:
 msgid "Set how late appointments can be booked (for example, require customers to book at least 1 hour before the appointment time)."
 msgstr "Укажите, как поздно можно забронировать встречу (например, запретите бронировать встречи позже, чем за час до самой встречи)."
 
-#: 
+#:
 msgid "Minimum time requirement prior to canceling"
 msgstr "Минимальный промежуток времени между отменой и встречей"
 
-#: 
+#:
 msgid "Set how late appointments can be cancelled (for example, require customers to cancel at least 1 hour before the appointment time)."
 msgstr "Укажите, как поздно можно отменить встречу (например, запретите отменять встречи позже, чем за час до самой встречи)."
 
-#: 
+#:
 msgid "Final step URL"
 msgstr "URL страницы для последнего шага бронирования"
 
-#: 
+#:
 msgid "Set the URL of a page that the user will be forwarded to after successful booking. If disabled then the default Done step is displayed."
 msgstr "Введите адрес страницы, на которую будет перенаправлен клиент после успешного бронирования. Если выключено, тогда будет показан стандартный последний шаг."
 
-#: 
+#:
 msgid "Enter a URL"
 msgstr "Введите URL"
 
-#: 
+#:
 msgid "To find your client ID and client secret, do the following:"
 msgstr "Чтобы узнать свой Client ID и Clent secret, выполните следующее:"
 
-#: 
+#:
 msgid "Go to the <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developers Console</a>."
 msgstr "Откройте <a href=\"https://console.developers.google.com/\" target=\"_blank\">Google Developers Console</a>."
 
-#: 
+#:
 msgid "Select a project, or create a new one."
 msgstr "Выберите проект или создайте новый."
 
-#: 
+#:
 msgid "Click in the upper left part to see a sliding sidebar. Next, click <b>API Manager</b>. In the list of APIs look for <b>Calendar API</b> and make sure it is enabled."
 msgstr "Нажмите в верхнем левом углу, чтобы увидеть выезжающее боковое меню. Далее нажмите на <b>API Manager</b>. В списке Google APIs найдите <b>Calendar API</b> и убедитесь, что он включен."
 
-#: 
+#:
 msgid "In the sidebar on the left, select <b>Credentials</b>."
 msgstr "Слева выберите <b>Credentials</b>."
 
-#: 
+#:
 msgid "Go to <b>OAuth consent screen</b> tab and give a name to the product, then click <b>Save</b>."
 msgstr "Перейдите на вкладку <b>OAuth consent screen</b> и задайте имя продукта, потом нажмите <b>Save</b>."
 
-#: 
+#:
 msgid "Go to <b>Credentials</b> tab and in <b>New credentials</b> drop-down menu select <b>OAuth client ID</b>."
 msgstr "Перейдите на вкладку <b>Credentials</b> и в выпадающем меню <b>New credentials</b> выберите <b>OAuth client ID</b>."
 
-#: 
+#:
 msgid "Select <b>Web application</b> and create your project's OAuth 2.0 credentials by providing the necessary information. For <b>Authorized redirect URIs</b> enter the <b>Redirect URI</b> found below on this page. Click <b>Create</b>."
 msgstr "Выберите <b>Web application</b> и создайте OAuth 2.0 реквизиты для вашего проекта путём ввода необходимой информации. Для <b>Authorized redirect URIs</b> введите значение <b>Redirect URI</b>, которое можно найти ниже на этой странице. Нажмите <b>Create</b>."
 
-#: 
+#:
 msgid "In the popup window look for the <b>Client ID</b> and <b>Client secret</b>. Use them in the form below on this page."
 msgstr "Во всплывающем окне скопируйте <b>Client ID</b> и <b>Client secret</b>. Используйте их в форме ниже на этой странице."
 
-#: 
+#:
 msgid "Go to Staff Members, select a staff member and click <b>Connect</b> which is located at the bottom of the page."
 msgstr "Перейдите в раздел \"Персонал\", выберите исполнителя и нажмите на <b>Подключить</b> внизу страницы."
 
-#: 
+#:
 msgid "Client ID"
 msgstr "Client ID"
 
-#: 
+#:
 msgid "The client ID obtained from the Developers Console"
 msgstr "Значение CLIENT ID, полученное из Google Developers Console"
 
-#: 
+#:
 msgid "Client secret"
 msgstr "Client secret"
 
-#: 
+#:
 msgid "The client secret obtained from the Developers Console"
 msgstr "Значение CLIENT SECRET, полученное из Google Developers Console"
 
-#: 
+#:
 msgid "Redirect URI"
 msgstr "Redirect URI"
 
-#: 
+#:
 msgid "Enter this URL as a redirect URI in the Developers Console"
 msgstr "Введите этот адрес в поле REDIRECT URIS в Google Developers Console"
 
-#: 
+#:
 msgid "Limit number of fetched events"
 msgstr "Ограничить количество выгружаемых событий"
 
-#: 
+#:
 msgid "Template for event title"
 msgstr "Шаблон заголовка событий"
 
-#: 
+#:
 msgid "Configure what information should be placed in the title of Google Calendar event. Available codes are {service_name}, {staff_name} and {client_names}."
 msgstr "Укажите, какая информация должна отображаться в заголовке событий в Google Календаре. Доступные коды: {service_name}, {staff_name} и {client_names}."
 
-#: 
+#:
 msgid "API Username"
 msgstr "API Username"
 
-#: 
+#:
 msgid "API Password"
 msgstr "API Password"
 
-#: 
+#:
 msgid "API Signature"
 msgstr "API Signature"
 
-#: 
+#:
 msgid "Upon providing the purchase code you will have access to free updates of Bookly. Updates may contain functionality improvements and important security fixes. For more information on where to find your purchase code see this <a href=\"https://help.market.envato.com/hc/en-us/articles/202822600-Where-can-I-find-my-Purchase-Code-\" target=\"_blank\">page</a>."
 msgstr "После того, как Вы введёте ключ, Вы получите доступ к бесплатным обновлениям Bookly. Обновления обычно содержат новые функции и важные исправления ошибок. Информацию о том, где найти Ваш лицензионный ключ, Вы получите на этой <a href=\"https://help.market.envato.com/hc/en-us/articles/202822600-Where-can-I-find-my-Purchase-Code-\" target=\"_blank\">странице</a>."
 
-#: 
+#:
 msgid "You need to install and activate WooCommerce plugin before using the options below.<br/><br/>Once the plugin is activated do the following steps:"
 msgstr "Для того, чтобы использовать настройки, которые представлены ниже, необходимо установить и активировать плагин WooCommerce.<br/><br/>Когда плагин активирован, выполните следующие шаги:"
 
-#: 
+#:
 msgid "Create a product in WooCommerce that can be placed in cart."
 msgstr "Создайте товар в WooCommerce, который можно добавить в корзину."
 
-#: 
+#:
 msgid "In the form below enable WooCommerce option."
 msgstr "В форме ниже включите настройку WooCommerce."
 
-#: 
+#:
 msgid "Select the product that you created at step 1 in the drop down list of products."
 msgstr "Выберите товар, который вы создали на первом шаге, в выпадающем списке товаров."
 
-#: 
+#:
 msgid "Note that once you have enabled WooCommerce option in Bookly the built-in payment methods will no longer work. All your customers will be redirected to WooCommerce cart instead of standard payment step."
 msgstr "Обратите внимание, что, если вы включили настройку WooCommerce в Bookly, тогда встроенные методы оплаты больше не будут работать. Все ваши клиенты будут перенаправляться в корзину WooCommerce вместо стандартного шага оплаты."
 
-#: 
+#:
 msgid "Booking product"
 msgstr "Товар для бронирования"
 
-#: 
+#:
 msgid "Cart item data"
 msgstr "Данные о товаре в корзине"
 
-#: 
+#:
 msgid "Google Calendar integration"
 msgstr "Интеграция с Google Календарём"
 
-#: 
+#:
 msgid "Synchronize staff member appointments with Google Calendar."
 msgstr "Синхронизировать данные о забронированных встречах сотрудника с его Google Календарём."
 
-#: 
+#:
 msgid "Connect"
 msgstr "Подключить"
 
-#: 
+#:
 msgid "Please configure Google Calendar <a href=\"%s\">settings</a> first"
 msgstr "Пожалуйста, сначала укажите <a href=\"%s\">настройки</a> Google Календаря"
 
-#: 
+#:
 msgid "Connected"
 msgstr "Подключен"
 
-#: 
+#:
 msgid "disconnect"
 msgstr "Отключить"
 
-#: 
+#:
 msgid "Add Bookly appointments list"
 msgstr "Добавить список встреч Bookly"
 
-#: 
+#:
 msgid "Titles"
 msgstr "Заголовки"
 
-#: 
+#:
 msgid "No appointments found."
 msgstr "Встречи не найдены."
 
-#: 
+#:
 msgid "Show past appointments"
 msgstr "Показать прошлые встречи"
 
-#: 
+#:
 msgid "Sorry, the time slot %date_time% for %service% has been already occupied."
 msgstr "Извините, время %date_time% для %service% уже занято."
 
-#: 
+#:
 msgid "Service was not found"
 msgstr "Сервис не найден"
 
-#: 
+#:
 msgid "%s is not a valid purchase code for %s."
 msgstr "%s не является действительным лицензионным ключом для %s."
 
-#: 
+#:
 msgid "Purchase code verification is temporarily unavailable. Please try again later."
 msgstr "Проверка кода покупки временно не работает. Пожалуйста, попробуйте снова позже."
 
-#: 
+#:
 msgid "Your appointment at {company_name}"
 msgstr "Ваша встреча в {company_name}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "We would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\n"
@@ -4720,7 +4720,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "We would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\n"
@@ -4740,11 +4740,11 @@ msgstr "Дорогой(ая) {client_name},\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Your visit to {company_name}"
 msgstr "Ваш визит в {company_name}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "Thank you for choosing {company_name}. We hope you were satisfied with your {service_name}.\n"
@@ -4764,11 +4764,11 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Your agenda for {tomorrow_date}"
 msgstr "Ваше расписание на {tomorrow_date}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "Your agenda for tomorrow is:\n"
@@ -4780,419 +4780,419 @@ msgstr "Здравствуйте.\n"
 "\n"
 "{next_day_agenda}"
 
-#: 
+#:
 msgid "Please contact your website administrator in order to verify the license for Bookly add-ons. If you do not verify the license within {days}, the respective add-ons will be disabled."
 msgstr "Пожалуйста, обратитесь к администратору вашего сайта для подтверждения лицензии дополнений к Bookly. Если вы не подтвердите лицензию в течение {days}, соответствующие дополнения будут отключены."
 
-#: 
+#:
 msgid "Contact your admin to verify Bookly add-ons license; {days} remaining."
 msgstr "Обратитесь к администратору для подтверждения лицензии дополнений к Bookly: осталось {days}."
 
-#: 
+#:
 msgid "Please verify the license for Bookly add-ons in the administrative panel. If you do not verify the license within {days}, the respective add-ons will be disabled."
 msgstr "Пожалуйста, подтвердите лицензию дополнений к Bookly в административной панели. Если вы не подтвердите лицензию к течение {days}, соответствующие дополнения будут отключены."
 
-#: 
+#:
 msgid "Please verify Bookly add-ons license; {days} remaining."
 msgstr "Пожалуйста, подтвердите лицензию дополнений к Bookly: осталось {days}."
 
-#: 
+#:
 msgid "Check for updates"
 msgstr "Проверить наличие обновлений"
 
-#: 
+#:
 msgid "This plugin is up to date."
 msgstr "Установлена самая последняя версия плагина."
 
-#: 
+#:
 msgid "A new version of this plugin is available."
 msgstr "Доступна новая версия этого плагина."
 
-#: 
+#:
 msgid "Unknown update checker status \"%s\""
 msgstr "Неизвестный статус проверщика обновлений \"%s\""
 
-#: 
+#:
 msgid "To update - enter the <a href=\"%s\">Purchase Code</a>"
 msgstr "Чтобы получать обновления, введите <a href=\"%s\">код покупки</a>."
 
-#: 
+#:
 msgid "You may import list of clients in CSV format. You can choose the columns contained in your file. The sequence of columns should coincide with the specified one."
 msgstr "Вы можете импортировать список клиентов в формате CSV. Вы можете выбрать столбцы, содержащиеся в вашем файле. Последовательность столбцов должна совпадать с указанной."
 
-#: 
+#:
 msgid "Limit appointments per customer"
 msgstr "Ограничить встречи на одного клиента"
 
-#: 
+#:
 msgid "per week"
 msgstr "в неделю"
 
-#: 
+#:
 msgid "per month"
 msgstr "в месяц"
 
-#: 
+#:
 msgid "per year"
 msgstr "в год"
 
-#: 
+#:
 msgid "Custom service name"
 msgstr "Название произвольного сервиса"
 
-#: 
+#:
 msgid "Please enter a service name"
 msgstr "Пожалуйста, введите название сервиса"
 
-#: 
+#:
 msgid "Custom service price"
 msgstr "Цена произвольного сервиса"
 
-#: 
+#:
 msgid "Appointment cancellation confirmation URL"
 msgstr "URL страницы для отмены встречи с подтверждением"
 
-#: 
+#:
 msgid "Set the URL of an appointment cancellation confirmation page that is shown to clients when they press cancellation link."
 msgstr "Укажите URL страницы, которая будет показана клиенту при переходе по ссылке на отмену встречи с подтверждением."
 
-#: 
+#:
 msgid "Add appointment cancellation confirmation"
 msgstr "Добавить подтверждение отмены встречи"
 
-#: 
+#:
 msgid "Thank you for being with us"
 msgstr "Спасибо за то, что Вы с нами."
 
-#: 
+#:
 msgid "Show time zone switcher"
 msgstr "Показывать переключатель часового пояса"
 
-#: 
+#:
 msgid "Reason"
 msgstr "Причина"
 
-#: 
+#:
 msgid "Manual adjustment"
 msgstr "Ручная коррекция"
 
-#: 
+#:
 msgid "<a class=\"%s\" href=\"#\">Click here</a> to dissociate this purchase code from the current domain (use to move the plugin to another site)."
 msgstr "Нажмите <a class=\"%s\" href=\"#\">здесь</a>, чтобы отсоединить данный лицензионный ключ от текущего домена (необходимо при переносе плагина на другой сайт)."
 
-#: 
+#:
 msgid "Error dissociating purchase code."
 msgstr "Ошибка при отсоединении лицензионного ключа."
 
-#: 
+#:
 msgid "Analytics"
 msgstr "Аналитика"
 
-#: 
+#:
 msgid "New Customers"
 msgstr "Новые клиенты"
 
-#: 
+#:
 msgid "Sessions"
 msgstr "Сессии"
 
-#: 
+#:
 msgid "Visits"
 msgstr "Визиты"
 
-#: 
+#:
 msgid "Show birthday field"
 msgstr "Показывать поле с датой рождения"
 
-#: 
+#:
 msgid "Sessions - number of completed and/or planned service sessions."
 msgstr "Сессии – количество сессий предоставления услуг, состоявшихся и/или запланированных."
 
-#: 
+#:
 msgid "Approved - number of visitors of sessions with Approved status during the selected period."
 msgstr "Подтверждено – количество посетителей сессий со статусом \"Подтверждено\" за указанный период."
 
-#: 
+#:
 msgid "Pending - number of visitors of sessions with Pending status during the selected period."
 msgstr "В ожидании – количество посетителей сессий со статусом \"В ожидании\" за указанный период."
 
-#: 
+#:
 msgid "Rejected - number of visitors of sessions with Rejected status during the selected period."
 msgstr "Отказано – количество посетителей сессий со статусом \"Отказано\" за указанный период."
 
-#: 
+#:
 msgid "Cancelled - number of visitors of sessions with Cancelled status during the selected period."
 msgstr "Отменено – количество посетителей сессий со статусом \"Отменено\" за указанный период."
 
-#: 
+#:
 msgid "Customers - number of unique customers who made bookings during the selected period."
 msgstr "Клиенты – количество уникальных клиентов, выполнявших бронирования за указанный период."
 
-#: 
+#:
 msgid "New customers - number of new customers added to the database during the selected period."
 msgstr "Новые клиенты – количество новых клиентов, добавленных в базу за указанный период."
 
-#: 
+#:
 msgid "Total - approximate cost of appointments with Approved and Pending statuses, calculated on the basis of the price list. Appointments that are paid through the front-end and have Pending payment status are included in brackets."
 msgstr "Итоговая стоимость – приблизительная стоимость услуг в статусе Approved и Pending, рассчитанная на основе прайс-листа. Услуги, оплаченные из фронтенда и имеющие статус платежа Pending, указываются в скобках."
 
-#: 
+#:
 msgid "Show Facebook login button"
 msgstr "Показывать кнопку входа через Facebook"
 
-#: 
+#:
 msgid "Make address mandatory"
 msgstr "Сделать ввод адреса обязательным"
 
-#: 
+#:
 msgid "Show address fields"
 msgstr "Показывать поля для ввода адреса"
 
-#: 
+#:
 msgid "-- Select calendar --"
 msgstr "-- Выберите календарь --"
 
-#: 
+#:
 msgid "If there is a lot of events in Google Calendar sometimes this leads to a lack of memory in PHP when Bookly tries to fetch all events. You can limit the number of fetched events here."
 msgstr "Если в Google Календаре много событий, иногда это приводит к нехватке памяти в PHP, когда Bookly пытается выгрузить все события. Здесь вы можете ограничить количество выгружаемых событий."
 
-#: 
+#:
 msgid "Customer's address fields"
 msgstr "Поля для ввода адреса клиента"
 
-#: 
+#:
 msgid "Choose address fields you want to request from the client."
 msgstr "Выберите поля для ввода адреса, которые необходимо будет заполнить клиенту."
 
-#: 
+#:
 msgid "Please configure Facebook App integration in <a href=\"%s\">settings</a> first."
 msgstr "Пожалуйста, сначала <a href=\"%s\">настройте</a> интеграцию Facebook приложения."
 
-#: 
+#:
 msgid "Ok"
 msgstr "Готово"
 
-#: 
+#:
 msgid "With \"One-way\" sync Bookly pushes new appointments and any further changes to Google Calendar. With \"Two-way front-end only\" sync Bookly will additionally fetch events from Google Calendar and remove corresponding time slots before displaying the Time step of the booking form (this may lead to a delay when users click Next to get to the Time step)."
 msgstr "В режиме \"Односторонней синхронизации\" Bookly передаёт информацию о новых встречах и любых дальнейших изменениях в Google Календарь. В режиме \"Двусторонней синхронизации для фронтенда\" Bookly будет дополнительно выгружать события из Google Календаря и удалять соответствующие временные интервалы перед тем, как отображать шаг Время в форме бронирования (это может привести к задержке, когда пользователи нажимают кнопку Далее, чтобы перейти к шагу Время)."
 
-#: 
+#:
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: 
+#:
 msgid "URL of the page for staff rating"
 msgstr "URL страницы для оценки сотрудника"
 
-#: 
+#:
 msgid "Rating"
 msgstr "Рейтинг"
 
-#: 
+#:
 msgid "Comment"
 msgstr "Комментарий"
 
-#: 
+#:
 msgid "Add staff rating form"
 msgstr "Добавить форму для оценки сотрудника"
 
-#: 
+#:
 msgid "Displaying appointments rating in the backend"
 msgstr "Отображение оценок в административной панели."
 
-#: 
+#:
 msgid "Enable this setting to display ratings in the back-end."
 msgstr "Включите эту настройку для того, чтобы отображать рейтинги в административной панели."
 
-#: 
+#:
 msgid "Timeout for rating appointment"
 msgstr "Время для выставления оценки"
 
-#: 
+#:
 msgid "Set a period of time after appointment when customer can rate and leave feedback for your services."
 msgstr "Укажите период после окончания встречи, на протяжении которого клиент может оценить и оставить отзыв о сервисе."
 
-#: 
+#:
 msgid "Period for calculating rating average"
 msgstr "Период усреднения оценки"
 
-#: 
+#:
 msgid "Set a period of time during which the rating average is calculated."
 msgstr "Укажите период, за который считается рейтинг."
 
-#: 
+#:
 msgid "Rating page URL"
 msgstr "URL страницы оценки встреч"
 
-#: 
+#:
 msgid "Set the URL of a page with a rating and comment form."
 msgstr "Укажите URL страницы с формой для оценки и комментария."
 
-#: 
+#:
 msgid "The feedback period has expired."
 msgstr "Время для выставления оценки истекло."
 
-#: 
+#:
 msgid "You cannot rate this service before appointment."
 msgstr "Вы не можете оценить сервис до встречи."
 
-#: 
+#:
 msgid "Rate the quality of the %s provided to you on %s at %s by %s"
 msgstr "Оцените качество сервиса %s, предоставленного вам %s в %s от %s."
 
-#: 
+#:
 msgid "Leave your comment"
 msgstr "Оставьте комментарий"
 
-#: 
+#:
 msgid "Your rating has been saved. We appreciate your feedback."
 msgstr "Ваша оценка сохранена. Спасибо за ваш отзыв."
 
-#: 
+#:
 msgid "Show staff member rating before employee name"
 msgstr "Показывать рейтинг перед именем сотрудника"
 
-#: 
+#:
 msgid "pages with another time"
 msgstr "страницы с другим временем"
 
-#: 
+#:
 msgid "Restore"
 msgstr "Восстановить"
 
-#: 
+#:
 msgid "Some of the desired time slots are busy. System offers the nearest time slot instead. Click the Edit button to select another time if needed."
 msgstr "Некоторые из требуемых временных интервалов заняты. Вместо них система предлагает ближайшее время. При необходимости нажмите на кнопку \"Редактировать\", чтобы выбрать другое время."
 
-#: 
+#:
 msgid "Deleted"
 msgstr "Удалено"
 
-#: 
+#:
 msgid "Another time"
 msgstr "Другое время"
 
-#: 
+#:
 msgid "Another time was offered on pages"
 msgstr "Другое время было предложено на страницах"
 
-#: 
+#:
 msgid "Repeat this appointment"
 msgstr "Повторить эту встречу"
 
-#: 
+#:
 msgid "Repeat"
 msgstr "Повторить"
 
-#: 
+#:
 msgid "Daily"
 msgstr "Ежедневно"
 
-#: 
+#:
 msgid "Weekly"
 msgstr "Еженедельно"
 
-#: 
+#:
 msgid "Biweekly"
 msgstr "Раз в две недели"
 
-#: 
+#:
 msgid "Monthly"
 msgstr "Ежемесячно"
 
-#: 
+#:
 msgid "Every"
 msgstr "Каждые"
 
-#: 
+#:
 msgid "day(s)"
 msgstr "дня (дней)"
 
-#: 
+#:
 msgid "On"
 msgstr "В"
 
-#: 
+#:
 msgid "Specific day"
 msgstr "Определенный день"
 
-#: 
+#:
 msgid "Second"
 msgstr "Второй"
 
-#: 
+#:
 msgid "Third"
 msgstr "Третий"
 
-#: 
+#:
 msgid "Fourth"
 msgstr "Четвёртый"
 
-#: 
+#:
 msgid "Until"
 msgstr "До"
 
-#: 
+#:
 msgid "Delete Appointment"
 msgstr "Удалить встречу"
 
-#: 
+#:
 msgid "Delete only this appointment"
 msgstr "Удалить только эту встречу"
 
-#: 
+#:
 msgid "Delete this and the following appointments"
 msgstr "Удалить эту и все последующие встречи"
 
-#: 
+#:
 msgid "Delete all appointments in series"
 msgstr "Удалить всю серию встреч"
 
-#: 
+#:
 msgid "Allow this service to have recurring appointments."
 msgstr "Разрешить этому сервису иметь повторяющиеся встречи."
 
-#: 
+#:
 msgid "Frequencies"
 msgstr "Частота"
 
-#: 
+#:
 msgid "Nothing selected"
 msgstr "Ничего не выбрано"
 
-#: 
+#:
 msgid "recurring appointments schedule"
 msgstr "график повторяющихся встреч"
 
-#: 
+#:
 msgid "recurring appointments schedule with cancel"
 msgstr "график повторяющихся встреч с возможностью отмены"
 
-#: 
+#:
 msgid "recurring appointments"
 msgstr "повторяющиеся встречи"
 
-#: 
+#:
 msgid "Recurring"
 msgstr "Повторяющиеся"
 
-#: 
+#:
 msgid "Recurring Appointments"
 msgstr "Повторяющиеся встречи"
 
-#: 
+#:
 msgid "Online Payments"
 msgstr "Онлайн платежи"
 
-#: 
+#:
 msgid "Customers must pay only for the 1st appointment"
 msgstr "Клиенты должны оплатить только первую встречу"
 
-#: 
+#:
 msgid "Customers must pay for all appointments in series"
 msgstr "Клиенты должны оплатить все встречи"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "This is a confirmation that you have booked {service_name} (x {recurring_count}).\n"
@@ -5224,7 +5224,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "You have a new booking.\n"
@@ -5246,7 +5246,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "Your booking of {service_name} (x {recurring_count}) has been cancelled.\n"
@@ -5278,7 +5278,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "The following booking has been cancelled.\n"
@@ -5304,7 +5304,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "Your booking of {service_name} (x {recurring_count}) has been rejected.\n"
@@ -5336,7 +5336,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "The following booking has been rejected.\n"
@@ -5362,7 +5362,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "This is a confirmation that you have booked {service_name} (x {recurring_count}).\n"
 "Please find the schedule of your booking below.\n"
@@ -5384,7 +5384,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "You have a new booking.\n"
 "Service: {service_name} (x {recurring_count})\n"
@@ -5402,7 +5402,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "Your booking of {service_name} (x {recurring_count}) has been cancelled.\n"
 "Reason: {cancellation_reason}\n"
@@ -5421,7 +5421,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "The following booking has been cancelled.\n"
 "Reason: {cancellation_reason}\n"
@@ -5441,7 +5441,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "Your booking of {service_name} (x {recurring_count}) has been rejected.\n"
 "Reason: {cancellation_reason}\n"
@@ -5460,7 +5460,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "The following booking has been rejected.\n"
 "Reason: {cancellation_reason}\n"
@@ -5480,87 +5480,87 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "You selected a booking for {service_name} at {service_time} on {service_date}. If you would like to make this appointment recurring please check the box below and set appropriate parameters. Otherwise press Next button below."
 msgstr "Вы выбрали {service_name} в {service_time} на {service_date}. Если Вы хотите повторить эту встречу, пожалуйста, поставьте галочку ниже и задайте соответствующие параметры. Или нажмите на кнопку \"Далее\"."
 
-#: 
+#:
 msgid "every"
 msgstr "каждый"
 
-#: 
+#:
 msgid "The first recurring appointment was added to cart. You will be invoiced for the remaining appointments later."
 msgstr "Первая повторяющаяся встреча добавлена в корзину. Вам будет выставлен счёт за оставшиеся встречи позже."
 
-#: 
+#:
 msgid "There are no available time slots for this day"
 msgstr "В этот день нет свободного времени"
 
-#: 
+#:
 msgid "Please select some days"
 msgstr "Пожалуйста, выберите дни"
 
-#: 
+#:
 msgid "Another time was offered on pages {list}."
 msgstr "Другое время было предложено на страницах {list}."
 
-#: 
+#:
 msgid "Notification to customer about pending recurring appointment"
 msgstr "Уведомление для клиента о повторяющейся встрече со статусом \"В ожидании\""
 
-#: 
+#:
 msgid "Notification to staff member about pending recurring appointment"
 msgstr "Уведомление для сотрудника о повторяющейся встрече со статусом \"В ожидании\""
 
-#: 
+#:
 msgid "Notification to customer about approved recurring appointment"
 msgstr "Уведомление для клиента о повторяющейся встрече со статусом \"Подтверждено\""
 
-#: 
+#:
 msgid "Notification to staff member about approved recurring appointment"
 msgstr "Уведомление для сотрудника о повторяющейся встрече со статусом \"Подтверждено\""
 
-#: 
+#:
 msgid "Notification to customer about cancelled recurring appointment"
 msgstr "Уведомление для клиента о повторяющейся встрече со статусом \"Отменено\""
 
-#: 
+#:
 msgid "Notification to staff member about cancelled recurring appointment "
 msgstr "Уведомление для сотрудника о повторяющейся встрече со статусом \"Отменено\" "
 
-#: 
+#:
 msgid "Notification to customer about rejected recurring appointment"
 msgstr "Уведомление для клиента о повторяющейся встрече со статусом \"Отказано\""
 
-#: 
+#:
 msgid "Notification to staff member about rejected recurring appointment "
 msgstr "Уведомление для сотрудника о повторяющейся встрече со статусом \"Отказано\" "
 
-#: 
+#:
 msgid "time(s)"
 msgstr "раз(а)"
 
-#: 
+#:
 msgid "Approve recurring appointment URL (success)"
 msgstr "URL страницы после подтверждения забронированной повторяющейся встречи (в случае успеха)"
 
-#: 
+#:
 msgid "Set the URL of a page that is shown to staff after they successfully approved recurring appointment."
 msgstr "Укажите URL страницы, которая будет показана сотруднику в случае успешного подтверждения повторяющейся встречи."
 
-#: 
+#:
 msgid "Approve recurring appointment URL (denied)"
 msgstr "URL страницы после подтверждения забронированной повторяющейся встречи (в случае отказа)"
 
-#: 
+#:
 msgid "Set the URL of a page that is shown to staff when the approval of recurring appointment cannot be done (changed status, etc.)."
 msgstr "Укажите URL страницы, которая будет показана сотруднику в случае, когда подтверждение повторяющейся встречи невозможно (по причине изменённого статуса и др.)."
 
-#: 
+#:
 msgid "You have been added to waiting list for appointment"
 msgstr "Вы были добавлены в список ожидания на встречу"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "This is a confirmation that you have been added to the waiting list for {service_name} (x {recurring_count}).\n"
@@ -5588,11 +5588,11 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "New waiting list information"
 msgstr "Информация о новом добавлении в список ожидания"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "You have new customer in the waiting list.\n"
@@ -5614,7 +5614,7 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "This is a confirmation that you have been added to the waiting list for {service_name} (x {recurring_count}).\n"
 "Please find the service schedule below.\n"
@@ -5632,7 +5632,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "You have new customer in the waiting list.\n"
 "Service: {service_name} (x {recurring_count})\n"
@@ -5650,231 +5650,231 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Notification to customer about placing on waiting list for recurring appointment"
 msgstr "Уведомление для клиента о добавлении в список ожидания на повторяющуюся встречу"
 
-#: 
+#:
 msgid "Notification to staff member about placing on waiting list for recurring appointment "
 msgstr "Уведомление для сотрудника о добавлении в список ожидания на повторяющуюся встречу"
 
-#: 
+#:
 msgid "URL for approving the whole schedule"
 msgstr "URL для подтверждения всего графика"
 
-#: 
+#:
 msgid "Summary"
 msgstr "Итого"
 
-#: 
+#:
 msgid "New Item"
 msgstr "Новый элемент"
 
-#: 
+#:
 msgid "Show extras"
 msgstr "Показывать дополнения"
 
-#: 
+#:
 msgid "Show"
 msgstr "Показать"
 
-#: 
+#:
 msgid "Extras price"
 msgstr "Цена дополнений"
 
-#: 
+#:
 msgid "Service Extras"
 msgstr "Дополнения к сервисам"
 
-#: 
+#:
 msgid "extras titles"
 msgstr "название дополнений"
 
-#: 
+#:
 msgid "extras total price"
 msgstr "итоговая цена дополнений"
 
-#: 
+#:
 msgid "Select the Extras you'd like (Multiple Selection)"
 msgstr "Выберите желаемые дополнения (множественный выбор)"
 
-#: 
+#:
 msgid "If enabled, all extras will be multiplied by number of persons."
 msgstr "Если включено, тогда все дополнения будут умножаться на количество персон."
 
-#: 
+#:
 msgid "Multiply extras by number of persons"
 msgstr "Умножать дополнения на количество персон"
 
-#: 
+#:
 msgid "Weekly Schedule"
 msgstr "Недельный график"
 
-#: 
+#:
 msgid "Special Days"
 msgstr "Особые дни"
 
-#: 
+#:
 msgid "Duplicate dates are not permitted."
 msgstr "Дубликаты дат не разрешены."
 
-#: 
+#:
 msgid "Add special day"
 msgstr "Добавить особый день"
 
-#: 
+#:
 msgid "Add Staff Special Days"
 msgstr "Добавить особые дни сотрудников"
 
-#: 
+#:
 msgid "Special prices for appointments which begin between:"
 msgstr "Особые цены на встречи, время начала которых находится между:"
 
-#: 
+#:
 msgid "add special period"
 msgstr "добавить особый период"
 
-#: 
+#:
 msgid "Disable special hours update"
 msgstr "Выключить обновление особых часов работы"
 
-#: 
+#:
 msgid "Add Staff Cabinet"
 msgstr "Добавить личный кабинет сотрудника"
 
-#: 
+#:
 msgid "Short Codes"
 msgstr "Шорткоды"
 
-#: 
+#:
 msgid "Add Staff Calendar"
 msgstr "Добавить календарь сотрудника"
 
-#: 
+#:
 msgid "Add Staff Details"
 msgstr "Добавить детали сотрудника"
 
-#: 
+#:
 msgid "Add Staff Services"
 msgstr "Добавить сервисы сотрудника"
 
-#: 
+#:
 msgid "Add Staff Schedule"
 msgstr "Добавить график сотрудника"
 
-#: 
+#:
 msgid "Add Staff Days Off"
 msgstr "Добавить выходные дни сотрудника"
 
-#: 
+#:
 msgid "Hide visibility field"
 msgstr "Не показывать поле настройки видимости"
 
-#: 
+#:
 msgid "Disable services update"
 msgstr "Отключить изменение сервисов"
 
-#: 
+#:
 msgid "Disable price update"
 msgstr "Отключить изменение цены"
 
-#: 
+#:
 msgid "Displayed appointments"
 msgstr "Отображаемые встречи"
 
-#: 
+#:
 msgid "Upcoming appointments"
 msgstr "Предстоящие встречи"
 
-#: 
+#:
 msgid "All appointments"
 msgstr "Все встречи"
 
-#: 
+#:
 msgid "This text can be inserted into notifications to customers by Administrator."
 msgstr "Этот текст может быть использован администратором в уведомлениях клиентам."
 
-#: 
+#:
 msgid "If you want to become invisible to your customers set the visibility to \"Private\"."
 msgstr "Если вы хотите быть невидимым для клиентов, установите видимость в значение \"Закрытый\"."
 
-#: 
+#:
 msgid "If <b>Publishable Key</b> is provided then Bookly will use <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>for collecting credit card details."
 msgstr "Если предоставлен <b>Publishable Key</b>, тогда Bookly будет использовать <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>для сбора данных кредитных карт."
 
-#: 
+#:
 msgid "Secret Key"
 msgstr "Secret Key"
 
-#: 
+#:
 msgid "Publishable Key"
 msgstr "Publishable Key"
 
-#: 
+#:
 msgid "Taxes"
 msgstr "Налоги"
 
-#: 
+#:
 msgid "Price settings and display"
 msgstr "Настройки и отображение цены"
 
-#: 
+#:
 msgid "If the prices for your services include taxes, select include taxes. If the prices for your services do not include taxes, select exclude taxes."
 msgstr "Если стоимость ваших улуг включает в себя налоги, выберите \"С налогами\". Если стоимость ваших услуг не включает в себя налоги, выберите \"Без налогов\"."
 
-#: 
+#:
 msgid "Include taxes"
 msgstr "С налогами"
 
-#: 
+#:
 msgid "Exclude taxes"
 msgstr "Без налогов"
 
-#: 
+#:
 msgid "Add Tax"
 msgstr "Добавить Налог"
 
-#: 
+#:
 msgid "Rate"
 msgstr "Ставка"
 
-#: 
+#:
 msgid "New tax"
 msgstr "Новый налог"
 
-#: 
+#:
 msgid "Edit tax"
 msgstr "Редактировать налог"
 
-#: 
+#:
 msgid "No taxes found."
 msgstr "Налоги не найдены."
 
-#: 
+#:
 msgid "Taxation"
 msgstr "Налог"
 
-#: 
+#:
 msgid "service tax amount"
 msgstr "сумма налога на услугу"
 
-#: 
+#:
 msgid "service tax rate"
 msgstr "ставка налога на услугу"
 
-#: 
+#:
 msgid "total tax included in the appointment (summary for all items)"
 msgstr "общий налог для бронирования (суммарно по всем составляющим)"
 
-#: 
+#:
 msgid "total price without tax"
 msgstr "общая стоимость бронирования без налога"
 
-#: 
+#:
 msgid "Note if you use price correction to change the service cost according to the payment gateway used, tax will not be calculated for the additional amount to the cost. If you need to report the exact tax amount to the payment system, do not use additional charge."
 msgstr "Обратите внимание, если вы используете корректировку цены для изменения стоимости услуги в соответствии с используемой платежной системой, налог не будет рассчитываться для надбавки к стоимости. Если вам нужно сообщить точную сумму налога в платежную систему, не используйте надбавку к стоимости."
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "This is a confirmation that you have been added to the waiting list for {service_name} on {appointment_date} at {appointment_time}.\n"
@@ -5894,7 +5894,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "You have new customer in the waiting list.\n"
@@ -5916,11 +5916,11 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Set appointment from waiting list"
 msgstr "Назначить встречу из списка ожидания"
 
-#: 
+#:
 msgid "Dear {staff_name},\n"
 "\n"
 "The time slot on {appointment_date} at {appointment_time} for {service_name} is now available for booking. Please see the list of customers on the waiting list and make a new appointment.\n"
@@ -5930,7 +5930,7 @@ msgstr "Дорогой(ая) {staff_name}.\n"
 "\n"
 "Время на {appointment_date} в {appointment_time} для {service_name} теперь доступно для бронирования. Пожалуйста, посмотрите список клиентов в списке оиждания и назначьте новую встречу."
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "This is a confirmation that you have been added to the waiting list for {service_name} on {appointment_date} at {appointment_time}.\n"
 "Thank you for choosing our company.\n"
@@ -5944,7 +5944,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "You have new customer in the waiting list.\n"
 "Service: {service_name}\n"
@@ -5962,598 +5962,598 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {staff_name},\n"
 "The time slot on {appointment_date} at {appointment_time} for {service_name} is now available for booking. Please see the list of customers on the waiting list and make a new appointment.\n"
 "{appointment_waiting_list}"
 msgstr "Дорогой(ая) {staff_name}.\n"
 "Время на {appointment_date} в {appointment_time} для {service_name} теперь доступно для бронирования. Пожалуйста, посмотрите список клиентов в списке ожидания и назначьте новую встречу. "
 
-#: 
+#:
 msgid "To join the waiting list for a busy time slot, please select a slot marked with \"(N)\", where N is a number of customers on the waiting list."
 msgstr "Чтобы добавиться в список ожидания на занятое время, пожалуйста, выберите время с пометкой \"(N)\", где N – это количество клиентов в списке ожидания."
 
-#: 
+#:
 msgid "number of persons on waiting list"
 msgstr "количество человек в списке ожидания"
 
-#: 
+#:
 msgid "Notification to customer about placing on waiting list"
 msgstr "Уведомление для клиента о добавлении в список ожидания"
 
-#: 
+#:
 msgid "Notification to staff member about placing on waiting list"
 msgstr "Уведомление для сотрудника о добавлении в список ожидания"
 
-#: 
+#:
 msgid "Notification to staff member to set appointment from waiting list"
 msgstr "Уведомление для сотрудника назначить встречу из списка ожидания"
 
-#: 
+#:
 msgid "waiting list of appointment"
 msgstr "список ожидания на встречу"
 
-#: 
+#:
 msgid "Set appointment"
 msgstr "Назначить встречу"
 
-#: 
+#:
 msgid "Merchant Key"
 msgstr "Merchant Key"
 
-#: 
+#:
 msgid "Merchant Salt"
 msgstr "Merchant Salt"
 
-#: 
+#:
 msgid "Follow these steps to get an API key:"
 msgstr "Выполните следующие шаги, чтобы получить API key:"
 
-#: 
+#:
 msgid "Go to the <a href=\"https://console.developers.google.com/flows/enableapi?apiid=places_backend&reusekey=true\" target=\"_blank\">Google API Console</a>."
 msgstr "Откройте <a href=\"https://console.developers.google.com/flows/enableapi?apiid=places_backend&reusekey=true\" target=\"_blank\">Google API Console</a>."
 
-#: 
+#:
 msgid "Create or select a project. Click <b>Continue</b> to enable the API."
 msgstr "Выберите проект или создайте новый. Нажмите <b>Продолжить</b>, чтобы подключить API."
 
-#: 
+#:
 msgid "On the <b>Credentials</b> page, get an <b>API key</b> (and set the API key restrictions). Note: If you have an existing unrestricted API key, or a key with server restrictions, you may use that key."
 msgstr "На странице <b>Учетные данные</b>, получите <b>API key</b> (и добавьте ограничения для API key). Примечание: если у вас есть существующий API key без ограничений или ключ с ограничениями, вы можете использовать этот ключ."
 
-#: 
+#:
 msgid "Click <b>Library</b> on the left sidebar menu. Select Google Maps JavaScript API and make sure it's enabled."
 msgstr "Нажмите <b>Библиотека</b> в меню слева. Выберите Google Maps JavaScript API и убедитесь, что он включен."
 
-#: 
+#:
 msgid "Use your <b>API key</b> in the form below."
 msgstr "Используйте ваш <b>API key</b> в форме ниже."
 
-#: 
+#:
 msgid "Enter a Google API key that you got after registering your app project on the Google API Console."
 msgstr "Введите Google API key, который вы получили после регистрации вашего проекта приложения в Google API Console."
 
-#: 
+#:
 msgid "Google Maps"
 msgstr "Карты Google"
 
-#: 
+#:
 msgid "When you connect a calendar all future and past events will be synchronized according to the selected synchronization mode. This may take a few minutes. Please wait."
 msgstr "При подключении календаря все будущие и прошлые события будут синхронизированы в соответствии с выбранным режимом синхронизации. Это может занять несколько минут. Пожалуйста, подождите."
 
-#: 
+#:
 msgid "If needed, edit item data which will be displayed in the cart. Besides cart item data Bookly passes address and account fields into WooCommerce if you collect them in your booking form."
 msgstr "При необходимости отредактируйте данные, которые будут отображаться в корзине. Помимо данных из корзины Bookly передает поля адреса и учетной записи в WooCommerce, если вы собираете их в форме бронирования."
 
-#: 
+#:
 msgid "Make birthday mandatory"
 msgstr "Обязательный ввод даты рождения"
 
-#: 
+#:
 msgid "If enabled, a customer will be required to enter a date of birth to proceed with a booking."
 msgstr "Если эта настройка включена, то клиент не сможет продолжить бронирование без ввода даты рождения."
 
-#: 
+#:
 msgid "Proceed without license verification"
 msgstr "Продолжить без подтверждения лицензии"
 
-#: 
+#:
 msgid "Tasks"
 msgstr "Задачи"
 
-#: 
+#:
 msgid "Skip time selection"
 msgstr "Пропустить назначение времени"
 
-#: 
+#:
 msgid "Customer Groups"
 msgstr "Группы Клиентов"
 
-#: 
+#:
 msgid "New group"
 msgstr "Новая группа"
 
-#: 
+#:
 msgid "Group Name"
 msgstr "Название Группы"
 
-#: 
+#:
 msgid "Number of Users"
 msgstr "Количество Пользователей"
 
-#: 
+#:
 msgid "Description"
 msgstr "Описание"
 
-#: 
+#:
 msgid "Appointment Status"
 msgstr "Статус Встречи"
 
-#: 
+#:
 msgid "Customers without group"
 msgstr "Клиенты без группы"
 
-#: 
+#:
 msgid "Groups"
 msgstr "Группы"
 
-#: 
+#:
 msgid "All groups"
 msgstr "Все группы"
 
-#: 
+#:
 msgid "No group selected"
 msgstr "Группа не выбрана"
 
-#: 
+#:
 msgid "Group"
 msgstr "Группа"
 
-#: 
+#:
 msgid "New Group"
 msgstr "Новая Группа"
 
-#: 
+#:
 msgid "Edit Group"
 msgstr "Редактировать Группу"
 
-#: 
+#:
 msgid "No customer groups yet."
 msgstr "Групп клиентов пока нет."
 
-#: 
+#:
 msgid "Customer group based"
 msgstr "На основании группы клиентов"
 
-#: 
+#:
 msgid "Customer Group"
 msgstr "Группа Клиентов"
 
-#: 
+#:
 msgid "No group"
 msgstr "Без группы"
 
-#: 
+#:
 msgid "Group name"
 msgstr "Название группы"
 
-#: 
+#:
 msgid "Total discount"
 msgstr "Общая сумма скидки"
 
-#: 
+#:
 msgid "Enter the fixed amount of discount (e.g. 10 off). To specify a percentage discount (e.g. 10% off), add '%' symbol to a numerical value."
 msgstr "Введите фиксированную сумму скидки (напр., 10). Чтобы указать скидку в процентах (напр., 10%), добавьте символ '%' к численному значению."
 
-#: 
+#:
 msgid "Edit group"
 msgstr "Редактировать группу"
 
-#: 
+#:
 msgid "Group name is required"
 msgstr "Необходимо указать название группы"
 
-#: 
+#:
 msgid "Important: for two-way sync, your website must use HTTPS. Google Calendar API will be able to send notifications to HTTPS address only if there is a valid SSL certificate installed on your web server. Follow the steps in this <a href=\"%s\" target=\"_blank\">document</a> to <b>verify and register your domain</b>."
-msgstr "Важно: для двусторонней синхронизации ваш сайт должен использовать HTTPS. API Google Календаря сможет отправлять уведомления на HTTPS-адрес только в том случае, если на вашем веб-сервере установлен действительный SSL сертификат. Выполните действия, описанные в этом <a href=\"%s\" target=\"_blank\"> документе </a>, чтобы <b> проверить и зарегистрировать свой домен </ b>."
+msgstr "Важно: для двусторонней синхронизации ваш сайт должен использовать HTTPS. API Google Календаря сможет отправлять уведомления на HTTPS-адрес только в том случае, если на вашем веб-сервере установлен действительный SSL сертификат. Выполните действия, описанные в этом <a href=\"%s\" target=\"_blank\"> документе </a>, чтобы <b> проверить и зарегистрировать свой домен </b>."
 
-#: 
+#:
 msgid "Allows to set the start and end times for an appointment for services with the duration of 1 day or longer. This time will be displayed in notifications to customers, backend calendar and codes for booking form."
 msgstr "Позволяет установить время начала и окончания для услуг продолжительностью 1 день или дольше. Это время будет отображаться в уведомлениях клиентам, календаре в административной панели и кодах для формы бронирования."
 
-#: 
+#:
 msgid "Street Number"
 msgstr "Номер Улицы"
 
-#: 
+#:
 msgid "Street number is required"
 msgstr "Необходимо указать номер улицы"
 
-#: 
+#:
 msgid "Total price"
 msgstr "Итоговая цена"
 
-#: 
+#:
 msgid "Below the App Details Panel click Add Platform button, select Website and enter your website URL."
 msgstr "Под панелью с деталями приложения нажмите \"Добавить платформу\", выберите Веб-сайт и введите URL вашего веб-сайта."
 
-#: 
+#:
 msgid "Go to your App Dashboard. In the left side navigation panel of the App Dashboard, click Settings > Basic to view the App Details Panel with your App ID. Use it in the form below."
 msgstr "Перейдите в Панель Приложения. В левой панели навигации выберите Настройки > Основное, чтобы увидеть информацию о вашем ID приложения. Используйте его в форме ниже."
 
-#: 
+#:
 msgid "To help us improve Bookly, the plugin anonymously collects usage information. You can opt out of sharing the information in Settings > General."
 msgstr "Чтобы помочь нам улучшить Bookly, плагин анонимно собирает информацию об использовании. Вы можете отказаться от предоставления информации в разделе Настройки > Общие."
 
-#: 
+#:
 msgid "Let the plugin anonymously collect usage information to help Bookly team improve the product."
 msgstr "Разрешить плагину анонимно собирать информацию об использовании, чтобы помочь команде Bookly улучшить продукт."
 
-#: 
+#:
 msgid "Disagree"
 msgstr "Не согласен"
 
-#: 
+#:
 msgid "Agree"
 msgstr "Согласен"
 
-#: 
+#:
 msgid "Required field."
 msgstr "Обязательно поле."
 
-#: 
+#:
 msgid "Ask once."
 msgstr "Запрашивать данные один раз."
 
-#: 
+#:
 msgid "All unsaved changes will be lost."
 msgstr "Все несохранённые изменения будут потеряны."
 
-#: 
+#:
 msgid "Don't save"
 msgstr "Не сохранять"
 
-#: 
+#:
 msgid "To get access to all Bookly features, lifetime free updates and 24/7 support, please upgrade to the Pro version of Bookly.<br>For more information visit"
 msgstr "Чтобы получить доступ ко всем функциям Bookly, бесплатным обновлениям  и круглосуточной поддержке, пожалуйста, обновите Bookly до Pro версии. <br>Для дополнительной информации посетите"
 
-#: 
+#:
 msgid "Show Repeat step"
 msgstr "Показывать шаг \"Повторить\""
 
-#: 
+#:
 msgid "Show Extras step"
 msgstr "Показывать шаг \"Дополнения\""
 
-#: 
+#:
 msgid "Show Cart step"
 msgstr "Показывать шаг \"Корзина\""
 
-#: 
+#:
 msgid "Show custom fields"
 msgstr "Показывать пользовательские поля"
 
-#: 
+#:
 msgid "Show customer information"
 msgstr "Показывать информацию о клиенте"
 
-#: 
+#:
 msgid "Show google maps field"
 msgstr "Показывать поле google maps"
 
-#: 
+#:
 msgid "Show coupons"
 msgstr "Показывать купоны"
 
-#: 
+#:
 msgid "Show waiting list slots"
 msgstr "Показывать интервалы со списком ожидания"
 
-#: 
+#:
 msgid "Show chain appointments"
 msgstr "Показывать цепочку встреч"
 
-#: 
+#:
 msgid "Show files"
 msgstr "Показывать файлы"
 
-#: 
+#:
 msgid "Show custom duration"
 msgstr "Показывать изменяемую продолжительность"
 
-#: 
+#:
 msgid "Show number of persons"
 msgstr "Показывать количество персон"
 
-#: 
+#:
 msgid "Show location"
 msgstr "Показывать место"
 
-#: 
+#:
 msgid "Show quantity"
 msgstr "Показывать количество"
 
-#: 
+#:
 msgid "Show timezone"
 msgstr "Показывать часовой пояс"
 
-#: 
+#:
 msgid "Timezone"
 msgstr "Часовой пояс"
 
-#: 
+#:
 msgid "Invoices add-on requires your customers address information. So options \"Make address field mandatory\" in Settings/Customers and \"Show address field\" in Appearance/Details are activated automatically and can be disabled after Invoices add-on is deactivated."
 msgstr "Для работы дополнения Инвойсы требуется информация об адресе клиента, поэтому настройка \"Сделать ввод адреса обязательным\" в Настройки/Клиенты и \"Показывать поля для ввода адреса\" в Внеший вид/Детали активированы автоматически и могут быть отключены после деактивации дополнения Инвойсы."
 
-#: 
+#:
 msgid "Customers are required to enter address to proceed with a booking. To disable, deactivate Invoices add-on first."
 msgstr "Клиенты должны ввести адрес, чтобы продолжить бронирование. Чтобы отключить, сначала деактивируйте дополнение Инвойсы."
 
-#: 
+#:
 msgid "Bookly Pro - License verification required"
 msgstr "Bookly Pro - Необходимо подтверждение лицензии"
 
-#: 
+#:
 msgid "Thank you for choosing Bookly Pro as your booking solution."
 msgstr "Благодарим вас за то, что выбрали Bookly Pro в качестве решения для бронирования встреч."
 
-#: 
+#:
 msgid "Proceed to Bookly Pro without license verification"
 msgstr "Перейдите к Bookly Pro без подтверждения лицензии"
 
-#: 
+#:
 msgid "max"
 msgstr "максимум"
 
-#: 
+#:
 msgid "Please verify your Bookly Pro license"
 msgstr "Пожалуйста, подтвердите свою лицензию для Bookly Pro"
 
-#: 
+#:
 msgid "Bookly Pro will need to verify your license to restore access to your bookings. Please enter the purchase code in the administrative panel."
 msgstr "Bookly Pro необходимо подтвердить вашу лицензию, чтобы восстановить доступ к встречам. Пожалуйста, введите код покупки в административной панели."
 
-#: 
+#:
 msgid "Please verify Bookly Pro license in the administrative panel. If you do not verify the license within {days}, access to your bookings will be disabled."
 msgstr "Пожалуйста, подтвердите код покупки для Bookly Pro в административной панели. Если вы не подтвердите код покупки в течение {days}, доступ к вашим встречам будет отключен."
 
-#: 
+#:
 msgid "A new appointment has been created. To view the details of this appointment, please contact your website administrator in order to verify Bookly Pro license."
 msgstr "Была создана новая встреча. Чтобы увидеть детали встречи, пожалуйста, свяжитесь с администратором вашего веб-сайта для подтверждения лицензии для Bookly Pro."
 
-#: 
+#:
 msgid "You have a new appointment. To view it, contact your admin to verify Bookly Pro license."
 msgstr "У вас новая встреча. Чтобы просмотреть, свяжитесь с администратором, чтобы подтвердить лицензию для Bookly Pro."
 
-#: 
+#:
 msgid "A new appointment has been created. To view the details of this appointment, please verify Bookly Pro license in the administrative panel."
 msgstr "Была создана новая встреча. Чтобы увидеть детали встречи, пожалуйста, подтвердите лицензию для Bookly Pro в административной панели."
 
-#: 
+#:
 msgid "You have a new appointment. To view it, please verify Bookly Pro license."
 msgstr "У вас новая встреча. Чтобы просмотреть, пожалуйста, подтвердите лицензию для Bookly Pro."
 
-#: 
+#:
 msgid "Welcome to Bookly Pro and thank you for purchasing our product!"
 msgstr "Добро пожаловать в Bookly Pro! Мы благодарим вас за покупку нашего продукта!"
 
-#: 
+#:
 msgid "Bookly will simplify the booking process for your customers. This plugin creates another touchpoint to convert your visitors into customers. With Bookly your clients can see your availability, pick the services you provide, book them online and much more."
 msgstr "Bookly упрощает процесс бронирования для ваших клиентов и помогает преобразовать посетителей в клиентов. С помощью Bookly ваши клиенты смогут увидеть вашу доступность, выбрать предоставляемые услуги, забронировать их на вашем сайте и многое другое."
 
-#: 
+#:
 msgid "To start using Bookly, you need to set up the services you provide and specify the staff members who will provide those services."
 msgstr "Чтобы начать использовать Bookly, вам необходимо настроить услуги, которые вы предоставляете, и указать исполнителей для этих услуг."
 
-#: 
+#:
 msgid "Add services you provide and assign them to staff members."
 msgstr "Добавьте сервисы, которые вы предоставляете, и назначьте их исполнителям."
 
-#: 
+#:
 msgid "Go to Posts/Pages and click on the Add Bookly booking form button in the page editor to publish the booking form on your website."
 msgstr "Перейдите в Записи/Страницы и в режиме редактирования нажмите на кнопку \"Добавить форму бронирования Bookly\", чтобы опубликовать форму бронирования на вашем сайте."
 
-#: 
+#:
 msgid "Bookly can boost your sales and scale together with your business. With Bookly add-ons you can get more features and functionality to customize your online scheduling system according to your business needs and simplify the process even more."
 msgstr "Bookly поможет увеличить ваши продажи онлайн. Гибкость плагина позволяет расширить функционал вместе с ростом вашего бизнеса. С дополнениями к Bookly вы можете получить больше функций, чтобы настроить вашу систему онлайн-бронирования в соответствии с потребностями вашего бизнеса."
 
-#: 
+#:
 msgid "Bookly Add-ons"
 msgstr "Дополнения к Bookly"
 
-#: 
+#:
 msgid "SMS service"
 msgstr "услуга SMS"
 
-#: 
+#:
 msgid "Welcome to Bookly and thank you for your choice!"
 msgstr "Добро пожаловать в Bookly! Мы благодарим вас за ваш выбор!"
 
-#: 
+#:
 msgid "Add a staff member (you can add only one service provider with a free version of Bookly)."
 msgstr "Добавить сотрудника (в бесплатной версии Bookly вы можете добавить только одного исполнителя)."
 
-#: 
+#:
 msgid "Add services you provide (up to five with a free version of Bookly) and assign them to a staff member."
 msgstr "Добавьте сервисы, которые вы предоставляете (до 5 сервисов в бесплатной версии Bookly), и назначьте их исполнителю."
 
-#: 
+#:
 msgid "Please contact your website administrator to verify your license by providing a valid purchase code. Upon providing the purchase code you will get access to software updates, including feature improvements and important security fixes. If you do not provide a valid purchase code within {days}, access to your bookings will be disabled."
 msgstr "Пожалуйста, свяжитесь с администратором вашего веб-сайта, чтобы подтвердить свою лицензию, указав действительный код покупки. После предоставления кода покупки вы получите доступ к обновлениям программного обеспечения, а также к улучшениям функций и важным исправлениям безопасности. Если вы не предоставите действительный код покупки в течение {days}, доступ к вашим встречам будет отключен."
 
-#: 
+#:
 msgid "Deactivate Bookly Pro"
 msgstr "Деактивировать Bookly Pro"
 
-#: 
+#:
 msgid "To enable access to your bookings, please contact your website administrator to verify your license by providing a valid purchase code."
 msgstr "Чтобы включить доступ к вашим встречам, пожалуйста, обратитесь к администратору вашего веб-сайта, чтобы подтвердить свою лицензию, предоставив действительный код покупки."
 
-#: 
+#:
 msgid "If you do not provide a valid purchase code within {days}, access to your bookings will be disabled. <a href=\"{url}\">Details</a>"
 msgstr "Если вы не предоставите действительный код покупки в течение {days}, доступ к вашим встречам будет отключен. <a href=\"{url}\">Подробнее</a>"
 
-#: 
+#:
 msgid "To enable access to your bookings, please verify your license by providing a valid purchase code. <a href=\"{url}\">Details</a>"
 msgstr "Чтобы включить доступ к вашим встречам, пожалуйста, подтвердите свою лицензию, предоставив действительный код покупки. <a href=\"{url}\">Подробнее</a>"
 
-#: 
+#:
 msgid "Follow the steps at <a href=\"https://developers.facebook.com/docs/apps/register\" target=\"_blank\">https://developers.facebook.com/docs/apps/register</a> to create a Developer Account, register and configure your <b>Facebook App</b>. Then you'll need to submit your app for review. Learn more about the review process and what's required to pass review in the <a href=\"https://developers.facebook.com/docs/facebook-login/review\" target=\"_blank\">Login Review Guide</a>."
 msgstr "Выполните шаги, описанные по ссылке <a href=\"https://developers.facebook.com/docs/apps/register\" target=\"_blank\">https://developers.facebook.com/docs/apps/register</a>, чтобы создать аккаунт разработчика, зарегистрировать и настроить ваше <b>Facebook Приложение</b>. Затем вам нужно будет пройти проверку приложения. Подробнее о процессе проверки и что для этого требуется читайте в документе о <a href=\"https://developers.facebook.com/docs/facebook-login/review\" target=\"_blank\">Проверке приложения</a>."
 
-#: 
+#:
 msgid "To view the details of these appointments, please contact your website administrator in order to verify Bookly Pro license."
 msgstr "Чтобы увидеть детали этих встреч, пожалуйста, обратитесь к администратору вашего веб-сайта, чтобы подтвердить лицензию для Bookly Pro."
 
-#: 
+#:
 msgid "Bookly can boost your sales and scale together with your business. Get more features and remove the limits by upgrading to the paid version with the <a href=\"%s\" target=\"_blank\">Bookly Pro add-on</a>, which allows you to use a vast number of additional features and settings for booking services, install other add-ons for Bookly, and includes six months of customer support."
 msgstr "Bookly поможет увеличить ваши продажи онлайн. Гибкость плагина позволяет расширить функционал вместе с ростом вашего бизнеса. Получите больше возможностей и снимите ограничения, установив <a href=\"%s\" target=\"_blank\">дополнение Bookly Pro</a>, которое позволяет использовать расширенные функции и настройки для бронирования сервисов, устанавливать другие дополнения к Bookly, и включает 6 месяцев клиентской поддержки."
 
-#: 
+#:
 msgid "Try Bookly Pro add-on"
 msgstr "Купить Bookly Pro"
 
-#: 
+#:
 msgid "<b>Bookly Lite rebrands into Bookly with more features available.</b><br/><br/>We have changed the architecture of Bookly Lite and Bookly to optimize the development of both plugin versions and add more features to the new free Bookly. To learn more about the major Bookly update, check our <a href=\"%s\" target=\"_blank\">blog post</a>."
 msgstr "<b>Bookly Lite переименовывается в Bookly с большим количеством доступных функций.</b><br/><br/>Мы изменили архитектуру Bookly Lite и Bookly для того, чтобы оптимизировать разработку двух версий плагина и добавить больше функций в бесплатную версию Bookly. Подробнее о новом Bookly читайте в <a href=\"%s\" target=\"_blank\">нашем блоге</a>."
 
-#: 
+#:
 msgid "Group appointments"
 msgstr "Групповые встречи"
 
-#: 
+#:
 msgid "Create new appointment for every recurring booking"
 msgstr "Создавать новую встречу для каждого повторяющегося бронирования"
 
-#: 
+#:
 msgid "Add customer to available group bookings"
 msgstr "Добавить клиента в в доступные групповые бронирования"
 
-#: 
+#:
 msgid "One booking per time slot"
 msgstr "Одно бронирование для временного интервала"
 
-#: 
+#:
 msgid "Enable this option if you want to limit the possibility of booking within the service capacity to one time."
 msgstr "Включите эту настройку, если хотите ограничить возможность бронирования в рамках вместимости услуги одним разом."
 
-#: 
+#:
 msgid "Equal duration"
 msgstr "Равная продолжительность"
 
-#: 
+#:
 msgid "Make every service duration equal to the duration of the longest one."
 msgstr "Приравнять продолжительность каждой услуги к длительности самой продолжительной из входящих в состав услуг."
 
-#: 
+#:
 msgid "Collaborative"
 msgstr "Совместный"
 
-#: 
+#:
 msgid "Collaborative service"
 msgstr "Совместный сервис"
 
-#: 
+#:
 msgid "Part of collaborative service"
 msgstr "Часть совместного сервиса"
 
-#: 
+#:
 msgid "There are no time slots for selected date."
 msgstr "Для выбранной даты нет свободных временных интервалов."
 
-#: 
+#:
 msgid "Confirm email"
 msgstr "Подтвердите адрес эл. почты"
 
-#: 
+#:
 msgid "Email confirmation doesn't match"
 msgstr "Введённые адреса эл. почты не совпадают друг с другом"
 
-#: 
+#:
 msgid "Created at any time"
 msgstr "Создана в любое время"
 
-#: 
+#:
 msgid "Created"
 msgstr "Создана"
 
-#: 
+#:
 msgid "Any time"
 msgstr "Любое время"
 
-#: 
+#:
 msgid "Last 7 days"
 msgstr "Последние 7 дней"
 
-#: 
+#:
 msgid "Last 30 days"
 msgstr "Последние 30 дней"
 
-#: 
+#:
 msgid "This month"
 msgstr "Текущий месяц"
 
-#: 
+#:
 msgid "Custom range"
 msgstr "Произвольный диапазон"
 
-#: 
+#:
 msgid "Archived"
 msgstr "В архиве"
 
-#: 
+#:
 msgid "Send invoice"
 msgstr "Отправить счёт"
 
-#: 
+#:
 msgid "Note: invoice will be sent to your PayPal email address"
 msgstr "Примечание: счёт будет отправлен на ваш адрес эл. почты PayPal"
 
-#: 
+#:
 msgid "Company address"
 msgstr "Адрес компании"
 
-#: 
+#:
 msgid "Company address line 2"
 msgstr "Адрес компании строка 2"
 
-#: 
+#:
 msgid "VAT"
 msgstr "НДС"
 
-#: 
+#:
 msgid "Company code"
 msgstr "Код компании"
 
-#: 
+#:
 msgid "Additional text to include into invoice"
 msgstr "Дополнительный текст, который можно добавить к счёту"
 
-#: 
+#:
 msgid "Confirm your email"
 msgstr "Подтвердите адрес эл. почты"
 
-#: 
+#:
 msgid "Thank you for registration."
 msgstr "Спасибо за регистрацию."
 
-#: 
+#:
 msgid "Confirmation is sent to %s."
 msgstr "Подтверждение отправлено на %s."
 
-#: 
+#:
 msgid "Once you confirm your e-mail address, you will get an access to Bookly SMS service."
 msgstr "Как только вы подтвердите свой адрес эл. почты, вы получите доступ к сервису Bookly SMS."
 
-#: 
+#:
 msgid "If you do not see your country in the list please contact us at <a href=\"mailto:support@bookly.info\">support@bookly.info</a>."
 msgstr "Если вы не нашли свою страну в списке, пожалуйста, свяжитесь с нами по адресу <a href=\"mailto:support@bookly.info\">support@bookly.info</a>."
 
-#: 
+#:
 msgid "Last month"
 msgstr "Прошлый месяц"
 
-#: 
+#:
 msgid "Hello,\n"
 "\n"
 "Thank you for registering at Bookly SMS service. Please click the link below to verify your email address.\n"
@@ -6569,187 +6569,187 @@ msgstr "Здравствуйте,\n"
 "\n"
 "Bookly"
 
-#: 
+#:
 msgid "Bookly SMS service  email confirmation"
 msgstr "Сервис Bookly SMS – подтверждение адреса эл. почты"
 
-#: 
+#:
 msgid "Add new item to the category"
 msgstr "Добавить новый элемент в категорию"
 
-#: 
+#:
 msgid "Edit category name"
 msgstr "Редактировать название категории"
 
-#: 
+#:
 msgid "Delete category"
 msgstr "Удалить категорию"
 
-#: 
+#:
 msgid "Archive"
 msgstr "Архивировать"
 
-#: 
+#:
 msgid "The working time in the provider's schedule is associated with another location."
 msgstr "Указанное время в графике сотрудника связано с другим местоположением."
 
-#: 
+#:
 msgid "Set slot length as service duration"
 msgstr "Установить длину интервала в качестве продолжительности сервиса"
 
-#: 
+#:
 msgid "The time interval which is used as a step when building all time slots for the service at the Time step. The setting overrides global settings in Settings  General. Use Default to apply global settings."
 msgstr "Интервал, который будет использован в качестве шага при построении всех временных списков для услуги на шаге Время. Эта настройка переопределяет глобальные настройки, указанные в Настройки > Общие. Выберите По умолчанию, чтобы использовать глобальные настройки."
 
-#: 
+#:
 msgid "Slot length as service duration"
 msgstr "Длина интервала в качестве продолжительности сервиса"
 
-#: 
+#:
 msgid "You must select at least one repeat option for recurring services."
 msgstr "Для работы повторяющихся сервисов необходимо выбрать хотя бы одну опцию повторения."
 
-#: 
+#:
 msgid "Align buttons to the left"
 msgstr "Выровнять кнопки по левому краю"
 
-#: 
+#:
 msgid "Email confirmation field"
 msgstr "Поле подтверждения эл. почты"
 
-#: 
+#:
 msgid "Booking exceeds the working hours limit for staff member"
 msgstr "Бронирование превышает допустимое количество рабочих часов для сотрудника."
 
-#: 
+#:
 msgid "View series"
 msgstr "Просмотреть серию"
 
-#: 
+#:
 msgid "Delete customers with existing bookings"
 msgstr "Удалить клиентов с существующими бронированиями"
 
-#: 
+#:
 msgid "Deleted Customer"
 msgstr "Удалённый клиент"
 
-#: 
+#:
 msgid "Please, check your email to confirm the subscription. Thank you!"
 msgstr "Пожалуйста, проверьте свою электронную почту, чтобы подтвердить подписку. Спасибо!"
 
-#: 
+#:
 msgid "Given email address is already subscribed, thank you!"
 msgstr "Данный адрес эл. почты уже подписан, спасибо!"
 
-#: 
+#:
 msgid "This email address is not valid."
 msgstr "Этот адрес эл. почты недействителен."
 
-#: 
+#:
 msgid "Feature requests"
 msgstr "Запросы функций"
 
-#: 
+#:
 msgid "In the Feature Requests section of our Community, you can make suggestions about what you'd like to see in our future releases."
 msgstr "В разделе \"Запросы Функций\" нашего сообщества вы можете сделать предложения о том, что бы вы хотели видеть в наших будущих релизах."
 
-#: 
+#:
 msgid "Before you post, please check if the same suggestion has already been made. If so, vote for ideas you like and add a comment with the details about your situation."
 msgstr "Перед публикацией, пожалуйста, проверьте, было ли сделано такое же предложение. Если да, голосуйте за понравившиеся идеи и оставляйте комментарии с детальным описанием своей ситуации."
 
-#: 
+#:
 msgid "It's much easier for us to address a suggestion if we clearly understand the context of the issue, the problem, and why it matters to you. When commenting or posting, please consider these questions so we can get a better idea of the problem you're facing:"
 msgstr "Нам будет гораздо проще работать с предложением, если мы чётко поймём контекст проблемы и почему это имеет для вас значение. Когда вы комментируете или публикуете предложение, пожалуйста, учитывайте следующие вопросы, чтобы мы могли лучше понять проблему, с которой вы столкнулись:"
 
-#: 
+#:
 msgid "What is the issue you're struggling with?"
 msgstr "Какие трудности вы испытываете?"
 
-#: 
+#:
 msgid "Where in your workflow do you encounter this issue?"
 msgstr "Где в вашем рабочем процессе проявляется эта проблема?"
 
-#: 
+#:
 msgid "Is this something that impacts just you, your whole team, or your customers?"
 msgstr "Это влияет только на вас, на всю вашу команду или на ваших клиентов?"
 
-#: 
+#:
 msgid "don't show this notification again"
 msgstr "больше не показывать это сообщение"
 
-#: 
+#:
 msgid "Proceed to Feature requests"
 msgstr "Перейти к Запросам функций"
 
-#: 
+#:
 msgid "We care about your experience of using Bookly!<br/>Leave a review and tell others what you think."
 msgstr "Для нас важен ваш опыт использования Bookly!<br/>Оставьте отзыв и расскажите другим, что вы думаете."
 
-#: 
+#:
 msgid "%s is used on another domain %s.<br/>In order to use the purchase code on this domain, please dissociate it in the admin panel of the other domain.<br/>If you do not have access to the admin area, please contact our technical support at support@bookly.info to transfer the license manually."
 msgstr "%s используется на другом домене %s.<br/>Чтобы использовать этот лицензионный ключ на этом домене, пожалуйста, отсоедините его в административной панели другого домена.<br/>Если у вас нет доступа к административной панели, пожалуйста, свяжитесь с нашей технической поддержкой по адресу support@bookly.info для переноса лицензионного ключа вручную."
 
-#: 
+#:
 msgid "Archiving Staff"
 msgstr "Архивация Сотрудника"
 
-#: 
+#:
 msgid "Ok, continue editing"
 msgstr "Продолжить редактирование"
 
-#: 
+#:
 msgid "Limit working hours per day"
 msgstr "Ограничить количество рабочих часов в день"
 
-#: 
+#:
 msgid "Unlimited"
 msgstr "Без ограничений"
 
-#: 
+#:
 msgid "Customer section"
 msgstr "О клиенте"
 
-#: 
+#:
 msgid "Appointment section"
 msgstr "О встрече"
 
-#: 
+#:
 msgid "Period (before and after)"
 msgstr "Период (до и после)"
 
-#: 
+#:
 msgid "upcoming"
 msgstr "предстоящих"
 
-#: 
+#:
 msgid "per 24 hours"
 msgstr "в течение 24 часов"
 
-#: 
+#:
 msgid "per 7 days"
 msgstr "в течение 7 дней"
 
-#: 
+#:
 msgid "Least occupied for period"
 msgstr "Менее загруженный в течение периода"
 
-#: 
+#:
 msgid "Most occupied for period"
 msgstr "Более загруженный в течение периода"
 
-#: 
+#:
 msgid "For service"
 msgstr "Для сервиса"
 
-#: 
+#:
 msgid "Skip"
 msgstr "Пропустить"
 
-#: 
+#:
 msgid "Your task is done"
 msgstr "Ваша задача выполнена"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "\n"
 "Your task {service_name} has been done.\n"
@@ -6769,11 +6769,11 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Task is done"
 msgstr "Задача выполнена"
 
-#: 
+#:
 msgid "Hello.\n"
 "\n"
 "The following task has been done.\n"
@@ -6797,7 +6797,7 @@ msgstr "Здравствуйте.\n"
 "\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Dear {client_name}.\n"
 "Your task {service_name} has been done.\n"
 "Thank you for choosing our company.\n"
@@ -6811,7 +6811,7 @@ msgstr "Дорогой(ая) {client_name}.\n"
 "{company_phone}\n"
 "{company_website}"
 
-#: 
+#:
 msgid "Hello.\n"
 "The following task has been done.\n"
 "Service: {service_name}\n"
@@ -6825,135 +6825,135 @@ msgstr "Здравствуйте.\n"
 "Телефон клиента: {client_phone}\n"
 "Электронная почта клиента: {client_email}"
 
-#: 
+#:
 msgid "Time step settings"
 msgstr "Настройки шага Время"
 
-#: 
+#:
 msgid "This setting allows to display the step of selecting an appointment time, hide it and create a task without due time, or display the time step, but allow a customer to skip it."
 msgstr "Эта настройка позволяет отобразить шаг выбора времени встречи, скрыть его и создать задачу без времени выполнения или отобразить шаг Время, но позволить клиенту пропустить его."
 
-#: 
+#:
 msgid "Optional"
 msgstr "Опциональный"
 
-#: 
+#:
 msgid "Coupon code"
 msgstr "Код купона"
 
-#: 
+#:
 msgid "Extras Step"
 msgstr "Шаг Дополнения"
 
-#: 
+#:
 msgid "After Service step"
 msgstr "После шага Сервис"
 
-#: 
+#:
 msgid "After Time step (Extras duration settings will be ignored)"
 msgstr "После шага Время (настройки длительности Дополнений будут проигнорированы)"
 
-#: 
+#:
 msgid "Set Default values that will be used in all locations where Use default settings is selected. To use custom settings in a location, select Use custom settings and enter custom values."
 msgstr "Установите значения по умолчанию, которые будут использованы во всех местах, где выбрано \"Использовать настройки по умолчанию\". Для использования в месте пользовательских настроек, выберите \"Использовать пользовательские настройки\" и введите пользовательские значения."
 
-#: 
+#:
 msgid "Default settings"
 msgstr "Настройки по умолчанию"
 
-#: 
+#:
 msgid "Use default settings"
 msgstr "Использовать настройки по умолчанию"
 
-#: 
+#:
 msgid "Enable this setting to be able to set custom settings for staff members for different locations."
 msgstr "Включите эту настройку, чтобы устанавливать пользовательские настройки для сотрудников в разных местах."
 
-#: 
+#:
 msgid "Booking exceeds your working hours limit"
 msgstr "Бронирование превышает ваше допустимое количество рабочих часов"
 
-#: 
+#:
 msgid "This setting allows limiting the total time occupied by bookings per day for staff member. Padding time is not included."
 msgstr "Настройка позволяет ограничить суммарное время, которое может быть занято бронированиями в сутки для сотрудника. Время паузы не учитывается."
 
-#: 
+#:
 msgid "This section describes information that is displayed about appointment."
 msgstr "Данный раздел описывает выводимую информацию о встрече."
 
-#: 
+#:
 msgid "This section describes information that is displayed about each participant of the appointment."
 msgstr "Данный раздел описывает выводимую информацию о каждом клиенте, участвующем во встрече."
 
-#: 
+#:
 msgid "Active from"
 msgstr "Активен с"
 
-#: 
+#:
 msgid "Max appointments"
 msgstr "Максимально встреч"
 
-#: 
+#:
 msgid "Your account has been disabled. Contact your website administrator to continue."
 msgstr "Ваша учётная запись была отключена. Чтобы продолжить, обратитесь к администратору вашего веб-сайта."
 
-#: 
+#:
 msgid "You are going to archive item which is involved in upcoming appointments. Please double check and edit appointments before this item archive if needed."
 msgstr "Вы собираетесь архивировать элемент, который участвует в предстоящих встречах. При необходимости, пожалуйста, дважды проверьте и отредактируйте встречи перед архивацией."
 
-#: 
+#:
 msgid "Set number of days before and after appointment that will be taken into account when calculating providers occupancy. 0 means the day of booking."
 msgstr "Установите количество дней до и после встречи, которые будут учитываться при расчете занятости сотрудников. 0 означает день бронирования."
 
-#: 
+#:
 msgid "This setting allows you to limit the number of appointments that can be booked by a customer in any given period. Restriction may end after a fixed period or with the beginning of the next calendar period  new day, week, month, etc."
 msgstr "Эта настройка позволяет вам ограничить количество встреч, которые могут быть забронированы клиентом в течение любого заданного периода. Ограничение может заканчиваться через фиксированное количество дней или с началом следующего календарного периода: новый день, неделя, месяц и т.д."
 
-#: 
+#:
 msgid "per day"
 msgstr "в течение дня"
 
-#: 
+#:
 msgid "per 30 days"
 msgstr "в течение 30 дней"
 
-#: 
+#:
 msgid "per 365 days"
 msgstr "в течение 365 дней"
 
-#: 
+#:
 msgid "Copy invoice to another email(s)"
 msgstr "Отправить копию счёта на адрес(а) эл. почты"
 
-#: 
+#:
 msgid "Enter one or more email addresses separated by commas."
 msgstr "Введите один или несколько адресов электронной почты разделяя их запятыми."
 
-#: 
+#:
 msgid "Show archived staff"
 msgstr "Показать архивированных сотрудников"
 
-#: 
+#:
 msgid "Hide archived staff"
 msgstr "Скрыть архивированных сотрудников"
 
-#: 
+#:
 msgid "Can't change calendar for archived staff"
 msgstr "Невозможно изменить календарь для архивированного сотрудника"
 
-#: 
+#:
 msgid "You are going to delete customers with existing bookings. Notifications will not be sent to them."
 msgstr "Вы собираетесь удалить клиентов с существующими бронированиями. Уведомления для них не будут отправлены."
 
-#: 
+#:
 msgid "You are going to delete customers, are you sure?"
 msgstr "Вы собираетесь удалить клиентов, вы уверены?"
 
-#: 
+#:
 msgid "Delete customers' WordPress accounts if there are any"
 msgstr "Удалить учетные записи WordPress клиентов, если таковые имеются"
 
-#: 
+#:
 msgid "Export only active coupons"
 msgstr "Экспортировать только активные купоны"
 

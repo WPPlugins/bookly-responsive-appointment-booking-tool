@@ -90,7 +90,6 @@ class Ajax extends Lib\Base\Ajax
                 'services_per_location'      => (bool) Lib\Proxy\Locations::servicesPerLocationAllowed(),
                 'show_ratings'               => (bool) get_option( 'bookly_ratings_app_show_on_frontend' ),
                 'service_name_with_duration' => (bool) get_option( 'bookly_app_service_name_with_duration' ),
-                'defaults'                   => Lib\Session::getFormVar( self::parameter( 'form_id' ), 'defaults' ),
                 'required'                   => array(
                     'staff'    => (int) get_option( 'bookly_app_required_employee' ),
                     'location' => (int) ( Lib\Config::locationsActive() && ( get_option( 'bookly_app_required_location' ) || get_option( 'bookly_locations_allow_services_per_location' ) ) ),

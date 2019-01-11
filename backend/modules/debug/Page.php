@@ -19,12 +19,20 @@ class Page extends Lib\Base\Ajax
     public static function render()
     {
         self::enqueueStyles( array(
-            'backend' => array( 'bootstrap/css/bootstrap-theme.min.css', ),
-            'module'  => array( 'css/style.css' ),
+            'frontend' => array( 'css/ladda.min.css', ),
+            'backend'  => array( 'bootstrap/css/bootstrap-theme.min.css', ),
+            'module'   => array( 'css/style.css' ),
         ) );
 
         self::enqueueScripts( array(
-            'backend' => array( 'bootstrap/js/bootstrap.min.js' => array( 'jquery' ) ),
+            'backend' => array(
+                'bootstrap/js/bootstrap.min.js' => array( 'jquery' ),
+                'js/alert.js' => array( 'jquery' ),
+            ),
+            'frontend' => array(
+                'js/spin.min.js'  => array( 'jquery', ),
+                'js/ladda.min.js' => array( 'jquery', ),
+            ),
             'module'  => array( 'js/debug.js' => array( 'jquery' ) ),
         ) );
 
@@ -73,6 +81,11 @@ class Page extends Lib\Base\Ajax
                 }
             }
         }
+
+        wp_localize_script( 'bookly-debug.js', 'BooklyL10n', array(
+            'csrfToken'    => Lib\Utils\Common::getCsrfToken(),
+        ) );
+
         ksort( $debug );
         $import_status = self::parameter( 'status' );
         self::renderTemplate( 'index', compact( 'debug', 'import_status' ) );
