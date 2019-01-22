@@ -181,14 +181,23 @@ export default function stepService(params) {
                     } else {
                         var category_ids = [],
                             service_ids  = [];
-                        $.each(_staff, function (st_id) {
-                            $.each(staff[st_id].services, function (s_id) {
-                                if (staff[st_id].services[s_id].locations.hasOwnProperty(_location_id)) {
+                        if (services_per_location) {
+                            $.each(staff, function (st_id) {
+                                $.each(staff[st_id].services, function (s_id) {
+                                    if (staff[st_id].services[s_id].locations.hasOwnProperty(_location_id)) {
+                                        category_ids.push(services[s_id].category_id);
+                                        service_ids.push(s_id);
+                                    }
+                                });
+                            });
+                        } else {
+                            $.each(locations[location_id].staff, function(st_id) {
+                                $.each(staff[st_id].services, function(s_id) {
                                     category_ids.push(services[s_id].category_id);
                                     service_ids.push(s_id);
-                                }
+                                });
                             });
-                        });
+                        }
                         $.each(categories, function(id, category) {
                             if ($.inArray(parseInt(id), category_ids) > -1) {
                                 _categories[id] = category;

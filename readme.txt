@@ -3,9 +3,9 @@ Contributors: Ladela
 Tags: Booking, booking system, appointment booking, Booking calendar, reservation calendar, appointment scheduler, appointment calendar
 Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
-Tested up to: 4.9.8
+Tested up to: 5.0.3
 Requires PHP: 5.3.7
-Stable tag: 16.6
+Stable tag: 16.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

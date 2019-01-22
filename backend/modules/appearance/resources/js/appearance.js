@@ -537,16 +537,14 @@ jQuery(function($) {
     // Show Facebook login button.
     $show_facebook_login_button.change(function () {
         if ($(this).data('appid') == '') {
-            $('#bookly-facebook-warning').modal('show');
-            this.checked = false;
+            if (this.checked) {
+                $('#bookly-facebook-warning').modal('show');
+                this.checked = false;
+            }
         } else {
             $('#bookly-facebook-login-button').toggle(this.checked);
         }
     });
-
-    if ($show_facebook_login_button.prop('checked')) {
-        $show_facebook_login_button.trigger('change');
-    }
 
     // Show first and last name.
     $first_last_name.on('change', function () {

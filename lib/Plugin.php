@@ -32,6 +32,7 @@ abstract class Plugin extends Base\Plugin
         Backend\Components\Dialogs\Customer\Edit\Ajax::init();
         Backend\Components\Dialogs\Customer\Delete\Ajax::init();
         Backend\Components\Dialogs\Payment\Ajax::init();
+        Backend\Components\Gutenberg\BooklyForm\Block::init();
         Backend\Components\Notices\CollectStatsAjax::init();
         Backend\Components\Notices\LiteRebrandingAjax::init();
         Backend\Components\Notices\NpsAjax::init();
@@ -94,6 +95,17 @@ abstract class Plugin extends Base\Plugin
                 return $user;
             }, 99, 1 );
         }
+
+        // Gutenberg category
+        add_filter( 'block_categories', function ( $categories, $post ) {
+            return array_merge( array(
+                array(
+                    'slug'  => 'bookly-blocks',
+                    'title' => 'Bookly',
+                ), ),
+                $categories
+            );
+        }, 10, 2 );
 
         // Register and schedule routines.
         Routines::init();

@@ -77,6 +77,7 @@ class Codes
     public $staff_phone;
     public $staff_photo;
     public $staff_rating_url;
+    public $status;
     public $total_price;
     public $total_price_no_tax;
     public $total_tax;
@@ -324,6 +325,7 @@ class Codes
             '{total_tax}'                       => Utils\Price::format( $this->total_tax ),
             '{total_price_no_tax}'              => Utils\Price::format( $this->total_price - $this->total_tax ),
             '{cancellation_reason}'             => $this->cancellation_reason,
+            '{status}'                          => Entities\CustomerAppointment::statusToString( $this->status ),
         );
         $codes['{cancel_appointment}'] = $format == 'html'
             ? sprintf( '<a href="%1$s">%1$s</a>', $codes['{cancel_appointment_url}'] )
@@ -411,6 +413,7 @@ class Codes
             $item->getCA()->getTimeZoneOffset() !== null ? 'UTC' . Utils\DateTime::guessTimeZone( - $item->getCA()->getTimeZoneOffset() * 60 ) : ''
         );
         $codes->number_of_persons      = $item->getCA()->getNumberOfPersons();
+        $codes->status                 = $item->getCA()->getStatus();
         $codes->service_price          = $item->getServicePrice();
         $codes->service_duration       = $item->getServiceDuration();
         $codes->staff_email            = $item->getStaff()->getEmail();
