@@ -23,7 +23,7 @@ class Ajax extends Page
     public static function getStaffAppointments()
     {
         if ( Lib\Config::proActive() ) {
-            $staff_members = Lib\Utils\Common::isCurrentUserAdmin()
+            $staff_members = Lib\Utils\Common::isCurrentUserSupervisor()
                 ? Lib\Entities\Staff::query()->sortBy( 'position' )->whereNot( 'visibility', 'archive' )->find()
                 : Lib\Entities\Staff::query()->where( 'wp_user_id', get_current_user_id() )->whereNot( 'visibility', 'archive' )->find();
         } else {
@@ -36,7 +36,7 @@ class Ajax extends Page
         // FullCalendar sends end date as 1 day further.
         $end_date->sub( $one_day );
 
-        if ( Lib\Utils\Common::isCurrentUserAdmin() ) {
+        if ( Lib\Utils\Common::isCurrentUserSupervisor() ) {
             $staff_ids = explode( ',', self::parameter( 'staff_ids' ) );
             foreach ( $staff_members as $id => $staff ) {
                 if ( ! in_array( $staff->getId(), $staff_ids ) ) {

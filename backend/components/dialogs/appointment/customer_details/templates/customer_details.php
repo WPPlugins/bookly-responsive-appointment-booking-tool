@@ -17,16 +17,9 @@ use Bookly\Lib\Config;
                     <div class="form-group">
                         <label for="bookly-appointment-status"><?php _e( 'Status', 'bookly' ) ?></label>
                         <select class="bookly-custom-field form-control" id="bookly-appointment-status">
-                            <option value="<?php echo CustomerAppointment::STATUS_PENDING ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_PENDING ) ) ?></option>
-                            <option value="<?php echo CustomerAppointment::STATUS_APPROVED ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_APPROVED ) ) ?></option>
-                            <option value="<?php echo CustomerAppointment::STATUS_CANCELLED ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_CANCELLED ) ) ?></option>
-                            <option value="<?php echo CustomerAppointment::STATUS_REJECTED ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_REJECTED ) ) ?></option>
-                            <?php if ( Config::waitingListActive() ) : ?>
-                                <option value="<?php echo CustomerAppointment::STATUS_WAITLISTED ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_WAITLISTED ) ) ?></option>
-                            <?php endif ?>
-                            <?php if ( Config::tasksActive() ) : ?>
-                                <option value="<?php echo CustomerAppointment::STATUS_DONE ?>"><?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_DONE ) ) ?></option>
-                            <?php endif ?>
+                            <?php foreach ( CustomerAppointment::getStatuses() as $status ): ?>
+                                <option value="<?php echo $status ?>"><?php echo esc_html( CustomerAppointment::statusToString( $status ) ) ?></option>
+                            <?php endforeach ?>
                         </select>
                     </div>
                     <div class="form-group" <?php if ( ! Config::groupBookingActive() ) echo ' style="display:none"' ?>>

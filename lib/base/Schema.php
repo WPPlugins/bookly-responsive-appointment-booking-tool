@@ -142,8 +142,26 @@ abstract class Schema
         global $wpdb;
 
         return (bool) $wpdb->query( $wpdb->prepare(
-            'SELECT 1 FROM `information_schema`.`tables` WHERE `table_name` = %s AND `table_schema` = SCHEMA() LIMIT 1',
+            'SELECT 1 FROM `information_schema`.`tables` WHERE TABLE_NAME = %s AND TABLE_SCHEMA = SCHEMA() LIMIT 1',
             $this->getTableName( $table )
+        ) );
+    }
+
+    /**
+     * Check exists column in table
+     *
+     * @param string $table
+     * @param string $column_name
+     * @return bool
+     */
+    protected function existsColumn( $table, $column_name )
+    {
+        global $wpdb;
+
+        return (bool) $wpdb->query( $wpdb->prepare( 'SELECT 1 FROM information_schema.COLUMNS
+            WHERE TABLE_NAME = %s AND COLUMN_NAME = %s AND TABLE_SCHEMA = SCHEMA() LIMIT 1',
+            $this->getTableName( $table ),
+            $column_name
         ) );
     }
 }

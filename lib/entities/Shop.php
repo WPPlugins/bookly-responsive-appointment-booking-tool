@@ -13,6 +13,12 @@ class Shop extends Lib\Base\Entity
     protected $plugin_id;
     /** @var  string */
     protected $type;
+    /** @var  int */
+    protected $highlighted;
+    /** @var  int */
+    protected $priority;
+    /** @var  string */
+    protected $demo_url;
     /** @var  string */
     protected $title;
     /** @var  string */
@@ -44,6 +50,9 @@ class Shop extends Lib\Base\Entity
         'id'          => array( 'format' => '%d' ),
         'plugin_id'   => array( 'format' => '%d' ),
         'type'        => array( 'format' => '%s' ),
+        'highlighted' => array( 'format' => '%d' ),
+        'priority'    => array( 'format' => '%d' ),
+        'demo_url'    => array( 'format' => '%s' ),
         'title'       => array( 'format' => '%s' ),
         'slug'        => array( 'format' => '%s' ),
         'description' => array( 'format' => '%s' ),
@@ -73,7 +82,7 @@ class Shop extends Lib\Base\Entity
     }
 
     /**
-     * Sets message_id
+     * Sets plugin_id
      *
      * @param int $plugin_id
      * @return $this
@@ -81,6 +90,75 @@ class Shop extends Lib\Base\Entity
     public function setPluginId( $plugin_id )
     {
         $this->plugin_id = $plugin_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets highlighted
+     *
+     * @return int
+     */
+    public function getHighlighted()
+    {
+        return $this->highlighted;
+    }
+
+    /**
+     * Sets highlighted
+     *
+     * @param int $highlighted
+     * @return $this
+     */
+    public function setHighlighted( $highlighted )
+    {
+        $this->highlighted = $highlighted;
+
+        return $this;
+    }
+
+    /**
+     * Gets priority
+     *
+     * @return int
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * Sets priority
+     *
+     * @param int $priority
+     * @return $this
+     */
+    public function setPriority( $priority )
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * Gets demo_url
+     *
+     * @return string
+     */
+    public function getDemoUrl()
+    {
+        return $this->demo_url;
+    }
+
+    /**
+     * Sets demo_url
+     *
+     * @param string $demo_url
+     * @return $this
+     */
+    public function setDemoUrl( $demo_url )
+    {
+        $this->demo_url = $demo_url;
 
         return $this;
     }
@@ -383,5 +461,4 @@ class Shop extends Lib\Base\Entity
 
         return $this;
     }
-
 }

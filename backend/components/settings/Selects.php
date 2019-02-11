@@ -36,6 +36,49 @@ class Selects
     }
 
     /**
+     * Render radios.
+     *
+     * @param string $option_name
+     * @param string $label
+     * @param array  $radios
+     * @param string $help
+     */
+    public static function renderRadios( $option_name, $label = null, $help = null, array $radios = array() )
+    {
+        $template = '<div class="radio"><label><input type="radio" name="{name}" id="{name}" value="{value}"{attr}> {label}</label></div>';
+        if ( empty ( $radios ) ) {
+            $radios = array(
+                //  value        title              disabled
+                array( 1, __( 'Enabled', 'bookly' ),  0 ),
+                array( 0, __( 'Disabled', 'bookly' ), 0 ),
+            );
+        }
+        $html = '';
+        foreach ( $radios as $attr ) {
+            $html .= strtr(
+                $template,
+                array(
+                    '{name}'  => $option_name,
+                    '{value}' => esc_attr( $attr[ 0 ] ),
+                    '{attr}'  => empty ( $attr[ 2 ] )
+                        ? checked( get_option( $option_name ), $attr[0], false )
+                        : disabled( true, true, false ),
+                    '{label}' => esc_html( $attr[1] ),
+                )
+            );
+        }
+
+        echo strtr(
+            '<div class="form-group">{label}{help}{control}</div>',
+            array(
+                '{label}'   => $label != '' ? sprintf( '<label>%s</label>', $label ) : '',
+                '{help}'    => $help  != '' ? sprintf( '<p class="help-block">%s</p>', $help ) : '',
+                '{control}' => $html,
+            )
+        );
+    }
+
+    /**
      * Render drop-down select.
      *
      * @param string $option_name

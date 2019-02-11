@@ -39,8 +39,8 @@ abstract class Component extends Cache
      */
     public static function renderTemplate( $template, $variables = array(), $echo = true )
     {
-        extract( $variables );
         extract( array( 'self' => get_called_class() ) );
+        extract( $variables );
 
         // Start output buffering.
         ob_start();

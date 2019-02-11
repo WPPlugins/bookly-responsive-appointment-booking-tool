@@ -5,7 +5,6 @@ use Bookly\Lib;
 use Bookly\Frontend\Components\Booking\InfoText;
 use Bookly\Frontend\Modules\Booking\Lib\Steps;
 use Bookly\Frontend\Modules\Booking\Lib\Errors;
-use Bookly\Lib\DataHolders\Booking as DataHolders;
 
 /**
  * Class Ajax
@@ -731,7 +730,7 @@ class Ajax extends Lib\Base\Ajax
                         $payment->setDetailsFromOrder( $order, $cart_info )->save();
                     }
                     // Send notifications.
-                    Lib\Notifications\Sender::sendFromCart( $order );
+                    Lib\Notifications\Cart\Sender::send( $order );
                     $response = array(
                         'success' => true,
                     );
@@ -837,57 +836,39 @@ class Ajax extends Lib\Base\Ajax
         $token = Lib\Utils\Common::xorDecrypt( self::parameter( 'token' ), 'approve' );
         $ca_to_approve = new Lib\Entities\CustomerAppointment();
         if ( $ca_to_approve->loadBy( array( 'token' => $token ) ) ) {
-            $success = true;
-            $updates = array();
-            /** @var Lib\Entities\CustomerAppointment[] $ca_list */
-            if ( $ca_to_approve->getCompoundToken() != '' ) {
-                $ca_list = Lib\Entities\CustomerAppointment::query()
-                    ->where( 'compound_token', $ca_to_approve->getCompoundToken() )
-                    ->find();
-            } else {
-                $ca_list = array( $ca_to_approve );
-            }
-            // Check that all items can be switched to approved.
-            foreach ( $ca_list as $ca ) {
-                $ca_status = $ca->getStatus();
-                if ( $ca_status == Lib\Entities\CustomerAppointment::STATUS_DONE ) {
-                    $success = false;
-                    break;
-                } elseif ( $ca_status != Lib\Entities\CustomerAppointment::STATUS_APPROVED ) {
-                    if ( $ca_status != Lib\Entities\CustomerAppointment::STATUS_CANCELLED &&
-                         $ca_status != Lib\Entities\CustomerAppointment::STATUS_REJECTED ) {
-                        $appointment = new Lib\Entities\Appointment();
-                        $appointment->load( $ca->getAppointmentId() );
-                        if ( $ca_status == Lib\Entities\CustomerAppointment::STATUS_WAITLISTED ) {
-                            $info = $appointment->getNopInfo();
-                            if ( $info['total_nop'] + $ca->getNumberOfPersons() > $info['capacity_max'] ) {
-                                $success = false;
-                                break;
-                            }
+            $item = Lib\DataHolders\Booking\Item::collect( $ca_to_approve, Lib\Proxy\CustomStatuses::prepareFreeStatuses( array(
+                Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+                Lib\Entities\CustomerAppointment::STATUS_REJECTED,
+                Lib\Entities\CustomerAppointment::STATUS_CANCELLED,
+                Lib\Entities\CustomerAppointment::STATUS_DONE,
+            ) ) );
+
+            if ( $item ) {
+                $success = true;
+                foreach ( $item->getItems() as $simple ) {
+                    $ca = $simple->getCA();
+                    if ( $ca->getStatus() == Lib\Entities\CustomerAppointment::STATUS_WAITLISTED ) {
+                        $info = $simple->getAppointment()->getNopInfo();
+                        if ( $info['total_nop'] + $ca->getNumberOfPersons() > $info['capacity_max'] ) {
+                            $success = false;
+                            break;
                         }
-                        $updates[] = array( $ca, $appointment );
-                    } else {
-                        $success = false;
-                        break;
                     }
                 }
-            }
-
-            if ( $success ) {
-                foreach ( $updates as $update ) {
-                    /** @var Lib\Entities\CustomerAppointment $ca */
-                    /** @var Lib\Entities\Appointment $appointment */
-                    list ( $ca, $appointment ) = $update;
-                    $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_APPROVED )->save();
-                    Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                if ( $success ) {
+                    $item->setStatus( Lib\Entities\CustomerAppointment::STATUS_APPROVED );
+                    foreach ( $item->getItems() as $simple ) {
+                        if ( $simple->getCA()->save() ) {
+                            $appointment = $simple->getAppointment();
+                            // Google Calendar.
+                            Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                            // Waiting list.
+                            Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
+                        }
+                    }
+                    Lib\Notifications\Booking\Sender::send( $item );
+                    $url = get_option( 'bookly_url_approve_page_url' );
                 }
-
-                if ( ! empty ( $updates ) ) {
-                    $ca_to_approve->setStatus( Lib\Entities\CustomerAppointment::STATUS_APPROVED );
-                    Lib\Notifications\Sender::sendSingle( DataHolders\Simple::create( $ca_to_approve ) );
-                }
-
-                $url = get_option( 'bookly_url_approve_page_url' );
             }
         }
 
@@ -907,38 +888,32 @@ class Ajax extends Lib\Base\Ajax
         $token = Lib\Utils\Common::xorDecrypt( self::parameter( 'token' ), 'reject' );
         $ca_to_reject = new Lib\Entities\CustomerAppointment();
         if ( $ca_to_reject->loadBy( array( 'token' => $token ) ) ) {
-            $updates = array();
-            /** @var Lib\Entities\CustomerAppointment[] $ca_list */
-            if ( $ca_to_reject->getCompoundToken() != '' ) {
-                $ca_list = Lib\Entities\CustomerAppointment::query()
-                    ->where( 'compound_token', $ca_to_reject->getCompoundToken() )
-                    ->find();
-            } else {
-                $ca_list = array( $ca_to_reject );
-            }
-            // Check that all items can be switched to rejected.
-            foreach ( $ca_list as $ca ) {
-                $ca_status = $ca->getStatus();
-                if ( $ca_status != Lib\Entities\CustomerAppointment::STATUS_REJECTED &&
-                    $ca_status != Lib\Entities\CustomerAppointment::STATUS_CANCELLED &&
-                    $ca_status != Lib\Entities\CustomerAppointment::STATUS_DONE ) {
-                    $appointment = new Lib\Entities\Appointment();
-                    $appointment->load( $ca->getAppointmentId() );
-                    $updates[] = array( $ca, $appointment );
+            $item = Lib\DataHolders\Booking\Item::collect( $ca_to_reject, Lib\Proxy\CustomStatuses::prepareFreeStatuses( array(
+                Lib\Entities\CustomerAppointment::STATUS_REJECTED,
+                Lib\Entities\CustomerAppointment::STATUS_CANCELLED,
+                Lib\Entities\CustomerAppointment::STATUS_DONE,
+            ) ) );
+
+            if ( $item ) {
+                $item->setStatus( Lib\Entities\CustomerAppointment::STATUS_REJECTED );
+                Lib\Notifications\Booking\Sender::send( $item );
+
+                foreach ( $item->getItems() as $simple ) {
+                    if ( $simple->getCA()->save() ) {
+                        $appointment = $simple->getAppointment();
+                        if ( $simple->getExtras() != '[]' ) {
+                            $extras_duration = $appointment->getMaxExtrasDuration();
+                            if ( $appointment->getExtrasDuration() != $extras_duration ) {
+                                $appointment->setExtrasDuration( $extras_duration );
+                                $appointment->save();
+                            }
+                        }
+                        // Google Calendar.
+                        Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                        // Waiting list.
+                        Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
+                    }
                 }
-            }
-
-            foreach ( $updates as $update ) {
-                /** @var Lib\Entities\CustomerAppointment $ca */
-                /** @var Lib\Entities\Appointment $appointment */
-                list ( $ca, $appointment ) = $update;
-                $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_REJECTED )->save();
-                Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
-            }
-
-            if ( ! empty ( $updates ) ) {
-                $ca_to_reject->setStatus( Lib\Entities\CustomerAppointment::STATUS_REJECTED );
-                Lib\Notifications\Sender::sendSingle( DataHolders\Simple::create( $ca_to_reject ) );
                 $url = get_option( 'bookly_url_reject_page_url' );
             }
         }

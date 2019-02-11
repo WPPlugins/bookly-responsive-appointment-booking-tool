@@ -41,7 +41,8 @@ abstract class Backend
         /** @var \WP_User $current_user */
         global $current_user, $submenu;
 
-        if ( $current_user->has_cap( 'administrator' ) || Lib\Entities\Staff::query()->where( 'wp_user_id', $current_user->ID )->count() ) {
+        $is_staff = Lib\Entities\Staff::query()->where( 'wp_user_id', $current_user->ID )->count() > 0;
+        if ( $current_user->has_cap( 'administrator' ) || $current_user->has_cap( 'manage_bookly_appointments' ) || $is_staff ) {
             $dynamic_position = '80.0000001' . mt_rand( 1, 1000 ); // position always is under `Settings`
             $badge_number = Modules\Messages\Page::getMessagesCount() +
                 Modules\Shop\Page::getNotSeenCount() +
@@ -71,14 +72,18 @@ abstract class Backend
 
                 add_submenu_page( 'bookly-menu', $calendar, $calendar, 'read',
                     Modules\Calendar\Page::pageSlug(), function () { Modules\Calendar\Page::render(); } );
-                add_submenu_page( 'bookly-menu', $appointments, $appointments, 'manage_options',
-                    Modules\Appointments\Page::pageSlug(), function () { Modules\Appointments\Page::render(); } );
+                if ( $current_user->has_cap( 'manage_options' ) || $current_user->has_cap( 'manage_bookly_appointments' ) ) {
+                    add_submenu_page( 'bookly-menu', $appointments, $appointments, 'read',
+                        Modules\Appointments\Page::pageSlug(), function () { Modules\Appointments\Page::render(); } );
+                }
                 Lib\Proxy\Locations::addBooklyMenuItem();
-                Lib\Proxy\Packages::addBooklyMenuItem();
+                if ( $current_user->has_cap( 'manage_options' ) || $current_user->has_cap( 'manage_bookly_appointments' ) ) {
+                    Lib\Proxy\Packages::addBooklyMenuItem();
+                }
                 if ( $current_user->has_cap( 'administrator' ) ) {
                     add_submenu_page( 'bookly-menu', $staff_members, $staff_members, 'manage_options',
                         Modules\Staff\Page::pageSlug(), function () { Modules\Staff\Page::render(); } );
-                } else {
+                } elseif ( $is_staff ) {
                     if ( get_option( 'bookly_gen_allow_staff_edit_profile' ) == 1 ) {
                         add_submenu_page( 'bookly-menu', __( 'Profile', 'bookly' ), __( 'Profile', 'bookly' ), 'read',
                             Modules\Staff\Page::pageSlug(), function () { Modules\Staff\Page::render(); } );
@@ -87,15 +92,19 @@ abstract class Backend
                 add_submenu_page( 'bookly-menu', $services, $services, 'manage_options',
                     Modules\Services\Page::pageSlug(), function () { Modules\Services\Page::render(); } );
                 Lib\Proxy\Taxes::addBooklyMenuItem();
-                add_submenu_page( 'bookly-menu', $customers, $customers, 'manage_options',
-                    Modules\Customers\Page::pageSlug(), function () { Modules\Customers\Page::render(); } );
+                if ( $current_user->has_cap( 'manage_options' ) || $current_user->has_cap( 'manage_bookly_appointments' ) ) {
+                    add_submenu_page( 'bookly-menu', $customers, $customers, 'read',
+                        Modules\Customers\Page::pageSlug(), function () { Modules\Customers\Page::render(); } );
+                }
                 Lib\Proxy\CustomerInformation::addBooklyMenuItem();
                 Lib\Proxy\CustomerGroups::addBooklyMenuItem();
                 add_submenu_page( 'bookly-menu', $notifications, $notifications, 'manage_options',
                     Modules\Notifications\Page::pageSlug(), function () { Modules\Notifications\Page::render(); } );
                 Modules\Sms\Page::addBooklyMenuItem();
-                add_submenu_page( 'bookly-menu', $payments, $payments, 'manage_options',
-                    Modules\Payments\Page::pageSlug(), function () { Modules\Payments\Page::render(); } );
+                if ( $current_user->has_cap( 'manage_options' ) || $current_user->has_cap( 'manage_bookly_appointments' ) ) {
+                    add_submenu_page( 'bookly-menu', $payments, $payments, 'read',
+                        Modules\Payments\Page::pageSlug(), function () { Modules\Payments\Page::render(); } );
+                }
                 add_submenu_page( 'bookly-menu', $appearance, $appearance, 'manage_options',
                     Modules\Appearance\Page::pageSlug(), function () { Modules\Appearance\Page::render(); } );
                 Lib\Proxy\Coupons::addBooklyMenuItem();
@@ -109,6 +118,9 @@ abstract class Backend
                 if ( isset ( $_GET['page'] ) && $_GET['page'] == 'bookly-debug' ) {
                     add_submenu_page( 'bookly-menu', 'Debug', 'Debug', 'manage_options',
                         Modules\Debug\Page::pageSlug(), function () { Modules\Debug\Page::render(); } );
+                }
+                if ( ! Lib\Config::proActive() ) {
+                    $submenu['bookly-menu'][] = array( esc_attr__( 'Get Bookly Pro', 'bookly' ) . ' <i class="fas fa-certificate" style="color: #f4662f"></i>', 'read', Lib\Utils\Common::prepareUrlReferrers( 'https://codecanyon.net/item/bookly/7226091?ref=ladela', 'admin_menu' ), );
                 }
             }
 

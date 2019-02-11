@@ -20,6 +20,7 @@
         <th><?php _e( 'Order', 'bookly' ) ?></th>
         <th><?php _e( 'Status', 'bookly' ) ?></th>
         <th><?php _e( 'Amount', 'bookly' ) ?></th>
+        <th></th>
     </tr>
     </thead>
 </table>

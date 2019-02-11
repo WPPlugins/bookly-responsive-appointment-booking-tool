@@ -37,7 +37,7 @@ global $wp_locale;
                         'bookly_l10n_required_service',
                     ) ) ?>
                     <div>
-                        <select class="bookly-select-mobile bookly-js-select-service">
+                        <select class="bookly-select-mobile bookly-js-select-service bookly-animate">
                             <option value="0" class="bookly-js-option bookly_l10n_option_service"><?php echo esc_html( get_option( 'bookly_l10n_option_service' ) ) ?></option>
                             <option value="1" class="service-name-duration">Crown and Bridge (<?php echo DateTime::secondsToInterval( 3600 ) ?>)</option>
                             <option value="-1" class="service-name">Crown and Bridge</option>
@@ -65,7 +65,7 @@ global $wp_locale;
                         'bookly_l10n_required_employee',
                     ) ) ?>
                     <div>
-                        <select class="bookly-select-mobile bookly-js-select-employee">
+                        <select class="bookly-select-mobile bookly-js-select-employee bookly-animate">
                             <option value="0" class="bookly-js-option bookly_l10n_option_employee"><?php echo esc_html( get_option( 'bookly_l10n_option_employee' ) ) ?></option>
                             <option value="1" class="employee-name-price">Nick Knight (<?php echo Price::format( 350 ) ?>)</option>
                             <option value="-1" class="employee-name">Nick Knight</option>
@@ -93,9 +93,12 @@ global $wp_locale;
                 <?php Proxy\CustomDuration::renderServiceDuration() ?>
                 <?php Proxy\GroupBooking::renderNOP() ?>
                 <?php Proxy\MultiplyAppointments::renderQuantity() ?>
-                <?php Proxy\ChainAppointments::renderChain() ?>
+                <?php Proxy\ChainAppointments::renderChainTip() ?>
 
             </div>
+
+            <?php Proxy\ChainAppointments::renderBookMore() ?>
+
             <div class="bookly-right bookly-mobile-next-step bookly-js-mobile-next-step bookly-btn bookly-none">
                 <?php Editable::renderString( array( 'bookly_l10n_step_service_mobile_button_next' ) ) ?>
             </div>
@@ -149,7 +152,7 @@ global $wp_locale;
                 <div class="bookly-right bookly-mobile-prev-step bookly-js-mobile-prev-step bookly-btn bookly-none">
                     <?php Editable::renderString( array( 'bookly_l10n_button_back' ) ) ?>
                 </div>
-                <button class="bookly-go-to-cart bookly-js-go-to-cart bookly-round bookly-round-md ladda-button"><span><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
+                <?php Proxy\Cart::renderButton() ?>
                 <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
                     <div class="bookly-next-step bookly-js-next-step bookly-btn">
                         <?php Editable::renderString( array( 'bookly_l10n_step_service_button_next' ) ) ?>

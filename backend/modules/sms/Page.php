@@ -35,9 +35,7 @@ class Page extends Lib\Base\Component
                 'js/datatables.min.js'          => array( 'jquery' ),
                 'js/moment.min.js',
                 'js/daterangepicker.js'         => array( 'jquery' ),
-                'js/help.js'                    => array( 'jquery' ),
                 'js/alert.js'                   => array( 'jquery' ),
-                'js/dropdown.js'                => array( 'jquery' ),
             ),
             'frontend' => array_merge(
                 array(
@@ -48,14 +46,15 @@ class Page extends Lib\Base\Component
                     ? array()
                     : array( 'js/intlTelInput.min.js' => array( 'jquery' ) )
             ),
-            'module'   => array( 'js/sms.js' => array( 'jquery', 'bookly-dropdown.js' ) ),
+            'module' => array(
+                'js/sms.js' => array( 'bookly-notifications-list.js', ),
+                'js/notifications-list.js' => array( 'jquery', ),
+            ),
         ) );
 
         $alert         = array( 'success' => array(), 'error' => array() );
         $prices        = array();
-        $form          = new \Bookly\Backend\Modules\Notifications\Forms\Notifications( 'sms' );
         $sms           = new Lib\SMS();
-        $cron_reminder = (array) get_option( 'bookly_cron_reminder_times' );
 
         $email_confirm_required = false;
         $show_registration_form = false;
@@ -107,22 +106,6 @@ class Page extends Lib\Base\Component
                     $alert['error'][] = __( 'Your payment has been interrupted.', 'bookly' );
                     break;
             }
-            if ( self::hasParameter( 'form-notifications' ) ) {
-                update_option( 'bookly_sms_administrator_phone', self::parameter( 'bookly_sms_administrator_phone' ) );
-                update_option( 'bookly_ntf_processing_interval', (int) self::parameter( 'bookly_ntf_processing_interval' ) );
-
-                $form->bind( self::postParameters() );
-                $form->save();
-                $alert['success'][] = __( 'Settings saved.', 'bookly' );
-
-                foreach ( array( 'staff_agenda', 'client_follow_up', 'client_reminder', 'client_birthday_greeting' ) as $type ) {
-                    $cron_reminder[ $type ] = self::parameter( $type . '_cron_hour' );
-                }
-                foreach ( array( 'client_reminder_1st', 'client_reminder_2nd', 'client_reminder_3rd', ) as $type ) {
-                    $cron_reminder[ $type ] = self::parameter( $type . '_cron_before_hour' );
-                }
-                update_option( 'bookly_cron_reminder_times', $cron_reminder );
-            }
             if ( self::hasParameter( 'tab' ) ) {
                 switch ( self::parameter( 'auto-recharge' ) ) {
                     case 'approved':
@@ -140,10 +123,10 @@ class Page extends Lib\Base\Component
         $only_client = Lib\Entities\Service::query()->whereIn( 'type', array( Lib\Entities\Service::TYPE_COMPOUND, Lib\Entities\Service::TYPE_COLLABORATIVE ) )->fetchCol( 'id' );
         wp_localize_script( 'bookly-daterangepicker.js', 'BooklyL10n',
             array(
-                'csrf_token'         => Lib\Utils\Common::getCsrfToken(),
+                'csrfToken'          => Lib\Utils\Common::getCsrfToken(),
                 'alert'              => $alert,
                 'apply'              => __( 'Apply', 'bookly' ),
-                'are_you_sure'       => __( 'Are you sure?', 'bookly' ),
+                'areYouSure'         => __( 'Are you sure?', 'bookly' ),
                 'cancel'             => __( 'Cancel', 'bookly' ),
                 'country'            => get_option( 'bookly_cst_phone_default_country' ),
                 'current_tab'        => $current_tab,
@@ -179,6 +162,16 @@ class Page extends Lib\Base\Component
                 'zeroRecords2'       => __( 'No records.', 'bookly' ),
                 'processing'         => __( 'Processing...', 'bookly' ),
                 'onlyClient'         => $only_client,
+                'invoice'         => array(
+                    'button' => __( 'Invoice', 'bookly' ),
+                    'alert'  => __( 'To generate an invoice you should fill in company information in Bookly > SMS Notifications > Send invoice.', 'bookly' ),
+                    'link'   => $sms->getInvoiceLink()
+                ),
+                'state'              => array( __( 'Disabled', 'bookly' ), __( 'Enabled', 'bookly' ) ),
+                'action'             => array( __( 'enable', 'bookly' ), __( 'disable', 'bookly' ) ),
+                'edit'               => __( 'Edit...', 'bookly' ),
+                'settingsSaved'      => __( 'Settings saved.', 'bookly' ),
+                'gateway'            => 'sms'
             )
         );
         foreach ( range( 1, 23 ) as $hours ) {
@@ -188,7 +181,7 @@ class Page extends Lib\Base\Component
         // Number of undelivered sms.
         $undelivered_count = Lib\SMS::getUndeliveredSmsCount();
 
-        self::renderTemplate( 'index', compact( 'form', 'sms', 'is_logged_in', 'prices', 'cron_reminder', 'bookly_ntf_processing_interval_values', 'undelivered_count', 'email_confirm_required', 'show_registration_form' ) );
+        self::renderTemplate( 'index', compact( 'sms', 'is_logged_in', 'prices', 'bookly_ntf_processing_interval_values', 'undelivered_count', 'email_confirm_required', 'show_registration_form' ) );
     }
 
     /**

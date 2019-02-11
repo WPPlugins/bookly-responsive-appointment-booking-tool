@@ -238,6 +238,24 @@ class Simple extends Item
     }
 
     /**
+     * @inheritdoc
+     */
+    public function setStatus( $status )
+    {
+        $this->ca->setStatus( $status );
+    }
+
+    /**
+     * Get items.
+     *
+     * @return Simple[]
+     */
+    public function getItems()
+    {
+        return array( $this );
+    }
+
+    /**
      * Create new item.
      *
      * @param Lib\Entities\CustomerAppointment $ca
@@ -247,4 +265,5 @@ class Simple extends Item
     {
         return new static( $ca );
     }
+
 }

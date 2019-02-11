@@ -13,7 +13,7 @@ use Bookly\Lib\Entities\Service;
             $service_id = $service['id'];
             $assigned_staff_ids = $service['staff_ids'] ? explode( ',', $service['staff_ids'] ) : array();
         ?>
-            <div class="panel panel-default bookly-js-collapse" data-service-id="<?php echo $service_id ?>">
+            <div class="panel panel-default bookly-js-collapse bookly-collapse" data-service-id="<?php echo $service_id ?>">
                 <div class="panel-heading" role="tab" id="s_<?php echo $service_id ?>">
                     <div class="row">
                         <div class="col-sm-8 col-xs-10">

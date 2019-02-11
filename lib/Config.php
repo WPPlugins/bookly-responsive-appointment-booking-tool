@@ -522,16 +522,6 @@ abstract class Config
     }
 
     /**
-     * Whether combined notifications for cart are enabled or not.
-     *
-     * @return bool
-     */
-    public static function combinedNotificationsEnabled()
-    {
-        return get_option( 'bookly_cst_combined_notifications' ) == 1;
-    }
-
-    /**
      * Whether step Cart is enabled or not.
      *
      * @return bool

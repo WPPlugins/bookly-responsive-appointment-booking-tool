@@ -60,6 +60,9 @@ abstract class Routines
                         $shop
                             ->setPluginId( $plugin['id'] )
                             ->setType( $plugin['type'] ? 'bundle' : 'plugin' )
+                            ->setHighlighted( $plugin['highlighted'] ?: 0 )
+                            ->setPriority( $plugin['priority'] ?: 0 )
+                            ->setDemoUrl( $plugin['demoUrl'] )
                             ->setTitle( $plugin['title'] )
                             ->setSlug( $plugin['slug'] )
                             ->setDescription( $plugin['envatoDescription'] )
@@ -114,7 +117,7 @@ abstract class Routines
                     if ( $summary !== false ) {
                         $notification_list = '';
                         foreach ( $summary->notifications as $type_id => $count ) {
-                            $notification_list .= PHP_EOL . Entities\Notification::getName( Entities\Notification::getTypeString( $type_id ) ) . ': ' . $count->delivered;
+                            $notification_list .= PHP_EOL . Entities\Notification::getTitle( Entities\Notification::getTypeString( $type_id ) ) . ': ' . $count->delivered;
                             if ( $count->delivered < $count->sent ) {
                                 $notification_list .= ' (' . $count->sent . ' ' . __( 'sent to our system', 'bookly' ) . ')';
                             }

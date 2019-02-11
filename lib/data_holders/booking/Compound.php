@@ -223,9 +223,19 @@ class Compound extends Item
         }
 
         return $service_price * $this->getCA()->getNumberOfPersons() +
-             $extras_total_price * (
-                 $this->getCA()->getExtrasMultiplyNop() ? $this->getCA()->getNumberOfPersons() : 1
-             );
+            $extras_total_price * (
+                $this->getCA()->getExtrasMultiplyNop() ? $this->getCA()->getNumberOfPersons() : 1
+            );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setStatus( $status )
+    {
+        foreach ( $this->items as $item ) {
+            $item->setStatus( $status );
+        }
     }
 
     /**
@@ -237,6 +247,33 @@ class Compound extends Item
     public static function create( Lib\Entities\Service $compound_service )
     {
         return new static( $compound_service );
+    }
+
+    /**
+     * Create new item.
+     *
+     * @param string $token
+     * @param array  $statuses
+     * @return Compound
+     */
+    public static function createByToken( $token, $statuses = array() )
+    {
+        $query = Lib\Entities\CustomerAppointment::query( 'ca' )
+            ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
+            ->where( 'ca.compound_token', $token );
+        if ( $statuses ) {
+            $query->whereIn( 'ca.status', $statuses );
+        }
+
+        $ca_list = $query->sortBy( 'a.start_date' )->find();
+
+        $self = new static( Lib\Entities\Service::find( $ca_list[0]->getCompoundServiceId() ) );
+
+        foreach ( $ca_list as $ca ) {
+            $self->addItem( Simple::create( $ca ) );
+        }
+
+        return $self;
     }
 
     /**

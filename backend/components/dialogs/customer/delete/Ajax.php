@@ -75,13 +75,19 @@ class Ajax extends Lib\Base\Ajax
         $events       = Lib\Entities\Appointment::query( 'a' )
             ->leftJoin( 'CustomerAppointment', 'ca', 'a.id = ca.appointment_id' )
             ->whereIn( 'ca.customer_id', $customer_ids )
-            ->whereIn( 'ca.status', array( Lib\Entities\CustomerAppointment::STATUS_APPROVED, Lib\Entities\CustomerAppointment::STATUS_PENDING ) )
+            ->whereIn( 'ca.status', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+            ) ) )
             ->whereGte( 'a.start_date', current_time( 'mysql' ) )
             ->count() > 0;
         $tasks        = Lib\Entities\Appointment::query( 'a' )
             ->leftJoin( 'CustomerAppointment', 'ca', 'a.id = ca.appointment_id' )
             ->whereIn( 'ca.customer_id', $customer_ids )
-            ->whereIn( 'ca.status', array( Lib\Entities\CustomerAppointment::STATUS_APPROVED, Lib\Entities\CustomerAppointment::STATUS_PENDING ) )
+            ->whereIn( 'ca.status', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+            ) ) )
             ->where( 'a.start_date', null )
             ->count() > 0;
         $meta         = get_user_meta( get_current_user_id(), 'bookly_delete_customers_options', true );
@@ -112,7 +118,7 @@ class Ajax extends Lib\Base\Ajax
     protected static function hasAccess( $action )
     {
         if ( parent::hasAccess( $action ) ) {
-            if ( ! Lib\Utils\Common::isCurrentUserAdmin() ) {
+            if ( ! Lib\Utils\Common::isCurrentUserSupervisor() ) {
                 switch ( $action ) {
                     case 'deleteCustomers':
                     case 'checkCustomers':

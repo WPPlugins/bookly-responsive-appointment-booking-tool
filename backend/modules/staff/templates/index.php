@@ -28,7 +28,7 @@ use Bookly\Backend\Modules\Staff\Proxy;
                 <div id="bookly-js-staff-list" class="bookly-nav">
                     <div id="bookly-staff-categories">
                     <?php foreach ( $categories as $category ) : ?>
-                        <div class="panel panel-default bookly-js-collapse<?php if ( $category['id'] === null ) : ?> bookly-js-unsortable<?php endif ?>" data-category="<?php echo $category['id'] ?: '' ?>">
+                        <div class="panel panel-default bookly-collapse<?php if ( $category['id'] === null ) : ?> bookly-js-unsortable<?php endif ?>" data-category="<?php echo $category['id'] ?: '' ?>">
                             <div class="panel-heading">
                                 <div class="bookly-flexbox">
                                     <div class="bookly-flex-cell bookly-vertical-middle" style="width: 1%;">
@@ -71,6 +71,7 @@ use Bookly\Backend\Modules\Staff\Proxy;
                     </div>
                     <?php Proxy\Pro::renderStaffList() ?>
                 </div>
+                <?php Proxy\Pro::renderStaffPositionMessage() ?>
             </div>
             <div id="bookly-new-staff-form" style="display: none;">
                 <div class="form-group bookly-margin-bottom-md">

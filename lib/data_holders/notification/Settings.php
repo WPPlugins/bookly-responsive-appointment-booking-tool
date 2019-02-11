@@ -1,8 +1,8 @@
 <?php
 namespace Bookly\Lib\DataHolders\Notification;
 
-use Bookly\Lib\Entities\CustomerAppointment;
 use Bookly\Lib\Entities\Notification;
+use Bookly\Lib\Entities\Service;
 
 /**
  * Class Settings
@@ -10,23 +10,18 @@ use Bookly\Lib\Entities\Notification;
  */
 class Settings
 {
-    const SET_AFTER_EVENT                       = 'after_event';
-    const SET_EXISTING_EVENT_WITH_DATE          = 'existing_event_with_date';
-    const SET_EXISTING_EVENT_WITH_DATE_AND_TIME = 'existing_event_with_date_and_time';
-    const SET_EXISTING_EVENT_WITH_DATE_BEFORE   = 'existing_event_with_date_before';
-
     /** @var array */
     protected $settings;
-    /** @var  int */
+    /** @var int */
     protected $offset_hours = 0;
-    /** @var  int */
+    /** @var int */
     protected $at_hour;
-    /** @var  string  @see CustomerAppointment::STATUS_* or any */
+    /** @var string  @see CustomerAppointment::STATUS_* or any */
     protected $status = 'any';
-    /** @var  bool */
+    /** @var bool */
     protected $instant = 0;
-    /** @var  mixed value "any" or an array of service_ids */
-    protected $services = 'any';
+    /** @var mixed value 'any' or an array of service_ids */
+    protected $services  = 'any';
 
     /**
      * Condition constructor.
@@ -45,79 +40,45 @@ class Settings
     private function prepare( $type )
     {
         switch ( $type ) {
-            case Notification::TYPE_APPOINTMENT_START_TIME:
+            case Notification::TYPE_NEW_BOOKING_COMBINED:
+            case Notification::TYPE_NEW_PACKAGE:
+            case Notification::TYPE_PACKAGE_DELETED:
+            case Notification::TYPE_CUSTOMER_NEW_WP_USER:
+            case Notification::TYPE_STAFF_WAITING_LIST:
+                $this->instant = 1;
+                break;
+            case Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED:
+            case Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED_RECURRING:
+            case Notification::TYPE_NEW_BOOKING:
+            case Notification::TYPE_NEW_BOOKING_RECURRING:
+                $this->status   = $this->settings['status'];
+                $this->instant  = 1;
+                $this->services = $this->_handleService( $this->settings );
+                break;
+            case Notification::TYPE_APPOINTMENT_REMINDER:
             case Notification::TYPE_LAST_CUSTOMER_APPOINTMENT:
-                $set  = self::SET_EXISTING_EVENT_WITH_DATE_AND_TIME;
-                if ( isset( $this->settings[ $set ] ) ) {
-                    $this->status = $this->settings[ $set ]['status'];
-                    // selected radio
-                    $option = $this->settings[ $set ]['option'];
-                    if ( $option == 1 ) {
-                        // offset_hours [ 1h .. 30d ] & perform [ after | before ]
-                        $this->offset_hours = $this->settings[ $set ]['offset_hours'];
-                        if ( $this->settings[ $set ]['perform'] == 'before' ) {
-                            $this->offset_hours *= - 1;
-                        }
-                    } elseif ( $option == 2 ) {
-                        // at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ -30d .. 30d ]
-                        $this->at_hour      = $this->settings[ $set ]['at_hour'];
-                        $this->offset_hours = $this->settings[ $set ]['offset_bidirectional_hours'];
+                if ( $this->settings['option'] == 1 ) {
+                    // offset_hours [ 1h .. 30d ] & perform [ after | before ]
+                    $this->offset_hours = $this->settings['offset_hours'];
+                    if ( $this->settings['perform'] == 'before' ) {
+                        $this->offset_hours *= - 1;
                     }
-
-                    // value "any" or an array of service_ids
-                    if ( $this->settings[ $set ]['services']['any'] ) {
-                        $this->services = 'any';
-                    } elseif ( array_key_exists( 'ids', $this->settings[ $set ]['services'] ) ) {
-                        $this->services = array_map( 'intval', (array) $this->settings[ $set ]['services']['ids'] );
-                    } else {
-                        $this->services = array();
-                    }
+                } elseif ( $this->settings['option'] == 2 ) {
+                    // at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ -30d .. 30d ]
+                    $this->at_hour      = $this->settings['at_hour'];
+                    $this->offset_hours = $this->settings['offset_bidirectional_hours'];
+                }
+                if ( $type != Notification::TYPE_LAST_CUSTOMER_APPOINTMENT ) {
+                    $this->services = $this->_handleService( $this->settings );
                 }
                 break;
             case Notification::TYPE_STAFF_DAY_AGENDA:
-                $set = self::SET_EXISTING_EVENT_WITH_DATE_BEFORE;
-                if ( isset( $this->settings[ $set ] ) ) {
-                    // AGENDA    at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ -30d .. 0 ]
-                    $this->at_hour      = $this->settings[ $set ]['at_hour'];
-                    $this->offset_hours = $this->settings[ $set ]['offset_bidirectional_hours'];
-                }
+                $this->at_hour      = $this->settings['before_at_hour'];
+                $this->offset_hours = $this->settings['offset_before_hours'];
                 break;
             case Notification::TYPE_CUSTOMER_BIRTHDAY:
-                $set = self::SET_EXISTING_EVENT_WITH_DATE;
-                if ( isset( $this->settings[ $set ] ) ) {
-                    // AGENDA    at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ -30d .. 30d ]
-                    $this->at_hour      = $this->settings[ $set ]['at_hour'];
-                    $this->offset_hours = $this->settings[ $set ]['offset_bidirectional_hours'];
-                }
-                break;
-            case Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED:
-            case Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED:
-                $set  = self::SET_AFTER_EVENT;
-                if ( isset( $this->settings[ $set ] ) ) {
-                    $this->status = $this->settings[ $set ]['status'];
-                    // selected radio
-                    $option = $this->settings[ $set ]['option'];
-                    if ( $option == 1 ) {
-                        // Instantly
-                        $this->instant = 1;
-                    } elseif ( $option == 2 ) {
-                        // offset_hours [ 1h .. 30d ] after
-                        $this->offset_hours = $this->settings[ $set ]['offset_hours'];
-                    } elseif ( $option == 3 ) {
-                        // at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ 0 .. 30d ]
-                        $this->at_hour      = $this->settings[ $set ]['at_hour'];
-                        $this->offset_hours = $this->settings[ $set ]['offset_bidirectional_hours'];
-                    }
-
-                    // value "any" or an array of service_ids
-                    if ( $this->settings[ $set ]['services']['any'] ) {
-                        $this->services = 'any';
-                    } elseif ( array_key_exists( 'ids', $this->settings[ $set ]['services'] ) ) {
-                        $this->services = array_map( 'intval', (array) $this->settings[ $set ]['services']['ids'] );
-                    } else {
-                        $this->services = array();
-                    }
-                }
+                $this->at_hour      = $this->settings['at_hour'];
+                $this->offset_hours = $this->settings['offset_bidirectional_hours'];
                 break;
         }
     }
@@ -171,47 +132,101 @@ class Settings
     /**
      * @return string|array
      */
-    public function forServices()
+    public function getServices()
     {
         return $this->services;
     }
 
     /**
-     * Default Custom notification settings
+     * Default notification settings.
      * @return array
      */
     public static function getDefault()
     {
         return array(
-            // Notification::TYPE_APPOINTMENT_START_TIME
-            // Notification::TYPE_LAST_CUSTOMER_APPOINTMENT
-            self::SET_EXISTING_EVENT_WITH_DATE_AND_TIME => array(
-                'status'       => 'any',
-                'option'       => 1,
-                'offset_hours' => 24,   'prepend' => 'before',
-                'at_hour'      => 9,    'offset_bidirectional_hours' => '0',
-                'services'     => array( 'any' => 1, 'ids' => array() ),
+            'status'   => 'any',
+            'option'   => 2,
+            'services' => array(
+                'any' => 'any',
+                'ids' => array(),
             ),
-            // Notification::TYPE_CUSTOMER_BIRTHDAY
-            self::SET_EXISTING_EVENT_WITH_DATE          => array(
-                'at_hour'      => 9,
-                'offset_bidirectional_hours' => '0',
-            ),
-            // Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED
-            self::SET_AFTER_EVENT                       => array(
-                'status'       => CustomerAppointment::STATUS_APPROVED,
-                'option'       => 1,
-                'offset_hours' => 1,
-                'at_hour'      => 9,    'offset_bidirectional_hours' => '0',
-                'services'     => array( 'any' => 1, 'ids' => array() ),
-            ),
-            // Notification::TYPE_STAFF_DAY_AGENDA
-            self::SET_EXISTING_EVENT_WITH_DATE_BEFORE   => array(
-                'at_hour'      => 9,
-                'offset_bidirectional_hours' => -24,
-                'services'     => array( 'any' => 1, 'ids' => array() ),
-            )
+            'offset_hours'   => 2,
+            'perform'        => 'before',
+            'at_hour'        => 9,
+            'before_at_hour' => 18,
+            'offset_before_hours' => -24,
+            'offset_bidirectional_hours' => 0,
         );
     }
 
+    /**
+     * @param Service $service
+     * @param string  $status customer appointment status
+     * @param Service $parent if set send staff notification for non simple service.
+     * @return bool
+     */
+    public function allowedServiceWithStatus( Service $service, $status, $parent = null )
+    {
+        if ( in_array( $this->getStatus(), array( 'any', $status ) ) ) {
+            if ( $this->services == 'any' ) {
+                return true;
+            } elseif ( $parent ) {
+                return in_array( $service->getId(), $this->services[ $parent->getType() ][ $parent->getId() ] );
+            } else {
+                return array_key_exists( $service->getId(), $this->services[ $service->getType() ] );
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get services ids or string 'any' for current notification
+     *
+     * @param array $settings
+     * @return array|string
+     */
+    private function _handleService( $settings )
+    {
+        $services = array(
+            Service::TYPE_SIMPLE => array(),
+            Service::TYPE_COMPOUND => array(),
+            Service::TYPE_COLLABORATIVE => array(),
+            Service::TYPE_PACKAGE => array()
+        );
+        // value "any" or an array of service_ids
+        if ( $settings['services']['any'] == 'selected' ) {
+            if ( array_key_exists( 'ids', $settings['services'] ) ) {
+                /* Example: We have 1 notification with checked service1 and service4
+                 *
+                 * service1,service2,service3 is simple services
+                 * service4 is compound with [service2 and service3]
+                 *
+                 * $service is array like
+                 *              Client  |   Staff
+                 * [
+                 *  'simple' =>   [1    =>  [1]   ],
+                 *  'compound' => [4    =>  [2,3] ]
+                 * ]
+                 * finally:
+                 * to client we to need send notification for services 1 or 4
+                 * to staff 1 or 2,3 if client booked service1 or service4
+                 * ----
+                 * if client booked service2 or service3, no notification will be sent
+                 */
+                $rows = Service::query( 's' )
+                    ->select( 's.id, s.`type`, COALESCE(ss.sub_service_id,s.id) AS sub_id' )
+                    ->leftJoin( 'SubService', 'ss', 'ss.service_id = s.id' )
+                    ->whereIn( 's.id', array_map( 'intval', (array) $settings['services']['ids'] ) )
+                    ->fetchArray();
+                foreach ( $rows as $row ) {
+                    $services[ $row['type'] ][ $row['id'] ][] = $row['sub_id'];
+                }
+            }
+        } else {
+            $services = 'any';
+        }
+
+        return $services;
+    }
 }

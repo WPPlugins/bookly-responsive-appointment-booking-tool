@@ -8,7 +8,7 @@
     wp.blocks.registerBlockType('bookly/form', {
         title: BooklyFormL10n.block.title,
         description: BooklyFormL10n.block.description,
-        icon: el('svg', { width: '20', height: '20', viewBox: "0 0 64 64" },
+        icon: el('svg', { width: '24', height: '24', viewBox: "0 0 64 64" },
             el('path', {style: {fill: "rgb(0, 0, 0)"}, d: "M 8 0 H 56 A 8 8 0 0 1 64 8 V 22 H 0 V 8 A 8 8 0 0 1 8 0 Z"}),
             el('path', {style: {fill: "rgb(244, 102, 47)"}, d: "M 0 22 H 64 V 56 A 8 8 0 0 1 56 64 H 8 A 8 8 0 0 1 0 56 V 22 Z"}),
             el('rect', {style: {fill: "rgb(98, 86, 86)"}, x: 6, y: 6, width: 52, height: 10}),
@@ -327,9 +327,9 @@
                         options: options.locations,
                         onChange: function (selectControl) {
                             var location_id = selectControl,
-                                category_id = $select_category.val(),
-                                service_id  = $select_service.val(),
-                                staff_id    = $select_employee.val()
+                                category_id = $select_category.val()||'',
+                                service_id  = $select_service.val()||'',
+                                staff_id    = $select_employee.val()||''
                             ;
 
                             // Validate selected values.
@@ -395,10 +395,10 @@
                 ),
                 options: options.categories,
                 onChange: function (selectControl) {
-                    var location_id = $select_location.val(),
+                    var location_id = $select_location.val()||'',
                         category_id = selectControl,
-                        service_id  = $select_service.val(),
-                        staff_id    = $select_employee.val()
+                        service_id  = $select_service.val()||'',
+                        staff_id    = $select_employee.val()||''
                     ;
 
                     // Validate selected values.
@@ -443,10 +443,10 @@
                 ),
                 options: options.services,
                 onChange: function (selectControl) {
-                    var location_id = $select_location.val(),
+                    var location_id = $select_location.val()||'',
                         category_id = '',
                         service_id  = selectControl,
-                        staff_id    = $select_employee.val()
+                        staff_id    = $select_employee.val()||''
                     ;
 
                     // Validate selected values.
@@ -483,9 +483,9 @@
                 ),
                 options: options.staff,
                 onChange: function (selectControl) {
-                     var location_id = $select_location.val(),
-                         category_id = $select_category.val(),
-                         service_id  = $select_service.val(),
+                     var location_id = $select_location.val()||'',
+                         category_id = $select_category.val()||'',
+                         service_id  = $select_service.val()||'',
                          staff_id    = selectControl
                      ;
 
@@ -520,7 +520,7 @@
             }
 
             // Number of persons
-            if (BooklyFormL10n.addons.multiplyAppointments == '1') {
+            if (BooklyFormL10n.addons.groupBooking == '1') {
                 inspectorElements.push(el(components.PanelRow,
                     {},
                     el('label', {htmlFor: 'bookly-js-hide-nop'}, BooklyFormL10n.nop),
@@ -537,7 +537,7 @@
             }
 
             // Quantity
-            if (BooklyFormL10n.addons.groupBooking == '1') {
+            if (BooklyFormL10n.addons.multiplyAppointments == '1') {
                 inspectorElements.push(el(components.PanelRow,
                     {},
                     el('label', {htmlFor: 'bookly-js-hide-quantity'}, BooklyFormL10n.quantity),

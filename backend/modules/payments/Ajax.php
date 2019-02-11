@@ -9,6 +9,13 @@ use Bookly\Lib;
  */
 class Ajax extends Lib\Base\Ajax
 {
+    /**
+     * @inheritdoc
+     */
+    protected static function permissions()
+    {
+        return array( '_default' => 'user' );
+    }
 
     /**
      * Get payments.

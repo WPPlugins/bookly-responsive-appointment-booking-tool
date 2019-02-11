@@ -2,6 +2,7 @@
 namespace Bookly\Lib\DataHolders\Booking;
 
 use Bookly\Lib;
+use Bookly\Lib\DataHolders\Booking;
 
 /**
  * Class Item
@@ -70,6 +71,49 @@ abstract class Item
     }
 
     /**
+     * Collects in item related customer appointments
+     *
+     * @param Lib\Entities\CustomerAppointment $ca
+     * @param array                            $exclude_statuses
+     * @return null|Booking\Collaborative|Booking\Compound|Booking\Simple
+     */
+    public static function collect( Lib\Entities\CustomerAppointment $ca, array $exclude_statuses = array() )
+    {
+        $item = null;
+        if ( $ca->getCollaborativeToken() || $ca->getCompoundToken() ) {
+            $query = Lib\Entities\CustomerAppointment::query();
+            if ( $exclude_statuses ) {
+                $query->whereNotIn( 'status', $exclude_statuses );
+            }
+            if ( $ca->getCollaborativeToken() ) {
+                $co = Collaborative::create( Lib\Entities\Service::find( $ca->getCollaborativeServiceId() ) )
+                    ->setToken( $ca->getCollaborativeToken() );
+                $query->where( 'collaborative_token', $ca->getCollaborativeToken() )
+                    ->where( 'collaborative_service_id', $ca->getCollaborativeServiceId() );
+            } elseif ( $ca->getCompoundToken() ) {
+                $co = Compound::create( Lib\Entities\Service::find( $ca->getCompoundServiceId() ) )
+                    ->setToken( $ca->getCompoundToken() );
+                $query->where( 'compound_token', $ca->getCompoundToken() )
+                      ->where( 'compound_service_id', $ca->getCompoundServiceId() );
+            }
+            /** @var self[] $ca_list */
+            $ca_list = $query->find();
+            if ( $ca_list ) {
+                foreach ( $ca_list as $customer_appointment ) {
+                    $co->addItem( Lib\DataHolders\Booking\Simple::create( $customer_appointment ) );
+                }
+                $item = $co;
+            }
+        } else {
+            if ( ! in_array( $ca->getStatus(), $exclude_statuses ) ) {
+                $item = Lib\DataHolders\Booking\Simple::create( $ca );
+            }
+        }
+
+        return $item;
+    }
+
+    /**
      * Get appointment.
      *
      * @return Lib\Entities\Appointment
@@ -103,7 +147,6 @@ abstract class Item
      * @return Lib\Entities\Service;
      */
     abstract public function getService();
-
 
     /**
      * Get service duration.
@@ -152,4 +195,20 @@ abstract class Item
      * @return float
      */
     abstract public function getTotalPrice();
+
+    /**
+     * Get items.
+     *
+     * For compound or collaborative services return sub services.
+     *
+     * @return Simple[]
+     */
+    abstract public function getItems();
+
+    /**
+     * Set status for all sub services.
+     *
+     * @param string $status
+     */
+    abstract public function setStatus( $status );
 }

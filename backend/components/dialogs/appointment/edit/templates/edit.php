@@ -3,6 +3,7 @@ use Bookly\Backend\Components\Controls\Buttons;
 use Bookly\Backend\Components\Dialogs;
 use Bookly\Backend\Components\Dialogs\Appointment\Edit\Proxy;
 use Bookly\Backend\Components\Dialogs\Appointment\AttachPayment\Proxy as AttachPaymentProxy;
+use Bookly\Lib;
 use Bookly\Lib\Config;
 use Bookly\Lib\Entities\CustomerAppointment;
 ?>
@@ -122,7 +123,7 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                         <?php Proxy\Shared::renderAppointmentDialogCustomersList() ?>
                                         <span class="dropdown">
                                             <button type="button" class="btn btn-sm btn-default bookly-margin-left-xs" data-toggle="dropdown" popover="<?php esc_attr_e( 'Status', 'bookly' ) ?>: {{statusToString(customer.status)}}">
-                                                <span ng-class="{'fa fa-fw': true, 'fa-clock': customer.status == 'pending', 'fa-check': customer.status == 'approved', 'fa-times': customer.status == 'cancelled', 'fa-times-circle': customer.status == 'rejected', 'fa-list-alt': customer.status == 'waitlisted', 'fa-check-circle': customer.status == 'done'}"></span>
+                                                <span ng-class="{'fa fa-fw': true, 'fa-clock': customer.status == 'pending', 'fa-check': customer.status == 'approved', 'fa-times': customer.status == 'cancelled', 'fa-times-circle': customer.status == 'rejected', 'fa-list-ol': customer.status == 'waitlisted', 'fa-check-circle': customer.status == 'done', 'fa-lock': 0<?php foreach ( Lib\Proxy\CustomStatuses::prepareBusyStatuses( array() ) as $status ): ?> || customer.status == '<?php echo $status ?>'<?php endforeach ?>, 'fa-lock-open': 0<?php foreach ( Lib\Proxy\CustomStatuses::prepareFreeStatuses( array() ) as $status ): ?> || customer.status == '<?php echo $status ?>'<?php endforeach ?>}"></span>
                                                 <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu">
@@ -153,7 +154,7 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                                 <?php if ( Config::waitingListActive() ): ?>
                                                     <li>
                                                         <a href ng-click="customer.status = 'waitlisted'">
-                                                            <span class="fa fa-fw fa-list-alt"></span>
+                                                            <span class="fa fa-fw fa-list-ol"></span>
                                                             <?php echo esc_html( CustomerAppointment::statusToString( CustomerAppointment::STATUS_WAITLISTED ) ) ?>
                                                         </a>
                                                     </li>
@@ -166,6 +167,14 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                                         </a>
                                                     </li>
                                                 <?php endif ?>
+                                                <?php foreach ( (array) Lib\Proxy\CustomStatuses::getAll() as $status ): ?>
+                                                    <li>
+                                                        <a href ng-click="customer.status = '<?php echo $status->getSlug() ?>'">
+                                                            <span class="fa fa-fw fa-lock<?php if ( ! $status->getBusy() ): ?>-open<?php endif ?>"></span>
+                                                            <?php echo esc_html( $status->getName() ) ?>
+                                                        </a>
+                                                    </li>
+                                                <?php endforeach ?>
                                             </ul>
                                         </span>
                                         <button type="button" class="btn btn-sm btn-default bookly-margin-left-xs" data-toggle="modal" href="#bookly-payment-details-modal" data-payment_id="{{customer.payment_id}}" ng-show="customer.payment_id || customer.payment_create" popover="<?php esc_attr_e( 'Payment', 'bookly' ) ?>: {{customer.payment_title}}" ng-disabled="customer.payment_create">
@@ -216,13 +225,11 @@ use Bookly\Lib\Entities\CustomerAppointment;
 
                         <div class=form-group>
                             <label for="bookly-notification"><?php esc_html_e( 'Send notifications', 'bookly' ) ?></label>
-                            <p class="help-block"><?php is_admin() ?
-                                    esc_html_e( 'If email or SMS notifications are enabled and you want customers or staff member to be notified about this appointment after saving, select appropriate option before clicking Save. With "If status changed" the notifications are sent to those customers whose status has just been changed. With "To all customers" the notifications are sent to everyone in the list.', 'bookly' ) :
-                                    esc_html_e( 'If email or SMS notifications are enabled and you want customers or yourself to be notified about this appointment after saving, select appropriate option before clicking Save. With "If status changed" the notifications are sent to those customers whose status has just been changed. With "To all customers" the notifications are sent to everyone in the list.', 'bookly' ) ?></p>
+                            <p class="help-block"><?php esc_html_e( 'If you have added a new customer to this appointment or changed the appointment status for an existing customer, and for these records you want the corresponding email or SMS notifications to be sent to their recipients, select the "Send if new or status changed" option before clicking Save. You can also send notifications as if all customers were added as new by selecting "Send as for new".', 'bookly' ) ?></p>
                             <select class="form-control" style="margin-top: 0" ng-model=form.notification id="bookly-notification" ng-init="form.notification = '<?php echo get_user_meta( get_current_user_id(), 'bookly_appointment_form_send_notifications', true ) ?>' || 'no'" >
                                 <option value="no"><?php esc_html_e( 'Don\'t send', 'bookly' ) ?></option>
-                                <option value="changed_status"><?php esc_html_e( 'If status changed', 'bookly' ) ?></option>
-                                <option value="all"><?php esc_html_e( 'To all customers', 'bookly' ) ?></option>
+                                <option value="changed_status"><?php esc_html_e( 'Send if new or status changed', 'bookly' ) ?></option>
+                                <option value="all"><?php esc_html_e( 'Send as for new', 'bookly' ) ?></option>
                             </select>
                         </div>
 

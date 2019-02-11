@@ -46,6 +46,7 @@ abstract class Price
         'KES' => array( 'symbol' => 'KSh',  'format' => '{symbol} {price|2}' ),
         'KRW' => array( 'symbol' => '₩',    'format' => '{price|2} {symbol}' ),
         'KZT' => array( 'symbol' => 'тг.',  'format' => '{price|2} {symbol}' ),
+        'KWD' => array( 'symbol' => 'KD',   'format' => '{price|2} {symbol}' ),
         'LAK' => array( 'symbol' => '₭',    'format' => '{price|0} {symbol}' ),
         'MUR' => array( 'symbol' => 'Rs',   'format' => '{symbol}{price|2}' ),
         'MXN' => array( 'symbol' => '$',    'format' => '{symbol}{price|2}' ),
@@ -77,6 +78,7 @@ abstract class Price
         'VND' => array( 'symbol' => 'VNĐ',  'format' => '{price|0} {symbol}' ),
         'XAF' => array( 'symbol' => 'FCFA', 'format' => '{price|0} {symbol}' ),
         'XOF' => array( 'symbol' => 'CFA',  'format' => '{symbol} {price|2}' ),
+        'XPF' => array( 'symbol' => 'CFP',  'format' => '{price|0} {symbol}' ),
         'ZAR' => array( 'symbol' => 'R',    'format' => '{symbol} {price|2}' ),
         'ZMW' => array( 'symbol' => 'K',    'format' => '{symbol}{price|2}' ),
     );

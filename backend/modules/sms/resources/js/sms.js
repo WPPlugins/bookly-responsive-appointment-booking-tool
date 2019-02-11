@@ -4,8 +4,7 @@ jQuery(function($) {
         $form_forgot   = $('.bookly-forgot-form'),
         $form_invoice  = $('.bookly-js-invoice'),
         $form_register = $('.bookly-register-form'),
-        $form_login    = $('.bookly-login-form'),
-        $custom_notifications = $('#bookly-js-custom-notifications')
+        $form_login    = $('.bookly-login-form')
     ;
 
     booklyAlert(BooklyL10n.alert);
@@ -42,7 +41,7 @@ jQuery(function($) {
             $pwd  = $form.find('input[name="password"]'),
             $username   = $form.find('input[name="username"]'),
             $pwd_repeat = $form.find('input[name="password_repeat"]'),
-            data  = { action: 'bookly_forgot_password', step: $btn.data('step'), 'username': $username.val(), csrf_token : BooklyL10n.csrf_token };
+            data  = { action: 'bookly_forgot_password', step: $btn.data('step'), username: $username.val(), csrf_token : BooklyL10n.csrfToken };
         switch ($(this).data('step')) {
             case 0:
                 forgot_helper( data, function() {
@@ -119,7 +118,7 @@ jQuery(function($) {
             } else {
                 ladda.start();
                 data.push({name: 'action', value: 'bookly_save_invoice_data'});
-                data.push({name: 'csrf_token', value: BooklyL10n.csrf_token});
+                data.push({name: 'csrf_token', value: BooklyL10n.csrfToken});
                 $.ajax({
                     url  : ajaxurl,
                     type : 'POST',
@@ -142,7 +141,7 @@ jQuery(function($) {
     $('.bookly-admin-notify').on('change', function () {
         var $checkbox = $(this);
         $checkbox.hide().prev('img').show();
-        $.get(ajaxurl, {action: 'bookly_admin_notify', csrf_token : BooklyL10n.csrf_token, option_name: $checkbox.attr('name'), value: $checkbox.is(':checked') ? 1 : 0 }, function () {}, 'json').always(function () {
+        $.get(ajaxurl, {action: 'bookly_admin_notify', csrf_token : BooklyL10n.csrfToken, option_name: $checkbox.attr('name'), value: $checkbox.is(':checked') ? 1 : 0 }, function () {}, 'json').always(function () {
             $checkbox.show().prev('img').hide();
         });
     });
@@ -179,133 +178,6 @@ jQuery(function($) {
         }
     });
 
-    // Hide recipients staff and admin for compound, collaborate services
-    var dropdownOptions = {};
-    if (BooklyL10n.onlyClient.length) {
-        dropdownOptions = {
-            onChange: function (values) {
-                var $panel = $(this).closest('.panel'),
-                    checked = this.booklyDropdown('getSelected'),
-                    disable = false
-                ;
-                if (values.length > 0) {
-                    for (var i = 0; i < BooklyL10n.onlyClient.length; i++) {
-                        if (checked.indexOf(BooklyL10n.onlyClient[i]) != -1) {
-                            disable = true;
-                            break;
-                        }
-                    }
-                }
-                $.each(['staff', 'admin'], function (index, value) {
-                    var $checkbox = $("[name$='[to_" + value + "]']", $panel);
-                    $checkbox.attr('disabled', disable);
-                    if (disable) {
-                        $checkbox.prop('checked', !disable);
-                    }
-                });
-            }
-        };
-    }
-    $('.bookly-js-services', $custom_notifications).booklyDropdown(dropdownOptions);
-
-    /**
-     * Notifications Tab.
-     */
-    $custom_notifications
-        .on('change', "select[name$='[type]']", function () {
-            var $panel    = $(this).closest('.panel'),
-                $settings = $panel.find('.bookly-js-settings'),
-                value     = $(this).find(':selected').val(),
-                set       = $(this).find(':selected').data('set'),
-                $set      = $panel.find('.bookly-js-' + set),
-                to        = $(this).find(':selected').data('to');
-
-            $panel.find('table.bookly-codes').each(function () {
-                $(this).toggle($(this).hasClass('bookly-js-codes-' + value));
-            });
-
-            $.each(['customer', 'staff', 'admin'], function (index, value) {
-                $("[name$='[to_" + value + "]']",$panel).removeAttr('disabled').closest('.checkbox-inline').toggle(to.indexOf(value) != -1);
-            });
-
-            $settings.each(function () {
-                $(this).toggle($(this).hasClass('bookly-js-' + set));
-            });
-
-            switch (set) {
-                case 'after_event':
-                    $('.bookly-js-services', $set).trigger('dropdown.change');
-                    $('.bookly-js-to', $set).toggle(value == 'ca_status_changed');
-                    $('.bookly-js-with', $set).toggle(value != 'ca_status_changed');
-                    break;
-                case 'existing_event_with_date_and_time':
-                    $('.bookly-js-services', $set).trigger('dropdown.change');
-                    break;
-            }
-            // Trigger for disable/enable recipients checkboxes,
-            // for services in custom notifications where the recipient is client only.
-            $("input[name$='[" + set + "][services][any]']", $set).trigger('change');
-        })
-        .on('change', "input[name$='[any]']", function () {
-            var checked = $(this).prop('checked'),
-                $panel  = $(this).closest('.panel'),
-                disable = false;
-            $('[data-toggle=dropdown]', $(this).parent()).prop('disabled', checked);
-            if (BooklyL10n.onlyClient.length > 0) {
-                if (checked && BooklyL10n.onlyClient.length > 0) {
-                    disable = true;
-                } else {
-                    var selected = $('.bookly-js-services', $(this).parent()).booklyDropdown('getSelected');
-                    for (var i = 0; i < BooklyL10n.onlyClient.length; i++) {
-                        if (selected.indexOf(BooklyL10n.onlyClient[i]) != -1) {
-                            disable = true;
-                            break;
-                        }
-                    }
-                }
-                $.each(['staff', 'admin'], function (index, value) {
-                    var $checkbox = $("[name$='[to_" + value + "]']", $panel);
-                    $checkbox.attr('disabled', disable);
-                    if (disable) {
-                        $checkbox.prop('checked', !disable);
-                    }
-                });
-            }
-        })
-        .on('click', '.bookly-js-delete', function () {
-            if (confirm(BooklyL10n.are_you_sure)) {
-                var $button = $(this),
-                    id    = $button.data('notification_id'),
-                    ladda = Ladda.create(this);
-                    ladda.start();
-                $.ajax({
-                    url: ajaxurl,
-                    type: 'POST',
-                    data: {
-                        action: 'bookly_delete_custom_notification',
-                        id: id,
-                        csrf_token: BooklyL10n.csrf_token
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $button.closest('.panel').remove();
-                            ladda.stop();
-                        }
-                    }
-                });
-            }
-        })
-        .on('show.bs.collapse', '.panel', function () {
-            $("select[name$='[type]']", $(this)).trigger('change');
-        });
-
-    $('#notifications button[type=reset]').on('click', function () {
-        setTimeout(function () {
-            $("select[name$='[type]']", $custom_notifications).trigger('change');
-        }, 0);
-    });
-
     var $phone_input = $('#admin_phone');
     if (BooklyL10n.intlTelInput.enabled) {
         $phone_input.intlTelInput({
@@ -332,7 +204,10 @@ jQuery(function($) {
         e.preventDefault();
         $.ajax({
             url         : ajaxurl,
-            data        : { action: 'bookly_send_test_sms', csrf_token : BooklyL10n.csrf_token, phone_number: BooklyL10n.intlTelInput.enabled ? $phone_input.intlTelInput('getNumber') : $phone_input.val() },
+            data        : {
+                action: 'bookly_send_test_sms',
+                csrf_token : BooklyL10n.csrfToken,
+                phone_number: BooklyL10n.intlTelInput.enabled ? $phone_input.intlTelInput('getNumber') : $phone_input.val() },
             dataType    : 'json',
             xhrFields   : { withCredentials: true },
             crossDomain : 'withCredentials' in new XMLHttpRequest(),
@@ -346,8 +221,6 @@ jQuery(function($) {
         });
     });
 
-    $('.bookly-js-services').booklyDropdown();
-
     /**
      * Auto-Recharge Tab.
      */
@@ -358,7 +231,7 @@ jQuery(function($) {
     $recharge_init.on('click', function () {
         var ladda = Ladda.create(this);
         ladda.start();
-        $.get(ajaxurl, {action: 'bookly_init_auto_recharge', csrf_token : BooklyL10n.csrf_token, amount: $recharge_amount.val()}, function () {
+        $.get(ajaxurl, {action: 'bookly_init_auto_recharge', csrf_token : BooklyL10n.csrfToken, amount: $recharge_amount.val()}, function () {
         }, 'json').always(function (response) {
             if (response.success) {
                 window.location.replace(response.data.paypal_preapproval);
@@ -371,7 +244,7 @@ jQuery(function($) {
     $recharge_decline.on('click', function () {
         var ladda = Ladda.create(this);
         ladda.start();
-        $.get(ajaxurl, {action: 'bookly_decline_auto_recharge', csrf_token : BooklyL10n.csrf_token}, function () {}, 'json')
+        $.get(ajaxurl, {action: 'bookly_decline_auto_recharge', csrf_token : BooklyL10n.csrfToken}, function () {}, 'json')
             .always(function (response) {
                 ladda.stop();
                 if (response.success) {
@@ -446,7 +319,7 @@ jQuery(function($) {
                 data: function (d) {
                     return {
                         action: 'bookly_get_purchases_list',
-                        csrf_token: BooklyL10n.csrf_token,
+                        csrf_token: BooklyL10n.csrfToken,
                         range:  $date_range.data('date')
                     };
                 },
@@ -458,7 +331,13 @@ jQuery(function($) {
                 { data: "type" },
                 { data: "order" },
                 { data: "status" },
-                { data: "amount" }
+                { data: "amount" },
+                {
+                    className: "text-right",
+                    render: function (data, type, row, meta) {
+                        return '<button type="button" class="btn btn-default bookly-margin-right-md" data-action="download-invoice"><i class="dashicons dashicons-media-text"></i> ' + BooklyL10n.invoice.button + '</a>';
+                    }
+                }
             ],
             language: {
                 zeroRecords: BooklyL10n.zeroRecords,
@@ -468,6 +347,18 @@ jQuery(function($) {
 
         $date_range.on('apply.daterangepicker', function () { dt.ajax.reload(); });
     });
+
+    $('#bookly-purchases')
+        .on('click', '[data-action=download-invoice]', function () {
+            if ($('#bookly_sms_invoice_company_name').val() == '') {
+                booklyAlert({error: [BooklyL10n.invoice.alert]});
+                $('#collapse_invoice').collapse('show');
+                $('#bookly_sms_invoice_company_name').focus();
+            } else {
+                var data = $('#bookly-purchases').DataTable().row($(this).closest('td')).data();
+                window.location = BooklyL10n.invoice.link + '/' + data.order;
+            }
+        });
 
     /**
      * SMS Details Tab.
@@ -501,7 +392,7 @@ jQuery(function($) {
                 data: function (d) {
                     return {
                         action: 'bookly_get_sms_list',
-                        csrf_token: BooklyL10n.csrf_token,
+                        csrf_token: BooklyL10n.csrfToken,
                         range:  $date_range.data('date')
                     };
                 },
@@ -536,6 +427,24 @@ jQuery(function($) {
     if ($('form.bookly-login-form').length){
         fillPriceTable();
     }
+    $('[data-action=save-administrator-phone]')
+        .on('click', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: ajaxurl,
+                method: 'POST',
+                data: {
+                    action: 'bookly_save_administrator_phone',
+                    bookly_sms_administrator_phone: BooklyL10n.intlTelInput.enabled ? $phone_input.intlTelInput('getNumber') : $phone_input.val(),
+                    csrf_token: BooklyL10n.csrfToken
+                },
+                success: function (response) {
+                    if (response.success) {
+                        booklyAlert({success: [BooklyL10n.settingsSaved]});
+                    }
+                }
+            });
+        });
 
     function fillPriceTable() {
         var dt = $('#bookly-prices').DataTable({
@@ -547,7 +456,7 @@ jQuery(function($) {
             responsive: true,
             ajax: {
                 url : ajaxurl,
-                data: { action: 'bookly_get_price_list', csrf_token : BooklyL10n.csrf_token },
+                data: { action: 'bookly_get_price_list', csrf_token : BooklyL10n.csrfToken },
                 dataSrc: 'list'
             },
             columns: [
@@ -599,7 +508,7 @@ jQuery(function($) {
             responsive: true,
             ajax: {
                 url: ajaxurl,
-                data: { action: 'bookly_get_sender_ids_list', csrf_token : BooklyL10n.csrf_token },
+                data: { action: 'bookly_get_sender_ids_list', csrf_token : BooklyL10n.csrfToken },
                 dataSrc: function (json) {
                     if (json.pending) {
                         $sender_id.val(json.pending);
@@ -628,7 +537,7 @@ jQuery(function($) {
             ladda.start();
             $.ajax({
                 url  : ajaxurl,
-                data : {action: 'bookly_request_sender_id', csrf_token : BooklyL10n.csrf_token, 'sender_id': $sender_id.val()},
+                data : {action: 'bookly_request_sender_id', csrf_token : BooklyL10n.csrfToken, 'sender_id': $sender_id.val()},
                 dataType : 'json',
                 xhrFields: {withCredentials: true},
                 success: function (response) {
@@ -649,10 +558,10 @@ jQuery(function($) {
 
         $reset_sender_id.on('click', function (e) {
             e.preventDefault();
-            if (confirm(BooklyL10n.are_you_sure)) {
+            if (confirm(BooklyL10n.areYouSure)) {
                 $.ajax({
                     url: ajaxurl,
-                    data: {action: 'bookly_reset_sender_id', csrf_token : BooklyL10n.csrf_token},
+                    data: {action: 'bookly_reset_sender_id', csrf_token : BooklyL10n.csrfToken},
                     dataType: 'json',
                     xhrFields: {withCredentials: true},
                     success: function (response) {
@@ -673,13 +582,13 @@ jQuery(function($) {
         });
 
         $cancel_sender_id.on('click',function () {
-            if (confirm(BooklyL10n.are_you_sure)) {
+            if (confirm(BooklyL10n.areYouSure)) {
                 var ladda = Ladda.create(this);
                 ladda.start();
                 $.ajax({
                     method     : 'POST',
                     url        : ajaxurl,
-                    data:      {action: 'bookly_cancel_sender_id', csrf_token : BooklyL10n.csrf_token},
+                    data:      {action: 'bookly_cancel_sender_id', csrf_token : BooklyL10n.csrfToken},
                     dataType   : 'json',
                     success    : function (response) {
                         if (response.success) {
@@ -699,35 +608,6 @@ jQuery(function($) {
             }
         });
         $(this).on('click', function () { dt.ajax.reload(); });
-    });
-
-    $('#bookly-js-new-notification').on('click', function () {
-        var ladda = Ladda.create(this);
-        ladda.start();
-        $.ajax({
-            url : ajaxurl,
-            type: 'POST',
-            data: {
-                action    : 'bookly_create_custom_sms',
-                csrf_token: BooklyL10n.csrf_token
-            },
-            dataType: 'json',
-            success: function (response) {
-                if (response.success) {
-                    $custom_notifications.append(response.data.html);
-                    var $subject = $custom_notifications.find('[name="notification[' + response.data.id + '][subject]"]'),
-                        $panel   = $subject.closest('.panel-collapse');
-
-                    $panel.collapse('show');
-                    $('.bookly-js-services', $panel).booklyDropdown(dropdownOptions);
-                    $("select[name$='[type]']", $panel).trigger('change');
-                    $subject.focus();
-                }
-            },
-            complete: function () {
-                ladda.stop();
-            }
-        });
     });
 
     $('#bookly-open-tab-sender-id').on('click', function (e) {

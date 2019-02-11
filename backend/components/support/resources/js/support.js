@@ -8,16 +8,15 @@ jQuery(function ($) {
         $btnContactUs
             .popover().popover('show')
             .next('.popover')
-                .css({right:22+$btnFeedback.outerWidth()+'px',left:'auto'})
-                .find('.arrow').removeClass().addClass('popover-arrow').css({right:($btnContactUs.outerWidth()/2)+'px',left:'auto'}).end()
+                .find('.arrow').removeClass().addClass('popover-arrow').end()
                 .find('.popover-content button').on('click', function () {
                     $btnContactUs.popover('hide');
                     $.ajax({
                         url  : ajaxurl,
                         type : 'POST',
-                        data : { action : 'bookly_dismiss_contact_us_notice', csrf_token : SupportL10n.csrf_token },
+                        data : { action : 'bookly_dismiss_contact_us_notice', csrf_token : BooklySupportL10n.csrfToken },
                         success : function(response) {
-                            $btnContactUs.attr("data-processed", true);
+                            $btnContactUs.attr('data-processed', true);
                         }
                     });
                 }).end()
@@ -27,7 +26,7 @@ jQuery(function ($) {
                 $.ajax({
                     url  : ajaxurl,
                     type : 'POST',
-                    data : { action : 'bookly_contact_us_btn_clicked', csrf_token : SupportL10n.csrf_token }
+                    data : { action : 'bookly_contact_us_btn_clicked', csrf_token : BooklySupportL10n.csrfToken }
                 });
             });
     }
@@ -44,7 +43,7 @@ jQuery(function ($) {
                         $.ajax({
                             url  : ajaxurl,
                             type : 'POST',
-                            data : { action : 'bookly_dismiss_feedback_notice', csrf_token : SupportL10n.csrf_token }
+                            data : { action : 'bookly_dismiss_feedback_notice', csrf_token : BooklySupportL10n.csrfToken }
                         });
                     }).end()
                 .end()
@@ -54,12 +53,12 @@ jQuery(function ($) {
                 $.ajax({
                     url  : ajaxurl,
                     type : 'POST',
-                    data : { action : 'bookly_dismiss_feedback_notice', csrf_token : SupportL10n.csrf_token }
+                    data : { action : 'bookly_dismiss_feedback_notice', csrf_token : BooklySupportL10n.csrfToken }
                 });
             });
     }
 
-    $('#bookly-support-send').on('click', function (e) {
+    $('#bookly-support-send').on('click', function () {
         var $name  = $('#bookly-support-name'),
             $email = $('#bookly-support-email'),
             $msg   = $('#bookly-support-msg')
@@ -78,7 +77,7 @@ jQuery(function ($) {
                 type : 'POST',
                 data : {
                     action     : 'bookly_send_support_request',
-                    csrf_token : SupportL10n.csrf_token,
+                    csrf_token : BooklySupportL10n.csrfToken,
                     name       : $name.val(),
                     email      : $email.val(),
                     msg        : $msg.val()
@@ -103,36 +102,37 @@ jQuery(function ($) {
         }
     });
 
-    $('#bookly-js-mark-read-all-messages').on('click', function (e) {
-        e.preventDefault();
-        var $link = $(this),
-            ladda = Ladda.create($('#bookly-bell').get(0)),
-            $dropdown = $link.closest(".dropdown-menu");
+    $('#bookly-js-mark-read-all-messages')
+        .on('click', function (e) {
+            e.preventDefault();
+            var $link = $(this),
+                ladda = Ladda.create($('#bookly-bell').get(0)),
+                $dropdown = $link.closest(".dropdown-menu");
 
-        $dropdown.prev().dropdown("toggle");
-        ladda.start();
-        $.ajax({
-            url  : ajaxurl,
-            type : 'POST',
-            data : {
-                action: 'bookly_mark_read_all_messages',
-                csrf_token: SupportL10n.csrf_token
-            },
-            dataType : 'json',
-            success  : function (response) {
-                if (response.success) {
-                    $('.bookly-js-new-messages-count').remove();
-                    $link.closest('li').remove();
-                    $('a', $dropdown).each(function () {
-                        $(this).html($(this).text());
-                    });
+            $dropdown.prev().dropdown('toggle');
+            ladda.start();
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'bookly_mark_read_all_messages',
+                    csrf_token: BooklySupportL10n.csrfToken
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        $('.bookly-js-new-messages-count').remove();
+                        $link.closest('li').remove();
+                        $('a', $dropdown).each(function () {
+                            $(this).html($(this).text());
+                        });
+                    }
+                },
+                complete: function () {
+                    ladda.stop();
                 }
-            },
-            complete : function () {
-                ladda.stop();
-            }
+            });
         });
-    });
 
     $('[data-action=feature-request]')
         .on('click', function () {
@@ -143,32 +143,60 @@ jQuery(function ($) {
             }
         });
 
-    $('.bookly-js-proceed-requests').on('click', function () {
-        var $modal = $('#bookly-feature-requests-modal'),
-            hide   = $('#bookly-js-dont-show-again', $modal).prop('checked')||0,
-            ladda  = Ladda.create(this);
-        ladda.start();
-        $.ajax({
-            url : ajaxurl,
-            type: 'POST',
-            data: {
-                action    : 'bookly_proceed_to_feature_requests',
-                csrf_token: SupportL10n.csrf_token,
-                hide      : hide
-            },
-            dataType: 'json',
-            success : function (response) {
-                if (response.success) {
-                    $modal.modal('hide');
-                    if (hide) {
-                        $('[data-action=feature-request]').data('target', response.data.target);
+    $('.bookly-js-proceed-to-demo')
+        .on('click', function () {
+            var $modal = $('#bookly-demo-site-info-modal'),
+                target = $(this).data('target');
+
+            if ($('#bookly-js-dont-show-again', $modal).prop('checked')) {
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'bookly_dismiss_demo_site_description',
+                        csrf_token: BooklySupportL10n.csrfToken
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $('[data-action=show-demo]').data('target', target);
+                        }
                     }
-                    window.open(response.data.target, '_blank');
-                }
-            },
-            complete: function () {
-                ladda.stop();
+                });
+            }
+            $modal.modal('hide');
+            window.open(target, '_blank');
+        });
+
+    $('[data-action=show-demo]')
+        .on('click', function () {
+            if ($(this).data('target')) {
+                window.open($(this).data('target'), '_blank');
+            } else {
+                $('#bookly-demo-site-info-modal').modal('show');
             }
         });
-    });
+
+    $('.bookly-js-proceed-requests')
+        .on('click', function () {
+            var $modal = $('#bookly-feature-requests-modal');
+            if ($('#bookly-js-dont-show-again', $modal).prop('checked')) {
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'bookly_dismiss_feature_requests_description',
+                        csrf_token: BooklySupportL10n.csrfToken
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $('[data-action=feature-request]').data('target', BooklySupportL10n.featuresRequestUrl);
+                        }
+                    }
+                });
+            }
+            $modal.modal('hide');
+            window.open(BooklySupportL10n.featuresRequestUrl, '_blank');
+        });
 });

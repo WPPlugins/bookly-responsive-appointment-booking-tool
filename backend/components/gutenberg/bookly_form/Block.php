@@ -23,7 +23,7 @@ class Block extends Lib\Base\Block
         wp_localize_script( 'bookly-booking-form-block.js', 'BooklyFormL10n', array(
             'casest'         => Lib\Config::getCaSeSt(),
             'block' => array(
-                'title'       => __( 'Bookly - Booking form', 'bookly' ),
+                'title'       => 'Bookly - ' . __( 'Booking form', 'bookly' ),
                 'description' => __( 'A custom block for displaying booking form', 'bookly' ),
             ),
             'selectLocation' => __( 'Select location', 'bookly' ),

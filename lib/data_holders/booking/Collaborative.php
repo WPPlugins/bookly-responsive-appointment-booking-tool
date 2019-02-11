@@ -238,6 +238,33 @@ class Collaborative extends Item
     }
 
     /**
+     * Create new item.
+     *
+     * @param string $token
+     * @param array  $statuses
+     * @return Collaborative
+     */
+    public static function createByToken( $token, $statuses = array() )
+    {
+        $query = Lib\Entities\CustomerAppointment::query( 'ca' )
+            ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
+            ->where( 'ca.collaborative_token', $token );
+        if ( $statuses ){
+            $query->whereIn( 'ca.status', $statuses );
+        }
+
+        $ca_list = $query->find();
+
+        $self = new static( Lib\Entities\Service::find( $ca_list[0]->getCollaborativeServiceId() ) );
+
+        foreach ( $ca_list as $ca ) {
+            $self->addItem( Simple::create( $ca ) );
+        }
+
+        return $self;
+    }
+
+    /**
      * Create from simple item.
      *
      * @param Simple $item
@@ -246,5 +273,15 @@ class Collaborative extends Item
     public static function createFromSimple( Simple $item )
     {
         return static::create( Lib\Entities\Service::find( $item->getCA()->getCollaborativeServiceId() ) )->addItem( $item );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setStatus( $status )
+    {
+        foreach ( $this->items as $item ) {
+            $item->setStatus( $status );
+        }
     }
 }

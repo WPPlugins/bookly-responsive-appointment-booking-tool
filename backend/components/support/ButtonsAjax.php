@@ -3,7 +3,6 @@ namespace Bookly\Backend\Components\Support;
 
 use Bookly\Lib;
 use Bookly\Backend\Modules;
-use Bookly\Backend\Components\Support\Lib\Urls;
 
 /**
  * Class ButtonsAjax
@@ -11,6 +10,14 @@ use Bookly\Backend\Components\Support\Lib\Urls;
  */
 class ButtonsAjax extends Lib\Base\Ajax
 {
+    /**
+     * @inheritdoc
+     */
+    protected static function permissions()
+    {
+        return array( '_default' => 'user' );
+    }
+
     /**
      * Send support request.
      */
@@ -80,9 +87,18 @@ class ButtonsAjax extends Lib\Base\Ajax
     /**
      * Proceed to feature requests.
      */
-    public static function proceedToFeatureRequests()
+    public static function dismissFeatureRequestsDescription()
     {
-        update_user_meta( get_current_user_id(), 'bookly_feature_requests_rules_hide', self::parameter( 'hide', 0 ) );
-        wp_send_json_success( array( 'target' => Lib\Utils\Common::prepareUrlReferrers( Urls::FEATURES_REQUEST_PAGE, 'notification_bar' ) ) );
+        update_user_meta( get_current_user_id(), 'bookly_dismiss_feature_requests_description', 1 );
+        wp_send_json_success();
+    }
+
+    /**
+     * Proceed to visit .
+     */
+    public static function dismissDemoSiteDescription()
+    {
+        update_user_meta( get_current_user_id(), 'bookly_dismiss_demo_site_description', 1 );
+        wp_send_json_success();
     }
 }

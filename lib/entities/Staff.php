@@ -177,12 +177,18 @@ class Staff extends Lib\Base\Entity
     {
         $start_date   = $date . ' 00:00:00';
         $end_date     = date_create( $date )->modify( '+1 day' )->format( 'Y-m-d H:i:s' );
-        $appointments = Lib\Entities\Appointment::query( 'a' )
+        $appointments = Lib\Entities\CustomerAppointment::query( 'ca' )
             ->select( 'a.start_date, DATE_ADD(`a`.`end_date`, INTERVAL `a`.`extras_duration` SECOND) as end_date' )
-            ->where( 'staff_id', $this->getId() )
-            ->whereLt( 'start_date', $end_date )
-            ->whereGt( 'end_date', $start_date )
-            ->whereNotIn( 'id', $exclude )
+            ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
+            ->where( 'a.staff_id', $this->getId() )
+            ->whereLt( 'a.start_date', $end_date )
+            ->whereGt( 'a.end_date', $start_date )
+            ->whereIn( 'ca.status', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+                Lib\Entities\CustomerAppointment::STATUS_WAITLISTED,
+            ) ) )
+            ->whereNotIn( 'a.id', $exclude )
             ->fetchArray();
 
         $workload = 0;

@@ -230,6 +230,7 @@ jQuery(function($) {
                 $unitDuration     = $panel.find('.bookly-js-unit-duration'),
                 $providers        = $panel.find('.bookly-js-providers'),
                 $staffPreference  = $panel.find('[name=staff_preference]'),
+                $limitPeriod      = $panel.find('[name=limit_period]'),
                 $prefStaffOrder   = $panel.find('.bookly-js-preferred-staff-order'),
                 $prefStaffList    = $panel.find('.bookly-js-preferred-staff-list'),
                 $prefPeriod       = $panel.find('.bookly-js-preferred-period'),
@@ -244,6 +245,9 @@ jQuery(function($) {
             $visibility.on('change', function () {
                 $panel.find('.bookly-js-groups-list').toggle(this.value === 'group');
             });
+            $limitPeriod.on('change', function () {
+                $('[name=appointments_limit]', $panel).toggle(this.value !== 'off');
+            }).trigger('change');
             // Capacity (min and max).
             $capacity.on('keyup change', function () {
                 checkCapacityError($panel);

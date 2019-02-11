@@ -362,15 +362,18 @@ class Ajax extends Lib\Base\Ajax
                 $form = new Forms\StaffMember();
                 $wp_users = $form->getUsersForStaff();
             } else {
-                /** @var Lib\Entities\Appointment $appointment */
                 $appointment = Lib\Entities\Appointment::query( 'a' )
                     ->select( 'MAX(a.start_date) AS start_date' )
+                    ->leftJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id' )
                     ->where( 'a.staff_id', $staff_id )
                     ->whereGt( 'a.start_date', current_time( 'mysql' ) )
-                    ->groupBy( 'a.staff_id' )
+                    ->whereIn( 'ca.status', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                        Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                        Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+                    ) ) )
                     ->fetchRow();
                 $filter_url = '';
-                if ( $appointment ) {
+                if ( $appointment['start_date'] ) {
                     $last_month = date_create( $appointment['start_date'] )->modify( 'last day of' )->format( 'Y-m-d' );
                     $action     = 'show_modal';
                     $filter_url = sprintf( '%s#staff=%d&range=%s-%s',

@@ -425,24 +425,8 @@ msgid "Send notifications"
 msgstr "Verstuur meldingen"
 
 #: 
-msgid "If email or SMS notifications are enabled and you want customers or staff member to be notified about this appointment after saving, select appropriate option before clicking Save. With \"If status changed\" the notifications are sent to those customers whose status has just been changed. With \"To all customers\" the notifications are sent to everyone in the list."
-msgstr "Als e-mail of sms-meldingen zijn ingeschakeld en u wilt dat klanten of medewerker worden geïnformeerd over deze afspraak na het opslaan, selecteert u de juiste optie voordat u klikt op Opslaan. Met \"Als de status veranderd\" worden de meldingen verzonden naar die klanten waarvan de status onlangs is veranderd. Met \"Aan alle klanten\" worden de notificaties aan iedereen op de lijst gestuurd."
-
-#: 
-msgid "If email or SMS notifications are enabled and you want customers or yourself to be notified about this appointment after saving, select appropriate option before clicking Save. With \"If status changed\" the notifications are sent to those customers whose status has just been changed. With \"To all customers\" the notifications are sent to everyone in the list."
-msgstr "Als e-mail- of sms-meldingen zijn ingeschakeld en u wilt dat klanten of uzelf worden geïnformeerd over deze afspraak, moet u de juiste optie selecteren voordat u op Opslaan klikt. Met \"Als de status veranderd\" worden de meldingen verzonden naar die klanten waarvan de status onlangs is veranderd. Met \"Aan alle klanten\" worden de notificaties aan iedereen op de lijst gestuurd."
-
-#: 
 msgid "Don't send"
 msgstr "Niet verzenden"
-
-#: 
-msgid "If status changed"
-msgstr "Als de status veranderd"
-
-#: 
-msgid "To all customers"
-msgstr "Aan alle klanten"
 
 #: 
 msgid "Internal note"
@@ -583,22 +567,6 @@ msgid "Message"
 msgstr "Bericht"
 
 #: 
-msgid "Send copy to administrators"
-msgstr "Stuur kopie naar beheerders"
-
-#: 
-msgid "Sending time"
-msgstr "Verzendtijd"
-
-#: 
-msgid "Set the time you want the notification to be sent."
-msgstr "Stel de tijd in waarop u wilt dat de melding wordt verzonden."
-
-#: 
-msgid "%s before"
-msgstr "%s voor"
-
-#: 
 msgid "date of appointment"
 msgstr "datum van afspraak"
 
@@ -729,10 +697,6 @@ msgid "staff agenda for next day"
 msgstr "medewerker's agenda voor de volgende dag"
 
 #: 
-msgid "Test Email Notifications"
-msgstr "Test E-mail Meldingen"
-
-#: 
 msgid "To email"
 msgstr "Naar e-mail"
 
@@ -793,16 +757,8 @@ msgid "If this option is enabled then the email address of the customer is used 
 msgstr "Wanneer deze optie is geactiveerd, wordt het e-mailadres van de klant gebruikt als het e-mailadres van de afzender voor meldingen gestuurd naar medewerkers en beheerder."
 
 #: 
-msgid "Single"
-msgstr "Enkel"
-
-#: 
 msgid "Codes"
 msgstr "Codes"
-
-#: 
-msgid "Combined"
-msgstr "Gecombineerde"
 
 #: 
 msgid "To send scheduled notifications please refer to <a href=\"%1$s\">Bookly Multisite</a> add-on <a href=\"%2$s\">message</a>."
@@ -1516,10 +1472,6 @@ msgid "Need help? Contact us here."
 msgstr "Hulp nodig? Neem hier contact met ons op."
 
 #: 
-msgid "Contact Us"
-msgstr "Neem Contact Op"
-
-#: 
 msgid "Feedback"
 msgstr "Feedback"
 
@@ -1602,10 +1554,6 @@ msgstr "Standaardwaarde medewerker selecteren"
 #: 
 msgid "Any"
 msgstr "Elke"
-
-#: 
-msgid "Hide this block"
-msgstr "Verberg dit blok"
 
 #: 
 msgid "Week days"
@@ -1753,48 +1701,6 @@ msgid "Booking cancellation"
 msgstr "Reservering geannuleerd"
 
 #: 
-msgid "Dear {client_name}.\n"
-"\n"
-"You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
-"\n"
-"Thank you for choosing our company.\n"
-"\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Beste {client_name}.\n"
-"\n"
-"U hebt uw reservering van {service_name} op {appointment_date} om {appointment_time} geannuleerd.\n"
-"\n"
-"Dank u voor het kiezen van ons bedrijf.\n"
-"\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
-msgid "Hello.\n"
-"\n"
-"The following booking has been cancelled.\n"
-"\n"
-"Service: {service_name}\n"
-"Date: {appointment_date}\n"
-"Time: {appointment_time}\n"
-"Client name: {client_name}\n"
-"Client phone: {client_phone}\n"
-"Client email: {client_email}"
-msgstr "Hallo {staff_name},\n"
-"\n"
-"De volgende reservering is geannuleerd.\n"
-"\n"
-"Dienst: {service_name}\n"
-"Datum: {appointment_date}\n"
-"Tijd: {appointment_time}\n"
-"Klantnaam: {client_name}\n"
-"Klant telefoonnummer: {client_phone}\n"
-"Klant email: {client_email}"
-
-#: 
 msgid "Booking rejection"
 msgstr "Reservatie afwijzing"
 
@@ -1898,88 +1804,6 @@ msgstr "Beste {client_name},\n"
 
 #: 
 msgid "Dear {client_name}.\n"
-"This is a confirmation that you have booked {service_name}.\n"
-"We are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Hallo {client_name}.\n"
-"Hierbij bevestigen wij uw {service_name} afspraak.\n"
-"Wij verwachten u op {company_address} op {appointment_date} om {appointment_time}.\n"
-"Bedankt voor uw vertrouwen in ons.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
-msgid "Dear {client_name}.\n"
-"This is a confirmation that you have booked the following items:\n"
-"{cart_info}\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Beste {client_name}.\n"
-"Dit is een bevestiging dat u de volgende items hebt geboekt:\n"
-"{cart_info}\n"
-"Dank u voor het kiezen van ons bedrijf.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
-msgid "Hello.\n"
-"You have a new booking.\n"
-"Service: {service_name}\n"
-"Date: {appointment_date}\n"
-"Time: {appointment_time}\n"
-"Client name: {client_name}\n"
-"Client phone: {client_phone}\n"
-"Client email: {client_email}"
-msgstr "Hallo\n"
-"U heeft een nieuwe reservering:\n"
-"Dienst: {service_name}\n"
-"Datum: {appointment_date}\n"
-"Tijd: {appointment_time}\n"
-"Klantnaam: {client_name}\n"
-"Klant telefoon: {client_phone}\n"
-"Klant email: {client_email}"
-
-#: 
-msgid "Dear {client_name}.\n"
-"You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Beste {client_name}.\n"
-"U hebt uw reservering van {service_name} op {appointment_date} om {appointment_time} geannuleerd.\n"
-"Dank u voor het kiezen van ons bedrijf.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
-msgid "Hello.\n"
-"The following booking has been cancelled.\n"
-"Service: {service_name}\n"
-"Date: {appointment_date}\n"
-"Time: {appointment_time}\n"
-"Client name: {client_name}\n"
-"Client phone: {client_phone}\n"
-"Client email: {client_email}"
-msgstr "Hallo,\n"
-"De volgende reservering is geannuleerd.\n"
-"Dienst: {service_name}\n"
-"Datum: {appointment_date}\n"
-"Tijd: {appointment_time}\n"
-"Klantnaam: {client_name}\n"
-"Klant telefoonnummer: {client_phone}\n"
-"Klant email: {client_email}"
-
-#: 
-msgid "Dear {client_name}.\n"
 "Your booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n"
 "Reason: {cancellation_reason}\n"
 "Thank you for choosing our company.\n"
@@ -2031,49 +1855,6 @@ msgstr "Hallo,\n"
 "Bedankt."
 
 #: 
-msgid "Dear {client_name}.\n"
-"We would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Beste {client_name}.\n"
-"Ik wil u er graag aan herinneren dat u morgen om {appointment_time} een {service_name} afspraak hebt met {staff_name}. Wij zijn gevestigd op:\n"
-"{company_address}\n"
-"Bedankt voor uw vertrouwen in ons.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
-msgid "Dear {client_name}.\n"
-"We would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Beste {client_name}.\n"
-"Ik wil u er graag aan herinneren dat u op {appointment_date} om {appointment_time} een {service_name} afspraak hebt met {staff_name}. Wij zijn gevestigd op: {company_address}\n"
-"Bedankt voor uw vertrouwen in ons.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
-msgid "Dear {client_name}.\n"
-"Thank you for choosing {company_name}. We hope you were satisfied with your {service_name}.\n"
-"Thank you and we look forward to seeing you again soon.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Beste {client_name}.\n"
-"Bedankt voor het reserveren van een afspraak bij {company_name}. Wij hopen dat u tevreden was met de gereserveerde dienst {service_name}.\n"
-"Bedankt en hopelijk snel tot ziens.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
 msgid "Dear {client_name},\n"
 "Happy birthday!\n"
 "We wish you all the best.\n"
@@ -2090,14 +1871,6 @@ msgstr "Beste {client_name},\n"
 "{company_name}\n"
 "{company_phone}\n"
 "{company_website}"
-
-#: 
-msgid "Hello.\n"
-"Your agenda for tomorrow is:\n"
-"{next_day_agenda}"
-msgstr "Hallo.\n"
-"Uw agenda voor morgen ziet er als volgt uit: \n"
-"{next_day_agenda}"
 
 #: 
 msgid "Back"
@@ -2442,10 +2215,6 @@ msgid "Notification to customer about pending appointment"
 msgstr "Kennisgeving aan klant over lopende afspraak"
 
 #: 
-msgid "Notification to customer about pending appointments"
-msgstr "Kennisgeving aan klant over lopende afspraken"
-
-#: 
 msgid "Evening reminder to customer about next day appointment (requires cron setup)"
 msgstr "Herinnering aan klant de avond voor de dag van de afspraak (vereist cron setup)"
 
@@ -2560,20 +2329,8 @@ msgid "Custom notification"
 msgstr "Aangepaste melding"
 
 #: 
-msgid "Appointment date and time"
-msgstr "Afspraak datum en tijd"
-
-#: 
 msgid "Customer's birthday"
 msgstr "Aangepaste verjaardag"
-
-#: 
-msgid "With status"
-msgstr "Met status"
-
-#: 
-msgid "Instantly"
-msgstr "Onmiddelijk"
 
 #: 
 msgid "days"
@@ -2592,16 +2349,8 @@ msgid "before"
 msgstr "voor"
 
 #: 
-msgid "Recipient"
-msgstr "Ontvanger"
-
-#: 
 msgid "Custom"
 msgstr "Aangepast"
-
-#: 
-msgid "New Notification"
-msgstr "Nieuwe Melding"
 
 #: 
 msgid "Start and end times of the appointment"
@@ -2640,10 +2389,6 @@ msgid "%s has reached the limit of bookings for this service"
 msgstr "%s heeft de limiet bereikt van het aantal boekingen voor deze dienst"
 
 #: 
-msgid "Reminder notification"
-msgstr "Herinnering melding"
-
-#: 
 msgid "URL Settings"
 msgstr "URL Instellingen"
 
@@ -2676,14 +2421,6 @@ msgid "Attach ICS file"
 msgstr "ICS bestand bijvoegen"
 
 #: 
-msgid "Event notification"
-msgstr "Evenement melding"
-
-#: 
-msgid "Status changed"
-msgstr "Status gewijzigd"
-
-#: 
 msgid "New booking"
 msgstr "Nieuwe boeking"
 
@@ -2694,10 +2431,6 @@ msgstr "Laatste afspraak klant"
 #: 
 msgid "Full day agenda"
 msgstr "Volledige dag agenda"
-
-#: 
-msgid "Notification period"
-msgstr "Meldingsperiode"
 
 #: 
 msgid "Set period of time when system will attempt to deliver notification to user. Notification will be discarded after period expiration."
@@ -3742,37 +3475,6 @@ msgstr "Beste {client_name}.\n"
 "{company_website}"
 
 #: 
-msgid "New invoice #{invoice_number}"
-msgstr "Nieuwe factuur#{invoice_number}"
-
-#: 
-msgid "Hello.\n"
-"\n"
-"Attached please find invoice #{invoice_number} for an appointment scheduled by {client_first_name} {client_last_name}"
-msgstr "Hallo\n"
-"\n"
-"Bijgesloten vind u de factuur invoice #{invoice_number} voor een afspraak\n"
-"gepland bij {client_first_name} {client_last_name}"
-
-#: 
-msgid "Invoice for your appointment"
-msgstr "Factuur voor uw afspraak"
-
-#: 
-msgid "Dear {client_name}.\n"
-"Please download invoice #{invoice_number} here: {invoice_link}\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Beste {client_name}.\n"
-"Download de factuur #{invoice_number} hier: {invoice_link}\n"
-"Bedankt dat u zaken met ons doet.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
 msgid "New invoice"
 msgstr "Nieuwe factuur"
 
@@ -4467,14 +4169,6 @@ msgid "Select what happens when customer clicks cancel appointment link. With \"
 msgstr "Selecteer wat er gebeurt als klant klikt op afspraak annuleren link. Met \"Wissen\" word de afspraak verwijderd uit de kalender. Met \"Annuleren\" zal alleen de status van de afspraak worden gewijzigd in \"Geannuleerd\"."
 
 #: 
-msgid "Combined notifications"
-msgstr "Gecombineerde meldingen"
-
-#: 
-msgid "If combined notifications are enabled then your clients will receive single notification for entire booking instead of separate notification per each booked appointment (e.g. when cart is enabled). You will need to edit corresponding templates in Email and SMS Notifications."
-msgstr "Door gecombineerde meldingen te gebruiken ontvangen uw klanten één bericht voor de gehele boeking in plaats van een apart bericht per boekingsafspraak (wanneer je bijv. gebruik maakt van het winkelmandje). De betreffende sjablonen past u aan onder E-mail meldingen en SMS-meldingen in het hoofdmenu."
-
-#: 
 msgid "Minimum time requirement prior to booking"
 msgstr "Minimum tijd voorafgaand aan afspraak"
 
@@ -4696,26 +4390,6 @@ msgstr "Beste {client_name}.\n"
 "\n"
 "Ik wil u er graag aan herinneren dat u morgen om {appointment_time} een {service_name} afspraak hebt met {staff_name}. Wij zijn gevestigd op:\n"
 "{company_address}\n"
-"\n"
-"Bedankt voor uw vertrouwen in ons.\n"
-"\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-
-#: 
-msgid "Dear {client_name}.\n"
-"\n"
-"We would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\n"
-"\n"
-"Thank you for choosing our company.\n"
-"\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr "Beste {client_name}.\n"
-"\n"
-"Ik wil u er graag aan herinneren dat u op {appointment_date} om {appointment_time} een {service_name} afspraak hebt met {staff_name}. Wij zijn gevestigd op: {company_address}\n"
 "\n"
 "Bedankt voor uw vertrouwen in ons.\n"
 "\n"
@@ -5154,10 +4828,6 @@ msgstr "terugkerende afspraken planning met annulering"
 #: 
 msgid "recurring appointments"
 msgstr "terugkerende afspraken"
-
-#: 
-msgid "Recurring"
-msgstr "Terugkerende"
 
 #: 
 msgid "Recurring Appointments"
@@ -5782,7 +5452,7 @@ msgstr "Als u voor uw klanten onzichtbaar wilt worden, zet de zichtbaarheid op \
 
 #: 
 msgid "If <b>Publishable Key</b> is provided then Bookly will use <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>for collecting credit card details."
-msgstr " Als <b>Publiceerbare Sleutel</b> is geleverd dan zal Bookly <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>gebruiken voor creditkaart gegevens. "
+msgstr "Als <b>Publiceerbare Sleutel</b> is geleverd dan zal Bookly <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>gebruiken voor creditkaart gegevens."
 
 #: 
 msgid "Secret Key"
@@ -5851,10 +5521,6 @@ msgstr "totale belasting in de afspraak (overzicht van alle items)"
 #: 
 msgid "total price without tax"
 msgstr "total prijs zonder belasting"
-
-#: 
-msgid "Note if you use price correction to change the service cost according to the payment gateway used, tax will not be calculated for the additional amount to the cost. If you need to report the exact tax amount to the payment system, do not use additional charge."
-msgstr "Let erop dat als u een prijscorrectie gebruikt om de servicekosten te wijzigen op basis van de gebruikte betalingsgateway, zal de belasting niet worden berekend voor het extra bedrag van de kosten. Als u het exacte belastingbedrag aan het betalingssysteem moet melden, gebruik dan geen extra kosten."
 
 #: 
 msgid "Dear {client_name}.\n"
@@ -6012,7 +5678,7 @@ msgstr "Klik <b>Bibliotheek</b> in het linker zijbalk menu. Selecteer Google Map
 
 #: 
 msgid "Use your <b>API key</b> in the form below."
-msgstr "Gebruik uw <b>Api sleutel<b> in onderstaand formulier."
+msgstr "Gebruik uw <b>Api sleutel</b> in onderstaand formulier."
 
 #: 
 msgid "Enter a Google API key that you got after registering your app project on the Google API Console."
@@ -6384,8 +6050,7 @@ msgstr "Om de toegang tot uw boekingen in te schakelen, verifieert u uw licentie
 
 #: 
 msgid "Follow the steps at <a href=\"https://developers.facebook.com/docs/apps/register\" target=\"_blank\">https://developers.facebook.com/docs/apps/register</a> to create a Developer Account, register and configure your <b>Facebook App</b>. Then you'll need to submit your app for review. Learn more about the review process and what's required to pass review in the <a href=\"https://developers.facebook.com/docs/facebook-login/review\" target=\"_blank\">Login Review Guide</a>."
-msgstr "Volg de stappen op <a href=\"https://developers.facebook.com/docs/apps/register\" target=\"_blank\">https://developers.facebook.com/docs/apps/register</a> om een Ontwikkelaarsaccount aan te maken, registreer en configureer uw <b>Facebook App</b>. Dan moet u uw app indienen ter beoordeling. Lees verder over het beoordelingsproces en wat er vereist is om voor de beoordeling te slagen in de <a href=\"https://developers.facebook.com/docs/facebook-login/review\" target=\"_blank\">Inloggen Beoordelingsgids</a>.\n"
-""
+msgstr "Volg de stappen op <a href=\"https://developers.facebook.com/docs/apps/register\" target=\"_blank\">https://developers.facebook.com/docs/apps/register</a> om een Ontwikkelaarsaccount aan te maken, registreer en configureer uw <b>Facebook App</b>. Dan moet u uw app indienen ter beoordeling. Lees verder over het beoordelingsproces en wat er vereist is om voor de beoordeling te slagen in de <a href=\"https://developers.facebook.com/docs/facebook-login/review\" target=\"_blank\">Inloggen Beoordelingsgids</a>."
 
 #: 
 msgid "To view the details of these appointments, please contact your website administrator in order to verify Bookly Pro license."
@@ -6724,10 +6389,6 @@ msgid "Most occupied for period"
 msgstr "Meest bezet in periode"
 
 #: 
-msgid "For service"
-msgstr "Voor service"
-
-#: 
 msgid "Skip"
 msgstr "Overslaan"
 
@@ -6942,4 +6603,768 @@ msgstr "Verwijder Wordpress accounts van klanten, als die er zijn"
 #: 
 msgid "Export only active coupons"
 msgstr "Exporteer alleen actieve kortingsbonnen"
+
+#: 
+msgid "This setting affects the cost of the booking according to the payment gateway used. Specify a percentage or fixed amount. Use minus (\"-\") sign for decrease/discount. Note that tax will not be calculated for the additional amount to the cost. If you need to report the exact tax amount to the payment system, do not use additional charge."
+msgstr "Deze instelling heeft invloed op de kosten volgens de gebruikte betalingsgateway. Specificeer een percentage of vast bedrag. Gebruik het min (\"-\") teken om te verminderen/korting. Let erop dat belasting niet zal worden berekend voor het extra bedrag van de kosten. Indien u het exacte belastingbedrag moet rapporteren aan het betalingssysteem, gebruik dan geen extra kosten."
+
+#: 
+msgid "How to publish this form on your web site?"
+msgstr "Hoe kunt u dit formulier op uw website publiceren?"
+
+#: 
+msgid "Open the page where you want to add the booking form in page edit mode and click on the \"Add Bookly booking form\" button. Choose which fields you'd like to keep or remove from the booking form. Click Insert, and the booking form will be added to the page."
+msgstr "Open de pagina waar u het boekingsformulier wilt toevoegen in pagina bewerkingsmodus en klik op de \"Voeg Bookly boekingsformulier toe\" knop. Kies welke velden u wilt behouden uit het boekingsformulier. Klik op Invoegen, en het boekingsformulier zal worden toegevoegd aan de pagina."
+
+#: 
+msgid "Notification to staff member about cancelled recurring appointment"
+msgstr "Meldingen aan personeelslid over het annuleren van terugkerende afspraak"
+
+#: 
+msgid "Notification to staff member about placing on waiting list for recurring appointment"
+msgstr "Melding aan personeelslid over het plaatsen op een wachtlijst voor terugkerende afspraak"
+
+#: 
+msgid "Get Bookly Pro"
+msgstr "Koop Bookly Pro"
+
+#: 
+msgid "Read more"
+msgstr "Lees verder"
+
+#: 
+msgid "Demo"
+msgstr "Demo"
+
+#: 
+msgid "payment status"
+msgstr "betalingsstatus"
+
+#: 
+msgid "This setting affects the cost of the booking according to the payment gateway used. Specify a percentage or fixed amount. Use minus (\"-\") sign for decrease/discount."
+msgstr "Deze instelling heeft invloed op de kosten van de boeking volgens de gebruikte betalingsgateway. Specificeer een percentage of vast bedrag. Gebruik het min (\"-\") teken om te verminderen/korting."
+
+#: 
+msgid "You are going to delete appointment(s). Notifications will be sent in accordance with your settings."
+msgstr "U gaat een afspraak/afspraken verwijderen. Meldingen zullen worden verstuurd volgens uw instellingen."
+
+#: 
+msgid "View this page at Bookly Pro Demo"
+msgstr "Bekijk deze pagina op Bookly Pro Demo"
+
+#: 
+msgid "Visit demo"
+msgstr "Bezoek demo"
+
+#: 
+msgid "The demo is a version of Bookly Pro with all installed add-ons so that you can try all the features and capabilities of the system and then choose the most suitable configuration according to your business needs."
+msgstr "De demo is een versie van Bookly Pro met alle geïnstalleerde add-ons zodat u alle functies en mogelijkheden van het systeem kunt proberen en kies dan de meest geschikte configuratie volgens uw bedrijfsbehoeften."
+
+#: 
+msgid "Proceed to demo"
+msgstr "Doorgaan naar demo"
+
+#: 
+msgid "General settings"
+msgstr "Algemene instellingen"
+
+#: 
+msgid "Save settings"
+msgstr "Bewaar instellingen"
+
+#: 
+msgid "Test email notifications"
+msgstr "Test e-mail meldingen"
+
+#: 
+msgid "Email notifications"
+msgstr "E-mail meldingen"
+
+#: 
+msgid "General settings..."
+msgstr "Algemene instellingen..."
+
+#: 
+msgid "State"
+msgstr "Staat"
+
+#: 
+msgid "Delete..."
+msgstr "Verwijderen..."
+
+#: 
+msgid "Dear {client_name}.\n"
+"\n"
+"You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Beste {client_name}.\n"
+"\n"
+"U heeft uw boeking geannuleerd van {service_name} op {appointment_date} om {appointment_time}.\n"
+"\n"
+"Bedankt dat u voor ons bedrijf hebt gekozen.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Hello.\n"
+"\n"
+"The following booking has been cancelled.\n"
+"\n"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr "Hallo.\n"
+"\n"
+"De volgende boeking is geannuleerd.\n"
+"\n"
+"Dienst: {service_name}\n"
+"Datum: {appointment_date}\n"
+"Tijd: {appointment_time}\n"
+"Naam client: {client_name}\n"
+"Telefoon client: {client_phone}\n"
+"E-mail client: {client_email}"
+
+#: 
+msgid "Dear {client_name}.\n"
+"This is a confirmation that you have booked {service_name}.\n"
+"We are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Beste {client_name}.\n"
+"Dit is een bevestiging dat u {service_name} heeft geboekt.\n"
+"We verwachten u in {company_address} op {appointment_date} om {appointment_time}.\n"
+"Bedankt dat u voor ons bedrijf hebt gekozen.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Hello.\n"
+"You have a new booking.\n"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr "Hallo.\n"
+"U heeft een nieuwe boeking.\n"
+"Dienst: {service_name}\n"
+"Datum: {appointment_date}\n"
+"Tijd: {appointment_time}\n"
+"Naam client: {client_name}\n"
+"Telefoon client: {client_phone}\n"
+"E-mail client: {client_email}"
+
+#: 
+msgid "Dear {client_name}.\n"
+"You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Beste {client_name}.\n"
+"U heeft uw boeking geannuleerd van {service_name} op {appointment_date} om {appointment_time}.\n"
+"Bedankt dat u voor ons bedrijf hebt gekozen.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Hello.\n"
+"The following booking has been cancelled.\n"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr "Hallo.\n"
+"De volgende boeking is geannuleerd.\n"
+"Dienst: {service_name}\n"
+"Datum: {appointment_date}\n"
+"Tijd: {appointment_time}\n"
+"Naam client: {client_name}\n"
+"Telefoon client: {client_phone}\n"
+"E-mail client: {client_email}"
+
+#: 
+msgid "Dear {client_name}.\n"
+"We would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Beste {client_name}.\n"
+"We willen u eraan herinneren dat u {service_name} voor morgen heeft geboekt om {appointment_time}. We verwachten u op {company_address}.\n"
+"Bedankt dat u voor ons bedrijf hebt gekozen.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Dear {client_name}.\n"
+"Thank you for choosing {company_name}. We hope you were satisfied with your {service_name}.\n"
+"Thank you and we look forward to seeing you again soon.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Beste {client_name}.\n"
+"Bedankt voor het kiezen van {company_name}. We hopen dat u tevreden bent met onze {service_name}.\n"
+"Bedankt en we kijken er naar uit om u snel weer te zien.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Hello.\n"
+"Your agenda for tomorrow is:\n"
+"{next_day_agenda}"
+msgstr "Hallo.\n"
+"Uw agenda voor morgen is als volgt:\n"
+"{next_day_agenda}"
+
+#: 
+msgid "New booking combined notification"
+msgstr "Nieuwe boeking gecombineerde melding"
+
+#: 
+msgid "New booking notification"
+msgstr "Nieuwe boeking melding"
+
+#: 
+msgid "Notification about customer's appointment status change"
+msgstr "Melding over klanten afspraken status wijziging"
+
+#: 
+msgid "Appointment reminder"
+msgstr "Afspraak herinnering"
+
+#: 
+msgid "New customer's WordPress user login details"
+msgstr "Wordpress gebruiker login gegevens van nieuwe klant"
+
+#: 
+msgid "Customer's birthday greeting"
+msgstr "Melding verjaardag klant"
+
+#: 
+msgid "Customer's last appointment notification"
+msgstr "Laatste afspraak van klant melding"
+
+#: 
+msgid "Staff full day agenda"
+msgstr "Personeel gehele dag agenda"
+
+#: 
+msgid "New recurring booking notification"
+msgstr "Nieuwe terugkerende boekingsmelding"
+
+#: 
+msgid "Notification about recurring appointment status changes"
+msgstr "Melding over terugkerende afspraak status wijzigingen"
+
+#: 
+msgid "Unknown"
+msgstr "Onbekend"
+
+#: 
+msgid "Save administrator phone"
+msgstr "Bewaar telefoonnummer beheerder"
+
+#: 
+msgid "A custom block for displaying staff calendar"
+msgstr "Een aangepast blok voor het weergeven van de kalender van het personeel"
+
+#: 
+msgid "A custom block for displaying staff details"
+msgstr "Een aangepast blok voor het weergeven van de gegevens van het personeel"
+
+#: 
+msgid "A custom block for displaying staff services"
+msgstr "Een aangepast blok voor het weergeven van de diensten van het personeel"
+
+#: 
+msgid "A custom block for displaying staff schedule"
+msgstr "Een aangepast blok voor het weergeven van de planning van het personeel"
+
+#: 
+msgid "Special days"
+msgstr "Speciale dagen"
+
+#: 
+msgid "A custom block for displaying staff special days"
+msgstr "Een aangepast blok voor het weergeven van de speciale dagen van het personeel"
+
+#: 
+msgid "A custom block for displaying staff days off"
+msgstr "Een aangepast blok voor het weergeven van de vrije dagen van het personeel"
+
+#: 
+msgid "Special hours"
+msgstr "Speciale uren"
+
+#: 
+msgid "Fields"
+msgstr "Velden"
+
+#: 
+msgid "read only"
+msgstr "alleen lezen"
+
+#: 
+msgid "Customer cabinet"
+msgstr "Klantenkast"
+
+#: 
+msgid "A custom block for displaying customer cabinet"
+msgstr "Een aangepast blok voor het weergeven van de klantenkast"
+
+#: 
+msgid "show"
+msgstr "tonen"
+
+#: 
+msgid "Custom field"
+msgstr "Aangepast veld"
+
+#: 
+msgid "Customer information"
+msgstr "Klant informatie"
+
+#: 
+msgid "Quick search notifications"
+msgstr "Snelle zoek meldingen"
+
+#: 
+msgid "To generate an invoice you should fill in company information in Bookly > SMS Notifications > Send invoice."
+msgstr "Om een factuur te genereren moet u bedrijfsinformatie invullen in Bookly > SMS Meldingen > Factuur versturen."
+
+#: 
+msgid "enable"
+msgstr "inschakelen"
+
+#: 
+msgid "disable"
+msgstr "uitschakelen"
+
+#: 
+msgid "Edit..."
+msgstr "Bewerken..."
+
+#: 
+msgid "Scheduled notifications retry period"
+msgstr "Geplande meldingen nogmaals proberen periode"
+
+#: 
+msgid "Test email notifications..."
+msgstr "Test e-mail meldingen..."
+
+#: 
+msgid "Notification settings"
+msgstr "Melding instellingen"
+
+#: 
+msgid "Enter notification name which will be displayed in the list."
+msgstr "Vul naam melding in welke zal worden getoond in de lijst."
+
+#: 
+msgid "Choose whether notification is enabled and sending messages or it is disabled and no messages are sent until you activate the notification."
+msgstr "Kies of de melding is ingeschakeld en berichten verstuurd of dat het uitgeschakeld is en geen berichten worden verstuurd totdat u de melding activeert."
+
+#: 
+msgid "Recipients"
+msgstr "Ontvangers"
+
+#: 
+msgid "Choose who will receive this notification."
+msgstr "Kies wie deze melding zal ontvangen."
+
+#: 
+msgid "Select the type of event at which the notification is sent."
+msgstr "Selecteer het soort evenement bij welke de melding wordt verstuurd."
+
+#: 
+msgid "Instant notifications"
+msgstr "Directe meldingen"
+
+#: 
+msgid "Scheduled notifications (require cron setup)"
+msgstr "Geplande meldingen (vereist cron setup)"
+
+#: 
+msgid "This notification is sent once for a booking made by a customer and includes all cart items."
+msgstr "Deze melding is verstuurd als een boeking gemaakt is door een klant en alle items van het mandje bevat."
+
+#: 
+msgid "Save notification"
+msgstr "Bewaard melding"
+
+#: 
+msgid "Appointment status"
+msgstr "Status afspraak"
+
+#: 
+msgid "Select what status an appointment should have for the notification to be sent."
+msgstr "Selecteer welke status een afspraak zou moeten hebben om de melding te versturen."
+
+#: 
+msgid "Choose whether notification should be sent for specific services only or not."
+msgstr "Kies of een melding zou moeten worden verstuurd voor specifieke diensten of niet."
+
+#: 
+msgid "Body"
+msgstr "Hoofdtekst"
+
+#: 
+msgid "Sms"
+msgstr "Sms"
+
+#: 
+msgid "New sms notification"
+msgstr "Nieuwe sms melding"
+
+#: 
+msgid "Edit sms notification"
+msgstr "Bewerk sms melding"
+
+#: 
+msgid "Create notification"
+msgstr "Melding aanmaken"
+
+#: 
+msgid "New notification..."
+msgstr "Nieuwe melding..."
+
+#: 
+msgid "If you have added a new customer to this appointment or changed the appointment status for an existing customer, and for these records you want the corresponding email or SMS notifications to be sent to their recipients, select the \"Send if new or status changed\" option before clicking Save. You can also send notifications as if all customers were added as new by selecting \"Send as for new\"."
+msgstr "Als u een nieuwe klant aan de afspraak hebt toegevoegd of de afspraak status hebt gewijzigd voor een bestaande klant, en voor die bestanden waarvan u de corresponderende e-mail of SMS meldingen wilt versturen naar hun ontvangers, selecteer de \"Verstuur indien nieuw of status gewijzigd\" optie voordat u op Bewaren klikt. U kunt ook meldingen versturen alsof alle klanten als nieuw werden toegevoegd door \"Verstuur als voor nieuw\" te selecteren."
+
+#: 
+msgid "Send if new or status changed"
+msgstr "Verstuur indien nieuw of status gewijzigd"
+
+#: 
+msgid "Send as for new"
+msgstr "Verstuur als voor nieuw"
+
+#: 
+msgid "New email notification"
+msgstr "Nieuwe e-mail melding"
+
+#: 
+msgid "Edit email notification"
+msgstr "Bewerk e-mail melding"
+
+#: 
+msgid "Contact us"
+msgstr "Neem contact met ons op"
+
+#: 
+msgid "Booking form"
+msgstr "Boekingsformulier"
+
+#: 
+msgid "A custom block for displaying booking form"
+msgstr "Een aangepast blok voor het weergeven van het boekingsformulier"
+
+#: 
+msgid "Form fields"
+msgstr "Formulier velden"
+
+#: 
+msgid "Default value for location"
+msgstr "Standaard waarde voor locatie"
+
+#: 
+msgid "Default value for category"
+msgstr "Standaard waarde voor categorie"
+
+#: 
+msgid "Default value for service"
+msgstr "Standaard waarde voor dienst"
+
+#: 
+msgid "Default value for employee"
+msgstr "Standaard waarde voor werknemer"
+
+#: 
+msgid "hide"
+msgstr "verbergen"
+
+#: 
+msgid "Notification about new package creation"
+msgstr "Melding over nieuw pakket aanmaak"
+
+#: 
+msgid "Notification about package deletion"
+msgstr "Melding over pakket verwijderen"
+
+#: 
+msgid "Packages list"
+msgstr "Pakketten lijst"
+
+#: 
+msgid "A custom block for displaying packages list"
+msgstr "Een aangepast blok voor het weergeven van pakket lijst"
+
+#: 
+msgid "Dear {client_name}.\n"
+"This is a confirmation that you have booked the following items:\n"
+"{cart_info}\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr "Beste {client_name}.\n"
+"Dit is een bevestiging dat u de volgende items hebt geboekt:\n"
+"{cart_info}\n"
+"Bedankt dat u voor ons bedrijf heeft gekozen.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+
+#: 
+msgid "Notification to customer about pending appointments"
+msgstr "Melding aan klant over afspraken in de wacht"
+
+#: 
+msgid "Use drag & drop to shift employees between categories and change their position in a list. The order of staff members will be displayed at the frontend the same way you configure it here."
+msgstr "Gebruik slapen & laten vallen om werknemers tussen categorieën te schuiven en hun positie in de lijst te wijzigen. De volgorde van personeelsleden zal worden weergegeven aan de frontend op dezelfde manier zoals u het hier configureert."
+
+#: 
+msgid "Cancellation confirmation"
+msgstr "Bevestiging annuleren"
+
+#: 
+msgid "A custom block for displaying cancellation confirmation"
+msgstr "Een aangepast blok voor het weergeven van de bevestiging van het annuleren"
+
+#: 
+msgid "Appointments list"
+msgstr "Afsprakenlijst"
+
+#: 
+msgid "A custom block for displaying appointments list"
+msgstr "Een aangepast blok voor het weergeven van afsprakenlijst"
+
+#: 
+msgid "Custom fields"
+msgstr "Aangepaste velden"
+
+#: 
+msgid "Notification for staff member to set up appointment from waiting list"
+msgstr "Melding voor personeelslid om een afspraak uit de wachtlijst in te stellen"
+
+#: 
+msgid "Add service"
+msgstr "Voeg dienst toe"
+
+#: 
+msgid "Custom statuses"
+msgstr "Aangepaste statussen"
+
+#: 
+msgid "Add status"
+msgstr "Voeg status toe"
+
+#: 
+msgid "Free/Busy"
+msgstr "Vrij/Bezet"
+
+#: 
+msgid "New Status"
+msgstr "Nieuwe Status"
+
+#: 
+msgid "Edit Status"
+msgstr "Bewerk Status"
+
+#: 
+msgid "Free/busy"
+msgstr "Vrij/bezet"
+
+#: 
+msgid "If you select busy, then a customer with this status will occupy a place in appointment. If you select free, then a place will be considered as free."
+msgstr "Als u bezet selecteert, dan zal een klant met deze status een plek in de afspraak innemen. Indien u vrij selecteert, dan zal een plek als vrij worden beschouwd."
+
+#: 
+msgid "Free"
+msgstr "Vrij"
+
+#: 
+msgid "Busy"
+msgstr "Bezet"
+
+#: 
+msgid "No statuses found."
+msgstr "Geen statussen gevonden."
+
+#: 
+msgid "Custom Statuses"
+msgstr "Aangepaste Statussen"
+
+#: 
+msgid "Staff ratings"
+msgstr "Personeel beoordelingen"
+
+#: 
+msgid "A custom block for displaying staff ratings"
+msgstr "Een aangepast blok voor het weergeven van de beoordelingen van het personeel"
+
+#: 
+msgid "Hide comment"
+msgstr "Verberg opmerking"
+
+#: 
+msgid "Outlook Calendar event"
+msgstr "Outlook Kalender evenement"
+
+#: 
+msgid "Outlook Calendar integration"
+msgstr "Outlook Kalender integratie"
+
+#: 
+msgid "Synchronize staff member appointments with Outlook Calendar."
+msgstr "Synchroniseer afspraken van personeelslid met Outlook Kalender."
+
+#: 
+msgid "Please configure Outlook Calendar <a href=\"%s\">settings</a> first"
+msgstr "Configureer Outlook Kalender <a href=\"%s\">settings</a> eerst"
+
+#: 
+msgid "Important: Your website must use <b>HTTPS</b>. The Outlook Calendar API will not work with your website if there is no valid SSL certificate installed on your web server."
+msgstr "Belangrijk: Uw website moet <b>HTTPS</b> gebruiken. De Outlook Kalender API zal niet werken met uw website als er geen geldig SSL certificaat op uw web server is geïnstalleerd."
+
+#: 
+msgid "To find your Application ID and Application Secret, do the following:"
+msgstr "Om uw Applicatie ID en Applicatie Geheim te vinden, doet u het volgende:"
+
+#: 
+msgid "Navigate to the <a href=\"%s\" target=\"_blank\">Microsoft App Registration Portal</a>."
+msgstr "Navigeer naar de <a href=\"%s\" target=\"_blank\">Microsoft App Registratie Portal</a>."
+
+#: 
+msgid "Sign in with either a personal or work or school Microsoft account. If you don't have either, sign up for a new personal account."
+msgstr "Log in met een persoonlijke of werk of school Microsoft account. Als u deze niet heeft, meld u dan aan voor een nieuw persoonlijk account."
+
+#: 
+msgid "Choose <b>Add an app</b>. Enter a name for the app and choose <b>Create application</b>. The registration page displays, listing the properties of your app."
+msgstr "Kies <b> Een app toevoegen</b>. Vul een naam voor de app in en kies <b>Aanmaken applicatie</b>. De registratiepagina verschijnt, en toont de eigenschappen van uw app."
+
+#: 
+msgid "Copy the <b>Application ID</b>. This is the unique identifier for your app. You'll use it in the form below on this page."
+msgstr "Kopieer de <b>Applicatie ID</b>. Dit is het unieke identificatiemiddel voor uw app. U gebruikt het in onderstaand formulier op deze pagina."
+
+#: 
+msgid "Under <b>Application Secrets</b>, choose <b>Generate New Password</b>. Copy the app secret from the <b>New password generated</b> dialog box before closing it. You'll use the secret in the form below on this page."
+msgstr "Onder <b>Applicatie Geheimen</b>, kies <b>Genereer Nieuw Wachtwoord</b>. Kopieer het app geheim vanuit het <b>Nieuwe Wachtwoord gegenereerd</b> dialoogvenster voordat u het sluit. U gebruikt het geheim in onderstaand formulier op deze pagina."
+
+#: 
+msgid "Under <b>Platforms</b>, choose <b>Add Platform</b>, and select <b>Web</b>. In <b>Redirect URLs</b> enter the <b>Redirect URI</b> found below on this page."
+msgstr "Onder <b>Platformen</b>, kies <b>Platform Toevoegen</b>, en selecteer <b>Web</b>. In <b>Doorsturen URL's</b> vul de <b>Doorgestuurde URI</b> in die onderaan deze pagina is gevonden."
+
+#: 
+msgid "Under <b>Microsoft Graph Permissions</b>, choose <b>Add</b> next to <b>Delegated Permissions</b>, and select <b>Calendars.ReadWrite</b> in the <b>Select Permission</b> dialog box. Close it by clicking <b>Ok</b>."
+msgstr "Onder <b>Microsoft Graph Permissies</b>, ckies <b>Toevoegen</b> naast <b>Gedelegeerde Permissies</b>, en selecteer dan <b>Kalenders.LezenSchrijven</b> in het <b>Selecteer Permissie</b> dialoogvenster. Sluit het door te klikken op <b>Ok</b>."
+
+#: 
+msgid "<b>Save</b> your changes."
+msgstr "<b>Bewaar</b> uw wijzigingen."
+
+#: 
+msgid "Application ID"
+msgstr "Applicatie ID"
+
+#: 
+msgid "The Application ID obtained from the Microsoft App Registration Portal."
+msgstr "De Applicatie ID verkregen van de Microsoft App Registratie Portal."
+
+#: 
+msgid "Application secret"
+msgstr "Applicatie geheim"
+
+#: 
+msgid "The Application Secret password obtained from the Microsoft App Registration Portal."
+msgstr "Het Applicatie Geheim wachtwoord die verkregen is van de Microsoft App Registratie Portal."
+
+#: 
+msgid "Enter this URL as a Redirect URLs in the Microsoft App Registration Portal."
+msgstr "Vul deze URl in als Doorsturen URL's in de Microsoft App Registratie Portal."
+
+#: 
+msgid "With \"One-way\" sync Bookly pushes new appointments and any further changes to Outlook Calendar. With \"Two-way front-end only\" sync Bookly will additionally fetch events from Outlook Calendar and remove corresponding time slots before displaying the Time step of the booking form (this may lead to a delay when users click Next to get to the Time step). With \"Two-way\" sync all bookings created in Bookly Calendar will be automatically copied to Outlook Calendar and vice versa."
+msgstr "Met \"Een-weg\" synchronisatie stuurt Bookly nieuwe afspraken en elke toekomstige wijzigingen naar Outlook Kalender. Met \"Alleen twee-weg front-end\" synchroniseert Bookly extra opgehaalde evenementen van Outlook Kalender en verwijderd corresponderende tijdsloten voordat de Tijdstap van het boekingsformulier wordt getoond (dit kan leiden tot een vertraging wanneer gebruikers op Volgende klikken om de volgende Tijdstap te krijgen). Met \"Twee-weg\" synchronisatie worden alle boekingen die gemaakt zijn in Bookly Kalender automatisch gekopieerd naar Outlook Kalender en vice versa."
+
+#: 
+msgid "Copy Outlook Calendar event titles"
+msgstr "Kopieer Outlook Kalender evenement titels"
+
+#: 
+msgid "If enabled then titles of Outlook Calendar events will be copied to Bookly appointments. If disabled, a standard title \"Outlook Calendar event\" will be used."
+msgstr "Indien ingeschakeld dan worden de titels van de Outlook Kalender evenementen gekopieerd naar Bookly afspraken. Indien uitgeschakeld, zal een standaard titel \"Outlook Kalender evenement\" worden gebruikt."
+
+#: 
+msgid "If there is a lot of events in Outlook Calendar sometimes this leads to a lack of memory in PHP when Bookly tries to fetch all events. You can limit the number of fetched events here."
+msgstr "Als er een heleboel evenementen in Outlook Kalender zijn leidt dit soms tot een tekort aan geheugen in PhP als Bookly probeert alle evenementen op te halen. U kunt hier de hoeveelheid op te halen evenementen beperken."
+
+#: 
+msgid "Configure what information should be placed in the title of Outlook Calendar event. Available codes are {service_name}, {staff_name} and {client_names}."
+msgstr "Configureer welke informatie moet worden geplaatst in de titel van het Outlook Kalender evenement. Beschikbare codes zijn {service_name}, {staff_name} en {client_names}."
+
+#: 
+msgid "Outlook Calendar"
+msgstr "Outlook Kalender"
+
+#: 
+msgid "Synchronize with Outlook Calendar"
+msgstr "Synchroniseer met Outlook Kalender"
+
+#: 
+msgid "Forms"
+msgstr "Formulieren"
+
+#: 
+msgid "Short code"
+msgstr "Verkorte code"
+
+#: 
+msgid "Select form"
+msgstr "Selecteer formulier"
+
+#: 
+msgid "Add Bookly forms"
+msgstr "Voeg Bookly formulieren toe"
+
+#: 
+msgid "Value"
+msgstr "Waarde"
+
+#: 
+msgid "New form"
+msgstr "Nieuw formulier"
+
+#: 
+msgid "Edit form"
+msgstr "Bewerk formulier"
+
+#: 
+msgid "New form..."
+msgstr "Nieuw formulier..."
+
+#: 
+msgid "Forms editing available on page"
+msgstr "Formulieren bewerken beschikbaar op pagina"
 

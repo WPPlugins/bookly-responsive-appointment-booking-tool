@@ -20,7 +20,12 @@ jQuery(function($) {
         $show_custom_duration           = $('#bookly-show-custom-duration'),
         $show_nop                       = $('#bookly-show-nop'),
         $show_quantity                  = $('#bookly-show-quantity'),
-        // Time step.
+        $service_select                 = $('.bookly-js-select-service'),
+        $staff_select                   = $('.bookly-js-select-employee'),
+        $duration_select                = $('.bookly-js-select-duration'),
+        $location_select                = $('.bookly-js-select-location'),
+
+    // Time step.
         $time_step_nop                  = $('#bookly-show-nop-on-time-step'),
         $time_step_calendar             = $('.bookly-js-selected-date'),
         $time_step_calendar_wrap        = $('.bookly-js-slot-calendar'),
@@ -223,7 +228,7 @@ jQuery(function($) {
 
     // Show price next to staff member name.
     $staff_name_with_price.on('change', function () {
-        var staff = $('.bookly-js-select-employee').val();
+        var staff = $staff_select.val();
         if (staff) {
             $('.bookly-js-select-employee').val(staff * -1);
         }
@@ -232,14 +237,14 @@ jQuery(function($) {
     }).trigger('change');
 
     if ($service_duration_with_price.prop("checked")) {
-        $('.bookly-js-select-duration').val(-1);
+        $duration_select.val(-1);
     }
 
     // Show price next to service duration.
     $service_duration_with_price.on('change', function () {
-        var duration = $('.bookly-js-select-duration').val();
+        var duration = $duration_select.val();
         if (duration) {
-            $('.bookly-js-select-duration').val(duration * -1);
+            $duration_select.val(duration * -1);
         }
         $('.bookly-js-duration-price').toggle($service_duration_with_price.prop("checked"));
         $('.bookly-js-duration').toggle(!$service_duration_with_price.prop("checked"));
@@ -315,9 +320,9 @@ jQuery(function($) {
 
     // Show duration next to service name.
     $service_name_with_duration.on('change', function () {
-        var service = $('.bookly-js-select-service').val();
+        var service = $service_select.val();
         if (service) {
-            $('.bookly-js-select-service').val(service * -1);
+            $service_select.val(service * -1);
         }
         $('.service-name-duration').toggle($service_name_with_duration.prop("checked"));
         $('.service-name').toggle(!$service_name_with_duration.prop("checked"));
@@ -326,11 +331,11 @@ jQuery(function($) {
     // Show price next to service duration.
     $service_duration_with_price.on('change', function () {
         if ($(this).prop('checked')) {
-            $('.bookly-js-select-duration option[value="1"]').each(function () {
+            $('option[value="1"]', $duration_select).each(function () {
                 $(this).text($(this).attr('data-text-1'));
             });
         } else {
-            $('.bookly-js-select-duration option[value="1"]').each(function () {
+            $('option[value="1"]', $duration_select).each(function () {
                 $(this).text($(this).attr('data-text-0'));
             });
         }
@@ -341,6 +346,33 @@ jQuery(function($) {
         $(this).parent().toggleClass('active', this.checked);
     });
 
+    // Highlight affected inputs.
+    $required_employee.on('click', function () {
+        bookly_highlight($staff_select);
+    });
+    $staff_name_with_price.on('click', function () {
+        bookly_highlight($staff_select);
+    });
+    $show_ratings.on('click', function () {
+        bookly_highlight($staff_select);
+    });
+    $service_name_with_duration.on('click', function () {
+        bookly_highlight($service_select);
+    });
+    $service_duration_with_price.on('click', function () {
+        bookly_highlight($duration_select);
+    });
+    $required_location.on('click', function () {
+        bookly_highlight($location_select);
+    });
+    $required_details.on('change', function () {
+        if (this.value == 'phone' || this.value == 'both') {
+            bookly_highlight($('.bookly-js-details-phone input'));
+        }
+        if (this.value == 'email' || this.value == 'both') {
+            bookly_highlight($('.bookly-js-details-email input'));
+        }
+    });
 
     /**
      * Step Time
@@ -826,4 +858,12 @@ jQuery(function($) {
         });
         $first_last_name.popover('hide');
     });
+
+    function bookly_highlight($element) {
+        var color = $color_picker.wpColorPicker('color');
+        $element.css('background-color', color);
+        setTimeout(function () {
+            $element.css('background-color', '#fff')
+        }, 500);
+    }
 });

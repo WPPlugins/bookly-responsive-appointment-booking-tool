@@ -2,13 +2,10 @@
 namespace Bookly\Backend\Modules\Sms\Proxy;
 
 use Bookly\Lib;
-use Bookly\Backend\Modules\Notifications\Forms\Notifications;
 
 /**
- * Class Shared
- * @package Bookly\Backend\Modules\Sms
- *
- * @method static void renderSmsNotifications( Notifications $form ) Render SMS notification(s).
+ * @since Bookly 16.4
+ * @deprecated To be removed in the future
  */
 abstract class Shared extends Lib\Base\Proxy
 {

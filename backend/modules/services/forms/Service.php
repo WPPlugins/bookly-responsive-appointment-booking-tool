@@ -91,6 +91,10 @@ class Service extends Lib\Base\Form
                 $this->data['appointments_limit'] = null;
             }
 
+            if ( $this->data['deposit'] ) {
+                $this->data['deposit'] = preg_replace( '/[^0-9%.]/', '', str_replace( ',', '.', $this->data['deposit'] ) );
+            }
+
             $this->data = Proxy\Shared::prepareUpdateService( $this->data );
         }
 

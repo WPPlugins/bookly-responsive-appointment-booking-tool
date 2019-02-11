@@ -543,10 +543,10 @@ class Finder
         }
 
         // Take into account the statuses.
-        $statuses = array(
+        $statuses = Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
             Lib\Entities\CustomerAppointment::STATUS_PENDING,
             Lib\Entities\CustomerAppointment::STATUS_APPROVED,
-        );
+        ) );
         if ( Lib\Config::waitingListActive() ) {
             $statuses[] = Lib\Entities\CustomerAppointment::STATUS_WAITLISTED;
         }

@@ -29,14 +29,15 @@ abstract class Plugin extends Base\Plugin
         // Init ajax.
         Backend\Components\Dialogs\Appointment\Delete\Ajax::init();
         Backend\Components\Dialogs\Appointment\Edit\Ajax::init();
-        Backend\Components\Dialogs\Customer\Edit\Ajax::init();
         Backend\Components\Dialogs\Customer\Delete\Ajax::init();
+        Backend\Components\Dialogs\Customer\Edit\Ajax::init();
         Backend\Components\Dialogs\Payment\Ajax::init();
         Backend\Components\Gutenberg\BooklyForm\Block::init();
         Backend\Components\Notices\CollectStatsAjax::init();
         Backend\Components\Notices\LiteRebrandingAjax::init();
         Backend\Components\Notices\NpsAjax::init();
         Backend\Components\Notices\SubscribeAjax::init();
+        Backend\Components\Dialogs\Sms\Ajax::init();
         Backend\Components\Support\ButtonsAjax::init();
         Backend\Components\TinyMce\Tools::init();
         Backend\Modules\Appearance\Ajax::init();

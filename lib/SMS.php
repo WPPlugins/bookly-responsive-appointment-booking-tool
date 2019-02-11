@@ -11,6 +11,7 @@ class SMS
 
     const AUTHENTICATE        = '/1.1/users';                            //GET
     const CONFIRM_EMAIL       = '/1.1/confirm';                          //POST
+    const GET_INVOICE         = '/1.1/users/%token%/invoice';            //GET
     const GET_PROFILE_INFO    = '/1.1/users/%token%';                    //GET
     const REGISTER            = '/1.1/users';                            //POST
     const SEND_SMS            = '/1.1/users/%token%/sms';                //POST
@@ -265,6 +266,18 @@ class SMS
         }
 
         return false;
+    }
+
+    /**
+     * Get link for downloading invoice file.
+     *
+     * @return string
+     */
+    public function getInvoiceLink()
+    {
+        $data = array();
+
+        return $this->_prepareUrl( self::GET_INVOICE, $data );
     }
 
     /**

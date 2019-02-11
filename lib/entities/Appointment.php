@@ -95,7 +95,10 @@ class Appointment extends Lib\Base\Entity
                 ->leftJoin( 'Customer', 'c', 'c.id = ca.customer_id' )
                 ->where( 'ca.appointment_id', $this->getId() );
             if ( ! $with_cancelled ) {
-                $appointments->whereIn( 'ca.status', array( Lib\Entities\CustomerAppointment::STATUS_PENDING, Lib\Entities\CustomerAppointment::STATUS_APPROVED ) );
+                $appointments->whereIn( 'ca.status', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                    Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                    Lib\Entities\CustomerAppointment::STATUS_APPROVED
+                ) ) );
             }
 
             foreach ( $appointments->fetchArray() as $data ) {
@@ -225,7 +228,10 @@ class Appointment extends Lib\Base\Entity
             $customer_appointments = CustomerAppointment::query()
                 ->select( 'extras' )
                 ->where( 'appointment_id', $this->getId() )
-                ->whereIn( 'status', array( CustomerAppointment::STATUS_PENDING, CustomerAppointment::STATUS_APPROVED ) )
+                ->whereIn( 'status', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                    CustomerAppointment::STATUS_PENDING,
+                    CustomerAppointment::STATUS_APPROVED
+                ) ) )
                 ->where( 'extras_consider_duration', 1 )
                 ->fetchArray();
             foreach ( $customer_appointments as $customer_appointment ) {
@@ -251,14 +257,14 @@ class Appointment extends Lib\Base\Entity
         $res = self::query( 'a' )
            ->select( sprintf(
                'SUM(IF(ca.status = "%s", ca.number_of_persons, 0)) AS pending,
-                SUM(IF(ca.status = "%s", ca.number_of_persons, 0)) AS approved,
-                SUM(IF(ca.status = "%s", ca.number_of_persons, 0)) AS cancelled,
+                SUM(IF(ca.status IN("%s"), ca.number_of_persons, 0)) AS approved,
+                SUM(IF(ca.status IN("%s"), ca.number_of_persons, 0)) AS cancelled,
                 SUM(IF(ca.status = "%s", ca.number_of_persons, 0)) AS rejected,
                 SUM(IF(ca.status = "%s", ca.number_of_persons, 0)) AS waitlisted,
                 ss.capacity_max',
                 CustomerAppointment::STATUS_PENDING,
-                CustomerAppointment::STATUS_APPROVED,
-                CustomerAppointment::STATUS_CANCELLED,
+                implode( '","', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array( CustomerAppointment::STATUS_APPROVED ) ) ),
+                implode( '","', Lib\Proxy\CustomStatuses::prepareFreeStatuses( array( CustomerAppointment::STATUS_CANCELLED ) ) ),
                 CustomerAppointment::STATUS_REJECTED,
                 CustomerAppointment::STATUS_WAITLISTED
            ) )

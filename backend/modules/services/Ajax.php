@@ -2,6 +2,7 @@
 namespace Bookly\Backend\Modules\Services;
 
 use Bookly\Backend\Components\Notices\Limitation;
+use Bookly\Backend\Modules\Appointments;
 use Bookly\Lib;
 
 /**
@@ -117,11 +118,15 @@ class Ajax extends Page
                 Lib\Entities\Service::query( 's' )->delete()->whereIn( 's.id', $service_ids )->execute();
             }
         } else {
-            /** @var Lib\Entities\Appointment $appointment */
             $appointment = Lib\Entities\Appointment::query( 'a' )
                 ->select( 'a.service_id, a.start_date' )
+                ->leftJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id' )
                 ->whereIn( 'a.service_id', $service_ids )
                 ->whereGt( 'a.start_date', current_time( 'mysql' ) )
+                ->whereIn( 'ca.status', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                    Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                    Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+                ) ) )
                 ->sortBy( 'a.start_date' )
                 ->order( 'DESC' )
                 ->limit( '1' )
@@ -131,21 +136,26 @@ class Ajax extends Page
                 $last_month = date_create( $appointment['start_date'] )->modify( 'last day of' )->format( 'Y-m-d' );
                 $action     = 'show_modal';
                 $filter_url = sprintf( '%s#service=%d&range=%s-%s',
-                    Lib\Utils\Common::escAdminUrl( \Bookly\Backend\Modules\Appointments\Page::pageSlug() ),
+                    Lib\Utils\Common::escAdminUrl( Appointments\Page::pageSlug() ),
                     $appointment['service_id'],
                     date_create( current_time( 'mysql' ) )->format( 'Y-m-d' ),
                     $last_month );
                 wp_send_json_error( compact( 'action', 'filter_url' ) );
-            } elseif ( $task = Lib\Entities\Appointment::query( 'a' )
+            } else if ( $task = Lib\Entities\Appointment::query( 'a' )
                 ->select( 'a.service_id' )
+                ->leftJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id' )
                 ->whereIn( 'a.service_id', $service_ids )
                 ->where( 'a.start_date', null )
+                ->whereIn( 'ca.status', Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                    Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                    Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+                ) ) )
                 ->limit( 1 )
                 ->fetchRow()
             ) {
                 $action     = 'show_modal';
                 $filter_url = sprintf( '%s#service=%d&tasks',
-                    Lib\Utils\Common::escAdminUrl( \Bookly\Backend\Modules\Appointments\Page::pageSlug() ),
+                    Lib\Utils\Common::escAdminUrl( Appointments\Page::pageSlug() ),
                     $task['service_id'] );
                 wp_send_json_error( compact( 'action', 'filter_url' ) );
             } else {

@@ -2,7 +2,6 @@
 namespace Bookly\Backend\Modules\Sms;
 
 use Bookly\Lib;
-use Bookly\Backend\Components\Sms\Custom;
 
 /**
  * Class Ajax
@@ -195,29 +194,6 @@ class Ajax extends Lib\Base\Ajax
     }
 
     /**
-     * Create new custom sms notification
-     */
-    public static function createCustomSms()
-    {
-        $notification = new Lib\Entities\Notification();
-        $notification
-            ->setType( Lib\Entities\Notification::TYPE_APPOINTMENT_START_TIME )
-            ->setToCustomer( 1 )
-            ->setToStaff( 1 )
-            ->setSettings( json_encode( Lib\DataHolders\Notification\Settings::getDefault() ) )
-            ->setGateway( 'sms' )
-            ->save();
-
-        $notification = $notification->getFields();
-        $id           = $notification['id'];
-
-        $form = new \Bookly\Backend\Modules\Notifications\Forms\Notifications( 'sms' );
-        $html = Custom\Notification::render( $form, $notification, false );
-
-        wp_send_json_success( compact( 'html', 'id' ) );
-    }
-
-    /**
      * Send client info for invoice.
      */
     public static function saveInvoiceData()
@@ -229,5 +205,70 @@ class Ajax extends Lib\Base\Ajax
         } else {
             wp_send_json_success( array( 'message' => __( 'Settings saved.', 'bookly' ) ) );
         }
+    }
+
+    /**
+     * Delete notification.
+     */
+    public static function deleteNotification()
+    {
+        Lib\Entities\Notification::query()
+            ->delete()
+            ->where( 'id', self::parameter( 'id' ) )
+            ->execute();
+
+        wp_send_json_success();
+    }
+
+    /**
+     * Get data for notification list.
+     */
+    public static function getNotifications()
+    {
+        $types = Lib\Entities\Notification::getTypes( self::parameter( 'gateway' ) );
+
+        $notifications = Lib\Entities\Notification::query()
+            ->select( 'id, name, active, type' )
+            ->where( 'gateway', self::parameter( 'gateway' ) )
+            ->whereIn( 'type', $types )
+            ->fetchArray();
+
+        foreach ( $notifications as &$notification ) {
+            $notification['order'] = array_search( $notification['type'], $types );
+            $notification['icon']  = Lib\Entities\Notification::getIcon( $notification['type'] );
+            $notification['title'] = Lib\Entities\Notification::getTitle( $notification['type'] );
+        }
+
+        wp_send_json_success( $notifications );
+    }
+
+    /**
+     * Activate/Suspend notification.
+     */
+    public static function setNotificationState()
+    {
+        Lib\Entities\Notification::query()
+            ->update()
+            ->set( 'active', (int) self::parameter( 'active' ) )
+            ->where( 'id', self::parameter( 'id' ) )
+            ->execute();
+
+        wp_send_json_success();
+    }
+
+    /**
+     * Remove notification(s).
+     */
+    public static function deleteNotifications()
+    {
+        $notifications = array_map( 'intval', self::parameter( 'notifications', array() ) );
+        Lib\Entities\Notification::query()->delete()->whereIn( 'id', $notifications )->execute();
+        wp_send_json_success();
+    }
+
+    public static function saveAdministratorPhone()
+    {
+        update_option( 'bookly_sms_administrator_phone', self::parameter( 'bookly_sms_administrator_phone' ) );
+        wp_send_json_success();
     }
 }

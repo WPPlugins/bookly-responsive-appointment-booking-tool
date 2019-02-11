@@ -15,7 +15,7 @@ use Bookly\Backend\Modules\Calendar\Proxy;
             <div class="bookly-page-title">
                 <?php _e( 'Calendar', 'bookly' ) ?>
             </div>
-            <?php if ( Common::isCurrentUserAdmin() ) : ?>
+            <?php if ( Common::isCurrentUserSupervisor() ) : ?>
                 <?php Components\Support\Buttons::render( $self::pageSlug() ) ?>
             <?php endif ?>
         </div>
@@ -23,7 +23,7 @@ use Bookly\Backend\Modules\Calendar\Proxy;
             <div class="panel-body">
                 <?php if ( $staff_members ) : ?>
                 <ul class="bookly-nav bookly-nav-tabs">
-                    <?php if ( Common::isCurrentUserAdmin() ) : ?>
+                    <?php if ( Common::isCurrentUserSupervisor() ) : ?>
                         <li class="bookly-nav-item bookly-js-calendar-tab" data-staff_id="0">
                             <?php _e( 'All', 'bookly' ) ?>
                         </li>
@@ -33,7 +33,7 @@ use Bookly\Backend\Modules\Calendar\Proxy;
                             <?php echo esc_html( $staff->getFullName() ) ?>
                         </li>
                     <?php endforeach ?>
-                    <?php if ( Common::isCurrentUserAdmin() ) : ?>
+                    <?php if ( Common::isCurrentUserSupervisor() ) : ?>
                         <ul id="bookly-js-staff-filter"
                             data-container-class="pull-right bookly-margin-top-xs"
                             data-txt-select-all="<?php esc_attr_e( 'All staff', 'bookly' ) ?>"

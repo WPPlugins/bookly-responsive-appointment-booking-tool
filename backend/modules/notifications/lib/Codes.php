@@ -110,12 +110,17 @@ class Codes
     /**
      * Render codes for given notification type.
      *
-     * @param $notification_type
+     * @param string $notification_type
+     * @param bool   $with_repeated  add codes 'series' from add-on recurring appointments
      */
-    public function render( $notification_type )
+    public function render( $notification_type, $with_repeated = false )
     {
         $codes = $this->_build( $notification_type );
-
+        if ( $with_repeated ) {
+            if ( isset( $this->codes['series'] ) ) {
+                $codes = array_merge( $codes, $this->codes['series'] );
+            }
+        }
         ksort( $codes );
 
         $tbody = '';
@@ -145,109 +150,64 @@ class Codes
         $codes = array();
 
         switch ( $notification_type ) {
-            case Notification::TYPE_APPOINTMENT_START_TIME:
-            case Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED:
+            case Notification::TYPE_APPOINTMENT_REMINDER:
+            case Notification::TYPE_NEW_BOOKING:
+            case Notification::TYPE_NEW_BOOKING_RECURRING:
             case Notification::TYPE_LAST_CUSTOMER_APPOINTMENT:
             case Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED:
+            case Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED_RECURRING:
                 $codes = array_merge(
                     $this->codes['appointment'],
                     $this->codes['category'],
-                    $this->codes['service'],
-                    $this->codes['customer_appointment'],
+                    $this->codes['company'],
                     $this->codes['customer'],
+                    $this->codes['customer_appointment'],
                     $this->codes['customer_timezone'],
-                    $this->codes['staff'],
                     $this->codes['payment'],
-                    $this->codes['company']
+                    $this->codes['service'],
+                    $this->codes['staff']
                 );
                 if ( Lib\Config::invoicesActive() &&
                     in_array( $notification_type, array(
-                        Notification::TYPE_CUSTOMER_APPOINTMENT_CREATED,
+                        Notification::TYPE_NEW_BOOKING,
+                        Notification::TYPE_NEW_BOOKING_RECURRING,
                         Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+                        Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED_RECURRING,
                     ) )
                 ) {
                     $codes = array_merge( $codes, $this->codes['invoice'] );
                 }
+                if ( Lib\Config::ratingsActive() && ( $notification_type == Notification::TYPE_APPOINTMENT_REMINDER ) ) {
+                    $codes = array_merge( $codes, $this->codes['rating'] );
+                }
                 break;
-            case 'staff_agenda':
             case Notification::TYPE_STAFF_DAY_AGENDA:
                 $codes = array_merge(
+                    $this->codes['company'],
                     $this->codes['staff'],
-                    $this->codes['staff_agenda'],
-                    $this->codes['company']
+                    $this->codes['staff_agenda']
                 );
                 break;
-            case 'client_birthday_greeting':
             case Notification::TYPE_CUSTOMER_BIRTHDAY:
                 $codes = array_merge(
-                    $this->codes['customer'],
-                    $this->codes['company']
+                    $this->codes['company'],
+                    $this->codes['customer']
                 );
                 break;
-            case 'client_new_wp_user':
+            case Notification::TYPE_CUSTOMER_NEW_WP_USER:
                 $codes = array_merge(
+                    $this->codes['company'],
                     $this->codes['customer'],
-                    $this->codes['user_credentials'],
-                    $this->codes['company']
+                    $this->codes['user_credentials']
                 );
                 break;
-            case 'client_pending_appointment_cart':
-            case 'client_approved_appointment_cart':
+            case Notification::TYPE_NEW_BOOKING_COMBINED:
                 $codes = array_merge(
                     $this->codes['cart'],
-                    $this->codes['customer'],
-                    $this->codes['customer_timezone'],
-                    $this->codes['payment'],
-                    $this->codes['company']
-                );
-                break;
-            case 'client_pending_appointment':
-            case 'staff_pending_appointment':
-            case 'client_approved_appointment':
-            case 'staff_approved_appointment':
-            case 'client_cancelled_appointment':
-            case 'staff_cancelled_appointment':
-            case 'client_rejected_appointment':
-            case 'staff_rejected_appointment':
-            case 'client_waitlisted_appointment':
-            case 'staff_waitlisted_appointment':
-            case 'client_reminder':
-            case 'client_reminder_1st':
-            case 'client_reminder_2nd':
-            case 'client_reminder_3rd':
-                $codes = array_merge(
-                    $this->codes['appointment'],
-                    $this->codes['category'],
-                    $this->codes['service'],
-                    $this->codes['customer_appointment'],
-                    $this->codes['staff'],
-                    $this->codes['customer'],
-                    $this->codes['customer_timezone'],
-                    $this->codes['payment'],
-                    $this->codes['company']
-                );
-                if ( Lib\Config::invoicesActive() &&
-                    in_array( $notification_type, array(
-                        'client_pending_appointment',
-                        'client_approved_appointment'
-                    ) )
-                ) {
-                    $codes = array_merge( $codes, $this->codes['invoice'] );
-                }
-                break;
-            case 'client_follow_up':
-                $codes = array_merge(
-                    $this->codes['appointment'],
-                    $this->codes['category'],
-                    $this->codes['service'],
-                    $this->codes['customer_appointment'],
-                    $this->codes['staff'],
-                    $this->codes['customer'],
-                    $this->codes['customer_timezone'],
-                    $this->codes['payment'],
                     $this->codes['company'],
-                    $this->codes['rating'],
-                    isset( $this->codes['invoice'] ) ? $this->codes['invoice'] : array()
+                    $this->codes['customer'],
+                    $this->codes['customer_timezone'],
+                    $this->codes['payment']
                 );
                 break;
             default:

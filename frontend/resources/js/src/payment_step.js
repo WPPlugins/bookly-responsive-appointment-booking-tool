@@ -55,6 +55,8 @@ export default function stepPayment(params) {
                         form_id      : params.form_id,
                         deposit_full : $(this).val()
                     };
+                    $(this).hide();
+                    $(this).prev().css('display', 'inline-block');
                     $.ajax({
                         type       : 'POST',
                         url        : BooklyL10n.ajaxurl,

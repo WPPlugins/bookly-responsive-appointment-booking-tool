@@ -9,6 +9,7 @@ use Bookly\Backend\Components\Controls\Buttons;
                 <div class="modal-title h2"><?php _e( 'Delete', 'bookly' ) ?></div>
             </div>
             <div class="modal-body">
+                <p><?php esc_html_e( 'You are going to delete appointment(s). Notifications will be sent in accordance with your settings.', 'bookly' ) ?></p>
                 <div class="checkbox">
                     <label>
                         <input id="bookly-delete-notify" type="checkbox" />

@@ -41,9 +41,10 @@ echo $progress_tracker;
             <?php Proxy\Shared::renderChainItemTail() ?>
             <?php Proxy\Shared::renderChainItemTailTip() ?>
         </div>
+        <?php Proxy\ChainAppointments::renderBookMore() ?>
         <div class="bookly-nav-steps bookly-box">
             <?php if ( $show_cart_btn ) : ?>
-                <button class="bookly-go-to-cart bookly-js-go-to-cart bookly-round bookly-round-md ladda-button" data-style="zoom-in" data-spinner-size="30"><span class="ladda-label"><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
+                <?php Proxy\Cart::renderButton() ?>
             <?php endif ?>
             <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
                 <button class="bookly-right bookly-mobile-next-step bookly-js-mobile-next-step bookly-btn bookly-none ladda-button" data-style="zoom-in" data-spinner-size="40">
@@ -106,7 +107,7 @@ echo $progress_tracker;
                 <span class="ladda-label"><?php echo Bookly\Lib\Utils\Common::getTranslatedOption( 'bookly_l10n_button_back' ) ?></span>
             </button>
             <?php if ( $show_cart_btn ) : ?>
-                <button class="bookly-go-to-cart bookly-js-go-to-cart bookly-round bookly-round-md ladda-button" data-style="zoom-in" data-spinner-size="30"><span class="ladda-label"><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
+                <?php Proxy\Cart::renderButton() ?>
             <?php endif ?>
             <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
                 <button class="bookly-next-step bookly-js-next-step bookly-btn ladda-button" data-style="zoom-in" data-spinner-size="40">

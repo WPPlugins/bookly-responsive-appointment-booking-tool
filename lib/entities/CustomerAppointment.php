@@ -2,7 +2,7 @@
 namespace Bookly\Lib\Entities;
 
 use Bookly\Lib;
-use Bookly\Lib\DataHolders\Booking as DataHolders;
+use Bookly\Lib\DataHolders\Booking;
 
 /**
  * Class CustomerAppointment
@@ -41,7 +41,7 @@ class CustomerAppointment extends Lib\Base\Entity
     protected $extras_consider_duration = 1;
     /** @var  string */
     protected $custom_fields = '[]';
-    /** @var  string self::STATUS_* */
+    /** @var  string */
     protected $status;
     /** @var  string Y-m-d H:i:s */
     protected $status_changed_at;
@@ -165,31 +165,33 @@ class CustomerAppointment extends Lib\Base\Entity
     {
         $appointment = new Appointment();
         if ( $appointment->load( $this->getAppointmentId() ) ) {
-            if ( ! in_array( $this->getStatus(), array( self::STATUS_CANCELLED, self::STATUS_REJECTED ) ) ) {
-                $this->setStatus( self::STATUS_CANCELLED );
-                Lib\Notifications\Sender::sendSingle( DataHolders\Simple::create( $this ) );
-            }
+            $item = Booking\Item::collect( $this, Lib\Proxy\CustomStatuses::prepareFreeStatuses( array(
+                self::STATUS_CANCELLED,
+                self::STATUS_REJECTED,
+            ) ) );
 
-            if ( get_option( 'bookly_cst_cancel_action' ) == 'delete' ) {
-                $this->deleteCascade( true );
-            } else {
-                if ( $this->getCompoundToken() ) {
-                    Lib\Proxy\CompoundServices::cancelAppointment( $this );
-                } elseif ( $this->getCollaborativeToken() ) {
-                    Lib\Proxy\CollaborativeServices::cancelAppointment( $this );
+            if ( $item ) {
+                $item->setStatus( self::STATUS_CANCELLED );
+                Lib\Notifications\Booking\Sender::send( $item );
+                if ( get_option( 'bookly_cst_cancel_action' ) == 'delete' ) {
+                    $this->deleteCascade( true );
                 } else {
-                    $this->save();
-                    if ( $this->getExtras() != '[]' ) {
-                        $extras_duration = $appointment->getMaxExtrasDuration();
-                        if ( $appointment->getExtrasDuration() != $extras_duration ) {
-                            $appointment->setExtrasDuration( $extras_duration );
-                            $appointment->save();
+                    foreach ( $item->getItems() as $i ) {
+                        if ( $i->getCA()->save() ) {
+                            $appointment = $i->getAppointment();
+                            if ( $i->getExtras() != '[]' ) {
+                                $extras_duration = $appointment->getMaxExtrasDuration();
+                                if ( $appointment->getExtrasDuration() != $extras_duration ) {
+                                    $appointment->setExtrasDuration( $extras_duration );
+                                    $appointment->save();
+                                }
+                            }
+                            // Google Calendar.
+                            Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                            // Waiting list.
+                            Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
                         }
                     }
-                    // Google Calendar.
-                    Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
-                    // Waiting list.
-                    Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
                 }
             }
         }
@@ -220,7 +222,7 @@ class CustomerAppointment extends Lib\Base\Entity
             case self::STATUS_REJECTED:   return __( 'Rejected',  'bookly' );
             case self::STATUS_WAITLISTED: return __( 'On waiting list',  'bookly' );
             case self::STATUS_DONE:       return __( 'Done', 'bookly' );
-            default: return '';
+            default: return Lib\Proxy\CustomStatuses::statusToString( $status );
         }
     }
 
@@ -244,6 +246,7 @@ class CustomerAppointment extends Lib\Base\Entity
             if ( Lib\Config::tasksActive() ) {
                 $statuses[] = self::STATUS_DONE;
             }
+            $statuses = Lib\Proxy\CustomStatuses::prepareAllStatuses( $statuses );
             self::putInCache( __FUNCTION__, $statuses );
         }
 

@@ -24,31 +24,31 @@ class Ajax extends Lib\Base\Ajax
         switch ( $order ) {
             case 'sales':
                 $query = $query
-                    ->sortBy( 'sales' )
+                    ->sortBy( 'priority DESC, sales' )
                     ->order( 'DESC' );
                 break;
             case 'rating':
                 $query = $query
-                    ->sortBy( 'rating' )
+                    ->sortBy( 'priority DESC, rating' )
                     ->order( 'DESC' );
                 break;
             case 'date':
                 $query = $query
-                    ->sortBy( 'published' )
+                    ->sortBy( 'priority DESC, published' )
                     ->order( 'DESC' );
                 break;
             case 'price_low':
                 $query = $query
-                    ->sortBy( 'price' );
+                    ->sortBy( 'priority DESC, price' );
                 break;
             case 'price_high':
                 $query = $query
-                    ->sortBy( 'price' )
+                    ->sortBy( 'priority DESC, price' )
                     ->order( 'DESC' );
                 break;
             default:
                 $query = $query
-                    ->sortBy( 'type DESC, created' )
+                    ->sortBy( 'priority DESC, type DESC, created' )
                     ->order( 'DESC' );
                 break;
         }
@@ -66,19 +66,21 @@ class Ajax extends Lib\Base\Ajax
         foreach ( $shop as $plugin ) {
             $installed          = in_array( $plugin['slug'], $plugins_installed );
             $response['shop'][] = array(
-                'plugin_class' => $plugin['type'] == 'bundle' ? 'bookly-shop-bundle' : '',
-                'title'        => $plugin['title'],
-                'description'  => $plugin['description'],
-                'icon'         => '<img src="' . $plugin['icon'] . '"/>',
-                'new'          => ( $plugin['seen'] == 0 || ( strtotime( $plugin['published'] ) > strtotime( '-2 weeks' ) ) ) ? __( 'New', 'bookly' ) : '',
-                'price'        => '$' . $plugin['price'],
-                'sales'        => sprintf( _n( '%d sale', '%d sales', $plugin['sales'], 'bookly' ), $plugin['sales'] ),
-                'rating_class' => (int) $plugin['rating'] ? '': 'collapse',
-                'rating'       => $plugin['rating'],
-                'reviews'      => sprintf( _n( '%d review', '%d reviews', $plugin['reviews'], 'bookly' ), $plugin['reviews'] ),
-                'url_class'    => $installed ? 'btn-default' : $plugin['slug'] == 'bookly-addon-pro' ? 'btn-success' : 'btn-success' . $disabled,
-                'url_text'     => $installed ? __( 'Installed', 'bookly' ) : __( 'Get it!', 'bookly' ),
-                'url'          => Lib\Utils\Common::prepareUrlReferrers( $plugin['url'] . '?ref=ladela', 'shop' ),
+                'plugin_class'   => $plugin['highlighted'] ? 'bookly-shop-highlighted' : ( $plugin['type'] == 'bundle' ? 'bookly-shop-bundle' : '' ),
+                'title'          => $plugin['title'],
+                'demo_url_class' => $plugin['demo_url'] === null ? 'collapse' : '',
+                'demo_url'       => $plugin['demo_url'],
+                'description'    => $plugin['description'],
+                'icon'           => '<img src="' . $plugin['icon'] . '"/>',
+                'new'            => ( $plugin['seen'] == 0 || ( strtotime( $plugin['published'] ) > strtotime( '-2 weeks' ) ) ) ? __( 'New', 'bookly' ) : '',
+                'price'          => '$' . $plugin['price'],
+                'sales'          => sprintf( _n( '%d sale', '%d sales', $plugin['sales'], 'bookly' ), $plugin['sales'] ),
+                'rating_class'   => (int) $plugin['rating'] ? '' : 'collapse',
+                'rating'         => $plugin['rating'],
+                'reviews'        => sprintf( _n( '%d review', '%d reviews', $plugin['reviews'], 'bookly' ), $plugin['reviews'] ),
+                'url_class'      => $installed ? 'btn-default' : $plugin['slug'] == 'bookly-addon-pro' ? 'btn-success' : 'btn-success' . $disabled,
+                'url_text'       => $installed ? __( 'Installed', 'bookly' ) : __( 'Get it!', 'bookly' ),
+                'url'            => Lib\Utils\Common::prepareUrlReferrers( $plugin['url'] . '?ref=ladela', 'shop' ),
             );
         }
 

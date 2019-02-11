@@ -29,7 +29,6 @@ use Bookly\Lib\DataHolders\Booking as DataHolders;
  * @method static Lib\Slots\RangeCollection prepareGeneratorRanges( Lib\Slots\RangeCollection $ranges, Lib\Slots\Staff $staff, int $duration ) Prepare range collection depends on staff hours limit.
  * @method static bool   getWorkingTimeLimitError( Lib\Entities\Staff $staff, string $start_date, string $end_date, int $duration, int $appointment_id ) Check if interval is suitable for staff's hours limit.
  * @method static void   revokeGoogleCalendarToken( Lib\Entities\Staff $staff ) Revoke Google Calendar token for given staff.
- * @method static void   sendCombined( DataHolders\Order $order ) Send combined notifications.
  * @method static bool   showFacebookLoginButton() Whether to show Facebook login button at the time step of booking form.
  * @method static void   syncGoogleCalendarEvent( Lib\Entities\Appointment $appointment ) Synchronize Google Calendar with appointment.
  */

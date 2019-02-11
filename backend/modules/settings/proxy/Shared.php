@@ -7,6 +7,7 @@ use Bookly\Lib;
  * Class Shared
  * @package Bookly\Backend\Modules\Settings\Proxy
  *
+ * @method static void  enqueueAssets() Enqueue assets for Settings page.
  * @method static array prepareCalendarAppointmentCodes( array $codes, string $participants ) Prepare codes for appointment description displayed in calendar.
  * @method static array preparePaymentGatewaySettings( array $payment_data ) Prepare payment gateway settings.
  * @method static array prepareWooCommerceCodes( array $codes ) Alter array of codes to be displayed in WooCommerce (Order,Cart,Checkout etc.).

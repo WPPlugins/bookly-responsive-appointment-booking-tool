@@ -7,9 +7,276 @@ namespace Bookly\Lib;
  */
 class Updater extends Base\Updater
 {
-    function update_16_2()
+    function update_16_8()
     {
         /** @global \wpdb $wpdb */
+        global $wpdb;
+
+        $self = $this;
+        $default_settings    = json_decode( '{"status":"any","option":2,"services":{"any":"any","ids":[]},"offset_hours":2,"perform":"before","at_hour":9,"before_at_hour":18,"offset_before_hours":-24,"offset_bidirectional_hours":0}', true );
+        $notifications_table = $this->getTableName( 'bookly_notifications' );
+        $notifications = array(
+            'appointment_start_time'           => array( 'type' => 'appointment_reminder', 'name' => __( 'Custom notification', 'bookly' ) . ': ' . __( 'Appointment reminder', 'bookly' ) ),
+            'ca_created'                       => array( 'type' => 'new_booking', 'name' => __( 'Custom notification', 'bookly' ) . ': ' . __( 'New booking', 'bookly' ) ),
+            'ca_status_changed'                => array( 'type' => 'ca_status_changed', 'name' => __( 'Custom notification', 'bookly' ) . ': ' . __( 'Notification about customer\'s appointment status change', 'bookly' ) ),
+            'client_approved_appointment'      => array( 'type' => 'new_booking', 'name' => __( 'Notification to customer about approved appointment', 'bookly' ) ),
+            'client_birthday_greeting'         => array( 'type' => 'customer_birthday', 'name' => __( 'Customer birthday greeting (requires cron setup)', 'bookly' ) ),
+            'client_cancelled_appointment'     => array( 'type' => 'ca_status_changed', 'name' => __( 'Notification to customer about cancelled appointment', 'bookly' ) ),
+            'client_follow_up'                 => array( 'type' => 'appointment_reminder', 'name' => __( 'Follow-up message in the same day after appointment (requires cron setup)', 'bookly' ) ),
+            'client_pending_appointment'       => array( 'type' => 'new_booking', 'name' => __( 'Notification to customer about pending appointment', 'bookly' ) ),
+            'client_rejected_appointment'      => array( 'type' => 'ca_status_changed', 'name' => __( 'Notification to customer about rejected appointment', 'bookly' ) ),
+            'client_reminder'                  => array( 'type' => 'appointment_reminder', 'name' => __( 'Evening reminder to customer about next day appointment (requires cron setup)', 'bookly' ) ),
+            'client_reminder_1st'              => array( 'type' => 'appointment_reminder', 'name' => __( '1st reminder to customer about upcoming appointment (requires cron setup)', 'bookly' ) ),
+            'client_reminder_2nd'              => array( 'type' => 'appointment_reminder', 'name' => __( '2nd reminder to customer about upcoming appointment (requires cron setup)', 'bookly' ) ),
+            'client_reminder_3rd'              => array( 'type' => 'appointment_reminder', 'name' => __( '3rd reminder to customer about upcoming appointment (requires cron setup)', 'bookly' ) ),
+            'last_appointment'                 => array( 'type' => 'last_appointment', 'name' => __( 'Custom notification', 'bookly' ) . ': ' . __( 'Last client\'s appointment', 'bookly' ) ),
+            'staff_agenda'                     => array( 'type' => 'staff_day_agenda', 'name' => __( 'Evening notification with the next day agenda to staff member (requires cron setup)', 'bookly' ) ),
+            'staff_approved_appointment'       => array( 'type' => 'new_booking', 'name' => __( 'Notification to staff member about approved appointment', 'bookly' ) ),
+            'staff_cancelled_appointment'      => array( 'type' => 'ca_status_changed', 'name' => __( 'Notification to staff member about cancelled appointment', 'bookly' ) ),
+            'staff_day_agenda'                 => array( 'type' => 'staff_day_agenda', 'name' => __( 'Custom notification', 'bookly' ) . ': ' . __( 'Full day agenda', 'bookly' ) ),
+            'staff_pending_appointment'        => array( 'type' => 'new_booking', 'name' => __( 'Notification to staff member about pending appointment', 'bookly' ) ),
+            'staff_rejected_appointment'       => array( 'type' => 'ca_status_changed', 'name' => __( 'Notification to staff member about rejected appointment', 'bookly' ) ),
+        );
+
+        // Changes in schema
+        $disposable_options[] = $this->disposable( __FUNCTION__ . '-1', function () use ( $self, $wpdb, $notifications_table, $notifications, $default_settings ) {
+            $wpdb->query( 'UPDATE `' . $wpdb->usermeta . '` SET meta_key = \'bookly_dismiss_feature_requests_description\' WHERE meta_key = \'bookly_feature_requests_rules_hide\'' );
+            if ( ! $self->existsColumn( 'bookly_notifications', 'name' ) ) {
+                $self->alterTables( array(
+                    'bookly_notifications' => array(
+                        'ALTER TABLE `%s` ADD COLUMN `name` VARCHAR(255) NOT NULL DEFAULT "" AFTER `active`',
+                    ),
+                ) );
+            }
+            $self->alterTables( array(
+                'bookly_customer_appointments' => array(
+                    'ALTER TABLE `%s` CHANGE `status` `status` VARCHAR(255) NOT NULL DEFAULT "approved"',
+                ),
+                'bookly_shop'                  => array(
+                    'ALTER TABLE `%s` ADD COLUMN `demo_url` VARCHAR(255) DEFAULT NULL AFTER `type`',
+                    'ALTER TABLE `%s` ADD COLUMN `priority` INT UNSIGNED DEFAULT 0 AFTER `type`',
+                    'ALTER TABLE `%s` ADD COLUMN `highlighted` TINYINT(1) NOT NULL DEFAULT 0 AFTER `type`',
+                ),
+            ) );
+
+            $update_name = 'UPDATE `' . $notifications_table . '` SET `name` = %s WHERE `type` = %s AND name = \'\'';
+            foreach ( $notifications as $type => $value ) {
+                $wpdb->query( $wpdb->prepare( $update_name, $value['name'], $type ) );
+
+                switch ( substr( $type, 0, 6 ) ) {
+                    case 'staff_':
+                        $wpdb->query( sprintf( 'UPDATE `%s` SET `to_staff` = 1 WHERE `type` = "%s"', $notifications_table, $type ) );
+                        break;
+                    case 'client':
+                        $wpdb->query( sprintf( 'UPDATE `%s` SET `to_customer` = 1 WHERE `type` = "%s"', $notifications_table, $type ) );
+                        break;
+                }
+            }
+
+            $update_settings = 'UPDATE `' . $notifications_table . '` SET `settings` = %s WHERE id = %d';
+            $records = $wpdb->get_results( 'SELECT id, `settings`, `type` FROM `' . $notifications_table . '` WHERE `type` IN (\'appointment_start_time\', \'customer_birthday\', \'last_appointment\', \'ca_status_changed\', \'ca_created\')', ARRAY_A );
+            foreach ( $records as $record ) {
+                $new_settings = $default_settings;
+                if ( $record['settings'] != '[]' && $record['settings'] != '' ) {
+                    $current_settings = (array) json_decode( $record['settings'], true );
+                    switch ( $record['type'] ) {
+                        case 'appointment_start_time':
+                        case 'last_appointment':
+                            $set = $current_settings['existing_event_with_date_and_time'];
+                            $new_settings['option']       = $set['option'];
+                            $new_settings['offset_hours'] = $set['offset_hours'];
+                            $new_settings['at_hour']      = $set['at_hour'];
+                            $new_settings['offset_bidirectional_hours'] = $set['offset_bidirectional_hours'];
+                            if ( $record['type'] !== 'last_appointment' ) {
+                                if ( isset( $set['services']['any'] ) && $set['services']['any'] ) {
+                                    $new_settings['services']['any'] = 'any';
+                                } elseif ( isset( $set['services']['ids'] ) && is_array( $set['services']['ids'] ) && count( $set['services']['ids'] ) > 0 ) {
+                                    $new_settings['services']['any'] = 'selected';
+                                    $new_settings['services']['ids'] = $set['services']['ids'];
+                                }
+                            } else {
+                                $new_settings['status']   = $set['status'];
+                            }
+                            break;
+                        case 'staff_day_agenda':
+                            $set = $current_settings['existing_event_with_date_before'];
+                            $new_settings['at_hour'] = $set['at_hour'];
+                            $new_settings['offset_bidirectional_hours'] = $set['offset_bidirectional_hours'];
+                            break;
+                        case 'customer_birthday':
+                            $set = $current_settings['existing_event_with_date'];
+                            $new_settings['at_hour'] = $set['at_hour'];
+                            $new_settings['offset_bidirectional_hours'] = $set['offset_bidirectional_hours'];
+                            break;
+                        case 'ca_status_changed':
+                        case 'ca_created':
+                            $set = $current_settings['after_event'];
+                            $new_settings['status']       = $set['status'];
+                            $new_settings['option']       = $set['option'] - 1;
+                            $new_settings['offset_hours'] = $set['offset_hours'];
+                            $new_settings['at_hour']      = $set['at_hour'];
+                            $new_settings['offset_bidirectional_hours'] = $set['offset_bidirectional_hours'];
+                            if ( isset( $set['services']['any'] ) && $set['services']['any'] ) {
+                                $new_settings['services']['any'] = 'any';
+                            } elseif ( isset( $set['services']['ids'] ) && is_array( $set['services']['ids'] ) && count( $set['services']['ids'] ) > 0 ) {
+                                $new_settings['services']['any'] = 'selected';
+                                $new_settings['services']['ids'] = $set['services']['ids'];
+                            }
+                            break;
+                    }
+                }
+                $wpdb->query( $wpdb->prepare( $update_settings, json_encode( $new_settings ), $record['id'] ) );
+            }
+        } );
+
+        // WPML
+        $disposable_options[] = $this->disposable( __FUNCTION__ . '-2', function () use ( $self, $wpdb, $notifications_table, $notifications ) {
+            $records = $wpdb->get_results( $wpdb->prepare( 'SELECT id, `type`, `gateway` FROM `' . $notifications_table . '` WHERE COALESCE( `settings`, \'[]\' ) = \'[]\' AND `type` IN (' . implode( ', ', array_fill( 0, count( $notifications ), '%s' ) ) . ')', array_keys( $notifications ) ), ARRAY_A );
+            $strings = array();
+            foreach ( $records as $record ) {
+                $type = $record['type'];
+                if ( isset( $notifications[ $type ]['type'] ) && $type != $notifications[ $type ]['type'] ) {
+                    $key   = sprintf( '%s_%s_%d', $record['gateway'], $type, $record['id'] );
+                    $value = sprintf( '%s_%s_%d', $record['gateway'], $notifications[ $type ]['type'], $record['id'] );
+                    $strings[ $key ] = $value;
+                    if ( $record['gateway'] == 'email' ) {
+                        $strings[ $key . '_subject' ] = $value . '_subject';
+                    }
+                }
+            }
+            $self->renameL10nStrings( $strings, false );
+        } );
+
+        // Add settings for notifications
+        $disposable_options[] = $this->disposable( __FUNCTION__ . '-3', function () use ( $wpdb, $notifications_table, $notifications, $default_settings ) {
+            $combined_notifications = get_option( 'bookly_cst_combined_notifications', 'missing' );
+            if ( $combined_notifications === 'missing' ) {
+                $combined_notifications = (bool) $wpdb->query( 'SELECT 1 FROM `' . $notifications_table . '` WHERE `type` = \'new_booking_combined\' AND `active` = 1 LIMIT 1' );
+            }
+            $combined_notifications_disabled = (int) ! $combined_notifications;
+            $cron_reminder_times = get_option( 'bookly_cron_reminder_times' );
+            $insert_from_select  = 'INSERT INTO `' . $notifications_table . '` (`gateway`, `name`, `subject`, `message`, `to_staff`, `to_customer`, `to_admin`, `attach_ics`, `attach_invoice`, `active`,  `settings`, `type`) 
+                SELECT `gateway`, `name`, `subject`, `message`, `to_staff`, `to_customer`, `to_admin`, `attach_ics`, `attach_invoice`, %d, %s, %s
+                  FROM `' . $notifications_table . '` WHERE id = %d';
+            $update_settings     = 'UPDATE `' . $notifications_table . '` SET `type` = %s, `settings` = %s, `active` = %d WHERE id = %d';
+
+            $records = $wpdb->get_results( $wpdb->prepare( 'SELECT id, `type`, `gateway`, `message`, `subject`, `active`, `settings` FROM `' . $notifications_table . '` WHERE `type` IN (' . implode( ', ', array_fill( 0, count( $notifications ), '%s' ) ) . ')', array_keys( $notifications ) ), ARRAY_A );
+            foreach ( $records as $record ) {
+                if ( ! isset( $notifications[ $record['type'] ]['type'] )
+                    || $notifications[ $record['type'] ]['type'] == $record['type']
+                ) {
+                    continue;
+                }
+                if ( $record['settings'] != '[]' && $record['settings'] != '' ) {
+                    $settings = (array) json_decode( $record['settings'], true );
+                } else {
+                    $settings = $default_settings;
+                    $settings['services']['any'] = 'any';
+                    $settings['services']['ids'] = array();
+                }
+                $clone_type = null;
+                $new_type   = $notifications[ $record['type'] ]['type'];
+                $new_active = $record['active'];
+                if ( isset( $settings[ $new_type ]['services']['any'] ) && ! $settings[ $new_type ]['services']['any'] ) {
+                    $settings['services']['ids'] = $settings[ $new_type ]['services']['ids'];
+                    $settings['services']['any'] = 'selected';
+                }
+                switch ( $record['type'] ) {
+                    case 'client_approved_appointment':
+                        $settings['status'] = 'approved';
+                        $clone_type = ( $combined_notifications_disabled && $record['active'] ) ? 'ca_status_changed' : null;
+                        $new_active = $combined_notifications_disabled ? $record['active'] : 0;
+                        break;
+                    case 'client_birthday_greeting':
+                        $settings['at_hour'] = (int) $cron_reminder_times['client_birthday_greeting'];
+                        break;
+                    case 'client_cancelled_appointment':
+                        $settings['status'] = 'cancelled';
+                        $clone_type = ( $combined_notifications_disabled && $record['active'] ) ? 'new_booking' : null;
+                        break;
+                    case 'client_follow_up':
+                        $settings['option']  = 2;
+                        $settings['at_hour'] = (int) $cron_reminder_times['client_follow_up'];
+                        break;
+                    case 'client_pending_appointment':
+                        $settings['status'] = 'pending';
+                        $clone_type = ( $combined_notifications_disabled && $record['active'] ) ? 'ca_status_changed' : null;
+                        $new_active = $combined_notifications_disabled ? $record['active'] : 0;
+                        break;
+                    case 'client_rejected_appointment':
+                        $settings['status'] = 'rejected';
+                        $clone_type = ( $combined_notifications_disabled && $record['active'] ) ? 'new_booking' : null;
+                        break;
+                    case 'client_reminder':
+                        $settings['option'] = 2;
+                        $settings['offset_hours'] = 1;
+                        $settings['perform'] = 'before';
+                        $settings['at_hour'] = (int) $cron_reminder_times['client_reminder'];
+                        $settings['offset_bidirectional_hours'] = - 24;
+                        break;
+                    case 'client_reminder_1st':
+                        $settings['option'] = 1;
+                        $settings['offset_hours'] = (int) $cron_reminder_times['client_reminder_1st'];
+                        $settings['perform'] = 'before';
+                        $settings['at_hour'] = 18;
+                        $settings['offset_bidirectional_hours'] = - 24;
+                        break;
+                    case 'client_reminder_2nd':
+                        $settings['option'] = 1;
+                        $settings['offset_hours'] = (int) $cron_reminder_times['client_reminder_2nd'];
+                        $settings['perform'] = 'before';
+                        $settings['at_hour'] = 18;
+                        $settings['offset_bidirectional_hours'] = - 24;
+                        break;
+                    case 'client_reminder_3rd':
+                        $settings['option'] = 1;
+                        $settings['offset_hours'] = (int) $cron_reminder_times['client_reminder_3rd'];
+                        $settings['perform'] = 'before';
+                        $settings['at_hour'] = 18;
+                        $settings['offset_bidirectional_hours'] = - 24;
+                        break;
+                    case 'staff_agenda':
+                        $settings['option'] = 3;
+                        $settings['before_at_hour'] = (int) $cron_reminder_times['staff_agenda'];
+                        $settings['offset_before_hours'] = - 24;
+                        break;
+                    case 'staff_approved_appointment':
+                        $settings['status'] = 'approved';
+                        $clone_type = $record['active'] ? 'ca_status_changed' : null;
+                        break;
+                    case 'staff_cancelled_appointment':
+                        $settings['status'] = 'cancelled';
+                        $clone_type = $record['active'] ? 'new_booking' : null;
+                        break;
+                    case 'staff_pending_appointment':
+                        $settings['status'] = 'pending';
+                        $clone_type = $record['active'] ? 'ca_status_changed' : null;
+                        break;
+                    case 'staff_rejected_appointment':
+                        $settings['status'] = 'rejected';
+                        $clone_type = $record['active'] ? 'new_booking' : null;
+                        break;
+                }
+                if ( $clone_type ) {
+                    $wpdb->query( $wpdb->prepare( $insert_from_select, $new_active, json_encode( $settings ), $clone_type, $record['id'] ) );
+                    $name = sprintf( '%s_%s_%d', $record['gateway'], $clone_type, $wpdb->insert_id );
+                    do_action( 'wpml_register_single_string', 'bookly', $name, $record['message'] );
+                    if ( $record['gateway'] == 'email' ) {
+                        do_action( 'wpml_register_single_string', 'bookly', $name . '_subject', $record['subject'] );
+                    }
+                }
+                $wpdb->query( $wpdb->prepare( $update_settings, $new_type, json_encode( $settings ), $new_active, $record['id'] ) );
+            }
+        } );
+
+        delete_option( 'bookly_cron_reminder_times' );
+        foreach ( $disposable_options as $option_name ) {
+            delete_option( $option_name );
+        }
+    }
+
+    function update_16_2()
+    {
         global $wpdb;
 
         $this->dropTableForeignKeys( $this->getTableName( 'bookly_staff_schedule_items' ), array( 'staff_id' ) );
@@ -85,7 +352,6 @@ class Updater extends Base\Updater
 
     function update_16_0()
     {
-        /** @global \wpdb $wpdb */
         global $wpdb;
 
         $this->alterTables( array(

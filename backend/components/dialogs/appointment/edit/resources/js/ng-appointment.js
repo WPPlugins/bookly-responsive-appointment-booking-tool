@@ -1222,7 +1222,8 @@
                     with_options : 1,
                     exclude      : exclude,
                     extras       : extras,
-                    duration    : $scope.form.service.id ? undefined : $scope.dataSource.getServiceDuration()
+                    nop          : $scope.dataSource.getTotalNumberOfPersons(),
+                    duration     : $scope.form.service.id ? undefined : $scope.dataSource.getServiceDuration()
                 },
                 function (response) {
                     $scope.$apply(function($scope) {

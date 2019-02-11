@@ -1,7 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 use Bookly\Backend\Components\Controls\Buttons;
 ?>
-<form class="panel panel-default bookly-js-collapse bookly-js-invoice">
+<form class="panel panel-default bookly-js-invoice bookly-collapse">
     <div class="panel-heading" role="tab">
         <div class="checkbox bookly-margin-remove">
             <label>

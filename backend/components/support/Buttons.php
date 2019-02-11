@@ -4,6 +4,7 @@ namespace Bookly\Backend\Components\Support;
 use Bookly\Lib;
 use Bookly\Backend\Modules;
 use Bookly\Backend\Components\Notices;
+use Bookly\Backend\Components\Support\Lib\Urls;
 
 /**
  * Class Buttons
@@ -32,12 +33,10 @@ class Buttons extends Lib\Base\Component
             'module' => array( 'js/support.js' => array( 'bookly-alert.js', 'bookly-ladda.min.js', ), ),
         ) );
 
-        wp_localize_script( 'bookly-support.js', 'SupportL10n', array(
-            'csrf_token' => Lib\Utils\Common::getCsrfToken()
+        wp_localize_script( 'bookly-support.js', 'BooklySupportL10n', array(
+            'csrfToken' => Lib\Utils\Common::getCsrfToken(),
+            'featuresRequestUrl' => Lib\Utils\Common::prepareUrlReferrers( Urls::FEATURES_REQUEST_PAGE, 'notification_bar' ),
         ) );
-
-        // Documentation link.
-        $doc_link = 'http://api.booking-wp-plugin.com/go/' . $page_slug;
 
         $days_in_use = (int) ( ( time() - Lib\Plugin::getInstallationTime() ) / DAY_IN_SECONDS );
 
@@ -59,17 +58,27 @@ class Buttons extends Lib\Base\Component
             ->order( 'DESC' )
             ->limit( 10 )
             ->fetchArray();
-        $messages_new = Lib\Entities\Message::query( 'm' )->where( 'm.seen', '0' )->count();
+        $messages_new  = Lib\Entities\Message::query( 'm' )->where( 'm.seen', '0' )->count();
         $messages_link = Lib\Utils\Common::escAdminUrl( Modules\Messages\Ajax::pageSlug() );
+        $demo_links    = array();
+
+        if ( ! Lib\Config::proActive() ) {
+            // Empty key for page bookly-settings
+            $demo_links = array( '' => 'https://www.booking-wp-plugin.com/demo/full/wp-admin/admin.php?page=bookly-settings' );
+            foreach ( array( 'calendar', 'appointments', 'staff', 'services', 'customers', 'notifications', 'payments', 'appearance' ) as $slug ) {
+                $demo_links[ 'bookly-' . $slug ] = 'https://www.booking-wp-plugin.com/demo/full/wp-admin/admin.php?page=bookly-' . $slug;
+            }
+        }
 
         static::renderTemplate( 'buttons', compact(
-            'doc_link',
-            'show_contact_us_notice',
-            'show_feedback_notice',
             'current_user',
+            'demo_links',
             'messages',
+            'messages_link',
             'messages_new',
-            'messages_link'
+            'page_slug',
+            'show_contact_us_notice',
+            'show_feedback_notice'
         ) );
     }
 }

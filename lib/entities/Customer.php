@@ -181,6 +181,7 @@ class Customer extends Lib\Base\Entity
             ->leftJoin( 'Category', 'c', 'c.id = s.category_id' )
             ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id AND ss.location_id <=> a.location_id' )
             ->leftJoin( 'Payment', 'p', 'p.id = ca.payment_id' )
+            ->groupBy( 'COALESCE(compound_token, collaborative_token, ca.id)' )
             ->sortBy( 'start_date' )
             ->order( 'DESC' );
     }

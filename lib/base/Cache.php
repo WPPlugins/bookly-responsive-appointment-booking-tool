@@ -59,7 +59,7 @@ abstract class Cache
      *
      * @param string $key
      */
-    public static function deleteFromCache( $key)
+    public static function deleteFromCache( $key )
     {
         $called_class = get_called_class();
 

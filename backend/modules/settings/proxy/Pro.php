@@ -9,7 +9,6 @@ use Bookly\Lib;
  *
  * @method static void renderCancelAppointmentAction() Render Cancel appointment action.
  * @method static void renderCancellationConfirmationUrl() Render cancellation confirmation URL setting.
- * @method static void renderCombinedNotifications() Render combined notifications in customers setting.
  * @method static void renderCreateWordPressUser() Render Create WordPress user account for customers.
  * @method static void renderCustomersAddress() Render address settings in the customers tab.
  * @method static void renderCustomersBirthday() Render birthday settings in the customers tab.

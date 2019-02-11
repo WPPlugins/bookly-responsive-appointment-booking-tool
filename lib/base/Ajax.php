@@ -78,9 +78,10 @@ abstract class Ajax extends Component
         }
 
         switch ( $security ) {
-            case 'admin'     : return Lib\Utils\Common::isCurrentUserAdmin();
-            case 'user'      : return is_user_logged_in();
-            case 'anonymous' : return true;
+            case 'admin'      : return Lib\Utils\Common::isCurrentUserAdmin();
+            case 'supervisor' : return Lib\Utils\Common::isCurrentUserSupervisor();
+            case 'user'       : return is_user_logged_in();
+            case 'anonymous'  : return true;
         }
 
         return false;

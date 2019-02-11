@@ -37,9 +37,7 @@ use Bookly\Lib\Utils;
         <span class="ladda-label"><?php echo Utils\Common::getTranslatedOption( 'bookly_l10n_button_back' ) ?></span>
     </button>
     <?php if ( $show_cart_btn ) : ?>
-        <button class="bookly-go-to-cart bookly-js-go-to-cart bookly-round bookly-round-md ladda-button" data-style="zoom-in" data-spinner-size="30">
-            <span class="ladda-label"><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span>
-        </button>
+        <?php Proxy\Cart::renderButton() ?>
     <?php endif ?>
     <?php if ( $has_slots ) : ?>
     <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">

@@ -59,6 +59,9 @@ use Bookly\Lib as BooklyLib;
                             <div>{{sales}}</div>
                             <div class="bookly-shop-rating {{rating_class}}">{{rating}}</div>
                             <div class="bookly-margin-bottom-lg">{{reviews}}</div>
+                            <div class="{{demo_url_class}}">
+                                <a href="{{demo_url}}" class="btn btn-lg btn-primary bookly-margin-bottom-sm " target="_blank"><b><?php esc_html_e( 'Demo', 'bookly' ) ?></b></a>
+                            </div>
                             <a href="{{url}}" class="btn btn-lg {{url_class}}" target="_blank"><b>{{url_text}}</b></a><br/>
                         </div>
                     </div>

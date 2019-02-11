@@ -18,7 +18,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
         <div class="bookly-btn" id="bookly-login-button">
             <?php Editable::renderString( array( 'bookly_l10n_step_details_button_login' ) ) ?>
         </div>
-        <div class="fb-login-button" id="bookly-facebook-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" data-scope="public_profile,email" style="display:none"></div>
+        <?php Proxy\Pro::renderFacebookButton() ?>
     </div>
     <div class="bookly-details-step">
 
@@ -44,16 +44,16 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                     <input type="text" value="" maxlength="60" />
                 </div>
             </div>
-            <div class="bookly-form-group">
+            <div class="bookly-form-group bookly-js-details-phone">
                 <?php Editable::renderLabel( array( 'bookly_l10n_label_phone', 'bookly_l10n_required_phone', ) ) ?>
                 <div>
-                    <input type="text" class="<?php if ( get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ) : ?>bookly-user-phone<?php endif ?>" value="" />
+                    <input type="text" class="bookly-animate<?php if ( get_option( 'bookly_cst_phone_default_country' ) != 'disabled' ) : ?> bookly-user-phone<?php endif ?>" value="" />
                 </div>
             </div>
             <div class="bookly-form-group bookly-js-details-email<?php echo ! get_option( 'bookly_cst_first_last_name' ) && get_option( 'bookly_app_show_email_confirm' ) ? ' collapse' : '' ?>">
                 <?php Editable::renderLabel( array( 'bookly_l10n_label_email', 'bookly_l10n_required_email' ) ) ?>
                 <div>
-                    <input maxlength="40" type="text" value="" />
+                    <input class="bookly-animate" maxlength="40" type="text" value="" />
                 </div>
             </div>
             <div class="bookly-form-group bookly-js-details-confirm<?php echo ! get_option( 'bookly_cst_first_last_name' ) || ! get_option( 'bookly_app_show_email_confirm' ) ? ' collapse' : '' ?>">
@@ -109,4 +109,3 @@ use Bookly\Backend\Modules\Appearance\Proxy;
         </div>
     </div>
 </div>
-<?php Proxy\Pro::renderFacebookButton() ?>

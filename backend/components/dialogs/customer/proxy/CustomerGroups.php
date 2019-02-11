@@ -5,7 +5,7 @@ use Bookly\Lib;
 
 /**
  * @since Bookly 16.2
- * @deprecated
+ * @deprecated To be removed in the future.
  * Proxy file was moved
  */
 abstract class CustomerGroups extends Lib\Base\Proxy

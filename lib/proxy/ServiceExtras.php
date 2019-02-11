@@ -11,6 +11,7 @@ use Bookly\Lib;
  * @method static \BooklyServiceExtras\Lib\Entities\ServiceExtra[] findByIds( array $extras_ids ) Return extras entities.
  * @method static \BooklyServiceExtras\Lib\Entities\ServiceExtra[] findByServiceId( int $service_id ) Return extras entities.
  * @method static \BooklyServiceExtras\Lib\Entities\ServiceExtra[] findAll() Return all extras entities.
+ * @method static array getCAInfo( $ca_id, bool $translate, string $locale = null ) Get extras data for given customer appointment.
  * @method static array getInfo( array $extras, bool $translate, string $locale = null ) Get extras data for given json data of appointment.
  * @method static int   getTotalDuration( array $extras )  Get total duration of given extras.
  * @method static float getTotalPrice( array $extras )  Get total price if given extras.

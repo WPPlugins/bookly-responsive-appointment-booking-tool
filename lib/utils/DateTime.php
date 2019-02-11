@@ -1,6 +1,8 @@
 <?php
 namespace Bookly\Lib\Utils;
 
+use Bookly\Lib;
+
 /**
  * Class DateTime
  * @package Bookly\Lib\Utils
@@ -67,6 +69,28 @@ class DateTime
     public static function formatDateTime( $iso_date_time )
     {
         return self::formatDate( $iso_date_time ) . ' ' . self::formatTime( $iso_date_time );
+    }
+
+    /**
+     * Apply time zone & time zone offset to the given ISO date and time
+     * which is considered to be in WP time zone.
+     *
+     * @param         $iso_date_time
+     * @param string  $time_zone
+     * @param integer $offset Offset in minutes
+     * @param string  $format Output format
+     * @return false|string
+     */
+    public static function applyTimeZone( $iso_date_time, $time_zone, $offset, $format = 'Y-m-d H:i:s' )
+    {
+        $date = $iso_date_time;
+        if ( $time_zone !== null ) {
+            $date = date_format( date_timestamp_set( date_create( $time_zone ), date_create( $iso_date_time . ' ' . Lib\Config::getWPTimeZone() )->getTimestamp() ), $format );
+        } elseif ( $offset !== null ) {
+            $date = self::applyTimeZoneOffset( $iso_date_time, $offset, $format );
+        }
+
+        return $date;
     }
 
     /**

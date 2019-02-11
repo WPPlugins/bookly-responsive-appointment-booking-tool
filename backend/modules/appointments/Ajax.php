@@ -2,7 +2,6 @@
 namespace Bookly\Backend\Modules\Appointments;
 
 use Bookly\Lib;
-use Bookly\Lib\DataHolders\Booking as DataHolders;
 
 /**
  * Class Ajax
@@ -10,6 +9,14 @@ use Bookly\Lib\DataHolders\Booking as DataHolders;
  */
 class Ajax extends Lib\Base\Ajax
 {
+    /**
+     * @inheritdoc
+     */
+    protected static function permissions()
+    {
+        return array( '_default' => 'supervisor' );
+    }
+
     /**
      * Get list of appointments.
      */
@@ -216,9 +223,14 @@ class Ajax extends Lib\Base\Ajax
                     case Lib\Entities\CustomerAppointment::STATUS_APPROVED:
                         $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_CANCELLED );
                         break;
+                    default:
+                        $busy_statuses = (array) Lib\Proxy\CustomStatuses::prepareBusyStatuses( array() );
+                        if ( in_array( $ca->getStatus(), $busy_statuses ) ) {
+                            $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_CANCELLED );
+                        }
                 }
-                Lib\Notifications\Sender::sendSingle(
-                    DataHolders\Simple::create( $ca ),
+                Lib\Notifications\Booking\Sender::sendForCA(
+                    $ca,
                     null,
                     array( 'cancellation_reason' => self::parameter( 'reason' ) )
                 );

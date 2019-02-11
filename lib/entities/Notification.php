@@ -2,6 +2,8 @@
 namespace Bookly\Lib\Entities;
 
 use Bookly\Lib;
+use Bookly\Lib\DataHolders\Booking\Item;
+use Bookly\Lib\DataHolders\Notification\Settings;
 
 /**
  * Class Notification
@@ -9,19 +11,49 @@ use Bookly\Lib;
  */
 class Notification extends Lib\Base\Entity
 {
-    const TYPE_APPOINTMENT_START_TIME              = 'appointment_start_time';
-    const TYPE_CUSTOMER_BIRTHDAY                   = 'customer_birthday';
-    const TYPE_LAST_CUSTOMER_APPOINTMENT           = 'last_appointment';
-    const TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED = 'ca_status_changed';
-    const TYPE_CUSTOMER_APPOINTMENT_CREATED        = 'ca_created';
-    const TYPE_STAFF_DAY_AGENDA                    = 'staff_day_agenda';
-
+    const TYPE_APPOINTMENT_REMINDER                          = 'appointment_reminder';
+    const TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED           = 'ca_status_changed';
+    const TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED_RECURRING = 'ca_status_changed_recurring';
+    const TYPE_CUSTOMER_BIRTHDAY                             = 'customer_birthday';
+    const TYPE_CUSTOMER_NEW_WP_USER                          = 'customer_new_wp_user';
+    const TYPE_LAST_CUSTOMER_APPOINTMENT                     = 'last_appointment';
+    const TYPE_NEW_BOOKING                                   = 'new_booking';
+    const TYPE_NEW_BOOKING_RECURRING                         = 'new_booking_recurring';
+    const TYPE_NEW_BOOKING_COMBINED                          = 'new_booking_combined';
+    const TYPE_NEW_PACKAGE                                   = 'new_package';
+    const TYPE_PACKAGE_DELETED                               = 'package_deleted';
+    const TYPE_STAFF_DAY_AGENDA                              = 'staff_day_agenda';
+    const TYPE_STAFF_WAITING_LIST                            = 'staff_waiting_list';
+    /** @var array Human readable notification titles */
+    public static $titles;
+    /** @var array */
+    public static $type_ids;
+    /** @var array */
+    public static $icons;
+    protected static $table = 'bookly_notifications';
+    protected static $schema = array(
+        'id'             => array( 'format' => '%d' ),
+        'gateway'        => array( 'format' => '%s' ),
+        'type'           => array( 'format' => '%s' ),
+        'active'         => array( 'format' => '%d' ),
+        'name'           => array( 'format' => '%s' ),
+        'subject'        => array( 'format' => '%s' ),
+        'message'        => array( 'format' => '%s' ),
+        'to_staff'       => array( 'format' => '%d' ),
+        'to_customer'    => array( 'format' => '%d' ),
+        'to_admin'       => array( 'format' => '%d' ),
+        'attach_ics'     => array( 'format' => '%d' ),
+        'attach_invoice' => array( 'format' => '%d' ),
+        'settings'       => array( 'format' => '%s' ),
+    );
     /** @var  string */
     protected $gateway = 'email';
     /** @var  string */
     protected $type;
     /** @var  bool */
     protected $active = 0;
+    /** @var  string */
+    protected $name = '';
     /** @var  string */
     protected $subject = '';
     /** @var  string */
@@ -38,59 +70,8 @@ class Notification extends Lib\Base\Entity
     protected $attach_invoice = 0;
     /** @var  string json */
     protected $settings = '[]';
-
-    protected static $table = 'bookly_notifications';
-
-    protected static $schema = array(
-        'id'          => array( 'format' => '%d' ),
-        'gateway'     => array( 'format' => '%s' ),
-        'type'        => array( 'format' => '%s' ),
-        'active'      => array( 'format' => '%d' ),
-        'subject'     => array( 'format' => '%s' ),
-        'message'     => array( 'format' => '%s' ),
-        'to_staff'    => array( 'format' => '%d' ),
-        'to_customer' => array( 'format' => '%d' ),
-        'to_admin'    => array( 'format' => '%d' ),
-        'attach_ics'  => array( 'format' => '%d' ),
-        'attach_invoice' => array( 'format' => '%d' ),
-        'settings'    => array( 'format' => '%s' ),
-    );
-
-    /** @var array Human readable notification names */
-    public static $names;
-
-    /** @var array */
-    public static $type_ids;
-
-    /** @var array */
-    public static $bookly_notifications = array(
-        'email' => array(
-            'client_pending_appointment',
-            'client_approved_appointment',
-            'client_cancelled_appointment',
-            'client_rejected_appointment',
-            'staff_pending_appointment',
-            'staff_approved_appointment',
-            'staff_cancelled_appointment',
-            'staff_rejected_appointment',
-        ),
-        'sms'   => array(
-            'client_pending_appointment',
-            'client_approved_appointment',
-            'client_cancelled_appointment',
-            'client_rejected_appointment',
-            'staff_pending_appointment',
-            'staff_approved_appointment',
-            'staff_cancelled_appointment',
-            'staff_rejected_appointment',
-            'client_reminder',
-            'client_reminder_1st',
-            'client_reminder_2nd',
-            'client_reminder_3rd',
-            'client_follow_up',
-            'staff_agenda',
-        ),
-    );
+    /** @var Settings */
+    protected $settings_object;
 
     /**
      * Get type ID.
@@ -138,94 +119,79 @@ class Notification extends Lib\Base\Entity
     }
 
     /**
-     * Notification name.
+     * Notification title.
      *
      * @param $type
      * @return string
      */
-    public static function getName( $type = null )
+    public static function getTitle( $type = null )
     {
-        self::initNames();
+        self::initTitles();
 
-        if ( array_key_exists( $type, self::$names ) ) {
-            return self::$names[ $type ];
-        } else {
-            return __( 'Message', 'bookly' );
-        }
-    }
-
-    /**
-     * Notification name.
-     *
-     * @param $type
-     * @return string
-     */
-    public static function getNameIfExists( $type = null )
-    {
-        self::initNames();
-
-        if ( array_key_exists( $type, self::$names ) ) {
-            return self::$names[ $type ];
-        } else {
-            return false;
-        }
+        return array_key_exists( $type, self::$titles )
+            ? self::$titles[ $type ]
+            : __( 'Unknown', 'bookly' );
     }
 
     /**
      * Return custom notification codes.
      *
+     * @param $gateway
      * @return array
      */
-    public static function getCustomNotificationTypes()
+    public static function getTypes( $gateway = 'email' )
     {
-        return array(
-            self::TYPE_CUSTOMER_APPOINTMENT_CREATED,
-            self::TYPE_APPOINTMENT_START_TIME,
+        $types = array(
+            self::TYPE_NEW_BOOKING,
             self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
-            self::TYPE_LAST_CUSTOMER_APPOINTMENT,
-            self::TYPE_CUSTOMER_BIRTHDAY,
-            self::TYPE_STAFF_DAY_AGENDA,
         );
+        if ( $gateway == 'sms' ) {
+            $types[] = self::TYPE_APPOINTMENT_REMINDER;
+            $types[] = self::TYPE_LAST_CUSTOMER_APPOINTMENT;
+            $types[] = self::TYPE_STAFF_DAY_AGENDA;
+        }
+
+        $types = Lib\Proxy\Shared::prepareNotificationTypes( $types, $gateway );
+
+        return $types;
     }
 
     /**
-     * Fill array with notification names.
+     * Notification icon.
+     *
+     * @param $type
+     * @return string
      */
-    private static function initNames()
+    public static function getIcon( $type = null )
     {
-        if ( self::$names === null ) {
-            self::$names = array(
-                'client_approved_appointment'      => __( 'Notification to customer about approved appointment', 'bookly' ),
-                'client_approved_appointment_cart' => __( 'Notification to customer about approved appointments', 'bookly' ),
-                'client_cancelled_appointment'     => __( 'Notification to customer about cancelled appointment', 'bookly' ),
-                'client_rejected_appointment'      => __( 'Notification to customer about rejected appointment', 'bookly' ),
-                'client_follow_up'                 => __( 'Follow-up message in the same day after appointment (requires cron setup)', 'bookly' ),
-                'client_new_wp_user'               => __( 'Notification to customer about their WordPress user login details', 'bookly' ),
-                'client_pending_appointment'       => __( 'Notification to customer about pending appointment', 'bookly' ),
-                'client_pending_appointment_cart'  => __( 'Notification to customer about pending appointments', 'bookly' ),
-                'client_reminder'                  => __( 'Evening reminder to customer about next day appointment (requires cron setup)', 'bookly' ),
-                'client_reminder_1st'              => __( '1st reminder to customer about upcoming appointment (requires cron setup)', 'bookly' ),
-                'client_reminder_2nd'              => __( '2nd reminder to customer about upcoming appointment (requires cron setup)', 'bookly' ),
-                'client_reminder_3rd'              => __( '3rd reminder to customer about upcoming appointment (requires cron setup)', 'bookly' ),
-                'client_birthday_greeting'         => __( 'Customer birthday greeting (requires cron setup)', 'bookly' ),
-                'staff_agenda'                     => __( 'Evening notification with the next day agenda to staff member (requires cron setup)', 'bookly' ),
-                'staff_approved_appointment'       => __( 'Notification to staff member about approved appointment', 'bookly' ),
-                'staff_cancelled_appointment'      => __( 'Notification to staff member about cancelled appointment', 'bookly' ),
-                'staff_rejected_appointment'       => __( 'Notification to staff member about rejected appointment', 'bookly' ),
-                'staff_pending_appointment'        => __( 'Notification to staff member about pending appointment', 'bookly' ),
+        self::initIcons();
 
-                self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => __( 'Custom notification', 'bookly' ) .': ' .__( 'Event notification', 'bookly' ) . ' / ' . __( 'Status changed', 'bookly' ),
-                self::TYPE_CUSTOMER_APPOINTMENT_CREATED        => __( 'Custom notification', 'bookly' ) .': ' .__( 'Event notification', 'bookly' ) . ' / ' . __( 'New booking', 'bookly' ),
-                self::TYPE_APPOINTMENT_START_TIME              => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Appointment date and time', 'bookly' ),
-                self::TYPE_CUSTOMER_BIRTHDAY                   => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Customer\'s birthday', 'bookly' ),
-                self::TYPE_LAST_CUSTOMER_APPOINTMENT           => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Last client\'s appointment', 'bookly' ),
-                self::TYPE_STAFF_DAY_AGENDA                    => __( 'Custom notification', 'bookly' ) .': ' .__( 'Reminder notification', 'bookly' ) . ' / ' . __( 'Full day agenda', 'bookly' ),
+        return array_key_exists( $type, self::$icons )
+            ? self::$icons[ $type ]
+            : 'fa-question';
+    }
+
+    /**
+     * Fill array with notification titles.
+     */
+    private static function initTitles()
+    {
+        if ( self::$titles === null ) {
+            self::$titles = array(
+                self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => __( 'Notification about customer\'s appointment status change', 'bookly' ),
+                self::TYPE_NEW_BOOKING                         => __( 'New booking notification', 'bookly' ),
+                self::TYPE_NEW_BOOKING_COMBINED                => __( 'New booking combined notification', 'bookly' ),
+                self::TYPE_CUSTOMER_NEW_WP_USER                => __( 'New customer\'s WordPress user login details', 'bookly' ),
+                self::TYPE_APPOINTMENT_REMINDER                => __( 'Appointment reminder', 'bookly' ),
+                self::TYPE_CUSTOMER_BIRTHDAY                   => __( 'Customer\'s birthday greeting', 'bookly' ),
+                self::TYPE_LAST_CUSTOMER_APPOINTMENT           => __( 'Customer\'s last appointment notification', 'bookly' ),
+                self::TYPE_STAFF_DAY_AGENDA                    => __( 'Staff full day agenda', 'bookly' ),
 
                 /** @see \Bookly\Backend\Modules\Sms\Ajax::executeSendTestSms */
-                'test_message'                     => __( 'Test message', 'bookly' ),
+                'test_message'                                 => __( 'Test message', 'bookly' ),
             );
 
-            self::$names = Lib\Proxy\Shared::prepareNotificationNames( self::$names );
+            self::$titles = Lib\Proxy\Shared::prepareNotificationTitles( self::$titles );
         }
     }
 
@@ -237,40 +203,43 @@ class Notification extends Lib\Base\Entity
         if ( self::$type_ids === null ) {
             self::$type_ids = array(
                 /** @see \Bookly\Backend\Modules\Sms\Ajax::executeSendTestSms */
-                'test_message'                     => 0,
-
-                'client_approved_appointment'      => 1,
-                'client_approved_appointment_cart' => 2,
-                'client_cancelled_appointment'     => 3,
-                'client_follow_up'                 => 4,
-                'client_new_wp_user'               => 5,
-                'client_pending_appointment'       => 6,
-                'client_pending_appointment_cart'  => 7,
-                'client_reminder'                  => 8,
-                'staff_agenda'                     => 9,
-                'staff_approved_appointment'       => 10,
-                'staff_cancelled_appointment'      => 11,
-                'staff_pending_appointment'        => 12,
-                'client_rejected_appointment'      => 13,
-                'staff_rejected_appointment'       => 14,
-                'client_birthday_greeting'         => 15,
-                'client_reminder_1st'              => 16,
-                'client_reminder_2nd'              => 17,
-                'client_reminder_3rd'              => 18,
-
+                'test_message'                                 => 0,
+                self::TYPE_CUSTOMER_NEW_WP_USER                => 5,
                 self::TYPE_STAFF_DAY_AGENDA                    => 9,
+                self::TYPE_NEW_BOOKING_COMBINED                => 7,
                 self::TYPE_CUSTOMER_BIRTHDAY                   => 15,
-                self::TYPE_APPOINTMENT_START_TIME              => 19,
+                self::TYPE_APPOINTMENT_REMINDER                => 19,
                 self::TYPE_LAST_CUSTOMER_APPOINTMENT           => 20,
                 self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED => 21,
-                self::TYPE_CUSTOMER_APPOINTMENT_CREATED        => 22,
-
-                // Recurring Appointments add-on   => [31-38],
-                // Waiting List add-on             => [51-53],
-                // Packages add-on                 => [81-82],
+                self::TYPE_NEW_BOOKING                         => 22,
+                self::TYPE_STAFF_WAITING_LIST                  => 53,
+                self::TYPE_NEW_PACKAGE                         => 81,
+                self::TYPE_PACKAGE_DELETED                     => 83,
             );
+        }
+    }
 
-            self::$type_ids = Lib\Proxy\Shared::prepareNotificationTypeIds( self::$type_ids );
+    /**
+     * Fill array of icons.
+     */
+    private static function initIcons()
+    {
+        if ( self::$icons === null ) {
+            self::$icons = array(
+                self::TYPE_NEW_BOOKING                                   => 'fa-calendar-check',
+                self::TYPE_NEW_BOOKING_RECURRING                         => 'fa-calendar-alt',
+                self::TYPE_NEW_BOOKING_COMBINED                          => 'fa-cart-plus',
+                self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED           => 'fa-arrows-alt-h',
+                self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED_RECURRING => 'fa-exchange-alt',
+                self::TYPE_NEW_PACKAGE                                   => 'fa-calendar-plus',
+                self::TYPE_PACKAGE_DELETED                               => 'fa-calendar-minus',
+                self::TYPE_CUSTOMER_NEW_WP_USER                          => 'fa-user-plus',
+                self::TYPE_STAFF_WAITING_LIST                            => 'fa-list-ol',
+                self::TYPE_APPOINTMENT_REMINDER                          => 'fa-bell',
+                self::TYPE_LAST_CUSTOMER_APPOINTMENT                     => 'fa-award',
+                self::TYPE_CUSTOMER_BIRTHDAY                             => 'fa-gift',
+                self::TYPE_STAFF_DAY_AGENDA                              => 'fa-list-alt',
+            );
         }
     }
 
@@ -282,6 +251,45 @@ class Notification extends Lib\Base\Entity
     private function getWpmlName()
     {
         return sprintf( '%s_%s_%d', $this->getGateway(), $this->getType(), $this->getId() );
+    }
+
+    /**
+     * Get Settings object.
+     *
+     * @return Settings
+     */
+    public function getSettingsObject()
+    {
+        if ( $this->settings_object === null ) {
+            $this->settings_object = new Settings( $this );
+        }
+
+        return $this->settings_object;
+    }
+
+    /**
+     * Check whether notification settings match given order item.
+     *
+     * @param Item $item
+     * @return bool
+     */
+    public function matchesItemForClient( Item $item )
+    {
+        return $item->isSeries() == in_array( $this->getType(), array( self::TYPE_NEW_BOOKING_RECURRING, self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED_RECURRING ) ) &&
+               $this->getSettingsObject()->allowedServiceWithStatus( $item->getService(), $item->getCA()->getStatus() );
+    }
+
+    /**
+     * Check whether notification settings match given order item for staff.
+     *
+     * @param Item    $item
+     * @param Service $parent
+     * @return bool
+     */
+    public function matchesItemForStaff( Item $item, $parent )
+    {
+        return $item->isSeries() == in_array( $this->getType(), array( self::TYPE_NEW_BOOKING_RECURRING, self::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED_RECURRING ) ) &&
+               $this->getSettingsObject()->allowedServiceWithStatus( $item->getService(), $item->getCA()->getStatus(), $parent );
     }
 
     /**************************************************************************
@@ -376,6 +384,29 @@ class Notification extends Lib\Base\Entity
     public function setToAdmin( $to_admin )
     {
         $this->to_admin = $to_admin;
+
+        return $this;
+    }
+
+    /**
+     * Gets name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Sets name
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setName( $name )
+    {
+        $this->name = $name;
 
         return $this;
     }

@@ -86,7 +86,7 @@ class Ajax extends Lib\Base\Ajax
     protected static function hasAccess( $action )
     {
         if ( parent::hasAccess( $action ) ) {
-            if ( ! Lib\Utils\Common::isCurrentUserAdmin() ) {
+            if ( ! Lib\Utils\Common::isCurrentUserSupervisor() ) {
                 switch ( $action ) {
                     case 'saveCustomer':
                         return Lib\Entities\Staff::query()

@@ -318,7 +318,9 @@ span.bookly-round {
 .bookly-mobile-step-1 .bookly-nav-steps {
     display: none;
 }
-
+.bookly-chain-actions {
+    width: 50px;
+}
 /* Extras */
 .extra-attachment-image {
     max-width: 150px;
@@ -1469,3 +1471,18 @@ label.bookly-square {
 /* intlTelInput.js */
 .iti-flag{background-image:url("../images/flags.png");}
 @media only screen and (min-resolution: 2dppx){.iti-flag{background-image:url("../images/flags@2x.png")}}
+
+
+.bookly-radio-loading {
+    border: 2px solid lightgrey;
+    border-top: 2px solid black;
+    border-radius: 50%;
+    width: 13px;
+    height: 13px;
+    animation: bookly-radio-loading-spin 2s linear infinite;
+}
+
+@keyframes bookly-radio-loading-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

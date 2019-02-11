@@ -107,7 +107,7 @@ jQuery(function ($) {
                                     $wp_user_select.append($option);
                                 });
                                 $('#bookly-staff-' + staff_id).remove();
-                                $staff_count.text($categories_list.children().length);
+                                $staff_count.text($categories_list.find('.bookly-js-staff-members').children().length);
                                 $categories_list.find('li:first').click();
                             }
                         });
@@ -300,7 +300,7 @@ jQuery(function ($) {
     $name_input.on('keypress', function (e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) {
-            createNewStaff();
+            createNewStaff($(this).closest('.popover'));
         }
     });
 
@@ -345,7 +345,7 @@ jQuery(function ($) {
         $new_category_popover.popover('hide');
     });
 
-    function createNewStaff() {
+    function createNewStaff(e) {
         var ladda    = Ladda.create($('.bookly-js-save-form').get(0)),
             data     = {
                 action    : 'bookly_create_staff',
@@ -353,7 +353,7 @@ jQuery(function ($) {
                 full_name : $name_input.val(),
                 csrf_token: BooklyL10n.csrf_token
             },
-            category = $new_staff_member.data('category');
+            category = e.data('category');
         if (category != '') data.category_id = category;
         ladda.start();
         if (validateForm($new_form)) {
@@ -455,6 +455,9 @@ jQuery(function ($) {
         }).on('click', function (e) {
             // Prevent navigating to '#'.
             e.preventDefault();
+            $new_staff_member.each(function () {
+                $(this).popover('hide');
+            });
             if (BooklyL10n.pro_required == '1' && $staff_count.html() >= '1') {
                 booklyAlert({error: [BooklyL10n.limitation]});
                 return false;
@@ -462,11 +465,11 @@ jQuery(function ($) {
                 var $button = $(this);
                 $button.popover('toggle');
                 var $popover = $button.next('.popover').off();
-                $new_staff_member.data('category', $button.closest('.panel').data('category'));
+                $popover.data('category', $button.closest('.panel').data('category'));
                 $popover.find('.bookly-js-new-staff-fullname').focus();
                 $popover
                     .on('click', '.bookly-js-save-form', function () {
-                        createNewStaff();
+                        createNewStaff($popover);
                     })
                     .on('click', '.bookly-popover-close', function () {
                         $popover.popover('hide');

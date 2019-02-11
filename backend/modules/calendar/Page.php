@@ -75,7 +75,7 @@ class Page extends Lib\Base\Ajax
 
         // Staff.
         if ( Lib\Config::proActive() ) {
-            if ( Lib\Utils\Common::isCurrentUserAdmin() ) {
+            if ( Lib\Utils\Common::isCurrentUserSupervisor() ) {
                 $staff_members = Lib\Entities\Staff::query()
                     ->whereNot( 'visibility', 'archive' )
                     ->sortBy( 'position' )
@@ -144,6 +144,7 @@ class Page extends Lib\Base\Ajax
             '{extras_total_price}'=> 0,
             '{location_name}'     => '',
             '{location_info}'     => '',
+            '{number_of_persons}' => '',
             '{on_waiting_list}'   => '',
             '{payment_status}'    => '',
             '{payment_type}'      => '',
@@ -221,7 +222,7 @@ class Page extends Lib\Base\Ajax
             if ( $appointment['number_of_persons'] == $appointment['total_number_of_persons'] ) {
                 $participants = 'one';
                 $template     = $one_participant;
-                foreach ( array( 'client_name', 'client_first_name', 'client_last_name', 'client_phone', 'client_email' ) as $data_entry ) {
+                foreach ( array( 'client_name', 'client_first_name', 'client_last_name', 'client_phone', 'client_email', 'number_of_persons' ) as $data_entry ) {
                     if ( $appointment[ $data_entry ] ) {
                         $codes[ '{' . $data_entry . '}' ] = esc_html( $appointment[ $data_entry ] );
                     }

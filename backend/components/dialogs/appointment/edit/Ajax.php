@@ -28,6 +28,19 @@ class Ajax extends Lib\Base\Ajax
             ? Lib\Entities\Service::TYPE_PACKAGE
             : Lib\Entities\Service::TYPE_SIMPLE;
 
+        $statuses = Lib\Proxy\CustomStatuses::prepareAllStatuses( array(
+            Lib\Entities\CustomerAppointment::STATUS_PENDING,
+            Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+            Lib\Entities\CustomerAppointment::STATUS_CANCELLED,
+            Lib\Entities\CustomerAppointment::STATUS_REJECTED,
+            Lib\Entities\CustomerAppointment::STATUS_WAITLISTED,
+            Lib\Entities\CustomerAppointment::STATUS_DONE,
+        ) );
+        $status_items = array();
+        foreach ( $statuses as $status ) {
+            $status_items[ $status ] = Lib\Entities\CustomerAppointment::statusToString( $status );
+        }
+
         $result = array(
             'staff'                    => array(),
             'customers'                => array(),
@@ -38,14 +51,7 @@ class Ajax extends Lib\Base\Ajax
             'week_days'                => array(),
             'time_interval'            => Lib\Config::getTimeSlotLength(),
             'status'                   => array(
-                'items' => array(
-                    'pending'    => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_PENDING ),
-                    'approved'   => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_APPROVED ),
-                    'cancelled'  => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_CANCELLED ),
-                    'rejected'   => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_REJECTED ),
-                    'waitlisted' => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_WAITLISTED ),
-                    'done'       => Lib\Entities\CustomerAppointment::statusToString( Lib\Entities\CustomerAppointment::STATUS_DONE ),
-                ),
+                'items' => $status_items,
             ),
             'extras_consider_duration' => (int) Lib\Proxy\ServiceExtras::considerDuration( true ),
             'extras_multiply_nop'      => (int) get_option( 'bookly_service_extras_multiply_nop', 1 ),
@@ -53,7 +59,7 @@ class Ajax extends Lib\Base\Ajax
 
         // Staff list.
         $staff         = Lib\Entities\Staff::query()->findOne();
-        $staff_members = $staff ? Lib\Config::proActive() ? Lib\Entities\Staff::query()->find() : array( $staff ) : array();
+        $staff_members = $staff ? Lib\Config::proActive() ? Lib\Utils\Common::isCurrentUserSupervisor() ? Lib\Entities\Staff::query()->find() : Lib\Entities\Staff::query()->where( 'wp_user_id', get_current_user_id() )->find() : array( $staff ) : array();
         $postfix_archived = sprintf( ' (%s)', __( 'Archived', 'bookly' ) );
 
         $max_duration  = 0;
@@ -359,9 +365,10 @@ class Ajax extends Lib\Base\Ajax
         $total_number_of_persons = 0;
         $max_extras_duration = 0;
         foreach ( $customers as $i => $customer ) {
-            if ( $customer['status'] == Lib\Entities\CustomerAppointment::STATUS_PENDING ||
-                $customer['status'] == Lib\Entities\CustomerAppointment::STATUS_APPROVED
-            ) {
+            if ( in_array( $customer['status'], Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                Lib\Entities\CustomerAppointment::STATUS_APPROVED
+            ) ) ) ) {
                 $total_number_of_persons += $customer['number_of_persons'];
                 if ( $customer['extras_consider_duration'] ) {
                     $extras_duration = Lib\Proxy\ServiceExtras::getTotalDuration( $customer['extras'] );
@@ -436,8 +443,10 @@ class Ajax extends Lib\Base\Ajax
                                 ->leftJoin( 'CustomerAppointment', 'ca', 'ca.appointment_id = a.id' )
                                 ->where( 'a.staff_id', $staff_id )
                                 ->where( 'a.service_id', $service_id )
-                                ->whereNot( 'ca.status', Lib\Entities\CustomerAppointment::STATUS_CANCELLED )
-                                ->whereNot( 'ca.status', Lib\Entities\CustomerAppointment::STATUS_REJECTED )
+                                ->whereNotIn( 'ca.status', Lib\Proxy\CustomStatuses::prepareFreeStatuses( array(
+                                    Lib\Entities\CustomerAppointment::STATUS_CANCELLED,
+                                    Lib\Entities\CustomerAppointment::STATUS_REJECTED
+                                ) ) )
                                 ->where( 'start_date', $start_date )
                                 ->findOne();
 
@@ -490,7 +499,7 @@ class Ajax extends Lib\Base\Ajax
                     }
                     if ( $notification != 'no' ) {
                         foreach ( $orders as $order ) {
-                            Lib\Proxy\RecurringAppointments::sendRecurring( $order->getItem( 0 ), $order );
+                            Lib\Notifications\Booking\Sender::sendForOrder( $order, array(), $notification == 'all' );
                         }
                     }
                 }
@@ -535,17 +544,17 @@ class Ajax extends Lib\Base\Ajax
                     // Send notifications.
                     if ( $notification == 'changed_status' ) {
                         foreach ( $ca_status_changed as $ca ) {
-                            Lib\Notifications\Sender::sendSingle( DataHolders\Simple::create( $ca )->setAppointment( $appointment ) );
+                            Lib\Notifications\Booking\Sender::sendForCA( $ca, $appointment );
                         }
                     } elseif ( $notification == 'all' ) {
                         $ca_list = $appointment->getCustomerAppointments( true );
                         foreach ( $ca_status_changed as $ca ) {
                             // The value "just_created" was initialized for the objects of this array
-                            Lib\Notifications\Sender::sendSingle( DataHolders\Simple::create( $ca )->setAppointment( $appointment ) );
+                            Lib\Notifications\Booking\Sender::sendForCA( $ca, $appointment, array(), true );
                             unset( $ca_list[ $ca->getId() ] );
                         }
                         foreach ( $ca_list as $ca ) {
-                            Lib\Notifications\Sender::sendSingle( DataHolders\Simple::create( $ca )->setAppointment( $appointment ) );
+                            Lib\Notifications\Booking\Sender::sendForCA( $ca, $appointment, array(), true );
                         }
                     }
 
@@ -588,7 +597,10 @@ class Ajax extends Lib\Base\Ajax
 
         $max_extras_duration = 0;
         foreach ( $customers as $customer ) {
-            if ( in_array( $customer['status'], array( Lib\Entities\CustomerAppointment::STATUS_PENDING, Lib\Entities\CustomerAppointment::STATUS_APPROVED ) ) ) {
+            if ( in_array( $customer['status'], Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                Lib\Entities\CustomerAppointment::STATUS_APPROVED
+            ) ) ) ) {
                 if ( $customer['extras_consider_duration'] ) {
                     $extras_duration = Lib\Proxy\ServiceExtras::getTotalDuration( $customer['extras'] );
                     if ( $extras_duration > $max_extras_duration ) {

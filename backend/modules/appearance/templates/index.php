@@ -14,6 +14,11 @@ use Bookly\Backend\Modules\Appearance\Proxy;
         #bookly-tbs .bookly-cart .bookly-extras-cart-title {
             padding-left: 25px;
         }
+        #bookly-tbs .bookly-animate {
+            -webkit-transition: background-color 500ms ease-in;
+            -ms-transition: background-color 500ms ease-in;
+            transition: background-color 500ms ease-in;
+        }
     </style>
 <?php if ( trim( $custom_css ) ) : ?>
     <style type="text/css">
@@ -71,7 +76,14 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                     <?php if ( ! get_user_meta( get_current_user_id(), Lib\Plugin::getPrefix() . 'dismiss_appearance_notice', true ) ): ?>
                         <div class="alert alert-info alert-dismissible fade in bookly-margin-top-lg bookly-margin-bottom-remove" id="bookly-js-hint-alert" role="alert">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <p>
                             <?php esc_html_e( 'Click on the underlined text to edit.', 'bookly' ) ?>
+                            </p>
+                            <p><?php esc_html_e( 'How to publish this form on your web site?', 'bookly' ) ?>
+                            <br>
+                            <?php esc_html_e( 'Open the page where you want to add the booking form in page edit mode and click on the "Add Bookly booking form" button. Choose which fields you\'d like to keep or remove from the booking form. Click Insert, and the booking form will be added to the page.', 'bookly' ) ?>
+                            <a href="<?php echo Bookly\Lib\Utils\Common::prepareUrlReferrers( 'https://support.booking-wp-plugin.com/hc/en-us/articles/212800185-Publish-Booking-Form', 'appearance' ) ?>" target="_blank"><?php esc_html_e( 'Read more', 'bookly' ) ?></a>
+                            </p>
                         </div>
                     <?php endif ?>
 

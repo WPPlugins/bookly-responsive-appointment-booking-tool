@@ -266,11 +266,13 @@ class Scheduler
         $this->finder->start_dp        = $this->finder->client_start_dp->toWpTz();
         $this->finder->end_dp          = $this->finder->client_end_dp->toWpTz();
 
+        $last_date = new DatePoint( date_create() );
+        $last_date = $last_date->modify( Config::getMaximumAvailableDaysForBooking() . ' days' );
         $this->finder->load(
-            $skip_days_off
-                ? function ( DatePoint $dp, $srv_duration_days, $slots_count ) use ( $client_dp ) {
-                        return $dp->gte( $client_dp->modify( ( $srv_duration_days > 1 ? $srv_duration_days : 1 ) . ' days' ) ) && $slots_count == 0;
-                    }
+            $skip_days_off ?
+                function ( DatePoint $dp, $srv_duration_days, $slots_count ) use ( $client_dp, $last_date ) {
+                    return ( $dp->gte( $client_dp->modify( ( $srv_duration_days > 1 ? $srv_duration_days : 1 ) . ' days' ) ) && $slots_count == 0 ) || $dp->gte( $last_date );
+                }
                 : null
         );
 

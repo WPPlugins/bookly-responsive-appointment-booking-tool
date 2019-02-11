@@ -193,7 +193,7 @@ use Bookly\Backend\Modules\Appearance\Proxy;
         <div class="bookly-back-step bookly-js-back-step bookly-btn">
             <?php Editable::renderString( array( 'bookly_l10n_button_back' ) ) ?>
         </div>
-        <button class="bookly-go-to-cart bookly-js-go-to-cart bookly-round bookly-round-md ladda-button" data-style="zoom-in" data-spinner-size="30"><span class="ladda-label"><img src="<?php echo plugins_url( 'bookly-responsive-appointment-booking-tool/frontend/resources/images/cart.png' ) ?>" /></span></button>
+        <?php Proxy\Cart::renderButton() ?>
         <div class="<?php echo get_option( 'bookly_app_align_buttons_left' ) ? 'bookly-left' : 'bookly-right' ?>">
             <button class="bookly-time-next bookly-btn bookly-right ladda-button">
                 <span class="bookly-label">&gt;</span>

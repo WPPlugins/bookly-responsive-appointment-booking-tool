@@ -88,7 +88,7 @@ class StaffServices extends Lib\Base\Form
                         $staff_service->setCapacityMax( $this->data['capacity_max'][ $service_id ] );
                     }
                     if ( isset( $this->data['deposit'][ $service_id ] ) ) {
-                        $staff_service->setDeposit( $this->data['deposit'][ $service_id ] );
+                        $staff_service->setDeposit( preg_replace( '/[^0-9%.]/', '', str_replace( ',', '.', $this->data['deposit'][ $service_id ] ) ) );
                     }
                     $staff_service
                         ->setPrice( $this->data['price'][ $service_id ] )

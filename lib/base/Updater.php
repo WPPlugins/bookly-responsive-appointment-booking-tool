@@ -118,6 +118,26 @@ abstract class Updater extends Schema
     }
 
     /**
+     * This method allows one-time code execution,
+     * at multiple calls to the same update_ * method, (for example, in case of timeout)
+     *
+     * @param string   $token
+     * @param callable $callable
+     * @return string
+     */
+    protected function disposable( $token, $callable )
+    {
+        $disposable_key = strtolower( strtok( __NAMESPACE__, '\\' ) ) . '_disposable_' . $token . '_completed';
+        $completed      = (int) get_option( $disposable_key );
+        if ( $completed === 0 ) {
+            call_user_func( $callable );
+            add_option( $disposable_key, '1' );
+        }
+
+        return $disposable_key;
+    }
+
+    /**
      * Rename WPML strings.
      *
      * @param array $strings

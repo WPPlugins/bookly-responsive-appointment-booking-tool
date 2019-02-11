@@ -32,15 +32,15 @@ jQuery(function($) {
      * Init Columns.
      */
     var columns = [
-        { data: 'id' },
-        { data: 'created' },
-        { data: 'type' },
-        { data: 'customer', render: $.fn.dataTable.render.text() },
-        { data: 'provider' },
-        { data: 'service' },
-        { data: 'start_date' },
-        { data: 'paid' },
-        { data: 'status' },
+        { data: 'id', responsivePriority: 9 },
+        { data: 'created', responsivePriority: 8 },
+        { data: 'type', responsivePriority: 7 },
+        { data: 'customer', render: $.fn.dataTable.render.text(), responsivePriority: 6 },
+        { data: 'provider', responsivePriority: 4 },
+        { data: 'service', responsivePriority: 3 },
+        { data: 'start_date', responsivePriority: 2 },
+        { data: 'paid', responsivePriority: 1 },
+        { data: 'status', responsivePriority: 3 },
         {
             responsivePriority: 1,
             orderable: false,

@@ -438,7 +438,10 @@ class Cart
                             ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id AND ss.location_id <=> a.location_id' )
                             ->leftJoin( 'Service', 's', 's.id = a.service_id' )
                             ->where( 'a.staff_id', $staff_id )
-                            ->whereIn( 'ca.status', array( Entities\CustomerAppointment::STATUS_PENDING, Entities\CustomerAppointment::STATUS_APPROVED ) )
+                            ->whereIn( 'ca.status', Proxy\CustomStatuses::prepareBusyStatuses( array(
+                                Entities\CustomerAppointment::STATUS_PENDING,
+                                Entities\CustomerAppointment::STATUS_APPROVED
+                            ) ) )
                             ->groupBy( 'a.service_id, a.start_date' )
                             ->havingRaw( '%s > bound_left AND bound_right > %s AND ( total_number_of_persons + %d ) > ss.capacity_max',
                                 array( $bound_end->format( 'Y-m-d H:i:s' ), $bound_start->format( 'Y-m-d H:i:s' ), $cart_item->getNumberOfPersons() ) )

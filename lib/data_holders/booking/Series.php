@@ -179,6 +179,16 @@ class Series extends Item
     }
 
     /**
+     * @inheritdoc
+     */
+    public function setStatus( $status )
+    {
+        foreach ( $this->items as $item ) {
+            $item->setStatus( $status );
+        }
+    }
+
+    /**
      * Create new item.
      *
      * @param Lib\Entities\Series $series

@@ -14,15 +14,15 @@ msgstr "Takvim"
 
 #: 
 msgid "Appointments"
-msgstr "Randevular"
+msgstr "Birebirler"
 
 #: 
 msgid "Staff Members"
-msgstr "Uzmanlar"
+msgstr "Öğretmenler"
 
 #: 
 msgid "Services"
-msgstr "Servisler"
+msgstr "Dersler"
 
 #: 
 msgid "SMS Notifications"
@@ -34,7 +34,7 @@ msgstr "E-posta Bildirimleri"
 
 #: 
 msgid "Customers"
-msgstr "Müşteriler"
+msgstr "Öğrenciler"
 
 #: 
 msgid "Payments"
@@ -114,7 +114,7 @@ msgstr "sepetinizde ki toplam randevu sayısı"
 
 #: 
 msgid "booking number"
-msgstr "randevu numarası"
+msgstr "birebir numarası"
 
 #: 
 msgid "name of category"
@@ -130,35 +130,35 @@ msgstr "kişi sayısı"
 
 #: 
 msgid "date of service"
-msgstr "servis tarihi"
+msgstr "birebir tarihi"
 
 #: 
 msgid "info of service"
-msgstr "servis bilgisi"
+msgstr "birebir bilgisi"
 
 #: 
 msgid "name of service"
-msgstr "servis ismi"
+msgstr "birebir ismi"
 
 #: 
 msgid "price of service"
-msgstr "servis ücreti"
+msgstr "birebir ücreti"
 
 #: 
 msgid "time of service"
-msgstr "servis saati"
+msgstr "birebir saati"
 
 #: 
 msgid "info of staff"
-msgstr "uzman bilgisi"
+msgstr "öğretmen bilgisi"
 
 #: 
 msgid "name of staff"
-msgstr "uzman ismi"
+msgstr "öğretmen ismi"
 
 #: 
 msgid "total price of booking"
-msgstr "randevu için toplam ücret"
+msgstr "birebir için toplam ücret"
 
 #: 
 msgid "Edit custom CSS"
@@ -186,15 +186,15 @@ msgstr "Düzenlemek için altı çizili metine tıklayın"
 
 #: 
 msgid "Make selecting employee required"
-msgstr "Uzman seçimi zorunludur"
+msgstr "Öğretmen seçimi zorunludur"
 
 #: 
 msgid "Show service price next to employee name"
-msgstr "Uzman isminin yanında servis ücretini göster"
+msgstr "Öğretmen isminin yanında birebir ücretini göster"
 
 #: 
 msgid "Show service duration next to service name"
-msgstr "Uzman isminin yanında servis süresini göster"
+msgstr "Öğretmen isminin yanında birebir süresini göster"
 
 #: 
 msgid "Show calendar"
@@ -425,23 +425,7 @@ msgid "Send notifications"
 msgstr ""
 
 #: 
-msgid "If email or SMS notifications are enabled and you want customers or staff member to be notified about this appointment after saving, select appropriate option before clicking Save. With \"If status changed\" the notifications are sent to those customers whose status has just been changed. With \"To all customers\" the notifications are sent to everyone in the list."
-msgstr ""
-
-#: 
-msgid "If email or SMS notifications are enabled and you want customers or yourself to be notified about this appointment after saving, select appropriate option before clicking Save. With \"If status changed\" the notifications are sent to those customers whose status has just been changed. With \"To all customers\" the notifications are sent to everyone in the list."
-msgstr ""
-
-#: 
 msgid "Don't send"
-msgstr ""
-
-#: 
-msgid "If status changed"
-msgstr ""
-
-#: 
-msgid "To all customers"
 msgstr ""
 
 #: 
@@ -583,22 +567,6 @@ msgid "Message"
 msgstr ""
 
 #: 
-msgid "Send copy to administrators"
-msgstr ""
-
-#: 
-msgid "Sending time"
-msgstr ""
-
-#: 
-msgid "Set the time you want the notification to be sent."
-msgstr ""
-
-#: 
-msgid "%s before"
-msgstr ""
-
-#: 
 msgid "date of appointment"
 msgstr ""
 
@@ -727,10 +695,6 @@ msgid "staff agenda for next day"
 msgstr ""
 
 #: 
-msgid "Test Email Notifications"
-msgstr ""
-
-#: 
 msgid "To email"
 msgstr ""
 
@@ -791,15 +755,7 @@ msgid "If this option is enabled then the email address of the customer is used 
 msgstr ""
 
 #: 
-msgid "Single"
-msgstr ""
-
-#: 
 msgid "Codes"
-msgstr ""
-
-#: 
-msgid "Combined"
 msgstr ""
 
 #: 
@@ -1513,10 +1469,6 @@ msgid "Need help? Contact us here."
 msgstr ""
 
 #: 
-msgid "Contact Us"
-msgstr ""
-
-#: 
 msgid "Feedback"
 msgstr ""
 
@@ -1598,10 +1550,6 @@ msgstr ""
 
 #: 
 msgid "Any"
-msgstr ""
-
-#: 
-msgid "Hide this block"
 msgstr ""
 
 #: 
@@ -1720,31 +1668,6 @@ msgid "Booking cancellation"
 msgstr ""
 
 #: 
-msgid "Dear {client_name}.\n"
-"\n"
-"You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
-"\n"
-"Thank you for choosing our company.\n"
-"\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
-msgid "Hello.\n"
-"\n"
-"The following booking has been cancelled.\n"
-"\n"
-"Service: {service_name}\n"
-"Date: {appointment_date}\n"
-"Time: {appointment_time}\n"
-"Client name: {client_name}\n"
-"Client phone: {client_phone}\n"
-"Client email: {client_email}"
-msgstr ""
-
-#: 
 msgid "Booking rejection"
 msgstr ""
 
@@ -1809,57 +1732,6 @@ msgstr ""
 
 #: 
 msgid "Dear {client_name}.\n"
-"This is a confirmation that you have booked {service_name}.\n"
-"We are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
-msgid "Dear {client_name}.\n"
-"This is a confirmation that you have booked the following items:\n"
-"{cart_info}\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
-msgid "Hello.\n"
-"You have a new booking.\n"
-"Service: {service_name}\n"
-"Date: {appointment_date}\n"
-"Time: {appointment_time}\n"
-"Client name: {client_name}\n"
-"Client phone: {client_phone}\n"
-"Client email: {client_email}"
-msgstr ""
-
-#: 
-msgid "Dear {client_name}.\n"
-"You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
-msgid "Hello.\n"
-"The following booking has been cancelled.\n"
-"Service: {service_name}\n"
-"Date: {appointment_date}\n"
-"Time: {appointment_time}\n"
-"Client name: {client_name}\n"
-"Client phone: {client_phone}\n"
-"Client email: {client_email}"
-msgstr ""
-
-#: 
-msgid "Dear {client_name}.\n"
 "Your booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n"
 "Reason: {cancellation_reason}\n"
 "Thank you for choosing our company.\n"
@@ -1891,33 +1763,6 @@ msgid "Hello.\n"
 msgstr ""
 
 #: 
-msgid "Dear {client_name}.\n"
-"We would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
-msgid "Dear {client_name}.\n"
-"We would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
-msgid "Dear {client_name}.\n"
-"Thank you for choosing {company_name}. We hope you were satisfied with your {service_name}.\n"
-"Thank you and we look forward to seeing you again soon.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
 msgid "Dear {client_name},\n"
 "Happy birthday!\n"
 "We wish you all the best.\n"
@@ -1926,12 +1771,6 @@ msgid "Dear {client_name},\n"
 "{company_name}\n"
 "{company_phone}\n"
 "{company_website}"
-msgstr ""
-
-#: 
-msgid "Hello.\n"
-"Your agenda for tomorrow is:\n"
-"{next_day_agenda}"
 msgstr ""
 
 #: 
@@ -2264,10 +2103,6 @@ msgid "Notification to customer about pending appointment"
 msgstr ""
 
 #: 
-msgid "Notification to customer about pending appointments"
-msgstr ""
-
-#: 
 msgid "Evening reminder to customer about next day appointment (requires cron setup)"
 msgstr ""
 
@@ -2382,19 +2217,7 @@ msgid "Custom notification"
 msgstr ""
 
 #: 
-msgid "Appointment date and time"
-msgstr ""
-
-#: 
 msgid "Customer's birthday"
-msgstr ""
-
-#: 
-msgid "With status"
-msgstr ""
-
-#: 
-msgid "Instantly"
 msgstr ""
 
 #: 
@@ -2414,15 +2237,7 @@ msgid "before"
 msgstr ""
 
 #: 
-msgid "Recipient"
-msgstr ""
-
-#: 
 msgid "Custom"
-msgstr ""
-
-#: 
-msgid "New Notification"
 msgstr ""
 
 #: 
@@ -2462,10 +2277,6 @@ msgid "%s has reached the limit of bookings for this service"
 msgstr ""
 
 #: 
-msgid "Reminder notification"
-msgstr ""
-
-#: 
 msgid "URL Settings"
 msgstr ""
 
@@ -2498,14 +2309,6 @@ msgid "Attach ICS file"
 msgstr ""
 
 #: 
-msgid "Event notification"
-msgstr ""
-
-#: 
-msgid "Status changed"
-msgstr ""
-
-#: 
 msgid "New booking"
 msgstr ""
 
@@ -2515,10 +2318,6 @@ msgstr ""
 
 #: 
 msgid "Full day agenda"
-msgstr ""
-
-#: 
-msgid "Notification period"
 msgstr ""
 
 #: 
@@ -3556,29 +3355,6 @@ msgid "Dear {client_name}.\n"
 msgstr ""
 
 #: 
-msgid "New invoice #{invoice_number}"
-msgstr ""
-
-#: 
-msgid "Hello.\n"
-"\n"
-"Attached please find invoice #{invoice_number} for an appointment scheduled by {client_first_name} {client_last_name}"
-msgstr ""
-
-#: 
-msgid "Invoice for your appointment"
-msgstr ""
-
-#: 
-msgid "Dear {client_name}.\n"
-"Please download invoice #{invoice_number} here: {invoice_link}\n"
-"Thank you for choosing our company.\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
 msgid "New invoice"
 msgstr ""
 
@@ -4214,14 +3990,6 @@ msgid "Select what happens when customer clicks cancel appointment link. With \"
 msgstr ""
 
 #: 
-msgid "Combined notifications"
-msgstr ""
-
-#: 
-msgid "If combined notifications are enabled then your clients will receive single notification for entire booking instead of separate notification per each booked appointment (e.g. when cart is enabled). You will need to edit corresponding templates in Email and SMS Notifications."
-msgstr ""
-
-#: 
 msgid "Minimum time requirement prior to booking"
 msgstr ""
 
@@ -4433,18 +4201,6 @@ msgstr ""
 msgid "Dear {client_name}.\n"
 "\n"
 "We would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\n"
-"\n"
-"Thank you for choosing our company.\n"
-"\n"
-"{company_name}\n"
-"{company_phone}\n"
-"{company_website}"
-msgstr ""
-
-#: 
-msgid "Dear {client_name}.\n"
-"\n"
-"We would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\n"
 "\n"
 "Thank you for choosing our company.\n"
 "\n"
@@ -4871,10 +4627,6 @@ msgstr ""
 
 #: 
 msgid "recurring appointments"
-msgstr ""
-
-#: 
-msgid "Recurring"
 msgstr ""
 
 #: 
@@ -5413,10 +5165,6 @@ msgstr ""
 
 #: 
 msgid "total price without tax"
-msgstr ""
-
-#: 
-msgid "Note if you use price correction to change the service cost according to the payment gateway used, tax will not be calculated for the additional amount to the cost. If you need to report the exact tax amount to the payment system, do not use additional charge."
 msgstr ""
 
 #: 
@@ -6245,10 +5993,6 @@ msgid "Most occupied for period"
 msgstr ""
 
 #: 
-msgid "For service"
-msgstr ""
-
-#: 
 msgid "Skip"
 msgstr ""
 
@@ -6434,5 +6178,709 @@ msgstr ""
 
 #: 
 msgid "Export only active coupons"
+msgstr ""
+
+#: 
+msgid "This setting affects the cost of the booking according to the payment gateway used. Specify a percentage or fixed amount. Use minus (\"-\") sign for decrease/discount. Note that tax will not be calculated for the additional amount to the cost. If you need to report the exact tax amount to the payment system, do not use additional charge."
+msgstr ""
+
+#: 
+msgid "How to publish this form on your web site?"
+msgstr ""
+
+#: 
+msgid "Open the page where you want to add the booking form in page edit mode and click on the \"Add Bookly booking form\" button. Choose which fields you'd like to keep or remove from the booking form. Click Insert, and the booking form will be added to the page."
+msgstr ""
+
+#: 
+msgid "Notification to staff member about cancelled recurring appointment"
+msgstr ""
+
+#: 
+msgid "Notification to staff member about placing on waiting list for recurring appointment"
+msgstr ""
+
+#: 
+msgid "Get Bookly Pro"
+msgstr ""
+
+#: 
+msgid "Read more"
+msgstr ""
+
+#: 
+msgid "Demo"
+msgstr ""
+
+#: 
+msgid "payment status"
+msgstr ""
+
+#: 
+msgid "This setting affects the cost of the booking according to the payment gateway used. Specify a percentage or fixed amount. Use minus (\"-\") sign for decrease/discount."
+msgstr ""
+
+#: 
+msgid "You are going to delete appointment(s). Notifications will be sent in accordance with your settings."
+msgstr ""
+
+#: 
+msgid "View this page at Bookly Pro Demo"
+msgstr ""
+
+#: 
+msgid "Visit demo"
+msgstr ""
+
+#: 
+msgid "The demo is a version of Bookly Pro with all installed add-ons so that you can try all the features and capabilities of the system and then choose the most suitable configuration according to your business needs."
+msgstr ""
+
+#: 
+msgid "Proceed to demo"
+msgstr ""
+
+#: 
+msgid "General settings"
+msgstr ""
+
+#: 
+msgid "Save settings"
+msgstr ""
+
+#: 
+msgid "Test email notifications"
+msgstr ""
+
+#: 
+msgid "Email notifications"
+msgstr ""
+
+#: 
+msgid "General settings..."
+msgstr ""
+
+#: 
+msgid "State"
+msgstr ""
+
+#: 
+msgid "Delete..."
+msgstr ""
+
+#: 
+msgid "Dear {client_name}.\n"
+"\n"
+"You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
+"\n"
+"Thank you for choosing our company.\n"
+"\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+
+#: 
+msgid "Hello.\n"
+"\n"
+"The following booking has been cancelled.\n"
+"\n"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr ""
+
+#: 
+msgid "Dear {client_name}.\n"
+"This is a confirmation that you have booked {service_name}.\n"
+"We are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+
+#: 
+msgid "Hello.\n"
+"You have a new booking.\n"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr ""
+
+#: 
+msgid "Dear {client_name}.\n"
+"You have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+
+#: 
+msgid "Hello.\n"
+"The following booking has been cancelled.\n"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time}\n"
+"Client name: {client_name}\n"
+"Client phone: {client_phone}\n"
+"Client email: {client_email}"
+msgstr ""
+
+#: 
+msgid "Dear {client_name}.\n"
+"We would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+
+#: 
+msgid "Dear {client_name}.\n"
+"Thank you for choosing {company_name}. We hope you were satisfied with your {service_name}.\n"
+"Thank you and we look forward to seeing you again soon.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+
+#: 
+msgid "Hello.\n"
+"Your agenda for tomorrow is:\n"
+"{next_day_agenda}"
+msgstr ""
+
+#: 
+msgid "New booking combined notification"
+msgstr ""
+
+#: 
+msgid "New booking notification"
+msgstr ""
+
+#: 
+msgid "Notification about customer's appointment status change"
+msgstr ""
+
+#: 
+msgid "Appointment reminder"
+msgstr ""
+
+#: 
+msgid "New customer's WordPress user login details"
+msgstr ""
+
+#: 
+msgid "Customer's birthday greeting"
+msgstr ""
+
+#: 
+msgid "Customer's last appointment notification"
+msgstr ""
+
+#: 
+msgid "Staff full day agenda"
+msgstr ""
+
+#: 
+msgid "New recurring booking notification"
+msgstr ""
+
+#: 
+msgid "Notification about recurring appointment status changes"
+msgstr ""
+
+#: 
+msgid "Unknown"
+msgstr ""
+
+#: 
+msgid "Save administrator phone"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying staff calendar"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying staff details"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying staff services"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying staff schedule"
+msgstr ""
+
+#: 
+msgid "Special days"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying staff special days"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying staff days off"
+msgstr ""
+
+#: 
+msgid "Special hours"
+msgstr ""
+
+#: 
+msgid "Fields"
+msgstr ""
+
+#: 
+msgid "read only"
+msgstr ""
+
+#: 
+msgid "Customer cabinet"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying customer cabinet"
+msgstr ""
+
+#: 
+msgid "show"
+msgstr ""
+
+#: 
+msgid "Custom field"
+msgstr ""
+
+#: 
+msgid "Customer information"
+msgstr ""
+
+#: 
+msgid "Quick search notifications"
+msgstr ""
+
+#: 
+msgid "To generate an invoice you should fill in company information in Bookly > SMS Notifications > Send invoice."
+msgstr ""
+
+#: 
+msgid "enable"
+msgstr ""
+
+#: 
+msgid "disable"
+msgstr ""
+
+#: 
+msgid "Edit..."
+msgstr ""
+
+#: 
+msgid "Scheduled notifications retry period"
+msgstr ""
+
+#: 
+msgid "Test email notifications..."
+msgstr ""
+
+#: 
+msgid "Notification settings"
+msgstr ""
+
+#: 
+msgid "Enter notification name which will be displayed in the list."
+msgstr ""
+
+#: 
+msgid "Choose whether notification is enabled and sending messages or it is disabled and no messages are sent until you activate the notification."
+msgstr ""
+
+#: 
+msgid "Recipients"
+msgstr ""
+
+#: 
+msgid "Choose who will receive this notification."
+msgstr ""
+
+#: 
+msgid "Select the type of event at which the notification is sent."
+msgstr ""
+
+#: 
+msgid "Instant notifications"
+msgstr ""
+
+#: 
+msgid "Scheduled notifications (require cron setup)"
+msgstr ""
+
+#: 
+msgid "This notification is sent once for a booking made by a customer and includes all cart items."
+msgstr ""
+
+#: 
+msgid "Save notification"
+msgstr ""
+
+#: 
+msgid "Appointment status"
+msgstr ""
+
+#: 
+msgid "Select what status an appointment should have for the notification to be sent."
+msgstr ""
+
+#: 
+msgid "Choose whether notification should be sent for specific services only or not."
+msgstr ""
+
+#: 
+msgid "Body"
+msgstr ""
+
+#: 
+msgid "Sms"
+msgstr ""
+
+#: 
+msgid "New sms notification"
+msgstr ""
+
+#: 
+msgid "Edit sms notification"
+msgstr ""
+
+#: 
+msgid "Create notification"
+msgstr ""
+
+#: 
+msgid "New notification..."
+msgstr ""
+
+#: 
+msgid "If you have added a new customer to this appointment or changed the appointment status for an existing customer, and for these records you want the corresponding email or SMS notifications to be sent to their recipients, select the \"Send if new or status changed\" option before clicking Save. You can also send notifications as if all customers were added as new by selecting \"Send as for new\"."
+msgstr ""
+
+#: 
+msgid "Send if new or status changed"
+msgstr ""
+
+#: 
+msgid "Send as for new"
+msgstr ""
+
+#: 
+msgid "New email notification"
+msgstr ""
+
+#: 
+msgid "Edit email notification"
+msgstr ""
+
+#: 
+msgid "Contact us"
+msgstr ""
+
+#: 
+msgid "Booking form"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying booking form"
+msgstr ""
+
+#: 
+msgid "Form fields"
+msgstr ""
+
+#: 
+msgid "Default value for location"
+msgstr ""
+
+#: 
+msgid "Default value for category"
+msgstr ""
+
+#: 
+msgid "Default value for service"
+msgstr ""
+
+#: 
+msgid "Default value for employee"
+msgstr ""
+
+#: 
+msgid "hide"
+msgstr ""
+
+#: 
+msgid "Notification about new package creation"
+msgstr ""
+
+#: 
+msgid "Notification about package deletion"
+msgstr ""
+
+#: 
+msgid "Packages list"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying packages list"
+msgstr ""
+
+#: 
+msgid "Dear {client_name}.\n"
+"This is a confirmation that you have booked the following items:\n"
+"{cart_info}\n"
+"Thank you for choosing our company.\n"
+"{company_name}\n"
+"{company_phone}\n"
+"{company_website}"
+msgstr ""
+
+#: 
+msgid "Notification to customer about pending appointments"
+msgstr ""
+
+#: 
+msgid "Use drag & drop to shift employees between categories and change their position in a list. The order of staff members will be displayed at the frontend the same way you configure it here."
+msgstr ""
+
+#: 
+msgid "Cancellation confirmation"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying cancellation confirmation"
+msgstr ""
+
+#: 
+msgid "Appointments list"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying appointments list"
+msgstr ""
+
+#: 
+msgid "Custom fields"
+msgstr ""
+
+#: 
+msgid "Notification for staff member to set up appointment from waiting list"
+msgstr ""
+
+#: 
+msgid "Add service"
+msgstr ""
+
+#: 
+msgid "Custom statuses"
+msgstr ""
+
+#: 
+msgid "Add status"
+msgstr ""
+
+#: 
+msgid "Free/Busy"
+msgstr ""
+
+#: 
+msgid "New Status"
+msgstr ""
+
+#: 
+msgid "Edit Status"
+msgstr ""
+
+#: 
+msgid "Free/busy"
+msgstr ""
+
+#: 
+msgid "If you select busy, then a customer with this status will occupy a place in appointment. If you select free, then a place will be considered as free."
+msgstr ""
+
+#: 
+msgid "Free"
+msgstr ""
+
+#: 
+msgid "Busy"
+msgstr ""
+
+#: 
+msgid "No statuses found."
+msgstr ""
+
+#: 
+msgid "Custom Statuses"
+msgstr ""
+
+#: 
+msgid "Staff ratings"
+msgstr ""
+
+#: 
+msgid "A custom block for displaying staff ratings"
+msgstr ""
+
+#: 
+msgid "Hide comment"
+msgstr ""
+
+#: 
+msgid "Outlook Calendar event"
+msgstr ""
+
+#: 
+msgid "Outlook Calendar integration"
+msgstr ""
+
+#: 
+msgid "Synchronize staff member appointments with Outlook Calendar."
+msgstr ""
+
+#: 
+msgid "Please configure Outlook Calendar <a href=\"%s\">settings</a> first"
+msgstr ""
+
+#: 
+msgid "Important: Your website must use <b>HTTPS</b>. The Outlook Calendar API will not work with your website if there is no valid SSL certificate installed on your web server."
+msgstr ""
+
+#: 
+msgid "To find your Application ID and Application Secret, do the following:"
+msgstr ""
+
+#: 
+msgid "Navigate to the <a href=\"%s\" target=\"_blank\">Microsoft App Registration Portal</a>."
+msgstr ""
+
+#: 
+msgid "Sign in with either a personal or work or school Microsoft account. If you don't have either, sign up for a new personal account."
+msgstr ""
+
+#: 
+msgid "Choose <b>Add an app</b>. Enter a name for the app and choose <b>Create application</b>. The registration page displays, listing the properties of your app."
+msgstr ""
+
+#: 
+msgid "Copy the <b>Application ID</b>. This is the unique identifier for your app. You'll use it in the form below on this page."
+msgstr ""
+
+#: 
+msgid "Under <b>Application Secrets</b>, choose <b>Generate New Password</b>. Copy the app secret from the <b>New password generated</b> dialog box before closing it. You'll use the secret in the form below on this page."
+msgstr ""
+
+#: 
+msgid "Under <b>Platforms</b>, choose <b>Add Platform</b>, and select <b>Web</b>. In <b>Redirect URLs</b> enter the <b>Redirect URI</b> found below on this page."
+msgstr ""
+
+#: 
+msgid "Under <b>Microsoft Graph Permissions</b>, choose <b>Add</b> next to <b>Delegated Permissions</b>, and select <b>Calendars.ReadWrite</b> in the <b>Select Permission</b> dialog box. Close it by clicking <b>Ok</b>."
+msgstr ""
+
+#: 
+msgid "<b>Save</b> your changes."
+msgstr ""
+
+#: 
+msgid "Application ID"
+msgstr ""
+
+#: 
+msgid "The Application ID obtained from the Microsoft App Registration Portal."
+msgstr ""
+
+#: 
+msgid "Application secret"
+msgstr ""
+
+#: 
+msgid "The Application Secret password obtained from the Microsoft App Registration Portal."
+msgstr ""
+
+#: 
+msgid "Enter this URL as a Redirect URLs in the Microsoft App Registration Portal."
+msgstr ""
+
+#: 
+msgid "With \"One-way\" sync Bookly pushes new appointments and any further changes to Outlook Calendar. With \"Two-way front-end only\" sync Bookly will additionally fetch events from Outlook Calendar and remove corresponding time slots before displaying the Time step of the booking form (this may lead to a delay when users click Next to get to the Time step). With \"Two-way\" sync all bookings created in Bookly Calendar will be automatically copied to Outlook Calendar and vice versa."
+msgstr ""
+
+#: 
+msgid "Copy Outlook Calendar event titles"
+msgstr ""
+
+#: 
+msgid "If enabled then titles of Outlook Calendar events will be copied to Bookly appointments. If disabled, a standard title \"Outlook Calendar event\" will be used."
+msgstr ""
+
+#: 
+msgid "If there is a lot of events in Outlook Calendar sometimes this leads to a lack of memory in PHP when Bookly tries to fetch all events. You can limit the number of fetched events here."
+msgstr ""
+
+#: 
+msgid "Configure what information should be placed in the title of Outlook Calendar event. Available codes are {service_name}, {staff_name} and {client_names}."
+msgstr ""
+
+#: 
+msgid "Outlook Calendar"
+msgstr ""
+
+#: 
+msgid "Synchronize with Outlook Calendar"
+msgstr ""
+
+#: 
+msgid "Forms"
+msgstr ""
+
+#: 
+msgid "Short code"
+msgstr ""
+
+#: 
+msgid "Select form"
+msgstr ""
+
+#: 
+msgid "Add Bookly forms"
+msgstr ""
+
+#: 
+msgid "Value"
+msgstr ""
+
+#: 
+msgid "New form"
+msgstr ""
+
+#: 
+msgid "Edit form"
+msgstr ""
+
+#: 
+msgid "New form..."
+msgstr ""
+
+#: 
+msgid "Forms editing available on page"
 msgstr ""
 

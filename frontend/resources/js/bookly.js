@@ -105,6 +105,8 @@
                             form_id      : params.form_id,
                             deposit_full : $(this).val()
                         };
+                        $(this).hide();
+                        $(this).prev().css('display', 'inline-block');
                         $.ajax({
                             type       : 'POST',
                             url        : BooklyL10n.ajaxurl,
@@ -2981,25 +2983,21 @@
                         }
                     });
 
-                    $container.on('click', '.bookly-js-mobile-step-1 .bookly-js-actions button', function () {
-                        switch ($(this).data('action')) {
-                            case 'plus':
-                                var $new_chain = $chain_item_draft.clone();
-                                $chain_item_draft.find('select').each(function (i, select) {
-                                    $new_chain.find('select:eq(' + i + ')').val(select.value);
-                                });
-                                $('.bookly-js-chain-item:last', $container)
-                                    .after(
-                                        $new_chain
-                                            .data('chain_key', ++ last_chain_key)
-                                            .removeClass('bookly-js-draft')
-                                            .css('display', 'table')
-                                    );
-                                break;
-                            case 'drop':
-                                $(this).closest('.bookly-js-chain-item').remove();
-                                break;
-                        }
+                    $container.on('click', '.bookly-js-mobile-step-1 .bookly-js-add-chain', function () {
+                        var $new_chain = $chain_item_draft.clone();
+                        $chain_item_draft.find('select').each(function (i, select) {
+                            $new_chain.find('select:eq(' + i + ')').val(select.value);
+                        });
+                        $('.bookly-js-chain-item:last', $container)
+                            .after(
+                                $new_chain
+                                    .data('chain_key', ++ last_chain_key)
+                                    .removeClass('bookly-js-draft')
+                                    .css('display', 'table')
+                            );
+                    });
+                    $container.on('click', '.bookly-js-mobile-step-1 .bookly-js-actions button[data-action="drop"]', function () {
+                        $(this).closest('.bookly-js-chain-item').remove();
                     });
 
                     // change week days

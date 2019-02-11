@@ -158,6 +158,16 @@ abstract class Common
     }
 
     /**
+     * Check whether the current user is supervisor or not.
+     *
+     * @return bool
+     */
+    public static function isCurrentUserSupervisor()
+    {
+        return current_user_can( 'manage_options' ) || current_user_can( 'manage_bookly_appointments' );
+    }
+
+    /**
      * @param int $duration
      * @return array
      */

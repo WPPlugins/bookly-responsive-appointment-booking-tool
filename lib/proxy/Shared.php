@@ -18,14 +18,11 @@ use Bookly\Lib;
  * @method static Lib\Query prepareCaSeStQuery( Lib\Query $query ) Prepare CaSeSt query
  * @method static array  prepareCategoryServiceStaffLocation( array $location_data, array $row ) Prepare Category Service Staff Location data by row
  * @method static array  prepareCategoryService( array $result, array $row ) Prepare Category Service data by row
- * @method static void   prepareNotificationCodesForOrder( Lib\Notifications\Codes $codes ) Prepare codes for replacing in notifications
- * @method static array  prepareNotificationNames( array $names ) Prepare notification names.
- * @method static array  prepareNotificationTypeIds( array $type_ids ) Prepare notification type IDs.
+ * @method static array  prepareNotificationTitles( array $titles ) Prepare notification titles.
+ * @method static array  prepareNotificationTypes( array $types, string $gateway ) Prepare notification type IDs.
  * @method static array  preparePaymentDetails( array $details, Lib\DataHolders\Booking\Order $order, Lib\CartInfo $cart_info ) Add info about payment
- * @method static array  prepareReplaceCodes( array $codes, Lib\Notifications\Codes $notification_codes, $format ) Replacing on booking steps
  * @method static Lib\Query prepareStaffServiceQuery( Lib\Query $query ) Prepare StaffService query for Finder.
  * @method static string prepareStatement( string $value, string $statement, string $table ) Prepare default value for sql statement.
- * @method static Lib\Notifications\Codes prepareTestNotificationCodes( Lib\Notifications\Codes $codes ) Prepare codes for testing email templates
  * @method static void   renderAdminNotices( \bool $bookly_page ) Render admin notices from add-ons.
  * @method static bool   showPaymentSpecificPrices( bool $show ) Whether to show specific price for each payment system.
  */

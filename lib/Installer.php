@@ -1,13 +1,17 @@
 <?php
 namespace Bookly\Lib;
 
+use Bookly\Lib\Entities\Notification;
+use Bookly\Lib\DataHolders\Notification\Settings;
+
 /**
  * Class Installer
  * @package Bookly
  */
 class Installer extends Base\Installer
 {
-    protected $notifications;
+    /** @var array */
+    protected $notifications = array();
 
     /**
      * Constructor.
@@ -17,193 +21,183 @@ class Installer extends Base\Installer
         // l10n.
         load_plugin_textdomain( 'bookly', false, Plugin::getSlug() . '/languages' );
 
-        /*
-         * Notifications email & sms.
-         */
-        $this->notifications = array(
-            array(
-                'gateway' => 'email',
-                'type'    => 'client_pending_appointment',
-                'subject' => __( 'Your appointment information', 'bookly' ),
-                'message' => wpautop( __( "Dear {client_name}.\n\nThis is a confirmation that you have booked {service_name}.\n\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'client_pending_appointment_cart',
-                'subject' => __( 'Your appointment information', 'bookly' ),
-                'message' => wpautop( __( "Dear {client_name}.\n\nThis is a confirmation that you have booked the following items:\n\n{cart_info}\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'staff_pending_appointment',
-                'subject' => __( 'New booking information', 'bookly' ),
-                'message' => wpautop( __( "Hello.\n\nYou have a new booking.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'client_approved_appointment',
-                'subject' => __( 'Your appointment information', 'bookly' ),
-                'message' => wpautop( __( "Dear {client_name}.\n\nThis is a confirmation that you have booked {service_name}.\n\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'client_approved_appointment_cart',
-                'subject' => __( 'Your appointment information', 'bookly' ),
-                'message' => wpautop( __( "Dear {client_name}.\n\nThis is a confirmation that you have booked the following items:\n\n{cart_info}\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'staff_approved_appointment',
-                'subject' => __( 'New booking information', 'bookly' ),
-                'message' => wpautop( __( "Hello.\n\nYou have a new booking.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'client_cancelled_appointment',
-                'subject' => __( 'Booking cancellation', 'bookly' ),
-                'message' => wpautop( __( "Dear {client_name}.\n\nYou have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'staff_cancelled_appointment',
-                'subject' => __( 'Booking cancellation', 'bookly' ),
-                'message' => wpautop( __( "Hello.\n\nThe following booking has been cancelled.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'client_rejected_appointment',
-                'subject' => __( 'Booking rejection', 'bookly' ),
-                'message' => wpautop( __( "Dear {client_name}.\n\nYour booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n\nReason: {cancellation_reason}\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'email',
-                'type'    => 'staff_rejected_appointment',
-                'subject' => __( 'Booking rejection', 'bookly' ),
-                'message' => wpautop( __( "Hello.\n\nThe following booking has been rejected.\n\nReason: {cancellation_reason}\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_pending_appointment',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nThis is a confirmation that you have booked {service_name}.\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_pending_appointment_cart',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nThis is a confirmation that you have booked the following items:\n{cart_info}\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'staff_pending_appointment',
-                'subject' => '',
-                'message' => __( "Hello.\nYou have a new booking.\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_approved_appointment',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nThis is a confirmation that you have booked {service_name}.\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_approved_appointment_cart',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nThis is a confirmation that you have booked the following items:\n{cart_info}\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'staff_approved_appointment',
-                'subject' => '',
-                'message' => __( "Hello.\nYou have a new booking.\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_cancelled_appointment',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nYou have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'staff_cancelled_appointment',
-                'subject' => '',
-                'message' => __( "Hello.\nThe following booking has been cancelled.\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_rejected_appointment',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nYour booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\nReason: {cancellation_reason}\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'staff_rejected_appointment',
-                'subject' => '',
-                'message' => __( "Hello.\nThe following booking has been rejected.\nReason: {cancellation_reason}\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
-                'active'  => 1,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_reminder',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nWe would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 0,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_reminder_1st',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nWe would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 0,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_reminder_2nd',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nWe would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 0,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'client_reminder_3rd',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nWe would like to remind you that you have booked {service_name} on {appointment_date} at {appointment_time}. We are waiting for you at {company_address}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 0,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    =>'client_follow_up',
-                'subject' => '',
-                'message' => __( "Dear {client_name}.\nThank you for choosing {company_name}. We hope you were satisfied with your {service_name}.\nThank you and we look forward to seeing you again soon.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
-                'active'  => 0,
-            ),
-            array(
-                'gateway' => 'sms',
-                'type'    => 'staff_agenda',
-                'subject' => '',
-                'message' => __( "Hello.\nYour agenda for tomorrow is:\n{next_day_agenda}", 'bookly' ),
-                'active'  => 0,
-            ),
+        // Notifications email & sms.
+        $default_settings = Settings::getDefault();
+        $settings = $default_settings;
+        $settings['status'] = 'approved';
+        $this->notifications[] = array(
+            'gateway'     => 'email',
+            'type'        => Notification::TYPE_NEW_BOOKING,
+            'name'        => __( 'Notification to customer about approved appointment', 'bookly' ),
+            'subject'     => __( 'Your appointment information', 'bookly' ),
+            'message'     => wpautop( __( "Dear {client_name}.\n\nThis is a confirmation that you have booked {service_name}.\n\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
+            'active'      => 1,
+            'to_customer' => 1,
+            'settings'    => $settings,
         );
+        $settings = $default_settings;
+        $settings['status'] = 'approved';
+        $this->notifications[] = array(
+            'gateway'     => 'email',
+            'type'        => Notification::TYPE_NEW_BOOKING,
+            'name'        => __( 'Notification to staff member about approved appointment', 'bookly' ),
+            'subject'     => __( 'New booking information', 'bookly' ),
+            'message'     => wpautop( __( "Hello.\n\nYou have a new booking.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
+            'active'      => 1,
+            'to_staff'    => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'cancelled';
+        $this->notifications[] = array(
+            'gateway'     => 'email',
+            'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            'name'        => __( 'Notification to customer about cancelled appointment', 'bookly' ),
+            'subject'     => __( 'Booking cancellation', 'bookly' ),
+            'message'     => wpautop( __( "Dear {client_name}.\n\nYou have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
+            'active'      => 1,
+            'to_customer' => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'cancelled';
+        $this->notifications[] = array(
+            'gateway'     => 'email',
+            'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            'name'        => __( 'Notification to staff member about cancelled appointment', 'bookly' ),
+            'subject'     => __( 'Booking cancellation', 'bookly' ),
+            'message'     => wpautop( __( "Hello.\n\nThe following booking has been cancelled.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
+            'active'      => 1,
+            'to_staff'    => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'rejected';
+        $this->notifications[] = array(
+            'gateway'     => 'email',
+            'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            'name'        => __( 'Notification to customer about rejected appointment', 'bookly' ),
+            'subject'     => __( 'Booking rejection', 'bookly' ),
+            'message'     => wpautop( __( "Dear {client_name}.\n\nYour booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n\nReason: {cancellation_reason}\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
+            'active'      => 1,
+            'to_customer' => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'rejected';
+        $this->notifications[] = array(
+            'gateway'     => 'email',
+            'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            'name'        => __( 'Notification to staff member about rejected appointment', 'bookly' ),
+            'subject'     => __( 'Booking rejection', 'bookly' ),
+            'message'     => wpautop( __( "Hello.\n\nThe following booking has been rejected.\n\nReason: {cancellation_reason}\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
+            'active'      => 1,
+            'to_staff'    => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'approved';
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_NEW_BOOKING,
+            'name'        => __( 'Notification to customer about approved appointment', 'bookly' ),
+            'message'     => __( "Dear {client_name}.\nThis is a confirmation that you have booked {service_name}.\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
+            'active'      => 1,
+            'to_customer' => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'approved';
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_NEW_BOOKING,
+            'name'        => __( 'Notification to staff member about approved appointment', 'bookly' ),
+            'message'     => __( "Hello.\nYou have a new booking.\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
+            'active'      => 1,
+            'to_staff'    => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'cancelled';
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            'name'        => __( 'Notification to customer about cancelled appointment', 'bookly' ),
+            'message'     => __( "Dear {client_name}.\nYou have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
+            'active'      => 1,
+            'to_customer' => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'cancelled';
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            'name'        => __( 'Notification to staff member about cancelled appointment', 'bookly' ),
+            'message'     => __( "Hello.\nThe following booking has been cancelled.\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
+            'active'      => 1,
+            'to_staff'    => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'rejected';
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            'name'        => __( 'Notification to customer about rejected appointment', 'bookly' ),
+            'message'     => __( "Dear {client_name}.\nYour booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\nReason: {cancellation_reason}\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
+            'active'      => 1,
+            'to_customer' => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['status'] = 'rejected';
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
+            'name'        => __( 'Notification to staff member about rejected appointment', 'bookly' ),
+            'message'     => __( "Hello.\nThe following booking has been rejected.\nReason: {cancellation_reason}\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
+            'active'      => 1,
+            'to_staff'    => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['option'] = 2;
+        $settings['offset_hours'] = 1;
+        $settings['perform'] = 'before';
+        $settings['at_hour'] = 18;
+        $settings['offset_bidirectional_hours'] = - 24;
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_APPOINTMENT_REMINDER,
+            'name'        => __( 'Evening reminder to customer about next day appointment (requires cron setup)', 'bookly' ),
+            'message'     => __( "Dear {client_name}.\nWe would like to remind you that you have booked {service_name} tomorrow at {appointment_time}. We are waiting for you at {company_address}.\nThank you for choosing our company.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
+            'to_customer' => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['option'] = 2;
+        $settings['at_hour'] = 21;
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_APPOINTMENT_REMINDER,
+            'name'        => __( 'Follow-up message in the same day after appointment (requires cron setup)', 'bookly' ),
+            'message'     => __( "Dear {client_name}.\nThank you for choosing {company_name}. We hope you were satisfied with your {service_name}.\nThank you and we look forward to seeing you again soon.\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
+            'to_customer' => 1,
+            'settings'    => $settings,
+        );
+        $settings = $default_settings;
+        $settings['at_hour'] = 18;
+        $settings['offset_bidirectional_hours'] = - 24;
+        $this->notifications[] = array(
+            'gateway'     => 'sms',
+            'type'        => Notification::TYPE_STAFF_DAY_AGENDA,
+            'name'        => __( 'Evening notification with the next day agenda to staff member (requires cron setup)', 'bookly' ),
+            'message'     => __( "Hello.\nYour agenda for tomorrow is:\n{next_day_agenda}", 'bookly' ),
+            'to_staff'    => 1,
+            'settings'    => $settings,
+        );
+
         /*
          * Options.
          */
@@ -323,8 +317,6 @@ class Installer extends Base\Installer
             'bookly_url_cancel_denied_page_url'          => home_url(),
             'bookly_url_reject_page_url'                 => home_url(),
             'bookly_url_reject_denied_page_url'          => home_url(),
-            // Cron.
-            'bookly_cron_reminder_times'                 => array( 'client_follow_up' => 21, 'client_reminder' => 18, 'client_birthday_greeting' => 9, 'staff_agenda' => 18, 'client_reminder_1st' => 1, 'client_reminder_2nd' => 2, 'client_reminder_3rd' => 3 ),
             // SMS.
             'bookly_sms_token'                           => '',
             'bookly_sms_administrator_phone'             => '',
@@ -378,10 +370,11 @@ class Installer extends Base\Installer
             'bookly_dismiss_appearance_notice',
             'bookly_dismiss_collect_stats_notice',
             'bookly_dismiss_contact_us_notice',
+            'bookly_dismiss_demo_site_description',
             'bookly_dismiss_feedback_notice',
             'bookly_dismiss_nps_notice',
             'bookly_dismiss_subscribe_notice',
-            'bookly_feature_requests_rules_hide',
+            'bookly_dismiss_feature_requests_description',
             'bookly_filter_appointments_list',
             'bookly_filter_staff_categories',
             'bookly_show_collecting_stats_notice',
@@ -456,7 +449,7 @@ class Installer extends Base\Installer
                 `package_unassigned`           TINYINT(1) NOT NULL DEFAULT 0,
                 `appointments_limit`           INT DEFAULT NULL,
                 `limit_period`                 ENUM("off","day","week","month","year","upcoming","calendar_day","calendar_week","calendar_month","calendar_year") NOT NULL DEFAULT "off",
-                `staff_preference`             ENUM("order", "least_occupied", "most_occupied", "least_occupied_for_period", "most_occupied_for_period", "least_expensive", "most_expensive") NOT NULL DEFAULT "most_expensive",
+                `staff_preference`             ENUM("order","least_occupied","most_occupied","least_occupied_for_period","most_occupied_for_period","least_expensive","most_expensive") NOT NULL DEFAULT "most_expensive",
                 `staff_preference_settings`    TEXT DEFAULT NULL,
                 `recurrence_enabled`           TINYINT(1) NOT NULL DEFAULT 1,
                 `recurrence_frequencies`       SET("daily","weekly","biweekly","monthly") NOT NULL DEFAULT "daily,weekly,biweekly,monthly",
@@ -564,6 +557,7 @@ class Installer extends Base\Installer
                 `gateway`        ENUM("email","sms") NOT NULL DEFAULT "email",
                 `type`           VARCHAR(255) NOT NULL DEFAULT "",
                 `active`         TINYINT(1) NOT NULL DEFAULT 0,
+                `name`           VARCHAR(255) NOT NULL DEFAULT "",
                 `subject`        VARCHAR(255) NOT NULL DEFAULT "",
                 `message`        TEXT DEFAULT NULL,
                 `to_staff`       TINYINT(1) NOT NULL DEFAULT 0,
@@ -695,7 +689,7 @@ class Installer extends Base\Installer
                 `extras_multiply_nop`      TINYINT(1) NOT NULL DEFAULT 1,
                 `extras_consider_duration` TINYINT(1) NOT NULL DEFAULT 1,
                 `custom_fields`            TEXT DEFAULT NULL,
-                `status`                   ENUM("pending","approved","cancelled","rejected","waitlisted","done") NOT NULL DEFAULT "approved",
+                `status`                   VARCHAR(255) NOT NULL DEFAULT "approved",
                 `status_changed_at`        DATETIME NULL,
                 `token`                    VARCHAR(255) DEFAULT NULL,
                 `time_zone`                VARCHAR(255) DEFAULT NULL,
@@ -781,6 +775,9 @@ class Installer extends Base\Installer
                 `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `plugin_id`   INT UNSIGNED NOT NULL,
                 `type`        ENUM("plugin","bundle") NOT NULL DEFAULT "plugin",
+                `highlighted` TINYINT(1) NOT NULL DEFAULT 0,
+                `priority`    INT UNSIGNED DEFAULT 0,
+                `demo_url`    VARCHAR(255) DEFAULT NULL,
                 `title`       VARCHAR(255) NOT NULL,
                 `slug`        VARCHAR(255) NOT NULL,
                 `description` TEXT NOT NULL,

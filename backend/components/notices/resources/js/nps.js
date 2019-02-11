@@ -16,7 +16,7 @@ jQuery(function ($) {
             if (value <= 7) {
                 $form.show();
             } else {
-                $.post(ajaxurl, {action: 'bookly_nps_send', csrf_token : SupportL10n.csrf_token, rate: value});
+                $.post(ajaxurl, {action: 'bookly_nps_send', csrf_token : BooklySupportL10n.csrfToken, rate: value});
                 $quiz.hide();
                 $form.hide();
                 $thanks.show();
@@ -35,7 +35,7 @@ jQuery(function ($) {
                 ajaxurl,
                 {
                     action     : 'bookly_nps_send',
-                    csrf_token : SupportL10n.csrf_token,
+                    csrf_token : BooklySupportL10n.csrfToken,
                     rate       : $stars.val(),
                     msg        : $msg.val(),
                     email      : $email.val()
@@ -52,7 +52,7 @@ jQuery(function ($) {
     });
 
     $alert.on('close.bs.alert', function () {
-        $.post(ajaxurl, {action: 'bookly_dismiss_nps_notice', csrf_token : SupportL10n.csrf_token}, function () {
+        $.post(ajaxurl, {action: 'bookly_dismiss_nps_notice', csrf_token : BooklySupportL10n.csrfToken}, function () {
             // Indicator for Selenium that request has completed.
             $('.bookly-js-nps-notice').remove();
         });
