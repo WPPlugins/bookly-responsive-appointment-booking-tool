@@ -7,6 +7,21 @@ namespace Bookly\Lib;
  */
 class Updater extends Base\Updater
 {
+    function update_16_9()
+    {
+        $this->alterTables( array(
+            'bookly_staff' => array(
+                'ALTER TABLE `%s` ADD COLUMN `outlook_data` TEXT DEFAULT NULL AFTER `google_data`',
+            ),
+            'bookly_appointments' => array(
+                'ALTER TABLE `%s` ADD COLUMN `outlook_event_id` VARCHAR(255) DEFAULT NULL AFTER `google_event_etag`',
+                'ALTER TABLE `%s` ADD COLUMN `outlook_event_change_key` VARCHAR(255) DEFAULT NULL AFTER `outlook_event_id`',
+                'ALTER TABLE `%s` ADD COLUMN `outlook_event_series_id` VARCHAR(255) DEFAULT NULL AFTER `outlook_event_change_key`',
+                'ALTER TABLE `%s` CHANGE `created_from` `created_from` ENUM("bookly","google","outlook") NOT NULL DEFAULT "bookly"',
+            ),
+        ) );
+    }
+
     function update_16_8()
     {
         /** @global \wpdb $wpdb */

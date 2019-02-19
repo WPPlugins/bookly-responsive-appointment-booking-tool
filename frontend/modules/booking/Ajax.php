@@ -862,6 +862,8 @@ class Ajax extends Lib\Base\Ajax
                             $appointment = $simple->getAppointment();
                             // Google Calendar.
                             Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                            // Outlook Calendar.
+                            Lib\Proxy\OutlookCalendar::syncEvent( $appointment );
                             // Waiting list.
                             Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
                         }
@@ -910,6 +912,8 @@ class Ajax extends Lib\Base\Ajax
                         }
                         // Google Calendar.
                         Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                        // Outlook Calendar.
+                        Lib\Proxy\OutlookCalendar::syncEvent( $appointment );
                         // Waiting list.
                         Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
                     }

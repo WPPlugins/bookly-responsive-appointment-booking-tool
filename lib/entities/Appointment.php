@@ -34,6 +34,12 @@ class Appointment extends Lib\Base\Entity
     /** @var string */
     protected $google_event_etag;
     /** @var string */
+    protected $outlook_event_id;
+    /** @var string */
+    protected $outlook_event_change_key;
+    /** @var string */
+    protected $outlook_event_series_id;
+    /** @var string */
     protected $created_from = 'bookly';
     /** @var string */
     protected $created;
@@ -41,21 +47,24 @@ class Appointment extends Lib\Base\Entity
     protected static $table = 'bookly_appointments';
 
     protected static $schema = array(
-        'id'                   => array( 'format' => '%d' ),
-        'location_id'          => array( 'format' => '%d' ),
-        'staff_id'             => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
-        'staff_any'            => array( 'format' => '%d' ),
-        'service_id'           => array( 'format' => '%d', 'reference' => array( 'entity' => 'Service' ) ),
-        'custom_service_name'  => array( 'format' => '%s' ),
-        'custom_service_price' => array( 'format' => '%f' ),
-        'start_date'           => array( 'format' => '%s' ),
-        'end_date'             => array( 'format' => '%s' ),
-        'extras_duration'      => array( 'format' => '%d' ),
-        'internal_note'        => array( 'format' => '%s' ),
-        'google_event_id'      => array( 'format' => '%s' ),
-        'google_event_etag'    => array( 'format' => '%s' ),
-        'created_from'         => array( 'format' => '%s' ),
-        'created'              => array( 'format' => '%s' ),
+        'id'                       => array( 'format' => '%d' ),
+        'location_id'              => array( 'format' => '%d' ),
+        'staff_id'                 => array( 'format' => '%d', 'reference' => array( 'entity' => 'Staff' ) ),
+        'staff_any'                => array( 'format' => '%d' ),
+        'service_id'               => array( 'format' => '%d', 'reference' => array( 'entity' => 'Service' ) ),
+        'custom_service_name'      => array( 'format' => '%s' ),
+        'custom_service_price'     => array( 'format' => '%f' ),
+        'start_date'               => array( 'format' => '%s' ),
+        'end_date'                 => array( 'format' => '%s' ),
+        'extras_duration'          => array( 'format' => '%d' ),
+        'internal_note'            => array( 'format' => '%s' ),
+        'google_event_id'          => array( 'format' => '%s' ),
+        'google_event_etag'        => array( 'format' => '%s' ),
+        'outlook_event_id'         => array( 'format' => '%s' ),
+        'outlook_event_change_key' => array( 'format' => '%s' ),
+        'outlook_event_series_id'  => array( 'format' => '%s' ),
+        'created_from'             => array( 'format' => '%s' ),
+        'created'                  => array( 'format' => '%s' ),
     );
 
     /**
@@ -199,6 +208,7 @@ class Appointment extends Lib\Base\Entity
                 ->setTimeZone( $time_zone['time_zone'] )
                 ->setTimeZoneOffset( $time_zone['time_zone_offset'] )
                 ->save();
+            Lib\Proxy\Files::attachFiles( $ca_data[ $id ]['custom_fields'], $customer_appointment );
             Lib\Proxy\Pro::createBackendPayment( $ca_data[ $id ], $customer_appointment );
         }
 
@@ -213,6 +223,16 @@ class Appointment extends Lib\Base\Entity
     public function hasGoogleCalendarEvent()
     {
         return $this->google_event_id != '';
+    }
+
+    /**
+     * Check whether this appointment has an associated event in Outlook Calendar.
+     *
+     * @return bool
+     */
+    public function hasOutlookCalendarEvent()
+    {
+        return $this->outlook_event_id != '';
     }
 
     /**
@@ -582,6 +602,75 @@ class Appointment extends Lib\Base\Entity
     }
 
     /**
+     * Gets outlook_event_id
+     *
+     * @return string
+     */
+    public function getOutlookEventId()
+    {
+        return $this->outlook_event_id;
+    }
+
+    /**
+     * Sets outlook_event_id
+     *
+     * @param string $outlook_event_id
+     * @return $this
+     */
+    public function setOutlookEventId( $outlook_event_id )
+    {
+        $this->outlook_event_id = $outlook_event_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets outlook_event_change_key
+     *
+     * @return string
+     */
+    public function getOutlookEventChangeKey()
+    {
+        return $this->outlook_event_change_key;
+    }
+
+    /**
+     * Sets outlook_event_change_key
+     *
+     * @param string $outlook_event_change_key
+     * @return $this
+     */
+    public function setOutlookEventChangeKey( $outlook_event_change_key )
+    {
+        $this->outlook_event_change_key = $outlook_event_change_key;
+
+        return $this;
+    }
+
+    /**
+     * Gets outlook_event_series_id
+     *
+     * @return string
+     */
+    public function getOutlookEventSeriesId()
+    {
+        return $this->outlook_event_series_id;
+    }
+
+    /**
+     * Sets outlook_event_series_id
+     *
+     * @param string $outlook_event_series_id
+     * @return $this
+     */
+    public function setOutlookEventSeriesId( $outlook_event_series_id )
+    {
+        $this->outlook_event_series_id = $outlook_event_series_id;
+
+        return $this;
+    }
+
+    /**
      * Gets created_from
      *
      * @return string
@@ -640,17 +729,21 @@ class Appointment extends Lib\Base\Entity
      */
     public function save()
     {
-        // Google Calendar.
-        if ( $this->isLoaded() && $this->hasGoogleCalendarEvent() ) {
+        // Google and Outlook calendars.
+        if ( $this->isLoaded() && ( $this->hasGoogleCalendarEvent() || $this->hasOutlookCalendarEvent() ) ) {
             $modified = $this->getModified();
             if ( array_key_exists( 'staff_id', $modified ) ) {
-                // Delete event from the Google Calendar of the old staff if the staff was changed.
+                // Delete event from Google and Outlook calendars of the old staff if the staff was changed.
                 $staff_id = $this->getStaffId();
                 $this->setStaffId( $modified['staff_id'] );
                 Lib\Proxy\Pro::deleteGoogleCalendarEvent( $this );
+                Lib\Proxy\OutlookCalendar::deleteEvent( $this );
                 $this
                     ->setStaffId( $staff_id )
                     ->setGoogleEventId( null )
+                    ->setGoogleEventETag( null )
+                    ->setOutlookEventId( null )
+                    ->setOutlookEventChangeKey( null )
                 ;
             }
         }
@@ -680,8 +773,9 @@ class Appointment extends Lib\Base\Entity
         }
 
         $result = parent::delete();
-        if ( $result && $this->hasGoogleCalendarEvent() ) {
+        if ( $result ) {
             Lib\Proxy\Pro::deleteGoogleCalendarEvent( $this );
+            Lib\Proxy\OutlookCalendar::deleteEvent( $this );
         }
 
         return $result;

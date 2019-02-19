@@ -606,6 +606,13 @@ class Finder
                 $this->staff[ $staff_id ]->addBooking( $booking );
             }
         }
+
+        // Outlook Calendar events.
+        foreach ( (array) Lib\Proxy\OutlookCalendar::getBookings( array_keys( $this->staff ), $this->start_dp ) as $staff_id => $bookings ) {
+            foreach ( $bookings as $booking ) {
+                $this->staff[ $staff_id ]->addBooking( $booking );
+            }
+        }
     }
 
     /**
@@ -666,7 +673,7 @@ class Finder
                         $booking_exists = false;
                         foreach ( $this->staff[ $staff_id ]->getBookings() as $booking ) {
                             // If such booking exists increase number_of_bookings.
-                            if ( $booking->fromGoogle() == false
+                            if ( $booking->external() == false
                                 && $booking->serviceId() == $service_id
                                 && $booking->range()->wraps( $range )
                             ) {

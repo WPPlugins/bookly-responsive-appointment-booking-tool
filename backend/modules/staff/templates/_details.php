@@ -74,6 +74,7 @@ use Bookly\Lib\Config;
     <?php Proxy\Pro::renderStaffDetails( $staff ) ?>
     <?php Proxy\Shared::renderStaffForm( $staff ) ?>
     <?php Proxy\Pro::renderGoogleCalendarSettings( $tpl_data ) ?>
+    <?php Proxy\OutlookCalendar::renderCalendarSettings( $tpl_data ) ?>
 
     <input type="hidden" name="id" value="<?php echo $staff->getId() ?>">
     <input type="hidden" name="attachment_id" value="<?php echo $staff->getAttachmentId() ?>">

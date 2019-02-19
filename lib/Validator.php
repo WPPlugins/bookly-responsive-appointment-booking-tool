@@ -273,26 +273,24 @@ class Validator
                     }
                 }
             }
-            if ( $customer->isLoaded() ) {
-                // Check appointments limit
-                $data = array();
-                foreach ( $userData->cart->getItems() as $cart_item ) {
-                    if ( $cart_item->toBePutOnWaitingList() ) {
-                        // Skip waiting list items.
-                        continue;
-                    }
-
-                    $service = $cart_item->getService();
-                    $slots   = $cart_item->getSlots();
-
-                    $data[ $service->getId() ]['service'] = $service;
-                    $data[ $service->getId() ]['dates'][] = $slots[0][2];
+            // Check appointments limit
+            $data = array();
+            foreach ( $userData->cart->getItems() as $cart_item ) {
+                if ( $cart_item->toBePutOnWaitingList() ) {
+                    // Skip waiting list items.
+                    continue;
                 }
-                foreach ( $data as $service_data ) {
-                    if ( $service_data['service']->appointmentsLimitReached( $customer->getId(), $service_data['dates'] ) ) {
-                        $this->errors['appointments_limit_reached'] = true;
-                        break;
-                    }
+
+                $service = $cart_item->getService();
+                $slots   = $cart_item->getSlots();
+
+                $data[ $service->getId() ]['service'] = $service;
+                $data[ $service->getId() ]['dates'][] = $slots[0][2];
+            }
+            foreach ( $data as $service_data ) {
+                if ( $service_data['service']->appointmentsLimitReached( $customer->getId(), $service_data['dates'] ) ) {
+                    $this->errors['appointments_limit_reached'] = true;
+                    break;
                 }
             }
         }

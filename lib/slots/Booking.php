@@ -24,7 +24,7 @@ class Booking
     /** @var bool */
     protected $one_booking_per_slot;
     /** @var bool */
-    protected $from_google;
+    protected $external;
 
     /**
      * Constructor.
@@ -39,9 +39,9 @@ class Booking
      * @param int $padding_right
      * @param int $extras_duration
      * @param bool $one_booking_per_slot
-     * @param bool $from_google
+     * @param bool $external
      */
-    public function __construct( $location_id, $service_id, $nop, $on_waiting_list, $start, $end, $padding_left, $padding_right, $extras_duration, $one_booking_per_slot, $from_google )
+    public function __construct( $location_id, $service_id, $nop, $on_waiting_list, $start, $end, $padding_left, $padding_right, $extras_duration, $one_booking_per_slot, $external )
     {
         $this->location_id          = (int) $location_id;
         $this->service_id           = (int) $service_id;
@@ -51,7 +51,7 @@ class Booking
         $this->range_with_padding   = $this->range->transform( - (int) $padding_left, (int) $padding_right );
         $this->extras_duration      = (int) $extras_duration;
         $this->one_booking_per_slot = (bool) $one_booking_per_slot;
-        $this->from_google          = (bool) $from_google;
+        $this->external             = (bool) $external;
     }
 
     /**
@@ -148,12 +148,12 @@ class Booking
     }
 
     /**
-     * Check if it is from GC.
+     * Check if booking is from external calendar (e.g. Google Calendar).
      *
      * @return bool
      */
-    public function fromGoogle()
+    public function external()
     {
-        return $this->from_google;
+        return $this->external;
     }
 }

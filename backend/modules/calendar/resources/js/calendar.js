@@ -5,7 +5,8 @@ jQuery(function ($) {
         $staffFilter     = $('#bookly-js-staff-filter'),
         $locationsFilter = $('#bookly-js-locations-filter'),
         firstHour        = new Date().getHours(),
-        $syncButton      = $('#bookly-google-calendar-sync'),
+        $gcSyncButton    = $('#bookly-google-calendar-sync'),
+        $ocSyncButton    = $('#bookly-outlook-calendar-sync'),
         staffMembers     = [],  // Do not override staffMembers, it is used as a reference
         staffIds         = getCookie('bookly_cal_st_ids'),
         locationIds      = getCookie('bookly_cal_location_ids'),
@@ -200,12 +201,32 @@ jQuery(function ($) {
     /**
      * Sync with Google Calendar.
      */
-    $syncButton.on('click', function () {
+    $gcSyncButton.on('click', function () {
         var ladda = Ladda.create(this);
         ladda.start();
         $.post(
             ajaxurl,
             {action: 'bookly_advanced_google_calendar_sync', csrf_token: BooklyL10n.csrf_token},
+            function (response) {
+                if (response.success) {
+                    $fullCalendar.fullCalendar('refetchEvents');
+                }
+                booklyAlert(response.data.alert);
+                ladda.stop();
+            },
+            'json'
+        );
+    });
+
+    /**
+     * Sync with Outlook Calendar.
+     */
+    $ocSyncButton.on('click', function () {
+        var ladda = Ladda.create(this);
+        ladda.start();
+        $.post(
+            ajaxurl,
+            {action: 'bookly_outlook_calendar_sync', csrf_token: BooklyL10n.csrf_token},
             function (response) {
                 if (response.success) {
                     $fullCalendar.fullCalendar('refetchEvents');

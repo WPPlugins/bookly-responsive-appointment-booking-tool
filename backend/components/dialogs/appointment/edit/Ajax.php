@@ -480,6 +480,8 @@ class Ajax extends Lib\Base\Ajax
                                 $ca_list = $appointment->saveCustomerAppointments( array_merge( $ca_customers, array( $customer ) ), $series->getId() );
                                 // Google Calendar.
                                 Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                                // Outlook Calendar.
+                                Lib\Proxy\OutlookCalendar::syncEvent( $appointment );
                                 // Waiting list.
                                 Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
 
@@ -538,6 +540,8 @@ class Ajax extends Lib\Base\Ajax
 
                     // Google Calendar.
                     Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                    // Outlook Calendar.
+                    Lib\Proxy\OutlookCalendar::syncEvent( $appointment );
                     // Waiting list.
                     Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
 

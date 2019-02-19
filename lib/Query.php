@@ -566,7 +566,7 @@ class Query
     {
         global $wpdb;
 
-        return (int) $wpdb->get_var( $this->composeQuery( true ) );
+        return array_sum( $wpdb->get_col( $this->composeQuery( true ) ) );
     }
 
     /**

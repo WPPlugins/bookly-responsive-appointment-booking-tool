@@ -10,6 +10,10 @@ jQuery(function ($) {
         $gcLimitEvents      = $('#bookly_gc_limit_events'),
         $gcFullSyncOffset   = $('#bookly_gc_full_sync_offset_days'),
         $gcFullSyncTitles   = $('#bookly_gc_full_sync_titles'),
+        $ocSyncMode         = $('#bookly_oc_sync_mode'),
+        $ocLimitEvents      = $('#bookly_oc_limit_events'),
+        $ocFullSyncOffset   = $('#bookly_oc_full_sync_offset_days'),
+        $ocFullSyncTitles   = $('#bookly_oc_full_sync_titles'),
         $currency           = $('#bookly_pmt_currency'),
         $formats            = $('#bookly_pmt_price_format')
     ;
@@ -39,6 +43,13 @@ jQuery(function ($) {
         $gcLimitEvents.closest('.form-group').toggle(this.value == '1.5-way');
         $gcFullSyncOffset.closest('.form-group').toggle(this.value == '2-way');
         $gcFullSyncTitles.closest('.form-group').toggle(this.value == '2-way');
+    }).trigger('change');
+
+    // Outlook Calendar tab.
+    $ocSyncMode.on('change', function () {
+        $ocLimitEvents.closest('.form-group').toggle(this.value == '1.5-way');
+        $ocFullSyncOffset.closest('.form-group').toggle(this.value == '2-way');
+        $ocFullSyncTitles.closest('.form-group').toggle(this.value == '2-way');
     }).trigger('change');
 
     // Calendar tab.

@@ -134,8 +134,10 @@ class CustomerAppointment extends Lib\Base\Entity
                         $appointment->save();
                     }
                 }
-                // Update GC event.
+                // Google Calendar.
                 Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                // Outlook Calendar.
+                Lib\Proxy\OutlookCalendar::syncEvent( $appointment );
                 // Waiting list.
                 Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
             }
@@ -188,6 +190,8 @@ class CustomerAppointment extends Lib\Base\Entity
                             }
                             // Google Calendar.
                             Lib\Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                            // Outlook Calendar.
+                            Lib\Proxy\OutlookCalendar::syncEvent( $appointment );
                             // Waiting list.
                             Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
                         }

@@ -55,6 +55,7 @@ use Bookly\Backend\Modules\Calendar\Proxy;
                     <?php endif ?>
                     <?php Proxy\Locations::renderCalendarLocationFilter() ?>
                     <?php Proxy\AdvancedGoogleCalendar::renderSyncButton( $staff_members ) ?>
+                    <?php Proxy\OutlookCalendar::renderSyncButton( $staff_members ) ?>
                 </ul>
                 <?php endif ?>
                 <div class="bookly-margin-top-xlg">

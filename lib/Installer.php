@@ -407,7 +407,8 @@ class Installer extends Base\Installer
                 `working_time_limit` INT UNSIGNED DEFAULT NULL,
                 `visibility`         ENUM("public","private","archive") NOT NULL DEFAULT "public",
                 `position`           INT NOT NULL DEFAULT 9999,
-                `google_data`        TEXT DEFAULT NULL
+                `google_data`        TEXT DEFAULT NULL,
+                `outlook_data`       TEXT DEFAULT NULL
             ) ENGINE = INNODB
             DEFAULT CHARACTER SET = utf8
             COLLATE = utf8_general_ci'
@@ -610,21 +611,24 @@ class Installer extends Base\Installer
 
         $wpdb->query(
             'CREATE TABLE IF NOT EXISTS `' . Entities\Appointment::getTableName() . '` (
-                `id`                   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `location_id`          INT UNSIGNED DEFAULT NULL,
-                `staff_id`             INT UNSIGNED NOT NULL,
-                `staff_any`            TINYINT(1) NOT NULL DEFAULT 0,
-                `service_id`           INT UNSIGNED DEFAULT NULL,
-                `custom_service_name`  VARCHAR(255) DEFAULT NULL,
-                `custom_service_price` DECIMAL(10,2) DEFAULT NULL,
-                `start_date`           DATETIME DEFAULT NULL,
-                `end_date`             DATETIME DEFAULT NULL,
-                `extras_duration`      INT NOT NULL DEFAULT 0,
-                `internal_note`        TEXT DEFAULT NULL,
-                `google_event_id`      VARCHAR(255) DEFAULT NULL,
-                `google_event_etag`    VARCHAR(255) DEFAULT NULL,
-                `created_from`         ENUM("bookly","google") NOT NULL DEFAULT "bookly",
-                `created`              DATETIME NOT NULL,
+                `id`                       INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `location_id`              INT UNSIGNED DEFAULT NULL,
+                `staff_id`                 INT UNSIGNED NOT NULL,
+                `staff_any`                TINYINT(1) NOT NULL DEFAULT 0,
+                `service_id`               INT UNSIGNED DEFAULT NULL,
+                `custom_service_name`      VARCHAR(255) DEFAULT NULL,
+                `custom_service_price`     DECIMAL(10,2) DEFAULT NULL,
+                `start_date`               DATETIME DEFAULT NULL,
+                `end_date`                 DATETIME DEFAULT NULL,
+                `extras_duration`          INT NOT NULL DEFAULT 0,
+                `internal_note`            TEXT DEFAULT NULL,
+                `google_event_id`          VARCHAR(255) DEFAULT NULL,
+                `google_event_etag`        VARCHAR(255) DEFAULT NULL,
+                `outlook_event_id`         VARCHAR(255) DEFAULT NULL,
+                `outlook_event_change_key` VARCHAR(255) DEFAULT NULL,
+                `outlook_event_series_id`  VARCHAR(255) DEFAULT NULL,
+                `created_from`             ENUM("bookly","google","outlook") NOT NULL DEFAULT "bookly",
+                `created`                  DATETIME NOT NULL,
                 CONSTRAINT
                     FOREIGN KEY (staff_id)
                     REFERENCES ' . Entities\Staff::getTableName() . '(id)

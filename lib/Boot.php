@@ -23,7 +23,7 @@ class Boot
         // Run plugin.
         add_action( 'plugins_loaded', function () use ( $plugin ) {
             $plugin::run();
-        } );
+        }, 8, 1 );
     }
 
     /**

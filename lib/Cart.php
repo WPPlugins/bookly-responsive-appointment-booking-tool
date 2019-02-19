@@ -314,6 +314,8 @@ class Cart
 
                 // Google Calendar.
                 Proxy\Pro::syncGoogleCalendarEvent( $appointment );
+                // Outlook Calendar.
+                Proxy\OutlookCalendar::syncEvent( $appointment );
 
                 // Add booking number.
                 $booking_numbers[] = $appointment->getId();

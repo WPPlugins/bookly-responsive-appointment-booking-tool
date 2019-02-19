@@ -702,7 +702,7 @@ export default function stepDetails(params) {
                 types: ['geocode']
             }
             ),
-            autocompleteFeidls = [
+            autocompleteFields = [
                 {
                     selector: '.bookly-js-address-country',
                     val: function() {
@@ -721,7 +721,7 @@ export default function stepDetails(params) {
                 {
                     selector: '.bookly-js-address-city',
                     val: function() {
-                        return getFieldValueByType('locality');
+                        return getFieldValueByType('locality') || getFieldValueByType('administrative_area_level_3');
                     }
                 },
                 {
@@ -763,7 +763,7 @@ export default function stepDetails(params) {
         };
 
         autocomplete.addListener('place_changed', function() {
-            autocompleteFeidls.forEach(function(field) {
+            autocompleteFields.forEach(function(field) {
                 var element = $container.find(field.selector);
 
                 if (element.length === 0) {

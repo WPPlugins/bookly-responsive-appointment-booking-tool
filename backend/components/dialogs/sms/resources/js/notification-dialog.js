@@ -136,7 +136,6 @@ jQuery(function ($) {
             allowClear             : false,
             templateResult         : format,
             templateSelection      : format,
-            dropdownCssClass       : 'bookly-notifications',
             escapeMarkup           : function (m) {
                 return m;
             }

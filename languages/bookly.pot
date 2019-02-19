@@ -134,6 +134,288 @@ msgstr ""
 msgid "Discount"
 msgstr ""
 
+msgid "Outlook Calendar event"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "Outlook Calendar integration"
+msgstr ""
+
+msgid "Synchronize staff member appointments with Outlook Calendar."
+msgstr ""
+
+msgid "Connect"
+msgstr ""
+
+#, php-format
+msgid "Please configure Outlook Calendar <a href=\"%s\">settings</a> first"
+msgstr ""
+
+msgid "Connected"
+msgstr ""
+
+msgid "disconnect"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid ""
+"When you connect a calendar all future and past events will be synchronized "
+"according to the selected synchronization mode. This may take a few minutes. "
+"Please wait."
+msgstr ""
+
+msgid "-- Select calendar --"
+msgstr ""
+
+msgid "Can't change calendar for archived staff"
+msgstr ""
+
+msgid "Instructions"
+msgstr ""
+
+msgid ""
+"Important: Your website must use <b>HTTPS</b>. The Outlook Calendar API will "
+"not work with your website if there is no valid SSL certificate installed on "
+"your web server."
+msgstr ""
+
+msgid "To find your Application ID and Application Secret, do the following:"
+msgstr ""
+
+#, php-format
+msgid ""
+"Navigate to the <a href=\"%s\" target=\"_blank\">Microsoft App Registration "
+"Portal</a>."
+msgstr ""
+
+msgid ""
+"Sign in with either a personal or work or school Microsoft account. If you "
+"don't have either, sign up for a new personal account."
+msgstr ""
+
+msgid ""
+"Choose <b>Add an app</b>. Enter a name for the app and choose <b>Create "
+"application</b>. The registration page displays, listing the properties of "
+"your app."
+msgstr ""
+
+msgid ""
+"Copy the <b>Application ID</b>. This is the unique identifier for your app. "
+"You'll use it in the form below on this page."
+msgstr ""
+
+msgid ""
+"Under <b>Application Secrets</b>, choose <b>Generate New Password</b>. Copy "
+"the app secret from the <b>New password generated</b> dialog box before "
+"closing it. You'll use the secret in the form below on this page."
+msgstr ""
+
+msgid ""
+"Under <b>Platforms</b>, choose <b>Add Platform</b>, and select <b>Web</b>. "
+"In <b>Redirect URLs</b> enter the <b>Redirect URI</b> found below on this "
+"page."
+msgstr ""
+
+msgid ""
+"Under <b>Microsoft Graph Permissions</b>, choose <b>Add</b> next to "
+"<b>Delegated Permissions</b>, and select <b>Calendars.ReadWrite</b> in the "
+"<b>Select Permission</b> dialog box. Close it by clicking <b>Ok</b>."
+msgstr ""
+
+msgid "<b>Save</b> your changes."
+msgstr ""
+
+msgid ""
+"Go to Staff Members, select a staff member and click <b>Connect</b> which is "
+"located at the bottom of the page."
+msgstr ""
+
+msgid "Application ID"
+msgstr ""
+
+msgid "The Application ID obtained from the Microsoft App Registration Portal."
+msgstr ""
+
+msgid "Application secret"
+msgstr ""
+
+msgid ""
+"The Application Secret password obtained from the Microsoft App Registration "
+"Portal."
+msgstr ""
+
+msgid "Redirect URI"
+msgstr ""
+
+msgid ""
+"Enter this URL as a Redirect URLs in the Microsoft App Registration Portal."
+msgstr ""
+
+msgid "Synchronization mode"
+msgstr ""
+
+msgid ""
+"With \"One-way\" sync Bookly pushes new appointments and any further changes "
+"to Outlook Calendar. With \"Two-way front-end only\" sync Bookly will "
+"additionally fetch events from Outlook Calendar and remove corresponding "
+"time slots before displaying the Time step of the booking form (this may "
+"lead to a delay when users click Next to get to the Time step). With \"Two-"
+"way\" sync all bookings created in Bookly Calendar will be automatically "
+"copied to Outlook Calendar and vice versa."
+msgstr ""
+
+msgid "One-way"
+msgstr ""
+
+msgid "Two-way front-end only"
+msgstr ""
+
+msgid "Two-way"
+msgstr ""
+
+msgid "Sync appointments history"
+msgstr ""
+
+msgid ""
+"Specify how many days of past calendar data you wish to sync at the time of "
+"initial sync. If you enter 0, synchronization of past events will not be "
+"performed."
+msgstr ""
+
+msgid "Copy Outlook Calendar event titles"
+msgstr ""
+
+msgid ""
+"If enabled then titles of Outlook Calendar events will be copied to Bookly "
+"appointments. If disabled, a standard title \"Outlook Calendar event\" will "
+"be used."
+msgstr ""
+
+msgid "Limit number of fetched events"
+msgstr ""
+
+msgid ""
+"If there is a lot of events in Outlook Calendar sometimes this leads to a "
+"lack of memory in PHP when Bookly tries to fetch all events. You can limit "
+"the number of fetched events here."
+msgstr ""
+
+msgid "Template for event title"
+msgstr ""
+
+msgid ""
+"Configure what information should be placed in the title of Outlook Calendar "
+"event. Available codes are {service_name}, {staff_name} and {client_names}."
+msgstr ""
+
+msgid "Appointment section"
+msgstr ""
+
+msgid "This section describes information that is displayed about appointment."
+msgstr ""
+
+msgid "Customer section"
+msgstr ""
+
+msgid ""
+"This section describes information that is displayed about each participant "
+"of the appointment."
+msgstr ""
+
+msgid "email of client"
+msgstr ""
+
+msgid "full name of client"
+msgstr ""
+
+msgid "first name of client"
+msgstr ""
+
+msgid "last name of client"
+msgstr ""
+
+msgid "phone of client"
+msgstr ""
+
+msgid "status of payment"
+msgstr ""
+
+msgid "payment type"
+msgstr ""
+
+msgid "status of appointment"
+msgstr ""
+
+msgid "total price of booking (sum of all cart items after applying coupon)"
+msgstr ""
+
+msgid "date of appointment"
+msgstr ""
+
+msgid "time of appointment"
+msgstr ""
+
+msgid "booking number"
+msgstr ""
+
+msgid "name of category"
+msgstr ""
+
+msgid "address of company"
+msgstr ""
+
+msgid "name of company"
+msgstr ""
+
+msgid "company phone"
+msgstr ""
+
+msgid "company web-site address"
+msgstr ""
+
+msgid "info of service"
+msgstr ""
+
+msgid "name of service"
+msgstr ""
+
+msgid "price of service"
+msgstr ""
+
+msgid "email of staff"
+msgstr ""
+
+msgid "info of staff"
+msgstr ""
+
+msgid "name of staff"
+msgstr ""
+
+msgid "phone of staff"
+msgstr ""
+
+msgid "Outlook Calendar"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Synchronize with Outlook Calendar"
+msgstr ""
+
+msgid "Calendars synchronized successfully."
+msgstr ""
+
 msgid "Custom Fields"
 msgstr ""
 
@@ -661,9 +943,6 @@ msgstr ""
 msgid "Allow this service to have recurring appointments."
 msgstr ""
 
-msgid "Disabled"
-msgstr ""
-
 msgid "Enabled"
 msgstr ""
 
@@ -890,9 +1169,6 @@ msgstr ""
 msgid "Add Staff Cabinet"
 msgstr ""
 
-msgid "Calendar"
-msgstr ""
-
 msgid "A custom block for displaying staff calendar"
 msgstr ""
 
@@ -1000,12 +1276,6 @@ msgid "%s of %s"
 msgstr ""
 
 msgid "Full name"
-msgstr ""
-
-msgid "Email"
-msgstr ""
-
-msgid "Phone"
 msgstr ""
 
 msgid "Info"
@@ -1199,9 +1469,6 @@ msgstr ""
 msgid "Disable capacity update"
 msgstr ""
 
-msgid "Instructions"
-msgstr ""
-
 msgid "Follow these steps to get an API key:"
 msgstr ""
 
@@ -1273,9 +1540,6 @@ msgid "Reschedule"
 msgstr ""
 
 msgid "Profile management"
-msgstr ""
-
-msgid "Name"
 msgstr ""
 
 msgid "Birthday"
@@ -2697,79 +2961,7 @@ msgid ""
 "behavior of the booking system."
 msgstr ""
 
-msgid "date of appointment"
-msgstr ""
-
-msgid "time of appointment"
-msgstr ""
-
-msgid "booking number"
-msgstr ""
-
-msgid "name of category"
-msgstr ""
-
-msgid "address of company"
-msgstr ""
-
-msgid "name of company"
-msgstr ""
-
-msgid "company phone"
-msgstr ""
-
-msgid "company web-site address"
-msgstr ""
-
 msgid "duration of service"
-msgstr ""
-
-msgid "info of service"
-msgstr ""
-
-msgid "name of service"
-msgstr ""
-
-msgid "price of service"
-msgstr ""
-
-msgid "email of staff"
-msgstr ""
-
-msgid "info of staff"
-msgstr ""
-
-msgid "name of staff"
-msgstr ""
-
-msgid "phone of staff"
-msgstr ""
-
-msgid "email of client"
-msgstr ""
-
-msgid "full name of client"
-msgstr ""
-
-msgid "first name of client"
-msgstr ""
-
-msgid "last name of client"
-msgstr ""
-
-msgid "phone of client"
-msgstr ""
-
-msgid "status of payment"
-msgstr ""
-
-msgid "payment type"
-msgstr ""
-
-msgid "status of appointment"
-msgstr ""
-
-msgid "total price of booking (sum of all cart items after applying coupon)"
 msgstr ""
 
 msgid "To set up Facebook integration, do the following:"
@@ -4284,26 +4476,8 @@ msgstr ""
 msgid "Synchronize staff member appointments with Google Calendar."
 msgstr ""
 
-msgid "Connect"
-msgstr ""
-
 #, php-format
 msgid "Please configure Google Calendar <a href=\"%s\">settings</a> first"
-msgstr ""
-
-msgid "Connected"
-msgstr ""
-
-msgid "disconnect"
-msgstr ""
-
-msgid ""
-"When you connect a calendar all future and past events will be synchronized "
-"according to the selected synchronization mode. This may take a few minutes. "
-"Please wait."
-msgstr ""
-
-msgid "-- Select calendar --"
 msgstr ""
 
 msgid "Archiving Staff"
@@ -4326,9 +4500,6 @@ msgid ""
 msgstr ""
 
 msgid "Unlimited"
-msgstr ""
-
-msgid "Can't change calendar for archived staff"
 msgstr ""
 
 msgid "Show archived staff"
@@ -4488,11 +4659,6 @@ msgid ""
 "domain</b>."
 msgstr ""
 
-msgid ""
-"Go to Staff Members, select a staff member and click <b>Connect</b> which is "
-"located at the bottom of the page."
-msgstr ""
-
 msgid "Client ID"
 msgstr ""
 
@@ -4505,13 +4671,7 @@ msgstr ""
 msgid "The client secret obtained from the Developers Console"
 msgstr ""
 
-msgid "Redirect URI"
-msgstr ""
-
 msgid "Enter this URL as a redirect URI in the Developers Console"
-msgstr ""
-
-msgid "Synchronization mode"
 msgstr ""
 
 msgid ""
@@ -4522,41 +4682,15 @@ msgid ""
 "a delay when users click Next to get to the Time step)."
 msgstr ""
 
-msgid "One-way"
-msgstr ""
-
-msgid "Two-way front-end only"
-msgstr ""
-
-msgid "Limit number of fetched events"
-msgstr ""
-
 msgid ""
 "If there is a lot of events in Google Calendar sometimes this leads to a "
 "lack of memory in PHP when Bookly tries to fetch all events. You can limit "
 "the number of fetched events here."
 msgstr ""
 
-msgid "Template for event title"
-msgstr ""
-
 msgid ""
 "Configure what information should be placed in the title of Google Calendar "
 "event. Available codes are {service_name}, {staff_name} and {client_names}."
-msgstr ""
-
-msgid "Appointment section"
-msgstr ""
-
-msgid "This section describes information that is displayed about appointment."
-msgstr ""
-
-msgid "Customer section"
-msgstr ""
-
-msgid ""
-"This section describes information that is displayed about each participant "
-"of the appointment."
 msgstr ""
 
 msgid ""
@@ -5830,18 +5964,6 @@ msgid ""
 "valid SSL certificate installed on your web server."
 msgstr ""
 
-msgid "Two-way"
-msgstr ""
-
-msgid "Sync appointments history"
-msgstr ""
-
-msgid ""
-"Specify how many days of past calendar data you wish to sync at the time of "
-"initial sync. If you enter 0, synchronization of past events will not be "
-"performed."
-msgstr ""
-
 msgid "Copy Google Calendar event titles"
 msgstr ""
 
@@ -5852,7 +5974,4 @@ msgid ""
 msgstr ""
 
 msgid "Synchronize with Google Calendar"
-msgstr ""
-
-msgid "Calendars synchronized successfully."
 msgstr ""

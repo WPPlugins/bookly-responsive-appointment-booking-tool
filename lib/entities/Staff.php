@@ -31,6 +31,8 @@ class Staff extends Lib\Base\Entity
     protected $position = 9999;
     /** @var  string */
     protected $google_data;
+    /** @var  string */
+    protected $outlook_data;
 
     protected static $table = 'bookly_staff';
 
@@ -47,6 +49,7 @@ class Staff extends Lib\Base\Entity
         'visibility'         => array( 'format' => '%s' ),
         'position'           => array( 'format' => '%d' ),
         'google_data'        => array( 'format' => '%s' ),
+        'outlook_data'       => array( 'format' => '%s' ),
     );
 
     /**
@@ -434,7 +437,7 @@ class Staff extends Lib\Base\Entity
     }
 
     /**
-     * Gets google data
+     * Gets Google data
      *
      * @return string
      */
@@ -444,7 +447,7 @@ class Staff extends Lib\Base\Entity
     }
 
     /**
-     * Sets google data
+     * Sets Google data
      *
      * @param string $google_data
      * @return $this
@@ -452,6 +455,29 @@ class Staff extends Lib\Base\Entity
     public function setGoogleData( $google_data )
     {
         $this->google_data = $google_data;
+
+        return $this;
+    }
+
+    /**
+     * Gets Microsoft data
+     *
+     * @return string
+     */
+    public function getOutlookData()
+    {
+        return $this->outlook_data;
+    }
+
+    /**
+     * Sets Microsoft data
+     *
+     * @param string $outlook_data
+     * @return $this
+     */
+    public function setOutlookData($outlook_data )
+    {
+        $this->outlook_data = $outlook_data;
 
         return $this;
     }
