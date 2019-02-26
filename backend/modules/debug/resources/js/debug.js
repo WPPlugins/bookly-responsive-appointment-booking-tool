@@ -1,6 +1,9 @@
 jQuery(function($) {
-    var $constraintModal = $('#bookly-js-add-constraint'),
-        $status;
+    let $constraintModal = $('#bookly-js-add-constraint'),
+        $columnModal = $('#bookly-js-add-field'),
+        $tableModal = $('#bookly-js-create-table'),
+        $status,
+        $create;
 
     $('.collapse').collapse('hide');
 
@@ -14,7 +17,7 @@ jQuery(function($) {
         .on('click', function (e) {
             e.preventDefault();
             $status = $(this).closest('td');
-            var $tr = $(this).closest('tr'),
+            let $tr = $(this).closest('tr'),
                 table = $tr.closest('.panel-collapse').attr('id'),
                 column = $tr.find('td:eq(0)').html(),
                 ref_table = $tr.find('td:eq(1)').html(),
@@ -55,7 +58,7 @@ jQuery(function($) {
 
     $constraintModal
         .on('click', '.bookly-js-save', function () {
-            var ladda = Ladda.create(this);
+            let ladda = Ladda.create(this);
             ladda.start();
             $.ajax({
                 url  : ajaxurl,
@@ -90,7 +93,7 @@ jQuery(function($) {
         })
         .on('click', '[data-action=fix-consistency]', function (e) {
             e.preventDefault();
-            var $button     = $(this),
+            let $button     = $(this),
                 table       = $('#bookly-js-table', $constraintModal).html(),
                 column      = $('#bookly-js-column', $constraintModal).html(),
                 ref_table   = $('#bookly-js-ref_table', $constraintModal).html(),
@@ -125,10 +128,10 @@ jQuery(function($) {
                     booklyAlert({success: ['No manipulation actions were performed']});
                     return false;
                 case 'CASCADE':
-                    query = 'DELETE FROM `' + table + '`' + "\n" + '          WHERE `' + column + '` NOT IN ( SELECT `' + ref_column + '` FROM `' + ref_table + '` )';
+                    query = 'DELETE FROM `' + table + "`\n" + '          WHERE `' + column + '` NOT IN ( SELECT `' + ref_column + '` FROM `' + ref_table + '` )';
                     break;
                 case 'SET NULL':
-                    query = 'UPDATE TABLE `' + table + '`' + "\n" + '                SET `' + column + '` = NULL' + "\n" + '           WHERE `' + column + '` NOT IN ( SELECT `' + ref_column + '` FROM `' + ref_table + '` )';
+                    query = 'UPDATE TABLE `' + table + "`\n" + '                SET `' + column + '` = NULL' + "\n" + '           WHERE `' + column + '` NOT IN ( SELECT `' + ref_column + '` FROM `' + ref_table + '` )';
                     break;
             }
 
@@ -150,5 +153,134 @@ jQuery(function($) {
                     }
                 });
             }
+        });
+
+    $('[data-action=fix-column]')
+        .on('click', function (e) {
+            e.preventDefault();
+            $status = $(this).closest('td');
+            let $tr = $(this).closest('tr'),
+                table = $tr.closest('.panel-collapse').attr('id'),
+                column = $tr.find('td:eq(0)').html()
+            ;
+            $('.bookly-js-loading:first-child', $columnModal).addClass('bookly-loading').removeClass('collapse');
+            $('.bookly-js-loading:last-child', $columnModal).addClass('collapse');
+            $('.bookly-js-fix-consistency', $columnModal).hide();
+            $columnModal.modal();
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action    : 'bookly_get_field_data',
+                    table     : table,
+                    column    : column,
+                    csrf_token: BooklyL10n.csrfToken
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        let sql = 'ALTER TABLE `' + table + '`' +
+                            "\n ADD COLUMN `" + column + '` ' + response.data;
+                        $('pre', $columnModal).html(sql);
+                    } else {
+                        $('pre', $columnModal).html('');
+                    }
+                    $('.bookly-js-loading', $columnModal).toggleClass('collapse');
+                }
+            });
+        });
+
+    $columnModal
+        .on('click', '.bookly-js-save', function () {
+            let ladda = Ladda.create(this);
+            ladda.start();
+            $.ajax({
+                url  : ajaxurl,
+                type : 'POST',
+                data : {
+                    action      : 'bookly_execute_query',
+                    query       : $('pre', $columnModal).html(),
+                    csrf_token  : BooklyL10n.csrfToken
+                },
+                dataType : 'json',
+                success  : function (response) {
+                    if (response.success) {
+                        booklyAlert({success: [response.data.message]});
+                        $columnModal.modal('hide');
+                        $status.html('OK');
+                    } else {
+                        booklyAlert({error : [response.data.message]});
+                    }
+                    ladda.stop();
+                },
+                error: function () {
+                    booklyAlert({error: ['Error: in query execution.']});
+                    ladda.stop();
+                }
+            });
+        });
+
+    $('[data-action=fix-create-table]')
+        .on('click', function (e) {
+            e.preventDefault();
+            $create = $(this);
+            let table = $create.closest('.panel').find('.panel-collapse').attr('id');
+            $('.bookly-js-loading:first-child', $tableModal).addClass('bookly-loading').removeClass('collapse');
+            $('.bookly-js-loading:last-child', $tableModal).addClass('collapse');
+            $tableModal.modal();
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action    : 'bookly_get_field_data',
+                    table     : table,
+                    column    : 'id',
+                    csrf_token: BooklyL10n.csrfToken
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        let field = response.data.replace(' primary key', ','),
+                            sql = 'CREATE TABLE `' + table + '` (' +
+                            "\n `id` " + field +
+                            "\n PRIMARY KEY (`id`));";
+                        $('pre', $tableModal).html(sql);
+                    } else {
+                        $('pre', $tableModal).html('');
+                    }
+                    $('.bookly-js-loading', $tableModal).toggleClass('collapse');
+                }
+            });
+        });
+
+    $tableModal
+        .on('click', '.bookly-js-save', function () {
+            let ladda = Ladda.create(this);
+            ladda.start();
+            $.ajax({
+                url  : ajaxurl,
+                type : 'POST',
+                data : {
+                    action      : 'bookly_execute_query',
+                    query       : $('pre', $tableModal).html(),
+                    csrf_token  : BooklyL10n.csrfToken
+                },
+                dataType : 'json',
+                success  : function (response) {
+                    if (response.success) {
+                        booklyAlert({success: [response.data.message]});
+                        $tableModal.modal('hide');
+                        $create.closest('.panel').find('.panel-body').html('Refresh the current page');
+                        $create.remove();
+                    } else {
+                        booklyAlert({error : [response.data.message]});
+                    }
+                    ladda.stop();
+                },
+                error: function () {
+                    booklyAlert({error: ['Error: in query execution.']});
+                    ladda.stop();
+                }
+            });
         });
 });

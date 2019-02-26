@@ -182,6 +182,7 @@ class Cart
                 if ( $order->hasItem( $series_unique_id ) ) {
                     $series = $order->getItem( $series_unique_id );
                 } else {
+                    $series_item_id = 0;
                     $series_entity = new Entities\Series();
                     $series_entity
                         ->setRepeat( '{}' )
@@ -332,7 +333,7 @@ class Cart
                     $item = $collaborative->addItem( $item );
                 }
                 if ( $series ) {
-                    $series->addItem( $i, $item );
+                    $series->addItem( $series_item_id++, $item );
                 } else {
                     $order->addItem( $i, $item );
                 }

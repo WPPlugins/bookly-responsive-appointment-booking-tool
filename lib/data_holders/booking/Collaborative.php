@@ -249,7 +249,7 @@ class Collaborative extends Item
         $query = Lib\Entities\CustomerAppointment::query( 'ca' )
             ->leftJoin( 'Appointment', 'a', 'a.id = ca.appointment_id' )
             ->where( 'ca.collaborative_token', $token );
-        if ( $statuses ){
+        if ( $statuses ) {
             $query->whereIn( 'ca.status', $statuses );
         }
 

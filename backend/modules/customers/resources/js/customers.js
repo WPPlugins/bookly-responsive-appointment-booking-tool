@@ -1,5 +1,5 @@
 jQuery(function($) {
-
+    'use strict';
     var
         $customersList        = $('#bookly-customers-list'),
         $mergeListContainer   = $('#bookly-merge-list'),
@@ -45,7 +45,7 @@ jQuery(function($) {
 
     if (BooklyL10n.proEnabled == 1){
         columns = columns.concat([
-            {data: 'address', responsivePriority: 3, orderable: false},
+            {data: 'address', render: $.fn.dataTable.render.text(), responsivePriority: 3, orderable: false},
             {
                 data: 'facebook_id',
                 responsivePriority: 2,

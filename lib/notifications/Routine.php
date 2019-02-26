@@ -49,11 +49,18 @@ abstract class Routine
         if ( ! $settings->getInstant() ) {
             $ca_list   = array();
             $customers = array();
+            $statuses = Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
+                Lib\Entities\CustomerAppointment::STATUS_PENDING,
+                Lib\Entities\CustomerAppointment::STATUS_APPROVED,
+            ) );
 
             switch ( $notification->getType() ) {
                 // Appointment start date add time.
                 case Notification::TYPE_APPOINTMENT_REMINDER:
                     $ca_list = self::getCustomerAppointments( $notification, $settings );
+                    if ( $settings->getStatus() === 'any' ) {
+                        $statuses = array();
+                    }
                     break;
 
                 // Last appointment.
@@ -80,17 +87,11 @@ abstract class Routine
                 foreach ( $ca_list as $ca ) {
                     if ( $token = $ca->getCompoundToken() ) {
                         if ( ! isset ( $compounds[ $token ] ) ) {
-                            $compounds[ $token ] = Compound::createByToken( $token, Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
-                                Lib\Entities\CustomerAppointment::STATUS_PENDING,
-                                Lib\Entities\CustomerAppointment::STATUS_APPROVED,
-                            ) ) );
+                            $compounds[ $token ] = Compound::createByToken( $token, $statuses );
                         }
                     } elseif ( $token = $ca->getCollaborativeToken() ) {
                         if ( ! isset ( $collaboratives[ $token ] ) ) {
-                            $collaboratives[ $token ] = Collaborative::createByToken( $token, Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
-                                Lib\Entities\CustomerAppointment::STATUS_PENDING,
-                                Lib\Entities\CustomerAppointment::STATUS_APPROVED,
-                            ) ) );
+                            $collaboratives[ $token ] = Collaborative::createByToken( $token, $statuses );
                         }
                     } else {
                         $simple = Simple::create( $ca );
@@ -170,13 +171,6 @@ abstract class Routine
         );
         if ( $settings->getStatus() != 'any' ) {
             $query .= sprintf( ' AND `ca`.`status` = "%s"', $settings->getStatus() );
-        } elseif ( $notification->getType() == Notification::TYPE_APPOINTMENT_REMINDER || $notification->getType() == Notification::TYPE_LAST_CUSTOMER_APPOINTMENT ) {
-            $busy = Lib\Proxy\CustomStatuses::prepareBusyStatuses( array(
-                Lib\Entities\CustomerAppointment::STATUS_PENDING,
-                Lib\Entities\CustomerAppointment::STATUS_APPROVED,
-            ) );
-            array_walk( $busy, array( $wpdb, 'escape_by_ref' ) );
-            $query .= sprintf( ' AND `ca`.`status` IN (%s)', implode( ',', array_map( function ( $status ) { return sprintf( "'%s'", $status ); }, $busy ) ) );
         }
 
         $query .= self::getAndWhereServiceType( $settings );

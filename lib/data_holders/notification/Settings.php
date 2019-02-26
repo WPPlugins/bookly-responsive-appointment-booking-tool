@@ -56,6 +56,9 @@ class Settings
                 $this->services = $this->_handleService( $this->settings );
                 break;
             case Notification::TYPE_APPOINTMENT_REMINDER:
+                $this->status   = $this->settings['status'];
+                $this->services = $this->_handleService( $this->settings );
+                // no need to break here
             case Notification::TYPE_LAST_CUSTOMER_APPOINTMENT:
                 if ( $this->settings['option'] == 1 ) {
                     // offset_hours [ 1h .. 30d ] & perform [ after | before ]
@@ -67,9 +70,6 @@ class Settings
                     // at_hour [ 00:00 .. 23:00 ] & offset_bidirectional_hours [ -30d .. 30d ]
                     $this->at_hour      = $this->settings['at_hour'];
                     $this->offset_hours = $this->settings['offset_bidirectional_hours'];
-                }
-                if ( $type != Notification::TYPE_LAST_CUSTOMER_APPOINTMENT ) {
-                    $this->services = $this->_handleService( $this->settings );
                 }
                 break;
             case Notification::TYPE_STAFF_DAY_AGENDA:

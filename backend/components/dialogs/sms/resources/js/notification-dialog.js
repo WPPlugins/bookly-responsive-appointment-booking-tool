@@ -64,17 +64,13 @@ jQuery(function ($) {
 
             switch (notification_type) {
                 case 'appointment_reminder':
-                    hideServices = false;
-                    break;
                 case 'ca_status_changed':
                 case 'ca_status_changed_recurring':
                     hideStatuses = false;
                     hideServices = false;
                     break;
                 case 'customer_birthday':
-                    break;
                 case 'customer_new_wp_user':
-                    break;
                 case 'last_appointment':
                     break;
                 case 'new_booking':
@@ -86,7 +82,6 @@ jQuery(function ($) {
                     $helpType.filter('.' + notification_type).show();
                     break;
                 case 'new_package':
-                    break;
                 case 'package_deleted':
                     break;
                 case 'staff_day_agenda':

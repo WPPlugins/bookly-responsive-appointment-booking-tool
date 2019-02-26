@@ -47,6 +47,9 @@ use Bookly\Backend\Components\Controls\Buttons;
                             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $tableName ?>" aria-expanded="true" aria-controls="<?php echo $tableName ?>">
                                 <?php echo $tableName ?>
                             </a>
+                            <?php if ( ! $table['status'] ) : ?>
+                                <button class="btn btn-success btn-xs pull-right" type="button" data-action="fix-create-table">create</button>
+                            <?php endif ?>
                         </h4>
                     </div>
                     <div id="<?php echo $tableName ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<?php echo $tableName ?>">
@@ -64,7 +67,7 @@ use Bookly\Backend\Components\Controls\Buttons;
                                     <?php foreach ( $table['fields'] as $field => $status ) : ?>
                                         <tr class="<?php echo $status ? 'default' : 'danger' ?>">
                                             <td><?php echo $field ?></td>
-                                            <td><?php echo $status ? 'OK' : 'ERROR' ?></td>
+                                            <td><?php echo $status ? 'OK' : '<button class="btn btn-success btn-xs" type="button" data-action="fix-column">FIX…</button>' ?></td>
                                         </tr>
                                     <?php endforeach ?>
                                     </tbody>
@@ -148,6 +151,42 @@ ADD CONSTRAINT
                     </div>
                     <?php Buttons::renderCustom( null, 'bookly-js-delete btn-lg btn-danger pull-left', 'Delete rows…', array( 'style' => 'display:none' ) ) ?>
                     <?php Buttons::renderCustom( null, 'bookly-js-save btn-lg btn-success', 'Add constraint' ) ?>
+                    <?php Buttons::renderCustom( null, 'btn-lg btn-default', 'Close', array( 'data-dismiss' => 'modal' ) ) ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bookly-js-add-field" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add column</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="bookly-js-loading" style="height: 120px;"></div>
+                    <div class="bookly-js-loading"><pre></pre></div>
+                </div>
+                <div class="modal-footer">
+                    <?php Buttons::renderCustom( null, 'bookly-js-save btn-lg btn-success', 'Add column' ) ?>
+                    <?php Buttons::renderCustom( null, 'btn-lg btn-default', 'Close', array( 'data-dismiss' => 'modal' ) ) ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bookly-js-create-table" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Create table</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="bookly-js-loading" style="height: 120px;"></div>
+                    <div class="bookly-js-loading"><pre></pre></div>
+                </div>
+                <div class="modal-footer">
+                    <?php Buttons::renderCustom( null, 'bookly-js-save btn-lg btn-success', 'Create table' ) ?>
                     <?php Buttons::renderCustom( null, 'btn-lg btn-default', 'Close', array( 'data-dismiss' => 'modal' ) ) ?>
                 </div>
             </div>

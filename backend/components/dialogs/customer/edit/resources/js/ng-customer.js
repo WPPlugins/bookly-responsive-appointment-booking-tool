@@ -67,6 +67,7 @@
 
                 // Init select2 for wp_users.
                 jQuery('#wp_user')
+                    .val(null)
                     .on('select2:unselecting', function(e) {
                         e.preventDefault();
                         jQuery(this).val(null).trigger('change');

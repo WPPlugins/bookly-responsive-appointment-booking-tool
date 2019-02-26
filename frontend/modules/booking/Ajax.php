@@ -94,6 +94,7 @@ class Ajax extends Lib\Base\Ajax
                     'location' => (int) ( Lib\Config::locationsActive() && ( get_option( 'bookly_app_required_location' ) || get_option( 'bookly_locations_allow_services_per_location' ) ) ),
                 ),
             );
+            $userData->sessionSave();
         } else {
             $response = array( 'success' => false, 'error' => Errors::FORM_ID_ERROR );
         }
@@ -150,6 +151,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );
@@ -250,6 +252,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );
@@ -300,6 +303,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );
@@ -366,6 +370,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );
@@ -402,6 +407,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );
@@ -476,6 +482,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );
@@ -570,6 +577,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );
@@ -619,6 +627,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );
@@ -674,8 +683,10 @@ class Ajax extends Lib\Base\Ajax
                 }
                 $userData->fillData( $parameters );
             }
+            $userData->sessionSave();
         }
         $errors['success'] = empty( $errors );
+
         wp_send_json( $errors );
     }
 
@@ -980,6 +991,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         // Output JSON response.
         wp_send_json( $response );

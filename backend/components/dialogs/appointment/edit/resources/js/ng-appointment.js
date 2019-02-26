@@ -667,7 +667,7 @@
                     notes                    : item.notes,
                     status                   : item.status,
                     payment_id               : item.payment_id,
-                    payment_create           : item.payment_create,
+                    payment_create           : item.payment_create||false,
                     payment_price            : item.payment_price,
                     payment_tax              : item.payment_tax
                 });

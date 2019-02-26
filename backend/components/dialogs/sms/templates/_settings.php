@@ -7,9 +7,9 @@ $service_dropdown_data = \Bookly\Lib\Utils\Common::getServiceDataForDropDown( 's
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                <label for="notification_status_1"><?php esc_attr_e( 'Appointment status', 'bookly' ) ?></label>
+                <label for="notification_status"><?php esc_attr_e( 'Appointment status', 'bookly' ) ?></label>
                 <p class="help-block"><?php esc_html_e( 'Select what status an appointment should have for the notification to be sent.', 'bookly' ) ?></p>
-                <select class="form-control" name="notification[settings][status]" id="notification_status_1">
+                <select class="form-control" name="notification[settings][status]" id="notification_status">
                     <option value="any"><?php esc_attr_e( 'Any', 'bookly' ) ?></option>
                     <?php foreach ( $statuses as $status ) : ?>
                         <option value="<?php echo $status ?>"><?php echo CustomerAppointment::statusToString( $status ) ?></option>

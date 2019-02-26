@@ -258,6 +258,14 @@ class UserBookingData
      */
     public function destruct()
     {
+        $this->sessionSave();
+    }
+
+    /**
+     * Save data to session.
+     */
+    public function sessionSave()
+    {
         Session::setFormVar( $this->form_id, 'data',            $this->getData() );
         Session::setFormVar( $this->form_id, 'cart',            $this->cart->getItemsData() );
         Session::setFormVar( $this->form_id, 'chain',           $this->chain->getItemsData() );
