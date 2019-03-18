@@ -256,8 +256,6 @@ abstract class Routine
 
             $query = strtr( $query, $replace );
 
-            $query .= self::getAndWhereServiceType( $settings );
-
             foreach ( (array) $wpdb->get_results( $query, ARRAY_A ) as $fields ) {
                 $ca_list[] = new CustomerAppointment( $fields );
             }
@@ -507,7 +505,7 @@ abstract class Routine
      */
     private static function getAndWhereServiceType( Settings $settings )
     {
-        $query = '';
+        $query = array();
         /* [
          *   'simple'   => [ 1 => [1] ],
          *   'compound' => [ 4 => [2,3]],
@@ -518,28 +516,28 @@ abstract class Routine
         if ( $services != 'any' ) {
             foreach ( $services as $service_type => $service ) {
                 $ids = array();
-                foreach ( $service as $simple_service_ids ) {
-                    $ids[] = array_merge( $ids, $simple_service_ids );
+                foreach ( $service as $service_id => $simple_service_ids ) {
+                    $ids[] = $service_id;
                 }
                 if ( $ids ) {
                     $ids = array_unique( $ids );
                     switch ( $service_type ) {
                         case Service::TYPE_SIMPLE:
                         case Service::TYPE_PACKAGE:
-                            $query .= sprintf( ' AND `a`.`service_id` IN (%s)', implode( ', ', $ids ) );
+                            $query[] = sprintf( '`a`.`service_id` IN (%s)', implode( ', ', $ids ) );
                             break;
                         case Service::TYPE_COMPOUND:
-                            $query .= sprintf( ' AND `ca`.`compound_service_id` IN (%s)', implode( ', ', $ids ) );
+                            $query[] = sprintf( '`ca`.`compound_service_id` IN (%s)', implode( ', ', $ids ) );
                             break;
                         case Service::TYPE_COLLABORATIVE:
-                            $query .= sprintf( ' AND `ca`.`collaborative_service_id` IN (%s)', implode( ', ', $ids ) );
+                            $query[] = sprintf( '`ca`.`collaborative_service_id` IN (%s)', implode( ', ', $ids ) );
                             break;
                     }
                 }
             }
         }
 
-        return $query;
+        return $query ? ' AND ( ' . implode( ' OR ', $query ) . ') ' : '';
     }
 
     /**

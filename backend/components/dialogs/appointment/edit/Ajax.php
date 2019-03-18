@@ -59,10 +59,11 @@ class Ajax extends Lib\Base\Ajax
 
         // Staff list.
         $staff         = Lib\Entities\Staff::query()->findOne();
-        $staff_members = $staff ? Lib\Config::proActive() ? Lib\Utils\Common::isCurrentUserSupervisor() ? Lib\Entities\Staff::query()->find() : Lib\Entities\Staff::query()->where( 'wp_user_id', get_current_user_id() )->find() : array( $staff ) : array();
+        $staff_members = $staff ? Lib\Config::proActive() ? Lib\Utils\Common::isCurrentUserSupervisor() ? Lib\Entities\Staff::query()->sortBy( 'position' )->find() : Lib\Entities\Staff::query()->where( 'wp_user_id', get_current_user_id() )->find() : array( $staff ) : array();
         $postfix_archived = sprintf( ' (%s)', __( 'Archived', 'bookly' ) );
 
         $max_duration  = 0;
+        $has_categories = (bool) Lib\Entities\Category::query()->findOne();
 
         foreach ( $staff_members as $staff_member ) {
             $services = array();
@@ -74,6 +75,7 @@ class Ajax extends Lib\Base\Ajax
                 if ( $type == Lib\Entities\Service::TYPE_SIMPLE || ! empty( $sub_services ) ) {
                     if ( $staff_service->getLocationId() === null || Lib\Proxy\Locations::prepareStaffLocationId( $staff_service->getLocationId(), $staff_service->getStaffId() ) == $staff_service->getLocationId() ) {
                         if ( ! in_array( $staff_service->service->getId(), array_map( function ( $service ) { return $service['id']; }, $services ) ) ) {
+                            $category = Lib\Entities\Category::find( Lib\Entities\Service::find( $staff_service->getServiceId() )->getCategoryId() );
                             $services[] = array(
                                 'id'              => $staff_service->service->getId(),
                                 'title'           => sprintf(
@@ -81,6 +83,7 @@ class Ajax extends Lib\Base\Ajax
                                     $staff_service->service->getTitle(),
                                     Lib\Utils\DateTime::secondsToInterval( $staff_service->service->getDuration() )
                                 ),
+                                'category'        => $category ? $category->getName() : ( $has_categories ? __( 'Uncategorized', 'bookly' ) : ''),
                                 'duration'        => $staff_service->service->getDuration(),
                                 'units_min'       => $staff_service->service->getUnitsMin(),
                                 'units_max'       => $staff_service->service->getUnitsMax(),
@@ -118,6 +121,7 @@ class Ajax extends Lib\Base\Ajax
                 'archived'  => $staff_member->getVisibility() == 'archive',
                 'services'  => $services,
                 'locations' => $locations,
+                'category'  => Lib\Proxy\Pro::getStaffCategoryName( $staff_member->getCategoryId() ),
             );
         }
 

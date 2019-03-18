@@ -305,7 +305,7 @@ class Service extends Lib\Base\Entity
                             ->where( 'a.service_id', $service_id )
                             ->where( 'ca.compound_service_id', $compound_service_id )
                             ->where( 'ca.customer_id', $customer_id )
-                            ->whereGt( 'a.start_date', $bound_start )
+                            ->whereGte( 'a.start_date', $bound_start )
                             ->whereLt( 'a.start_date', $bound_end )
                             ->whereNot( 'ca.status', CustomerAppointment::STATUS_WAITLISTED )
                             ->count();

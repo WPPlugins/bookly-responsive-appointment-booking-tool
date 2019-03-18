@@ -20,7 +20,7 @@ class Ajax extends Lib\Base\Ajax
     /**
      * Save notification.
      */
-    public function saveNotification()
+    public static function saveNotification()
     {
         $data         = self::parameter( 'notification' );
         $notification = new Lib\Entities\Notification();

@@ -22,13 +22,13 @@ use Bookly\Lib\Entities\CustomerAppointment;
                     <div ng-hide="loading || form.screen != 'main'" class="modal-body">
                         <div class=form-group>
                             <label for="bookly-provider"><?php esc_html_e( 'Provider', 'bookly' ) ?></label>
-                            <select id="bookly-provider" class="form-control" ng-model="form.staff" ng-options="s.full_name + (form.staff_any == s ? ' (' + dataSource.l10n.staff_any + ')' : '') for s in dataSource.data.staff | filter:filterStaff" ng-change="onStaffChange()"></select>
+                            <select id="bookly-provider" class="form-control" ng-model="form.staff" ng-options="s.full_name + (form.staff_any == s ? ' (' + dataSource.l10n.staff_any + ')' : '') group by s.category for s in dataSource.data.staff | filter:filterStaff" ng-change="onStaffChange()"></select>
                         </div>
 
                         <div class=form-group>
                             <label for="bookly-service"><?php esc_html_e( 'Service', 'bookly' ) ?></label>
                             <select id="bookly-service" class="form-control" ng-model="form.service"
-                                    ng-options="s.title for s in form.staff.services" ng-change="onServiceChange()">
+                                    ng-options="s.title group by s.category for s in form.staff.services" ng-change="onServiceChange()">
                                 <option value=""><?php esc_html_e( '-- Select a service --', 'bookly' ) ?></option>
                             </select>
                             <p class="text-danger" my-slide-up="errors.service_required">
