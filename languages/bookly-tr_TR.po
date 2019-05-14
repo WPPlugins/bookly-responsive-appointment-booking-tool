@@ -14,15 +14,15 @@ msgstr "Takvim"
 
 #: 
 msgid "Appointments"
-msgstr "Birebirler"
+msgstr "Randevular"
 
 #: 
 msgid "Staff Members"
-msgstr "Öğretmenler"
+msgstr "Uzmanlar"
 
 #: 
 msgid "Services"
-msgstr "Dersler"
+msgstr "Hizmetler"
 
 #: 
 msgid "SMS Notifications"
@@ -34,7 +34,7 @@ msgstr "E-posta Bildirimleri"
 
 #: 
 msgid "Customers"
-msgstr "Öğrenciler"
+msgstr "Müşteriler"
 
 #: 
 msgid "Payments"
@@ -98,7 +98,7 @@ msgstr "Ücret"
 
 #: 
 msgid "Edit"
-msgstr "Düzenle"
+msgstr " "
 
 #: 
 msgid "Total"
@@ -114,7 +114,7 @@ msgstr "sepetinizde ki toplam randevu sayısı"
 
 #: 
 msgid "booking number"
-msgstr "birebir numarası"
+msgstr "randevu numarası"
 
 #: 
 msgid "name of category"
@@ -130,35 +130,35 @@ msgstr "kişi sayısı"
 
 #: 
 msgid "date of service"
-msgstr "birebir tarihi"
+msgstr "servis tarihi"
 
 #: 
 msgid "info of service"
-msgstr "birebir bilgisi"
+msgstr "servis bilgisi"
 
 #: 
 msgid "name of service"
-msgstr "birebir ismi"
+msgstr "servis ismi"
 
 #: 
 msgid "price of service"
-msgstr "birebir ücreti"
+msgstr "servis ücreti"
 
 #: 
 msgid "time of service"
-msgstr "birebir saati"
+msgstr "servis saati"
 
 #: 
 msgid "info of staff"
-msgstr "öğretmen bilgisi"
+msgstr "uzman bilgisi"
 
 #: 
 msgid "name of staff"
-msgstr "öğretmen ismi"
+msgstr "uzmanın ismi"
 
 #: 
 msgid "total price of booking"
-msgstr "birebir için toplam ücret"
+msgstr "servis için toplam ücret"
 
 #: 
 msgid "Edit custom CSS"
@@ -186,15 +186,15 @@ msgstr "Düzenlemek için altı çizili metine tıklayın"
 
 #: 
 msgid "Make selecting employee required"
-msgstr "Öğretmen seçimi zorunludur"
+msgstr "Uzman seçimi zorunludur"
 
 #: 
 msgid "Show service price next to employee name"
-msgstr "Öğretmen isminin yanında birebir ücretini göster"
+msgstr "Uzman isminin yanında servis ücretini göster"
 
 #: 
 msgid "Show service duration next to service name"
-msgstr "Öğretmen isminin yanında birebir süresini göster"
+msgstr "Uzman isminin yanında servis süresini göster"
 
 #: 
 msgid "Show calendar"
@@ -226,15 +226,15 @@ msgstr ""
 
 #: 
 msgid "Tomorrow"
-msgstr ""
+msgstr "Yarın"
 
 #: 
 msgid "Yesterday"
-msgstr ""
+msgstr "Dün"
 
 #: 
 msgid "Apply"
-msgstr ""
+msgstr "OK"
 
 #: 
 msgid "To"
@@ -250,11 +250,11 @@ msgstr ""
 
 #: 
 msgid "No appointments for selected period."
-msgstr ""
+msgstr "Seçili tarihte hiç randevu yok."
 
 #: 
 msgid "Processing..."
-msgstr ""
+msgstr "İşleniyor..."
 
 #: 
 msgid "%s of %s"
@@ -266,43 +266,43 @@ msgstr ""
 
 #: 
 msgid "Customer Name"
-msgstr ""
+msgstr "Müşteri"
 
 #: 
 msgid "Customer Phone"
-msgstr ""
+msgstr "Cep"
 
 #: 
 msgid "Customer Email"
-msgstr ""
+msgstr "eMail"
 
 #: 
 msgid "Duration"
-msgstr ""
+msgstr "Süre"
 
 #: 
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #: 
 msgid "Payment"
-msgstr ""
+msgstr "Ödeme"
 
 #: 
 msgid "Appointment Date"
-msgstr ""
+msgstr "Tarih"
 
 #: 
 msgid "New appointment"
-msgstr ""
+msgstr "Yeni randevu"
 
 #: 
 msgid "Customer"
-msgstr ""
+msgstr "Müşteri"
 
 #: 
 msgid "Edit appointment"
-msgstr ""
+msgstr "Randevuyu güncelle"
 
 #: 
 msgid "Week"
@@ -322,7 +322,7 @@ msgstr ""
 
 #: 
 msgid "Delete"
-msgstr ""
+msgstr "Sil"
 
 #: 
 msgid "No staff selected"
@@ -362,19 +362,19 @@ msgstr ""
 
 #: 
 msgid "Provider"
-msgstr ""
+msgstr "Hizmet veren"
 
 #: 
 msgid "Service"
-msgstr ""
+msgstr "Hizmet"
 
 #: 
 msgid "-- Select a service --"
-msgstr ""
+msgstr "-- Hizmet seçin--"
 
 #: 
 msgid "Please select a service"
-msgstr ""
+msgstr "Lütfen hizmet seçiniz"
 
 #: 
 msgid "Location"
@@ -382,11 +382,11 @@ msgstr ""
 
 #: 
 msgid "Period"
-msgstr ""
+msgstr "Zaman"
 
 #: 
 msgid "to"
-msgstr ""
+msgstr "ile"
 
 #: 
 msgid "Selected period doesn't match service duration"
@@ -414,23 +414,23 @@ msgstr ""
 
 #: 
 msgid "-- Search customers --"
-msgstr ""
+msgstr "-- Müşteri Arayın --"
 
 #: 
 msgid "New customer"
-msgstr ""
+msgstr "Yeni müşteri"
 
 #: 
 msgid "Send notifications"
-msgstr ""
+msgstr "Bildirim gönder"
 
 #: 
 msgid "Don't send"
-msgstr ""
+msgstr "Gönderme"
 
 #: 
 msgid "Internal note"
-msgstr ""
+msgstr "İç not"
 
 #: 
 msgid "Number of persons"
@@ -469,10 +469,6 @@ msgid "Code"
 msgstr ""
 
 #: 
-msgid "All Services"
-msgstr ""
-
-#: 
 msgid "Reorder"
 msgstr ""
 
@@ -482,15 +478,15 @@ msgstr ""
 
 #: 
 msgid "Edit customer"
-msgstr ""
+msgstr "Müşteri güncelle"
 
 #: 
 msgid "Create customer"
-msgstr ""
+msgstr "Müşteri yarat"
 
 #: 
 msgid "Quick search customer"
-msgstr ""
+msgstr "Hızlıca müşteri ara"
 
 #: 
 msgid "User"
@@ -498,19 +494,19 @@ msgstr ""
 
 #: 
 msgid "Notes"
-msgstr ""
+msgstr "Notlar"
 
 #: 
 msgid "Last appointment"
-msgstr ""
+msgstr "Son Randevu"
 
 #: 
 msgid "Total appointments"
-msgstr ""
+msgstr "Randevu sayısı"
 
 #: 
 msgid "New Customer"
-msgstr ""
+msgstr "Yeni müşteri"
 
 #: 
 msgid "First name"
@@ -526,11 +522,11 @@ msgstr ""
 
 #: 
 msgid "Name"
-msgstr ""
+msgstr "İsim"
 
 #: 
 msgid "Phone"
-msgstr ""
+msgstr "Cep"
 
 #: 
 msgid "Email"
@@ -998,11 +994,11 @@ msgstr ""
 
 #: 
 msgid "Pending"
-msgstr ""
+msgstr "Bekliyor"
 
 #: 
 msgid "Approved"
-msgstr ""
+msgstr "OK"
 
 #: 
 msgid "Approve appointment URL (success)"
@@ -1462,7 +1458,7 @@ msgstr ""
 
 #: 
 msgid "Documentation"
-msgstr ""
+msgstr "Dökümanlar"
 
 #: 
 msgid "Need help? Contact us here."
@@ -1470,7 +1466,7 @@ msgstr ""
 
 #: 
 msgid "Feedback"
-msgstr ""
+msgstr "Bildirin"
 
 #: 
 msgid "Leave us a message"
@@ -1985,7 +1981,7 @@ msgstr ""
 
 #: 
 msgid "Cancelled"
-msgstr ""
+msgstr "İptal"
 
 #: 
 msgid "Error connecting to server."
@@ -2072,7 +2068,7 @@ msgstr ""
 
 #: 
 msgid "Rejected"
-msgstr ""
+msgstr "Red"
 
 #: 
 msgid "Notification to customer about approved appointment"
@@ -2364,7 +2360,7 @@ msgstr ""
 
 #: 
 msgid "Internal Notes"
-msgstr ""
+msgstr "İç Notlar"
 
 #: 
 msgid "%d year"
@@ -2540,7 +2536,7 @@ msgstr ""
 
 #: 
 msgid "Select for merge"
-msgstr ""
+msgstr "Birleştir"
 
 #: 
 msgid "Merge list"
@@ -4346,51 +4342,7 @@ msgid "Analytics"
 msgstr ""
 
 #: 
-msgid "New Customers"
-msgstr ""
-
-#: 
-msgid "Sessions"
-msgstr ""
-
-#: 
-msgid "Visits"
-msgstr ""
-
-#: 
 msgid "Show birthday field"
-msgstr ""
-
-#: 
-msgid "Sessions - number of completed and/or planned service sessions."
-msgstr ""
-
-#: 
-msgid "Approved - number of visitors of sessions with Approved status during the selected period."
-msgstr ""
-
-#: 
-msgid "Pending - number of visitors of sessions with Pending status during the selected period."
-msgstr ""
-
-#: 
-msgid "Rejected - number of visitors of sessions with Rejected status during the selected period."
-msgstr ""
-
-#: 
-msgid "Cancelled - number of visitors of sessions with Cancelled status during the selected period."
-msgstr ""
-
-#: 
-msgid "Customers - number of unique customers who made bookings during the selected period."
-msgstr ""
-
-#: 
-msgid "New customers - number of new customers added to the database during the selected period."
-msgstr ""
-
-#: 
-msgid "Total - approximate cost of appointments with Approved and Pending statuses, calculated on the basis of the price list. Appointments that are paid through the front-end and have Pending payment status are included in brackets."
 msgstr ""
 
 #: 
@@ -5096,10 +5048,6 @@ msgid "If you want to become invisible to your customers set the visibility to \
 msgstr ""
 
 #: 
-msgid "If <b>Publishable Key</b> is provided then Bookly will use <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>for collecting credit card details."
-msgstr ""
-
-#: 
 msgid "Secret Key"
 msgstr ""
 
@@ -5519,22 +5467,6 @@ msgid "Show files"
 msgstr ""
 
 #: 
-msgid "Show custom duration"
-msgstr ""
-
-#: 
-msgid "Show number of persons"
-msgstr ""
-
-#: 
-msgid "Show location"
-msgstr ""
-
-#: 
-msgid "Show quantity"
-msgstr ""
-
-#: 
 msgid "Show timezone"
 msgstr ""
 
@@ -5560,10 +5492,6 @@ msgstr ""
 
 #: 
 msgid "Proceed to Bookly Pro without license verification"
-msgstr ""
-
-#: 
-msgid "max"
 msgstr ""
 
 #: 
@@ -5732,31 +5660,31 @@ msgstr ""
 
 #: 
 msgid "Created at any time"
-msgstr ""
+msgstr "Kayıt zamanı"
 
 #: 
 msgid "Created"
-msgstr ""
+msgstr "Kayıt"
 
 #: 
 msgid "Any time"
-msgstr ""
+msgstr "Herhangi"
 
 #: 
 msgid "Last 7 days"
-msgstr ""
+msgstr "Son 7 gün"
 
 #: 
 msgid "Last 30 days"
-msgstr ""
+msgstr "Son 30 gün"
 
 #: 
 msgid "This month"
-msgstr ""
+msgstr "Bu ay"
 
 #: 
 msgid "Custom range"
-msgstr ""
+msgstr "Özel aralık"
 
 #: 
 msgid "Archived"
@@ -5812,7 +5740,7 @@ msgstr ""
 
 #: 
 msgid "Last month"
-msgstr ""
+msgstr "Geçen ay"
 
 #: 
 msgid "Hello,\n"
@@ -5861,10 +5789,6 @@ msgid "Slot length as service duration"
 msgstr ""
 
 #: 
-msgid "You must select at least one repeat option for recurring services."
-msgstr ""
-
-#: 
 msgid "Align buttons to the left"
 msgstr ""
 
@@ -5902,7 +5826,7 @@ msgstr ""
 
 #: 
 msgid "Feature requests"
-msgstr ""
+msgstr "Özellik iste"
 
 #: 
 msgid "In the Feature Requests section of our Community, you can make suggestions about what you'd like to see in our future releases."
@@ -6226,7 +6150,7 @@ msgstr ""
 
 #: 
 msgid "View this page at Bookly Pro Demo"
-msgstr ""
+msgstr "Pro versiyonda bu sayfa"
 
 #: 
 msgid "Visit demo"
@@ -6576,11 +6500,11 @@ msgstr ""
 
 #: 
 msgid "Send if new or status changed"
-msgstr ""
+msgstr "Yeni veya Durumu değiştiyse"
 
 #: 
 msgid "Send as for new"
-msgstr ""
+msgstr "Yeniyse"
 
 #: 
 msgid "New email notification"
@@ -6592,7 +6516,7 @@ msgstr ""
 
 #: 
 msgid "Contact us"
-msgstr ""
+msgstr "Bize ulaşın"
 
 #: 
 msgid "Booking form"
@@ -6849,38 +6773,86 @@ msgid "Synchronize with Outlook Calendar"
 msgstr ""
 
 #: 
-msgid "Forms"
+msgid "Set maximum value for Quantity field."
 msgstr ""
 
 #: 
-msgid "Short code"
+msgid "Multiply Appointments"
 msgstr ""
 
 #: 
-msgid "Select form"
+msgid "Advanced"
 msgstr ""
 
 #: 
-msgid "Add Bookly forms"
+msgid "Dashboard"
 msgstr ""
 
 #: 
-msgid "Value"
+msgid "See the number of appointments and total revenue for the selected period"
 msgstr ""
 
 #: 
-msgid "New form"
+msgid "Revenue"
 msgstr ""
 
 #: 
-msgid "Edit form"
+msgid "Approved appointments"
 msgstr ""
 
 #: 
-msgid "New form..."
+msgid "Pending appointments"
 msgstr ""
 
 #: 
-msgid "Forms editing available on page"
+msgid "Limit"
+msgstr ""
+
+#: 
+msgid "Note: If payment is made for several services, then for each service you will see the entire amount paid as revenue."
+msgstr ""
+
+#: 
+msgid "Quick search services"
+msgstr ""
+
+#: 
+msgid "Categories..."
+msgstr ""
+
+#: 
+msgid "Add service..."
+msgstr ""
+
+#: 
+msgid "Add..."
+msgstr ""
+
+#: 
+msgid "Create service"
+msgstr ""
+
+#: 
+msgid "Edit service"
+msgstr ""
+
+#: 
+msgid "Categories"
+msgstr ""
+
+#: 
+msgid "Add category"
+msgstr ""
+
+#: 
+msgid "You must select at least one repeat option for recurring services."
+msgstr ""
+
+#: 
+msgid "1. Provide <b>Secret</b> and <b>Publishable</b> keys which are available in the <a href=\"%s\" target=\"_blank\">Dashboard</a>."
+msgstr ""
+
+#: 
+msgid "2. In the Dashboard's <a href=\"%s\" target=\"_blank\">Webhooks settings</a> section, click <b>Add endpoint</b> to reveal a form to add a new endpoint for receiving events."
 msgstr ""
 

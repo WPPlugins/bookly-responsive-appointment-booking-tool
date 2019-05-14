@@ -469,10 +469,6 @@ msgid "Code"
 msgstr "Код"
 
 #: 
-msgid "All Services"
-msgstr "Все сервисы"
-
-#: 
 msgid "Reorder"
 msgstr "Переместить"
 
@@ -1314,7 +1310,7 @@ msgstr "SMS уведомления (или \"Bookly SMS\") это сервис �
 
 #: 
 msgid "It is necessary to register in order to start using this service."
-msgstr "Для того, чтобы начать пользоваться данным сервисов, необходимо сначала зарегистрироваться."
+msgstr "Для того, чтобы начать пользоваться данным сервисом, необходимо сначала зарегистрироваться."
 
 #: 
 msgid "After registration you will need to configure notification messages and top up your balance in order to start sending SMS."
@@ -4565,52 +4561,8 @@ msgid "Analytics"
 msgstr "Аналитика"
 
 #: 
-msgid "New Customers"
-msgstr "Новые клиенты"
-
-#: 
-msgid "Sessions"
-msgstr "Сессии"
-
-#: 
-msgid "Visits"
-msgstr "Визиты"
-
-#: 
 msgid "Show birthday field"
 msgstr "Показывать поле с датой рождения"
-
-#: 
-msgid "Sessions - number of completed and/or planned service sessions."
-msgstr "Сессии – количество сессий предоставления услуг, состоявшихся и/или запланированных."
-
-#: 
-msgid "Approved - number of visitors of sessions with Approved status during the selected period."
-msgstr "Подтверждено – количество посетителей сессий со статусом \"Подтверждено\" за указанный период."
-
-#: 
-msgid "Pending - number of visitors of sessions with Pending status during the selected period."
-msgstr "В ожидании – количество посетителей сессий со статусом \"В ожидании\" за указанный период."
-
-#: 
-msgid "Rejected - number of visitors of sessions with Rejected status during the selected period."
-msgstr "Отказано – количество посетителей сессий со статусом \"Отказано\" за указанный период."
-
-#: 
-msgid "Cancelled - number of visitors of sessions with Cancelled status during the selected period."
-msgstr "Отменено – количество посетителей сессий со статусом \"Отменено\" за указанный период."
-
-#: 
-msgid "Customers - number of unique customers who made bookings during the selected period."
-msgstr "Клиенты – количество уникальных клиентов, выполнявших бронирования за указанный период."
-
-#: 
-msgid "New customers - number of new customers added to the database during the selected period."
-msgstr "Новые клиенты – количество новых клиентов, добавленных в базу за указанный период."
-
-#: 
-msgid "Total - approximate cost of appointments with Approved and Pending statuses, calculated on the basis of the price list. Appointments that are paid through the front-end and have Pending payment status are included in brackets."
-msgstr "Итоговая стоимость – приблизительная стоимость услуг в статусе Approved и Pending, рассчитанная на основе прайс-листа. Услуги, оплаченные из фронтенда и имеющие статус платежа Pending, указываются в скобках."
 
 #: 
 msgid "Show Facebook login button"
@@ -5471,10 +5423,6 @@ msgid "If you want to become invisible to your customers set the visibility to \
 msgstr "Если вы хотите быть невидимым для клиентов, установите видимость в значение \"Закрытый\"."
 
 #: 
-msgid "If <b>Publishable Key</b> is provided then Bookly will use <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>for collecting credit card details."
-msgstr "Если предоставлен <b>Publishable Key</b>, тогда Bookly будет использовать <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>для сбора данных кредитных карт."
-
-#: 
 msgid "Secret Key"
 msgstr "Secret Key"
 
@@ -5927,22 +5875,6 @@ msgid "Show files"
 msgstr "Показывать файлы"
 
 #: 
-msgid "Show custom duration"
-msgstr "Показывать изменяемую продолжительность"
-
-#: 
-msgid "Show number of persons"
-msgstr "Показывать количество персон"
-
-#: 
-msgid "Show location"
-msgstr "Показывать место"
-
-#: 
-msgid "Show quantity"
-msgstr "Показывать количество"
-
-#: 
 msgid "Show timezone"
 msgstr "Показывать часовой пояс"
 
@@ -5969,10 +5901,6 @@ msgstr "Благодарим вас за то, что выбрали Bookly Pro 
 #: 
 msgid "Proceed to Bookly Pro without license verification"
 msgstr "Перейдите к Bookly Pro без подтверждения лицензии"
-
-#: 
-msgid "max"
-msgstr "максимум"
 
 #: 
 msgid "Please verify your Bookly Pro license"
@@ -6273,10 +6201,6 @@ msgstr "Интервал, который будет использован в к
 #: 
 msgid "Slot length as service duration"
 msgstr "Длина интервала в качестве продолжительности сервиса"
-
-#: 
-msgid "You must select at least one repeat option for recurring services."
-msgstr "Для работы повторяющихся сервисов необходимо выбрать хотя бы одну опцию повторения."
 
 #: 
 msgid "Align buttons to the left"
@@ -7351,38 +7275,86 @@ msgid "Synchronize with Outlook Calendar"
 msgstr "Синхронизировать с Календарём Outlook"
 
 #: 
-msgid "Forms"
+msgid "Set maximum value for Quantity field."
 msgstr ""
 
 #: 
-msgid "Short code"
+msgid "Multiply Appointments"
 msgstr ""
 
 #: 
-msgid "Select form"
+msgid "Advanced"
 msgstr ""
 
 #: 
-msgid "Add Bookly forms"
+msgid "Dashboard"
 msgstr ""
 
 #: 
-msgid "Value"
+msgid "See the number of appointments and total revenue for the selected period"
 msgstr ""
 
 #: 
-msgid "New form"
+msgid "Revenue"
 msgstr ""
 
 #: 
-msgid "Edit form"
+msgid "Approved appointments"
 msgstr ""
 
 #: 
-msgid "New form..."
+msgid "Pending appointments"
 msgstr ""
 
 #: 
-msgid "Forms editing available on page"
+msgid "Limit"
+msgstr ""
+
+#: 
+msgid "Note: If payment is made for several services, then for each service you will see the entire amount paid as revenue."
+msgstr ""
+
+#: 
+msgid "Quick search services"
+msgstr ""
+
+#: 
+msgid "Categories..."
+msgstr ""
+
+#: 
+msgid "Add service..."
+msgstr ""
+
+#: 
+msgid "Add..."
+msgstr ""
+
+#: 
+msgid "Create service"
+msgstr ""
+
+#: 
+msgid "Edit service"
+msgstr ""
+
+#: 
+msgid "Categories"
+msgstr ""
+
+#: 
+msgid "Add category"
+msgstr ""
+
+#: 
+msgid "You must select at least one repeat option for recurring services."
+msgstr ""
+
+#: 
+msgid "1. Provide <b>Secret</b> and <b>Publishable</b> keys which are available in the <a href=\"%s\" target=\"_blank\">Dashboard</a>."
+msgstr ""
+
+#: 
+msgid "2. In the Dashboard's <a href=\"%s\" target=\"_blank\">Webhooks settings</a> section, click <b>Add endpoint</b> to reveal a form to add a new endpoint for receiving events."
 msgstr ""
 

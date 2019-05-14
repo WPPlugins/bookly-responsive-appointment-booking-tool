@@ -12,13 +12,11 @@ use Bookly\Lib\Entities\Payment;
 <?php else: ?>
     <p class="help-block"><?php esc_html_e( 'This setting affects the cost of the booking according to the payment gateway used. Specify a percentage or fixed amount. Use minus ("-") sign for decrease/discount.', 'bookly' ) ?></p>
 <?php endif ?>
-<div class="form-group">
-    <div class="row">
-        <div class="col-md-6">
-            <?php Settings\Inputs::renderNumber( 'bookly_' . $gateway . '_increase', __( 'Increase/Discount (%)', 'bookly' ), '', -100, 'any', 100 ) ?>
-        </div>
-        <div class="col-md-6">
-            <?php Settings\Inputs::renderNumber( 'bookly_' . $gateway . '_addition', __( 'Addition/Deduction', 'bookly' ), '', null, 'any' ) ?>
-        </div>
+<div class="row">
+    <div class="col-md-6">
+        <?php Settings\Inputs::renderNumber( 'bookly_' . $gateway . '_increase', __( 'Increase/Discount (%)', 'bookly' ), '', -100, 'any', 100 ) ?>
+    </div>
+    <div class="col-md-6">
+        <?php Settings\Inputs::renderNumber( 'bookly_' . $gateway . '_addition', __( 'Addition/Deduction', 'bookly' ), '', null, 'any' ) ?>
     </div>
 </div>

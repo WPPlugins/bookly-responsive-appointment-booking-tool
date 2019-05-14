@@ -22,8 +22,6 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function getPayments()
     {
-        $columns = self::parameter( 'columns' );
-        $order   = self::parameter( 'order' );
         $filter  = self::parameter( 'filter' );
 
         $query = Lib\Entities\Payment::query( 'p' )
@@ -65,11 +63,6 @@ class Ajax extends Lib\Base\Ajax
             $query->where( 'ca.customer_id', $filter['customer'] );
         }
 
-        foreach ( $order as $sort_by ) {
-            $query->sortBy( $columns[ $sort_by['column'] ]['data'] )
-                ->order( $sort_by['dir'] == 'desc' ? Lib\Query::ORDER_DESCENDING : Lib\Query::ORDER_ASCENDING );
-        }
-
         $payments = $query->fetchArray();
 
         $data  = array();
@@ -87,14 +80,16 @@ class Ajax extends Lib\Base\Ajax
 
             $data[] = array(
                 'id'         => $payment['id'],
-                'created'    => Lib\Utils\DateTime::formatDateTime( $payment['created'] ),
+                'created'    => $payment['created'],
+                'created_format' => Lib\Utils\DateTime::formatDateTime( $payment['created'] ),
                 'type'       => Lib\Entities\Payment::typeToString( $payment['type'] ),
                 'customer'   => $payment['customer'] ?: $details['customer'],
                 'provider'   => ( $payment['provider'] ?: $details['items'][0]['staff_name'] ) . $multiple,
                 'service'    => ( $payment['service'] ?: $details['items'][0]['service_name'] ) . $multiple,
-                'start_date' => ( $payment['start_date']
+                'start_date' => $payment['start_date'] ?: $details['items'][0]['appointment_date'] ?: __( 'N/A', 'bookly' ),
+                'start_date_format' => $payment['start_date']
                     ? Lib\Utils\DateTime::formatDateTime( $payment['start_date'] )
-                    : ( $details['items'][0]['appointment_date'] ? Lib\Utils\DateTime::formatDateTime( $details['items'][0]['appointment_date'] ) . $multiple : __( 'N/A', 'bookly' ) . $multiple ) ),
+                    : ( $details['items'][0]['appointment_date'] ? Lib\Utils\DateTime::formatDateTime( $details['items'][0]['appointment_date'] ) . $multiple : __( 'N/A', 'bookly' ) . $multiple ),
                 'paid'       => $paid_title,
                 'status'     => Lib\Entities\Payment::statusToString( $payment['status'] ),
             );

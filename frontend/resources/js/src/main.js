@@ -37,6 +37,9 @@ window.bookly = function(options) {
 
         importScript(src, true);
     }
+    if (options.hasOwnProperty('stripe') && options.stripe.enabled) {
+        importScript('https://js.stripe.com/v3/', true);
+    }
 };
 
 /**

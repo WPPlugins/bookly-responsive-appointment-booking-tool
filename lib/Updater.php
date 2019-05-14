@@ -9,6 +9,9 @@ class Updater extends Base\Updater
 {
     function update_16_9()
     {
+        /** @global \wpdb $wpdb */
+        global $wpdb;
+
         $this->alterTables( array(
             'bookly_staff' => array(
                 'ALTER TABLE `%s` ADD COLUMN `outlook_data` TEXT DEFAULT NULL AFTER `google_data`',

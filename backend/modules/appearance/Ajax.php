@@ -97,8 +97,6 @@ class Ajax extends Lib\Base\Ajax
             'bookly_app_service_duration_with_price',
             'bookly_cst_first_last_name',
             'bookly_app_show_email_confirm',
-            // Options.
-            'bookly_multiply_appointments_quantity_max',
         ) ) );
 
         // Allow add-ons to add their options.

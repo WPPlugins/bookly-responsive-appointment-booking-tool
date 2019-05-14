@@ -235,12 +235,12 @@ use Bookly\Backend\Modules\Appearance\Proxy;
                                         <?php // Render unique data per step
                                         switch ( $step ) :
                                             case 1: include '_1_service.php';   break;
-                                            case 2: Proxy\ServiceExtras::renderStep( $self::renderTemplate( '_progress_tracker', compact( 'step', 'editable' ), false ) );
+                                            case 2: Proxy\ServiceExtras::renderStep( $self::renderTemplate( '_progress_tracker', compact( 'step' ), false ) );
                                                 break;
                                             case 3: include '_3_time.php';      break;
-                                            case 4: Proxy\RecurringAppointments::renderStep( $self::renderTemplate( '_progress_tracker', compact( 'step', 'editable' ), false ) );
+                                            case 4: Proxy\RecurringAppointments::renderStep( $self::renderTemplate( '_progress_tracker', compact( 'step' ), false ) );
                                                 break;
-                                            case 5: Proxy\Cart::renderStep( $self::renderTemplate( '_progress_tracker', compact( 'step', 'editable' ), false ) );
+                                            case 5: Proxy\Cart::renderStep( $self::renderTemplate( '_progress_tracker', compact( 'step' ), false ) );
                                                 break;
                                             case 6: include '_6_details.php';   break;
                                             case 7: include '_7_payment.php';   break;

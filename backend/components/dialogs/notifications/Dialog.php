@@ -32,7 +32,6 @@ class Dialog extends SmsDialog
         wp_localize_script( 'bookly-notification-dialog.js', 'BooklyNotificationDialogL10n', array(
             'csrfToken'       => BooklyLib\Utils\Common::getCsrfToken(),
             'recurringActive' => (int) BooklyLib\Config::recurringAppointmentsActive(),
-            'gateway'         => 'email',
             'defaultNotification' => self::getDefaultNotification(),
             'title' => array(
                 'container' => __( 'Email', 'bookly' ),

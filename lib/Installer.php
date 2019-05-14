@@ -376,6 +376,7 @@ class Installer extends Base\Installer
             'bookly_dismiss_subscribe_notice',
             'bookly_dismiss_feature_requests_description',
             'bookly_filter_appointments_list',
+            'bookly_filter_services_categories',
             'bookly_filter_staff_categories',
             'bookly_show_collecting_stats_notice',
         );

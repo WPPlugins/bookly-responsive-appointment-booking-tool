@@ -16,10 +16,6 @@ jQuery(function($) {
         $required_location              = $('#bookly-required-location'),
         $show_ratings                   = $('#bookly-show-ratings'),
         $show_chain_appointments        = $('#bookly-show-chain-appointments'),
-        $show_location                  = $('#bookly-show-location'),
-        $show_custom_duration           = $('#bookly-show-custom-duration'),
-        $show_nop                       = $('#bookly-show-nop'),
-        $show_quantity                  = $('#bookly-show-quantity'),
         $service_select                 = $('.bookly-js-select-service'),
         $staff_select                   = $('.bookly-js-select-employee'),
         $duration_select                = $('.bookly-js-select-duration'),
@@ -271,51 +267,6 @@ jQuery(function($) {
     // Show chain appointments
     $show_chain_appointments.on('change', function () {
         $('.bookly-js-chain-appointments').toggle( this.checked );
-    });
-
-    // Show location
-    $show_location.on('change', function () {
-        $('.bookly-js-location').toggle( this.checked );
-        if (!this.disabled) {
-            if (this.checked) {
-                $required_location.closest('[data-toggle="popover"]').popover('destroy');
-                $required_location.prop('disabled', false);
-            } else {
-                $required_location.closest('[data-toggle="popover"]').popover();
-                $required_location.prop('checked', false).prop('disabled', true).trigger('change');
-            }
-        }
-    }).trigger('change');
-
-    // Show custom duration
-    $show_custom_duration.on('change', function () {
-        $('.bookly-js-custom-duration').toggle( this.checked );
-        if (this.checked) {
-            $service_duration_with_price.closest('[data-toggle="popover"]').popover('destroy');
-            $service_duration_with_price.prop('disabled', false);
-        } else {
-            $service_duration_with_price.closest('[data-toggle="popover"]').popover();
-            $service_duration_with_price.prop('checked', false).prop('disabled', true).trigger('change');
-        }
-    }).trigger('change');
-
-    // Show number of persons
-    $show_nop.on('change', function () {
-        $('.bookly-js-nop').toggle( this.checked );
-    }).trigger('change');
-
-    // Show quantity
-    $show_quantity.on('change', function () {
-        $('.bookly-js-quantity').toggle( this.checked );
-    });
-
-    // Set max quantity
-    $('.bookly_multiply_appointments_quantity_max').on('save', function (e, params) {
-        var $options = '';
-        for (var x = 1; x <= params.newValue['bookly_multiply_appointments_quantity_max']; x++) {
-            $options += "<option>" + x + "</option>";
-        }
-        $('.bookly-js-select-quantity').html($options);
     });
 
     // Show duration next to service name.
@@ -815,11 +766,7 @@ jQuery(function($) {
                 'bookly_files_enabled'                  : Number($show_files.prop('checked')),
                 'bookly_waiting_list_enabled'           : Number($show_waiting_list.prop('checked')),
                 'bookly_google_maps_address_enabled'    : Number($show_google_maps.prop('checked')),
-                'bookly_service_extras_show_in_cart'    : Number($show_cart_extras.prop('checked')),
-                'bookly_locations_enabled'              : Number($show_location.prop('checked')),
-                'bookly_custom_duration_enabled'        : Number($show_custom_duration.prop('checked')),
-                'bookly_group_booking_enabled'          : Number($show_nop.prop('checked')),
-                'bookly_multiply_appointments_enabled'  : Number($show_quantity.prop('checked'))
+                'bookly_service_extras_show_in_cart'    : Number($show_cart_extras.prop('checked'))
             }
         };
         // Add data from editable elements.

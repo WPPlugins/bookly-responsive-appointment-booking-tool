@@ -4,6 +4,7 @@ namespace Bookly\Backend\Modules\Services;
 use Bookly\Backend\Components\Notices\Limitation;
 use Bookly\Backend\Modules\Appointments;
 use Bookly\Lib;
+use Bookly\Lib\Utils\DateTime;
 
 /**
  * Class Ajax
@@ -12,51 +13,37 @@ use Bookly\Lib;
 class Ajax extends Page
 {
     /**
-     * Get category services
+     * Get services data for data tables
      */
-    public static function getCategoryServices()
+    public static function getServices()
     {
-        wp_send_json_success( self::renderTemplate( '_list', self::_getTemplateData(), false ) );
-    }
+        $query = Lib\Entities\Service::query( 's' )
+            ->whereIn( 's.type', array_keys( Proxy\Shared::prepareServiceTypes( array( Lib\Entities\Service::TYPE_SIMPLE => Lib\Entities\Service::TYPE_SIMPLE ) ) ) )
+            ->sortBy( 'position' );
 
-    /**
-     * Add category.
-     */
-    public static function addCategory()
-    {
-        $html = '';
-        if ( ! empty ( $_POST ) && self::csrfTokenValid() ) {
-            $form = new Forms\Category();
-            $form->bind( self::postParameters() );
-            if ( $category = $form->save() ) {
-                $html = self::renderTemplate( '_category_item', array( 'category' => $category->getFields() ), false );
-            }
+        $type_icons = Proxy\Shared::prepareServiceIcons( array( Lib\Entities\Service::TYPE_SIMPLE => 'fa-calendar-day' ) );
+
+        $data = array();
+        /** @var Lib\Entities\Service $service */
+        foreach ( $query->find() as $service ) {
+            $sub_services_count = count( $service->getSubServices() );
+            $data[]             = array(
+                'id'        => $service->getId(),
+                'title'     => $service->getTitle(),
+                'position'  => sprintf( '%05d-%05d', $service->getPosition(), $service->getId() ),
+                'category'  => $service->getCategoryId(),
+                'colors'    => Proxy\Shared::prepareServiceColors( array_fill( 0, 3, $service->getColor() ), $service->getId(), $service->getType() ),
+                'type'      => ucfirst( $service->getType() ),
+                'type_icon' => $type_icons[ $service->getType() ],
+                'price'     => Lib\Utils\Price::format( $service->getPrice() ),
+                'duration'  => in_array( $service->getType(), array(
+                    Lib\Entities\Service::TYPE_COLLABORATIVE,
+                    Lib\Entities\Service::TYPE_COMPOUND,
+                ) ) ? sprintf( _n( '%d service', '%d services', $sub_services_count, 'bookly' ), $sub_services_count ) : Lib\Utils\DateTime::secondsToInterval( $service->getDuration() ),
+            );
         }
-        wp_send_json_success( compact( 'html' ) );
-    }
 
-    /**
-     * Update category.
-     */
-    public static function updateCategory()
-    {
-        $form = new Forms\Category();
-        $form->bind( self::postParameters() );
-        $form->save();
-    }
-
-    /**
-     * Update category position.
-     */
-    public static function updateCategoryPosition()
-    {
-        $category_sorts = self::parameter( 'position' );
-        foreach ( $category_sorts as $position => $category_id ) {
-            $category_sort = new Lib\Entities\Category();
-            $category_sort->load( $category_id );
-            $category_sort->setPosition( $position );
-            $category_sort->save();
-        }
+        wp_send_json_success( $data );
     }
 
     /**
@@ -64,29 +51,21 @@ class Ajax extends Page
      */
     public static function updateServicesPosition()
     {
-        $services_sorts = self::parameter( 'position' );
+        $services_sorts = self::parameter( 'positions' );
         foreach ( $services_sorts as $position => $service_id ) {
             $services_sort = new Lib\Entities\Service();
             $services_sort->load( $service_id );
             $services_sort->setPosition( $position );
             $services_sort->save();
         }
-    }
 
-    /**
-     * Delete category.
-     */
-    public static function deleteCategory()
-    {
-        $category = new Lib\Entities\Category();
-        $category->setId( self::parameter( 'id', 0 ) );
-        $category->delete();
+        wp_send_json_success();
     }
 
     /**
      * Add service.
      */
-    public static function addService()
+    public static function createService()
     {
         ! Lib\Config::proActive() &&
         get_option( 'bookly_updated_from_legacy_version' ) != 'lite' &&
@@ -97,11 +76,78 @@ class Ajax extends Page
         $form->bind( self::postParameters() );
         $form->getObject()->setDuration( Lib\Config::getTimeSlotLength() );
         $service = $form->save();
-        $data = self::_getTemplateData( $service->getCategoryId() );
 
         Proxy\Shared::serviceCreated( $service, self::postParameters() );
 
-        wp_send_json_success( array( 'html' => self::renderTemplate( '_list', $data, false ), 'service_id' => $service->getId() ) );
+        $sub_services_count = array_sum( array_map( function ( $sub_service ) {
+            return (int) ( $sub_service->getType() == Lib\Entities\SubService::TYPE_SERVICE );
+        }, $service->getSubServices() ) );
+
+        wp_send_json_success( array(
+            'id'       => $service->getId(),
+            'type'     => $service->getType(),
+            'title'    => $service->getTitle(),
+            'category' => $service->getCategoryId(),
+            'colors'   => Proxy\Shared::prepareServiceColors( array_fill( 0, 3, $service->getColor() ), $service->getId(), $service->getType() ),
+            'duration' => in_array( $service->getType(), array(
+                Lib\Entities\Service::TYPE_COLLABORATIVE,
+                Lib\Entities\Service::TYPE_COMPOUND,
+            ) ) ? sprintf( _n( '%d service', '%d services', $sub_services_count, 'bookly' ), $sub_services_count ) : Lib\Utils\DateTime::secondsToInterval( $service->getDuration() ),
+        ) );
+    }
+
+    /**
+     * Edit Service
+     */
+    public static function getServiceData()
+    {
+        $service_id              = self::parameter( 'id' );
+        $service_collection_data = Lib\Entities\Service::query( 's' )
+            ->select( 's.*, COUNT(staff.id) AS total_staff, GROUP_CONCAT(DISTINCT staff.id) AS staff_ids' )
+            ->leftJoin( 'StaffService', 'ss', 'ss.service_id = s.id' )
+            ->leftJoin( 'Staff', 'staff', 'staff.id = ss.staff_id' )
+            ->whereIn( 's.type', array_keys( Proxy\Shared::prepareServiceTypes( array( Lib\Entities\Service::TYPE_SIMPLE => Lib\Entities\Service::TYPE_SIMPLE ) ) ) )
+            ->groupBy( 's.id' )
+            ->fetchArray();
+        $service_collection      = array();
+        foreach ( $service_collection_data as $current_service ) {
+            if ( $current_service['id'] == $service_id ) {
+                $service = $current_service;
+            }
+            $service_collection[ $current_service['id'] ] = $current_service;
+        }
+        $service['sub_services']       = Lib\Entities\SubService::query()
+            ->where( 'service_id', $service['id'] )
+            ->sortBy( 'position' )
+            ->fetchArray();
+        $service['sub_services_count'] = array_sum( array_map( function ( $sub_service ) {
+            return (int) ( $sub_service['type'] == Lib\Entities\SubService::TYPE_SERVICE );
+        }, $service['sub_services'] ) );
+        $service['colors']             = Proxy\Shared::prepareServiceColors( array_fill( 0, 3, $service['color'] ), $service['id'], $service['type'] );
+
+        $staff_dropdown_data = self::getStaffDropDownData();
+
+        $categories_collection = Lib\Entities\Category::query()->sortBy( 'position' )->fetchArray();
+        $service_types         = Proxy\Shared::prepareServiceTypes( array( Lib\Entities\Service::TYPE_SIMPLE => __( 'Simple', 'bookly' ) ) );
+        $result                = array(
+            'general_html'      => self::renderTemplate( 'general', compact( 'service', 'service_types', 'service_collection', 'staff_dropdown_data', 'categories_collection' ), false ),
+            'advanced_html'     => self::renderTemplate( 'advanced', compact( 'service', 'service_types', 'service_collection', 'staff_dropdown_data', 'categories_collection' ), false ),
+            'time_html'         => self::renderTemplate( 'time', compact( 'service', 'service_types', 'service_collection', 'staff_dropdown_data', 'categories_collection' ), false ),
+            'extras_html'       => Proxy\ServiceExtras::getTabHtml( $service_id ),
+            'schedule_html'     => Proxy\ServiceSchedule::getTabHtml( $service_id ),
+            'special_days_html' => Proxy\ServiceSpecialDays::getTabHtml( $service_id ),
+            'additional_html'   => Proxy\Shared::prepareAfterServiceList( '', $service_collection ),
+            'title'             => $service['title'],
+            'type'              => $service['type'],
+            'price'             => Lib\Utils\Price::format( $service['price'] ),
+            'duration'          => in_array( $service['type'], array(
+                Lib\Entities\Service::TYPE_COLLABORATIVE,
+                Lib\Entities\Service::TYPE_COMPOUND,
+            ) ) ? sprintf( _n( '%d service', '%d services', $service['sub_services_count'], 'bookly' ), $service['sub_services_count'] ) : Lib\Utils\DateTime::secondsToInterval( $service['duration'] ),
+            'staff'             => $staff_dropdown_data,
+        );
+
+        wp_send_json_success( Proxy\Shared::prepareGetService( $result, $service ) );
     }
 
     /**
@@ -135,7 +181,7 @@ class Ajax extends Page
             if ( $appointment ) {
                 $last_month = date_create( $appointment['start_date'] )->modify( 'last day of' )->format( 'Y-m-d' );
                 $action     = 'show_modal';
-                $filter_url = sprintf( '%s#service=%d&range=%s-%s',
+                $filter_url = sprintf( '%s#service=%d&appointment-date=%s-%s',
                     Lib\Utils\Common::escAdminUrl( Appointments\Page::pageSlug() ),
                     $appointment['service_id'],
                     date_create( current_time( 'mysql' ) )->format( 'Y-m-d' ),
@@ -185,7 +231,7 @@ class Ajax extends Page
                 if ( self::parameter( 'update_staff', false ) ) {
                     Lib\Entities\StaffService::query()
                         ->update()
-                        ->set( 'price',        self::parameter( 'price' ) )
+                        ->set( 'price', self::parameter( 'price' ) )
                         ->set( 'capacity_min', $service->getCapacityMin() )
                         ->set( 'capacity_max', $service->getCapacityMax() )
                         ->where( 'service_id', self::parameter( 'id' ) )
@@ -193,7 +239,7 @@ class Ajax extends Page
                 }
                 // Create records for newly linked staff.
                 $existing_staff_ids = array();
-                $res = Lib\Entities\StaffService::query()
+                $res                = Lib\Entities\StaffService::query()
                     ->select( 'staff_id' )
                     ->where( 'service_id', $service->getId() )
                     ->fetchArray();
@@ -217,11 +263,36 @@ class Ajax extends Page
         // Update services in addons.
         $alert = Proxy\Shared::updateService( array( 'success' => array( __( 'Settings saved.', 'bookly' ) ) ), $service, self::postParameters() );
 
-        $price = Lib\Utils\Price::format( $service->getPrice() );
-        $nice_duration = Lib\Utils\DateTime::secondsToInterval( $service->getDuration() );
-        $title = $service->getTitle();
-        $colors = array_fill( 0, 3, $service->getColor() );
+        wp_send_json_success( Proxy\Shared::prepareUpdateServiceResponse( array(), $service, self::postParameters() ) );
+    }
 
-        wp_send_json_success( Proxy\Shared::prepareUpdateServiceResponse( compact( 'title', 'price', 'colors', 'nice_duration', 'alert' ), $service, self::postParameters() ) );
+    /**
+     * Update service categories
+     */
+    public static function updateServiceCategories()
+    {
+        $categories          = self::parameter( 'categories', array() );
+        $existing_categories = array();
+        foreach ( $categories as $category ) {
+            if ( strpos( $category['id'], 'new' ) === false ) {
+                $existing_categories[] = $category['id'];
+            }
+        }
+        // Delete categories
+        Lib\Entities\Category::query( 'c' )->delete()->whereNotIn( 'c.id', $existing_categories )->execute();
+        foreach ( $categories as $position => $category_data ) {
+            if ( strpos( $category_data['id'], 'new' ) === false ) {
+                $category = Lib\Entities\Category::find( $category_data['id'] );
+            } else {
+                $category = new Lib\Entities\Category();
+            }
+            $category
+                ->setPosition( $position )
+                ->setName( $category_data['name'] )
+                ->save();
+
+        }
+
+        wp_send_json_success( Lib\Entities\Category::query()->sortBy( 'position' )->fetchArray() );
     }
 }

@@ -9,7 +9,7 @@ use Bookly\Lib\Utils\Common;
 <div>
     <?php if ( $form->getCategories() || $form->getUncategorizedServices() ) : ?>
         <form>
-            <?php Proxy\Locations::renderLocationSwitcher( $staff_id, $location_id ) ?>
+            <?php Proxy\Locations::renderLocationSwitcher( $staff_id, $location_id, 'custom_services' ) ?>
             <?php if ( $form->getUncategorizedServices() ) : ?>
                 <div class="panel panel-default bookly-panel-unborder">
                     <div class="panel-heading">

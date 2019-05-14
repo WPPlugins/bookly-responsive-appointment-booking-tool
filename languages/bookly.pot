@@ -1067,9 +1067,6 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-msgid "Show custom duration"
-msgstr ""
-
 msgid "Show service price next to duration"
 msgstr ""
 
@@ -1123,12 +1120,6 @@ msgstr ""
 
 msgid "Compound"
 msgstr ""
-
-#, php-format
-msgid "%d service"
-msgid_plural "%d services"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Part of compound service"
 msgstr ""
@@ -1463,10 +1454,10 @@ msgstr ""
 msgid "Show information about group bookings"
 msgstr ""
 
-msgid "Show number of persons"
+msgid "Disable capacity update"
 msgstr ""
 
-msgid "Disable capacity update"
+msgid "Address"
 msgstr ""
 
 msgid "Follow these steps to get an API key:"
@@ -1543,9 +1534,6 @@ msgid "Profile management"
 msgstr ""
 
 msgid "Birthday"
-msgstr ""
-
-msgid "Address"
 msgstr ""
 
 msgid "Wordpress password"
@@ -2347,6 +2335,9 @@ msgstr ""
 msgid "Email already in use."
 msgstr ""
 
+msgid "Dashboard"
+msgstr ""
+
 msgid "Staff Members"
 msgstr ""
 
@@ -3055,10 +3046,13 @@ msgid ""
 "correct this problem."
 msgstr ""
 
-msgid "All Services"
+msgid "Quick search services"
 msgstr ""
 
-msgid "New Category"
+msgid "Categories..."
+msgstr ""
+
+msgid "Add service..."
 msgstr ""
 
 msgid "Update service setting"
@@ -3076,28 +3070,7 @@ msgstr ""
 msgid "No, update just here in services"
 msgstr ""
 
-msgid "Simple"
-msgstr ""
-
 msgid "Color"
-msgstr ""
-
-msgid ""
-"The time interval which is used as a step when building all time slots for "
-"the service at the Time step. The setting overrides global settings in "
-"Settings  General. Use Default to apply global settings."
-msgstr ""
-
-msgid "Slot length as service duration"
-msgstr ""
-
-msgid "Start and end times of the appointment"
-msgstr ""
-
-msgid ""
-"Allows to set the start and end times for an appointment for services with "
-"the duration of 1 day or longer. This time will be displayed in "
-"notifications to customers, backend calendar and codes for booking form."
 msgstr ""
 
 msgid "Providers"
@@ -3109,8 +3082,35 @@ msgstr ""
 msgid "No staff selected"
 msgstr ""
 
+msgid "Start and end times of the appointment"
+msgstr ""
+
+msgid ""
+"Allows to set the start and end times for an appointment for services with "
+"the duration of 1 day or longer. This time will be displayed in "
+"notifications to customers, backend calendar and codes for booking form."
+msgstr ""
+
+msgid ""
+"The time interval which is used as a step when building all time slots for "
+"the service at the Time step. The setting overrides global settings in "
+"Settings  General. Use Default to apply global settings."
+msgstr ""
+
+msgid "Slot length as service duration"
+msgstr ""
+
 msgid "You must select at least one repeat option for recurring services."
 msgstr ""
+
+msgid "Simple"
+msgstr ""
+
+#, php-format
+msgid "%d service"
+msgid_plural "%d services"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Welcome to Bookly and thank you for your choice!"
 msgstr ""
@@ -3352,6 +3352,10 @@ msgstr ""
 msgid "Get it!"
 msgstr ""
 
+msgid ""
+"See the number of appointments and total revenue for the selected period"
+msgstr ""
+
 msgid "end date of appointment"
 msgstr ""
 
@@ -3506,19 +3510,16 @@ msgstr ""
 msgid "Default value for employee select"
 msgstr ""
 
-msgid "Hide this block"
-msgstr ""
-
 msgid "Week days"
 msgstr ""
 
 msgid "Time range"
 msgstr ""
 
-msgid "Insert Appointment Booking Form"
+msgid "Add Bookly booking form"
 msgstr ""
 
-msgid "Add Bookly booking form"
+msgid "Insert Appointment Booking Form"
 msgstr ""
 
 msgid "Send tax information"
@@ -3540,6 +3541,9 @@ msgid "Addition/Deduction"
 msgstr ""
 
 msgid "Enter a value"
+msgstr ""
+
+msgid "Add..."
 msgstr ""
 
 msgid "Reset"
@@ -3771,6 +3775,21 @@ msgstr ""
 msgid "Don't save"
 msgstr ""
 
+msgid "Create service"
+msgstr ""
+
+msgid "Edit service"
+msgstr ""
+
+msgid "Advanced"
+msgstr ""
+
+msgid "Categories"
+msgstr ""
+
+msgid "Add category"
+msgstr ""
+
 msgid "Attach ICS file"
 msgstr ""
 
@@ -3854,6 +3873,15 @@ msgid "Given email address is already subscribed, thank you!"
 msgstr ""
 
 msgid "This email address is not valid."
+msgstr ""
+
+msgid "Revenue"
+msgstr ""
+
+msgid "Approved appointments"
+msgstr ""
+
+msgid "Pending appointments"
 msgstr ""
 
 msgid "All fields marked with an asterisk (*) are required."
@@ -4400,9 +4428,6 @@ msgid ""
 "verify the license within {days}, access to your bookings will be disabled."
 msgstr ""
 
-msgid "Analytics"
-msgstr ""
-
 msgid "License verification"
 msgstr ""
 
@@ -4478,6 +4503,9 @@ msgstr ""
 
 #, php-format
 msgid "Please configure Google Calendar <a href=\"%s\">settings</a> first"
+msgstr ""
+
+msgid "New Category"
 msgstr ""
 
 msgid "Archiving Staff"
@@ -4825,6 +4853,9 @@ msgstr ""
 msgid "per year"
 msgstr ""
 
+msgid "Limit"
+msgstr ""
+
 msgid ""
 "To make service invisible to your customers set the visibility to \"Private"
 "\"."
@@ -4849,55 +4880,6 @@ msgid "Least expensive"
 msgstr ""
 
 msgid "Most expensive"
-msgstr ""
-
-msgid "Sessions"
-msgstr ""
-
-msgid "New Customers"
-msgstr ""
-
-msgid "Visits"
-msgstr ""
-
-msgid "Sessions - number of completed and/or planned service sessions."
-msgstr ""
-
-msgid ""
-"Approved - number of visitors of sessions with Approved status during the "
-"selected period."
-msgstr ""
-
-msgid ""
-"Pending - number of visitors of sessions with Pending status during the "
-"selected period."
-msgstr ""
-
-msgid ""
-"Rejected - number of visitors of sessions with Rejected status during the "
-"selected period."
-msgstr ""
-
-msgid ""
-"Cancelled - number of visitors of sessions with Cancelled status during the "
-"selected period."
-msgstr ""
-
-msgid ""
-"Customers - number of unique customers who made bookings during the selected "
-"period."
-msgstr ""
-
-msgid ""
-"New customers - number of new customers added to the database during the "
-"selected period."
-msgstr ""
-
-msgid ""
-"Total - approximate cost of appointments with Approved and Pending statuses, "
-"calculated on the basis of the price list. Appointments that are paid "
-"through the front-end and have Pending payment status are included in "
-"brackets."
 msgstr ""
 
 msgid "Form view in case of single booking"
@@ -4943,6 +4925,14 @@ msgid ""
 msgstr ""
 
 msgid "Select file"
+msgstr ""
+
+msgid "Analytics"
+msgstr ""
+
+msgid ""
+"Note: If payment is made for several services, then for each service you "
+"will see the entire amount paid as revenue."
 msgstr ""
 
 msgid "Titles"
@@ -5841,9 +5831,6 @@ msgstr ""
 msgid "W/o location"
 msgstr ""
 
-msgid "Show location"
-msgstr ""
-
 msgid "Make selecting location required"
 msgstr ""
 
@@ -5931,10 +5918,23 @@ msgstr ""
 msgid "Your rating has been saved. We appreciate your feedback."
 msgstr ""
 
+#, php-format
 msgid ""
-"If <b>Publishable Key</b> is provided then Bookly will use <a href=\"https://"
-"stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>for "
-"collecting credit card details."
+"1. Provide <b>Secret</b> and <b>Publishable</b> keys which are available in "
+"the <a href=\"%s\" target=\"_blank\">Dashboard</a>."
+msgstr ""
+
+#, php-format
+msgid ""
+"2. In the Dashboard's <a href=\"%s\" target=\"_blank\">Webhooks settings</a> "
+"section, click <b>Add endpoint</b> to reveal a form to add a new endpoint "
+"for receiving events."
+msgstr ""
+
+#, php-format
+msgid ""
+"Enter the following URL as the destination for events <b>%s</b> and click "
+"<b>Add endpoint</b>."
 msgstr ""
 
 msgid "Secret Key"
@@ -5943,10 +5943,23 @@ msgstr ""
 msgid "Publishable Key"
 msgstr ""
 
-msgid "Show quantity"
+#, php-format
+msgid ""
+"Bookly Stripe add-on has been upgraded to support <a href=\"%s\" target="
+"\"_blank\">SCA</a>. You must update your Stripe settings to keep the "
+"integration with the upgraded add-on."
 msgstr ""
 
-msgid "max"
+#, php-format
+msgid ""
+"1. Make sure that <b>Publishable Key</b> is provided in <a href=\"%s"
+"\">payment settings</a>."
+msgstr ""
+
+msgid "Set maximum value for Quantity field."
+msgstr ""
+
+msgid "Multiply Appointments"
 msgstr ""
 
 msgid "Google Calendar event"

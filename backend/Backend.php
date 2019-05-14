@@ -60,6 +60,7 @@ abstract class Backend
                 Lib\Proxy\Pro::addLicenseBooklyMenuItem();
             } else {
                 // Translated submenu pages.
+                $dashboard      = __( 'Dashboard',           'bookly' );
                 $calendar       = __( 'Calendar',            'bookly' );
                 $appointments   = __( 'Appointments',        'bookly' );
                 $staff_members  = __( 'Staff Members',       'bookly' );
@@ -70,6 +71,8 @@ abstract class Backend
                 $appearance     = __( 'Appearance',          'bookly' );
                 $settings       = __( 'Settings',            'bookly' );
 
+                add_submenu_page( 'bookly-menu', $dashboard, $dashboard, 'read',
+                    Modules\Dashboard\Page::pageSlug(), function () { Modules\Dashboard\Page::render(); } );
                 add_submenu_page( 'bookly-menu', $calendar, $calendar, 'read',
                     Modules\Calendar\Page::pageSlug(), function () { Modules\Calendar\Page::render(); } );
                 if ( $current_user->has_cap( 'manage_options' ) || $current_user->has_cap( 'manage_bookly_appointments' ) ) {
@@ -113,7 +116,6 @@ abstract class Backend
                     Modules\Settings\Page::pageSlug(), function () { Modules\Settings\Page::render(); } );
                 Modules\Messages\Page::addBooklyMenuItem();
                 Modules\Shop\Page::addBooklyMenuItem();
-                Lib\Proxy\Pro::addAnalyticsBooklyMenuItem();
 
                 if ( isset ( $_GET['page'] ) && $_GET['page'] == 'bookly-debug' ) {
                     add_submenu_page( 'bookly-menu', 'Debug', 'Debug', 'manage_options',

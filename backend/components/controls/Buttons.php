@@ -38,7 +38,7 @@ class Buttons
     public static function renderDelete( $id = 'bookly-delete', $extra_class = null, $caption = null, array $attributes = array() )
     {
         if ( $caption === null ) {
-            $caption = __( 'Delete', 'bookly' );
+            $caption = __( 'Delete...', 'bookly' );
         }
 
         echo self::_createButton(
@@ -46,7 +46,31 @@ class Buttons
             $id,
             'btn-danger',
             $extra_class,
-            '<i class="glyphicon glyphicon-trash"></i> ' . esc_html( $caption ),
+            '<i class="fa fa-fw fa-trash"></i> ' . esc_html( $caption ),
+            $attributes
+        );
+    }
+
+    /**
+     * Render Add button.
+     *
+     * @param string $id
+     * @param string $extra_class
+     * @param string $caption
+     * @param array  $attributes
+     */
+    public static function renderAdd( $id = 'bookly-add', $extra_class = null, $caption = null, array $attributes = array() )
+    {
+        if ( $caption === null ) {
+            $caption = __( 'Add...', 'bookly' );
+        }
+
+        echo self::_createButton(
+            'button',
+            $id,
+            'btn-success',
+            $extra_class,
+            '<i class="fa fa-fw fa-plus"></i> ' . esc_html( $caption ),
             $attributes
         );
     }

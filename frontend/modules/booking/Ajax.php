@@ -556,9 +556,9 @@ class Ajax extends Lib\Base\Ajax
 
                 // Set response.
                 $response = array(
-                    'success'  => true,
-                    'disabled' => false,
-                    'html'     => self::renderTemplate( '7_payment', array(
+                    'success'                => true,
+                    'disabled'               => false,
+                    'html'                   => self::renderTemplate( '7_payment', array(
                         'form_id'          => self::parameter( 'form_id' ),
                         'progress_tracker' => $progress_tracker,
                         'info_text'        => $info_text,
@@ -566,7 +566,8 @@ class Ajax extends Lib\Base\Ajax
                         'payment_options'  => $payment_options,
                         'page_url'         => self::parameter( 'page_url' ),
                         'userData'         => $userData,
-                    ), false )
+                    ), false ),
+                    'stripe_publishable_key' => get_option( 'bookly_stripe_publishable_key' ),
                 );
             } else {
                 $response = array(
@@ -761,6 +762,7 @@ class Ajax extends Lib\Base\Ajax
         } else {
             $response = array( 'success' => false, 'error' => Errors::SESSION_ERROR );
         }
+        $userData->sessionSave();
 
         wp_send_json( $response );
     }

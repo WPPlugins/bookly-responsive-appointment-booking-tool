@@ -3,7 +3,7 @@
     <div class="col-md-12">
         <div class="form-group">
             <label><?php esc_html_e( 'Body', 'bookly' ) ?></label>
-            <?php wp_editor( '', 'bookly-js-tinymce-message', array(
+            <?php wp_editor( '', 'bookly-js-message', array(
                 'textarea_name'  => 'notification[message]',
                 'media_buttons'  => false,
                 'editor_height'  => 250,

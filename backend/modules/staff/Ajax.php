@@ -376,7 +376,7 @@ class Ajax extends Lib\Base\Ajax
                 if ( $appointment['start_date'] ) {
                     $last_month = date_create( $appointment['start_date'] )->modify( 'last day of' )->format( 'Y-m-d' );
                     $action     = 'show_modal';
-                    $filter_url = sprintf( '%s#staff=%d&range=%s-%s',
+                    $filter_url = sprintf( '%s#staff=%d&appointment-date=%s-%s',
                         Lib\Utils\Common::escAdminUrl( \Bookly\Backend\Modules\Appointments\Ajax::pageSlug() ),
                         $staff_id,
                         date_create( current_time( 'mysql' ) )->format( 'Y-m-d' ),

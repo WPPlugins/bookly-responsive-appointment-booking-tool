@@ -235,15 +235,23 @@ class Service extends Lib\Base\Entity
     public function appointmentsLimitReached( $customer_id, array $appointment_dates )
     {
         if ( Lib\Config::proActive() && $this->getLimitPeriod() != 'off' && $this->getAppointmentsLimit() > 0 ) {
-            if ( $this->withSubServices() ) {
+            if ( $this->isCompound() ) {
                 // Compound service.
-                $sub_services        = $this->getSubServices();
-                $compound_service_id = $this->getId();
-                $service_id          = $sub_services[0]->getId();
+                $sub_services             = $this->getSubServices();
+                $compound_service_id      = $this->getId();
+                $collaborative_service_id = null;
+                $service_id               = $sub_services[0]->getId();
+            } elseif ( $this->isCollaborative() ) {
+                // Collaborative service.
+                $sub_services             = $this->getSubServices();
+                $compound_service_id      = null;
+                $collaborative_service_id = $this->getId();
+                $service_id               = $sub_services[0]->getId();
             } else {
                 // Simple service.
-                $compound_service_id = null;
-                $service_id          = $this->getId();
+                $compound_service_id      = null;
+                $collaborative_service_id = null;
+                $service_id               = $this->getId();
             }
 
             switch ( $this->getLimitPeriod() ) {
@@ -252,6 +260,7 @@ class Service extends Lib\Base\Entity
                         ->leftJoin( 'Appointment', 'a', 'ca.appointment_id = a.id' )
                         ->where( 'a.service_id', $service_id )
                         ->where( 'ca.compound_service_id', $compound_service_id )
+                        ->where( 'ca.collaborative_service_id', $collaborative_service_id )
                         ->where( 'ca.customer_id', $customer_id )
                         ->whereGt( 'a.start_date', current_time( 'mysql' ) )
                         ->whereNot( 'ca.status', CustomerAppointment::STATUS_WAITLISTED )

@@ -154,7 +154,12 @@ class ShortCode extends Lib\Base\Component
             }
         }
 
-        // Handle shortcode attributes.
+        // Check if predefined short code is rendering
+        if ( isset( $attributes['id'] ) ) {
+            $attributes = apply_filters( 'bookly_form_attributed', $attributes );
+        }
+
+        // Handle short code attributes.
         $fields_to_hide = isset ( $attributes['hide'] ) ? explode( ',', $attributes['hide'] ) : array();
         $location_id    = (int) ( @$_GET['loc_id'] ?: @$attributes['location_id'] );
         $category_id    = (int) ( @$_GET['cat_id'] ?: @$attributes['category_id'] );
@@ -180,13 +185,13 @@ class ShortCode extends Lib\Base\Component
         }
 
         // Set service step fields for Add-ons.
-        if ( Lib\Config::customDurationActive() && get_option( 'bookly_custom_duration_enabled' ) ) {
+        if ( Lib\Config::customDurationActive() ) {
             $form_attributes['hide_service_duration'] = in_array( 'service_duration', $fields_to_hide );
         }
-        if ( Lib\Config::locationsActive() && get_option( 'bookly_locations_enabled' ) ) {
+        if ( Lib\Config::locationsActive() ) {
             $form_attributes['hide_locations'] = in_array( 'locations', $fields_to_hide );
         }
-        if ( Lib\Config::multiplyAppointmentsActive() && get_option( 'bookly_multiply_appointments_enabled' ) ) {
+        if ( Lib\Config::multiplyAppointmentsActive() ) {
             $form_attributes['hide_quantity']  = in_array( 'quantity',  $fields_to_hide );
         }
 

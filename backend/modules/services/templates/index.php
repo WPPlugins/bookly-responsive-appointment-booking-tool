@@ -1,86 +1,65 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-use Bookly\Backend\Components\Controls\Buttons;
-use Bookly\Backend\Components\Controls\Inputs;
-use Bookly\Backend\Components\Dialogs;
+use Bookly\Backend\Components\Controls;
 use Bookly\Backend\Components\Support;
+use Bookly\Backend\Modules\Services\Proxy;
+use Bookly\Backend\Components\Dialogs;
+use Bookly\Lib;
 ?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">
         <div class="page-header text-right clearfix">
             <div class="bookly-page-title">
-                <?php _e( 'Services', 'bookly' ) ?>
+                <?php esc_html_e( 'Services', 'bookly' ) ?>
             </div>
             <?php Support\Buttons::render( $self::pageSlug() ) ?>
         </div>
-        <div class="row">
-            <div id="bookly-sidebar" class="col-sm-4">
-                <div id="bookly-categories-list" class="bookly-nav">
-                    <div class="bookly-nav-item active bookly-category-item bookly-js-all-services">
-                        <div class="bookly-padding-vertical-xs"><?php _e( 'All Services', 'bookly' ) ?></div>
+        <div class="panel panel-default bookly-main">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="bookly-filter" placeholder="<?php esc_attr_e( 'Quick search services', 'bookly' ) ?>" />
+                        </div>
                     </div>
-                     <ul id="bookly-category-item-list">
-                        <?php foreach ( $category_collection as $category ) $self::renderTemplate( '_category_item', compact( 'category' ) ) ?>
-                    </ul>
+                    <div class="col-md-8 form-inline bookly-margin-bottom-lg text-right">
+                        <div class="form-group">
+                            <?php Controls\Buttons::renderCustom( 'bookly-js-categories', 'btn-default', esc_html__( 'Categories...', 'bookly' ), array( 'data-toggle' => 'modal', 'data-target'=> '#bookly-service-categories-modal' ) ) ?>
+                        </div>
+                        <div class="form-group">
+                            <?php Controls\Buttons::renderAdd( 'bookly-js-new-service', 'btn-success', esc_html__( 'Add service...', 'bookly' ), array( 'data-toggle' => 'modal', 'data-target'=> '#bookly-create-service-modal' ) ) ?>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <button id="bookly-new-category" type="button"
-                            class="btn btn-xlg btn-block btn-success-outline">
-                        <i class="dashicons dashicons-plus-alt"></i>
-                        <?php _e( 'New Category', 'bookly' ) ?>
-                    </button>
-                </div>
-
-                <form method="post" id="new-category-form" style="display: none">
-                    <div class="form-group bookly-margin-bottom-md">
-                        <div class="form-field form-required">
-                            <label for="bookly-category-name"><?php _e( 'Name', 'bookly' ) ?></label>
-                            <input class="form-control" id="bookly-category-name" type="text" name="name" />
-                            <input type="hidden" name="action" value="bookly_add_category" />
-                            <?php Inputs::renderCsrf() ?>
-                        </div>
-                    </div>
-
-                    <hr />
-                    <div class="text-right">
-                        <button type="submit" class="btn btn-success">
-                            <?php _e( 'Save', 'bookly' ) ?>
-                        </button>
-                        <button type="button" class="btn btn-default">
-                            <?php _e( 'Cancel', 'bookly' ) ?>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <div id="bookly-services-wrapper" class="col-sm-8">
-                <div class="panel panel-default bookly-main">
-                    <div class="panel-body">
-                        <h4 class="bookly-block-head">
-                            <span class="bookly-category-title"><?php _e( 'All Services', 'bookly' ) ?></span>
-                            <button type="button" class="add-service ladda-button pull-right btn btn-success" data-spinner-size="40" data-style="zoom-in">
-                                <span class="ladda-label"><i class="glyphicon glyphicon-plus"></i> <?php _e( 'Add Service', 'bookly' ) ?></span>
-                            </button>
-                        </h4>
-
-                        <p class="bookly-margin-top-xlg no-result" <?php if ( ! empty ( $service_collection ) ) : ?>style="display: none;"<?php endif ?>>
-                            <?php _e( 'No services found. Please add services.', 'bookly' ) ?>
-                        </p>
-
-                        <div class="bookly-margin-top-xlg" id="bookly-js-services-list">
-                            <?php include '_list.php' ?>
-                        </div>
-                        <div class="text-right">
-                            <?php Buttons::renderDelete() ?>
-                        </div>
-                    </div>
+                <table id="services-list" class="table table-striped" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th style="display: none;"></th>
+                        <th width="24"></th>
+                        <?php if ( Proxy\Shared::prepareServiceTypes( array() ) ) : ?>
+                            <th width="24"></th>
+                        <?php endif ?>
+                        <th width="24"></th>
+                        <th><?php esc_html_e( 'Title', 'bookly' ) ?></th>
+                        <th><?php esc_html_e( 'Category', 'bookly' ) ?></th>
+                        <th><?php esc_html_e( 'Duration', 'bookly' ) ?></th>
+                        <th><?php esc_html_e( 'Price', 'bookly' ) ?></th>
+                        <th width="75"></th>
+                        <th width="16"><input type="checkbox" class="bookly-js-check-all"/></th>
+                    </tr>
+                    </thead>
+                </table>
+                <div class="text-right bookly-margin-top-lg">
+                    <?php Controls\Buttons::renderDelete() ?>
                 </div>
             </div>
         </div>
     </div>
-
+    <?php Dialogs\Common\CascadeDelete::render() ?>
+    <?php Dialogs\Service\Create\Dialog::render() ?>
+    <?php Dialogs\Service\Edit\Dialog::render() ?>
+    <?php Dialogs\Service\Categories\Dialog::render() ?>
     <div id="bookly-update-service-settings" class="modal fade" tabindex=-1 role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -104,5 +83,4 @@ use Bookly\Backend\Components\Support;
             </div>
         </div>
     </div>
-    <?php Dialogs\Common\CascadeDelete::render() ?>
 </div>

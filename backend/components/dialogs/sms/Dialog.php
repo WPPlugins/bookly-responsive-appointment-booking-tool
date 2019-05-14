@@ -15,7 +15,6 @@ class Dialog extends BooklyLib\Base\Component
      */
     public static function render()
     {
-        add_filter( 'wp_default_editor', function() { return 'tinymce'; } );
         self::enqueueStyles( array(
             'frontend' => array( 'css/ladda.min.css', ),
             'backend'  => array( 'css/fontawesome-all.min.css', 'css/select2.min.css' ),
@@ -35,7 +34,6 @@ class Dialog extends BooklyLib\Base\Component
         wp_localize_script( 'bookly-notification-dialog.js', 'BooklyNotificationDialogL10n', array(
             'csrfToken'       => BooklyLib\Utils\Common::getCsrfToken(),
             'recurringActive' => (int) BooklyLib\Config::recurringAppointmentsActive(),
-            'gateway'         => 'sms',
             'defaultNotification' => self::getDefaultNotification(),
             'title' => array(
                 'container' => __( 'Sms', 'bookly' ),

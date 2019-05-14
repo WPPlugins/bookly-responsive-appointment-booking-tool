@@ -469,10 +469,6 @@ msgid "Code"
 msgstr "コード"
 
 #: 
-msgid "All Services"
-msgstr "全てのサービス"
-
-#: 
 msgid "Reorder"
 msgstr "再オーダーする"
 
@@ -4546,53 +4542,8 @@ msgid "Analytics"
 msgstr "分析"
 
 #: 
-msgid "New Customers"
-msgstr "新しい顧客"
-
-#: 
-msgid "Sessions"
-msgstr "セッション"
-
-#: 
-msgid "Visits"
-msgstr "訪問\n"
-""
-
-#: 
 msgid "Show birthday field"
 msgstr "誕生日の欄を表示する"
-
-#: 
-msgid "Sessions - number of completed and/or planned service sessions."
-msgstr "セッション - 完了したおよび/または予定されたサービスのセッションの数。"
-
-#: 
-msgid "Approved - number of visitors of sessions with Approved status during the selected period."
-msgstr "承認済み - 選択した期間中にセッションが承認済みとなった訪問者数。"
-
-#: 
-msgid "Pending - number of visitors of sessions with Pending status during the selected period."
-msgstr "保留中 - 選択した期間中にセッションが保留状態となった訪問者数。"
-
-#: 
-msgid "Rejected - number of visitors of sessions with Rejected status during the selected period."
-msgstr " 却下済みー選択した期間中にセッションを却下された訪問者数。"
-
-#: 
-msgid "Cancelled - number of visitors of sessions with Cancelled status during the selected period."
-msgstr "キャンセル- 選択した期間中にセッションをキャンセルした訪問者数。"
-
-#: 
-msgid "Customers - number of unique customers who made bookings during the selected period."
-msgstr "顧客 - 選択した期間に予約を行った一顧客の数。"
-
-#: 
-msgid "New customers - number of new customers added to the database during the selected period."
-msgstr "新規の顧客 - 選択した期間中にデータベースに追加された新規顧客の数。"
-
-#: 
-msgid "Total - approximate cost of appointments with Approved and Pending statuses, calculated on the basis of the price list. Appointments that are paid through the front-end and have Pending payment status are included in brackets."
-msgstr "合計 - 価格リストに基づいて計算された承認済みおよび保留中のステータスの予定の概算コスト。 フロントエンドから支払われ、支払いステータスが保留中の予定は、大括弧で囲まれています。"
 
 #: 
 msgid "Show Facebook login button"
@@ -5449,11 +5400,6 @@ msgid "If you want to become invisible to your customers set the visibility to \
 msgstr "あなたのお客様に見えないようにしたい場合は、可視性を「プライベート」に設定します。"
 
 #: 
-msgid "If <b>Publishable Key</b> is provided then Bookly will use <a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\">Stripe.js</a><br/>for collecting credit card details."
-msgstr "<b>パブリッシュ可能なキー</b>が提供されている場合、Booklyはクレジットカードの詳細を収集するために下記のリンクを使用します<a href=\"https://stripe.com/docs/stripe.js\" target=\"_blank\"> Stripe.js </a> <br />\n"
-""
-
-#: 
 msgid "Secret Key"
 msgstr "シークレットキー"
 
@@ -5910,22 +5856,6 @@ msgid "Show files"
 msgstr "複数のファイルを表示する"
 
 #: 
-msgid "Show custom duration"
-msgstr "カスタム期間を表示する"
-
-#: 
-msgid "Show number of persons"
-msgstr "人数を表示する"
-
-#: 
-msgid "Show location"
-msgstr "場所を表示する"
-
-#: 
-msgid "Show quantity"
-msgstr "数量を表示する"
-
-#: 
 msgid "Show timezone"
 msgstr "タイムゾーンを表示する"
 
@@ -5952,10 +5882,6 @@ msgstr "面会予約をスムーズに管理できるシステム、Bookly プ�
 #: 
 msgid "Proceed to Bookly Pro without license verification"
 msgstr "ライセンスの証人なしでBookly プロを続行する"
-
-#: 
-msgid "max"
-msgstr "最大"
 
 #: 
 msgid "Please verify your Bookly Pro license"
@@ -6258,10 +6184,6 @@ msgstr "タイム•インターバルは、タイムステップでサービス
 #: 
 msgid "Slot length as service duration"
 msgstr "サービス期間を示すスロットの長さ"
-
-#: 
-msgid "You must select at least one repeat option for recurring services."
-msgstr "定期的なサービスでは少なくとも1つのリピートするオプションを選択する必要があります。"
 
 #: 
 msgid "Align buttons to the left"
@@ -7341,38 +7263,86 @@ msgid "Synchronize with Outlook Calendar"
 msgstr "Outlook（アウトルック）カレンダーと同期する"
 
 #: 
-msgid "Forms"
-msgstr "フォ―ム"
+msgid "Set maximum value for Quantity field."
+msgstr ""
 
 #: 
-msgid "Short code"
-msgstr "短いコード"
+msgid "Multiply Appointments"
+msgstr ""
 
 #: 
-msgid "Select form"
-msgstr "フォームを選択する"
+msgid "Advanced"
+msgstr ""
 
 #: 
-msgid "Add Bookly forms"
-msgstr "Booklyフォームを追加する"
+msgid "Dashboard"
+msgstr ""
 
 #: 
-msgid "Value"
-msgstr "値"
+msgid "See the number of appointments and total revenue for the selected period"
+msgstr ""
 
 #: 
-msgid "New form"
-msgstr "新しいフォーム"
+msgid "Revenue"
+msgstr ""
 
 #: 
-msgid "Edit form"
-msgstr "フォームを編集する"
+msgid "Approved appointments"
+msgstr ""
 
 #: 
-msgid "New form..."
-msgstr "新しいフォーム..."
+msgid "Pending appointments"
+msgstr ""
 
 #: 
-msgid "Forms editing available on page"
-msgstr "ページ上で利用可能なフォームの編集"
+msgid "Limit"
+msgstr ""
+
+#: 
+msgid "Note: If payment is made for several services, then for each service you will see the entire amount paid as revenue."
+msgstr ""
+
+#: 
+msgid "Quick search services"
+msgstr ""
+
+#: 
+msgid "Categories..."
+msgstr ""
+
+#: 
+msgid "Add service..."
+msgstr ""
+
+#: 
+msgid "Add..."
+msgstr ""
+
+#: 
+msgid "Create service"
+msgstr ""
+
+#: 
+msgid "Edit service"
+msgstr ""
+
+#: 
+msgid "Categories"
+msgstr ""
+
+#: 
+msgid "Add category"
+msgstr ""
+
+#: 
+msgid "You must select at least one repeat option for recurring services."
+msgstr ""
+
+#: 
+msgid "1. Provide <b>Secret</b> and <b>Publishable</b> keys which are available in the <a href=\"%s\" target=\"_blank\">Dashboard</a>."
+msgstr ""
+
+#: 
+msgid "2. In the Dashboard's <a href=\"%s\" target=\"_blank\">Webhooks settings</a> section, click <b>Add endpoint</b> to reveal a form to add a new endpoint for receiving events."
+msgstr ""
 

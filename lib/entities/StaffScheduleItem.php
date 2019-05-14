@@ -193,10 +193,10 @@ class StaffScheduleItem extends Lib\Base\Entity
             $break = new ScheduleItemBreak();
             $break->setFields( $row );
             if (
-                $this->getStartTime()     >= $break->getStartTime()
+                $this->getStartTime()     > $break->getStartTime()
                 || $break->getStartTime() >= $this->getEndTime()
                 || $this->getStartTime()  >= $break->getEndTime()
-                || $break->getEndTime()   >= $this->getEndTime()
+                || $break->getEndTime()   > $this->getEndTime()
             ) {
                 $break->delete();
             }

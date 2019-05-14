@@ -54,6 +54,7 @@ class Page extends Lib\Base\Component
         wp_localize_script( 'bookly-appointments.js', 'BooklyL10n', array(
             'csrf_token'      => Lib\Utils\Common::getCsrfToken(),
             'any_time'        => __( 'Any time', 'bookly' ),
+            'createdAtAnyTime' => __( 'Created at any time', 'bookly' ),
             'tomorrow'        => __( 'Tomorrow', 'bookly' ),
             'today'           => __( 'Today', 'bookly' ),
             'yesterday'       => __( 'Yesterday', 'bookly' ),

@@ -219,9 +219,6 @@ class UserBookingData
             if ( isset( $_COOKIE['bookly-cst-street-number'] ) ) { $this->setStreetNumber( $_COOKIE['bookly-cst-street-number'] ); }
             if ( isset( $_COOKIE['bookly-cst-additional-address'] ) ) { $this->setAdditionalAddress( $_COOKIE['bookly-cst-additional-address'] ); }
         }
-
-        // Register destructor (should work in cases when regular __destruct() does not work).
-        register_shutdown_function( array( $this, 'destruct' ) );
     }
 
     public function resetChain()
@@ -251,14 +248,6 @@ class UserBookingData
             ->setEditCartKeys( array() )
             ->setRepeated( 0 )
             ->setRepeatData( array() );
-    }
-
-    /**
-     * Destructor used in register_shutdown_function.
-     */
-    public function destruct()
-    {
-        $this->sessionSave();
     }
 
     /**

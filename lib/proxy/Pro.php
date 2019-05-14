@@ -8,7 +8,6 @@ use Bookly\Lib\DataHolders\Booking as DataHolders;
  * Class Pro
  * @package Bookly\Lib\Proxy
  *
- * @method static void   addAnalyticsBooklyMenuItem() Add 'Analytics' to Bookly admin menu.
  * @method static void   addLicenseBooklyMenuItem() Add 'License' to Bookly admin menu.
  * @method static string createWPUser( Lib\Entities\Customer $customer ) Crate WP user for customer.
  * @method static void   createBackendPayment( array $data, Lib\Entities\CustomerAppointment $ca ) Crate WP user for customer.

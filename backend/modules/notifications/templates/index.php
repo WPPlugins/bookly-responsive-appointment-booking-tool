@@ -44,7 +44,7 @@ use Bookly\Lib\Config;
 
                     <div class="form-inline bookly-margin-bottom-lg text-right">
                         <?php Inputs::renderCsrf() ?>
-                        <?php Buttons::renderCustom( 'bookly-js-delete-notifications', 'btn-danger', esc_html__( 'Delete...', 'bookly' ) ) ?>
+                        <?php Buttons::renderDelete( 'bookly-js-delete-notifications' ) ?>
 
                         <div class="pull-left">
                             <button type="button" class="btn btn-default" id="bookly-js-test-email-notifications">

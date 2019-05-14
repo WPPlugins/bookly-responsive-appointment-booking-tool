@@ -48,10 +48,29 @@ class Tools extends Lib\Base\Component
         Proxy\Shared::renderMediaButtons( $version );
     }
 
-    public static function renderPopup()
+    public static function enqueueAssets()
     {
         $casest = Lib\Config::getCaSeSt();
-        self::renderTemplate( 'bookly_form', compact( 'casest' ) );
+
+        self::enqueueScripts( array(
+            'module'  => array( 'js/bookly-form-settings.js' => array( 'jquery' ), ),
+        ) );
+
+        wp_localize_script( 'bookly-bookly-form-settings.js', 'BooklyFormShortCodeL10n', array(
+            'csrfToken'      => Lib\Utils\Common::getCsrfToken(),
+            'locationCustom' => (int) Lib\Proxy\Locations::servicesPerLocationAllowed(),
+            'locations'      => $casest['locations'],
+            'categories'     => $casest['categories'],
+            'services'       => $casest['services'],
+            'staff'          => $casest['staff'],
+            'title'          => __( 'Insert Appointment Booking Form', 'bookly' ),
+        ) );
+    }
+
+    public static function renderPopup()
+    {
+        self::enqueueAssets();
+        self::renderTemplate( 'bookly_popup' );
 
         Proxy\Shared::renderPopup();
     }

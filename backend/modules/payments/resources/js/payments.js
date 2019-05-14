@@ -4,7 +4,7 @@ jQuery(function($) {
         $payments_list    = $('#bookly-payments-list'),
         $check_all_button = $('#bookly-check-all'),
         $id_filter        = $('#bookly-filter-id'),
-        $date_filter      = $('#bookly-filter-date'),
+        $creationDateFilter = $('#bookly-filter-date'),
         $type_filter      = $('#bookly-filter-type'),
         $customer_filter  = $('#bookly-filter-customer'),
         $staff_filter     = $('#bookly-filter-staff'),
@@ -12,8 +12,32 @@ jQuery(function($) {
         $status_filter    = $('#bookly-filter-status'),
         $payment_total    = $('#bookly-payment-total'),
         $delete_button    = $('#bookly-delete'),
-        $download_invoice = $('#bookly-download-invoices')
-        ;
+        $download_invoice = $('#bookly-download-invoices'),
+        urlParts          = document.URL.split('#'),
+        pickers = {
+            dateFormat:     'YYYY-MM-DD',
+            creationDate: {
+                startDate: moment().subtract(30, 'days'),
+                endDate  : moment(),
+            },
+        };
+
+    if (urlParts.length > 1) {
+        urlParts[1].split('&').forEach(function (part) {
+            var params = part.split('=');
+            if (params[0] == 'created-date') {
+                pickers.creationDate.startDate = moment(params['1'].substring(0, 10));
+                pickers.creationDate.endDate = moment(params['1'].substring(11));
+                $creationDateFilter
+                    .data('date', pickers.creationDate.startDate.format(pickers.dateFormat) + ' - ' + pickers.creationDate.endDate.format(pickers.dateFormat))
+                    .find('span')
+                    .html(pickers.creationDate.startDate.format(BooklyL10n.mjsDateFormat) + ' - ' + pickers.creationDate.endDate.format(BooklyL10n.mjsDateFormat));
+            } else {
+                $('#bookly-filter-' + params[0]).val(params[1]);
+            }
+        });
+    }
+
     $('.bookly-js-select')
         .val(null)
         .on('select2:unselecting', function(e) {
@@ -33,12 +57,24 @@ jQuery(function($) {
      */
     var columns = [
         { data: 'id', responsivePriority: 9 },
-        { data: 'created', responsivePriority: 8 },
+        {
+            data: 'created',
+            responsivePriority: 8,
+            render: function ( data, type, row, meta ) {
+                return row.created_format;
+            }
+        },
         { data: 'type', responsivePriority: 7 },
         { data: 'customer', render: $.fn.dataTable.render.text(), responsivePriority: 6 },
         { data: 'provider', responsivePriority: 4 },
         { data: 'service', responsivePriority: 3 },
-        { data: 'start_date', responsivePriority: 2 },
+        {
+            data: 'start_date',
+            responsivePriority: 2,
+            render: function ( data, type, row, meta ) {
+                return row.start_date_format;
+            }
+        },
         { data: 'paid', responsivePriority: 1 },
         { data: 'status', responsivePriority: 3 },
         {
@@ -73,7 +109,7 @@ jQuery(function($) {
         searching: false,
         processing: true,
         responsive: true,
-        serverSide: true,
+        serverSide: false,
         ajax: {
             url: ajaxurl,
             type: 'POST',
@@ -83,7 +119,7 @@ jQuery(function($) {
                     csrf_token: BooklyL10n.csrf_token,
                     filter: {
                         id      : $id_filter.val(),
-                        created : $date_filter.data('date'),
+                        created : $creationDateFilter.data('date'),
                         type    : $type_filter.val(),
                         customer: $customer_filter.val(),
                         staff   : $staff_filter.val(),
@@ -138,10 +174,11 @@ jQuery(function($) {
     picker_ranges[BooklyL10n.this_month] = [moment().startOf('month'), moment().endOf('month')];
     picker_ranges[BooklyL10n.last_month] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
 
-    $date_filter.daterangepicker(
+    $creationDateFilter.daterangepicker(
         {
-            parentEl: $date_filter.parent(),
-            startDate: moment().subtract(30, 'days'), // by default selected is "Last 30 days"
+            parentEl: $creationDateFilter.parent(),
+            startDate: pickers.creationDate.startDate,
+            endDate  : pickers.creationDate.endDate,
             ranges: picker_ranges,
             locale: {
                 applyLabel:  BooklyL10n.apply,
@@ -156,16 +193,15 @@ jQuery(function($) {
             }
         },
         function(start, end) {
-            var format = 'YYYY-MM-DD';
-            $date_filter
-                .data('date', start.format(format) + ' - ' + end.format(format))
+            $creationDateFilter
+                .data('date', start.format(pickers.dateFormat) + ' - ' + end.format(pickers.dateFormat))
                 .find('span')
                 .html(start.format(BooklyL10n.mjsDateFormat) + ' - ' + end.format(BooklyL10n.mjsDateFormat));
         }
     );
 
     $id_filter.on('keyup', function () { dt.ajax.reload(); });
-    $date_filter.on('apply.daterangepicker', function () { dt.ajax.reload(); });
+    $creationDateFilter.on('apply.daterangepicker', function () { dt.ajax.reload(); });
     $type_filter.on('change', function () { dt.ajax.reload(); });
     $customer_filter.on('change', function () { dt.ajax.reload(); });
     $staff_filter.on('change', function () { dt.ajax.reload(); });

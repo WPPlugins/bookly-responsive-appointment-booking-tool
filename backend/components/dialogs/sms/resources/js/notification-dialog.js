@@ -7,9 +7,9 @@ jQuery(function ($) {
             statuses : $('.bookly-js-statuses-container', $modalNotification),
             services : $('.bookly-js-services-container', $modalNotification),
             recipient: $('.bookly-js-recipient-container', $modalNotification),
-            message  : $('#bookly-js-message-container', $modalNotification),
-            attach   : $('.bookly-js-attach-container', $modalNotification),
-            codes    : $('.bookly-js-codes-container', $modalNotification)
+            message  : $('#bookly-js-message-container',  $modalNotification),
+            attach   : $('.bookly-js-attach-container',   $modalNotification),
+            codes    : $('.bookly-js-codes-container',    $modalNotification)
         },
         $offsets             = $('.bookly-js-offset', containers.settings),
         $notificationType    = $('select[name=\'notification[type]\']', containers.settings),
@@ -20,8 +20,26 @@ jQuery(function ($) {
         $helpType            = $('.bookly-js-help-block', containers.settings),
         $codes               = $('table.bookly-codes', $modalNotification),
         $status              = $("select[name='notification[settings][status]']", containers.settings),
-        $defaultStatuses
+        $defaultStatuses,
+        useTinyMCE           = typeof(tinyMCE) !== 'undefined',
+        $textarea            = $('#bookly-js-message', containers.message)
     ;
+
+    function getNotificationText() {
+        if (useTinyMCE) {
+            return tinyMCE.activeEditor.getContent({format: 'raw'});
+        } else {
+            return $textarea.val();
+        }
+    }
+
+    function setNotificationText(text) {
+        if (useTinyMCE) {
+            tinyMCE.activeEditor.setContent(text);
+        } else {
+            return $textarea.val(text);
+        }
+    }
 
     function format(option) {
         return option.id && option.element.dataset.icon ? '<i class="fa fa-fw ' + option.element.dataset.icon + '"></i> ' + option.text : option.text;
@@ -31,7 +49,7 @@ jQuery(function ($) {
         .on('show.bs.modal.first', function () {
             $notificationType.trigger('change');
             $modalNotification.unbind('show.bs.modal.first');
-            if (BooklyNotificationDialogL10n.gateway == 'email') {
+            if (useTinyMCE) {
                 tinymce.init(tinyMCEPreInit);
             }
             containers.message.siblings('a[data-toggle=collapse]').html(BooklyNotificationDialogL10n.title.container);
@@ -149,10 +167,7 @@ jQuery(function ($) {
                 ladda = Ladda.create(this);
             ladda.start();
             data.push({name: 'action', value: 'bookly_save_notification'});
-            data.push({name: 'notification[gateway]', value: BooklyNotificationDialogL10n.gateway});
-            if (BooklyNotificationDialogL10n.gateway == 'email') {
-                data.push({name: 'notification[message]', value: tinyMCE.activeEditor.getContent({format: 'raw'})});
-            }
+            data.push({name: 'notification[message]', value: getNotificationText()});
 
             $.ajax({
                 url     : ajaxurl,
@@ -238,11 +253,8 @@ jQuery(function ($) {
         $("input[name='notification[attach_ics]']", containers.message).prop('checked', data.attach_ics == '1');
         $("input[name='notification[attach_invoice]']", containers.message).prop('checked', data.attach_invoice == '1');
 
-        if (BooklyNotificationDialogL10n.gateway == 'email') {
-            tinymce.activeEditor.setContent(data.message);
-        } else {
-            $("textarea[name='notification[message]']", containers.message).val(data.message);
-        }
+        setNotificationText(data.message);
+
         if (data.hasOwnProperty('id')) {
             $('.modal-title', $modalNotification).html(BooklyNotificationDialogL10n.title.edit);
             containers.settings.collapse('hide');

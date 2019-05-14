@@ -40,6 +40,7 @@ class StaffServices extends Lib\Base\Form
         $this->uncategorized_services = Lib\Entities\Service::query( 's' )
             ->where( 's.category_id', null )
             ->whereIn( 's.type', array( Lib\Entities\Service::TYPE_SIMPLE, Lib\Entities\Service::TYPE_PACKAGE ) )
+            ->sortBy( 's.position' )
             ->find();
 
         $staff_services = Lib\Entities\StaffService::query( 'ss' )

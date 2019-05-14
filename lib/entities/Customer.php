@@ -168,7 +168,7 @@ class Customer extends Lib\Base\Entity
                     ca.number_of_persons,
                     ca.custom_fields,
                     ca.appointment_id,
-                    IF (ca.compound_service_id IS NULL AND ca.collaborative_service_id IS NULL, COALESCE(ss.price, a.custom_service_price), s.price) AS price,
+                    IF (ca.compound_service_id IS NULL AND ca.collaborative_service_id IS NULL, COALESCE(ss.price, ss_no_location.price, a.custom_service_price), s.price) AS price,
                     IF (ca.time_zone_offset IS NULL,
                         a.start_date,
                         DATE_SUB(a.start_date, INTERVAL ' . $client_diff . ' + ca.time_zone_offset MINUTE)
@@ -180,6 +180,7 @@ class Customer extends Lib\Base\Entity
             ->leftJoin( 'Service', 's', 's.id = COALESCE(ca.compound_service_id, ca.collaborative_service_id, a.service_id)' )
             ->leftJoin( 'Category', 'c', 'c.id = s.category_id' )
             ->leftJoin( 'StaffService', 'ss', 'ss.staff_id = a.staff_id AND ss.service_id = a.service_id AND ss.location_id <=> a.location_id' )
+            ->leftJoin( 'StaffService', 'ss_no_location', 'ss_no_location.staff_id = a.staff_id AND ss_no_location.service_id = a.service_id AND ss_no_location.location_id IS NULL' )
             ->leftJoin( 'Payment', 'p', 'p.id = ca.payment_id' )
             ->groupBy( 'COALESCE(compound_token, collaborative_token, ca.id)' )
             ->sortBy( 'start_date' )

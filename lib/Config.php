@@ -147,7 +147,6 @@ abstract class Config
             $location_data = array(
                 'min_capacity' => (int) $row['capacity_min'],
                 'max_capacity' => (int) $row['capacity_max'],
-                'raw_price'    => $staff_name_with_price ? $row['price'] : null,
                 'price'        => $staff_name_with_price
                     ? html_entity_decode( Utils\Price::format( $row['price'] ) )
                     : null,

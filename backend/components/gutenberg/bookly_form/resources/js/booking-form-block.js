@@ -432,9 +432,9 @@
                 value: attributes.service,
                 help : el(components.PanelRow,
                     {},
-                    el('label', {htmlFor: 'bookly-js-hide-category'}, BooklyFormL10n.hide),
+                    el('label', {htmlFor: 'bookly-js-hide-services'}, BooklyFormL10n.hide),
                     el(components.FormToggle, {
-                        id: 'bookly-js-hide-category',
+                        id: 'bookly-js-hide-services',
                         checked: attributes.hide_services,
                         onChange: function () {
                             return props.setAttributes({hide_services: !props.attributes.hide_services});
@@ -451,6 +451,7 @@
 
                     // Validate selected values.
                     if (service_id != '') {
+
                         if (staff_id != '' && !staff[staff_id].services.hasOwnProperty(service_id)) {
                             staff_id = '';
                         }

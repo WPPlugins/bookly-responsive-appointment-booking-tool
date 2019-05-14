@@ -11,6 +11,7 @@ use BooklyLocations\Lib\Entities\Location;
  * @method static void           addBooklyMenuItem() Add 'Locations' to Bookly menu.
  * @method static Location|false findById( int $location_id ) Find location by id
  * @method static Location[]     findByStaffId( int $staff_id ) Find locations by staff id.
+ * @method static array          prepareLocationsForCombinedServices( array $locations, array $services ) Prepare Location Ids for combined services.
  * @method static int            prepareStaffLocationId( int $location_id, int $staff_id ) Prepare StaffService Location Id.
  * @method static int            prepareStaffScheduleLocationId( int $location_id, int $staff_id ) Prepare StaffService Location Id.
  * @method static Lib\Query      prepareStaffScheduleQuery( Lib\Query $query, int $location_id, int $staff_id ) Prepare Get StaffSchedule Query.

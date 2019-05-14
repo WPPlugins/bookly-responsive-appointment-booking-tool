@@ -373,7 +373,7 @@ abstract class Routine
                         '{30_service}'  => __( 'Service', 'bookly' ),
                         '{40_customer}' => __( 'Customer', 'bookly' ),
                     );
-                    if ( Lib\Config::locationsActive() && get_option( 'bookly_locations_enabled' ) ) {
+                    if ( Lib\Config::locationsActive() ) {
                         $columns['{20_location}'] = __( 'Location', 'bookly' );
                     }
                     $columns_extended = $columns;
