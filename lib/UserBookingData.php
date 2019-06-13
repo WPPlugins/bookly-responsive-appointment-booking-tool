@@ -195,9 +195,6 @@ class UserBookingData
         } elseif ( get_option( 'bookly_cst_remember_in_cookie' ) && isset( $_COOKIE['bookly-cst-full-name'] ) ) {
             $this
                 ->setFullName( $_COOKIE['bookly-cst-full-name'] )
-                ->setEmail( $_COOKIE['bookly-cst-email'] )
-                ->setEmailConfirm( $_COOKIE['bookly-cst-email'] )
-                ->setPhone( $_COOKIE['bookly-cst-phone'] )
                 ->setInfoFields( (array) json_decode( stripslashes( $_COOKIE['bookly-cst-info-fields'] ), true ) )
             ;
             if ( isset( $_COOKIE['bookly-cst-birthday'] ) ) {
@@ -209,6 +206,8 @@ class UserBookingData
                 );
                 $this->setBirthday( $birthday );
             }
+            if ( isset( $_COOKIE['bookly-cst-email'] ) ) { $this->setEmail( $_COOKIE['bookly-cst-email'] )->setEmailConfirm( $_COOKIE['bookly-cst-email'] ); }
+            if ( isset( $_COOKIE['bookly-cst-phone'] ) ) { $this->setPhone( $_COOKIE['bookly-cst-phone'] ); }
             if ( isset( $_COOKIE['bookly-cst-first-name'] ) ) { $this->setFirstName( $_COOKIE['bookly-cst-first-name'] ); }
             if ( isset( $_COOKIE['bookly-cst-last-name'] ) ) { $this->setLastName( $_COOKIE['bookly-cst-last-name'] ); }
             if ( isset( $_COOKIE['bookly-cst-country'] ) ) { $this->setCountry( $_COOKIE['bookly-cst-country'] ); }
@@ -687,21 +686,26 @@ class UserBookingData
                         } else {
                             $customer_data['full_name'] = $this->getFullName();
                         }
+                        if ( $this->getEmail() != '' ) {
+                            $customer_data['email'] = $this->getEmail();
+                        }
+                        if ( $this->getPhone() != '' ) {
+                            $customer_data['phone'] = $this->getPhone();
+                        }
                         $this->customer->loadBy( $customer_data );
                     } else {
                         // Try to find customer by phone or email.
-                        $this->customer->loadBy(
-                            Config::phoneRequired()
-                                ? array( 'phone' => $this->getPhone() )
-                                : array( 'email' => $this->getEmail() )
-                        );
-                        if ( ! $this->customer->isLoaded() ) {
-                            // Try to find customer by 'secondary' identifier, otherwise return new customer.
-                            $this->customer->loadBy(
-                                Config::phoneRequired()
-                                    ? array( 'email' => $this->getEmail(), 'phone' => '' )
-                                    : array( 'phone' => $this->getPhone(), 'email' => '' )
-                            );
+                        $params = Config::phoneRequired()
+                            ? ( $this->getPhone() ? array( 'phone' => $this->getPhone() ) : array() )
+                            : ( $this->getEmail() ? array( 'email' => $this->getEmail() ) : array() );
+                        if ( ! empty ( $params ) && ! $this->customer->loadBy( $params ) ) {
+                            $params = Config::phoneRequired()
+                                ? ( $this->getEmail() ? array( 'email' => $this->getEmail(), 'phone' => '' ) : array() )
+                                : ( $this->getPhone() ? array( 'phone' => $this->getPhone(), 'email' => '' ) : array() );
+                            if ( ! empty( $params ) ) {
+                                // Try to find customer by 'secondary' identifier, otherwise return new customer.
+                                $this->customer->loadBy( $params );
+                            }
                         }
                     }
                 }

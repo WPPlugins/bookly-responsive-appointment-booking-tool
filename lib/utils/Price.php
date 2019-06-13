@@ -50,6 +50,7 @@ abstract class Price
         'KWD' => array( 'symbol' => 'KD',   'format' => '{price|2} {symbol}' ),
         'KZT' => array( 'symbol' => 'тг.',  'format' => '{price|2} {symbol}' ),
         'LAK' => array( 'symbol' => '₭',    'format' => '{price|0} {symbol}' ),
+        'LBP' => array( 'symbol' => 'ل.ل.', 'format' => '{symbol} {price}' ),
         'LKR' => array( 'symbol' => 'Rs.',  'format' => '{symbol} {price|2}' ),
         'MUR' => array( 'symbol' => 'Rs',   'format' => '{symbol}{price|2}' ),
         'MXN' => array( 'symbol' => '$',    'format' => '{symbol}{price|2}' ),

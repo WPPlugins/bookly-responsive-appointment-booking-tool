@@ -221,22 +221,30 @@ class Validator
                 if ( ! $customer->isLoaded() ) {
                     // Try to find customer by 'primary' identifier.
                     $identifier = Config::phoneRequired() ? 'phone' : 'email';
-                    $customer->loadBy( array( $identifier => $data[ $identifier ] ) );
+                    if ( $data[ $identifier ] !== '' ) {
+                        $customer->loadBy( array( $identifier => $data[ $identifier ] ) );
+                    }
                     if ( ! $customer->isLoaded() ) {
                         // Try to find customer by 'secondary' identifier.
                         $identifier = Config::phoneRequired() ? 'email' : 'phone';
-                        $customer->loadBy( array( 'phone' => '', 'email' => '', $identifier => $data[ $identifier ] ) );
+                        if ( $data[ $identifier ] !== '' ) {
+                            $customer->loadBy( array( 'phone' => '', 'email' => '', $identifier => $data[ $identifier ] ) );
+                        }
                     }
                     if ( Config::allowDuplicates() ) {
-                        $customer_data = array(
-                            'email' => $data['email'],
-                            'phone' => $data['phone'],
-                        );
                         if ( Config::showFirstLastName() ) {
-                            $customer_data['first_name'] = $data['first_name'];
-                            $customer_data['last_name']  = $data['last_name'];
+                            $customer_data = array(
+                                'first_name' => $data['first_name'],
+                                'last_name'  => $data['last_name'],
+                            );
                         } else {
-                            $customer_data['full_name'] = $data['full_name'];
+                            $customer_data = array( 'full_name' => $data['full_name'] );
+                        }
+                        if ( $data['email'] != '' ) {
+                            $customer_data['email'] = $data['email'];
+                        }
+                        if ( $data['phone'] != '' ) {
+                            $customer_data['phone'] = $data['phone'];
                         }
                         $customer->loadBy( $customer_data );
                     } elseif ( ! isset ( $data['force_update_customer'] ) && $customer->isLoaded() ) {

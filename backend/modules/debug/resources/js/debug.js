@@ -243,7 +243,9 @@ jQuery(function($) {
                         let field = response.data.replace(' primary key', ','),
                             sql = 'CREATE TABLE `' + table + '` (' +
                             "\n `id` " + field +
-                            "\n PRIMARY KEY (`id`));";
+                            "\nPRIMARY KEY (`id`))" +
+                            "\nENGINE = INNODB" +
+                            "\n" + BooklyL10n.charsetCollate + ";";
                         $('pre', $tableModal).html(sql);
                     } else {
                         $('pre', $tableModal).html('');

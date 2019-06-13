@@ -362,6 +362,9 @@ msgstr ""
 msgid "date of appointment"
 msgstr ""
 
+msgid "customer notes for appointment"
+msgstr ""
+
 msgid "time of appointment"
 msgstr ""
 
@@ -3362,9 +3365,6 @@ msgstr ""
 msgid "end time of appointment"
 msgstr ""
 
-msgid "customer notes for appointment"
-msgstr ""
-
 msgid "cart information"
 msgstr ""
 
@@ -5136,6 +5136,9 @@ msgstr ""
 
 msgid ""
 "Sorry, the time slot %date_time% for %service% has been already occupied."
+msgstr ""
+
+msgid "This service is no longer provided."
 msgstr ""
 
 msgid "Service was not found"

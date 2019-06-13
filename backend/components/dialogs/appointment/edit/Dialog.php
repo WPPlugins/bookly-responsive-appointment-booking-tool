@@ -23,7 +23,7 @@ class Dialog extends Lib\Base\Component
 
         self::enqueueScripts( array(
             'backend' => array(
-                'js/angular.min.js'           => array( 'jquery' ),
+                'js/angular.min.js'           => array( 'jquery-ui-datepicker' ),
                 'js/angular-ui-date-0.0.8.js' => array( 'bookly-angular.min.js' ),
                 'js/moment.min.js'            => array( 'jquery' ),
                 'js/select2.full.min.js'      => array( 'jquery' ),
@@ -34,7 +34,7 @@ class Dialog extends Lib\Base\Component
                 'js/ladda.min.js' => array( 'jquery' ),
             ),
             'module' => array(
-                'js/ng-appointment.js' => array( 'bookly-angular-ui-date-0.0.8.js', 'jquery-ui-datepicker' ),
+                'js/ng-appointment.js' => array( 'bookly-angular-ui-date-0.0.8.js' ),
             )
         ) );
 
@@ -45,7 +45,8 @@ class Dialog extends Lib\Base\Component
                 'monthNamesShort' => array_values( $wp_locale->month_abbrev ),
                 'monthNames'      => array_values( $wp_locale->month ),
                 'dayNamesMin'     => array_values( $wp_locale->weekday_abbrev ),
-                'longDays'        => array_values( $wp_locale->weekday ),
+                'dayNamesShort'   => array_values( $wp_locale->weekday_abbrev ),
+                'dayNames'        => array_values( $wp_locale->weekday ),
                 'firstDay'        => (int) get_option( 'start_of_week' ),
             ),
             'cf_per_service'  => (int) Lib\Config::customFieldsPerService(),

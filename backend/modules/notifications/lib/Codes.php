@@ -37,6 +37,7 @@ class Codes
             'cart' => array(
                 'cart_info'                      => __( 'cart information', 'bookly' ),
                 'cart_info_c'                    => __( 'cart information with cancel', 'bookly' ),
+                'appointment_notes'              => __( 'customer notes for appointment', 'bookly' ),
             ),
             'category' => array(
                 'category_name'                  => __( 'name of category', 'bookly' ),

@@ -226,7 +226,7 @@ jQuery(function ($) {
                 }
 
                 function checkRepeatError($panel) {
-                    if ($panel.find('[name="recurrence_enabled"]').val() == 1 && $panel.find('[name="recurrence_frequencies[]"]:checked').length == 0) {
+                    if ($panel.find('[name="recurrence_enabled"]:checked').val() == 1 && $panel.find('[name="recurrence_frequencies[]"]:checked').length == 0) {
                         $panel.find('[name="recurrence_enabled"]').closest('.form-group').addClass('has-error');
                         $panel.find('.bookly-js-frequencies').closest('.form-group').find('button.dropdown-toggle').addClass('btn-danger').removeClass('btn-default');
                         $serviceError.find('.bookly-js-recurrence-error').remove();
@@ -265,8 +265,6 @@ jQuery(function ($) {
                             }
                             $servicesList.DataTable().ajax.reload();
                             $serviceDialog.modal('hide');
-                        } else {
-                            booklyAlert({error: [response.data.message]});
                         }
                     }, 'json').always(function() {
                         ladda.stop();

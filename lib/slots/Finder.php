@@ -364,10 +364,14 @@ class Finder
             $this->client_start_dp = DatePoint::fromStr( $this->last_fetched_slot[0][2] )->toClientTz()->modify( 'tomorrow' );
         } else {
             // Requested date.
-            $this->client_start_dp = DatePoint::fromStrInClientTz( $this->selected_date ?: $this->userData->getDateFrom() );
-            if ( $this->show_calendar ) {
-                $this->client_start_dp = $this->client_start_dp->modify( 'first day of this month midnight' );
+            if ( $this->show_calendar && ( $this->selected_date > $this->userData->getDateFrom() ) ) {
+                // Example case:
+                // The client chose the 3rd day of the following month on time step.
+                $this->client_start_dp = DatePoint::fromStrInClientTz( $this->selected_date )->modify( 'first day of this month midnight' );
+            } else {
+                $this->client_start_dp = DatePoint::fromStrInClientTz( $this->userData->getDateFrom() );
             }
+
             if ( $this->client_start_dp->lt( $min_start ) ) {
                 $this->client_start_dp = $min_start->toClientTz();
             }

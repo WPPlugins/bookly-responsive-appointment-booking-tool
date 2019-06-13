@@ -503,6 +503,7 @@
             callback = _callback;
         };
 
+        var checkErrorsXhr = null;
         var checkAppointmentErrors = function() {
             if ($scope.form.staff) {
                 var dates = $scope.dataSource.getStartAndEndDates(),
@@ -531,7 +532,12 @@
                     });
                 });
 
-                jQuery.post(
+                if (checkErrorsXhr != null) {
+                    checkErrorsXhr.abort();
+                    checkErrorsXhr = null;
+                }
+
+                checkErrorsXhr = jQuery.post(
                     ajaxurl,
                     {
                         action         : 'bookly_check_appointment_errors',

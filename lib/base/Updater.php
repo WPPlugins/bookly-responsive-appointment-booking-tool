@@ -185,4 +185,46 @@ abstract class Updater extends Schema
             $this->renameOptions( $strings );
         }
     }
+
+    /**
+     * Upgrade character and collate for bookly tables.
+     *
+     * @param array $tables
+     */
+    protected function upgradeCharsetCollate( array $tables )
+    {
+        global $wpdb;
+        // In WordPress 4.2, team upgraded wp tables to utf8mb4.
+        if ( $wpdb->has_cap( 'collation' ) ) {
+            // Bookly < 17.3 by default used CHARACTER SET = utf8 COLLATE = utf8_general_ci
+            // mysql 5.5.3+ (2010) support utf8mb4
+            // mysql 5.6+          support utf8mb4_520
+            if ( $wpdb->charset ) {
+                $query = sprintf( 'SELECT TABLE_NAME
+                    FROM INFORMATION_SCHEMA.COLUMNS
+                   WHERE TABLE_NAME IN (%s)
+                     AND TABLE_SCHEMA = SCHEMA()
+                     AND CHARACTER_SET_NAME IS NOT NULL
+                     AND CHARACTER_SET_NAME != %%s',
+                    implode( ', ', array_fill( 0, count( $tables ), '%s' ) )
+                );
+                $alter  = 'ALTER TABLE `%s` CONVERT TO CHARACTER SET ' . $wpdb->charset;
+                $params = array_map( array( $this, 'getTableName' ), $tables );
+                $params[] = $wpdb->charset;
+                if ( $wpdb->collate ) {
+                    $query .= '
+                     AND COLLATION_NAME IS NOT NULL
+                     AND COLLATION_NAME != %s';
+                    $params[] = $wpdb->collate;
+                    $alter .=' COLLATE ' . $wpdb->collate;
+                }
+
+                $records = $wpdb->get_results( $wpdb->prepare( $query, $params ) );
+                foreach ( $records as $record ) {
+                    $wpdb->query( sprintf( $alter, $record->TABLE_NAME ) );
+                }
+            }
+        }
+    }
+
 }

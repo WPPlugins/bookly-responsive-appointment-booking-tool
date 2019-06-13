@@ -70,7 +70,7 @@ class Page extends Lib\Base\Component
             'calendar'        => array(
                 'longMonths'  => array_values( $wp_locale->month ),
                 'shortMonths' => array_values( $wp_locale->month_abbrev ),
-                'longDays'    => array_values( $wp_locale->weekday ),
+                'dayNames'    => array_values( $wp_locale->weekday ),
                 'shortDays'   => array_values( $wp_locale->weekday_abbrev ),
             ),
             'mjsDateFormat'   => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_MOMENT_JS ),

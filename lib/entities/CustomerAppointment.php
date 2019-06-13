@@ -113,16 +113,16 @@ class CustomerAppointment extends Lib\Base\Entity
     /**
      * Delete entity and appointment if there are no more customers.
      *
-     * @param bool $compound
+     * @param bool $compound_collaborative
      */
-    public function deleteCascade( $compound = false )
+    public function deleteCascade( $compound_collaborative = false )
     {
         Lib\Proxy\Shared::deleteCustomerAppointment( $this );
         $this->delete();
         $appointment = new Appointment();
         if ( $appointment->load( $this->getAppointmentId() ) ) {
             // Check if there are any customers left.
-            if ( CustomerAppointment::query()->where( 'appointment_id', $appointment->getId() )->count() == 0 ) {
+            if ( self::query()->where( 'appointment_id', $appointment->getId() )->count() == 0 ) {
                 // If no customers then delete the appointment.
                 $appointment->delete();
             } else {
@@ -141,13 +141,21 @@ class CustomerAppointment extends Lib\Base\Entity
                 // Waiting list.
                 Lib\Proxy\WaitingList::handleParticipantsChange( $appointment );
             }
-            if ( $compound && $this->getCompoundToken() ) {
-                // Remove compound CustomerAppointments
+            if ( $compound_collaborative ) {
                 /** @var CustomerAppointment[] $ca_list */
-                $ca_list = CustomerAppointment::query()
-                    ->where( 'compound_token', $this->getCompoundToken() )
-                    ->where( 'compound_service_id', $this->getCompoundServiceId() )
-                    ->find();
+                $ca_list = array();
+                if ( $this->getCompoundToken() ) {
+                    // Remove compound CustomerAppointments
+                    $ca_list = self::query()
+                        ->where( 'compound_token', $this->getCompoundToken() )
+                        ->where( 'compound_service_id', $this->getCompoundServiceId() )
+                        ->find();
+                } elseif ( $this->getCollaborativeToken() ) {
+                    $ca_list = self::query()
+                        ->where( 'collaborative_token', $this->getCollaborativeToken() )
+                        ->where( 'collaborative_service_id', $this->getCollaborativeServiceId() )
+                        ->find();
+                }
                 foreach ( $ca_list as $ca ) {
                     $ca->deleteCascade();
                 }

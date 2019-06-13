@@ -49,7 +49,7 @@ class Dialog extends Lib\Base\Component
                 'monthNamesShort' => array_values( $wp_locale->month_abbrev ),
                 'monthNames'      => array_values( $wp_locale->month ),
                 'dayNamesMin'     => array_values( $wp_locale->weekday_abbrev ),
-                'longDays'        => array_values( $wp_locale->weekday ),
+                'dayNames'        => array_values( $wp_locale->weekday ),
                 'firstDay'        => (int) get_option( 'start_of_week' ),
                 'yearRange'       => sprintf( '%s:%s', date_create()->modify( '-100 years' )->format( 'Y' ), date( 'Y' ) ),
                 'changeYear'      => true,

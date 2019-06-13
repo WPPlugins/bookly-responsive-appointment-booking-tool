@@ -124,7 +124,6 @@ abstract class Schema
      */
     protected function getTableName( $table )
     {
-        /** @global \wpdb $wpdb */
         global $wpdb;
 
         return $wpdb->prefix . $table;

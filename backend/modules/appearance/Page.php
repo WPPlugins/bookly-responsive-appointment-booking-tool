@@ -63,6 +63,7 @@ class Page extends Lib\Base\Component
             'nop_format'    => get_option( 'bookly_group_booking_nop_format' ),
             'today'         => __( 'Today', 'bookly' ),
             'months'        => array_values( $wp_locale->month ),
+            'daysFull'      => array_values( $wp_locale->weekday ),
             'days'          => array_values( $wp_locale->weekday_abbrev ),
             'nextMonth'     => __( 'Next month', 'bookly' ),
             'prevMonth'     => __( 'Previous month', 'bookly' ),

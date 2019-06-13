@@ -8,7 +8,7 @@ jQuery(function ($) {
     moment.locale('en', {
         months       : BooklyL10n.calendar.longMonths,
         monthsShort  : BooklyL10n.calendar.shortMonths,
-        weekdays     : BooklyL10n.calendar.longDays,
+        weekdays     : BooklyL10n.calendar.dayNames,
         weekdaysShort: BooklyL10n.calendar.shortDays,
         weekdaysMin  : BooklyL10n.calendar.shortDays
     });

@@ -83,7 +83,7 @@ class Ajax extends Lib\Base\Ajax
                                     $staff_service->service->getTitle(),
                                     Lib\Utils\DateTime::secondsToInterval( $staff_service->service->getDuration() )
                                 ),
-                                'category'        => $category ? $category->getName() : ( $has_categories ? __( 'Uncategorized', 'bookly' ) : ''),
+                                'category'        => $category ? $category->getName() : ( $has_categories ? __( 'Uncategorized', 'bookly' ) : '' ),
                                 'duration'        => $staff_service->service->getDuration(),
                                 'units_min'       => $staff_service->service->getUnitsMin(),
                                 'units_max'       => $staff_service->service->getUnitsMax(),

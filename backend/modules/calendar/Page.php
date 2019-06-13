@@ -46,7 +46,7 @@ class Page extends Lib\Base\Ajax
                 'shortMonths' => array_values( $wp_locale->month_abbrev ),
                 'longMonths'  => array_values( $wp_locale->month ),
                 'shortDays'   => array_values( $wp_locale->weekday_abbrev ),
-                'longDays'    => array_values( $wp_locale->weekday ),
+                'dayNames'    => array_values( $wp_locale->weekday ),
             ),
             'dpDateFormat'    => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_JQUERY_DATEPICKER ),
             'mjsDateFormat'   => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_MOMENT_JS ),

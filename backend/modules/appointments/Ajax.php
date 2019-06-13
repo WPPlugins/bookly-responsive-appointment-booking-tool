@@ -85,7 +85,7 @@ class Ajax extends Lib\Base\Ajax
         if ( $filter['created_date'] != 'any' ) {
             list ( $start, $end ) = explode( ' - ', $filter['created_date'], 2 );
             $end = date( 'Y-m-d', strtotime( $end ) + DAY_IN_SECONDS );
-            $query->havingRaw( 'created_date BETWEEN %s AND %s', array( $start, $end ) );
+            $query->whereBetween( 'COALESCE(ca.created, a.created)', $start, $end );
         }
 
         if ( $filter['staff'] != '' ) {
@@ -114,6 +114,10 @@ class Ajax extends Lib\Base\Ajax
         foreach ( $fields_data as $field_data ) {
             $custom_fields[ $field_data->id ] = '';
         }
+
+        $filtered = $query->count();
+
+        $query->limit( self::parameter( 'length' ) )->offset( self::parameter( 'start' ) );
 
         $data = array();
         foreach ( $query->fetchArray() as $row ) {
@@ -188,9 +192,9 @@ class Ajax extends Lib\Base\Ajax
         update_user_meta( get_current_user_id(), 'bookly_filter_appointments_list', $filter );
 
         wp_send_json( array(
-            'draw'            => (int) self::parameter( 'draw' ),
+            'draw'            => ( int ) self::parameter( 'draw' ),
             'recordsTotal'    => $total,
-            'recordsFiltered' => count( $data ),
+            'recordsFiltered' => $filtered,
             'data'            => $data,
         ) );
     }

@@ -191,13 +191,15 @@ jQuery(function($) {
     }
 
     var dt = $appointmentsList.DataTable({
-        order: [[ 1, 'desc' ]],
-        info: false,
-        paging: false,
-        searching: false,
-        processing: true,
-        responsive: true,
-        serverSide: true,
+        order       : [[1, 'desc']],
+        info        : false,
+        searching   : false,
+        lengthChange: false,
+        processing  : true,
+        responsive  : true,
+        pageLength  : 25,
+        pagingType  : 'numbers',
+        serverSide  : true,
         drawCallback: function( settings ) {
             $('[data-toggle="popover"]').on('click', function (e) {
                 e.preventDefault();
@@ -236,6 +238,9 @@ jQuery(function($) {
                 }
             }
         ]),
+        dom: "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row pull-left'<'col-sm-12 bookly-margin-top-lg'p>>",
         language: {
             zeroRecords: BooklyL10n.zeroRecords,
             processing:  BooklyL10n.processing
@@ -370,7 +375,7 @@ jQuery(function($) {
     moment.locale('en', {
         months       : BooklyL10n.calendar.longMonths,
         monthsShort  : BooklyL10n.calendar.shortMonths,
-        weekdays     : BooklyL10n.calendar.longDays,
+        weekdays     : BooklyL10n.calendar.dayNames,
         weekdaysShort: BooklyL10n.calendar.shortDays,
         weekdaysMin  : BooklyL10n.calendar.shortDays
     });

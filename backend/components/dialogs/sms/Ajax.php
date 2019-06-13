@@ -40,8 +40,11 @@ class Ajax extends Lib\Base\Ajax
     {
         $notification = new Lib\Entities\Notification();
         $notification->load( self::parameter( 'id' ) );
-        $data = $notification->getFields();
+        $data             = $notification->getFields();
         $data['settings'] = array_merge( Lib\DataHolders\Notification\Settings::getDefault(), json_decode( $data['settings'], true ) );
+        if ( get_user_meta( get_current_user_id(), 'rich_editing', true ) !== 'false' ) {
+            $data['message'] = wpautop( $data['message'] );
+        }
 
         wp_send_json_success( $data );
     }

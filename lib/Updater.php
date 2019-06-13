@@ -7,6 +7,30 @@ namespace Bookly\Lib;
  */
 class Updater extends Base\Updater
 {
+    function update_17_3()
+    {
+        $this->upgradeCharsetCollate( array(
+            'bookly_appointments',
+            'bookly_categories',
+            'bookly_customer_appointments',
+            'bookly_customers',
+            'bookly_holidays',
+            'bookly_messages',
+            'bookly_notifications',
+            'bookly_payments',
+            'bookly_schedule_item_breaks',
+            'bookly_sent_notifications',
+            'bookly_series',
+            'bookly_services',
+            'bookly_shop',
+            'bookly_staff',
+            'bookly_staff_schedule_items',
+            'bookly_staff_services',
+            'bookly_stats',
+            'bookly_sub_services',
+        ) );
+    }
+
     function update_16_9()
     {
         /** @global \wpdb $wpdb */

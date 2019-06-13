@@ -18,6 +18,9 @@ class Page extends Lib\Base\Ajax
      */
     public static function render()
     {
+        /** @var \wpdb $wpdb*/
+        global $wpdb;
+
         self::enqueueStyles( array(
             'frontend' => array( 'css/ladda.min.css', ),
             'backend'  => array( 'bootstrap/css/bootstrap-theme.min.css', ),
@@ -83,7 +86,10 @@ class Page extends Lib\Base\Ajax
         }
 
         wp_localize_script( 'bookly-debug.js', 'BooklyL10n', array(
-            'csrfToken'    => Lib\Utils\Common::getCsrfToken(),
+            'csrfToken'      => Lib\Utils\Common::getCsrfToken(),
+            'charsetCollate' => $wpdb->has_cap( 'collation' )
+                ? $wpdb->get_charset_collate()
+                : 'DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci'
         ) );
 
         ksort( $debug );

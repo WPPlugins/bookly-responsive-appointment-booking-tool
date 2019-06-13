@@ -11,10 +11,15 @@ class Widget extends Lib\Base\Component
 {
     public static function init()
     {
-        $class = __CLASS__;
-        add_action( 'wp_dashboard_setup', function () use ( $class ) {
-            wp_add_dashboard_widget( strtolower( str_replace( '\\', '-', $class ) ), 'Bookly - ' . __( 'Appointments', 'bookly' ), array( $class, 'renderWidget' ) );
-        } );
+        /** @var \WP_User $current_user */
+        global $current_user;
+
+        if ( $current_user && $current_user->has_cap( 'manage_options' ) ) {
+            $class = __CLASS__;
+            add_action( 'wp_dashboard_setup', function () use ( $class ) {
+                wp_add_dashboard_widget( strtolower( str_replace( '\\', '-', $class ) ), 'Bookly - ' . __( 'Appointments', 'bookly' ), array( $class, 'renderWidget' ) );
+            } );
+        }
     }
 
     /**

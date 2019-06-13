@@ -71,8 +71,11 @@ abstract class Backend
                 $appearance     = __( 'Appearance',          'bookly' );
                 $settings       = __( 'Settings',            'bookly' );
 
-                add_submenu_page( 'bookly-menu', $dashboard, $dashboard, 'read',
-                    Modules\Dashboard\Page::pageSlug(), function () { Modules\Dashboard\Page::render(); } );
+                if ( $current_user->has_cap( 'manage_options' ) ) {
+                    add_submenu_page( 'bookly-menu', $dashboard, $dashboard, 'read',
+                        Modules\Dashboard\Page::pageSlug(), function () {
+                            Modules\Dashboard\Page::render(); } );
+                }
                 add_submenu_page( 'bookly-menu', $calendar, $calendar, 'read',
                     Modules\Calendar\Page::pageSlug(), function () { Modules\Calendar\Page::render(); } );
                 if ( $current_user->has_cap( 'manage_options' ) || $current_user->has_cap( 'manage_bookly_appointments' ) ) {

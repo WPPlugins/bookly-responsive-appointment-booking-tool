@@ -147,7 +147,7 @@ class Ajax extends Page
             'staff'             => $staff_dropdown_data,
         );
 
-        wp_send_json_success( Proxy\Shared::prepareGetService( $result, $service ) );
+        wp_send_json_success( $result );
     }
 
     /**
@@ -263,7 +263,7 @@ class Ajax extends Page
         // Update services in addons.
         $alert = Proxy\Shared::updateService( array( 'success' => array( __( 'Settings saved.', 'bookly' ) ) ), $service, self::postParameters() );
 
-        wp_send_json_success( Proxy\Shared::prepareUpdateServiceResponse( array(), $service, self::postParameters() ) );
+        wp_send_json_success( Proxy\Shared::prepareUpdateServiceResponse( array( 'alert' => $alert), $service, self::postParameters() ) );
     }
 
     /**

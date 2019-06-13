@@ -20,7 +20,7 @@ jQuery(function ($) {
             timeFormat:    obj.options.l10n.mjsTimeFormat,
             monthNames:    obj.options.l10n.calendar.longMonths,
             monthNamesShort: obj.options.l10n.calendar.shortMonths,
-            dayNames:      obj.options.l10n.calendar.longDays,
+            dayNames:      obj.options.l10n.calendar.dayNames,
             dayNamesShort: obj.options.l10n.calendar.shortDays,
             allDaySlot: false,
             eventBackgroundColor: 'silver',

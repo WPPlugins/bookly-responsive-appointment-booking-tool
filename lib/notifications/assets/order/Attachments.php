@@ -39,8 +39,10 @@ class Attachments extends Base\Attachments
                     }
                 }
             }
+
+            return isset ( $this->files['invoice'] ) ? array( $this->files['invoice'] ) : array();
         }
 
-        return isset ( $this->files['invoice'] ) ? array( $this->files['invoice'] ) : array();
+        return array();
     }
 }

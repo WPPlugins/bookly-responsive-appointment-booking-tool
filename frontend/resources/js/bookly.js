@@ -3030,6 +3030,8 @@
                                     // Deselect category to keep full list of services.
                                     $('.bookly-js-select-category', $chain_item).val('');
                                 }
+                            } else {
+                                $('.bookly-js-select-category', $chain_item).val(services[chain_item.service_id].category_id).trigger('change');
                             }
                         }
                         if (!opt[params.form_id].form_attributes.hide_staff_members && chain_item.staff_ids.length == 1 && chain_item.staff_ids[0]) {

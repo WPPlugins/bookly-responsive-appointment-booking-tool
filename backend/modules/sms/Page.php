@@ -149,7 +149,7 @@ class Page extends Lib\Base\Component
                     'enabled' => get_option( 'bookly_cst_phone_default_country' ) != 'disabled',
                 ),
                 'calendar'           => array(
-                    'longDays'    => array_values( $wp_locale->weekday ),
+                    'dayNames'    => array_values( $wp_locale->weekday ),
                     'longMonths'  => array_values( $wp_locale->month ),
                     'shortDays'   => array_values( $wp_locale->weekday_abbrev ),
                     'shortMonths' => array_values( $wp_locale->month_abbrev ),

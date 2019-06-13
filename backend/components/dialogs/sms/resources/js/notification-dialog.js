@@ -25,14 +25,6 @@ jQuery(function ($) {
         $textarea            = $('#bookly-js-message', containers.message)
     ;
 
-    function getNotificationText() {
-        if (useTinyMCE) {
-            return tinyMCE.activeEditor.getContent({format: 'raw'});
-        } else {
-            return $textarea.val();
-        }
-    }
-
     function setNotificationText(text) {
         if (useTinyMCE) {
             tinyMCE.activeEditor.setContent(text);
@@ -163,11 +155,13 @@ jQuery(function ($) {
 
     $btnSaveNotification
         .on('click', function () {
+            if (useTinyMCE) {
+                tinyMCE.triggerSave();
+            }
             var data  = $modalNotification.serializeArray(),
                 ladda = Ladda.create(this);
             ladda.start();
             data.push({name: 'action', value: 'bookly_save_notification'});
-            data.push({name: 'notification[message]', value: getNotificationText()});
 
             $.ajax({
                 url     : ajaxurl,

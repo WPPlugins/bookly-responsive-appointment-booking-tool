@@ -30,7 +30,7 @@ class Installer extends Base\Installer
             'type'        => Notification::TYPE_NEW_BOOKING,
             'name'        => __( 'Notification to customer about approved appointment', 'bookly' ),
             'subject'     => __( 'Your appointment information', 'bookly' ),
-            'message'     => wpautop( __( "Dear {client_name}.\n\nThis is a confirmation that you have booked {service_name}.\n\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
+            'message'     => __( "Dear {client_name}.\n\nThis is a confirmation that you have booked {service_name}.\n\nWe are waiting you at {company_address} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
             'active'      => 1,
             'to_customer' => 1,
             'settings'    => $settings,
@@ -42,7 +42,7 @@ class Installer extends Base\Installer
             'type'        => Notification::TYPE_NEW_BOOKING,
             'name'        => __( 'Notification to staff member about approved appointment', 'bookly' ),
             'subject'     => __( 'New booking information', 'bookly' ),
-            'message'     => wpautop( __( "Hello.\n\nYou have a new booking.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
+            'message'     => __( "Hello.\n\nYou have a new booking.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
             'active'      => 1,
             'to_staff'    => 1,
             'settings'    => $settings,
@@ -54,7 +54,7 @@ class Installer extends Base\Installer
             'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
             'name'        => __( 'Notification to customer about cancelled appointment', 'bookly' ),
             'subject'     => __( 'Booking cancellation', 'bookly' ),
-            'message'     => wpautop( __( "Dear {client_name}.\n\nYou have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
+            'message'     => __( "Dear {client_name}.\n\nYou have cancelled your booking of {service_name} on {appointment_date} at {appointment_time}.\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
             'active'      => 1,
             'to_customer' => 1,
             'settings'    => $settings,
@@ -66,7 +66,7 @@ class Installer extends Base\Installer
             'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
             'name'        => __( 'Notification to staff member about cancelled appointment', 'bookly' ),
             'subject'     => __( 'Booking cancellation', 'bookly' ),
-            'message'     => wpautop( __( "Hello.\n\nThe following booking has been cancelled.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
+            'message'     => __( "Hello.\n\nThe following booking has been cancelled.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
             'active'      => 1,
             'to_staff'    => 1,
             'settings'    => $settings,
@@ -78,7 +78,7 @@ class Installer extends Base\Installer
             'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
             'name'        => __( 'Notification to customer about rejected appointment', 'bookly' ),
             'subject'     => __( 'Booking rejection', 'bookly' ),
-            'message'     => wpautop( __( "Dear {client_name}.\n\nYour booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n\nReason: {cancellation_reason}\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ) ),
+            'message'     => __( "Dear {client_name}.\n\nYour booking of {service_name} on {appointment_date} at {appointment_time} has been rejected.\n\nReason: {cancellation_reason}\n\nThank you for choosing our company.\n\n{company_name}\n{company_phone}\n{company_website}", 'bookly' ),
             'active'      => 1,
             'to_customer' => 1,
             'settings'    => $settings,
@@ -90,7 +90,7 @@ class Installer extends Base\Installer
             'type'        => Notification::TYPE_CUSTOMER_APPOINTMENT_STATUS_CHANGED,
             'name'        => __( 'Notification to staff member about rejected appointment', 'bookly' ),
             'subject'     => __( 'Booking rejection', 'bookly' ),
-            'message'     => wpautop( __( "Hello.\n\nThe following booking has been rejected.\n\nReason: {cancellation_reason}\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ) ),
+            'message'     => __( "Hello.\n\nThe following booking has been rejected.\n\nReason: {cancellation_reason}\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time}\nClient name: {client_name}\nClient phone: {client_phone}\nClient email: {client_email}", 'bookly' ),
             'active'      => 1,
             'to_staff'    => 1,
             'settings'    => $settings,
@@ -395,6 +395,10 @@ class Installer extends Base\Installer
         /** @global \wpdb $wpdb */
         global $wpdb;
 
+        $charset_collate = $wpdb->has_cap( 'collation' )
+            ? $wpdb->get_charset_collate()
+            : 'DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci';
+
         $wpdb->query(
             'CREATE TABLE IF NOT EXISTS `' . Entities\Staff::getTableName() . '` (
                 `id`                 INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -411,8 +415,7 @@ class Installer extends Base\Installer
                 `google_data`        TEXT DEFAULT NULL,
                 `outlook_data`       TEXT DEFAULT NULL
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -421,8 +424,7 @@ class Installer extends Base\Installer
                 `name`     VARCHAR(255) NOT NULL,
                 `position` INT NOT NULL DEFAULT 9999
              ) ENGINE = INNODB
-             DEFAULT CHARACTER SET = utf8
-             COLLATE = utf8_general_ci'
+             ' . $charset_collate
         );
 
         $wpdb->query(
@@ -464,9 +466,8 @@ class Installer extends Base\Installer
                     REFERENCES ' . Entities\Category::getTableName() . '(id)
                     ON DELETE SET NULL
                     ON UPDATE CASCADE
-            ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+             ) ENGINE = INNODB
+             ' . $charset_collate
         );
 
         $wpdb->query(
@@ -488,8 +489,7 @@ class Installer extends Base\Installer
                     ON DELETE CASCADE
                     ON UPDATE CASCADE
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -507,8 +507,7 @@ class Installer extends Base\Installer
                     ON DELETE CASCADE
                     ON UPDATE CASCADE
              ) ENGINE = INNODB
-             DEFAULT CHARACTER SET = utf8
-             COLLATE = utf8_general_ci'
+             ' . $charset_collate
         );
 
         $wpdb->query(
@@ -533,8 +532,7 @@ class Installer extends Base\Installer
                     ON DELETE CASCADE
                     ON UPDATE CASCADE
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -549,8 +547,7 @@ class Installer extends Base\Installer
                     ON DELETE CASCADE
                     ON UPDATE CASCADE
              ) ENGINE = INNODB
-             DEFAULT CHARACTER SET = utf8
-             COLLATE = utf8_general_ci'
+             ' . $charset_collate
         );
 
         $wpdb->query(
@@ -569,8 +566,7 @@ class Installer extends Base\Installer
                 `attach_invoice` TINYINT(1) NOT NULL DEFAULT 0,
                 `settings`       TEXT NULL
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -596,8 +592,7 @@ class Installer extends Base\Installer
                 `info_fields`        TEXT DEFAULT NULL,
                 `created`            DATETIME NOT NULL
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -606,8 +601,7 @@ class Installer extends Base\Installer
                 `repeat` VARCHAR(255) DEFAULT NULL,
                 `token`  VARCHAR(255) NOT NULL
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -641,8 +635,7 @@ class Installer extends Base\Installer
                     ON DELETE CASCADE
                     ON UPDATE CASCADE
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -657,8 +650,7 @@ class Installer extends Base\Installer
                       REFERENCES ' . Entities\Staff::getTableName() . '(id)
                       ON DELETE CASCADE
               ) ENGINE = INNODB
-              DEFAULT CHARACTER SET = utf8
-              COLLATE = utf8_general_ci'
+              ' . $charset_collate
         );
 
         $wpdb->query(
@@ -675,8 +667,7 @@ class Installer extends Base\Installer
                 `details`   TEXT DEFAULT NULL,
                 `created`   DATETIME NOT NULL
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -729,8 +720,7 @@ class Installer extends Base\Installer
                     ON DELETE   SET NULL
                     ON UPDATE   CASCADE
             ) ENGINE = INNODB
-            DEFAULT CHARACTER SET = utf8
-            COLLATE = utf8_general_ci'
+            ' . $charset_collate
         );
 
         $wpdb->query(
@@ -746,8 +736,7 @@ class Installer extends Base\Installer
                     ON DELETE   CASCADE 
                     ON UPDATE   CASCADE
               ) ENGINE = INNODB
-              DEFAULT CHARACTER SET = utf8
-              COLLATE = utf8_general_ci'
+              ' . $charset_collate
         );
 
         $wpdb->query(
@@ -757,8 +746,7 @@ class Installer extends Base\Installer
                 `value`    TEXT DEFAULT NULL,
                 `created`  DATETIME NOT NULL
               ) ENGINE = INNODB
-              DEFAULT CHARACTER SET = utf8
-              COLLATE = utf8_general_ci'
+              ' . $charset_collate
         );
 
         $wpdb->query(
@@ -771,8 +759,7 @@ class Installer extends Base\Installer
                 `seen`       TINYINT(1) NOT NULL DEFAULT 0,
                 `created`    DATETIME NOT NULL
               ) ENGINE = INNODB
-              DEFAULT CHARACTER SET = utf8
-              COLLATE = utf8_general_ci'
+              ' . $charset_collate
         );
 
         $wpdb->query(
@@ -796,8 +783,7 @@ class Installer extends Base\Installer
                 `seen`        TINYINT(1) NOT NULL DEFAULT 0,
                 `created`     DATETIME NOT NULL
               ) ENGINE = INNODB
-              DEFAULT CHARACTER SET = utf8
-              COLLATE = utf8_general_ci'
+              ' . $charset_collate
         );
     }
 

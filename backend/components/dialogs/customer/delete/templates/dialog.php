@@ -25,7 +25,7 @@ use Bookly\Backend\Components\Controls\Buttons;
                         </label>
                     </div>
                 </div>
-                <div style="margin-top: 80px;">
+                <div>
                     <div class="checkbox">
                         <label>
                             <input class="bookly-js-remember-choice-checkbox" type="checkbox"/><?php esc_html_e( 'Remember my choice', 'bookly' ) ?>
