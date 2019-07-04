@@ -138,7 +138,7 @@ export default function stepTime(params, error_message) {
                     weekdaysFull  : BooklyL10n.days,
                     weekdaysShort : BooklyL10n.daysShort,
                     monthsFull    : BooklyL10n.months,
-                    firstDay      : opt[params.form_id].start_of_week,
+                    firstDay      : opt[params.form_id].firstDay,
                     clear         : false,
                     close         : false,
                     today         : false,

@@ -21,8 +21,8 @@ use Bookly\Backend\Components\Controls\Buttons;
                 </div>
             </div>
             <div class="modal-footer">
-                <?php Buttons::renderDelete(); ?>
-                <?php Buttons::renderCustom( null, 'btn-default', __( 'Cancel', 'bookly' ), array( 'ng-click' => 'closeDialog()', 'data-dismiss' => 'modal' ) ) ?>
+                <?php Buttons::renderCustom( 'bookly-delete', 'btn-danger', esc_html__( 'Delete', 'bookly' ), array(), '<i class="fa fa-fw fa-trash"></i> {caption}' ) ?>
+                <?php Buttons::renderCustom( null, 'btn-default', esc_html__( 'Cancel', 'bookly' ), array( 'ng-click' => 'closeDialog()', 'data-dismiss' => 'modal' ) ) ?>
             </div>
         </div>
     </div>

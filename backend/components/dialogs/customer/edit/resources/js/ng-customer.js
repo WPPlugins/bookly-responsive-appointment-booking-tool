@@ -192,7 +192,15 @@
                 /**
                  * Datepicker options.
                  */
-                scope.dateOptions = BooklyL10nCustDialog.dateOptions;
+                scope.datePickerOptions = jQuery.extend({
+                        beforeShow: function (input, inst) {
+                            jQuery(document).off('focusin.bs.modal');
+                        },
+                        onClose: function () {
+                            jQuery(document).on('focusin.bs.modal');
+                        },
+                    },
+                    BooklyL10nCustDialog.datePicker);
 
                 /**
                  * Toggle checkbox info field.

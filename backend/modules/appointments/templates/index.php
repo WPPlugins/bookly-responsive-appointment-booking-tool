@@ -102,9 +102,7 @@ use Bookly\Lib\Utils\DateTime;
                             <th><?php esc_html_e( 'Customer Name', 'bookly' ) ?></th>
                             <th><?php esc_html_e( 'Customer Phone', 'bookly' ) ?></th>
                             <th><?php esc_html_e( 'Customer Email', 'bookly' ) ?></th>
-                            <?php if ( Config::groupBookingActive() ) : ?>
-                                <th><?php esc_html_e( 'Number of persons', 'bookly' ) ?></th>
-                            <?php endif ?>
+                            <?php Proxy\GroupBooking::renderTableHeader() ?>
                             <th><?php echo esc_html( Common::getTranslatedOption( 'bookly_l10n_label_service' ) ) ?></th>
                             <th><?php esc_html_e( 'Duration', 'bookly' ) ?></th>
                             <th><?php esc_html_e( 'Status', 'bookly' ) ?></th>

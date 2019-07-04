@@ -15,4 +15,4 @@
         </div>
     </div>
 </div>
-<div class="bookly-js-holidays jCal-wrap bookly-margin-top-lg"></div>
+<div class="bookly-js-holidays jCal-wrap bookly-margin-top-lg" style="height: 1080px;"></div>

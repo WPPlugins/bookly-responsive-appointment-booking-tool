@@ -459,10 +459,11 @@ class UserBookingData
         $inserted_keys = array();
 
         if ( $count ) {
-            for ( $i = $count - 1; $i > 0; -- $i ) {
-                $this->cart->drop( $edit_cart_keys[ $i ] );
+            $replace_key = array_shift( $edit_cart_keys );
+            foreach ( $edit_cart_keys as $key ) {
+                $this->cart->drop( $key );
             }
-            $inserted_keys = $this->cart->replace( $edit_cart_keys[0], $cart_items );
+            $inserted_keys = $this->cart->replace( $replace_key, $cart_items );
         } else {
             foreach ( $cart_items as $cart_item ) {
                 $inserted_keys[] = $this->cart->add( $cart_item );

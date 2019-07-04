@@ -3,7 +3,6 @@ use Bookly\Backend\Components\Controls;
 use Bookly\Backend\Components\Support;
 use Bookly\Backend\Modules\Services\Proxy;
 use Bookly\Backend\Components\Dialogs;
-use Bookly\Lib;
 ?>
 <div id="bookly-tbs" class="wrap">
     <div class="bookly-tbs-body">

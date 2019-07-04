@@ -528,4 +528,20 @@ class Range
 
         return $result;
     }
+
+    /**
+     * Get staff IDs of all slots including next ones.
+     *
+     * @return array
+     */
+    public function allStaffIds()
+    {
+        $result = array( $this->staffId() );
+
+        if ( $this->data()->hasNextSlot() ) {
+            $result = array_merge( $result, $this->nextSlot()->allStaffIds() );
+        }
+
+        return $result;
+    }
 }

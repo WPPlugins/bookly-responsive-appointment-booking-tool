@@ -4,7 +4,6 @@ namespace Bookly\Backend\Modules\Services;
 use Bookly\Backend\Components\Notices\Limitation;
 use Bookly\Backend\Modules\Appointments;
 use Bookly\Lib;
-use Bookly\Lib\Utils\DateTime;
 
 /**
  * Class Ajax
@@ -39,7 +38,9 @@ class Ajax extends Page
                 'duration'  => in_array( $service->getType(), array(
                     Lib\Entities\Service::TYPE_COLLABORATIVE,
                     Lib\Entities\Service::TYPE_COMPOUND,
-                ) ) ? sprintf( _n( '%d service', '%d services', $sub_services_count, 'bookly' ), $sub_services_count ) : Lib\Utils\DateTime::secondsToInterval( $service->getDuration() ),
+                ) )
+                    ? sprintf( _n( '%d service', '%d services', $sub_services_count, 'bookly' ), $sub_services_count )
+                    : Lib\Utils\DateTime::secondsToInterval( $service->getDuration() ),
             );
         }
 
@@ -80,6 +81,7 @@ class Ajax extends Page
         Proxy\Shared::serviceCreated( $service, self::postParameters() );
 
         $sub_services_count = array_sum( array_map( function ( $sub_service ) {
+            /** @var Lib\Entities\Service $sub_service */
             return (int) ( $sub_service->getType() == Lib\Entities\SubService::TYPE_SERVICE );
         }, $service->getSubServices() ) );
 
@@ -290,7 +292,6 @@ class Ajax extends Page
                 ->setPosition( $position )
                 ->setName( $category_data['name'] )
                 ->save();
-
         }
 
         wp_send_json_success( Lib\Entities\Category::query()->sortBy( 'position' )->fetchArray() );

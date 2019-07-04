@@ -14,8 +14,6 @@ class Page extends Lib\Base\Component
      */
     public static function render()
     {
-        global $wp_locale;
-
         self::enqueueStyles( array(
             'frontend' => array_merge(
                 array( 'css/ladda.min.css', ),
@@ -125,22 +123,11 @@ class Page extends Lib\Base\Component
             array(
                 'csrfToken'          => Lib\Utils\Common::getCsrfToken(),
                 'alert'              => $alert,
-                'apply'              => __( 'Apply', 'bookly' ),
                 'areYouSure'         => __( 'Are you sure?', 'bookly' ),
                 'cancel'             => __( 'Cancel', 'bookly' ),
                 'country'            => get_option( 'bookly_cst_phone_default_country' ),
                 'current_tab'        => $current_tab,
-                'custom_range'       => __( 'Custom range', 'bookly' ),
-                'from'               => __( 'From', 'bookly' ),
-                'last_30'            => __( 'Last 30 days', 'bookly' ),
-                'last_7'             => __( 'Last 7 days', 'bookly' ),
-                'last_month'         => __( 'Last month', 'bookly' ),
                 'mjsDateFormat'      => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_MOMENT_JS ),
-                'startOfWeek'        => (int) get_option( 'start_of_week' ),
-                'this_month'         => __( 'This month', 'bookly' ),
-                'to'                 => __( 'To', 'bookly' ),
-                'today'              => __( 'Today', 'bookly' ),
-                'yesterday'          => __( 'Yesterday', 'bookly' ),
                 'input_old_password' => __( 'Please enter old password.', 'bookly' ),
                 'passwords_no_same'  => __( 'Passwords must be the same.', 'bookly' ),
                 'intlTelInput'       => array(
@@ -148,12 +135,9 @@ class Page extends Lib\Base\Component
                     'utils'   => is_rtl() ? '' : plugins_url( 'intlTelInput.utils.js', Lib\Plugin::getDirectory() . '/frontend/resources/js/intlTelInput.utils.js' ),
                     'enabled' => get_option( 'bookly_cst_phone_default_country' ) != 'disabled',
                 ),
-                'calendar'           => array(
-                    'dayNames'    => array_values( $wp_locale->weekday ),
-                    'longMonths'  => array_values( $wp_locale->month ),
-                    'shortDays'   => array_values( $wp_locale->weekday_abbrev ),
-                    'shortMonths' => array_values( $wp_locale->month_abbrev ),
-                ),
+
+                'datePicker' => Lib\Utils\DateTime::datePickerOptions(),
+                'dateRange' => Lib\Utils\DateTime::dateRangeOptions(),
                 'sender_id'          => array(
                     'sent'        => __( 'Sender ID request is sent.', 'bookly' ),
                     'set_default' => __( 'Sender ID is reset to default.', 'bookly' ),

@@ -22,10 +22,92 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function getAppointments()
     {
-        $columns     = self::parameter( 'columns' );
-        $order       = self::parameter( 'order' );
-        $filter      = self::parameter( 'filter' );
-        $postfix_any = sprintf( ' (%s)', get_option( 'bookly_l10n_option_employee' ) );
+        $columns = self::parameter( 'columns' );
+        $order   = self::parameter( 'order' );
+        $filter  = self::parameter( 'filter' );
+        $limits  = array(
+            'length' => self::parameter( 'length' ),
+            'start'  => self::parameter( 'start' ),
+        );
+
+        $data = self::getAppointmentsTableData( $filter, $limits, $columns, $order );
+
+        unset( $filter['date'] );
+
+        update_user_meta( get_current_user_id(), 'bookly_filter_appointments_list', $filter );
+
+        wp_send_json( array(
+            'draw'            => ( int ) self::parameter( 'draw' ),
+            'recordsTotal'    => $data['total'],
+            'recordsFiltered' => $data['filtered'],
+            'data'            => $data['data'],
+        ) );
+    }
+
+    /**
+     * Delete customer appointments.
+     */
+    public static function deleteCustomerAppointments()
+    {
+        // Customer appointments to delete
+        $ca_list           = array();
+        // Appointments without customers to delete
+        $appointments_list = array();
+        foreach ( self::parameter( 'data', array() ) as $ca_data ) {
+            if ( $ca_data['ca_id'] === 'null' ) {
+                $appointments_list[] = $ca_data['id'];
+            } else {
+                $ca_list[] = $ca_data['ca_id'];
+            }
+        }
+
+        /** @var Lib\Entities\CustomerAppointment $ca */
+        foreach ( Lib\Entities\CustomerAppointment::query()->whereIn( 'id', $ca_list )->find() as $ca ) {
+            if ( self::parameter( 'notify' ) ) {
+                switch ( $ca->getStatus() ) {
+                    case Lib\Entities\CustomerAppointment::STATUS_PENDING:
+                    case Lib\Entities\CustomerAppointment::STATUS_WAITLISTED:
+                        $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_REJECTED );
+                        break;
+                    case Lib\Entities\CustomerAppointment::STATUS_APPROVED:
+                        $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_CANCELLED );
+                        break;
+                    default:
+                        $busy_statuses = (array) Lib\Proxy\CustomStatuses::prepareBusyStatuses( array() );
+                        if ( in_array( $ca->getStatus(), $busy_statuses ) ) {
+                            $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_CANCELLED );
+                        }
+                }
+                Lib\Notifications\Booking\Sender::sendForCA(
+                    $ca,
+                    null,
+                    array( 'cancellation_reason' => self::parameter( 'reason' ) )
+                );
+            }
+            $ca->deleteCascade();
+        }
+
+        /** @var Lib\Entities\Appointment $appointment */
+        foreach ( Lib\Entities\Appointment::query()->whereIn( 'id', $appointments_list )->find() as $appointment ) {
+            $ca = $appointment->getCustomerAppointments();
+            if ( empty( $ca ) ) {
+                $appointment->delete();
+            }
+        }
+
+        wp_send_json_success();
+    }
+
+    /**
+     * @param array $filter
+     * @param array $limits
+     * @param array $columns
+     * @param array $order
+     * @return array
+     */
+    public static function getAppointmentsTableData( $filter = array(), $limits = array(), $columns = array(), $order = array() )
+    {
+        $postfix_any      = sprintf( ' (%s)', get_option( 'bookly_l10n_option_employee' ) );
         $postfix_archived = sprintf( ' (%s)', __( 'Archived', 'bookly' ) );
 
         $query = Lib\Entities\Appointment::query( 'a' )
@@ -117,7 +199,9 @@ class Ajax extends Lib\Base\Ajax
 
         $filtered = $query->count();
 
-        $query->limit( self::parameter( 'length' ) )->offset( self::parameter( 'start' ) );
+        if ( ! empty( $limits ) ) {
+            $query->limit( $limits['length'] )->offset( $limits['start'] );
+        }
 
         $data = array();
         foreach ( $query->fetchArray() as $row ) {
@@ -127,11 +211,20 @@ class Ajax extends Lib\Base\Ajax
             $row['status'] = Lib\Entities\CustomerAppointment::statusToString( $row['status'] );
             // Payment title.
             $payment_title = '';
+            $payment_raw_title = '';
             if ( $row['payment'] !== null ) {
                 $payment_title = Lib\Utils\Price::format( $row['payment'] );
                 if ( $row['payment'] != $row['payment_total'] ) {
                     $payment_title = sprintf( __( '%s of %s', 'bookly' ), $payment_title, Lib\Utils\Price::format( $row['payment_total'] ) );
                 }
+
+                $payment_raw_title = trim( sprintf(
+                    '%s %s %s',
+                    $payment_title,
+                    Lib\Entities\Payment::typeToString( $row['payment_type'] ),
+                    Lib\Entities\Payment::statusToString( $row['payment_status'] )
+                ) );
+
                 $payment_title .= sprintf(
                     ' %s <span%s>%s</span>',
                     Lib\Entities\Payment::typeToString( $row['payment_type'] ),
@@ -174,6 +267,7 @@ class Ajax extends Lib\Base\Ajax
                 ),
                 'status'            => $row['status'],
                 'payment'           => $payment_title,
+                'payment_raw_title' => $payment_raw_title,
                 'notes'             => $row['notes'],
                 'number_of_persons' => (int) $row['number_of_persons'],
                 'rating'            => $row['rating'],
@@ -188,68 +282,11 @@ class Ajax extends Lib\Base\Ajax
             $custom_fields = array_map( function () { return ''; }, $custom_fields );
         }
 
-        unset( $filter['date'] );
-        update_user_meta( get_current_user_id(), 'bookly_filter_appointments_list', $filter );
+        return array(
+            'data'     => $data,
+            'total'    => $total,
+            'filtered' => $filtered,
+        );
 
-        wp_send_json( array(
-            'draw'            => ( int ) self::parameter( 'draw' ),
-            'recordsTotal'    => $total,
-            'recordsFiltered' => $filtered,
-            'data'            => $data,
-        ) );
-    }
-
-    /**
-     * Delete customer appointments.
-     */
-    public static function deleteCustomerAppointments()
-    {
-        // Customer appointments to delete
-        $ca_list           = array();
-        // Appointments without customers to delete
-        $appointments_list = array();
-        foreach ( self::parameter( 'data', array() ) as $ca_data ) {
-            if ( $ca_data['ca_id'] === 'null' ) {
-                $appointments_list[] = $ca_data['id'];
-            } else {
-                $ca_list[] = $ca_data['ca_id'];
-            }
-        }
-
-        /** @var Lib\Entities\CustomerAppointment $ca */
-        foreach ( Lib\Entities\CustomerAppointment::query()->whereIn( 'id', $ca_list )->find() as $ca ) {
-            if ( self::parameter( 'notify' ) ) {
-                switch ( $ca->getStatus() ) {
-                    case Lib\Entities\CustomerAppointment::STATUS_PENDING:
-                    case Lib\Entities\CustomerAppointment::STATUS_WAITLISTED:
-                        $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_REJECTED );
-                        break;
-                    case Lib\Entities\CustomerAppointment::STATUS_APPROVED:
-                        $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_CANCELLED );
-                        break;
-                    default:
-                        $busy_statuses = (array) Lib\Proxy\CustomStatuses::prepareBusyStatuses( array() );
-                        if ( in_array( $ca->getStatus(), $busy_statuses ) ) {
-                            $ca->setStatus( Lib\Entities\CustomerAppointment::STATUS_CANCELLED );
-                        }
-                }
-                Lib\Notifications\Booking\Sender::sendForCA(
-                    $ca,
-                    null,
-                    array( 'cancellation_reason' => self::parameter( 'reason' ) )
-                );
-            }
-            $ca->deleteCascade();
-        }
-
-        /** @var Lib\Entities\Appointment $appointment */
-        foreach ( Lib\Entities\Appointment::query()->whereIn( 'id', $appointments_list )->find() as $appointment ) {
-            $ca = $appointment->getCustomerAppointments();
-            if ( empty( $ca ) ) {
-                $appointment->delete();
-            }
-        }
-
-        wp_send_json_success();
     }
 }

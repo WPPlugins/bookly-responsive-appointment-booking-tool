@@ -373,4 +373,54 @@ class DateTime
 
         return $d && $d->format( $format ) === $date;
     }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    public static function dateRangeOptions( $array = array() )
+    {
+        return array_merge(
+            array(
+                'tomorrow'    => __( 'Tomorrow', 'bookly' ),
+                'today'       => __( 'Today', 'bookly' ),
+                'yesterday'   => __( 'Yesterday', 'bookly' ),
+                'last_7'      => __( 'Last 7 days', 'bookly' ),
+                'last_30'     => __( 'Last 30 days', 'bookly' ),
+                'thisMonth'   => __( 'This month', 'bookly' ),
+                'nextMonth'   => __( 'Next month', 'bookly' ),
+                'customRange' => __( 'Custom range', 'bookly' ),
+                'apply'       => __( 'Apply', 'bookly' ),
+                'cancel'      => __( 'Cancel', 'bookly' ),
+                'to'          => __( 'To', 'bookly' ),
+                'from'        => __( 'From', 'bookly' ),
+                'dateFormat'  => self::convertFormat( 'date', self::FORMAT_MOMENT_JS ),
+                'firstDay'    => (int) get_option( 'start_of_week' ),
+            ),
+            $array
+        );
+    }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    public static function datePickerOptions( $array = array() )
+    {
+        /** @var \WP_Locale $wp_locale */
+        global $wp_locale;
+
+        return array_merge(
+            array(
+                'dateFormat'      => self::convertFormat( 'date', self::FORMAT_JQUERY_DATEPICKER ),
+                'monthNamesShort' => array_values( $wp_locale->month_abbrev ),
+                'monthNames'      => array_values( $wp_locale->month ),
+                'dayNamesMin'     => array_values( $wp_locale->weekday_abbrev ),
+                'dayNamesShort'   => array_values( $wp_locale->weekday_abbrev ),
+                'dayNames'        => array_values( $wp_locale->weekday ),
+                'firstDay'        => (int) get_option( 'start_of_week' ),
+            ),
+            $array
+        );
+    }
 }

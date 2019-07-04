@@ -21,7 +21,7 @@ abstract class Ajax extends Component
             $anonymous     = in_array( 'anonymous', $called_class::permissions() );
 
             foreach ( static::reflection()->getMethods( \ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC ) as $method ) {
-                if ( $method->class != $called_class ) {
+                if ( $method->class !== $called_class ) {
                     // Stop if parent class reached.
                     break;
                 }

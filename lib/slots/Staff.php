@@ -87,7 +87,6 @@ class Staff
      */
     public function addSpecialDay( $day )
     {
-
         foreach ( $this->schedule as $schedule ) {
             if ( ! $schedule->hasSpecialDay( $day['date'] ) ) {
                 $schedule->addSpecialDay( $day['date'], $day['start_time'], $day['end_time'] );

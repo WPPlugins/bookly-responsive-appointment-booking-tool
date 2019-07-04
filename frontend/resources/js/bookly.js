@@ -653,7 +653,7 @@
                         $next_btn.trigger('click', [1]);
                     });
                     // Facebook login button.
-                    if (opt[params.form_id].hasOwnProperty('facebook') && opt[params.form_id].facebook.enabled) {
+                    if (opt[params.form_id].hasOwnProperty('facebook') && opt[params.form_id].facebook.enabled && typeof FB !== 'undefined') {
                         FB.XFBML.parse($('.bookly-js-fb-login-button', $container).parent().get(0));
                         opt[params.form_id].facebook.onStatusChange = function (response) {
                             if (response.status === 'connected') {
@@ -1483,7 +1483,7 @@
                                                 weekdaysShort   : BooklyL10n.daysShort,
                                                 labelMonthNext  : BooklyL10n.nextMonth,
                                                 labelMonthPrev  : BooklyL10n.prevMonth,
-                                                firstDay        : opt[params.form_id].start_of_week,
+                                                firstDay        : opt[params.form_id].firstDay,
                                                 onSet: function() {
                                                     var exclude = [];
                                                     $.each(schedule, function (index, item) {
@@ -1650,7 +1650,7 @@
                             weekdaysShort   : BooklyL10n.daysShort,
                             labelMonthNext  : BooklyL10n.nextMonth,
                             labelMonthPrev  : BooklyL10n.prevMonth,
-                            firstDay        : opt[params.form_id].start_of_week
+                            firstDay        : opt[params.form_id].firstDay
                         });
 
                         var open_repeat_onchange = $repeat_enabled.on('change', function () {
@@ -2021,7 +2021,7 @@
                         weekdaysFull  : BooklyL10n.days,
                         weekdaysShort : BooklyL10n.daysShort,
                         monthsFull    : BooklyL10n.months,
-                        firstDay      : opt[params.form_id].start_of_week,
+                        firstDay      : opt[params.form_id].firstDay,
                         clear         : false,
                         close         : false,
                         today         : false,
@@ -2607,7 +2607,7 @@
                         weekdaysShort   : BooklyL10n.daysShort,
                         labelMonthNext  : BooklyL10n.nextMonth,
                         labelMonthPrev  : BooklyL10n.prevMonth,
-                        firstDay        : opt[params.form_id].start_of_week,
+                        firstDay        : opt[params.form_id].firstDay,
                         onSet           : function(timestamp) {
                             if ($.isNumeric(timestamp.select)) {
                                 // Checks appropriate day of the week
@@ -3323,37 +3323,40 @@
      * Init Facebook login.
      */
     function initFacebookLogin(options) {
-        FB.init({
-            appId : options.facebook.appId,
-            status: true,
-            version: 'v2.12'
-        });
-        FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
-                options.facebook.enabled = false;
-                FB.api('/me', {fields: 'id,name,first_name,last_name,email,link'}, function(userInfo) {
-                    $.ajax({
-                        type: 'POST',
-                        url: BooklyL10n.ajaxurl,
-                        data: $.extend(userInfo, {
-                            action      : 'bookly_pro_facebook_login',
-                            csrf_token  : BooklyL10n.csrf_token,
-                            form_id     : options.form_id
-                        }),
-                        dataType: 'json',
-                        xhrFields: {withCredentials: true},
-                        crossDomain: 'withCredentials' in new XMLHttpRequest(),
-                        success: function (response) {}
+        if (typeof FB !== 'undefined') {
+            FB.init({
+                appId: options.facebook.appId,
+                status: true,
+                version: 'v2.12'
+            });
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    options.facebook.enabled = false;
+                    FB.api('/me', {fields: 'id,name,first_name,last_name,email,link'}, function (userInfo) {
+                        $.ajax({
+                            type: 'POST',
+                            url: BooklyL10n.ajaxurl,
+                            data: $.extend(userInfo, {
+                                action: 'bookly_pro_facebook_login',
+                                csrf_token: BooklyL10n.csrf_token,
+                                form_id: options.form_id
+                            }),
+                            dataType: 'json',
+                            xhrFields: {withCredentials: true},
+                            crossDomain: 'withCredentials' in new XMLHttpRequest(),
+                            success: function (response) {
+                            }
+                        });
                     });
-                });
-            } else {
-                FB.Event.subscribe('auth.statusChange', function(response) {
-                    if (options.facebook.onStatusChange) {
-                        options.facebook.onStatusChange(response);
-                    }
-                });
-            }
-        });
+                } else {
+                    FB.Event.subscribe('auth.statusChange', function (response) {
+                        if (options.facebook.onStatusChange) {
+                            options.facebook.onStatusChange(response);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     function importScript(src, async, onLoad) {

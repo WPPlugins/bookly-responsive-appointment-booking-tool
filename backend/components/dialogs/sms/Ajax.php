@@ -42,7 +42,7 @@ class Ajax extends Lib\Base\Ajax
         $notification->load( self::parameter( 'id' ) );
         $data             = $notification->getFields();
         $data['settings'] = array_merge( Lib\DataHolders\Notification\Settings::getDefault(), json_decode( $data['settings'], true ) );
-        if ( get_user_meta( get_current_user_id(), 'rich_editing', true ) !== 'false' ) {
+        if ( get_user_meta( get_current_user_id(), 'rich_editing', true ) !== 'false' && $notification->getGateway() != 'sms' ) {
             $data['message'] = wpautop( $data['message'] );
         }
 

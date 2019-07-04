@@ -56,7 +56,7 @@ use Bookly\Lib\Entities\CustomerAppointment;
                                     <div class="col-sm-4">
                                         <label for="bookly-date"><?php esc_html_e( 'Date', 'bookly' ) ?></label>
                                         <input id="bookly-date" class="form-control" type=text
-                                               ng-model=form.date ui-date="dateOptions" autocomplete="off"
+                                               ng-model=form.date ui-date="datePickerOptions" autocomplete="off"
                                                ng-change=onDateChange()>
                                     </div>
                                     <div class="col-sm-8">

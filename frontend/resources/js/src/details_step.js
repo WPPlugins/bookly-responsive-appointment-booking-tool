@@ -274,7 +274,7 @@ export default function stepDetails(params) {
                     $next_btn.trigger('click', [1]);
                 });
                 // Facebook login button.
-                if (opt[params.form_id].hasOwnProperty('facebook') && opt[params.form_id].facebook.enabled) {
+                if (opt[params.form_id].hasOwnProperty('facebook') && opt[params.form_id].facebook.enabled && typeof FB !== 'undefined') {
                     FB.XFBML.parse($('.bookly-js-fb-login-button', $container).parent().get(0));
                     opt[params.form_id].facebook.onStatusChange = function (response) {
                         if (response.status === 'connected') {

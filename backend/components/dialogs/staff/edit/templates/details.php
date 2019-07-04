@@ -7,10 +7,40 @@ use Bookly\Lib\Config;
 /** @var Bookly\Lib\Entities\Staff $staff */
 ?>
 <form class="bookly-js-staff-details">
-    <div class="form-group">
-        <label for="bookly-full-name"><?php esc_html_e( 'Full name', 'bookly' ) ?></label>
-        <input type="text" class="form-control" id="bookly-full-name" name="full_name" value="<?php echo esc_attr( $staff->getFullName() ) ?>"/>
+    <div class="bookly-flexbox bookly-margin-bottom-lg">
+        <div class="bookly-flex-cell bookly-vertical-middle" style="width: 1%">
+            <div id="bookly-js-staff-avatar" class="bookly-thumb bookly-thumb-lg bookly-margin-right-lg">
+                <div class="bookly-flex-cell" style="width: 100%">
+                    <div class="form-group">
+                        <?php $img = wp_get_attachment_image_src( $staff->getAttachmentId(), 'thumbnail' ) ?>
+
+                        <div class="bookly-js-image bookly-thumb bookly-thumb-lg bookly-margin-right-lg"
+                            <?php echo $img ? 'style="background-image: url(' . $img[0] . '); background-size: cover;"' : '' ?>
+                        >
+                            <a class="dashicons dashicons-trash text-danger bookly-thumb-delete"
+                               href="javascript:void(0)"
+                               title="<?php esc_attr_e( 'Delete', 'bookly' ) ?>"
+                               <?php if ( ! $img ) : ?>style="display: none;"<?php endif ?>>
+                            </a>
+                            <div class="bookly-thumb-edit">
+                                <div class="bookly-pretty">
+                                    <label class="bookly-pretty-indicator bookly-thumb-edit-btn">
+                                        <?php esc_html_e( 'Image', 'bookly' ) ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="font-size: 27px;margin-left: -10px;"><?php Proxy\Ratings::renderStaffServiceRating( $staff->getId(), null, 'left' ) ?></div>
+        <div class="form-group" style="margin-top: 20px; margin-bottom: 0px">
+            <label for="bookly-full-name"><?php esc_html_e( 'Full name', 'bookly' ) ?></label>
+            <input type="text" class="form-control" id="bookly-full-name" name="full_name" value="<?php echo esc_attr( $staff->getFullName() ) ?>"/>
+        </div>
     </div>
+
     <?php if ( Common::isCurrentUserAdmin() ) : ?>
         <div class="form-group">
             <label for="bookly-wp-user"><?php esc_html_e( 'User', 'bookly' ) ?></label>
@@ -31,7 +61,7 @@ use Bookly\Lib\Config;
     <?php endif ?>
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div class="form-group">
                 <label for="bookly-email"><?php esc_html_e( 'Email', 'bookly' ) ?></label>
                 <input class="form-control" id="bookly-email" name="email"
@@ -39,7 +69,7 @@ use Bookly\Lib\Config;
                        type="text"/>
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div class="form-group">
                 <label for="bookly-phone"><?php esc_html_e( 'Phone', 'bookly' ) ?></label>
                 <input class="form-control" id="bookly-phone"
@@ -58,24 +88,21 @@ use Bookly\Lib\Config;
     </div>
 
     <div class="form-group">
-        <label for="bookly-visibility"><?php esc_html_e( 'Visibility', 'bookly' ) ?></label>
-        <p class="help-block">
-            <?php esc_html_e( 'To make staff member invisible to your customers set the visibility to "Private".', 'bookly' ) ?>
-        </p>
-        <select name="visibility" class="form-control" id="bookly-visibility" data-default="<?php echo $staff->getVisibility() ?>">
-            <option value="public" <?php selected( $staff->getVisibility(), 'public' ) ?>><?php esc_html_e( 'Public', 'bookly' ) ?></option>
-            <option value="private" <?php selected( $staff->getVisibility(), 'private' ) ?>><?php esc_html_e( 'Private', 'bookly' ) ?></option>
-            <?php if ( Config::proActive() || $staff->getVisibility() == 'archive' ) : ?>
-                <option value="archive" <?php selected( $staff->getVisibility(), 'archive' ) ?>><?php esc_html_e( 'Archive', 'bookly' ) ?></option>
-            <?php endif ?>
-        </select>
+        <label><?php esc_html_e( 'Visibility', 'bookly' ) ?></label>
+        <p class="help-block"><?php esc_html_e( 'To make staff member invisible to your customers set the visibility to "Private".', 'bookly' ) ?></p>
+        <div class="radio"><label><input type="radio" name="visibility" value="public" <?php checked( $staff->getVisibility(), 'public' ) ?>><?php esc_html_e( 'Public', 'bookly' ) ?></label></div>
+        <div class="radio"><label><input type="radio" name="visibility" value="private" <?php checked( $staff->getVisibility(), 'private' ) ?>><?php esc_html_e( 'Private', 'bookly' ) ?></label></div>
+        <?php if ( Config::proActive() || $staff->getVisibility() === 'archive' ) : ?>
+            <div class="radio"><label><input type="radio" name="visibility" value="archive" <?php checked( $staff->getVisibility(), 'archive' ) ?>><?php esc_html_e( 'Archive', 'bookly' ) ?></label></div>
+        <?php endif ?>
     </div>
 
     <?php Proxy\Pro::renderStaffDetails( $staff ) ?>
     <?php Proxy\Shared::renderStaffForm( $staff ) ?>
+    <?php if ( $staff->getId() ) : ?>
     <?php Proxy\Pro::renderGoogleCalendarSettings( $tpl_data ) ?>
     <?php Proxy\OutlookCalendar::renderCalendarSettings( $tpl_data ) ?>
-
+    <?php endif ?>
     <input type="hidden" name="id" value="<?php echo $staff->getId() ?>">
     <input type="hidden" name="attachment_id" value="<?php echo $staff->getAttachmentId() ?>">
     <?php Inputs::renderCsrf() ?>
@@ -85,7 +112,6 @@ use Bookly\Lib\Config;
             <?php Buttons::renderDelete( 'bookly-staff-delete', 'btn-lg pull-left' ) ?>
             <?php Buttons::renderCustom( null, 'btn-lg btn-danger ladda-button bookly-js-staff-archive pull-left', esc_html__( 'Archive', 'bookly' ), !Config::proActive() || $staff->getVisibility() == 'archive' ? array( 'style' => 'display:none;' ) : array(), '<i class="fa fa-archive"></i> {caption}' ) ?>
         <?php endif ?>
-        <?php Buttons::renderCustom( 'bookly-details-save', 'btn-lg btn-success', esc_html__( 'Save', 'bookly' ) ) ?>
-        <?php Buttons::renderReset() ?>
+        <?php Buttons::renderCustom( 'bookly-details-save', 'btn-lg btn-success bookly-js-save', esc_html__( 'Save', 'bookly' ) ) ?>
     </div>
 </form>

@@ -35,6 +35,7 @@ abstract class Plugin extends Base\Plugin
         Backend\Components\Dialogs\Customer\Edit\Ajax::init();
         Backend\Components\Dialogs\Payment\Ajax::init();
         Backend\Components\Dialogs\Sms\Ajax::init();
+        Backend\Components\Dialogs\Staff\Edit\Ajax::init();
         Backend\Components\Gutenberg\BooklyForm\Block::init();
         Backend\Components\Notices\CollectStatsAjax::init();
         Backend\Components\Notices\LiteRebrandingAjax::init();

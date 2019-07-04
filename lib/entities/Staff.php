@@ -202,6 +202,30 @@ class Staff extends Lib\Base\Entity
         return $workload;
     }
 
+    /**
+     * Get holidays.
+     *
+     * @return array
+     */
+    public function getHolidays()
+    {
+        $collection = Lib\Entities\Holiday::query( 'h' )->where( 'h.staff_id', $this->getId() )->fetchArray();
+        $holidays = array();
+        foreach ( $collection as $holiday ) {
+            list ( $Y, $m, $d ) = explode( '-', $holiday['date'] );
+            $holidays[ $holiday['id'] ] = array(
+                'm' => (int) $m,
+                'd' => (int) $d,
+            );
+            // if not repeated holiday, add the year
+            if ( ! $holiday['repeat_event'] ) {
+                $holidays[ $holiday['id'] ]['y'] = (int) $Y;
+            }
+        }
+
+        return $holidays;
+    }
+
     /**************************************************************************
      * Entity Fields Getters & Setters                                        *
      **************************************************************************/

@@ -220,7 +220,7 @@ jQuery(function($) {
         labelMonthNext : BooklyL10n.nextMonth,
         labelMonthPrev : BooklyL10n.prevMonth,
         onRender       : applyColor,
-        firstDay       : BooklyL10n.start_of_week == 1
+        firstDay       : BooklyL10n.startOfWeek == 1
     });
 
     // Show price next to staff member name.
@@ -345,7 +345,7 @@ jQuery(function($) {
         today          : false,
         closeOnSelect  : false,
         onRender       : applyColor,
-        firstDay       : BooklyL10n.start_of_week == 1,
+        firstDay       : BooklyL10n.startOfWeek == 1,
         klass : {
             picker: 'picker picker--opened picker--focused'
         },
@@ -460,7 +460,7 @@ jQuery(function($) {
         labelMonthNext : BooklyL10n.nextMonth,
         labelMonthPrev : BooklyL10n.prevMonth,
         onRender       : applyColor,
-        firstDay       : BooklyL10n.start_of_week == 1
+        firstDay       : BooklyL10n.startOfWeek == 1
     });
     $repeat_variant.on('change', function () {
         $repeat_variants.hide();

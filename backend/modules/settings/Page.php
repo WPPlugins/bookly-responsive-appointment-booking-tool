@@ -134,7 +134,7 @@ class Page extends Lib\Base\Ajax
             'default_country'    => get_option( 'bookly_cst_phone_default_country' ),
             'holidays'           => self::_getHolidays(),
             'loading_img'        => plugins_url( 'bookly-responsive-appointment-booking-tool/backend/resources/images/loading.gif' ),
-            'start_of_week'      => get_option( 'start_of_week' ),
+            'firstDay'           => get_option( 'start_of_week' ),
             'days'               => array_values( $wp_locale->weekday_abbrev ),
             'months'             => array_values( $wp_locale->month ),
             'close'              => __( 'Close', 'bookly' ),

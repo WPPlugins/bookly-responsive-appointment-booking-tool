@@ -111,7 +111,7 @@ $break_end     = clone $working_end;
         <?php Inputs::renderCsrf() ?>
 
         <div class="panel-footer">
-            <?php Buttons::renderSubmit( 'bookly-schedule-save' ) ?>
+            <?php Buttons::renderCustom( 'bookly-schedule-save', 'btn-lg btn-success', esc_attr__( 'Save', 'bookly' ) ) ?>
             <?php Buttons::renderReset( 'bookly-schedule-reset', null, null, array( 'data-default-breaks' => json_encode( $default_breaks ), 'data-spinner-color' => 'rgb(62, 66, 74)' ) ) ?>
         </div>
     </form>

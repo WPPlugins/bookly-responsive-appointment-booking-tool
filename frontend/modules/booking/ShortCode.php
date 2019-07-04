@@ -245,7 +245,7 @@ class ShortCode extends Lib\Base\Component
             'errors'               => $errors,
             'form_attributes'      => $form_attributes,
             'use_client_time_zone' => (int) Lib\Config::useClientTimeZone(),
-            'start_of_week'        => (int) get_option( 'start_of_week' ),
+            'firstDay'             => (int) get_option( 'start_of_week' ),
             'date_format'          => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_PICKADATE ),
             'defaults'             => compact( 'service_id', 'staff_id', 'location_id', 'category_id' ),
         );

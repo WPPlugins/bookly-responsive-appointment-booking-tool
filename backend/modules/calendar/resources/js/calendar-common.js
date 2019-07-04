@@ -6,7 +6,7 @@ jQuery(function ($) {
 
         // settings for fullcalendar.
         var settings = {
-            firstDay:   obj.options.l10n.startOfWeek,
+            firstDay:   obj.options.l10n.datePicker.firstDay,
             allDayText: obj.options.l10n.allDay,
             buttonText: {
                 today:  obj.options.l10n.today,
@@ -18,10 +18,10 @@ jQuery(function ($) {
             slotDuration:  obj.options.l10n.slotDuration,
             // Text/Time Customization.
             timeFormat:    obj.options.l10n.mjsTimeFormat,
-            monthNames:    obj.options.l10n.calendar.longMonths,
-            monthNamesShort: obj.options.l10n.calendar.shortMonths,
-            dayNames:      obj.options.l10n.calendar.dayNames,
-            dayNamesShort: obj.options.l10n.calendar.shortDays,
+            monthNames:    obj.options.l10n.datePicker.monthNames,
+            monthNamesShort: obj.options.l10n.datePicker.monthNamesShort,
+            dayNames:      obj.options.l10n.datePicker.dayNames,
+            dayNamesShort: obj.options.l10n.datePicker.dayNamesShort,
             allDaySlot: false,
             eventBackgroundColor: 'silver',
             // Agenda Options.

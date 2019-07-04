@@ -14,9 +14,6 @@ class Page extends Lib\Base\Component
      */
     public static function render()
     {
-        /** @var \WP_Locale $wp_locale */
-        global $wp_locale;
-
         self::enqueueStyles( array(
             'frontend' => array( 'css/ladda.min.css', ),
             'backend'  => array(
@@ -38,36 +35,19 @@ class Page extends Lib\Base\Component
                 'js/spin.min.js'  => array( 'jquery' ),
                 'js/ladda.min.js' => array( 'jquery' ),
             ),
-            'module'   => array( 'js/payments.js' => array( 'bookly-datatables.min.js', 'bookly-ng-payment_details.js' ) ),
+            'module'   => array( 'js/payments.js' => array( 'bookly-datatables.min.js', 'bookly-ng-payment_details.js', 'bookly-daterangepicker.js' ) ),
         ) );
 
-        wp_localize_script( 'bookly-daterangepicker.js', 'BooklyL10n', array(
-            'csrf_token'      => Lib\Utils\Common::getCsrfToken(),
-            'today'           => __( 'Today', 'bookly' ),
-            'yesterday'       => __( 'Yesterday', 'bookly' ),
-            'last_7'          => __( 'Last 7 days', 'bookly' ),
-            'last_30'         => __( 'Last 30 days', 'bookly' ),
-            'this_month'      => __( 'This month', 'bookly' ),
-            'last_month'      => __( 'Last month', 'bookly' ),
-            'custom_range'    => __( 'Custom range', 'bookly' ),
-            'apply'           => __( 'Apply', 'bookly' ),
-            'cancel'          => __( 'Cancel', 'bookly' ),
-            'to'              => __( 'To', 'bookly' ),
-            'from'            => __( 'From', 'bookly' ),
-            'calendar'        => array(
-                'longMonths'  => array_values( $wp_locale->month ),
-                'shortMonths' => array_values( $wp_locale->month_abbrev ),
-                'dayNames'    => array_values( $wp_locale->weekday ),
-                'shortDays'   => array_values( $wp_locale->weekday_abbrev ),
-            ),
-            'startOfWeek'     => (int) get_option( 'start_of_week' ),
-            'mjsDateFormat'   => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_MOMENT_JS ),
-            'zeroRecords'     => __( 'No payments for selected period and criteria.', 'bookly' ),
-            'processing'      => __( 'Processing...', 'bookly' ),
-            'details'         => __( 'Details', 'bookly' ),
-            'are_you_sure'    => __( 'Are you sure?', 'bookly' ),
-            'no_result_found' => __( 'No result found', 'bookly' ),
-            'invoice'         => array(
+        wp_localize_script( 'bookly-payments.js', 'BooklyL10n', array(
+            'csrfToken'     => Lib\Utils\Common::getCsrfToken(),
+            'datePicker'    => Lib\Utils\DateTime::datePickerOptions(),
+            'dateRange'     => Lib\Utils\DateTime::dateRangeOptions( array( 'lastMonth' => __( 'Last month', 'bookly' ), ) ),
+            'zeroRecords'   => __( 'No payments for selected period and criteria.', 'bookly' ),
+            'processing'    => __( 'Processing...', 'bookly' ),
+            'details'       => __( 'Details', 'bookly' ),
+            'areYouSure'    => __( 'Are you sure?', 'bookly' ),
+            'noResultFound' => __( 'No result found', 'bookly' ),
+            'invoice'       => array(
                 'enabled' => (int) Lib\Config::invoicesActive(),
                 'button'  => __( 'Invoice', 'bookly' ),
             ),

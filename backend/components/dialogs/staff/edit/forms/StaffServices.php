@@ -1,11 +1,11 @@
 <?php
-namespace Bookly\Backend\Modules\Staff\Forms;
+namespace Bookly\Backend\Components\Dialogs\Staff\Edit\Forms;
 
 use Bookly\Lib;
 
 /**
  * Class StaffServices
- * @package Bookly\Backend\Modules\Staff\Forms
+ * @package Bookly\Backend\Components\Dialogs\Staff\Edit\Forms
  */
 class StaffServices extends Lib\Base\Form
 {

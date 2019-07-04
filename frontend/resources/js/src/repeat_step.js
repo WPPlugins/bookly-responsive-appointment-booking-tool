@@ -222,7 +222,7 @@ export default function stepRepeat(params, error) {
                                             weekdaysShort   : BooklyL10n.daysShort,
                                             labelMonthNext  : BooklyL10n.nextMonth,
                                             labelMonthPrev  : BooklyL10n.prevMonth,
-                                            firstDay        : opt[params.form_id].start_of_week,
+                                            firstDay        : opt[params.form_id].firstDay,
                                             onSet: function() {
                                                 var exclude = [];
                                                 $.each(schedule, function (index, item) {
@@ -389,7 +389,7 @@ export default function stepRepeat(params, error) {
                         weekdaysShort   : BooklyL10n.daysShort,
                         labelMonthNext  : BooklyL10n.nextMonth,
                         labelMonthPrev  : BooklyL10n.prevMonth,
-                        firstDay        : opt[params.form_id].start_of_week
+                        firstDay        : opt[params.form_id].firstDay
                     });
 
                     var open_repeat_onchange = $repeat_enabled.on('change', function () {

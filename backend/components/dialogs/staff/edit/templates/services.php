@@ -4,7 +4,7 @@ use Bookly\Backend\Components\Controls\Inputs;
 use Bookly\Backend\Components\Dialogs;
 use Bookly\Backend\Modules\Staff\Proxy;
 use Bookly\Lib\Utils\Common;
-/** @var Bookly\Backend\Modules\Staff\Forms\StaffServices $form */
+/** @var Dialogs\Staff\Edit\Forms\StaffServices $form */
 ?>
 <div>
     <?php if ( $form->getCategories() || $form->getUncategorizedServices() ) : ?>
@@ -156,7 +156,7 @@ use Bookly\Lib\Utils\Common;
 
             <div class="panel-footer">
                 <span class="bookly-js-services-error text-danger"></span>
-                <?php Buttons::renderSubmit( 'bookly-services-save' ) ?>
+                <?php Buttons::renderCustom( 'bookly-services-save', 'btn-lg btn-success' ) ?>
                 <?php Buttons::renderReset( 'bookly-services-reset' ) ?>
             </div>
         </form>

@@ -68,7 +68,7 @@ class Page extends Lib\Base\Component
             'nextMonth'     => __( 'Next month', 'bookly' ),
             'prevMonth'     => __( 'Previous month', 'bookly' ),
             'date_format'   => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_PICKADATE ),
-            'start_of_week' => (int) get_option( 'start_of_week' ),
+            'firstDay'      => (int) get_option( 'start_of_week' ),
             'saved'         => __( 'Settings saved.', 'bookly' ),
             'intlTelInput'  => array(
                 'enabled' => get_option( 'bookly_cst_phone_default_country' ) != 'disabled',

@@ -35,6 +35,9 @@ class Query
     /** @var array JOINs of query */
     protected $joins = array();
 
+    /** @var array JOINs with sub queries */
+    protected $join_selects = array();
+
     /** @var array WHERE expressions */
     protected $where = array();
 
@@ -54,13 +57,13 @@ class Query
     protected $offset = 0;
 
     /** @var string */
-    protected $sort_by = null;
+    protected $sort_by;
 
     /** @var string */
     protected $order = 'ASC';
 
     /** @var string */
-    protected $index_by = null;
+    protected $index_by;
 
     /** @var string */
     protected $entity;
@@ -196,6 +199,39 @@ class Query
             'schema' => null,
             'on'     => $on,
             'type'   => 'LEFT'
+        );
+
+        return $this;
+    }
+
+    /**
+     * Let join with select.
+     *
+     * @param Query  $query
+     * @param string $alias
+     * @param string $on
+     * @param string $join
+     * @return $this
+     */
+    public function joinSelect( Query $query, $alias, $on, $join = null )
+    {
+        return $this->joinRaw( $query->composeQuery(), $alias, $on, $join );
+    }
+
+    /**
+     * Let join with raw select statement.
+     *
+     * @param string $alias
+     * @param string $on
+     * @param string $join LEFT, RIGHT or etc.
+     * @return $this
+     */
+    public function joinRaw( $query, $alias, $on, $join = null )
+    {
+        $this->join_selects[ $alias ] = array(
+            'query' => $query,
+            'on'    => $on,
+            'type'  => $join,
         );
 
         return $this;
@@ -703,6 +739,9 @@ class Query
         // Join.
         foreach ( $this->joins as $alias => $t ) {
             $join .= " {$t['type']} JOIN `{$t['table']}` AS `{$alias}` ON {$t['on']}";
+        }
+        foreach ( $this->join_selects as $alias => $q ) {
+            $join .= " {$q['type']} JOIN ( {$q['query']} ) AS `{$alias}` ON {$q['on']}";
         }
 
         // SET for UPDATE

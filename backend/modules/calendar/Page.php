@@ -14,9 +14,6 @@ class Page extends Lib\Base\Ajax
      */
     public static function render()
     {
-        /** @var \WP_Locale $wp_locale */
-        global $wp_locale;
-
         self::enqueueStyles( array(
             'module'  => array( 'css/fullcalendar.min.css', ),
             'backend' => array( 'bootstrap/css/bootstrap-theme.min.css' ),
@@ -42,15 +39,10 @@ class Page extends Lib\Base\Ajax
         wp_localize_script( 'bookly-calendar.js', 'BooklyL10n', array(
             'csrf_token'      => Lib\Utils\Common::getCsrfToken(),
             'slotDuration'    => $slot->format( '%H:%I:%S' ),
-            'calendar'        => array(
-                'shortMonths' => array_values( $wp_locale->month_abbrev ),
-                'longMonths'  => array_values( $wp_locale->month ),
-                'shortDays'   => array_values( $wp_locale->weekday_abbrev ),
-                'dayNames'    => array_values( $wp_locale->weekday ),
-            ),
-            'dpDateFormat'    => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_JQUERY_DATEPICKER ),
             'mjsDateFormat'   => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_MOMENT_JS ),
             'mjsTimeFormat'   => Lib\Utils\DateTime::convertFormat( 'time', Lib\Utils\DateTime::FORMAT_MOMENT_JS ),
+            'datePicker'      => Lib\Utils\DateTime::datePickerOptions(),
+            'dateRange'       => Lib\Utils\DateTime::dateRangeOptions(),
             'today'           => __( 'Today', 'bookly' ),
             'week'            => __( 'Week',  'bookly' ),
             'day'             => __( 'Day',   'bookly' ),
@@ -58,7 +50,6 @@ class Page extends Lib\Base\Ajax
             'allDay'          => __( 'All Day', 'bookly' ),
             'delete'          => __( 'Delete',  'bookly' ),
             'are_you_sure'    => __( 'Are you sure?',     'bookly' ),
-            'startOfWeek'     => (int) get_option( 'start_of_week' ),
             'recurring_appointments' => array(
                 'active' => (int) Lib\Config::recurringAppointmentsActive(),
                 'title'  => __( 'Recurring appointments', 'bookly' ),

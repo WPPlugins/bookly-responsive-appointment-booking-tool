@@ -14,9 +14,6 @@ class Page extends Lib\Base\Component
      */
     public static function render()
     {
-        /** @var \WP_Locale $wp_locale */
-        global $wp_locale;
-
         self::enqueueStyles( array(
             'backend' => array(
                 'bootstrap/css/bootstrap-theme.min.css',
@@ -37,25 +34,8 @@ class Page extends Lib\Base\Component
         ) );
         wp_localize_script( 'bookly-dashboard.js', 'BooklyL10n', array(
             'csrfToken'  => Lib\Utils\Common::getCsrfToken(),
-            'datePicker' => array(
-                'last_7'        => __( 'Last 7 days', 'bookly' ),
-                'last_30'       => __( 'Last 30 days', 'bookly' ),
-                'thisMonth'     => __( 'This month', 'bookly' ),
-                'lastMonth'     => __( 'Last month', 'bookly' ),
-                'customRange'   => __( 'Custom range', 'bookly' ),
-                'apply'         => __( 'Apply', 'bookly' ),
-                'cancel'        => __( 'Cancel', 'bookly' ),
-                'to'            => __( 'To', 'bookly' ),
-                'from'          => __( 'From', 'bookly' ),
-                'mjsDateFormat' => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_MOMENT_JS ),
-                'startOfWeek'   => (int) get_option( 'start_of_week' ),
-            ),
-            'calendar'   => array(
-                'longMonths'  => array_values( $wp_locale->month ),
-                'shortMonths' => array_values( $wp_locale->month_abbrev ),
-                'dayNames'    => array_values( $wp_locale->weekday ),
-                'shortDays'   => array_values( $wp_locale->weekday_abbrev ),
-            ),
+            'datePicker' => Lib\Utils\DateTime::datePickerOptions(),
+            'dateRange'  => Lib\Utils\DateTime::dateRangeOptions( array( 'lastMonth' => __( 'Last month', 'bookly' ), ) ),
         ) );
 
         self::renderTemplate( 'index' );

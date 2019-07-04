@@ -82,7 +82,7 @@ export default function stepService(params) {
                     weekdaysShort   : BooklyL10n.daysShort,
                     labelMonthNext  : BooklyL10n.nextMonth,
                     labelMonthPrev  : BooklyL10n.prevMonth,
-                    firstDay        : opt[params.form_id].start_of_week,
+                    firstDay        : opt[params.form_id].firstDay,
                     onSet           : function(timestamp) {
                         if ($.isNumeric(timestamp.select)) {
                             // Checks appropriate day of the week

@@ -1205,6 +1205,12 @@ msgstr ""
 msgid "read only"
 msgstr ""
 
+msgid "Repeat every year"
+msgstr ""
+
+msgid "We are not working on this day"
+msgstr ""
+
 msgid "Min capacity should not be greater than max capacity."
 msgstr ""
 
@@ -1389,6 +1395,37 @@ msgstr ""
 msgid "Show customer information"
 msgstr ""
 
+msgid ""
+"To receive REST API credentials, in <b>My Apps & Credentials</b> of your "
+"PayPal account do the following steps:"
+msgstr ""
+
+msgid "Click <b>Create App</b> and enter application details."
+msgstr ""
+
+msgid ""
+"Once created, copy <b>Client ID</b> and <b>Secret</b> and use them in the "
+"form below."
+msgstr ""
+
+msgid "Client ID"
+msgstr ""
+
+msgid "Secret"
+msgstr ""
+
+msgid "Time interval of payment gateway"
+msgstr ""
+
+msgid ""
+"This setting determines the time limit after which the payment made via the "
+"payment gateway is considered to be incomplete. This functionality requires "
+"a scheduled cron job."
+msgstr ""
+
+msgid "Invalid session"
+msgstr ""
+
 msgid "Mollie accepts payments in Euro only."
 msgstr ""
 
@@ -1401,16 +1438,10 @@ msgstr ""
 msgid "API Key"
 msgstr ""
 
-msgid "Time interval of payment gateway"
-msgstr ""
-
-msgid ""
-"This setting determines the time limit after which the payment made via the "
-"payment gateway is considered to be incomplete. This functionality requires "
-"a scheduled cron job."
-msgstr ""
-
 msgid "Persons"
+msgstr ""
+
+msgid "Number of persons"
 msgstr ""
 
 msgid "Capacity (min and max)"
@@ -2131,6 +2162,33 @@ msgstr ""
 msgid "%d min"
 msgstr ""
 
+msgid "Tomorrow"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "Last 7 days"
+msgstr ""
+
+msgid "Last 30 days"
+msgstr ""
+
+msgid "This month"
+msgstr ""
+
+msgid "Next month"
+msgstr ""
+
+msgid "Custom range"
+msgstr ""
+
+msgid "To"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
 msgid "Local"
 msgstr ""
 
@@ -2392,9 +2450,6 @@ msgstr ""
 msgid "Appointment Date"
 msgstr ""
 
-msgid "Number of persons"
-msgstr ""
-
 msgid "Created"
 msgstr ""
 
@@ -2402,33 +2457,6 @@ msgid "Attachments"
 msgstr ""
 
 msgid "Any time"
-msgstr ""
-
-msgid "Tomorrow"
-msgstr ""
-
-msgid "Yesterday"
-msgstr ""
-
-msgid "Last 7 days"
-msgstr ""
-
-msgid "Last 30 days"
-msgstr ""
-
-msgid "This month"
-msgstr ""
-
-msgid "Next month"
-msgstr ""
-
-msgid "Custom range"
-msgstr ""
-
-msgid "To"
-msgstr ""
-
-msgid "From"
 msgstr ""
 
 msgid "No appointments for selected period."
@@ -2689,9 +2717,6 @@ msgstr ""
 msgid "You declined the Auto-Recharge of your balance."
 msgstr ""
 
-msgid "Last month"
-msgstr ""
-
 msgid "Please enter old password."
 msgstr ""
 
@@ -2750,76 +2775,16 @@ msgstr ""
 msgid "SMS has been sent successfully."
 msgstr ""
 
-msgid "No services found. Please add services."
+msgid "Quick search staff"
 msgstr ""
 
-msgid "Add Service"
-msgstr ""
-
-msgid "Add new item to the category"
-msgstr ""
-
-msgid "Edit category name"
-msgstr ""
-
-msgid "Delete category"
+msgid "Add staff..."
 msgstr ""
 
 msgid "User"
 msgstr ""
 
-msgid ""
-"If this staff member requires separate login to access personal calendar, a "
-"regular WP user needs to be created for this purpose."
-msgstr ""
-
-msgid ""
-"User with \"Administrator\" role will have access to calendars and settings "
-"of all staff members, user with another role will have access only to "
-"personal calendar and settings."
-msgstr ""
-
-msgid ""
-"If you leave this field blank, this staff member will not be able to access "
-"personal calendar using WP backend."
-msgstr ""
-
-msgid "Select from WP users"
-msgstr ""
-
 msgid "Image"
-msgstr ""
-
-msgid "New Staff Member"
-msgstr ""
-
-#, php-format
-msgid "This text can be inserted into notifications with %s code."
-msgstr ""
-
-msgid ""
-"To make staff member invisible to your customers set the visibility to "
-"\"Private\"."
-msgstr ""
-
-msgid "Archive"
-msgstr ""
-
-msgid ""
-"The working time in the provider's schedule is associated with another "
-"location."
-msgstr ""
-
-msgid "The start time must be less than the end one"
-msgstr ""
-
-msgid "Error adding the break interval"
-msgstr ""
-
-msgid "Repeat every year"
-msgstr ""
-
-msgid "We are not working on this day"
 msgstr ""
 
 msgid "Website"
@@ -3085,6 +3050,10 @@ msgstr ""
 msgid "No staff selected"
 msgstr ""
 
+#, php-format
+msgid "This text can be inserted into notifications with %s code."
+msgstr ""
+
 msgid "Start and end times of the appointment"
 msgstr ""
 
@@ -3162,6 +3131,9 @@ msgid "Add Services"
 msgstr ""
 
 msgid "Try Bookly Pro add-on"
+msgstr ""
+
+msgid "Last month"
 msgstr ""
 
 msgid "No payments for selected period and criteria."
@@ -3632,6 +3604,51 @@ msgid "Create notification"
 msgstr ""
 
 msgid "New notification..."
+msgstr ""
+
+msgid ""
+"If this staff member requires separate login to access personal calendar, a "
+"regular WP user needs to be created for this purpose."
+msgstr ""
+
+msgid ""
+"User with \"Administrator\" role will have access to calendars and settings "
+"of all staff members, user with another role will have access only to "
+"personal calendar and settings."
+msgstr ""
+
+msgid ""
+"If you leave this field blank, this staff member will not be able to access "
+"personal calendar using WP backend."
+msgstr ""
+
+msgid "Select from WP users"
+msgstr ""
+
+msgid ""
+"To make staff member invisible to your customers set the visibility to "
+"\"Private\"."
+msgstr ""
+
+msgid "Archive"
+msgstr ""
+
+msgid "No services found. Please add services."
+msgstr ""
+
+msgid "Add Service"
+msgstr ""
+
+msgid "Create staff"
+msgstr ""
+
+msgid "Edit staff"
+msgstr ""
+
+msgid "The start time must be less than the end one"
+msgstr ""
+
+msgid "Error adding the break interval"
 msgstr ""
 
 msgid "Complete payment"
@@ -4489,12 +4506,6 @@ msgstr ""
 msgid "Print"
 msgstr ""
 
-msgid ""
-"Use drag & drop to shift employees between categories and change their "
-"position in a list. The order of staff members will be displayed at the "
-"frontend the same way you configure it here."
-msgstr ""
-
 msgid "Google Calendar integration"
 msgstr ""
 
@@ -4503,20 +4514,6 @@ msgstr ""
 
 #, php-format
 msgid "Please configure Google Calendar <a href=\"%s\">settings</a> first"
-msgstr ""
-
-msgid "New Category"
-msgstr ""
-
-msgid "Archiving Staff"
-msgstr ""
-
-msgid ""
-"You are going to archive item which is involved in upcoming appointments. "
-"Please double check and edit appointments before this item archive if needed."
-msgstr ""
-
-msgid "Ok, continue editing"
 msgstr ""
 
 msgid "Limit working hours per day"
@@ -4528,12 +4525,6 @@ msgid ""
 msgstr ""
 
 msgid "Unlimited"
-msgstr ""
-
-msgid "Show archived staff"
-msgstr ""
-
-msgid "Hide archived staff"
 msgstr ""
 
 msgid "API Username"
@@ -4685,9 +4676,6 @@ msgid ""
 "valid SSL certificate installed on your web server. Follow the steps in this "
 "<a href=\"%s\" target=\"_blank\">document</a> to <b>verify and register your "
 "domain</b>."
-msgstr ""
-
-msgid "Client ID"
 msgstr ""
 
 msgid "The client ID obtained from the Developers Console"
@@ -4961,6 +4949,17 @@ msgid ""
 msgstr ""
 
 msgid "Error dissociating purchase code."
+msgstr ""
+
+msgid "Archiving Staff"
+msgstr ""
+
+msgid ""
+"You are going to archive item which is involved in upcoming appointments. "
+"Please double check and edit appointments before this item archive if needed."
+msgstr ""
+
+msgid "Ok, continue editing"
 msgstr ""
 
 msgid "Reason"
@@ -5652,9 +5651,6 @@ msgstr ""
 msgid "Secret Word"
 msgstr ""
 
-msgid "Invalid session"
-msgstr ""
-
 msgid "Select the Extras you'd like (Multiple Selection)"
 msgstr ""
 
@@ -5936,8 +5932,13 @@ msgstr ""
 
 #, php-format
 msgid ""
-"Enter the following URL as the destination for events <b>%s</b> and click "
+"3. Enter the following URL as the destination for events <b>%s</b> and click "
 "<b>Add endpoint</b>."
+msgstr ""
+
+msgid ""
+"4. Add these events: <b>payment_intent.succeeded</b>, <b>payment_intent."
+"payment_failed</b> and click <b>Add endpoint</b>."
 msgstr ""
 
 msgid "Secret Key"
@@ -5957,6 +5958,12 @@ msgstr ""
 msgid ""
 "1. Make sure that <b>Publishable Key</b> is provided in <a href=\"%s"
 "\">payment settings</a>."
+msgstr ""
+
+#, php-format
+msgid ""
+"Enter the following URL as the destination for events <b>%s</b> and click "
+"<b>Add endpoint</b>."
 msgstr ""
 
 msgid "Set maximum value for Quantity field."

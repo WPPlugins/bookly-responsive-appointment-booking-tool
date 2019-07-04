@@ -144,6 +144,7 @@ jQuery(function ($) {
     $('#bookly_paypal_enabled').change(function () {
         $('.bookly-paypal-ec').toggle(this.value == 'ec');
         $('.bookly-paypal-ps').toggle(this.value == 'ps');
+        $('.bookly-paypal-checkout').toggle(this.value == 'checkout');
         $('.bookly-paypal').toggle(this.value != '0');
     }).change();
 
@@ -214,7 +215,7 @@ jQuery(function ($) {
         events:     BooklyL10n.holidays,
         action:     'bookly_settings_holiday',
         csrf_token: BooklyL10n.csrf_token,
-        dayOffset:  parseInt(BooklyL10n.start_of_week),
+        dayOffset:  parseInt(BooklyL10n.firstDay),
         loadingImg: BooklyL10n.loading_img,
         dow:        BooklyL10n.days,
         ml:         BooklyL10n.months,

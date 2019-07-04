@@ -14,8 +14,6 @@ class Dialog extends Lib\Base\Component
      */
     public static function render()
     {
-        global $wp_locale;
-
         self::enqueueStyles( array(
             'backend'  => array( 'css/jquery-ui-theme/jquery-ui.min.css', 'css/select2.min.css', 'css/fontawesome-all.min.css' ),
             'frontend' => array( 'css/ladda.min.css', ),
@@ -39,16 +37,8 @@ class Dialog extends Lib\Base\Component
         ) );
 
         wp_localize_script( 'bookly-ng-appointment.js', 'BooklyL10nAppDialog', array(
-            'csrf_token'  => Lib\Utils\Common::getCsrfToken(),
-            'dateOptions' => array(
-                'dateFormat'      => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_JQUERY_DATEPICKER ),
-                'monthNamesShort' => array_values( $wp_locale->month_abbrev ),
-                'monthNames'      => array_values( $wp_locale->month ),
-                'dayNamesMin'     => array_values( $wp_locale->weekday_abbrev ),
-                'dayNamesShort'   => array_values( $wp_locale->weekday_abbrev ),
-                'dayNames'        => array_values( $wp_locale->weekday ),
-                'firstDay'        => (int) get_option( 'start_of_week' ),
-            ),
+            'csrf_token'      => Lib\Utils\Common::getCsrfToken(),
+            'datePicker'      => Lib\Utils\DateTime::datePickerOptions(),
             'cf_per_service'  => (int) Lib\Config::customFieldsPerService(),
             'no_result_found' => __( 'No result found', 'bookly' ),
             'staff_any'       => get_option( 'bookly_l10n_option_employee' ),

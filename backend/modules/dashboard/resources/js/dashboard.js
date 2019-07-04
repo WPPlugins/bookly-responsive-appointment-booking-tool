@@ -6,17 +6,17 @@ jQuery(function ($) {
      * Init date range pickers.
      */
     moment.locale('en', {
-        months       : BooklyL10n.calendar.longMonths,
-        monthsShort  : BooklyL10n.calendar.shortMonths,
-        weekdays     : BooklyL10n.calendar.dayNames,
-        weekdaysShort: BooklyL10n.calendar.shortDays,
-        weekdaysMin  : BooklyL10n.calendar.shortDays
+        months       : BooklyL10n.datePicker.monthNames,
+        monthsShort  : BooklyL10n.datePicker.monthNamesShort,
+        weekdays     : BooklyL10n.datePicker.dayNames,
+        weekdaysShort: BooklyL10n.datePicker.dayNamesShort,
+        weekdaysMin  : BooklyL10n.datePicker.dayNamesMin
     });
 
-    pickerRanges[BooklyL10n.datePicker.last_7]    = [moment().subtract(7, 'days'), moment()];
-    pickerRanges[BooklyL10n.datePicker.last_30]   = [moment().subtract(30, 'days'), moment()];
-    pickerRanges[BooklyL10n.datePicker.thisMonth] = [moment().startOf('month'), moment().endOf('month')];
-    pickerRanges[BooklyL10n.datePicker.lastMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
+    pickerRanges[BooklyL10n.dateRange.last_7]    = [moment().subtract(7, 'days'), moment()];
+    pickerRanges[BooklyL10n.dateRange.last_30]   = [moment().subtract(30, 'days'), moment()];
+    pickerRanges[BooklyL10n.dateRange.thisMonth] = [moment().startOf('month'), moment().endOf('month')];
+    pickerRanges[BooklyL10n.dateRange.lastMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
 
     $dateFilter.daterangepicker({
         parentEl : $dateFilter.parent(),
@@ -25,15 +25,15 @@ jQuery(function ($) {
         ranges   : pickerRanges,
         autoUpdateInput: false,
         locale: {
-            applyLabel : BooklyL10n.datePicker.apply,
-            cancelLabel: BooklyL10n.datePicker.cancel,
-            fromLabel  : BooklyL10n.datePicker.from,
-            toLabel    : BooklyL10n.datePicker.to,
-            customRangeLabel: BooklyL10n.datePicker.customRange,
-            daysOfWeek : BooklyL10n.calendar.shortDays,
-            monthNames : BooklyL10n.calendar.longMonths,
-            firstDay   : parseInt(BooklyL10n.datePicker.startOfWeek),
-            format     : BooklyL10n.datePicker.mjsDateFormat
+            applyLabel : BooklyL10n.dateRange.apply,
+            cancelLabel: BooklyL10n.dateRange.cancel,
+            fromLabel  : BooklyL10n.dateRange.from,
+            toLabel    : BooklyL10n.dateRange.to,
+            customRangeLabel: BooklyL10n.dateRange.customRange,
+            daysOfWeek : BooklyL10n.datePicker.dayNamesShort,
+            monthNames : BooklyL10n.datePicker.dayNames,
+            firstDay   : parseInt(BooklyL10n.dateRange.firstDay),
+            format     : BooklyL10n.dateRange.dateFormat
         }
     },
     function(start, end, label) {
@@ -43,7 +43,7 @@ jQuery(function ($) {
                 $dateFilter
                     .data('date', start.format(format) + ' - ' + end.format(format))
                     .find('span')
-                    .html(start.format(BooklyL10n.datePicker.mjsDateFormat) + ' - ' + end.format(BooklyL10n.datePicker.mjsDateFormat));
+                    .html(start.format(BooklyL10n.dateRange.dateFormat) + ' - ' + end.format(BooklyL10n.dateRange.dateFormat));
         }
     } );
 

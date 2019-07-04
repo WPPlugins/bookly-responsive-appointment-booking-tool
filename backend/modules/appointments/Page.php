@@ -14,9 +14,6 @@ class Page extends Lib\Base\Component
      */
     public static function render()
     {
-        /** @var \WP_Locale $wp_locale */
-        global $wp_locale;
-
         self::enqueueStyles( array(
             'frontend' => array( 'css/ladda.min.css', ),
             'backend'  => array(
@@ -53,28 +50,8 @@ class Page extends Lib\Base\Component
         $show_attachments = Lib\Config::filesActive() && count( Lib\Proxy\Files::getAllIds() ) > 0;
         wp_localize_script( 'bookly-appointments.js', 'BooklyL10n', array(
             'csrf_token'      => Lib\Utils\Common::getCsrfToken(),
-            'any_time'        => __( 'Any time', 'bookly' ),
-            'createdAtAnyTime' => __( 'Created at any time', 'bookly' ),
-            'tomorrow'        => __( 'Tomorrow', 'bookly' ),
-            'today'           => __( 'Today', 'bookly' ),
-            'yesterday'       => __( 'Yesterday', 'bookly' ),
-            'last_7'          => __( 'Last 7 days', 'bookly' ),
-            'last_30'         => __( 'Last 30 days', 'bookly' ),
-            'this_month'      => __( 'This month', 'bookly' ),
-            'next_month'      => __( 'Next month', 'bookly' ),
-            'custom_range'    => __( 'Custom range', 'bookly' ),
-            'apply'           => __( 'Apply', 'bookly' ),
-            'cancel'          => __( 'Cancel', 'bookly' ),
-            'to'              => __( 'To', 'bookly' ),
-            'from'            => __( 'From', 'bookly' ),
-            'calendar'        => array(
-                'longMonths'  => array_values( $wp_locale->month ),
-                'shortMonths' => array_values( $wp_locale->month_abbrev ),
-                'dayNames'    => array_values( $wp_locale->weekday ),
-                'shortDays'   => array_values( $wp_locale->weekday_abbrev ),
-            ),
-            'mjsDateFormat'   => Lib\Utils\DateTime::convertFormat( 'date', Lib\Utils\DateTime::FORMAT_MOMENT_JS ),
-            'startOfWeek'     => (int) get_option( 'start_of_week' ),
+            'datePicker'      => Lib\Utils\DateTime::datePickerOptions(),
+            'dateRange'       => Lib\Utils\DateTime::dateRangeOptions( array( 'anyTime' => __( 'Any time', 'bookly' ), 'createdAtAnyTime' => __( 'Created at any time', 'bookly' ), ) ),
             'are_you_sure'    => __( 'Are you sure?', 'bookly' ),
             'zeroRecords'     => __( 'No appointments for selected period.', 'bookly' ),
             'processing'      => __( 'Processing...', 'bookly' ),

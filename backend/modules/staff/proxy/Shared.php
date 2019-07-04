@@ -13,7 +13,7 @@ use Bookly\Lib;
  * @method static string getAffectedAppointmentsFilter( string $filter_url, int $staff_id ) Get link with filter for appointments page.
  * @method static void   preUpdateStaff( Lib\Entities\Staff $staff, array $params ) Do stuff before staff update.
  * @method static void   renderStaffForm( Lib\Entities\Staff $staff ) Render Staff form tab details.
- * @method static int    renderStaffPage( int $active_staff_id, array $params ) Do stuff on staff page render.
+ * @method static int    renderStaffPage( array $params ) Do stuff on staff page render.
  * @method static void   renderStaffService( int $staff_id, Lib\Entities\Service $service, array $services_data, array $attributes = array() ) Render controls for staff on Services tab.
  * @method static void   renderStaffServiceLabels() Render column header for controls on Services tab.
  * @method static void   renderStaffServiceTail( int $staff_id, Lib\Entities\Service $service, int $location_id, $attributes = array() ) Render controls for Staff on tab services.
