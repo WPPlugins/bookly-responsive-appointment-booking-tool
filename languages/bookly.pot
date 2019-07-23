@@ -194,42 +194,49 @@ msgstr ""
 
 #, php-format
 msgid ""
-"Navigate to the <a href=\"%s\" target=\"_blank\">Microsoft App Registration "
-"Portal</a>."
+"Sign in to the <a href=\"%s\" target=\"_blank\">Azure portal</a> using "
+"either a work or school account or a personal Microsoft account."
 msgstr ""
 
 msgid ""
-"Sign in with either a personal or work or school Microsoft account. If you "
-"don't have either, sign up for a new personal account."
+"If your account gives you access to more than one tenant, select your "
+"account in the top right corner, and set your portal session to the Azure AD "
+"tenant that you want."
 msgstr ""
 
 msgid ""
-"Choose <b>Add an app</b>. Enter a name for the app and choose <b>Create "
-"application</b>. The registration page displays, listing the properties of "
-"your app."
+"In the left-hand navigation pane, select the <b>Azure Active Directory</b> "
+"service, and then select <b>App registrations &gt; New registration</b>."
 msgstr ""
 
 msgid ""
-"Copy the <b>Application ID</b>. This is the unique identifier for your app. "
-"You'll use it in the form below on this page."
+"When the <b>Register an application</b> page appears, enter your "
+"application's <b>Name</b> and <b>Redirect URI</b> found below on this page. "
+"When finished, select <b>Register</b>."
 msgstr ""
 
 msgid ""
-"Under <b>Application Secrets</b>, choose <b>Generate New Password</b>. Copy "
-"the app secret from the <b>New password generated</b> dialog box before "
-"closing it. You'll use the secret in the form below on this page."
+"Azure AD assigns a unique application (client) ID to your app, and you're "
+"taken to your application's <b>Overview</b> page."
 msgstr ""
 
 msgid ""
-"Under <b>Platforms</b>, choose <b>Add Platform</b>, and select <b>Web</b>. "
-"In <b>Redirect URLs</b> enter the <b>Redirect URI</b> found below on this "
-"page."
+"Copy the <b>Application (client) ID</b> and insert it into the form below on "
+"this page."
 msgstr ""
 
 msgid ""
-"Under <b>Microsoft Graph Permissions</b>, choose <b>Add</b> next to "
-"<b>Delegated Permissions</b>, and select <b>Calendars.ReadWrite</b> in the "
-"<b>Select Permission</b> dialog box. Close it by clicking <b>Ok</b>."
+"Under <b>Certificates &amp; secrets</b>, choose <b>New client secret</b>, "
+"set <b>Expires</b> to <b>Never</b> and click <b>Add</b>. Copy the app secret "
+"from the <b>Client secrets</b> list before leaving the page. Insert the "
+"secret into the form below on this page."
+msgstr ""
+
+msgid ""
+"Under <b>API permissions</b>, choose <b>Add a permission</b>, and select "
+"<b>Microsoft Graph &gt; Delegated permissions</b>. In <b>Select permissions</"
+"b> find <b>Calendars.ReadWrite</b>, select it and click <b>Add permissions</"
+"b> button."
 msgstr ""
 
 msgid "<b>Save</b> your changes."
@@ -332,6 +339,9 @@ msgid ""
 "of the appointment."
 msgstr ""
 
+msgid "customer notes for appointment"
+msgstr ""
+
 msgid "email of client"
 msgstr ""
 
@@ -360,9 +370,6 @@ msgid "total price of booking (sum of all cart items after applying coupon)"
 msgstr ""
 
 msgid "date of appointment"
-msgstr ""
-
-msgid "customer notes for appointment"
 msgstr ""
 
 msgid "time of appointment"
@@ -1414,15 +1421,6 @@ msgstr ""
 msgid "Secret"
 msgstr ""
 
-msgid "Time interval of payment gateway"
-msgstr ""
-
-msgid ""
-"This setting determines the time limit after which the payment made via the "
-"payment gateway is considered to be incomplete. This functionality requires "
-"a scheduled cron job."
-msgstr ""
-
 msgid "Invalid session"
 msgstr ""
 
@@ -1436,6 +1434,15 @@ msgid "I will pay now with Mollie"
 msgstr ""
 
 msgid "API Key"
+msgstr ""
+
+msgid "Time interval of payment gateway"
+msgstr ""
+
+msgid ""
+"This setting determines the time limit after which the payment made via the "
+"payment gateway is considered to be incomplete. This functionality requires "
+"a scheduled cron job."
 msgstr ""
 
 msgid "Persons"
@@ -2776,6 +2783,9 @@ msgid "SMS has been sent successfully."
 msgstr ""
 
 msgid "Quick search staff"
+msgstr ""
+
+msgid "Show archived"
 msgstr ""
 
 msgid "Add staff..."

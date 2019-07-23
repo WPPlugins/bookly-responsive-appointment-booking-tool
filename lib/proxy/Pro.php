@@ -21,7 +21,7 @@ use Bookly\Lib\DataHolders\Booking as DataHolders;
  * @method static string getLastCustomerTimezone( int $customer_id ) Get last appointment timezone for customer.
  * @method static int    getMinimumTimePriorBooking() Get minimum time ( in seconds ) prior to booking.
  * @method static int    getMinimumTimePriorCancel() Get minimum time ( in seconds ) prior to cancel.
- * @method static array  getStaffCategoryName() Get staff category name.
+ * @method static array  getStaffCategoryName( int $category_id ) Get staff category name.
  * @method static array  getStaffDataForDropDown() Get staff grouped by categories for drop-down list.
  * @method static array  getTimeZoneOffset( string $time_zone_value ) Get timezone offset from string.
  * @method static bool   graceExpired() Check whether grace period has expired or not.

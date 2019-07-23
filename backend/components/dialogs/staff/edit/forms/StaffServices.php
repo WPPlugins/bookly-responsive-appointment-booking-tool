@@ -70,13 +70,13 @@ class StaffServices extends Lib\Base\Form
     public function save()
     {
         $staff_id    = $this->data['staff_id'];
-        $location_id = $this->data['location_id'] ?: null;
+        $location_id = array_key_exists( 'location_id', $this->data ) ? $this->data['location_id'] : null;
         if ( $staff_id ) {
             Lib\Entities\StaffService::query()
                 ->delete()
                 ->where( 'staff_id', $staff_id )
                 ->where( 'location_id', $location_id )
-                ->whereNotIn( 'service_id', (array) $this->data['service'] )
+                ->whereNotIn( 'service_id', array_key_exists( 'service', $this->data ) ? (array) $this->data['service'] : array() )
                 ->execute();
             if ( isset ( $this->data['service'] ) && ( ! isset ( $this->data['custom_services'] ) || $this->data['custom_services'] == '1' ) ) {
                 foreach ( $this->data['service'] as $service_id ) {

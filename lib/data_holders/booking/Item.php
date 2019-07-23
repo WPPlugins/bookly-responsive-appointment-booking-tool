@@ -96,7 +96,7 @@ abstract class Item
                 $query->where( 'compound_token', $ca->getCompoundToken() )
                       ->where( 'compound_service_id', $ca->getCompoundServiceId() );
             }
-            /** @var self[] $ca_list */
+            /** @var Lib\Entities\CustomerAppointment[] $ca_list */
             $ca_list = $query->find();
             if ( $ca_list ) {
                 foreach ( $ca_list as $customer_appointment ) {

@@ -146,6 +146,7 @@ jQuery(function ($) {
         $('.bookly-paypal-ps').toggle(this.value == 'ps');
         $('.bookly-paypal-checkout').toggle(this.value == 'checkout');
         $('.bookly-paypal').toggle(this.value != '0');
+        $('#bookly_paypal_timeout').closest('.form-group').toggle(this.value != 'ec');
     }).change();
 
     $('#bookly_authorize_net_enabled').change(function () {

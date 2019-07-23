@@ -87,7 +87,7 @@ use Bookly\Lib\Config;
         <textarea id="bookly-info" name="info" rows="3" class="form-control"><?php echo esc_textarea( $staff->getInfo() ) ?></textarea>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="bookly-visibility" data-default="<?php echo esc_attr( $staff->getVisibility() ) ?>">
         <label><?php esc_html_e( 'Visibility', 'bookly' ) ?></label>
         <p class="help-block"><?php esc_html_e( 'To make staff member invisible to your customers set the visibility to "Private".', 'bookly' ) ?></p>
         <div class="radio"><label><input type="radio" name="visibility" value="public" <?php checked( $staff->getVisibility(), 'public' ) ?>><?php esc_html_e( 'Public', 'bookly' ) ?></label></div>

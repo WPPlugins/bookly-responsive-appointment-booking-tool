@@ -168,6 +168,11 @@ jQuery(function ($) {
                 window.location.href = $unsaved_changes.data('url');
             });
 
+            $unsaved_changes
+                .on('hidden.bs.modal', function () {
+                    jQuery('body').addClass('modal-open');
+                });
+
             function save(callback) {
                 var data         = $form.serializeArray(),
                     $staff_phone = $('#bookly-phone', $form),
@@ -182,6 +187,7 @@ jQuery(function ($) {
                 }
                 data.push({name: 'action', value: 'bookly_update_staff'});
                 data.push({name: 'phone', value: phone});
+                data.push({name: 'tab', value: phone});
 
                 $.ajax({
                     type       : 'POST',

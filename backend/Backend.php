@@ -16,7 +16,7 @@ abstract class Backend
     {
         add_action( 'admin_menu', array( __CLASS__, 'addAdminMenu' ) );
 
-        add_action( 'admin_notices', function () {
+        add_action( 'all_admin_notices', function () {
             $bookly_page = isset ( $_REQUEST['page'] ) && strncmp( $_REQUEST['page'], 'bookly-', 7 ) === 0;
             if ( $bookly_page ) {
                 // Subscribe notice.
@@ -31,6 +31,14 @@ abstract class Backend
             // Let add-ons render admin notices.
             Lib\Proxy\Shared::renderAdminNotices( $bookly_page );
         }, 10, 0 );
+
+        // for Site Health
+        // Close current session, for fixing loopback request
+        add_filter( 'site_status_tests', function ( $tests ) {
+            session_write_close();
+
+            return $tests;
+        }, 10, 1 );
     }
 
     /**
@@ -72,7 +80,7 @@ abstract class Backend
                 $settings       = __( 'Settings',            'bookly' );
 
                 add_submenu_page( 'bookly-menu', $dashboard, $dashboard, 'manage_options',
-                    Modules\Dashboard\Page::pageSlug(), function () {Modules\Dashboard\Page::render();} );
+                    Modules\Dashboard\Page::pageSlug(), function () { Modules\Dashboard\Page::render(); } );
                 add_submenu_page( 'bookly-menu', $calendar, $calendar, 'read',
                     Modules\Calendar\Page::pageSlug(), function () { Modules\Calendar\Page::render(); } );
                 if ( $current_user->has_cap( 'manage_options' ) || $current_user->has_cap( 'manage_bookly_appointments' ) ) {

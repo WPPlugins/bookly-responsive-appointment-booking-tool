@@ -22,7 +22,6 @@ class Page extends Lib\Base\Component
         self::enqueueScripts( array(
             'backend'  => array(
                 'bootstrap/js/bootstrap.min.js' => array( 'jquery' ),
-                'js/jCal.js'                    => array( 'jquery' ),
                 'js/help.js'                    => array( 'jquery' ),
                 'js/alert.js'                   => array( 'jquery' ),
                 'js/datatables.min.js'          => array( 'jquery' ),

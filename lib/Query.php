@@ -909,7 +909,9 @@ class Query
         }
 
         // Order
-        $order = ' ORDER BY ' . $this->sort_by . ' ' . $this->order;
+        if ( $this->sort_by !== null ) {
+            $order = ' ORDER BY ' . $this->sort_by . ' ' . $this->order;
+        }
 
         // Limit
         if ( $this->limit > 0 ) {

@@ -171,7 +171,7 @@ jQuery(function($) {
     picker_ranges[BooklyL10n.dateRange.today]     = [moment(), moment()];
     picker_ranges[BooklyL10n.dateRange.last_7]    = [moment().subtract(7, 'days'), moment()];
     picker_ranges[BooklyL10n.dateRange.last_30]   = [moment().subtract(30, 'days'), moment()];
-    picker_ranges[BooklyL10n.dateRange.thisNonth] = [moment().startOf('month'), moment().endOf('month')];
+    picker_ranges[BooklyL10n.dateRange.thisMonth] = [moment().startOf('month'), moment().endOf('month')];
     picker_ranges[BooklyL10n.dateRange.lastMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
 
     $creationDateFilter.daterangepicker(

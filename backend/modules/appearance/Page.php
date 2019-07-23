@@ -26,8 +26,10 @@ class Page extends Lib\Base\Component
                     'css/ladda.min.css',
                     'css/picker.classic.css',
                     'css/picker.classic.date.css',
-                    'css/bookly-main.css',
-                )
+                ),
+                is_rtl()
+                    ? array( 'css/bookly-rtl.css', 'css/bookly-main.css', )
+                    : array( 'css/bookly-main.css', )
             ),
             'backend' => array( 'bootstrap/css/bootstrap-theme.min.css', ),
             'wp'      => array( 'wp-color-picker', ),

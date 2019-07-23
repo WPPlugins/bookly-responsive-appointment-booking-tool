@@ -31,15 +31,24 @@ use Bookly\Lib;
                         <div class="col-md-2">
                             <div class="form-group">
                                 <select class="form-control bookly-js-select" id="bookly-filter-visibility" data-placeholder="<?php esc_attr_e( 'Visibility', 'bookly' ) ?>">
-                                    <option value="public"><?php echo esc_html_e( 'Public', 'bookly' ) ?></option>
-                                    <option value="private"><?php echo esc_html_e( 'Private', 'bookly' ) ?></option>
-                                    <?php if ( Lib\Config::proActive() ): ?>
-                                        <option value="archive"><?php echo esc_html_e( 'Archived', 'bookly' ) ?></option>
-                                    <?php endif ?>
+                                    <option value="public"><?php esc_html_e( 'Public', 'bookly' ) ?></option>
+                                    <option value="private"><?php esc_html_e( 'Private', 'bookly' ) ?></option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6 form-inline bookly-margin-bottom-lg text-right">
+                        <div class="col-md-2">
+                            <?php if ( Lib\Config::proActive() ): ?>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="bookly-filter-archived"/>
+                                        <?php esc_html_e( 'Show archived', 'bookly' ) ?>
+                                    </label>
+                                </div>
+                            </div>
+                            <?php endif ?>
+                        </div>
+                        <div class="col-md-4 form-inline bookly-margin-bottom-lg text-right">
                             <div class="form-group">
                                 <?php Components\Dialogs\Staff\Categories\Proxy\Pro::renderAdd() ?>
                             </div>

@@ -5,13 +5,19 @@ jQuery(function ($) {
         $deleteButton   = $('#bookly-delete'),
         $deleteModal    = $('.bookly-js-delete-cascade-confirm'),
         $staffCount     = $('.bookly-js-staff-count'),
-        $filterVisibility = $('#bookly-filter-visibility')
+        $filterVisibility = $('#bookly-filter-visibility'),
+        $filterArchived   = $('#bookly-filter-archived')
     ;
 
     $('.bookly-js-select').val(null);
     $.each(BooklyL10n.filter, function (field, value) {
         if (value != '') {
-            $('#bookly-filter-' + field).val(value);
+            let $elem = $('#bookly-filter-' + field);
+            if ($elem.is(':checkbox')) {
+                $elem.prop('checked', value == '1');
+            } else {
+                $elem.val(value);
+            }
         }
         // check if select has correct values
         if ($('#bookly-filter-' + field).prop('type') == 'select-one') {
@@ -111,7 +117,8 @@ jQuery(function ($) {
             data: function (d) {
                 return $.extend({action: 'bookly_get_staff_list', csrf_token: BooklyL10n.csrfToken}, {
                     filter: {
-                        visibility: $filterVisibility.val()
+                        visibility: $filterVisibility.val(),
+                        archived  : $filterArchived.prop('checked')?1:0
                     }
                 }, d);
             },
@@ -121,6 +128,11 @@ jQuery(function ($) {
             }
         },
         columns   : columns,
+        rowCallback: function (row, data) {
+            if ( data.visibility == 'archive' ) {
+                $(row).addClass('text-muted');
+            }
+        },
         dom       : "<'row'<'col-sm-6'<'pull-left'>><'col-sm-6'>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row pull-left'<'col-sm-12 bookly-margin-top-lg'p>>",
@@ -250,4 +262,5 @@ jQuery(function ($) {
         });
 
     $filterVisibility.on('change', function () {dt.ajax.reload();});
+    $filterArchived.on('change', function () {dt.ajax.reload();});
 });

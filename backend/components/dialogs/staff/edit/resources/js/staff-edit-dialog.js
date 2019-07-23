@@ -11,6 +11,7 @@ jQuery(function ($) {
         $validateErrors = $('.bookly-js-errors', $modalFooter),
         $deleteCascadeModal = $('.bookly-js-delete-cascade-confirm'),
         $staffCount = $('.bookly-js-staff-count'),
+        currentTab,
         staff_id,
         holidays
     ;
@@ -73,6 +74,9 @@ jQuery(function ($) {
             });
 
             $archiveBtn.toggle(staff_id ? response.data.staff.visibility !== 'archive' : false);
+            if (currentTab) {
+                $('#' + currentTab, $modalBody).click();
+            }
         });
     }
 
@@ -199,6 +203,9 @@ jQuery(function ($) {
             });
 
             $container.show();
+        })
+        .on('click', '> .bookly-nav-justified [data-toggle=tab]', function () {
+            currentTab = $(this).attr('id');
         });
 
     $deleteCascadeModal

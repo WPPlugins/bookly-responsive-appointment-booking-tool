@@ -227,7 +227,7 @@
             setEndTimeBasedOnService : function() {
                 ds.form.end_time_data = ds.getDataForEndTime();
                 var d = ds.form.service ? ds.form.service.duration * ds.form.service.units_min : ds.data.time_interval;
-                if (d < 86400) {
+                if (d < 86400 || parseInt(ds.form.service.units_max) > 1) {
                     ds.form.end_time = ds.findTime('end', moment(ds.form.start_time.value, 'HH:mm').add(d, 'seconds').format('HH:mm'));
                 }
             },
@@ -1158,7 +1158,7 @@
                 month   = m.format('M'),
                 day     = m.format('DD');
 
-            return BooklyL10nAppDialog.datePicker.weekdayShort[weekday] + ', ' + BooklyL10nAppDialog.datePicker.monthNamesShort[month-1] + ' ' + day;
+            return BooklyL10nAppDialog.datePicker.dayNamesShort[weekday] + ', ' + BooklyL10nAppDialog.datePicker.monthNamesShort[month-1] + ' ' + day;
         };
         $scope.schFormatTime = function(slots, options) {
             for (var i = 0; i < options.length; ++ i) {

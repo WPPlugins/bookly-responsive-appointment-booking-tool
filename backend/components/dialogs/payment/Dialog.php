@@ -27,6 +27,10 @@ class Dialog extends Lib\Base\Component
             'module' => array( 'js/ng-payment_details.js' => array( 'bookly-angular.min.js' ), ),
         ) );
 
+        wp_localize_script( 'bookly-ng-payment_details.js', 'BooklyPaymentDialogL10n', array(
+            'csrfToken' => Lib\Utils\Common::getCsrfToken(),
+        ) );
+
         self::renderTemplate( 'dialog' );
     }
 }

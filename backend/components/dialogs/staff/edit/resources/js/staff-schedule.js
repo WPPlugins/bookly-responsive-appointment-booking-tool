@@ -195,7 +195,7 @@ jQuery(function ($) {
                                     }
                                     $('.popover').popover('hide');
                                 } else {
-                                    obj.options.savingStatus({error: [response.data.message]});
+                                    obj.options.booklyAlert({error: [response.data.message]});
                                 }
                             },
                             complete: function () {
@@ -330,7 +330,7 @@ jQuery(function ($) {
 
         function deleteBreak() {
             var $break_interval_wrapper = $(this).closest('.bookly-intervals-wrapper');
-            if (confirm(obj.options.l10n.are_you_sure)) {
+            if (confirm(obj.options.l10n.areYouSure)) {
                 var ladda = Ladda.create(this);
                 ladda.start();
                 $.ajax({
@@ -358,6 +358,9 @@ jQuery(function ($) {
         },
         savingStatus: function (data) {
             $(document.body).trigger('staff_edit.save', data);
+        },
+        booklyAlert: function (data) {
+            booklyAlert(data);
         },
         onLoad: function () {},
         l10n: {}

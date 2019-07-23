@@ -105,8 +105,7 @@
     margin: 0 !important;
 }
 .bookly-form-group > div {
-    margin-right: 14px;
-    margin-top: 5px;
+    margin: 5px 14px 0 0;
 }
 
 /* Buttons */
@@ -252,14 +251,14 @@ span.bookly-round {
     background: #bec3c7;
     margin-top: 5px;
 }
+
 .bookly-progress-tracker > div:first-child .step {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-radius: 5px 0 0 5px;
 }
 .bookly-progress-tracker > div:last-child .step {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-radius: 0 5px 5px 0;
 }
+
 .bookly-progress-tracker > div:first-child {
     padding-left: 0;
 }
@@ -313,7 +312,7 @@ span.bookly-round {
 }
 .bookly-mobile-step-1,
 .bookly-details-step {
-    margin-right: -14px;
+    margin: 0 -14px 0 0;
 }
 .bookly-mobile-step-1 .bookly-nav-steps {
     display: none;
@@ -664,14 +663,12 @@ select.bookly-time-zone-switcher {
 }
 
 .bookly-pagination > li:first-child {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border-radius: 4px 0 0 4px;
 }
 
 .bookly-pagination > li:last-child {
     border-right: 1px solid #cccccc !important;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-radius: 0 4px 4px 0;
 }
 
 .bookly-pagination > li.active {
@@ -883,7 +880,7 @@ label.bookly-square {
     display: block;
 }
 .bookly-details-step .bookly-form-group .intl-tel-input input {
-    padding-left: 45px !important;
+    padding: 6px 7px 5px 45px !important;
 }
 .bookly-details-step .bookly-table,
 .bookly-details-step .bookly-table > * {

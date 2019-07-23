@@ -142,7 +142,13 @@ class DatePoint implements IPoint
      */
     public function diff( IPoint $point )
     {
-        return $this->datetime->getTimestamp() - $point->value()->getTimestamp();
+        $delta = $point->value()->diff( $this->datetime );
+        $diff  = $delta->s
+            + $delta->i * 60
+            + $delta->h * 3600
+            + $delta->days * 86400;
+
+        return $delta->invert ? -$diff : $diff;
     }
 
     /**

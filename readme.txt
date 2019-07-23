@@ -5,7 +5,7 @@ Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
 Tested up to: 5.2.2
 Requires PHP: 5.3.7
-Stable tag: 17.4
+Stable tag: 17.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -210,7 +210,7 @@ Check out our [video tutorials](https://www.youtube.com/channel/UCO4v4UcvU43enNc
 
 = How do I suggest a feature for future versions of Bookly? =
 
-We've created a [discussion board](https://support.booking-wp-plugin.com/hc/en-us/community/topics/200189331-Feature-Requests?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) specifically for that. Go ahead and vote for the features you'd like to be added or create new feature requests with a bit of context in the description.
+We've created a [discussion board](https://ideas.booking-wp-plugin.com?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) specifically for that. Go ahead and vote for the features you'd like to be added or create new feature requests with a bit of context in the description.
 
 == Screenshots ==
 

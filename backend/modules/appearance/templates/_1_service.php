@@ -104,7 +104,7 @@ global $wp_locale;
             </div>
         </div>
         <div class="bookly-mobile-step-2 bookly-js-mobile-step-2">
-            <div class="bookly-box">
+            <div class="bookly-box" style="display: table;">
                 <div class="bookly-left">
                     <div class="bookly-available-date bookly-js-available-date bookly-left">
                         <div class="bookly-form-group">
@@ -126,22 +126,22 @@ global $wp_locale;
                     </div>
                 </div>
                 <div class="bookly-time-range bookly-js-time-range bookly-left">
-                    <div class="bookly-form-group bookly-time-from bookly-left">
-                        <?php Editable::renderLabel( array( 'bookly_l10n_label_start_from', ) ) ?>
+                    <div class="bookly-form-group bookly-left">
+                        <?php Editable::renderLabel( array( is_rtl() ? 'bookly_l10n_label_finish_by' : 'bookly_l10n_label_start_from' ) ) ?>
                         <div>
-                            <select class="bookly-js-select-time-from">
+                            <select>
                                 <?php for ( $i = 28800; $i <= 64800; $i += 3600 ) : ?>
-                                    <option><?php echo DateTime::formatTime( $i ) ?></option>
+                                    <option <?php is_rtl() ? selected( $i == 64800 ) : '' ?>><?php echo DateTime::formatTime( $i ) ?></option>
                                 <?php endfor ?>
                             </select>
                         </div>
                     </div>
-                    <div class="bookly-form-group bookly-time-to bookly-left">
-                        <?php Editable::renderLabel( array( 'bookly_l10n_label_finish_by', ) ) ?>
+                    <div class="bookly-form-group bookly-left">
+                        <?php Editable::renderLabel( array( is_rtl() ? 'bookly_l10n_label_start_from' : 'bookly_l10n_label_finish_by', ) ) ?>
                         <div>
-                            <select class="bookly-js-select-time-to">
+                            <select>
                                 <?php for ( $i = 28800; $i <= 64800; $i += 3600 ) : ?>
-                                    <option<?php selected( $i == 64800 ) ?>><?php echo DateTime::formatTime( $i ) ?></option>
+                                    <option<?php is_rtl() ? '' : selected( $i == 64800 ) ?>><?php echo DateTime::formatTime( $i ) ?></option>
                                 <?php endfor ?>
                             </select>
                         </div>

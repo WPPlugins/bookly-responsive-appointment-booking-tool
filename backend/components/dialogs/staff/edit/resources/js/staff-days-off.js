@@ -7,11 +7,11 @@ jQuery(function ($) {
         if (!$container.children().length) {
             $container.html('<div class="bookly-loading"></div>');
             $.ajax({
-                url: ajaxurl,
-                data: {action: 'bookly_staff_holidays', id: obj.options.staff_id, csrf_token: obj.options.csrf_token},
-                xhrFields: {withCredentials: true},
-                crossDomain: 'withCredentials' in new XMLHttpRequest(),
-                success: function (response) {
+                url         : ajaxurl,
+                data        : {action: 'bookly_staff_holidays', id: obj.options.staff_id, csrf_token: obj.options.csrf_token},
+                xhrFields   : {withCredentials: true},
+                crossDomain : 'withCredentials' in new XMLHttpRequest(),
+                success     : function (response) {
                     $container.html(response.data.html);
                     init($container, obj);
                 }

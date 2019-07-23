@@ -14,47 +14,61 @@ class Ajax extends Page
      */
     public static function settingsHoliday()
     {
-        $id      = self::parameter( 'id',  false );
-        $day     = self::parameter( 'day', false );
-        $holiday = self::parameter( 'holiday' ) == 'true';
-        $repeat  = (int) ( self::parameter( 'repeat' ) == 'true' );
+        $interval = self::parameter( 'range', array() );
+        $range    = new Lib\Slots\Range( Lib\Slots\DatePoint::fromStr( $interval[0] ), Lib\Slots\DatePoint::fromStr( $interval[1] )->modify( 1 ) );
+        if ( self::parameter( 'holiday' ) == 'true' ) {
+            $repeat    = (int) ( self::parameter( 'repeat' ) == 'true' );
+            $employees = Lib\Entities\Staff::query()->whereNot( 'visibility', 'archive' )->fetchArray();
+            $holidays  = Lib\Entities\Holiday::query()
+                ->whereBetween( 'date', $range->start()->value()->format( 'Y-m-d' ), $range->end()->value()->format( 'Y-m-d' ) )
+                ->where( 'staff_id', null )
+                ->indexBy( 'date' )
+                ->find();
+            $staff_holidays = Lib\Entities\Holiday::query( 'h' )
+                ->select( 'CONCAT(h.staff_id, \'-\', h.date) AS s_d, h.*' )
+                ->whereBetween( 'date', $interval[0], $interval[1] )
+                ->whereNot( 'staff_id', null )
+                ->indexBy( 's_d' )
+                ->find();
 
-        // update or delete the event
-        if ( $id ) {
-            if ( $holiday ) {
-                Lib\Entities\Holiday::query()
-                    ->update()
-                    ->set( 'repeat_event', $repeat )
-                    ->where( 'id', $id )
-                    ->where( 'parent_id', $id , 'OR' )
-                    ->execute();
-            } else {
-                Lib\Entities\Holiday::query()
-                    ->delete()
-                    ->where( 'id', $id )
-                    ->where( 'parent_id', $id, 'OR' )
-                    ->execute();
-            }
-            // add the new event
-        } elseif ( $holiday && $day ) {
-            $holiday = new Lib\Entities\Holiday( );
-            $holiday
-                ->setDate( $day )
-                ->setRepeatEvent( $repeat )
-                ->save();
-            foreach ( Lib\Entities\Staff::query()->fetchArray() as $employee ) {
-                $staff_holiday = new Lib\Entities\Holiday();
-                $staff_holiday
-                    ->setDate( $day)
+            foreach ( $range->split( DAY_IN_SECONDS ) as $r ) {
+                $day = $r->start()->value()->format( 'Y-m-d' );
+                if ( array_key_exists( $day, $holidays ) ) {
+                    $holiday = $holidays[ $day ];
+                } else {
+                    $holiday = new Lib\Entities\Holiday();
+                }
+                $holiday
+                    ->setDate( $day )
                     ->setRepeatEvent( $repeat )
-                    ->setStaffId( $employee['id'] )
-                    ->setParent( $holiday )
                     ->save();
+                foreach ( $employees as $employee ) {
+                    $key = $employee['id'] . '-' . $day;
+                    if ( array_key_exists( $key, $staff_holidays ) ) {
+                        $staff_holiday = $staff_holidays[ $key ];
+                    } else {
+                        $staff_holiday = new Lib\Entities\Holiday();
+                    }
+                    $staff_holiday
+                        ->setDate( $day )
+                        ->setRepeatEvent( $repeat )
+                        ->setStaffId( $employee['id'] )
+                        ->setParent( $holiday )
+                        ->save();
+                }
             }
+        } else {
+            $ids = Lib\Entities\Holiday::query()
+                ->whereBetween( 'date', $range->start()->value()->format( 'Y-m-d' ), $range->end()->value()->format( 'Y-m-d' ) )
+                ->where( 'staff_id', null )
+                ->fetchCol( 'id' );
+            Lib\Entities\Holiday::query()
+                ->delete()
+                ->whereIn( 'id', $ids )
+                ->whereIn( 'parent_id', $ids, 'OR' )
+                ->execute();
         }
 
-        // and return refreshed events
-        echo json_encode( self::_getHolidays() );
-        exit;
+        wp_send_json_success( self::_getHolidays() );
     }
 }

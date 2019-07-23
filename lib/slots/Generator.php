@@ -240,28 +240,26 @@ class Generator implements \Iterator
     {
         if ( $ranges->isNotEmpty() ) {
             $max_capacity = $staff->getService( $this->srv_id, $this->location_id )->capacityMax();
-            $start = $ranges->get( 0 )->start();
-
             foreach ( $staff->getBookings() as $booking ) {
                 // Take in account booking and service padding.
                 $range_to_remove = $booking->rangeWithPadding()->transform( - $this->srv_padding_right, $this->srv_padding_left );
-                // Make sure that removed range will have length of a multiple of slot length.
-                $extra_left      = $range_to_remove->start()->diff( $start ) % $this->slot_length;
-                $extra_right     = $range_to_remove->end()->diff( $start ) % $this->slot_length;
-                $range_to_remove = $range_to_remove->transform(
-                    $extra_left
-                        ? - $extra_left
-                        : null,
-                    $extra_right
-                        ? $this->slot_length - $extra_right
-                        : null
-                );
                 // Remove booking from ranges.
                 $new_ranges = new RangeCollection();
                 $removed    = new RangeCollection();
                 foreach ( $ranges->all() as $r ) {
                     if ( $r->overlaps( $range_to_remove ) ) {
-                        $new_ranges = $new_ranges->merge( $r->subtract( $range_to_remove, $removed_range ) );
+                        // Make sure that removed range will have length of a multiple of slot length.
+                        $extra_left  = $range_to_remove->start()->diff( $r->start() ) % $this->slot_length;
+                        $extra_right = $range_to_remove->end()->diff( $r->start() ) % $this->slot_length;
+                        $remove      = $range_to_remove->transform(
+                            $extra_left
+                                ? - $extra_left
+                                : null,
+                            $extra_right
+                                ? $this->slot_length - $extra_right
+                                : null
+                        );
+                        $new_ranges = $new_ranges->merge( $r->subtract( $remove, $removed_range ) );
                         /** @var Range $removed_range */
                         if ( $removed_range ) {
                             $removed->push( $removed_range->replaceNop( $booking->nop() ) );

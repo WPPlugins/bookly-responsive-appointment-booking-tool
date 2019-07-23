@@ -171,7 +171,7 @@ class Settings
             if ( $this->services == 'any' ) {
                 return true;
             } elseif ( $parent ) {
-                return in_array( $service->getId(), $this->services[ $parent->getType() ][ $parent->getId() ] );
+                return in_array( $service->getId(), isset( $this->services[ $parent->getType() ][ $parent->getId() ] ) ? $this->services[ $parent->getType() ][ $parent->getId() ] : array() );
             } else {
                 return array_key_exists( $service->getId(), $this->services[ $service->getType() ] );
             }

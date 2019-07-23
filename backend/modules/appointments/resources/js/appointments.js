@@ -86,6 +86,8 @@ jQuery(function($) {
         });
     }
 
+    Ladda.bind($('button[type=submit]', $exportForm).get(0), {timeout: 2000});
+
     /**
      * Init DataTables.
      */
@@ -282,7 +284,6 @@ jQuery(function($) {
      * Export.
      */
     $exportForm.on('submit', function () {
-        Ladda.bind('#bookly-export-customers-dialog button[type=submit]', {timeout: 2000});
         $exportDialog.find('[name="filter"]').val(JSON.stringify({
             id          : $idFilter.val(),
             date        : $appointmentDateFilter.data('date'),

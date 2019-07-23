@@ -4,7 +4,6 @@ use Bookly\Lib\Utils\Common;
 use Bookly\Frontend\Modules\Booking\Proxy;
 use Bookly\Frontend\Components;
 
-
 /** @var \Bookly\Lib\UserBookingData $userData */
 echo $progress_tracker;
 ?>

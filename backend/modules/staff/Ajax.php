@@ -40,12 +40,14 @@ class Ajax extends Lib\Base\Ajax
             $query->where( 's.wp_user_id', get_current_user_id() );
         }
         $filter = self::parameter( 'filter' );
-        if ( $filter['visibility'] != '' ) {
-            if ( $filter['visibility'] == 'without_archived' ){
-                $query->whereNot( 's.visibility', 'archive' );
-            } else {
-                $query->where( 's.visibility', $filter['visibility'] );
+        if ( $filter['archived'] ) {
+            if ( $filter['visibility'] != '' ) {
+                $query->whereRaw( 's.visibility = %s OR s.visibility = %s', array( $filter['visibility'], 'archive' ) );
             }
+        } elseif ( $filter['visibility'] != '' ) {
+            $query->where( 's.visibility', $filter['visibility'] );
+        } else {
+            $query->whereNot( 's.visibility', 'archive' );
         }
         $list = $query->fetchArray();
 

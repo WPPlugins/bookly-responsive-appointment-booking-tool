@@ -10,7 +10,9 @@
     return this;
   };
 
-  var events = {};
+  var events = {},
+      hoverSelect = 'stop', // start or stop
+      intervalStart = null;
 
   $.jCal = function (target, opt) {
     opt = $.extend({
@@ -48,6 +50,7 @@
         drawCal($(this), $.extend( {}, opt, { 'ind':ind,
             'day':new Date( new Date( opt.day.getTime() ).setMonth( new Date( opt.day.getTime() ).getMonth() + ind ) ) }
         ));
+          $(this).attr('data-index', ind);
       });
   };
 
@@ -57,7 +60,6 @@
       '<div class="jCal">' +
         ( (opt.ind == 0) ? '<div class="left" />' : '' ) +
         '<div class="month">' +
-//        '<span class="monthYear">' + opt.day.getFullYear() + '</span>' +
         '<span class="monthName">' + opt.ml[opt.day.getMonth()] + '</span>' +
         '</div>' +
         ( (opt.ind == ( opt.showMonths - 1 )) ? '<div class="right" />' : '' ) +
@@ -170,15 +172,29 @@
       }
     }
 
-    $target.find('div[id^=' + opt.cID + 'd]:first, div[id^=' + opt.cID + 'd]:nth-child(7n+2)').before( '<br style="clear:both;" />' );
+    $target.find('div[id^=' + opt.cID + 'd]:first, div[id^=' + opt.cID + 'd]:nth-child(7n+2)').before( '<div style="clear:both;" />' );
     $target.find('div[id^=' + opt.cID + 'd_]:not(.invday)').bind("mouseover mouseout click", $.extend( {}, opt ),
       function(e){
         if ($('.jCalMask', e.data._target).length > 0) return false;
         var osDate = new Date ( $(this).attr('id').replace(/c[0-9]{1,}d_([0-9]{1,2})_([0-9]{1,2})_([0-9]{4})/, '$1/$2/$3') );
         if (e.data.forceWeek) osDate.setDate( osDate.getDate() + (e.data.dayOffset - osDate.getDay()) );
         var sDate = new Date ( osDate.getTime() );
-        if (e.type == 'click')
-          $('div[id*=d_]', e.data._target).stop().removeClass('selectedDay').removeClass('overDay');
+
+        if (e.type == 'click') {
+            $('div[id*=d_]', e.data._target).stop().removeClass('overDay');
+            if (intervalStart !== null) {
+                hoverSelect = 'stop';
+                drawPopup($target, opt, this, [intervalStart, new Date(sDate)]);
+                intervalStart = null;
+            } else {
+                $('.day', $target.closest('.jCal-wrap')).removeClass('selectedDay');
+                intervalStart = new Date(sDate);
+                hoverSelect = 'start';
+            }
+        } else if (hoverSelect == 'start') {
+            reSelectDates($target, intervalStart, sDate);
+        }
+
         for (var di = 0, ds = $(e.data._target).data('days'); di < ds; di++) {
           var currDay = $(e.data._target).find('#' + e.data.cID + 'd_' + ( sDate.getMonth() + 1 ) + '_' + sDate.getDate() + '_' + sDate.getFullYear());
           if ( currDay.length == 0 || $(currDay).hasClass('invday') ) break;
@@ -189,7 +205,6 @@
         }
         if (e.type == 'click') {
           e.data.day = osDate;
-          drawPopup($target, opt, this, osDate);
           if ( e.data.callback( osDate, di, this ) )
             $(e.data._target).data('day', e.data.day).data('days', di);
         }
@@ -201,10 +216,26 @@
       }
   }
 
+    function reSelectDates($target, startDay, endDay) {
+        if (startDay) {
+            var $container = $target.closest('.jCal-wrap'),
+                start = startDay;
+            if (startDay.getTime() > endDay.getTime()) {
+                start = endDay;
+                endDay  = new Date(startDay);
+            }
+            $('.day', $container).removeClass('selectedDay');
+            for (var d = new Date(start); d <= endDay; d.setDate(d.getDate() + 1)) {
+                var dF = $('div[id*=d_' + (d.getMonth() + 1) + '_' + d.getDate() + '_' + d.getFullYear() + ']', $container);
+                dF.stop().addClass('selectedDay');
+            }
+        }
+    };
+
   // draw the events in calendar (called for each month)
   function drawEvents($target, month) {
       // remove old events
-      $('.holidayDay', $target).removeClass('holidayDay').data('id', null);
+      $('.holidayDay', $target).removeClass('holidayDay');
       $('.repeatDay', $target).removeClass('repeatDay');
       // and add new
       for (var i in events) {
@@ -212,8 +243,7 @@
               if (events[i].m == month) {
                   $target.find(getEventSelector(events[i]))
                       .addClass('holidayDay')
-                      .addClass(events[i].hasOwnProperty('y') ? '' : 'repeatDay')
-                      .data('id', i);
+                      .addClass(events[i].hasOwnProperty('y') ? '' : 'repeatDay');
               }
           }
       }
@@ -225,15 +255,14 @@
   }
 
     // draw the popup on click to day
-    function drawPopup($target, opt, div, day) {
+    function drawPopup($target, opt, div, range) {
         $('.popover').popover('hide');
-        var $div = $(div);
-
-        // checked or not on draw
-        var ch  = $div.hasClass('holidayDay') ? 'checked="checked"' : '';
-        var ch2 = $div.hasClass('repeatDay') ? 'checked="checked"' : '';
-        var di  = ch ? '' : 'disabled="disabled"';
-        var day = new Date(day);
+        let $div = $(div);
+            $first = $target.find('div[id*=d_' + (range[0].getMonth() + 1) + '_' + range[0].getDate() + '_' + range[0].getFullYear() + ']'),
+            // checked or not on draw
+            ch  = $first.hasClass('holidayDay') ? 'checked="checked"' : '',
+            ch2 = $first.hasClass('repeatDay') ? 'checked="checked"' : '',
+            di  = ch ? '' : 'disabled="disabled"';
 
         var $popup = $('<div class="text-center" style="width: 260px;">' +
             '<div class="checkbox bookly-margin-bottom-md"><label>' +
@@ -268,9 +297,10 @@
             .popover('show');
 
         $('.bookly-js-day-off, .bookly-js-repeat', $popup).on('change', function () {
-            var $this   = $(this);
-            var day_off = $day_off.prop('checked');
-            var repeat  = $repeat.prop('checked');
+            var $this   = $(this),
+                day_off = $day_off.prop('checked'),
+                repeat  = $repeat.prop('checked'),
+                $container = $target.closest('.jCal-wrap');
 
             if (day_off) {
                 $repeat.prop('disabled', false);
@@ -278,14 +308,19 @@
                 $repeat.prop('checked', false).prop('disabled', true);
             }
 
+            if (range[0].getTime() > range[1].getTime()) {
+                let start = range[1];
+                range[1] = new Date(range[0]);
+                range[0] = start;
+            }
+
             // update data on server side
             var options = {
                 action  : opt.action,
                 csrf_token: opt.csrf_token,
-                id      : $div.data('id'),
                 holiday : day_off,
                 repeat  : repeat,
-                day     : day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate()
+                range   : [range[0].getFullYear() + '-' + (range[0].getMonth() + 1) + '-' + range[0].getDate(), range[1].getFullYear() + '-' + (range[1].getMonth() + 1) + '-' + range[1].getDate() ]
             };
             if (opt.staff_id) {
                 options.staff_id = opt.staff_id;
@@ -297,10 +332,16 @@
                 ajaxurl,
                 options,
                 function (response) {
-                    $this.prop('disabled', false).show().prev('img').hide();
-                    // refresh events from server
-                    events = response;
-                    drawEvents($target, day.getMonth() + 1);
+                    if (response.success) {
+                        $this.prop('disabled', false).show().prev('img').hide();
+                        // refresh events from server
+                        events = response.data;
+                        for (let m = range[0].getMonth(); m <= range[1].getMonth(); m++) {
+                            let $target = $('[data-index=' + m + ']', $container);
+                            $('.day', $target).removeClass('selectedDay');
+                            drawEvents($target, m + 1);
+                        }
+                    }
                 },
                 'json'
             );

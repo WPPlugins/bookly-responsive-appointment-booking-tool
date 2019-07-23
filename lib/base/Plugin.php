@@ -105,8 +105,14 @@ abstract class Plugin
     public static function run()
     {
         if ( ! session_id() ) {
-            // WP 4.9+ fix loopback request failure
-            if ( ! isset( $_GET['wp_scrape_key'] ) ) {
+            // fix loopback request failure
+            if (
+                // WP 4.9+ plugin or theme editor
+                ! isset( $_GET['wp_scrape_key'] )
+                &&
+                // WP 5.2+ Site Health feature=loopback_requests
+                ! ( isset( $_POST['action'] ) && $_POST['action'] == 'health-check-site-status' )
+            ) {
                 // Start session.
                 @session_start();
             }

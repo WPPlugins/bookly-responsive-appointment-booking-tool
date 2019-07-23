@@ -28,7 +28,7 @@
                         }
                         jQuery.ajax({
                             url:      ajaxurl,
-                            data:     {action: 'bookly_get_payment_details', payment_id: payment_id, csrf_token : BooklyL10n.csrf_token},
+                            data:     {action: 'bookly_get_payment_details', payment_id: payment_id, csrf_token: BooklyPaymentDialogL10n.csrfToken},
                             dataType: 'json',
                             success:  function (response) {
                                 if (response.success) {
@@ -42,7 +42,7 @@
                                         ladda.start();
                                         jQuery.ajax({
                                             url:      ajaxurl,
-                                            data:     {action: 'bookly_complete_payment', payment_id: payment_id, csrf_token : BooklyL10n.csrf_token},
+                                            data:     {action: 'bookly_complete_payment', payment_id: payment_id, csrf_token: BooklyPaymentDialogL10n.csrfToken},
                                             dataType: 'json',
                                             type:     'POST',
                                             success:  function (response) {
@@ -72,7 +72,7 @@
 
                                         jQuery.ajax({
                                             url     : ajaxurl,
-                                            data    : {action: 'bookly_get_payment_info', payment_id: payment_id, csrf_token: BooklyL10n.csrf_token},
+                                            data    : {action: 'bookly_get_payment_info', payment_id: payment_id, csrf_token: BooklyPaymentDialogL10n.csrfToken},
                                             dataType: 'json',
                                             type    : 'POST',
                                             success : function (response) {
@@ -117,7 +117,7 @@
                                                 reason: $adjust_reason.val(),
                                                 amount: $adjust_amount.val(),
                                                 tax   : $adjust_tax.val() || 0,
-                                                csrf_token: BooklyL10n.csrf_token
+                                                csrf_token: BooklyPaymentDialogL10n.csrfToken
                                             },
                                             dataType: 'json',
                                             type    : 'POST',

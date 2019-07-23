@@ -42,6 +42,7 @@ class Dialog extends Lib\Base\Component
                     : array( 'js/intlTelInput.min.js' => array( 'jquery' ) )
             ),
             'backend'  => array(
+                'js/jCal.js'             => array( 'jquery' ),
                 'js/dropdown.js'         => array( 'jquery' ),
                 'js/range_tools.js'      => array( 'jquery' ),
                 'js/moment.min.js',
@@ -65,7 +66,7 @@ class Dialog extends Lib\Base\Component
             ),
             'holidays' => array(
                 'loading_img'        => plugins_url( 'bookly-responsive-appointment-booking-tool/backend/resources/images/loading.gif' ),
-                'start_of_week'      => (int) get_option( 'start_of_week' ),
+                'firstDay'           => (int) get_option( 'start_of_week' ),
                 'days'               => array_values( $wp_locale->weekday_abbrev ),
                 'months'             => array_values( $wp_locale->month ),
                 'close'              => __( 'Close', 'bookly' ),

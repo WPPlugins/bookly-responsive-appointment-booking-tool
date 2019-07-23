@@ -111,11 +111,14 @@ jQuery(function ($) {
                 })
                 // Change location
                 .on('change', '#staff_location_id', function () {
-                    let data = {};
+                    let get_staff_services = {
+                        action    : obj.options.get_staff_services.action,
+                        staff_id  : obj.options.get_staff_services.staff_id,
+                        csrf_token: obj.options.get_staff_services.csrf_token,
+                    };
                     if (this.value != '') {
-                        data.location_id = this.value;
+                        get_staff_services.location_id = this.value;
                     }
-                    let get_staff_services = jQuery.extend(data, obj.options.get_staff_services);
                     $container.html('');
                     new BooklyStaffServices($container, {
                         get_staff_services: get_staff_services,

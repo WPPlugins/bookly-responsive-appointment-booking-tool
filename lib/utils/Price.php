@@ -72,6 +72,7 @@ abstract class Price
         'RSD' => array( 'symbol' => 'din.', 'format' => '{symbol}{price|0}' ),
         'RUB' => array( 'symbol' => 'руб.', 'format' => '{price|2} {symbol}' ),
         'SAR' => array( 'symbol' => 'SAR',  'format' => '{price|2} {symbol}' ),
+        'SCR' => array( 'symbol' => '₨',    'format' => '{symbol} {price|2}' ),
         'SEK' => array( 'symbol' => 'kr',   'format' => '{price|2} {symbol}' ),
         'SGD' => array( 'symbol' => '$',    'format' => '{symbol}{price|2}' ),
         'THB' => array( 'symbol' => '฿',    'format' => '{price|2} {symbol}' ),

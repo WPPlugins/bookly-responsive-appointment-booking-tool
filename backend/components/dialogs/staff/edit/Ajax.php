@@ -156,38 +156,40 @@ class Ajax extends Lib\Base\Ajax
      */
     public static function staffHolidaysUpdate()
     {
-        $id      = self::parameter( 'id' );
-        $holiday = self::parameter( 'holiday' ) === 'true';
-        $repeat  = self::parameter( 'repeat' ) === 'true';
-        $day     = self::parameter( 'day', false );
+        $interval = self::parameter( 'range', array() );
+        $range    = new Lib\Slots\Range( Lib\Slots\DatePoint::fromStr( $interval[0] ), Lib\Slots\DatePoint::fromStr( $interval[1] )->modify( 1 ) );
         if ( self::$staff ) {
-            // Update or delete the event.
-            if ( $id ) {
-                if ( $holiday ) {
-                    Lib\Entities\Holiday::query()
-                        ->update()
-                        ->set( 'repeat_event', (int) $repeat )
-                        ->where( 'id', $id )
-                        ->execute();
-                } else {
-                    Lib\Entities\Holiday::query()
-                        ->delete()
-                        ->where( 'id', $id )
-                        ->execute();
+            if ( self::parameter( 'holiday' ) == 'true' ) {
+                $repeat   = (int) ( self::parameter( 'repeat' ) == 'true' );
+                $holidays = Lib\Entities\Holiday::query()
+                    ->whereBetween( 'date', $range->start()->value()->format( 'Y-m-d' ), $range->end()->value()->format( 'Y-m-d' ) )
+                    ->where( 'staff_id', self::$staff->getId() )
+                    ->indexBy( 'date' )
+                    ->find();
+                foreach ( $range->split( DAY_IN_SECONDS ) as $r ) {
+                    $day = $r->start()->value()->format( 'Y-m-d' );
+                    if ( array_key_exists( $day, $holidays ) ) {
+                        $holiday = $holidays[ $day ];
+                    } else {
+                        $holiday = new Lib\Entities\Holiday();
+                    }
+                    $holiday
+                        ->setDate( $day )
+                        ->setRepeatEvent( $repeat )
+                        ->setStaffId( self::$staff->getId() )
+                        ->save();
                 }
-            } elseif ( $holiday && $day ) {
-                // Add the new event.
-                $holiday = new Lib\Entities\Holiday();
-                $holiday
-                    ->setDate( $day )
-                    ->setRepeatEvent( (int) $repeat )
-                    ->setStaffId( self::$staff->getId() )
-                    ->save();
+            } else {
+                Lib\Entities\Holiday::query()
+                    ->delete()
+                    ->whereBetween( 'date', $range->start()->value()->format( 'Y-m-d' ), $range->end()->value()->format( 'Y-m-d' ) )
+                    ->where( 'staff_id', self::$staff->getId() )
+                    ->execute();
             }
             // And return refreshed events.
-            echo json_encode( self::$staff->getHolidays() );
+            wp_send_json_success( self::$staff->getHolidays() );
         }
-        exit;
+        wp_send_json_error();
     }
 
     /**
