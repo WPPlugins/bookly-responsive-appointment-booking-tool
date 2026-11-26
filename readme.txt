@@ -1,28 +1,28 @@
-=== WordPress Online Booking and Scheduling Plugin – Bookly ===
-Contributors: Ladela
-Tags: Booking, booking system, appointment booking, Booking calendar, reservation calendar, appointment scheduler, appointment calendar
+=== Online Scheduling and Appointment Booking System – Bookly ===
+Contributors: ladela
+Tags: appointment booking, booking, booking calendar, booking system, appointments
 Donate link: https://www.booking-wp-plugin.com/
 Requires at least: 3.7
-Tested up to: 5.2.2
+Tested up to: 7.1
 Requires PHP: 5.3.7
-Stable tag: 17.5
+Stable tag: 29.0
 License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Bookly is a booking plugin for WordPress for building an advanced automated online scheduling system.
+Appointment booking system for WordPress — schedule appointments, manage calendars, send reminders, take payments. Start booking today!
 
 == Description ==
 
-**Bookly** is a free **scheduling plugin for WordPress** that allows accepting **online bookings** on your website and automating your **reservation system**. Manage your **booking calendar**, services, client base, save time and money – all in one place. Join almost 20000 businesses all around the world that have already automated their **online booking system**!
+**Bookly** is a free **scheduling plugin for WordPress** that allows accepting **online bookings** on your website and automating your **reservation system**. Manage your **booking calendar**, services, client base, save time and money – all in one place. Join more than 70,000 businesses all around the world that have already automated their **online booking system**!
 
 https://youtu.be/XkCrADjLt2s
 
 **Bookly** is designed to grow your online sales and **make easy appointments**. This is a **one-stop shop** for **any businesses** from hair salons or photography to wealth management and transportation. You can **start** easily with the **free version of Bookly** and once your business scales you can operate **ultimate scheduling software** with the paid version available with the **Bookly Pro add-on**, and various add-ons.
 
-_**PLEASE NOTE** that online payments, unlimited number of staff members and services, and ability to install add-ons are_ **NOT AVAILABLE** in the **free version**. If you would like to find out more about features available with the **Bookly PRO** add-on, please check our [demo](http://demo.booking-wp-plugin.com/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG/).
+_**PLEASE NOTE** that online payments, unlimited number of staff members and services, and ability to install add-ons are_ **NOT AVAILABLE** in the **free version**. If you would like to find out more about features available with the **Bookly PRO** add-on, please check our [demo](https://demo.booking-wp-plugin.com/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG/).
 
-[Bookly Homepage](https://www.booking-wp-plugin.com/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) | [Pro Features](http://booking-wp-plugin.com/features/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) (Bookly Pro add-on required) |
-[Add-ons](https://www.booking-wp-plugin.com/demo-list/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) (Bookly Pro add-on required) | [Bookly Help Center](https://support.booking-wp-plugin.com/hc/en-us?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG)  | [Demo](https://www.booking-wp-plugin.com/demo/free/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG)
+[Bookly Homepage](https://www.booking-wp-plugin.com/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) | [Pro Features](https://www.booking-wp-plugin.com/pricing?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) (Bookly Pro add-on required) |
+[Add-ons](https://www.booking-wp-plugin.com/add-ons?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) (Bookly Pro add-on required) | [Bookly Help Center](https://support.booking-wp-plugin.com/hc/en-us?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG)  | [Demo](https://www.booking-wp-plugin.com/demo/free/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG)
 
 
 ## 1. Benefits for the customers
@@ -86,8 +86,30 @@ You can change the **layout** and **modify the appearance** of the booking form 
   * Services grouped into **categories**
   * Customizable **SMS** and **email notifications settings** right from the Bookly backend
   * **WPML integration** for multi-language support
+  * Automated **SMS Mailing Campaigns** for various marketing purposes
+  * Blocks for Elementor and Gutenberg
 
-### 3. Who can benefit from using Bookly:
+### 3. Bookly Pro add-on features:
+
+**Bookly Pro** add-on allows you to use more features and settings, install other add-ons for Bookly, includes six months of customer support, and provides you with advanced capabilities for automating your **online scheduling system**. Some of them include:
+
+  * **Unlimited** number of **staff members** with an individual working schedule and ability to manage their profiles and online booking calendar
+  * **Unlimited** number of **services** with additional settings (padding time, visibility, limitations, etc.)
+  * Ability to receive secure and flexible **online payments** on your website
+  * Online payment processing with PayPal, Stripe, 2Checkout, Authorize.Net, Mollie, Payson, PayUbiz, PayU Latam
+  * Additional **templates** for **Email notifications** (e.g., reminders about upcoming appointments, follow-up messages, birthday greetings, next day agenda, etc.)
+  * **Advanced** features for customizing your **online booking form** (show address fields, birthday fields, Facebook login, timezone switcher)
+  * **Google Calendar** integration
+  * **WooCommerce** compatibility
+  * **Importable and exportable customer list** which includes info about appointments and payments
+  * **Built-in analytics** so you will be able to see a comprehensive report about the number of bookings, customers and payments received
+  * Integration with **Zoom**, **Google Meet** and **Jitsi**
+  * **Mailchimp** integration (via add-on)
+  * Ability to export appointments via **ICalendar feed**
+  * **Ability to purchase and use** dozens of **paid add-ons for deeper customization** of your booking system (group bookings, custom fields, service **extra items**, recurring appointments, deposits, **coupons**, personal staff cabinet and user account for your clients, **automatic invoicing**, waiting list, and much **more!**)
+
+
+### 4. Who can benefit from using Bookly:
 
 Bookly for WordPress is designed to be used by **local businesses** or **individual providers** who offer different services to customers. Since the **booking form** can be **fully customized** and **personalized**, it is **successfully used** in many business segments such as **Healthcare**, **Beauty**, **Education**, **Medicine**, **Consulting** etc., as well as by individual professionals.
 
@@ -103,29 +125,14 @@ Also, Bookly is an excellent solution for **web studios** and **developers**, wh
   * **Professional services** (coaches, consultants, lawyers, photographers, consulting psychologist, cleaning services)
   * or any **other services** which can be scheduled and reserved **online** using the booking system.
 
-### 4. Bookly Pro add-on features:
-
-**Bookly Pro** add-on allows you to use more features and settings, install other add-ons for Bookly, includes six months of customer support, and provides you with advanced capabilities for automating your **online scheduling system**. Some of them include:
-
-  * **Unlimited** number of **staff members** with an individual working schedule and ability to manage their profiles and online booking calendar
-  * **Unlimited** number of **services** with additional settings (padding time, visibility, limitations, etc.)
-  * Ability to receive secure and flexible **online payments** on your website
-  * Additional **templates** for **Email notifications** (e.g., reminders about upcoming appointments, follow-up messages, birthday greetings, next day agenda, etc.)
-  * **Advanced** features for customizing your **online booking form** (show address fields, birthday fields, Facebook login, timezone switcher)
-  * **Google Calendar** integration
-  * **WooCommerce** compatibility
-  * **Importable and exportable customer list** which includes info about appointments and payments
-  * **Built-in analytics** so you will be able to see a comprehensive report about the number of bookings, customers and payments received
-  * **Ability to purchase and use** dozens of **paid add-ons for deeper customization** of your booking system (various **payment gateways**, group bookings, custom fields, service **extra items**, recurring appointments, deposits, **coupons**, personal staff cabinet and user account for your clients, **automatic invoicing**, waiting list, and much **more!**)
-
 ### FURTHER READING
 
-  * [Bookly Online Scheduling plugin](https://www.booking-wp-plugin.com/?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading) official page
+  * [Bookly Online Scheduling plugin](https://www.booking-wp-plugin.com/?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) official page
   * [Help center](https://support.booking-wp-plugin.com/hc/en-us?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading)
   * [Bookly demo](https://www.booking-wp-plugin.com/demo/free/?utm_campaign=wp_furtherreading&utm_medium=cpc&utm_source=WP_ORG)
-  * [Bookly Pro add-on demo](http://demo.booking-wp-plugin.com/?utm_campaign=wp_furtherreading&utm_medium=cpc&utm_source=WP_ORG)
-  * [Add-ons for Bookly Pro](https://codecanyon.net/user/ladela/portfolio?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading&ref=ladela)
-  * [Youtube channel](http://youtube.com/c/Bookly?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading)
+  * [Bookly Pro add-on demo](https://demo.booking-wp-plugin.com/?utm_campaign=wp_furtherreading&utm_medium=cpc&utm_source=WP_ORG)
+  * [Add-ons for Bookly Pro](https://www.booking-wp-plugin.com/add-ons?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG)
+  * [Youtube channel](https://youtube.com/c/Bookly?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_further_reading)
 
 ### AFTER ACTIVATION
 
@@ -142,19 +149,19 @@ You can check the functionality of Bookly by visiting our [demo page](https://ww
 
 = Where can I try the Bookly Pro add-on? =
 
-To check out all features available with the Bookly Pro add-on, please visit [Bookly Pro demo](http://demo.booking-wp-plugin.com/?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ).
+To check out all features available with the Bookly Pro add-on, please visit [Bookly Pro demo](https://demo.booking-wp-plugin.com/?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ).
 
 = How to upgrade to Bookly Pro? =
 
-Bookly Pro is a paid version which requires the Bookly Pro add-on. Purchase and download the Bookly Pro add-on [here](https://codecanyon.net/item/bookly/7226091?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela). Install it as a new plugin.
+Bookly Pro is a paid version which requires the Bookly Pro add-on. Purchase and download the Bookly Pro add-on [here](https://www.booking-wp-plugin.com/pricing?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG). Install it as a new plugin.
 
 = What’s the price of the Bookly Pro add-on? =
 
-Bookly has a free version which can be used for the unlimited period and contains most of the basic features. You can check the current price and purchase the Bookly Pro add-on [here](https://codecanyon.net/item/bookly/7226091?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG&ref=ladela). It includes six months of customer support and lifetime free updates of the plugin. For Pro version you can also install add-ons. You can check the add-ons prices [here](https://codecanyon.net/user/ladela/portfolio?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela).
+Bookly has a free version which can be used for the unlimited period and contains most of the basic features. You can check the current price and purchase the Bookly Pro add-on [here](https://www.booking-wp-plugin.com/pricing?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG). It includes six months of customer support and lifetime free updates of the plugin. For Pro version you can also install add-ons. You can check the add-ons prices [here](https://www.booking-wp-plugin.com/pricing?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG).
 
 = Can I install add-ons with the free version of Bookly? =
 
-You can use Bookly add-ons with the Bookly Pro add-on only. To install the add-ons you need to upgrade to [Bookly Pro](https://codecanyon.net/item/bookly/7226091?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela) first.
+You can use Bookly add-ons with the Bookly Pro add-on only. To install the add-ons you need to upgrade to [Bookly Pro](https://www.booking-wp-plugin.com/pricing?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) first.
 
 = What add-ons do you provide for Bookly Pro? =
 
@@ -165,7 +172,7 @@ We have dozens of add-ons available for Bookly Pro only and continue adding more
   * ‘Bookly Locations’ allows your customers to pick the most suitable place to get the service you provide and you can associate your employees with different locations.
   * ‘Service Extras’ allows purchasing extra items for the service you provide.
 You can check the full list of add-ons and how they work [here](https://www.booking-wp-plugin.com/demo-list/?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ).
-If you have Bookly Pro you can purchase add-ons [here](https://codecanyon.net/user/ladela/portfolio?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela).
+If you have Bookly Pro you can purchase add-ons [here](https://www.booking-wp-plugin.com/pricing?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG).
 
 = Can I use Bookly for the hotel or rental business? =
 
@@ -173,11 +180,11 @@ The current version of Bookly won’t fit hotel or rental business. But other th
 
 = Do you offer support? =
 
-The Bookly team strives to provide support for both free and paid Bookly versions, but we cannot always guarantee active support on the WordPress.org forums, as we prioritize users who [bought Bookly Pro](https://codecanyon.net/item/bookly/7226091?utm_source=WP_ORG&utm_medium=cpc&utm_campaign=wp_FAQ&ref=ladela) add-on and have a valid support pack.
+The Bookly team strives to provide support for both free and paid Bookly versions, but we cannot always guarantee active support on the WordPress.org forums, as we prioritize users who [bought Bookly Pro](https://www.booking-wp-plugin.com/pricing?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) add-on and have a valid support pack.
 
 We recommend visiting our [Help Center](https://support.booking-wp-plugin.com/hc/en-us?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG), [Youtube Video Tutorials](https://www.youtube.com/channel/UCO4v4UcvU43enNcHU8BN5XA/videos?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG), and trying [our demos](https://www.booking-wp-plugin.com/demo-list/?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) to find the answers to the most common questions.
 
-Regular License of Bookly Pro add-on includes six months of support which is available online 24/7. After the support pack expires, it can be [renewed at any time](https://help.market.envato.com/hc/en-us/articles/207886473-Extending-and-Renewing-Item-Support).
+Regular License of Bookly Pro add-on includes six months of support which is available online 24/7. After the support pack expires, it can be renewed at any time.
 
 = I’ve installed Bookly. How do I get it running? =
 
@@ -205,7 +212,7 @@ To learn more, please visit our [Help Center](https://support.booking-wp-plugin.
 
 = I want to learn more about all Bookly features. =
 
-You can find more details about Bookly Pro features [here](https://www.booking-wp-plugin.com/features/?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) (paid version requires the Bookly Pro add-on).
+You can find more details about Bookly Pro features [here](https://www.booking-wp-plugin.com/pricing?utm_campaign=wp_description&utm_medium=cpc&utm_source=WP_ORG) (paid version requires the Bookly Pro add-on).
 Check out our [video tutorials](https://www.youtube.com/channel/UCO4v4UcvU43enNcHU8BN5XA?utm_campaign=wp_FAQ&utm_medium=cpc&utm_source=WP_ORG) about main Bookly features.
 
 = How do I suggest a feature for future versions of Bookly? =
